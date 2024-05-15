@@ -747,7 +747,7 @@
             this.comboBoxTranslationAutoSuffix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTranslationAutoSuffix.DropDownWidth = 121;
             this.comboBoxTranslationAutoSuffix.FormattingEnabled = true;
-            this.comboBoxTranslationAutoSuffix.Items.AddRange(new object[] {
+            this.comboBoxTranslationAutoSuffix.Items.AddRange(new string[] {
             "None",
             "Every minute",
             "Every 5 minutes",
@@ -993,7 +993,7 @@
             this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDialogStyle.DropDownWidth = 170;
             this.comboBoxDialogStyle.FormattingEnabled = true;
-            this.comboBoxDialogStyle.Items.AddRange(new object[] {
+            this.comboBoxDialogStyle.Items.AddRange(new string[] {
             "Dash both lines with space",
             "Dash both lines without space",
             "Dash second line with space",
@@ -1474,7 +1474,7 @@
             this.comboBoxAutoBackupDeleteAfter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoBackupDeleteAfter.DropDownWidth = 88;
             this.comboBoxAutoBackupDeleteAfter.FormattingEnabled = true;
-            this.comboBoxAutoBackupDeleteAfter.Items.AddRange(new object[] {
+            this.comboBoxAutoBackupDeleteAfter.Items.AddRange(new string[] {
             "1 month",
             "3 months",
             "6 months"});
@@ -1530,7 +1530,7 @@
             this.comboBoxTimeCodeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeMode.DropDownWidth = 207;
             this.comboBoxTimeCodeMode.FormattingEnabled = true;
-            this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
+            this.comboBoxTimeCodeMode.Items.AddRange(new string[] {
             "HH:MM:SS:MSEC (00:00:00.000)",
             "HH:MM:SS:FF (00:00:00.00)"});
             this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(506, 261);
@@ -1565,7 +1565,7 @@
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.DropDownWidth = 188;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Items.AddRange(new object[] {
+            this.comboBoxEncoding.Items.AddRange(new string[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -1643,7 +1643,7 @@
             this.comboBoxSpellChecker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSpellChecker.DropDownWidth = 121;
             this.comboBoxSpellChecker.FormattingEnabled = true;
-            this.comboBoxSpellChecker.Items.AddRange(new object[] {
+            this.comboBoxSpellChecker.Items.AddRange(new string[] {
             "Hunspell",
             "Word"});
             this.comboBoxSpellChecker.Location = new System.Drawing.Point(670, 16);
@@ -1670,7 +1670,7 @@
             this.comboBoxAutoBackup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoBackup.DropDownWidth = 121;
             this.comboBoxAutoBackup.FormattingEnabled = true;
-            this.comboBoxAutoBackup.Items.AddRange(new object[] {
+            this.comboBoxAutoBackup.Items.AddRange(new string[] {
             "None",
             "Every minute",
             "Every 5 minutes",
@@ -1736,7 +1736,7 @@
             this.comboBoxListViewDoubleClickEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxListViewDoubleClickEvent.DropDownWidth = 332;
             this.comboBoxListViewDoubleClickEvent.FormattingEnabled = true;
-            this.comboBoxListViewDoubleClickEvent.Items.AddRange(new object[] {
+            this.comboBoxListViewDoubleClickEvent.Items.AddRange(new string[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -1942,20 +1942,13 @@
             // textBoxFormatsSearch
             // 
             this.textBoxFormatsSearch.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxFormatsSearch.HideSelection = true;
+            this.textBoxFormatsSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxFormatsSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
-            this.textBoxFormatsSearch.MaxLength = 32767;
             this.textBoxFormatsSearch.Multiline = true;
             this.textBoxFormatsSearch.Name = "textBoxFormatsSearch";
-            this.textBoxFormatsSearch.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxFormatsSearch.ReadOnly = false;
-            this.textBoxFormatsSearch.SelectedText = "";
-            this.textBoxFormatsSearch.SelectionLength = 0;
-            this.textBoxFormatsSearch.SelectionStart = 0;
             this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
             this.textBoxFormatsSearch.TabIndex = 6;
-            this.textBoxFormatsSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFormatsSearch.UseSystemPasswordChar = false;
             this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
             // 
             // labelFormatsSearch
@@ -2207,7 +2200,7 @@
             this.nikseComboBoxShortcutsFilter.DropDownWidth = 92;
             this.nikseComboBoxShortcutsFilter.Enabled = false;
             this.nikseComboBoxShortcutsFilter.FormattingEnabled = true;
-            this.nikseComboBoxShortcutsFilter.Items.AddRange(new object[] {
+            this.nikseComboBoxShortcutsFilter.Items.AddRange(new string[] {
             "All",
             "Used",
             "Unused"});
@@ -2254,20 +2247,13 @@
             // textBoxShortcutSearch
             // 
             this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxShortcutSearch.HideSelection = true;
+            this.textBoxShortcutSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxShortcutSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxShortcutSearch.Location = new System.Drawing.Point(64, 20);
-            this.textBoxShortcutSearch.MaxLength = 32767;
             this.textBoxShortcutSearch.Multiline = true;
             this.textBoxShortcutSearch.Name = "textBoxShortcutSearch";
-            this.textBoxShortcutSearch.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxShortcutSearch.ReadOnly = false;
-            this.textBoxShortcutSearch.SelectedText = "";
-            this.textBoxShortcutSearch.SelectionLength = 0;
-            this.textBoxShortcutSearch.SelectionStart = 0;
             this.textBoxShortcutSearch.Size = new System.Drawing.Size(151, 21);
             this.textBoxShortcutSearch.TabIndex = 0;
-            this.textBoxShortcutSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxShortcutSearch.UseSystemPasswordChar = false;
             this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
             // 
             // buttonClearShortcut
@@ -2297,7 +2283,7 @@
             this.comboBoxShortcutKey.DropDownWidth = 92;
             this.comboBoxShortcutKey.Enabled = false;
             this.comboBoxShortcutKey.FormattingEnabled = true;
-            this.comboBoxShortcutKey.Items.AddRange(new object[] {
+            this.comboBoxShortcutKey.Items.AddRange(new string[] {
             "None",
             "A",
             "B",
@@ -2776,7 +2762,7 @@
             this.comboBoxCustomSearch5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch5.DropDownWidth = 148;
             this.comboBoxCustomSearch5.FormattingEnabled = true;
-            this.comboBoxCustomSearch5.Items.AddRange(new object[] {
+            this.comboBoxCustomSearch5.Items.AddRange(new string[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2829,7 +2815,7 @@
             this.comboBoxCustomSearch4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch4.DropDownWidth = 148;
             this.comboBoxCustomSearch4.FormattingEnabled = true;
-            this.comboBoxCustomSearch4.Items.AddRange(new object[] {
+            this.comboBoxCustomSearch4.Items.AddRange(new string[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2882,7 +2868,7 @@
             this.comboBoxCustomSearch3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch3.DropDownWidth = 148;
             this.comboBoxCustomSearch3.FormattingEnabled = true;
-            this.comboBoxCustomSearch3.Items.AddRange(new object[] {
+            this.comboBoxCustomSearch3.Items.AddRange(new string[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2935,7 +2921,7 @@
             this.comboBoxCustomSearch2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch2.DropDownWidth = 148;
             this.comboBoxCustomSearch2.FormattingEnabled = true;
-            this.comboBoxCustomSearch2.Items.AddRange(new object[] {
+            this.comboBoxCustomSearch2.Items.AddRange(new string[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2997,7 +2983,7 @@
             this.comboBoxCustomSearch1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch1.DropDownWidth = 148;
             this.comboBoxCustomSearch1.FormattingEnabled = true;
-            this.comboBoxCustomSearch1.Items.AddRange(new object[] {
+            this.comboBoxCustomSearch1.Items.AddRange(new string[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -3397,7 +3383,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxlVideoPlayerPreviewFontSize.DropDownWidth = 70;
             this.comboBoxlVideoPlayerPreviewFontSize.FormattingEnabled = true;
-            this.comboBoxlVideoPlayerPreviewFontSize.Items.AddRange(new object[] {
+            this.comboBoxlVideoPlayerPreviewFontSize.Items.AddRange(new string[] {
             "8",
             "9",
             "10",
@@ -3695,20 +3681,14 @@
             // textBoxFFmpegPath
             // 
             this.textBoxFFmpegPath.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxFFmpegPath.HideSelection = true;
+            this.textBoxFFmpegPath.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxFFmpegPath.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxFFmpegPath.Location = new System.Drawing.Point(9, 65);
             this.textBoxFFmpegPath.MaxLength = 1000;
             this.textBoxFFmpegPath.Multiline = true;
             this.textBoxFFmpegPath.Name = "textBoxFFmpegPath";
-            this.textBoxFFmpegPath.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxFFmpegPath.ReadOnly = false;
-            this.textBoxFFmpegPath.SelectedText = "";
-            this.textBoxFFmpegPath.SelectionLength = 0;
-            this.textBoxFFmpegPath.SelectionStart = 0;
             this.textBoxFFmpegPath.Size = new System.Drawing.Size(366, 21);
             this.textBoxFFmpegPath.TabIndex = 22;
-            this.textBoxFFmpegPath.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFFmpegPath.UseSystemPasswordChar = false;
             // 
             // labelFFmpegPath
             // 
@@ -3765,7 +3745,7 @@
             this.comboBoxSpectrogramAppearance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSpectrogramAppearance.DropDownWidth = 325;
             this.comboBoxSpectrogramAppearance.FormattingEnabled = true;
-            this.comboBoxSpectrogramAppearance.Items.AddRange(new object[] {
+            this.comboBoxSpectrogramAppearance.Items.AddRange(new string[] {
             "Classic",
             "Use waveform color (one color gradient)"});
             this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 70);
@@ -3981,7 +3961,7 @@
             this.comboBoxWaveformTextSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxWaveformTextSize.DropDownWidth = 121;
             this.comboBoxWaveformTextSize.FormattingEnabled = true;
-            this.comboBoxWaveformTextSize.Items.AddRange(new object[] {
+            this.comboBoxWaveformTextSize.Items.AddRange(new string[] {
             "7",
             "8",
             "9",
@@ -4249,7 +4229,7 @@
             this.comboBoxCustomToggleEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomToggleEnd.DropDownWidth = 42;
             this.comboBoxCustomToggleEnd.FormattingEnabled = true;
-            this.comboBoxCustomToggleEnd.Items.AddRange(new object[] {
+            this.comboBoxCustomToggleEnd.Items.AddRange(new string[] {
             ")",
             "♪"});
             this.comboBoxCustomToggleEnd.Location = new System.Drawing.Point(230, 76);
@@ -4276,7 +4256,7 @@
             this.comboBoxCustomToggleStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomToggleStart.DropDownWidth = 42;
             this.comboBoxCustomToggleStart.FormattingEnabled = true;
-            this.comboBoxCustomToggleStart.Items.AddRange(new object[] {
+            this.comboBoxCustomToggleStart.Items.AddRange(new string[] {
             "(",
             "♪"});
             this.comboBoxCustomToggleStart.Location = new System.Drawing.Point(182, 76);
@@ -4322,7 +4302,7 @@
             this.comboBoxBDOpensIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBDOpensIn.DropDownWidth = 221;
             this.comboBoxBDOpensIn.FormattingEnabled = true;
-            this.comboBoxBDOpensIn.Items.AddRange(new object[] {
+            this.comboBoxBDOpensIn.Items.AddRange(new string[] {
             "OCR",
             "BD SUP EDIIT"});
             this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 25);
@@ -4647,7 +4627,7 @@
             this.comboBoxToolsMusicSymbol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsMusicSymbol.DropDownWidth = 86;
             this.comboBoxToolsMusicSymbol.FormattingEnabled = true;
-            this.comboBoxToolsMusicSymbol.Items.AddRange(new object[] {
+            this.comboBoxToolsMusicSymbol.Items.AddRange(new string[] {
             "♪",
             "♪♪",
             "*",
@@ -4730,7 +4710,7 @@
             this.comboBoxToolsEndSceneIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsEndSceneIndex.DropDownWidth = 86;
             this.comboBoxToolsEndSceneIndex.FormattingEnabled = true;
-            this.comboBoxToolsEndSceneIndex.Items.AddRange(new object[] {
+            this.comboBoxToolsEndSceneIndex.Items.AddRange(new string[] {
             "Last",
             "Last - 1",
             "Last - 2",
@@ -4767,7 +4747,7 @@
             this.comboBoxToolsStartSceneIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsStartSceneIndex.DropDownWidth = 86;
             this.comboBoxToolsStartSceneIndex.FormattingEnabled = true;
-            this.comboBoxToolsStartSceneIndex.Items.AddRange(new object[] {
+            this.comboBoxToolsStartSceneIndex.Items.AddRange(new string[] {
             "First",
             "First +1",
             "First +2",
@@ -4795,7 +4775,7 @@
             this.comboBoxToolsVerifySeconds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsVerifySeconds.DropDownWidth = 86;
             this.comboBoxToolsVerifySeconds.FormattingEnabled = true;
-            this.comboBoxToolsVerifySeconds.Items.AddRange(new object[] {
+            this.comboBoxToolsVerifySeconds.Items.AddRange(new string[] {
             "2",
             "3",
             "4",
@@ -4903,7 +4883,7 @@
             this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
             this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
-            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
+            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new string[] {
             "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
@@ -5853,7 +5833,7 @@
             this.comboBoxSubtitleListViewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleListViewFontSize.DropDownWidth = 73;
             this.comboBoxSubtitleListViewFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new object[] {
+            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new string[] {
             "7",
             "8",
             "9",
@@ -6012,7 +5992,7 @@
             this.comboBoxSubtitleFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFontSize.DropDownWidth = 73;
             this.comboBoxSubtitleFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleFontSize.Items.AddRange(new object[] {
+            this.comboBoxSubtitleFontSize.Items.AddRange(new string[] {
             "7",
             "8",
             "9",
@@ -6202,20 +6182,13 @@
             // textBoxNetworkSessionNewMessageSound
             // 
             this.textBoxNetworkSessionNewMessageSound.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxNetworkSessionNewMessageSound.HideSelection = true;
+            this.textBoxNetworkSessionNewMessageSound.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxNetworkSessionNewMessageSound.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxNetworkSessionNewMessageSound.Location = new System.Drawing.Point(28, 50);
-            this.textBoxNetworkSessionNewMessageSound.MaxLength = 32767;
             this.textBoxNetworkSessionNewMessageSound.Multiline = true;
             this.textBoxNetworkSessionNewMessageSound.Name = "textBoxNetworkSessionNewMessageSound";
-            this.textBoxNetworkSessionNewMessageSound.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxNetworkSessionNewMessageSound.ReadOnly = false;
-            this.textBoxNetworkSessionNewMessageSound.SelectedText = "";
-            this.textBoxNetworkSessionNewMessageSound.SelectionLength = 0;
-            this.textBoxNetworkSessionNewMessageSound.SelectionStart = 0;
             this.textBoxNetworkSessionNewMessageSound.Size = new System.Drawing.Size(318, 21);
             this.textBoxNetworkSessionNewMessageSound.TabIndex = 20;
-            this.textBoxNetworkSessionNewMessageSound.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxNetworkSessionNewMessageSound.UseSystemPasswordChar = false;
             // 
             // labelNetworkSessionNewMessageSound
             // 
@@ -6290,7 +6263,7 @@
             this.comboBoxProxyAuthType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxProxyAuthType.DropDownWidth = 192;
             this.comboBoxProxyAuthType.FormattingEnabled = true;
-            this.comboBoxProxyAuthType.Items.AddRange(new object[] {
+            this.comboBoxProxyAuthType.Items.AddRange(new string[] {
             "",
             "Basic",
             "Digest",
@@ -6600,7 +6573,7 @@
             this.nikseComboBoxChatGptModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.nikseComboBoxChatGptModel.DropDownWidth = 375;
             this.nikseComboBoxChatGptModel.FormattingEnabled = true;
-            this.nikseComboBoxChatGptModel.Items.AddRange(new object[] {
+            this.nikseComboBoxChatGptModel.Items.AddRange(new string[] {
             "gpt-4o",
             "gpt-4-turbo",
             "gpt-3.5-turbo",
@@ -6990,10 +6963,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelAutoTranslate);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
