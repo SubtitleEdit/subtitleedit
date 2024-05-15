@@ -308,10 +308,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         AddAudioToVideoFile(resultAudioFileName, checkBoxForceStereo.Checked);
                     }
 
-                    if (checkBoxForceStereo.Checked)
-                    {
-                        ConvertWavToTwoChannelAudio(resultAudioFileName);
-                    }
+                }
+
+                if (checkBoxForceStereo.Checked)
+                {
+                    ConvertWavToTwoChannelAudio(resultAudioFileName);
                 }
 
                 UiUtil.OpenFolder(_waveFolder);
