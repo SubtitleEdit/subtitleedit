@@ -181,7 +181,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
 
             checkBoxAddToVideoFile.Enabled = _videoFileName != null;
-            checkBoxForceStereo.Enabled = _videoFileName != null;
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -305,14 +304,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     if (_videoFileName != null)
                     {
-                        AddAudioToVideoFile(resultAudioFileName, checkBoxForceStereo.Checked);
+                        AddAudioToVideoFile(resultAudioFileName);
                     }
 
-                }
-
-                if (checkBoxForceStereo.Checked)
-                {
-                    ConvertWavToTwoChannelAudio(resultAudioFileName);
                 }
 
                 UiUtil.OpenFolder(_waveFolder);
@@ -323,31 +317,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 MessageBox.Show("Ups: " + exception.Message + Environment.NewLine + exception.Message);
                 SeLogger.Error(exception, $"{Text}: Error running engine {nikseComboBoxEngine.Text} with video {_videoFileName}");
             }
-        }
-
-        private bool ConvertWavToTwoChannelAudio(string audioFileName)
-        {
-            var outputFileName = audioFileName.Remove(audioFileName.LastIndexOf('.')) + "_stereo.wav";
-            if (File.Exists(outputFileName))
-            {
-                SeLogger.Error($"Skipping converting {audioFileName} to stereo wav as {outputFileName} already exists");
-                return true;
-            }
-
-            var addAudioProcess = VideoPreviewGenerator.ConvertToAc2(audioFileName, outputFileName);
-            addAudioProcess.Start();
-            while (!addAudioProcess.HasExited)
-            {
-                Application.DoEvents();
-                if (_abort)
-                {
-                    return false;
-                }
-            }
-
-            SafeFileDelete(audioFileName);
-
-            return true;
         }
 
         private void HandleAbort()
@@ -413,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return false;
         }
 
-        private void AddAudioToVideoFile(string audioFileName, bool forceStereo)
+        private void AddAudioToVideoFile(string audioFileName)
         {
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
@@ -423,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             labelProgress.Text = "Add audio to video file...";
             var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, forceStereo);
+            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
             addAudioProcess.Start();
             while (!addAudioProcess.HasExited)
             {
