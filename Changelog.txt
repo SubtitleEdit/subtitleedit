@@ -2,7 +2,7 @@
 
 4.0.6 (xth May 2024) BETA
 * NEW:
-   * Add "Text To Speech" - thx darnn/cvrle77/msjsc001
+   * Add "Text To Speech" - thx darnn/cvrle77/BlueBlue7891
    * Add burn-in batch mode - thx Leon/David
    * Add new LRC with milliseconds format - thx eadmaster 
    * Add new subtitle format (Whisper output) - thx lererledd
@@ -20,6 +20,9 @@
    * Add the new llama3 model and set as default for "Ollama translate"
    * Allow vertical zoom out in waveform (ctrl+shift+mouse-wheel) - thx Leon
    * Add auto-translate advanced settings
+   * Some improvements for auto-translate
+   * Set default ChatGPT model to the new "gpt-4o"
+   * Add hot keys to the binary OCR "character-inspect-window" - thx trienow
 * FIXED:
    * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
