@@ -143,7 +143,7 @@
             // 
             this.checkBoxForceStereo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxForceStereo.AutoSize = true;
-            this.checkBoxForceStereo.Location = new System.Drawing.Point(34, 382);
+            this.checkBoxForceStereo.Location = new System.Drawing.Point(17, 382);
             this.checkBoxForceStereo.Name = "checkBoxForceStereo";
             this.checkBoxForceStereo.Size = new System.Drawing.Size(85, 17);
             this.checkBoxForceStereo.TabIndex = 33;
