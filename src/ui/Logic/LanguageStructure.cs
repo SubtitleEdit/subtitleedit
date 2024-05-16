@@ -2718,8 +2718,8 @@
             public string CpsLineLengthStyleCalcNoSpace { get; set; }
             public string CpsLineLengthStyleCalcCjk { get; set; }
             public string CpsLineLengthStyleCalcCjkNoSpace { get; set; }
-            public string CpsLineLengthStyleCalcIgnoreArabicDiacritics { get; set; }
-            public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace { get; set; }
+            public string CpsLineLengthStyleCalcIncludeCompositionCharacters { get; set; }
+            public string CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace { get; set; }
             public string CpsLineLengthStyleCalcNoSpaceOrPunctuation { get; set; }
             public string CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly { get; set; }
             public string MusicSymbol { get; set; }
