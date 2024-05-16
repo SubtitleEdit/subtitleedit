@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public string Folder { get; set; }
         public bool AlreadyDownloaded { get; set; }
         public long Bytes { get; set; }
+        public bool Dynamic { get; set; }
 
         public override string ToString()
         {

@@ -237,6 +237,49 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
+                // look for custom models 
+                var modelSubFolders = Directory.GetDirectories(modelsFolder, "faster-whisper-*");
+                foreach (var modelSubFolder in modelSubFolders)
+                {
+                    var folderNameOnly = Path.GetFileName(modelSubFolder);
+                    var x = whisperModel.Models.Where(p => p.Folder.Equals(folderNameOnly, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (!x.Any())
+                    {
+                        long fileSize = 0;
+                        var files = Directory.GetFiles(modelSubFolder, "*" + WhisperHelper.ModelExtension()).ToList();
+                        foreach (var file in files)
+                        {
+                            var fileInfo = new FileInfo(file);
+                            fileSize += fileInfo.Length;
+                        }
+
+                        var model = new WhisperModel
+                        {
+                            Name = folderNameOnly.Remove(0, "faster-whisper-".Length),
+                            AlreadyDownloaded = false,
+                            Folder = Path.Combine(modelsFolder, modelSubFolder),
+                            Rename = false,
+                            Urls = Array.Empty<string>(),
+                            Dynamic = true,
+                            Size = Utilities.FormatBytesToDisplayFileSize(fileSize),
+                        };
+
+                        comboBoxModels.Items.Add(model);
+
+                        if (model.Name == selectName)
+                        {
+                            try
+                            {
+                                comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+                        }
+                    }
+                }
+
                 if (comboBoxModels.SelectedIndex < 0 && comboBoxModels.Items.Count > 0)
                 {
                     try
