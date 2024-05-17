@@ -2257,8 +2257,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <CpsLineLengthStyleCalcNoSpace>Đếm tất cả ngoại trừ dấu cách</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, dấu cách 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Bỏ qua các dấu phụ tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Bỏ qua dấu/dấu cách tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Kí hiệu Âm nhạc</MusicSymbol>
     <MusicSymbolsReplace>Các ký hiệu âm nhạc cần thay thế (phân tách bằng dấu phẩy)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Sửa lỗi OCR phổ biến - cũng sử dụng quy tắc hardcoded</FixCommonOcrErrorsUseHardcodedRules>

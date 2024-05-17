@@ -2535,8 +2535,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<CpsLineLengthStyleCalcNoSpace>Contar todos, menos espaços</CpsLineLengthStyleCalcNoSpace>
 		<CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
 		<CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
-		<CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorar diacríticos em árabe</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-		<CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorar diacríticos/espaço em árabe</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
 		<CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
 		<CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, somente cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
 		<MusicSymbol>Símbolo musical</MusicSymbol>

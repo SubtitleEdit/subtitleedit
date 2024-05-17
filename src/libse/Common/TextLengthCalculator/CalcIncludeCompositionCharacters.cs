@@ -2,12 +2,10 @@
 
 namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
-    public class CalcIgnoreThaiCompositeCharacters : ICalcLength
+    public class CalcIncludeCompositionCharacters : ICalcLength
     {
         /// <summary>
-        /// Calculate all text excluding Thai composite characters (tags are not counted).
-        /// Netflix rule: 35 characters per line (excluding all composite characters, i.e. tone marks, top and bottom vowels are not counted.
-        /// See https://partnerhelp.netflixstudios.com/hc/en-us/articles/220448308-Thai-Timed-Text-Style-Guide
+        /// Calculate all text including composition characters (tags are not counted).
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
@@ -31,14 +29,15 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                         ch != '\u202B' &&
                         ch != '\u202C' &&
                         ch != '\u202D' &&
-                        ch != '\u202E')
+                        ch != '\u202E' &&
+                        !(ch >= '\u064B' && ch <= '\u0653'))
                     {
                         length++;
                     }
                 }
                 else
                 {
-                    length++;
+                    length += element.Length;
                 }
             }
 
