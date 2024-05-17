@@ -2,10 +2,10 @@
 
 namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
-    public class CalcAll : ICalcLength
+    public class CalcIncludeCompositionCharactersNotSpace : ICalcLength
     {
         /// <summary>
-        /// Calculate length of all text including space but excluding composition characters (tags are not counted).
+        /// Calculate all text including composition characters but not space (tags are not counted).
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 {
                     var ch = element[0];
                     if (!char.IsControl(ch) &&
+                        ch != ' ' &&
                         ch != zeroWidthSpace &&
                         ch != zeroWidthNoBreakSpace &&
                         ch != '\u200E' &&
@@ -29,14 +30,15 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                         ch != '\u202B' &&
                         ch != '\u202C' &&
                         ch != '\u202D' &&
-                        ch != '\u202E')
+                        ch != '\u202E' &&
+                        !(ch >= '\u064B' && ch <= '\u0653'))
                     {
                         length++;
                     }
                 }
                 else
                 {
-                    length++;
+                    length += element.Length;
                 }
             }
 

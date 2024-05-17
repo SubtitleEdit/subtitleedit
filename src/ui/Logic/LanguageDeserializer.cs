@@ -6922,11 +6922,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CpsLineLengthStyleCalcCjkNoSpace":
                     language.Settings.CpsLineLengthStyleCalcCjkNoSpace = reader.Value;
                     break;
-                case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacritics":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics = reader.Value;
+                case "Settings/CpsLineLengthStyleCalcIncludeCompositionCharacters":
+                    language.Settings.CpsLineLengthStyleCalcIncludeCompositionCharacters = reader.Value;
                     break;
-                case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = reader.Value;
+                case "Settings/CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace":
+                    language.Settings.CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcNoSpaceOrPunctuation":
                     language.Settings.CpsLineLengthStyleCalcNoSpaceOrPunctuation = reader.Value;
