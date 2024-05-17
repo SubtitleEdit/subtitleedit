@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
 {
@@ -77,14 +78,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             ImageDisplayArea = new Rectangle();
             Bitmap bmp = null;
             var displayControlSequenceTableAddresses = new List<int>();
-            int imageTopFieldDataAddress = 0;
-            int imageBottomFieldDataAddress = 0;
-            bool bitmapGenerated = false;
+            var imageTopFieldDataAddress = 0;
+            var imageBottomFieldDataAddress = 0;
+            var bitmapGenerated = false;
             double largestDelay = -999999;
-            int displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
-            int lastDisplayControlSequenceTableAddress = 0;
+            var displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
+            var lastDisplayControlSequenceTableAddress = 0;
             displayControlSequenceTableAddresses.Add(displayControlSequenceTableAddress);
-            int commandIndex = 0;
+            var commandIndex = 0;
             while (displayControlSequenceTableAddress > lastDisplayControlSequenceTableAddress && displayControlSequenceTableAddress + 1 < _data.Length && commandIndex < _data.Length)
             {
                 int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
@@ -210,6 +211,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return bmp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SetColor(List<Color> fourColors, int fourColorIndex, int clutIndex, List<Color> colorLookUpTable)
         {
             if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
@@ -386,6 +388,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return (Bitmap)bmpImage.Clone();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsBackgroundColor(Color c)
         {
             return c.A < 2;
@@ -400,10 +403,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var colorZeroValue = fourColors[0].ToArgb();
             while (y < bmp.Height && dataAddress + index + 2 < data.Length)
             {
-                int runLength;
-                int color;
-                bool restOfLine;
-                index += DecodeRle(dataAddress + index, data, out color, out runLength, ref onlyHalf, out restOfLine);
+                index += DecodeRle(dataAddress + index, data, out var color, out var runLength, ref onlyHalf, out var restOfLine);
                 if (restOfLine)
                 {
                     runLength = bmp.Width - x;
@@ -502,69 +502,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return 1;
             }
             onlyHalf = true;
+
             return 0;
         }
-
-        //private static int DecodeRleNonOptimized(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
-        //{
-        //    //Value      Bits   n=length, c=color
-        //    //1-3        4      n n c c                           (half a byte)
-        //    //4-15       8      0 0 n n n n c c                   (one byte)
-        //    //16-63     12      0 0 0 0 n n n n n n c c           (one and a half byte)
-        //    //64-255    16      0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
-        //    // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
-        //    restOfLine = false;
-        //    string binary2 = Helper.GetBinaryString(data, index, 3);
-        //    if (onlyHalf)
-        //        binary2 = binary2.Substring(4);
-
-        //    if (binary2.StartsWith("000000"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
-        //        if (runLength == 0)
-        //        {
-        //            // rest of line + skip 4 bits if Only half
-        //            restOfLine = true;
-        //            if (onlyHalf)
-        //            {
-        //                onlyHalf = false;
-        //                return 3;
-        //            }
-        //        }
-        //        return 2;
-        //    }
-
-        //    if (binary2.StartsWith("0000"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
-        //        if (onlyHalf)
-        //        {
-        //            onlyHalf = false;
-        //            return 2;
-        //        }
-        //        onlyHalf = true;
-        //        return 1;
-        //    }
-
-        //    if (binary2.StartsWith("00"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
-        //        return 1;
-        //    }
-
-        //    runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
-        //    color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
-        //    if (onlyHalf)
-        //    {
-        //        onlyHalf = false;
-        //        return 1;
-        //    }
-        //    onlyHalf = true;
-        //    return 0;
-        //}
-
     }
 }
