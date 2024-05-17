@@ -39,37 +39,39 @@ namespace Nikse.SubtitleEdit.Core.Common
             public List<string> GetAllLanguages()
             {
                 var list = new List<string>();
-                for (int i = 0; i < Subtitles.Count; i++)
+                var minCount = Math.Min(Subtitles.Count, Math.Min(SubtitleIDs.Count, SubtitleTypes.Count));
+                for (int i = 0; i < minCount; i++)
                 {
-                    if (i < SubtitleIDs.Count && i < SubtitleTypes.Count)
+                    var ids = SubtitleIDs[i].Split(',');
+                    var types = SubtitleTypes[i].Split(',');
+                    if ((ids.Length == 2 && ids[0].Trim() == ids[1].Trim()) || (ids.Length == 3 && ids[0].Trim() == ids[1].Trim() && ids[1].Trim() == ids[2].Trim()))
                     {
-                        var ids = SubtitleIDs[i].Split(',');
-                        var types = SubtitleTypes[i].Split(',');
-                        if (ids.Length == 2 && ids[0].Trim() == ids[1].Trim() || ids.Length == 3 && ids[0].Trim() == ids[1].Trim() && ids[1].Trim() == ids[2].Trim())
+                        list.Add(Subtitles[i] + " (" + ids[0].Trim() + ")");
+                    }
+                    else
+                    {
+                        if (ids.Length >= 1 && types.Length >= 1)
                         {
-                            list.Add(Subtitles[i] + " (" + ids[0].Trim() + ")");
+                            list.Add(Subtitles[i] + ", " + types[0].Trim() + " (" + ids[0].Trim() + ")");
                         }
-                        else
+
+                        if (ids.Length >= 2 && types.Length >= 2)
                         {
-                            if (ids.Length >= 1 && types.Length >= 1)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[0].Trim() + " (" + ids[0].Trim() + ")");
-                            }
-                            if (ids.Length >= 2 && types.Length >= 2)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[1].Trim() + " (" + ids[1].Trim() + ")");
-                            }
-                            if (ids.Length >= 3 && types.Length >= 3)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[2].Trim() + " (" + ids[2].Trim() + ")");
-                            }
-                            if (ids.Length >= 4 && types.Length >= 4)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[3].Trim() + " (" + ids[3].Trim() + ")");
-                            }
+                            list.Add(Subtitles[i] + ", " + types[1].Trim() + " (" + ids[1].Trim() + ")");
+                        }
+
+                        if (ids.Length >= 3 && types.Length >= 3)
+                        {
+                            list.Add(Subtitles[i] + ", " + types[2].Trim() + " (" + ids[2].Trim() + ")");
+                        }
+
+                        if (ids.Length >= 4 && types.Length >= 4)
+                        {
+                            list.Add(Subtitles[i] + ", " + types[3].Trim() + " (" + ids[3].Trim() + ")");
                         }
                     }
                 }
+
                 return list;
             }
 
