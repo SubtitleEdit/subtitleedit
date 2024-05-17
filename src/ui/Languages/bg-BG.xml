@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 09.05.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 16.05.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -557,7 +557,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NoUpdates>Не обновявай</NoUpdates>
     <XPluginsHasAnUpdate>{0} приставки (Plugins) имат актуализации -</XPluginsHasAnUpdate>
     <OnePluginsHasAnUpdate>Една приставка (Plugin) има актуализация -</OnePluginsHasAnUpdate>
-    <Update>обновление</Update>
+    <Update>обновяване</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Избор на аудио пътечка</Title>
@@ -573,7 +573,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Language>Език</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title>Избиране на цвят</Title>
+    <Title>Избор на цвят</Title>
     <Red>Червен</Red>
     <Green>Зелен</Green>
     <Blue>Син</Blue>
@@ -581,7 +581,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </ColorChooser>
   <ColumnPaste>
     <Title>Поставяне на колона</Title>
-    <ChooseColumn>Избиране на колона</ChooseColumn>
+    <ChooseColumn>Избор на колона</ChooseColumn>
     <OverwriteShiftCellsDown>Презаписване/Преместване на клетките надолу</OverwriteShiftCellsDown>
     <Overwrite>Презаписване</Overwrite>
     <ShiftCellsDown>Преместване на клетките надолу</ShiftCellsDown>
@@ -1604,7 +1604,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateProgressBar>Генериране на лента за напредък...</GenerateProgressBar>
         <AssaResolutionChanger>Промяна резолюцията на скрипт ASSA...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Генериране на фоново поле...</AssaGenerateBackgroundBox>
-        <ImageColorPicker>Избор на цвят на изображението...</ImageColorPicker>
+        <ImageColorPicker>Избиране цвят на изображението...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Поправяне на грешки в избраните редове ...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Промяна големината на буквите в избраните редове ...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Запис на избраните редове като...</SaveSelectedLines>
@@ -1667,7 +1667,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <SetStartTimeAndOffsetTheRest>НачалоИзместиОстаналите</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Търсене на текст в Интернет</SearchTextOnline>
       <GoogleTranslate>Google превод</GoogleTranslate>
-      <AutoTranslate>Авто-превод</AutoTranslate>
+      <AutoTranslate>Автоматично превеждане</AutoTranslate>
       <GoogleIt>Търси в Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -2340,7 +2340,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeautifyTimeCodes>Разкрасяване на времевите кодове</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Превключване на отметки</ToggleBookmarks>
-    <FocusTextBox>Фокус в/у текстовото поле</FocusTextBox>
+    <FocusTextBox>Фокусиране върху текстовото поле</FocusTextBox>
     <ToggleBookmarksWithComment>Превключване на отметки - добавяне на коментар</ToggleBookmarksWithComment>
     <ClearBookmarks>Изчистване на отметките</ClearBookmarks>
     <ExportBookmarks>Експорт на отметки...</ExportBookmarks>
@@ -2546,6 +2546,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CpsLineLengthStyleCalcNoSpace>Преброяване на всички, без интервалите</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, латински 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латински 0,5, интервал 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнорирай Арабските диакритични символи</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Игнорирай Арабските диакритични символи/интервал</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препинателни знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без интервал или препинателни знаци, само cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Замяна с музикален символ:</MusicSymbol>
@@ -3181,6 +3183,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Play>Възпроизвеждане</Play>
     <AutoContinue>Авт. продължаване</AutoContinue>
     <Regenerate>Регенериране</Regenerate>
+    <Speed>Скорост</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE синхронизация</Title>
@@ -3351,6 +3354,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <InspectItems>Проверка на елементите</InspectItems>
     <AddBetterMatch>Добавяне на по-вярно съвпадение</AddBetterMatch>
     <Add>Добави</Add>
+    <AddBetterMultiMatch>Добавяне на по-добро мулти съвпадение</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Добавяне или актуализиране на съвпадение</AddOrUpdateMatch>
+    <SelectPrevousMatch>Избор на предишното съвпадение</SelectPrevousMatch>
+    <SelectNextMatch>Избор на следващото съвпадение</SelectNextMatch>
+    <JumpPreviousMissingMatch>Преминаване към предишното липсващо съвпадение</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Преминаване към следващото липсващо съвпадение</JumpNextMissingMatch>
+    <FocusTextbox>Фокусиране върху въвеждането на текст</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Нова папка</Title>
