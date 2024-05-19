@@ -1016,6 +1016,8 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <AlignRight>Juster til højre</AlignRight>
     <GetStartPosition>Hent startposition</GetStartPosition>
     <GetEndPosition>Hent slutposition</GetEndPosition>
+    <UseSource>Brug kilde</UseSource>
+    <UseSourceResolution>Brug kildeopløsning</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generer video med indlejrede undertekster</Title>
@@ -2535,6 +2537,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CpsLineLengthStyleCalcNoSpace>Tæl alle undtagen mellemrum</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, mellemrum 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Kompositionstegn tæller ekstra</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>kompositionstegn tæller ekstra, tæl ikke mellemrum</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Intet mellemrum eller tegnsætning ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Ingen mellemrum eller tegnsætning, kun cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Musik symbol</MusicSymbol>
@@ -3170,6 +3174,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Play>Spil</Play>
     <AutoContinue>Auto-fortsæt</AutoContinue>
     <Regenerate>Regenerer</Regenerate>
+    <Speed>Fart</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
@@ -3338,6 +3343,13 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <InspectItems>Undersøg elementer</InspectItems>
     <AddBetterMatch>Tilføj bedre match</AddBetterMatch>
     <Add>Tilføj</Add>
+    <AddBetterMultiMatch>Tilføj bedre multimatch</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Tilføj eller opdater match</AddOrUpdateMatch>
+    <SelectPrevousMatch>Vælg den forrige kamp</SelectPrevousMatch>
+    <SelectNextMatch>Vælg næste kamp</SelectNextMatch>
+    <JumpPreviousMissingMatch>Hop til den forrige manglende kamp</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Hop til den næste manglende kamp</JumpNextMissingMatch>
+    <FocusTextbox>Fokuser tekstinputtet</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mappe</Title>

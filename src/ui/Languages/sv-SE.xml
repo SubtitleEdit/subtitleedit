@@ -1022,6 +1022,8 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <AlignRight>Justera höger</AlignRight>
     <GetStartPosition>Få startposition</GetStartPosition>
     <GetEndPosition>Få slutposition</GetEndPosition>
+    <UseSource>Använd källa</UseSource>
+    <UseSourceResolution>Använd källupplösning</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Skapa video med inbäddade undertexter</Title>
@@ -2544,6 +2546,8 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <CpsLineLengthStyleCalcNoSpace>Räkna alla utom mellanslag</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, mellanslag 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Inkludera kompositionstecken</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Inkludera kompositionstecken, inte mellanslag</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Inget mellanslag eller skiljetecken ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Inget mellanslag eller skiljetecken, endast cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Musiksymbol</MusicSymbol>
@@ -3180,6 +3184,7 @@ och N bryter</WrapStyle2>
     <Play>Spela</Play>
     <AutoContinue>Auto-fortsätt</AutoContinue>
     <Regenerate>Regenerera</Regenerate>
+    <Speed>Fart</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
@@ -3350,6 +3355,13 @@ Behålla ändringarna?</KeepChangesMessage>
     <InspectItems>Inspektera objekt</InspectItems>
     <AddBetterMatch>Lägg till en bättre matchning</AddBetterMatch>
     <Add>Lägg till</Add>
+    <AddBetterMultiMatch>Lägg till bättre multimatch</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Lägg till eller uppdatera matchning</AddOrUpdateMatch>
+    <SelectPrevousMatch>Välj föregående match</SelectPrevousMatch>
+    <SelectNextMatch>Välj nästa match</SelectNextMatch>
+    <JumpPreviousMissingMatch>Hoppa till föregående saknade match</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Hoppa till nästa saknade match</JumpNextMissingMatch>
+    <FocusTextbox>Fokusera textinmatningen</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mapp</Title>
