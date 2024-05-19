@@ -103,6 +103,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
+                var progressReport = new Progress<float>((progress) =>
+                {
+                    var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                });
                 foreach (var url in LastDownloadedModel.Urls)
                 {
                     using (var httpClient = DownloaderFactory.MakeHttpClient())
@@ -112,11 +117,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         labelFileName.Text = url.Split('/').Last();
                         using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
                         {
-                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
-                            {
-                                var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                            }), _cancellationTokenSource.Token);
+                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, progressReport,
+                                _cancellationTokenSource.Token);
 
                             while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
                             {
