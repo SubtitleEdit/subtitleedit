@@ -18,6 +18,7 @@
     <Preview>Förhandsgranska</Preview>
     <ShowPreview>Visa förhandsgranskning</ShowPreview>
     <HidePreview>Dölj förhandsgranskning</HidePreview>
+    <SubtitleFile>Undertextfil</SubtitleFile>
     <SubtitleFiles>Text filer</SubtitleFiles>
     <AllFiles>Alla filer</AllFiles>
     <VideoFiles>Videofiler</VideoFiles>
@@ -1024,6 +1025,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <GetEndPosition>Få slutposition</GetEndPosition>
     <UseSource>Använd källa</UseSource>
     <UseSourceResolution>Använd källupplösning</UseSourceResolution>
+    <OutputSettings>Utdatafil/mapp...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Skapa video med inbäddade undertexter</Title>
@@ -1063,14 +1065,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <To>Till:</To>
     <Translate>Översätt</Translate>
     <PleaseWait>Vänta... detta kan ta en stund</PleaseWait>
-    <PoweredByGoogleTranslate>Använder sig av Google översätt</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Använder sig av Microsoft översätt</PoweredByMicrosoftTranslate>
     <PoweredByX>Drivs av {0}</PoweredByX>
-    <MsClientSecretNeeded>Tyvärr, du behöver en Cognitive Services 'Translator Text'-nyckel från Microsoft för att använda den senaste Microsoft Translator.
-
-Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nyckel.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Provar att översätta utan API-nyckel... (långsam och databegränsad)</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Linjesammanfogning:</LineMergeHandling>
     <ProcessorMergeNext>Slå samman max två rader</ProcessorMergeNext>
     <ProcessorSentence>Slå samman meningar</ProcessorSentence>
@@ -1097,6 +1092,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
     <Delay>Fördröjning mellan serversamtal</Delay>
     <MaxBytes>Maximalt antal byte i varje serveranrop</MaxBytes>
     <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Översätt varje rad separat</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google mot Microsoft translate</Title>
