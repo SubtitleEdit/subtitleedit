@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             comboBoxParagraphHandling.Items.Clear();
             comboBoxParagraphHandling.Items.Add(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Default);
-            comboBoxParagraphHandling.Items.Add("Translate each line separately");
+            comboBoxParagraphHandling.Items.Add(LanguageSettings.Current.GoogleTranslate.TranslateLinesSeparately);
             comboBoxParagraphHandling.SelectedIndex = 0;
             if (Enum.TryParse<TranslateStrategy>(Configuration.Settings.Tools.AutoTranslateStrategy, out var ts) &&
                 ts == TranslateStrategy.TranslateEachLineSeparately)

@@ -18,6 +18,7 @@
     <Preview>Preview</Preview>
     <ShowPreview>Show preview</ShowPreview>
     <HidePreview>Hide preview</HidePreview>
+    <SubtitleFile>Subtitle file</SubtitleFile>
     <SubtitleFiles>Subtitle files</SubtitleFiles>
     <AllFiles>All files</AllFiles>
     <VideoFiles>Video files</VideoFiles>
@@ -1022,6 +1023,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <GetEndPosition>Get end position</GetEndPosition>
     <UseSource>Use source</UseSource>
     <UseSourceResolution>Use source resolution</UseSourceResolution>
+    <OutputSettings>Output file/folder...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generate video with added/removed embedded subtitles</Title>
@@ -1061,15 +1063,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <To>To:</To>
     <Translate>Translate</Translate>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
     <PoweredByX>Powered by {0}</PoweredByX>
-    <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
-
-Go to "Options -&gt; Settings -&gt; Auto-translate" to enter your key.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
-To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter your Google translate API key.</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Line merge:</LineMergeHandling>
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
     <ProcessorSentence>Merge sentences</ProcessorSentence>
@@ -1096,6 +1090,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
     <Delay>Delay between server calls</Delay>
     <MaxBytes>Maximum bytes in each server call</MaxBytes>
     <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Translate each line separately</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>

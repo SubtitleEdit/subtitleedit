@@ -22,6 +22,7 @@
             public string Preview { get; set; }
             public string ShowPreview { get; set; }
             public string HidePreview { get; set; }
+            public string SubtitleFile { get; set; }
             public string SubtitleFiles { get; set; }
             public string AllFiles { get; set; }
             public string VideoFiles { get; set; }
@@ -1097,6 +1098,7 @@
             public string GetEndPosition { get; set; }
             public string UseSource { get; set; }
             public string UseSourceResolution { get; set; }
+            public string OutputSettings { get; set; }
         }
 
         public class GenerateVideoWithEmbeddedSubs
@@ -1144,12 +1146,7 @@
             public string To { get; set; }
             public string Translate { get; set; }
             public string PleaseWait { get; set; }
-            public string PoweredByGoogleTranslate { get; set; }
-            public string PoweredByMicrosoftTranslate { get; set; }
             public string PoweredByX { get; set; }
-            public string MsClientSecretNeeded { get; set; }
-            public string GoogleNoApiKeyWarning { get; set; }
-            public string Service { get; set; }
             public string LineMergeHandling { get; set; }
             public string ProcessorMergeNext { get; set; }
             public string ProcessorSentence { get; set; }
@@ -1175,6 +1172,7 @@
             public string Delay { get; set; }
             public string MaxBytes { get; set; }
             public string PromptX { get; set; }
+            public string TranslateLinesSeparately { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
