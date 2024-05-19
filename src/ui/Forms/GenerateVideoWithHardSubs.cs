@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             labelPreviewPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            nikseLabelOutline.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
             numericUpDownOutline.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
@@ -109,6 +110,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             useSourceResolutionToolStripMenuItem.Text =  LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
+            columnHeaderVideoFile.Text = LanguageSettings.Current.Settings.VideoFileName;
+            columnHeaderResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
+            columnHeaderSize.Text = LanguageSettings.Current.General.Size;
+            columnHeaderStatus.Text = LanguageSettings.Current.BatchConvert.Status;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;

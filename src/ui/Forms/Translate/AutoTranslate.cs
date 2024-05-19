@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             Text = LanguageSettings.Current.Main.VideoControls.AutoTranslate;
             buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
             labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
+            buttonStrategy.Text = LanguageSettings.Current.General.Advanced;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelUrl.Text = LanguageSettings.Current.Main.Url;
