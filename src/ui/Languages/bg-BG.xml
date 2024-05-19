@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 16.05.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 20.05.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1377,7 +1377,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Redo>Повтори действието</Redo>
         <ShowUndoHistory>Показване на хронология (за отмяна)</ShowUndoHistory>
         <InsertUnicodeSymbol>Вмъкване на Unicode символ</InsertUnicodeSymbol>
-        <InsertUnicodeControlCharacters>Вмъкване на Unicode контролен символ</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharacters>Вмъкване на Unicode контролни символи</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Маркер отЛяво-наДясно (LRM)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Маркер отДясно-наЛяво (RLM)</InsertUnicodeControlCharactersRLM>
         <InsertUnicodeControlCharactersLRE>Започване на стандартно вграждане отЛяво-наДясно (LRM)</InsertUnicodeControlCharactersLRE>
@@ -1876,7 +1876,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OcrReplacePairXAdded>За замяна в ОСR списъка «{0} -&gt; {1}» добавени към ОСR списъка за замяна</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>За замяна в ОСR списъка «{0} -&gt; {1}» НЕ добавени към ОСR списъка за замяна</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} избрани реда</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Субтитрите съдържат музикални символи в Unicode. Ако файла се запише кодиран в ANSI формат, те ще се загубят. Искате ли да продължите?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Субтитрите съдържат Unicode символи. Ако файла се запише кодиран в ANSI формат, те ще се загубят. Искате ли да продължите?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Субтитрите съдържат кодове с отрицателни времена. Искате ли да продължите записването?</NegativeTimeWarning>
     <BeforeMergeShortLines>Преди обединяването на кратки редове</BeforeMergeShortLines>
     <MergedShortLinesX>Брой обединени редове: {0}</MergedShortLinesX>
@@ -2546,8 +2546,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CpsLineLengthStyleCalcNoSpace>Преброяване на всички, без интервалите</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, латински 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латински 0,5, интервал 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнорирай Арабските диакритични символи</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Игнорирай Арабските диакритични символи/интервал</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Включване на композиционни символи</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Включване на композиционни символи, а не интервал</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препинателни знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без интервал или препинателни знаци, само cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Замяна с музикален символ:</MusicSymbol>
