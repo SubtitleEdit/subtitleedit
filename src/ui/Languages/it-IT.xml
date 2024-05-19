@@ -18,6 +18,7 @@
     <Preview>Anteprima</Preview>
     <ShowPreview>Visualizza anteprima</ShowPreview>
     <HidePreview>Nascondi anteprima</HidePreview>
+    <SubtitleFile>File sottotitoli</SubtitleFile>
     <SubtitleFiles>File sottotitoli</SubtitleFiles>
     <AllFiles>Tutti i file</AllFiles>
     <VideoFiles>File video</VideoFiles>
@@ -1022,6 +1023,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <GetEndPosition>Ottieni posizione finale</GetEndPosition>
     <UseSource>Usa sorgente</UseSource>
     <UseSourceResolution>Usa risoluzione sorgente</UseSourceResolution>
+    <OutputSettings>File/cartella destinazione...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Genera video con sottotitoli incorporati aggiunti/rimossi</Title>
@@ -1061,15 +1063,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <To>A:</To>
     <Translate>Traduci</Translate>
     <PleaseWait>Attendi. Ci potrebbe volere un po di tempo.</PleaseWait>
-    <PoweredByGoogleTranslate>Servizio traduzione di Google</PoweredByGoogleTranslate>
     <PoweredByX>Offerto da {0}</PoweredByX>
-    <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Per usare il traduttore Microsoft più recente, è necessaria una chiave "Testo traduttore" dei servizi cognitivi.
-
-Per inserire la chiave vai in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica" .</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Tentativo di tradurre senza chiave API... (dati lenti e limitati). 
-Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica".</GoogleNoApiKeyWarning>
-    <Service>Servizio:</Service>
     <LineMergeHandling>Unione righe:</LineMergeHandling>
     <ProcessorMergeNext>Unisci massimo due righe</ProcessorMergeNext>
     <ProcessorSentence>Unisci frasi</ProcessorSentence>
@@ -1096,6 +1090,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
     <Delay>Ritardo tra chiamate al server</Delay>
     <MaxBytes>Numero massimo byte in ciascuna chiamata al server</MaxBytes>
     <PromptX>Prompt per {0}</PromptX>
+    <TranslateLinesSeparately>Traduci ogni riga separatamente</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traduttore Google contro traduttore Microsoft</Title>
