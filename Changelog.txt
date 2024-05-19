@@ -23,6 +23,7 @@
    * Some improvements for auto-translate
    * Set default ChatGPT model to the new "gpt-4o"
    * Add hot keys to the binary OCR "character-inspect-window" - thx trienow
+   * Update WhisperCPP to 1.6.0
 * FIXED:
    * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
