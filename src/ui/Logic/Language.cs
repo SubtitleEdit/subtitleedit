@@ -156,6 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Preview = "Preview",
                 ShowPreview = "Show preview",
                 HidePreview = "Hide preview",
+                SubtitleFile = "Subtitle file",
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
                 VideoFiles = "Video files",
@@ -1277,6 +1278,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GetEndPosition = "Get end position",
                 UseSource = "Use source",
                 UseSourceResolution = "Use source resolution",
+                OutputSettings = "Output file/folder...",
             };
 
             GenerateVideoWithEmbeddedSubs = new LanguageStructure.GenerateVideoWithEmbeddedSubs
@@ -1324,14 +1326,7 @@ namespace Nikse.SubtitleEdit.Logic
                 To = "To:",
                 Translate = "Translate",
                 PleaseWait = "Please wait... this may take a while",
-                PoweredByGoogleTranslate = "Powered by Google translate",
-                PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
                 PoweredByX = "Powered by {0}",
-                MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
-                                       Environment.NewLine +
-                                       "Go to \"Options -> Settings -> Auto-translate\" to enter your key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key, go to \"Options -> Settings -> Auto-translate\" to enter your Google translate API key.",
-                Service = "Service:",
                 LineMergeHandling = "Line merge:",
                 ProcessorMergeNext = "Merge max two lines",
                 ProcessorSentence = "Merge sentences",
@@ -1357,6 +1352,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MaxBytes = "Maximum bytes in each server call",
                 MergeSplitStrategy = "Split/merge handling",
                 PromptX = "Prompt for {0}",
+                TranslateLinesSeparately = "Translate each line separately",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
             numericUpDownOutline.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
+            buttonOutlineColor.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.OutputSettings;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelAudioEnc.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
             labelVideoEncoding.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
@@ -114,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             columnHeaderSize.Text = LanguageSettings.Current.General.Size;
             columnHeaderStatus.Text = LanguageSettings.Current.BatchConvert.Status;
+            columnHeaderSubtitleFile.Text = LanguageSettings.Current.General.SubtitleFile;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;

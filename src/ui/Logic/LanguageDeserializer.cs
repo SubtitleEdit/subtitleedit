@@ -109,6 +109,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/HidePreview":
                     language.General.HidePreview = reader.Value;
                     break;
+                case "General/SubtitleFile":
+                    language.General.SubtitleFile = reader.Value;
+                    break;
                 case "General/SubtitleFiles":
                     language.General.SubtitleFiles = reader.Value;
                     break;
@@ -2707,6 +2710,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/UseSourceResolution":
                     language.GenerateVideoWithBurnedInSubs.UseSourceResolution = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/OutputSettings":
+                    language.GenerateVideoWithBurnedInSubs.OutputSettings = reader.Value;
+                    break;
                 case "GenerateVideoWithEmbeddedSubs/Title":
                     language.GenerateVideoWithEmbeddedSubs.Title = reader.Value;
                     break;
@@ -2800,23 +2806,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/PleaseWait":
                     language.GoogleTranslate.PleaseWait = reader.Value;
                     break;
-                case "GoogleTranslate/PoweredByGoogleTranslate":
-                    language.GoogleTranslate.PoweredByGoogleTranslate = reader.Value;
-                    break;
-                case "GoogleTranslate/PoweredByMicrosoftTranslate":
-                    language.GoogleTranslate.PoweredByMicrosoftTranslate = reader.Value;
-                    break;
                 case "GoogleTranslate/PoweredByX":
                     language.GoogleTranslate.PoweredByX = reader.Value;
-                    break;
-                case "GoogleTranslate/MsClientSecretNeeded":
-                    language.GoogleTranslate.MsClientSecretNeeded = reader.Value;
-                    break;
-                case "GoogleTranslate/GoogleNoApiKeyWarning":
-                    language.GoogleTranslate.GoogleNoApiKeyWarning = reader.Value;
-                    break;
-                case "GoogleTranslate/Service":
-                    language.GoogleTranslate.Service = reader.Value;
                     break;
                 case "GoogleTranslate/LineMergeHandling":
                     language.GoogleTranslate.LineMergeHandling = reader.Value;
@@ -2892,6 +2883,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "GoogleTranslate/PromptX":
                     language.GoogleTranslate.PromptX = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateLinesSeparately":
+                    language.GoogleTranslate.TranslateLinesSeparately = reader.Value;
                     break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
