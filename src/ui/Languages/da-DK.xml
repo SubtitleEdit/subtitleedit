@@ -18,6 +18,7 @@
     <Preview>Vist test</Preview>
     <ShowPreview>Vis forhåndsvisning</ShowPreview>
     <HidePreview>Skjul forhåndsvisning</HidePreview>
+    <SubtitleFile>Undertekst fil</SubtitleFile>
     <SubtitleFiles>Undertekst filer</SubtitleFiles>
     <AllFiles>Alle filer</AllFiles>
     <VideoFiles>Video filer</VideoFiles>
@@ -1018,6 +1019,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <GetEndPosition>Hent slutposition</GetEndPosition>
     <UseSource>Brug kilde</UseSource>
     <UseSourceResolution>Brug kildeopløsning</UseSourceResolution>
+    <OutputSettings>Output fil/mappe...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generer video med indlejrede undertekster</Title>
@@ -1057,14 +1059,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <To>Til:</To>
     <Translate>Oversæt</Translate>
     <PleaseWait>Vent venligst... dette kan tage et stykke tid</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft Bing Translate</PoweredByMicrosoftTranslate>
     <PoweredByX>Drevet af {0}</PoweredByX>
-    <MsClientSecretNeeded>Der kræver en Bing "client secret" from Microsoft for at benytte Bing Translate.
-
-Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bing "client secret".</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Forsøger at oversætte uden API nøgle... (langsomt/begrænser/risiko for fejl)</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Linjesammenlægning:</LineMergeHandling>
     <ProcessorMergeNext>Flet maks to linjer</ProcessorMergeNext>
     <ProcessorSentence>Flet sætninger</ProcessorSentence>
@@ -1091,6 +1086,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <Delay>Forsinkelse mellem serveropkald</Delay>
     <MaxBytes>Maksimalt antal bytes i hvert serverkald</MaxBytes>
     <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Oversæt hver linje separat</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
