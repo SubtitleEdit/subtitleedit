@@ -1013,6 +1013,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AlignRight>오른쪽 정렬</AlignRight>
     <GetStartPosition>시작 지점 얻기</GetStartPosition>
     <GetEndPosition>끝 지점 얻기</GetEndPosition>
+    <UseSource>원본 사용</UseSource>
+    <UseSourceResolution>원본 해상도 사용</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>자막이 내장된 비디오 파일 생성</Title>
@@ -2542,6 +2544,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CpsLineLengthStyleCalcNoSpace>모든 공백을 제외한 수</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>한중일 1, 라틴어 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>한중일 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>합성 문자 포함</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>합성 문자 포함, 공백 무시</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>공백 또는 구두점()[]-:;,.!? 없음</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>공백 또는 구두점 없음, cps 만</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>음표</MusicSymbol>
@@ -3177,6 +3181,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Play>재생</Play>
     <AutoContinue>자동 계속</AutoContinue>
     <Regenerate>재생성</Regenerate>
+    <Speed>속도</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 타이밍</Title>
@@ -3346,6 +3351,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <InspectItems>항목 검사</InspectItems>
     <AddBetterMatch>일치 항목 추가</AddBetterMatch>
     <Add>추가</Add>
+    <AddBetterMultiMatch>다중 일치 항목 추가</AddBetterMultiMatch>
+    <AddOrUpdateMatch>일치 항목 추가 또는 업데이트</AddOrUpdateMatch>
+    <SelectPrevousMatch>이전 일치 항목 선택</SelectPrevousMatch>
+    <SelectNextMatch>다음 일치 항목 선택</SelectNextMatch>
+    <JumpPreviousMissingMatch>이전 누락된 일치 항목으로 이동</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>다음 누락된 일치 항목으로 이동</JumpNextMissingMatch>
+    <FocusTextbox>텍스트 입력에 포커스</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>새 폴더</Title>
