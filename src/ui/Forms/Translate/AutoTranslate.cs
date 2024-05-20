@@ -340,29 +340,49 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/'),
                 });
 
+                var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+
+                //TODO: move to refresh models context menu
+                //using (var httpClient = new HttpClient())
+                //{
+                //    try
+                //    {
+                //        httpClient.Timeout = TimeSpan.FromSeconds(5);
+                //        var url = "http://localhost:11434/api/tags";
+                //        var resultTask = httpClient.GetAsync(new Uri(url));
+
+                //        var result = resultTask.Result;
+                //        var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                //        if (result.IsSuccessStatusCode)
+                //        {
+                //            var parser = new SeJsonParser();
+                //            var resultJson = Encoding.UTF8.GetString(bytes);
+                //            var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
+                //            foreach (var name in names.OrderByDescending(p => p))
+                //            {
+                //                models.Remove(name);
+                //                models.Insert(0, name);
+                //            }
+                //        }
+                //    }
+                //    catch (Exception exception)
+                //    {
+                //        SeLogger.Error(exception, "Unable to get ollama models");
+                //    }
+                //}
+
                 labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
                 labelFormality.Visible = true;
+
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
                 comboBoxFormality.Enabled = true;
                 comboBoxFormality.Left = labelFormality.Right + 3;
                 comboBoxFormality.Visible = true;
-                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
-                comboBoxFormality.Items.Clear();
-                comboBoxFormality.Items.Add("llama3");
-                comboBoxFormality.Items.Add("llama2");
-                comboBoxFormality.Items.Add("mistral");
-                comboBoxFormality.Items.Add("dolphin-phi");
-                comboBoxFormality.Items.Add("phi");
-                comboBoxFormality.Items.Add("neural-chat");
-                comboBoxFormality.Items.Add("starling-lm");
-                comboBoxFormality.Items.Add("codellama");
-                comboBoxFormality.Items.Add("llama2-uncensored");
-                comboBoxFormality.Items.Add("llama2:13b");
-                comboBoxFormality.Items.Add("llama2:70b");
-                comboBoxFormality.Items.Add("orca-mini");
-                comboBoxFormality.Items.Add("vicuna");
-                comboBoxFormality.Items.Add("llava");
-                comboBoxFormality.Items.Add("gemma:2b");
-                comboBoxFormality.Items.Add("gemma:7b");
+                foreach (var model in models)
+                {
+                    comboBoxFormality.Items.Add(model);
+                }
                 comboBoxFormality.Text = Configuration.Settings.Tools.OllamaModel;
 
                 return;

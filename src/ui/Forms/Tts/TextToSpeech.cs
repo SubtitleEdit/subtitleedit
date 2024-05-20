@@ -1157,22 +1157,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
-                var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
-                var result = httpClient.GetAsync(new Uri(url)).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    Cursor = Cursors.Default;
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form Azure via url \"{url}\" : Status code={result.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
-                    return new List<AzureVoiceModel>();
-                }
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
+                    var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
+                    var result = httpClient.GetAsync(new Uri(url)).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
-                File.WriteAllBytes(jsonFileName, bytes);
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form Azure via url \"{url}\" : Status code={result.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<AzureVoiceModel>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
             }
 
             var json = File.ReadAllText(jsonFileName);
