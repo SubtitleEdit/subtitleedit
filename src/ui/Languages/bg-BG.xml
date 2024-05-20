@@ -2387,7 +2387,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <StartWithLastFileLoaded>Стартиране с последния зареден файл</StartWithLastFileLoaded>
     <RememberSelectedLine>Запомняне на избрания ред</RememberSelectedLine>
     <RememberPositionAndSize>Запомняне позицията и размера на главния прозорец</RememberPositionAndSize>
-    <StartInSourceView>Стартиране в «Изглед оригинал»</StartInSourceView>
+    <StartInSourceView>След стартиране показване на оригиналния списък</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Премахване на празните редове при отваряне на субтитри</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Премахване на празни редове</RemoveBlankLines>
     <ApplyAssaOverrideTags>Прилагане на ASSA предефиниране на таговете за избор</ApplyAssaOverrideTags>
@@ -2395,14 +2395,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <SetAssaResolution>Задаване резолюция на ASSA (PlayResX/PlayResY)</SetAssaResolution>
     <SetAssaBgBox>Задаване фоново поле на ASSA</SetAssaBgBox>
     <TakeAutoBackup>Направи автоматично архивиране сега</TakeAutoBackup>
-    <ShowLineBreaksAs>Показване прекъсвания на ред в «Изглед на списъка», като:</ShowLineBreaksAs>
+    <ShowLineBreaksAs>Показване прекъсванията на редовете в изгледа на списъка като:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>«Запазване като...» използва името на файла от:</SaveAsFileNameFrom>
-    <MainListViewDoubleClickAction>Двойно кликване в/у ред в «Изглед на списъка» на главния прозорец ще:</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>При двойно кликване в/у ред в изгледа на списъка в главния прозорец:</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Изберете колони за показване</MainListViewColumnsInfo>
     <MainListViewNothing>Нищо</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Преминаване до позицията на видеото и пауза</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Преминаване до позицията на видеото и възпроизвеждане</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Преминаване до позицията на видеото, възпр. на текущото и пауза</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Преминаване до позиц.на видеото, възпр.на текущото и пауза</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Преминаване до панела за редактиране на текст</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Преминаване на видео позиция - 1 сек и пауза</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Преминаване на видео позиция - 0,5 сек и пауза</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2542,14 +2542,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <ContinuationStyleCustom>Потребителски</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/дължина на реда</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Преброяване на всички символи</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Преброяване на всички, без интервалите, само cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Преброяване на вс.,без интерв.,само cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Преброяване на всички, без интервалите</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, латински 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латински 0,5, интервал 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Включване на композиционни символи</CpsLineLengthStyleCalcIncludeCompositionCharacters>
-    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Включване на композиционни символи, а не интервал</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препинателни знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без интервал или препинателни знаци, само cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Вкл. на композиц. символи,а не интервал</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препин.знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без интервал или препин.знаци,само cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Замяна с музикален символ:</MusicSymbol>
     <MusicSymbolsReplace>Музикални символи за замяна (разделени със запетая)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR(разпознаване на текст) грешки</FixCommonOcrErrorsUseHardcodedRules>
