@@ -106,8 +106,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            outputText = FixNewLines(outputText);
             outputText = RemovePreamble(text, outputText);
             return outputText.Trim();
         }
@@ -210,6 +209,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private static TranslationPair MakePair(string nameCode, string twoLetter)
         {
             return new TranslationPair(nameCode, nameCode, twoLetter);
+        }
+
+        internal static string FixNewLines(string outputText)
+        {
+            outputText = outputText.Replace("<br/>", Environment.NewLine);
+            outputText = outputText.Replace("<br />", Environment.NewLine);
+            outputText = outputText.Replace("<br  />", Environment.NewLine);
+            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            return outputText.Trim();
         }
     }
 }
