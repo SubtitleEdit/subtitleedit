@@ -83,9 +83,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (!string.IsNullOrEmpty(outputText))
             {
-                outputText = outputText.Replace("<br />", Environment.NewLine);
-                outputText = outputText.Replace("<br/>", Environment.NewLine);
-                outputText = outputText.Replace("<br>", Environment.NewLine);
+                outputText = ChatGptTranslate.FixNewLines(outputText);
             }
 
             return outputText;
