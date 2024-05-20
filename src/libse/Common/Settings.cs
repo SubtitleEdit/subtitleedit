@@ -181,6 +181,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
         public string OllamaApiUrl { get; set; }
+        public string OllamaModels { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
 
@@ -561,6 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             ChatGptModel = "gpt-4o";
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
+            OllamaModels = "llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
             OllamaModel = "llama3";
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
@@ -5427,6 +5429,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OllamaApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaModels");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaModels = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("OllamaModel");
@@ -12068,6 +12076,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
                 textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
                 textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                textWriter.WriteElementString("OllamaModels", settings.Tools.OllamaModels);
                 textWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
                 textWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
                 textWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);

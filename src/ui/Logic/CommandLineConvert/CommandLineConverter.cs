@@ -1262,8 +1262,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var argument = commandLineArguments[i];
                 foreach (var actionName in actionNames)
                 {
-                    if (argument.StartsWith("/" + actionName, StringComparison.OrdinalIgnoreCase) ||
-                        argument.StartsWith("-" + actionName, StringComparison.OrdinalIgnoreCase))
+                    if (!actionName.EndsWith(':') &&
+                        (argument.Equals("/" + actionName, StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-" + actionName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        actions.Add(argument);
+                        commandLineArguments.RemoveAt(i);
+                    }
+                    else if (actionName.EndsWith(':') &&
+                        (argument.StartsWith("/" + actionName, StringComparison.OrdinalIgnoreCase) ||
+                         argument.StartsWith("-" + actionName, StringComparison.OrdinalIgnoreCase)))
                     {
                         actions.Add(argument);
                         commandLineArguments.RemoveAt(i);
@@ -2189,9 +2197,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             {
                 foreach (var actionString in actions)
                 {
-                    if (Enum.TryParse(actionString, out BatchAction action))
+                    if (Enum.TryParse(actionString.TrimStart('/', '-'), out BatchAction action))
                     {
-
                         switch (action)
                         {
                             case BatchAction.FixCommonErrors:
@@ -2357,9 +2364,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     sub.Renumber();
                 }
             }
-
-
-            if (action.StartsWith("deleteLast:", StringComparison.OrdinalIgnoreCase))
+            else if (action.StartsWith("deleteLast:", StringComparison.OrdinalIgnoreCase))
             {
                 var deleteLast = GetArgument(new List<string> { actionString }, "deletelast:");
                 if (int.TryParse(deleteLast, out var skipLast) && skipLast > 0)
@@ -2370,9 +2375,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     sub.Renumber();
                 }
             }
-
-
-            if (action.StartsWith("deleteContains:", StringComparison.OrdinalIgnoreCase))
+            else if (action.StartsWith("deleteContains:", StringComparison.OrdinalIgnoreCase))
             {
                 var deleteContains = GetArgument(new List<string> { actionString }, "deletecontains:");
                 if (!string.IsNullOrEmpty(deleteContains))
@@ -2389,6 +2392,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                     sub.Renumber();
                 }
+            }
+            else
+            {
+                _stdOutWriter.WriteLine("Unknown parameter: " + actionString);
             }
         }
 
