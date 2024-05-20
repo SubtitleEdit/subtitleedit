@@ -10,11 +10,12 @@
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
-   * Update Finnish translation - thx Teijo S
+   * Update Finnish translation - thx Teijo S	
    * Update Italian language - thx bovirus
    * Update Chinese translation - thx nkh0472
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
+   * Update Greek translation - thx PMitsakis
    * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
    * Allow re-encode with burn-in without subtitle - thx Leon
    * Add the new llama3 model and set as default for "Ollama translate"
