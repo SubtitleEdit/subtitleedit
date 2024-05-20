@@ -18,6 +18,7 @@
     <Preview>预览</Preview>
     <ShowPreview>显示预览</ShowPreview>
     <HidePreview>隐藏预览</HidePreview>
+    <SubtitleFile>字幕文件</SubtitleFile>
     <SubtitleFiles>字幕文件</SubtitleFiles>
     <AllFiles>所有文件</AllFiles>
     <VideoFiles>视频文件</VideoFiles>
@@ -1019,6 +1020,7 @@ Command line: {1} {2}
     <GetEndPosition>获取结束位置</GetEndPosition>
     <UseSource>使用源</UseSource>
     <UseSourceResolution>使用源分辨率</UseSourceResolution>
+    <OutputSettings>输出文件/文件夹...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>生成带有嵌入式字幕的视频</Title>
@@ -1058,12 +1060,7 @@ Command line: {1} {2}
     <To>至:</To>
     <Translate>翻译</Translate>
     <PleaseWait>这可能需要一段时间，请稍候...</PleaseWait>
-    <PoweredByGoogleTranslate>由谷歌翻译提供</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>由微软翻译提供</PoweredByMicrosoftTranslate>
     <PoweredByX>由{0}提供</PoweredByX>
-    <MsClientSecretNeeded>抱歉，要想使用最新的微软翻译，你需要微软认知服务“翻译文本”密钥。转到“选项 -&gt; 设置 -&gt; 工具”输入你的密钥。</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>正在尝试使用API密钥……（慢速且有限的数据）</GoogleNoApiKeyWarning>
-    <Service>服务商：</Service>
     <LineMergeHandling>行的合并模式：</LineMergeHandling>
     <ProcessorMergeNext>最多合并2行</ProcessorMergeNext>
     <ProcessorSentence>合并句子</ProcessorSentence>
@@ -1089,6 +1086,7 @@ Command line: {1} {2}
     <Delay>服务器调用的延迟</Delay>
     <MaxBytes>每次服务器调用的最大字节数</MaxBytes>
     <PromptX>{0} 的提示词</PromptX>
+    <TranslateLinesSeparately>分别翻译每一行</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
