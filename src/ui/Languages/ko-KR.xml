@@ -18,6 +18,7 @@
     <Preview>미리 보기</Preview>
     <ShowPreview>미리보기 표시</ShowPreview>
     <HidePreview>미리보기 숨김</HidePreview>
+    <SubtitleFile>자막 파일</SubtitleFile>
     <SubtitleFiles>자막 파일</SubtitleFiles>
     <AllFiles>모든 파일</AllFiles>
     <VideoFiles>비디오 파일</VideoFiles>
@@ -1015,6 +1016,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GetEndPosition>끝 지점 얻기</GetEndPosition>
     <UseSource>원본 사용</UseSource>
     <UseSourceResolution>원본 해상도 사용</UseSourceResolution>
+    <OutputSettings>출력 파일/폴더...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>자막이 내장된 비디오 파일 생성</Title>
@@ -1054,16 +1056,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <To>번역 후:</To>
     <Translate>번역</Translate>
     <PleaseWait>번역 중... 잠시 기다려 주세요.</PleaseWait>
-    <PoweredByGoogleTranslate>Google 번역기 실행</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Microsoft 번역기 실행</PoweredByMicrosoftTranslate>
     <PoweredByX>{0}으로 번역 제공</PoweredByX>
-    <MsClientSecretNeeded>죄송합니다,  최신 Microsoft 번역기를 사용하려면, Microsoft에서 인지 가능한 'Translator Text' 키 필요합니다.
-
-키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 자동 번역"으로 이동하십시오.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>API 키 없이 번역... (느리고 데이터가 제한됨)
-	
-	API 키를 사용하려면, "옵션 -&gt; 환경설정 -&gt; 자동 번역"으로 이동하여 Google 번역 API 키를 입력하십시오.</GoogleNoApiKeyWarning>
-    <Service>서비스:</Service>
     <LineMergeHandling>줄 병합:</LineMergeHandling>
     <ProcessorMergeNext>최대 두 줄 병합</ProcessorMergeNext>
     <ProcessorSentence>문장 병합</ProcessorSentence>
@@ -1089,6 +1082,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Delay>서버 호출 간 지연</Delay>
     <MaxBytes>각 서버 호출의 최대 바이트 수</MaxBytes>
     <PromptX>{0}개의 프롬프트</PromptX>
+    <TranslateLinesSeparately>각 줄을 개별적으로 번역</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
