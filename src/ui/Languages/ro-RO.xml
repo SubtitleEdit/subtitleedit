@@ -2841,8 +2841,8 @@ Reții schimbările?</KeepChangesMessage>
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Adaugă formă de undă/spectrogramă</AddWaveformAndSpectrogram>
-    <ClickToAddWaveform>Click pentru adăugarea formei de undă</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Click pentru adăugarea formei de undă/spectrogramei</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Click pentru adăugarea formei de undă sonoră</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Click pentru adăugarea formei de undă sonoră/spectrogramei</ClickToAddWaveformAndSpectrogram>
     <Seconds>secunde</Seconds>
     <ZoomIn>Focalizare de apropiere</ZoomIn>
     <ZoomOut>Focalizare de depărtare</ZoomOut>
