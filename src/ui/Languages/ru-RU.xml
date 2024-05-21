@@ -18,6 +18,7 @@
     <Preview>Предпросмотр</Preview>
     <ShowPreview>Показать предпросмотр</ShowPreview>
     <HidePreview>Скрыть предпросмотр</HidePreview>
+    <SubtitleFile>Файл субтитров</SubtitleFile>
     <SubtitleFiles>Файлы субтитров</SubtitleFiles>
     <AllFiles>Все файлы</AllFiles>
     <VideoFiles>Видеофайлы</VideoFiles>
@@ -1024,6 +1025,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <AlignRight>Выровнять по правому краю</AlignRight>
     <GetStartPosition>Получить начальную позицию</GetStartPosition>
     <GetEndPosition>Получить конечную позицию</GetEndPosition>
+    <UseSource>Исходное</UseSource>
+    <UseSourceResolution>Использовать исходное разрешение</UseSourceResolution>
+    <OutputSettings>Выходной файл/папка…</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Создать видео со встроенными субтитрами</Title>
@@ -1063,14 +1067,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <To>На:</To>
     <Translate>Перевести</Translate>
     <PleaseWait>Пожалуйста, подождите какое-то время…</PleaseWait>
-    <PoweredByGoogleTranslate>Google Переводчик</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Microsoft Переводчик</PoweredByMicrosoftTranslate>
     <PoweredByX>Переводчик {0}</PoweredByX>
-    <MsClientSecretNeeded>К сожалению, для использования последней версии Microsoft Translator вам понадобится ключ «Translator Text» Cognitive Services от Microsoft.
-
-Чтобы ввести ключ, перейдите в «Параметры -&gt; Настройки -&gt; Автоматический перевод», чтобы ввести ключ.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Попытка перевести без ключа API… (медленно и с ограничением данных)</GoogleNoApiKeyWarning>
-    <Service>Сервис:</Service>
     <LineMergeHandling>Объединение строк:</LineMergeHandling>
     <ProcessorMergeNext>Не более двух строк</ProcessorMergeNext>
     <ProcessorSentence>Объединить предложения</ProcessorSentence>
@@ -1080,13 +1077,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoCopyToClipboard>Автокопирование в буфер обмена</AutoCopyToClipboard>
     <AutoCopyLineSeparator>Разделитель строк</AutoCopyLineSeparator>
     <TranslateBlockXOfY>Перевести блок {0} из {1}</TranslateBlockXOfY>
-    <TranslateBlockInfo>Скопируйте результат для перевода в буфер обмена и нажмите кнопку ниже</TranslateBlockInfo>
+    <TranslateBlockInfo>Переведите исходный текст, затем скопируйте результат в буфер обмена и нажмите кнопку ниже</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>Получить переведённый текст из буфера обмена
- (Ctrl + V)</TranslateBlockGetFromClipboard>
-    <TranslateBlockCopySourceText>Копировать исходный текст из буфера</TranslateBlockCopySourceText>
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>Копировать исходный текст в буфер обмена</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Буфер обмена содержит исходный текст!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>Перейдите к переводчику для получения перевода,
-скопируйте результат в буфер обмена и снова нажмите эту кнопку</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>Переведите исходный текст, затем скопируйте результат в буфер обмена и повторите попытку</TranslateBlockClipboardError2>
     <StartWebServerX>Запустить веб-сервер «{0}»</StartWebServerX>
     <XRequiresALocalWebServer>Для «{0}» требуется локальный сервер!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>Для «{0}» требуется ключ API</XRequiresAnApiKey>
@@ -1098,6 +1094,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Delay>Задержка между вызовами сервера</Delay>
     <MaxBytes>Макс. байт в каждом вызове сервера</MaxBytes>
     <PromptX>Промт для {0}</PromptX>
+    <TranslateLinesSeparately>Переводить каждую строку отдельно</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Сравнительный перевод в Google и Microsoft</Title>
@@ -2553,6 +2550,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CpsLineLengthStyleCalcNoSpace>Исключить пробелы</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, латиница 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латиница 0.5, пробел 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Включая составные символы</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Вкл. составные символы, без пробелов</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без пробелов и знак. преп. ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без пробелов и знак. преп., только CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Музыкальный символ</MusicSymbol>
@@ -3189,6 +3188,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Play>Воспроизвести</Play>
     <AutoContinue>Автопродолжение</AutoContinue>
     <Regenerate>Регенерировать</Regenerate>
+    <Speed>Скорость</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Синхронизация SMPTE</Title>
@@ -3361,6 +3361,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <InspectItems>Элементы субтитра</InspectItems>
     <AddBetterMatch>Добавить лучшее соответствие</AddBetterMatch>
     <Add>Добавить</Add>
+    <AddBetterMultiMatch>Добавить лучшее мульти-соответствие</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Добавить или обновить соответствие</AddOrUpdateMatch>
+    <SelectPrevousMatch>Выбрать предыдущее соответствие</SelectPrevousMatch>
+    <SelectNextMatch>Выбрать следующее соответствие</SelectNextMatch>
+    <JumpPreviousMissingMatch>Перейти к предыдущему отсутствующему соответствию</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Перейти к следующему отсутствующему соответствию</JumpNextMissingMatch>
+    <FocusTextbox>Фокус на текстовом поле</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Новая папка</Title>
