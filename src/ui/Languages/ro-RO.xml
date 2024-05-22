@@ -1179,6 +1179,7 @@ Pentru folosirea unui cod API de la Google Translate, accesează "Opțiuni -&gt;
       <Options>
         <Title>Opțiuni</Title>
         <Settings>&amp;Setări...</Settings>
+        <WordLists>Liste de cuvinte…</WordLists>
         <ChooseLanguage>&amp;Alege limba...</ChooseLanguage>
       </Options>
       <Networking>
