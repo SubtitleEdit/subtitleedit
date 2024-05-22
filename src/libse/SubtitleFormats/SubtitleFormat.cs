@@ -244,6 +244,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Utx(),
                     new UtxFrames(),
                     new UleadSubtitleFormat(),
+                    new VideoIndexerJson(),
                     new VocapiaSplit(),
                     new WebVTT(),
                     new WebVTTFileWithLineNumber(),
