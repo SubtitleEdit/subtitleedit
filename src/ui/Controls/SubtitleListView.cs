@@ -2384,5 +2384,23 @@ namespace Nikse.SubtitleEdit.Controls
 
             EndUpdate();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                // unhook handler
+                _setLastColumnWidthTimer.Tick -= SetLastColumnWidthTimer_Tick;
+                _syntaxColorLineTimer.Tick -= SyntaxColorLineTimerTick;
+                _setStartAndDurationTimer.Tick -= SetStartAndDurationTimerTick;
+
+                // dispose timers
+                _setLastColumnWidthTimer.Dispose();
+                _syntaxColorLineTimer.Dispose();
+                _setStartAndDurationTimer.Dispose();
+            }
+        }
     }
 }
