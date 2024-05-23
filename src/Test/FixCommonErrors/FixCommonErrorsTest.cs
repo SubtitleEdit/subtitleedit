@@ -1363,6 +1363,26 @@ namespace Test.FixCommonErrors
             Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
         }
 
+        [TestMethod]
+        public void AddPeriodChineseDoNotAdd1()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("→「Adobe」の順に移動します。", 0, 2000));
+            s.Paragraphs.Add(new Paragraph("Bye.", 7000, 9000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "→「Adobe」の順に移動します。");
+        }
+
+        [TestMethod]
+        public void AddPeriodChineseDoNotAdd2()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("この新しいplistファイルを\r\n作成するには、", 0, 2000));
+            s.Paragraphs.Add(new Paragraph("Bye.", 7000, 9000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "この新しいplistファイルを\r\n作成するには、");
+        }
+
         #endregion Fix missing periods at end of line
 
         #region Start with uppercase after paragraph
