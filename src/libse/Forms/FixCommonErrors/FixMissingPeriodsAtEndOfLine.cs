@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         // Cached variables
         private static readonly char[] ExpectedChars = { '♪', '♫' };
-        private const string ExpectedString1 = ",.!?:;>-])♪♫…";
+        private const string DoNotAddPeriodAfterChars = ",.!?:;>-])♪♫…、。";
         private const string ExpectedString2 = ")]*#¶.!?";
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     next.Text.Length > 0 &&
                     char.IsUpper(nextText[0]) &&
                     tempNoHtml.Length > 0 &&
-                    !ExpectedString1.Contains(tempNoHtml[tempNoHtml.Length - 1]))
+                    !DoNotAddPeriodAfterChars.Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
                     var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
