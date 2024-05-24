@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Concurrent;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static Nikse.SubtitleEdit.Forms.Options.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -185,10 +187,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Init()
         {
-            comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
-            var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-            comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+            InitializeLanguageNames();
 
             FillModels(comboBoxModels, string.Empty);
 
@@ -1922,7 +1921,64 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void comboBoxLanguages_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxLanguages.SelectedIndex > 0 && comboBoxLanguages.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitializeLanguageNames();
+                return;
+            }
+
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
+        }
+
+        private void InitializeLanguageNames()
+        {
+            comboBoxLanguages.Items.Clear();
+
+            var languagesFilled = false;
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
+            {
+                var favorites = Utilities.GetSubtitleLanguageCultures(true).ToList();
+                var languages = WhisperLanguage.Languages;
+
+                foreach (var whisperLanguage in languages)
+                {
+                    if (favorites.Any(p => p.TwoLetterISOLanguageName == whisperLanguage.Code) ||
+                        favorites.Any(p => p.EnglishName == whisperLanguage.Name))
+                    {
+                        languagesFilled = true;
+                        comboBoxLanguages.Items.Add(whisperLanguage);
+                    }
+                }
+
+                if (languagesFilled)
+                {
+                    comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+                }
+
+                var lang = languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
+                comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+            }
+
+            if (!languagesFilled)
+            {
+                comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
+                var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
+                comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+            }
+
+            if (string.IsNullOrEmpty(comboBoxLanguages.Text) && comboBoxLanguages.Items.Count > 0)
+            {
+                comboBoxLanguages.SelectedIndex = 0;
+            }
         }
 
         private void WhisperPhpOriginalChoose()
