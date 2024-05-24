@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2024-03-25/ffmpeg-2024-03-25-git-ecdc94b97f.zip";
+            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2024-05/ffmpeg-2024-05-23.zip";
             if (IntPtr.Size == 32)
             {
                 url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
@@ -115,8 +115,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             var sha512Hashes = new[]
             {
-                "71d31bdf7242d5a81899f2dbc7253a7b3b9ec59bbce86f9e3bc53bb8e5289ba22db0ae5e7372673a9aed2724c4942c7eec144e461b174cf18fc1836816402dbe", // ffmpeg-2024-03-25-git-ecdc94b97f
                 "c07de58f2006565d7864bea7f3f8e0648e3b0596b0bab94fb1d8ff5a18ea7626bacc8c5206049549c01cda5176350df311e469d6f1f2bf99d968d55817852d4d", // ffprobe-2024-03-25-git-ecdc94b97f
+                "fe70d60e9fc0a59c24c0be15f0a8d8af33f1fb7d0027b6fcccce72b6dc41a4023ae276d3e033010b6f628ca6c8d34fc932052622e16a23b5258ec959d20daca9", // ffmpeg-2024-05-23
             };
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             if (!sha512Hashes.Contains(hash))
