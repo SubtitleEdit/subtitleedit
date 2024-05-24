@@ -18,6 +18,7 @@ bin/
 obj/
 SubtitleEdit-*-setup.exe
 SubtitleEdit-*.zip
+.vscode/
 
 # Visual Studio cache/options directory
 .vs/
