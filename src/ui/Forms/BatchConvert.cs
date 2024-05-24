@@ -1374,7 +1374,10 @@ namespace Nikse.SubtitleEdit.Forms
                     var isMatroska = false;
                     var isTs = false;
                     var isMp4 = false;
-                    if (fromFormat == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
+                    if (fromFormat == null &&
+                        (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) ||
+                        fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase)) &&
+                        FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
@@ -3001,7 +3004,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var binaryParagraphs = new List<IBinaryParagraphWithPosition>();
                     if (p.FileName != null && !p.Subtitle.Paragraphs.Any(s => !string.IsNullOrEmpty(s.Text)) &&
-                        p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                        (p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) ||
+                        p.FileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase)) &&
                         FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
                         binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraphWithPosition>().ToList();
@@ -3678,7 +3682,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             AddFromSearch(fileName, fi, "VobSub");
                         }
-                        else if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
+                        else if ((ext == ".sup" || ext == ".sub") && FileUtil.IsBluRaySup(fileName))
                         {
                             AddFromSearch(fileName, fi, "Blu-ray");
                         }
