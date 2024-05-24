@@ -2825,30 +2825,30 @@ Continui?</RestoreDefaultSettingsMsg>
     <MinFrameGap>Decalare-cadre minimă</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} cadre la o rată de {1} oferă {2} milisec.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Utilizezi"{0}"milisec. ca nouă decalare-cadre minimă?</UseXAsNewGap>
-    <BDOpensIn></BDOpensIn>
-    <BDOpensInOcr></BDOpensInOcr>
-    <BDOpensInEdit></BDOpensInEdit>
-    <ShortcutsAllowSingleLetterOrNumberInTextBox></ShortcutsAllowSingleLetterOrNumberInTextBox>
-    <ShortcutCustomToggle></ShortcutCustomToggle>
-    <UpdateFileTypeAssociations></UpdateFileTypeAssociations>
-    <FileTypeAssociationsUpdated></FileTypeAssociationsUpdated>
-    <CustomContinuationStyle></CustomContinuationStyle>
-    <LoadStyle></LoadStyle>
-    <Suffix></Suffix>
-    <AddSuffixForComma></AddSuffixForComma>
-    <AddSpace></AddSpace>
-    <RemoveComma></RemoveComma>
-    <Prefix></Prefix>
-    <DifferentStyleGap></DifferentStyleGap>
-    <Preview></Preview>
-    <PreviewPause></PreviewPause>
-    <CustomContinuationStyleNote></CustomContinuationStyleNote>
-    <ResetCustomContinuationStyleWarning></ResetCustomContinuationStyleWarning>
-    <ExportAsHtml></ExportAsHtml>
-    <SetNewActor></SetNewActor>
-    <SetActorX></SetActorX>
-    <Used></Used>
-    <Unused></Unused>
+    <BDOpensIn>BD sup/bdn-xml se deschide în</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Editare</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Comenzi rapide: permite o singură literă/număr în caseta de text</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Comandă rapidă comută pornirea/sfârșitul personalizat</ShortcutCustomToggle>
+    <UpdateFileTypeAssociations>Actualizare asocieri tipuri de fișiere</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>Asocieri de tip fișiere actualizate</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Editare stil personalizat de continuare</CustomContinuationStyle>
+    <LoadStyle>Încarcă stilul...</LoadStyle>
+    <Suffix>Sufix:</Suffix>
+    <AddSuffixForComma>Procesare dacă se termină cu virgulă</AddSuffixForComma>
+    <AddSpace>Adăugă spațiu</AddSpace>
+    <RemoveComma>Elimină virgula</RemoveComma>
+    <Prefix>Prefix:</Prefix>
+    <DifferentStyleGap>Utilizare stil diferit pentru goluri mai lungi decât</DifferentStyleGap>
+    <Preview>Previzualizare</Preview>
+    <PreviewPause>(pauză)</PreviewPause>
+    <CustomContinuationStyleNote>Notă: stilul personalizat de continuare este partajat între profiluri.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Asta va suprascrie valorile din dialog.  Esti sigur?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Exportăi ca HTML...</ExportAsHtml>
+    <SetNewActor>Setare actor nou/voce nouă</SetNewActor>
+    <SetActorX>Setare actor/voce {0}</SetActorX>
+    <Used>Folosit</Used>
+    <Unused>Nefolosit</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Descărcare mpv lib</DownloadMpv>
