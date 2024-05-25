@@ -1948,21 +1948,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 var favorites = Utilities.GetSubtitleLanguageCultures(true).ToList();
                 var languages = WhisperLanguage.Languages;
+                var languagesToAdd = new List<WhisperLanguage>();
 
                 foreach (var whisperLanguage in languages)
                 {
                     if (favorites.Any(p => p.TwoLetterISOLanguageName == whisperLanguage.Code) ||
-                        favorites.Any(p => p.EnglishName == whisperLanguage.Name))
+                        favorites.Any(p2 => p2.EnglishName.Contains(whisperLanguage.Name, StringComparison.OrdinalIgnoreCase)) ||
+                        favorites.Any(p3 => whisperLanguage.Name.Contains(p3.EnglishName, StringComparison.OrdinalIgnoreCase)))
                     {
                         languagesFilled = true;
-                        comboBoxLanguages.Items.Add(whisperLanguage);
+                        languagesToAdd.Add(whisperLanguage);
                     }
                 }
 
-                if (languagesFilled)
-                {
-                    comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
-                }
+                comboBoxLanguages.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
 
                 var lang = languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
                 comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
@@ -1974,6 +1973,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
                 comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
             }
+
+            comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
 
             if (string.IsNullOrEmpty(comboBoxLanguages.Text) && comboBoxLanguages.Items.Count > 0)
             {
