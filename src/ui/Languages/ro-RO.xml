@@ -237,73 +237,73 @@ Notă: Verifică spațiul liber de pe disc.</WaveFileMalformed>
     <RemoveXAttachments>Se elimină {0} atașări?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags></ApplyCustomTags>
-    <History></History>
-    <TagsToApply></TagsToApply>
-    <ApplyTo></ApplyTo>
-    <SelectedLinesX></SelectedLinesX>
-    <AdvancedSelection></AdvancedSelection>
+    <ApplyCustomTags>Aplică etichete de înlocuire personalizate</ApplyCustomTags>
+    <History>Istoric</History>
+    <TagsToApply>Etichete de aplicat</TagsToApply>
+    <ApplyTo>Aplică la</ApplyTo>
+    <SelectedLinesX>Liniile selectate: {0}</SelectedLinesX>
+    <AdvancedSelection>Selecție avansată</AdvancedSelection>
   </AssaOverrideTags>
   <AssaProgressBarGenerator>
-    <Title></Title>
-    <Progressbar></Progressbar>
-    <Chapters></Chapters>
-    <SplitterWidth></SplitterWidth>
-    <SplitterHeight></SplitterHeight>
-    <XAdjustment></XAdjustment>
-    <YAdjustment></YAdjustment>
-    <Position></Position>
-    <TextAlignment></TextAlignment>
-    <SquareCorners></SquareCorners>
-    <RoundedCorners></RoundedCorners>
-    <Top></Top>
-    <Bottom></Bottom>
-    <TakePosFromVideo></TakePosFromVideo>
+    <Title>Generează bara de progres</Title>
+    <Progressbar>Bara de progres</Progressbar>
+    <Chapters>Capitole</Chapters>
+    <SplitterWidth>Lățimea separatorului</SplitterWidth>
+    <SplitterHeight>Înălțimea separatorului</SplitterHeight>
+    <XAdjustment>Ajustare X</XAdjustment>
+    <YAdjustment>Ajustare Y</YAdjustment>
+    <Position>Poziţie</Position>
+    <TextAlignment>Aliniere text</TextAlignment>
+    <SquareCorners>Colțuri pătrate</SquareCorners>
+    <RoundedCorners>Colturi rotunjite</RoundedCorners>
+    <Top>Sus</Top>
+    <Bottom>Jos</Bottom>
+    <TakePosFromVideo>Ia poziția din video</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResolutionChanger>
-    <Title></Title>
-    <SourceVideoRes></SourceVideoRes>
-    <TargetVideoRes></TargetVideoRes>
-    <ChangeResolutionMargins></ChangeResolutionMargins>
-    <ChangeResolutionFontSize></ChangeResolutionFontSize>
-    <ChangeResolutionPositions></ChangeResolutionPositions>
-    <ChangeResolutionDrawing></ChangeResolutionDrawing>
-    <SourceAndTargetEqual></SourceAndTargetEqual>
+    <Title>Schimbăi rezoluția scriptului ASSA</Title>
+    <SourceVideoRes>Rezoluția sursă video</SourceVideoRes>
+    <TargetVideoRes>Rezoluția video țintă</TargetVideoRes>
+    <ChangeResolutionMargins>Modificăi rezoluția margine</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Schimbă rezoluția pentru dimensiune font</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Schimbăi rezoluția pentru poziție</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Schimbă rezoluția pentru desen</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Rezoluția sursă și țintă este aceeași - nimic de făcut.</SourceAndTargetEqual>
   </AssaResolutionChanger>
   <ImageColorPicker>
-    <Title></Title>
-    <CopyColorHex></CopyColorHex>
-    <CopyColorAssa></CopyColorAssa>
-    <CopyColorRgb></CopyColorRgb>
+    <Title>Selector culoare imagine</Title>
+    <CopyColorHex>Copiazăi în clipboard culoare tip HEX {0}</CopyColorHex>
+    <CopyColorAssa>Copiazăi în clipboard culoare tip ASSA {0}</CopyColorAssa>
+    <CopyColorRgb>Copiază în clipboard culoare tip RGB {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
-    <Title></Title>
-    <Padding></Padding>
-    <FillWidth></FillWidth>
-    <Drawing></Drawing>
-    <BoxColor></BoxColor>
-    <Radius></Radius>
-    <Step></Step>
-    <Spikes></Spikes>
-    <Bubbles></Bubbles>
-    <Circle></Circle>
-    <MarginX></MarginX>
-    <MarginY></MarginY>
-    <OnlyDrawing></OnlyDrawing>
-    <DrawingFile></DrawingFile>
-    <ColorPickerSetLastColor></ColorPickerSetLastColor>
+    <Title>Generază caseta de fundal</Title>
+    <Padding>Margine</Padding>
+    <FillWidth>Umple lățimea</FillWidth>
+    <Drawing>Desenare</Drawing>
+    <BoxColor>Culoarea casetei</BoxColor>
+    <Radius>Rază</Radius>
+    <Step>Etapa</Step>
+    <Spikes>Marcaje</Spikes>
+    <Bubbles>Bule</Bubbles>
+    <Circle>Cerc</Circle>
+    <MarginX>MargineX</MarginX>
+    <MarginY>MargineY</MarginY>
+    <OnlyDrawing>Doar desen</OnlyDrawing>
+    <DrawingFile>Fișier desen</DrawingFile>
+    <ColorPickerSetLastColor>Ultima culoare selector culoare este acum: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
-    <SetPosition></SetPosition>
-    <VideoResolutionX></VideoResolutionX>
-    <StyleAlignmentX></StyleAlignmentX>
-    <CurrentMousePositionX></CurrentMousePositionX>
-    <CurrentTextPositionX></CurrentTextPositionX>
-    <SetPosInfo></SetPosInfo>
-    <Clipboard></Clipboard>
-    <ResolutionMissing></ResolutionMissing>
-    <RotateXAxis></RotateXAxis>
-    <DistortX></DistortX>
+    <SetPosition>Setare poziție</SetPosition>
+    <VideoResolutionX>Rezoluție video: {0}</VideoResolutionX>
+    <StyleAlignmentX>Aliniere stil: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Poziție mouse: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Poziție texti: {0}</CurrentTextPositionX>
+    <SetPosInfo>Click pe video pentru comutare între poziția de setare/mutare</SetPosInfo>
+    <Clipboard>Clipboard</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY nu sunt setate - setați rezoluția acum?</ResolutionMissing>
+    <RotateXAxis>Rotire axa {0}</RotateXAxis>
+    <DistortX>Distorsiune {0}</DistortX>
   </AssaSetPosition>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Echilibrare automată linii selectate</TitleAutoBreak>
@@ -326,9 +326,9 @@ Notă: Verifică spațiul liber de pe disc.</WaveFileMalformed>
     <ConvertOptions>Opțiuni de conversie</ConvertOptions>
     <RemoveFormatting>Elimină formatarea mărcilor</RemoveFormatting>
     <RemoveStyleActor>Elimină stilul/actorul</RemoveStyleActor>
-    <StyleActor></StyleActor>
+    <StyleActor>Stil/actor (separate prin virgulă)</StyleActor>
     <RemoveTextForHI>Elimină textul pentru HI</RemoveTextForHI>
-    <ConvertColorsToDialog></ConvertColorsToDialog>
+    <ConvertColorsToDialog>Convertire culori în dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Suprascrie fișierele originale (extensie nouă, dacă formatul e schimbat)</OverwriteOriginalFiles>
     <RedoCasing>Reface încasetarea</RedoCasing>
     <Convert>Convertește</Convert>
