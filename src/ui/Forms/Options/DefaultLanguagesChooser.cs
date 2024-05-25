@@ -79,6 +79,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (listView1.SelectedItems.Count == listView1.Items.Count)
+            {
+                DefaultLanguages = string.Empty;
+            }
+
             DialogResult = DialogResult.OK;
         }
 
