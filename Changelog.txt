@@ -16,6 +16,8 @@
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Update Greek translation - thx PMitsakis
+   * Update Russian translation - thx elfriob
+   * Update Romanian translation - thx MediaExpres
    * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
    * Allow re-encode with burn-in without subtitle - thx Leon
    * Add the new llama3 model and set as default for "Ollama translate"
@@ -25,6 +27,8 @@
    * Set default ChatGPT model to the new "gpt-4o"
    * Add hot keys to the binary OCR "character-inspect-window" - thx trienow
    * Update WhisperCPP to 1.6.0
+   * Update ffmpeg to 2024-05-23
+   * Enable language filter in Whisper window - thx rRobis
 * FIXED:
    * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
@@ -32,6 +36,7 @@
    * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
    * Fix image export shadow when border is zero - thx pixelhunterX
    * Fix crash in translate with empty API key - thx lambdacore12
+   * Fix FixMissingPeriodsAtEndOfLine for Chinese - thx Leon
 
 
 4.0.5 (13th April 2024) 
