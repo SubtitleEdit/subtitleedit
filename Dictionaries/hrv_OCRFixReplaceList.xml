@@ -5622,6 +5622,7 @@
     <RegEx find="uoa" replaceWith="upa" />
     <RegEx find="uoi" replaceWith="upi" />
     <RegEx find="uzt" replaceWith="ust" />
+    <RegEx find="tablja" replaceWith="tavlja" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="tvra" replaceWith="tvar" />
     <RegEx find="tvrn" replaceWith="tvarn" />
