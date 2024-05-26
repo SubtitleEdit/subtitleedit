@@ -56,12 +56,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new List<TranslationPair>
             {
+                MakeTranslationPair("Arabic", "ar"),
                 MakeTranslationPair("Bulgarian", "bg"),
                 MakeTranslationPair("Chinese", "zh"),
                 MakeTranslationPair("Czech", "cs"),
                 MakeTranslationPair("Danish", "da"),
                 MakeTranslationPair("Dutch", "nl", true),
                 MakeTranslationPair("English", "en", true),
+                MakeTranslationPair("English (British)", "en-gb", true),
+                MakeTranslationPair("English (American)", "en-us", true),
                 MakeTranslationPair("Estonian", "et"),
                 MakeTranslationPair("Finnish", "fi"),
                 MakeTranslationPair("French", "fr", true),
@@ -144,7 +147,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     }
                 }
             }
-
 
             return Task.FromResult(string.Join(Environment.NewLine, resultList));
         }
