@@ -5661,6 +5661,7 @@
     <RegEx find="vizuj" replaceWith="viziraj" />
     <RegEx find="vjeorj" replaceWith="vjeroj" />
     <RegEx find="vkr" replaceWith="vor" />
+    <RegEx find="vks" replaceWith="vsk" />
     <RegEx find="([vV])jeov" replaceWith="$1jerov" />
     <RegEx find="vješč" replaceWith="vješć" />
     <RegEx find="vljstv" replaceWith="voljstv" />
