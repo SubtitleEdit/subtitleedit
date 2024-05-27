@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -576,13 +577,38 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        public static void FillComboWithLanguages(NikseComboBox comboBox, IEnumerable<TranslationPair> languages)
+        public static void FillComboWithLanguages(NikseComboBox comboBox, List<TranslationPair> languages)
         {
             comboBox.Items.Clear();
-            foreach (var language in languages)
+            var languagesFilled = false;
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
             {
-                comboBox.Items.Add(language);
+                var favorites = Utilities.GetSubtitleLanguageCultures(true).ToList();
+                var languagesToAdd = new List<TranslationPair>();
+
+                foreach (var language in languages)
+                {
+                    if (favorites.Any(p0 => p0.TwoLetterISOLanguageName == language.Code) ||
+                        favorites.Any(p1 => p1.ThreeLetterISOLanguageName == language.Code) ||
+                        (!string.IsNullOrWhiteSpace(language.Code) && favorites.Any(p2 => p2.TwoLetterISOLanguageName.StartsWith(language.Code, StringComparison.OrdinalIgnoreCase))) ||
+                        favorites.Any(p3 => p3.EnglishName.Contains(language.Name, StringComparison.OrdinalIgnoreCase)) ||
+                        favorites.Any(p4 => language.Name.Contains(p4.EnglishName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        languagesFilled = true;
+                        languagesToAdd.Add(language);
+                    }
+                }
+
+                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
             }
+
+            if (!languagesFilled)
+            {
+                comboBox.Items.AddRange(languages.OrderBy(p => p.Name).ToArray<object>());
+            }
+
+            comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
         }
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
@@ -1349,6 +1375,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void comboBoxTarget_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxTarget.SelectedIndex > 0 && comboBoxTarget.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                SetupLanguageSettings();
+                return;
+            }
+
             if (_autoTranslator.Name == DeepLTranslate.StaticName && comboBoxTarget.SelectedItem is TranslationPair target)
             {
                 if (target.HasFormality == null || target.HasFormality == false)
@@ -1401,6 +1441,24 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void translateCurrentLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             translateCurrentLineToolStripMenuItem1_Click(null, null);
+        }
+
+        private void comboBoxSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSource.SelectedIndex <= 0 || comboBoxSource.Text != LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                return;
+            }
+
+            using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                }
+
+                SetupLanguageSettings();
+            }
         }
     }
 }

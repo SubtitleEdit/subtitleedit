@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
@@ -47,8 +48,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var microsoftSourceLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
             var microsoftTargetLanguages = _microsoftTranslationService.GetSupportedTargetLanguages();
 
-            var targetLanguages = googleTargetLanguages.Intersect(microsoftTargetLanguages);
-            var fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages);
+            var targetLanguages = googleTargetLanguages.Intersect(microsoftTargetLanguages).ToList();
+            var fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages).ToList();
 
             AutoTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
             AutoTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
@@ -61,20 +62,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             _toLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
             _fromLanguage = defaultFromLanguage;
-            if (_toLanguage == defaultFromLanguage)
+            if (_toLanguage != defaultFromLanguage)
             {
-                foreach (var s in Utilities.GetDictionaryLanguages())
-                {
-                    string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
-                    if (temp.Length > 4)
-                    {
-                        temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
+                return;
+            }
 
-                        if (temp != _toLanguage)
-                        {
-                            _toLanguage = temp;
-                            break;
-                        }
+            foreach (var s in Utilities.GetDictionaryLanguages())
+            {
+                var temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
+                if (temp.Length > 4)
+                {
+                    temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
+
+                    if (temp != _toLanguage)
+                    {
+                        _toLanguage = temp;
+                        break;
                     }
                 }
             }
@@ -104,7 +107,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             Cursor = Cursors.WaitCursor;
             try
             {
-
                 buttonGoogle.Text = string.Empty;
                 buttonMicrosoft.Text = string.Empty;
 
@@ -155,5 +157,36 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
+        private void comboBoxFrom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxFrom.SelectedIndex > 0 && comboBoxFrom.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitLanguageComboBoxes();
+            }
+        }
+
+        private void comboBoxTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxTo.SelectedIndex > 0 && comboBoxTo.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitLanguageComboBoxes();
+            }
+        }
     }
 }
