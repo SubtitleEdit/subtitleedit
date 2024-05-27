@@ -383,6 +383,7 @@
             this.comboBoxSource.Size = new System.Drawing.Size(125, 23);
             this.comboBoxSource.TabIndex = 94;
             this.comboBoxSource.UsePopupWindow = false;
+            this.comboBoxSource.SelectedIndexChanged += new System.EventHandler(this.comboBoxSource_SelectedIndexChanged);
             // 
             // comboBoxTarget
             // 
