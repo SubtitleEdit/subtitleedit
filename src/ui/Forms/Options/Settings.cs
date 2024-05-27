@@ -273,12 +273,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
 
-            var videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
-            if (videoPlayerPreviewFontSizeIndex >= 0 && videoPlayerPreviewFontSizeIndex < comboBoxlVideoPlayerPreviewFontSize.Items.Count)
+            comboBoxlVideoPlayerPreviewFontSize.Items.Clear();
+            for (var i = 8; i <= 120; i++)
             {
-                comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = videoPlayerPreviewFontSizeIndex;
+                comboBoxlVideoPlayerPreviewFontSize.Items.Add(i.ToString());
             }
-            else
+            comboBoxlVideoPlayerPreviewFontSize.Text = gs.VideoPlayerPreviewFontSize.ToString();
+            if (string.IsNullOrEmpty(comboBoxlVideoPlayerPreviewFontSize.Text))
             {
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
