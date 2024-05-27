@@ -44,16 +44,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return GetTranslationPairs();
-        }
-
-        public List<TranslationPair> GetSupportedTargetLanguages()
-        {
-            return GetTranslationPairs();
-        }
-
-        public List<TranslationPair> GetTranslationPairs()
-        {
             return new List<TranslationPair>
             {
                 MakeTranslationPair("Arabic", "ar"),
@@ -63,6 +53,42 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Danish", "da"),
                 MakeTranslationPair("Dutch", "nl", true),
                 MakeTranslationPair("English", "en", true),
+                MakeTranslationPair("Estonian", "et"),
+                MakeTranslationPair("Finnish", "fi"),
+                MakeTranslationPair("French", "fr", true),
+                MakeTranslationPair("German", "de", true),
+                MakeTranslationPair("Greek", "el"),
+                MakeTranslationPair("Hungarian", "hu"),
+                MakeTranslationPair("Indonesian", "id"),
+                MakeTranslationPair("Italian", "it", true),
+                MakeTranslationPair("Japanese", "ja", true),
+                MakeTranslationPair("Korean", "ko"),
+                MakeTranslationPair("Latvian", "lv"),
+                MakeTranslationPair("Lithuanian", "lt"),
+                MakeTranslationPair("Norwegian (Bokmål)", "nb"),
+                MakeTranslationPair("Polish", "pl", true),
+                MakeTranslationPair("Portuguese", "pt", true),
+                MakeTranslationPair("Romanian", "ro"),
+                MakeTranslationPair("Russian", "ru", true),
+                MakeTranslationPair("Slovak", "sk"),
+                MakeTranslationPair("Slovenian", "sl"),
+                MakeTranslationPair("Spanish", "es", true),
+                MakeTranslationPair("Swedish", "sv"),
+                MakeTranslationPair("Turkish", "tr"),
+                MakeTranslationPair("Ukranian", "uk"),
+            };
+        }
+
+        public List<TranslationPair> GetSupportedTargetLanguages()
+        {
+            return new List<TranslationPair>
+            {
+                MakeTranslationPair("Arabic", "ar"),
+                MakeTranslationPair("Bulgarian", "bg"),
+                MakeTranslationPair("Chinese", "zh"),
+                MakeTranslationPair("Czech", "cs"),
+                MakeTranslationPair("Danish", "da"),
+                MakeTranslationPair("Dutch", "nl", true),
                 MakeTranslationPair("English (British)", "en-gb", true),
                 MakeTranslationPair("English (American)", "en-us", true),
                 MakeTranslationPair("Estonian", "et"),
@@ -79,7 +105,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Lithuanian", "lt"),
                 MakeTranslationPair("Norwegian (Bokmål)", "nb"),
                 MakeTranslationPair("Polish", "pl", true),
-                MakeTranslationPair("Portuguese", "pt", true),
+                MakeTranslationPair("Portuguese", "pt-pt", true),
+                MakeTranslationPair("Portuguese (Brazil)", "pt-br", true),
                 MakeTranslationPair("Romanian", "ro"),
                 MakeTranslationPair("Russian", "ru", true),
                 MakeTranslationPair("Slovak", "sk"),
@@ -110,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
                 new KeyValuePair<string, string>("formality", _formality),
             });
-            var result = _client.PostAsync("/v2/translate", postContent).Result;
+            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
             if (!result.IsSuccessStatusCode)
