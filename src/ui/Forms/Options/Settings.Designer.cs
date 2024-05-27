@@ -3383,30 +3383,6 @@
             this.comboBoxlVideoPlayerPreviewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxlVideoPlayerPreviewFontSize.DropDownWidth = 70;
             this.comboBoxlVideoPlayerPreviewFontSize.FormattingEnabled = true;
-            this.comboBoxlVideoPlayerPreviewFontSize.Items.AddRange(new string[] {
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30"});
             this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(446, 40);
             this.comboBoxlVideoPlayerPreviewFontSize.MaxLength = 32767;
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
