@@ -29,6 +29,9 @@
    * Update WhisperCPP to 1.6.0
    * Update ffmpeg to 2024-05-23
    * Enable language filter in Whisper window - thx rRobis
+   * Add .m4b file extension to audio formats - thx janot
+   * Update DeepL languages - thx Uncle-Tio/Ihab
+   * Allow larger subtitle preview size - thx kadrimarzouki
 * FIXED:
    * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
