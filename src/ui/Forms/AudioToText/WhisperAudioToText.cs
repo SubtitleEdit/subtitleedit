@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Init()
         {
-            InitializeLanguageNames();
+            InitializeLanguageNames(comboBoxLanguages);
 
             FillModels(comboBoxModels, string.Empty);
 
@@ -1930,16 +1930,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
-                InitializeLanguageNames();
+                InitializeLanguageNames(comboBoxLanguages);
                 return;
             }
 
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
 
-        private void InitializeLanguageNames()
+        internal static void InitializeLanguageNames(NikseComboBox comboBox)
         {
-            comboBoxLanguages.Items.Clear();
+            comboBox.Items.Clear();
 
             var languagesFilled = false;
 
@@ -1960,24 +1960,24 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
-                comboBoxLanguages.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
+                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
 
                 var lang = languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-                comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+                comboBox.Text = lang != null ? lang.ToString() : "English";
             }
 
             if (!languagesFilled)
             {
-                comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
+                comboBox.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
                 var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-                comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+                comboBox.Text = lang != null ? lang.ToString() : "English";
             }
 
-            comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+            comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
 
-            if (string.IsNullOrEmpty(comboBoxLanguages.Text) && comboBoxLanguages.Items.Count > 0)
+            if (string.IsNullOrEmpty(comboBox.Text) && comboBox.Items.Count > 0)
             {
-                comboBoxLanguages.SelectedIndex = 0;
+                comboBox.SelectedIndex = 0;
             }
         }
 
