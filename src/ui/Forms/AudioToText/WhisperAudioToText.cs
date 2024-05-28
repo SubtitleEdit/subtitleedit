@@ -772,6 +772,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void SaveToSourceFolder(string videoFileName)
         {
             var format = SubtitleFormat.FromName(Configuration.Settings.General.DefaultSubtitleFormat, new SubRip());
+            if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            {
+                try
+                {
+                    var info = FfmpegMediaInfo.Parse(videoFileName);
+                    if (info.Dimension.Width > 0)
+                    {
+                        if (string.IsNullOrEmpty(TranscribedSubtitle.Header))
+                        {
+                            TranscribedSubtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                        }
+
+                        TranscribedSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + info.Dimension.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", TranscribedSubtitle.Header);
+                        TranscribedSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + info.Dimension.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", TranscribedSubtitle.Header);
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             var text = TranscribedSubtitle.ToText(format);
 
             var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
