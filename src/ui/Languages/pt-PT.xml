@@ -19,6 +19,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Preview>Pré-visualizar</Preview>
     <ShowPreview>Mostrar pré-visualização</ShowPreview>
     <HidePreview>Ocultar pré-visualização</HidePreview>
+    <SubtitleFile>Ficheiro de legenda</SubtitleFile>
     <SubtitleFiles>Ficheiros de legendas</SubtitleFiles>
     <AllFiles>Todos os ficheiros</AllFiles>
     <VideoFiles>Ficheiros de vídeo</VideoFiles>
@@ -1023,6 +1024,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <GetEndPosition>Posição final</GetEndPosition>
     <UseSource>Usar original</UseSource>
     <UseSourceResolution>Utilizar resolução original</UseSourceResolution>
+    <OutputSettings>Ficheiro/pasta de saída...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Gerar vídeo com legendas embutidas adicionadas/removidas</Title>
@@ -1062,15 +1064,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <To>Para:</To>
     <Translate>Traduzir</Translate>
     <PleaseWait>Aguarde... isto pode demorar.</PleaseWait>
-    <PoweredByGoogleTranslate>Disponibilizado por Google tradutor</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Disponibilizado por Microsoft tradutor</PoweredByMicrosoftTranslate>
     <PoweredByX>Disponibilizado por {0}</PoweredByX>
-    <MsClientSecretNeeded>Desculpe, precisa de uma chave de 'Tradutor de texto' dos Serviços Cognitivos da Microsoft para usar o mais recente tradutor da Microsoft.
-
-Vá a "Opções -&gt; Definições -&gt; Tradução automática" para inserir a chave.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>A tentar traduzir sem chave API... (tradução lenta e limitada).
-Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução automática" para inserir a chave API do Tradutor do Google.</GoogleNoApiKeyWarning>
-    <Service>Serviço:</Service>
     <LineMergeHandling>Combinação de linhas:</LineMergeHandling>
     <ProcessorMergeNext>Combinar no máximo duas linhas</ProcessorMergeNext>
     <ProcessorSentence>Combinar frases</ProcessorSentence>
@@ -1097,6 +1091,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
     <Delay>Atraso entre chamadas ao servidor</Delay>
     <MaxBytes>Máximo de bytes em cada chamada ao servidor</MaxBytes>
     <PromptX>Solicitar para {0}</PromptX>
+    <TranslateLinesSeparately>Traduzir cada linha separadamente</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tradutor do Google vs Microsoft</Title>
@@ -2546,6 +2541,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CpsLineLengthStyleCalcNoSpace>Contar todos excepto o espaço</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composição</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composição, não espaço</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, apenas cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolo musical</MusicSymbol>
