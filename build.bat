@@ -263,7 +263,7 @@ FOR %%G IN (7za.exe) DO (SET "SEVENZIP_PATH=%%~$PATH:G")
 IF EXIST "%SEVENZIP_PATH%" (SET "SEVENZIP=%SEVENZIP_PATH%" & EXIT /B)
 
 FOR /F "tokens=2*" %%A IN (
-  'REG QUERY "HKLM\SOFTWARE\7-Zip" /v "Path" 2^>NUL ^|^|
+   REG QUERY "HKLM\SOFTWARE\7-Zip" /v "Path" 2^>NUL ^|^|
    REG QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v "Path" 2^>NUL') DO IF "%%A" == "REG_SZ" SET "SEVENZIP=%%B\7z.exe"
 EXIT /B
 
@@ -273,6 +273,6 @@ FOR %%G IN (ISCC.exe) DO (SET "INNOSETUP_PATH=%%~$PATH:G")
 IF EXIST "%INNOSETUP_PATH%" (SET "INNOSETUP=%INNOSETUP_PATH%" & EXIT /B)
 
 FOR /F "tokens=5*" %%A IN (
-  'REG QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1" /v "Inno Setup: App Path" 2^>NUL ^|^|
+   REG QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1" /v "Inno Setup: App Path" 2^>NUL ^|^|
    REG QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1" /v "Inno Setup: App Path" 2^>NUL') DO IF "%%A" == "REG_SZ" SET "INNOSETUP=%%B\ISCC.exe"
 EXIT /B
