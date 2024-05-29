@@ -636,6 +636,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             title = "Error: Cannot load amfrt64.dll";
                         }
+                        else if (_log.ToString().Contains("The minimum required Nvidia driver for nvenc is"))
+                        {
+                            title = "Nvidia driver needs updating";
+                        }
 
                         MessageBox.Show($"Encoding with ffmpeg failed: {Environment.NewLine}{_log}", title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
