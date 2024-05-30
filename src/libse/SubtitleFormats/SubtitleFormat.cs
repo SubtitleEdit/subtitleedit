@@ -653,7 +653,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new AvidStl(),
                 new WinCaps32(),
                 new IsmtDfxp(),
-                new Cavena890(),
                 new Spt(),
                 new Sptx(),
                 new IaiSub(),
