@@ -26,7 +26,6 @@
    * Some improvements for auto-translate
    * Set default ChatGPT model to the new "gpt-4o"
    * Add hot keys to the binary OCR "character-inspect-window" - thx trienow
-   * Update WhisperCPP to 1.6.0
    * Update ffmpeg to 2024-05-23
    * Enable language filter in Whisper window - thx rRobis
    * Add .m4b file extension to audio formats - thx janot
