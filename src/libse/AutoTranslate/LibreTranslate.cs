@@ -75,7 +75,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             resultText = resultText.Replace("<br />", Environment.NewLine);
+            resultText = resultText.Replace(". />", "." + Environment.NewLine);
             resultText = resultText.Replace(" /> ", " "); // https://github.com/SubtitleEdit/subtitleedit/issues/8223
+            resultText = resultText.Replace("/> ", " "); 
+            resultText = resultText.Replace("  ", " ");
+            resultText = resultText.Replace("<br ", Environment.NewLine); //
 
             return Json.DecodeJsonText(resultText).Trim();
         }
