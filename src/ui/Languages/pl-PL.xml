@@ -18,6 +18,7 @@
     <Preview>Podgląd</Preview>
     <ShowPreview>Pokaż podgląd</ShowPreview>
     <HidePreview>Ukryj podgląd</HidePreview>
+    <SubtitleFile>Plik napisów</SubtitleFile>
     <SubtitleFiles>Pliki napisów</SubtitleFiles>
     <AllFiles>Wszystkie pliki</AllFiles>
     <VideoFiles>Pliki wideo</VideoFiles>
@@ -1018,6 +1019,9 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <AlignRight>Wyrównaj do prawej</AlignRight>
     <GetStartPosition>Pobierz pozycję początkową</GetStartPosition>
     <GetEndPosition>Pobierz pozycję zakończenia</GetEndPosition>
+    <UseSource>Użyj źródła</UseSource>
+    <UseSourceResolution>Użyj rozdzielczości źródłowej</UseSourceResolution>
+    <OutputSettings>Plik wyjściowy/folder...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generuj wideo z dodanymi/usuniętymi osadzonymi napisami</Title>
@@ -1057,15 +1061,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <To>na:</To>
     <Translate>Tłumacz</Translate>
     <PleaseWait>Proszę czekać... to może chwilę potrwać</PleaseWait>
-    <PoweredByGoogleTranslate>Obsługiwane przez tłumacza Google</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Obsługiwane przez tłumacza Microsoft</PoweredByMicrosoftTranslate>
     <PoweredByX>Obsługiwane przez {0}</PoweredByX>
-    <MsClientSecretNeeded>Przepraszamy, potrzebujesz klucza do usług poznawczych "Translator Text" firmy Microsoft, aby móc korzystać z najnowszego programu Microsoft Translator.
-
-Przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie automatyczne", aby wpisać swój klucz.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Spróbuję przetłumaczyć bez klucza API... (powolne i z ograniczonymi danymi).
-Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie automatyczne", aby wprowadzić swój klucz API tłumacza Google.</GoogleNoApiKeyWarning>
-    <Service>Usługa:</Service>
     <LineMergeHandling>Połącz linie:</LineMergeHandling>
     <ProcessorMergeNext>Połącz maksymalnie dwie linie</ProcessorMergeNext>
     <ProcessorSentence>Połącz zdania</ProcessorSentence>
@@ -1086,6 +1082,13 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie aut
     <XRequiresAnApiKey>"{0}" wymaga klucza API.</XRequiresAnApiKey>
     <ReadMore>Więcej informacji?</ReadMore>
     <Formality>Stopień formalizmu</Formality>
+    <TranslateCurrentLine>Przetłumacz tylko bieżącą linię</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Przetłumacz ponownie bieżącą linię</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Obsługa dzielenia/łączenia</MergeSplitStrategy>
+    <Delay>Opóźnienie między wywołaniami serwera</Delay>
+    <MaxBytes>Maksymalna liczba bajtów w każdym wywołaniu serwera</MaxBytes>
+    <PromptX>Monit o {0}</PromptX>
+    <TranslateLinesSeparately>Przetłumacz każdą linię osobno</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tłumaczenie Google vs Tłumaczenie Microsoft</Title>
@@ -1450,6 +1453,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie aut
         <RemoveOrExportShotChanges>Usuń/eksportuj zmiany ujęcia...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Wygeneruj wykresy falowe w trybie wsadowym...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Pokaż/Ukryj wykres falowy i spektrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Zamiana tekstu na mowę i dodanie do wideo...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Odłącz elementy sterowania wideo</UnDockVideoControls>
         <ReDockVideoControls>Ponowne przyłącz elementy sterowania wideo</ReDockVideoControls>
       </Video>
@@ -1607,6 +1611,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie aut
         <GoToSourceView>Przejdź do widoku źródła</GoToSourceView>
         <GoToListView>Przejdź do widoku listy</GoToListView>
         <ExtractAudio>Wyodrębnij dźwięk...</ExtractAudio>
+        <MediaInfo>Informacje o mediach</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2126,6 +2131,8 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
     <EvenLines>Linie parzyste</EvenLines>
     <DurationLessThan>Czas trwania krótszy niż</DurationLessThan>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
+    <CpsLessThan>ZNS mniej niż</CpsLessThan>
+    <CpsGreaterThan>ZNS więcej niż</CpsGreaterThan>
     <ExactlyOneLine>Dokładnie jedna linia</ExactlyOneLine>
     <ExactlyTwoLines>Dokładnie dwie linie</ExactlyTwoLines>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
@@ -2531,6 +2538,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <CpsLineLengthStyleCalcNoSpace>Policz wszystko oprócz spacji</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, spacja 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Uwzględnij znaki kompozycji</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Uwzględnij znaki kompozycji, a nie spacje</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Brak spacji i znaków interpunkcji ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Bez spacji i znaków interpunkcyjnych, tylko ZNS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Symbol muzyczny</MusicSymbol>
@@ -3150,6 +3159,24 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <Info>Jeden punkt synchronizacji dostosuje pozycję, dwa lub więcej punktów synchronizacji dostosuje pozycję i szybkość</Info>
     <ApplySync>Zastosuj</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Zamiana tekstu na mowę</Title>
+    <Voice>Głos</Voice>
+    <TestVoice>Głos testowy</TestVoice>
+    <DefaultVoice>Głos domyślny</DefaultVoice>
+    <AddAudioToVideo>Dodaj audio do pliku wideo (nowy plik)</AddAudioToVideo>
+    <GenerateSpeech>Generuj mowę z tekstu</GenerateSpeech>
+    <ActorInfo>Kliknij prawym przyciskiem myszy, aby przypisać aktora do głosu</ActorInfo>
+    <AdjustingSpeedXOfY>Regulacja prędkości: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Łączenie ścieżki audio: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generowanie mowy z tekstu: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Przegląd klipów audio</ReviewAudioClips>
+    <ReviewInfo>Przegląd i edycja/usuwanie klipów audio</ReviewInfo>
+    <Play>Odtwarzaj</Play>
+    <AutoContinue>Auto-kontynuacja</AutoContinue>
+    <Regenerate>Generuj ponownie</Regenerate>
+    <Speed>Prędkość</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Synchronizacja SMPTE</Title>
     <UseSmpteTiming>Użyć synchronizacji w czasie SMPTE dla bieżących napisów?</UseSmpteTiming>
@@ -3319,6 +3346,13 @@ Zachować te zmiany?</KeepChangesMessage>
     <InspectItems>Sprawdź elementy</InspectItems>
     <AddBetterMatch>Dodaj lepsze dopasowanie</AddBetterMatch>
     <Add>Dodaj</Add>
+    <AddBetterMultiMatch>Dodaj lepsze dopasowanie wielokrotne</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Dodaj lub zaktualizuj dopasowanie</AddOrUpdateMatch>
+    <SelectPrevousMatch>Wybierz poprzednie dopasowanie</SelectPrevousMatch>
+    <SelectNextMatch>Wybierz następne dopasowanie</SelectNextMatch>
+    <JumpPreviousMissingMatch>Przejdź do poprzedniego brakującego dopasowania</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Przejdź do następnego brakującego dopasowania</JumpNextMissingMatch>
+    <FocusTextbox>Skup się na wprowadzaniu tekstu</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nowy folder</Title>
@@ -3383,7 +3417,8 @@ Zachować te zmiany?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Usuń zmianę ujęcia z zaznaczenia</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
-    <InsertSubtitleHere>Wstaw napisy tutaj</InsertSubtitleHere>
+    <InsertSubtitleHere>Wstaw tutaj tekst</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Wstaw tutaj plik napisów...</InsertSubtitleFileHere>
     <CharsSecX>ZNS: {0:0.00}</CharsSecX>
     <WordsMinX>SNM: {0:0.00}</WordsMinX>
   </Waveform>
