@@ -2468,6 +2468,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DurationGreaterThan = "Duration greater than",
                 CpsLessThan = "CPS less than",
                 CpsGreaterThan = "CPS greater than",
+                LengthLessThan = "Length less than",
+                LengthGreaterThan = "Length greater than",
                 ExactlyOneLine = "Exactly one line",
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",

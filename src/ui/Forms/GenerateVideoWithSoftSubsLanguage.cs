@@ -108,6 +108,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = LanguageSettings.Current.ChooseLanguage.Title;
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            labelLanguageCode.Text = LanguageSettings.Current.EbuSaveOptions.LanguageCode;
+            labelTitle.Text = LanguageSettings.Current.SubStationAlphaProperties.Title;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);

@@ -2280,6 +2280,8 @@
             public string DurationGreaterThan { get; set; }
             public string CpsLessThan { get; set; }
             public string CpsGreaterThan { get; set; }
+            public string LengthLessThan { get; set; }
+            public string LengthGreaterThan { get; set; }
             public string ExactlyOneLine { get; set; }
             public string ExactlyTwoLines { get; set; }
             public string MoreThanTwoLines { get; set; }
