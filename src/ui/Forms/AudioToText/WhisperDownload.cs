@@ -137,6 +137,29 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
+            if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+            {
+                UiUtil.OpenUrl("https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r192.3.4_windows.7z");
+
+                var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                UiUtil.OpenFolder(folder);
+
+                MessageBox.Show(this, $"Unpack and copy files from \"Faster-Whisper-XXL\" to: \"{folder}\"");
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             var downloadUrl = IntPtr.Size * 8 == 32 ? DownloadUrl32Cpp : DownloadUrl64Cpp;
             if (_whisperChoice == WhisperChoice.CppCuBlas)
             {
@@ -392,6 +415,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     "d53002d273287bfcfcd678d3d9f1faabbbca533ac3fa11867be0e7e365d386bf8fddf591cad41345006406cac663868dd7214d680f36906abe0f7d851d989fa2",
                     "0f463526879a83b938c315d8ca865db89945beb8ba9fd44e74319ba567affb0fcf223d1ee662bf8be280e736e54f44beec2f1e33aac9d537d7d7ae9ba155b049",
                     "78365ba55f66ac018aa8ca405bf11bcb93ce0bff44a528e9304be14f99dc4f84f08ce1679c9cf3d135dd56ade79881318833d69397ca55caa062c6214a0d4cff",
+                };
+
+                return oldHashes.Contains(hash);
+            }
+
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+            {
+                var oldHashes = new List<string>
+                {
+                    "x",
                 };
 
                 return oldHashes.Contains(hash);
