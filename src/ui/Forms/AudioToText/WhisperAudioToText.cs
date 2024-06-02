@@ -2292,11 +2292,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         internal static void FixPurfviewWhisperStandardArgument(Label label, string engine)
         {
-            if (engine != WhisperChoice.PurfviewFasterWhisper && Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
+            if (engine != WhisperChoice.PurfviewFasterWhisper &&
+                engine != WhisperChoice.PurfviewFasterWhisperXXL &&
+                Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
             {
                 Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--standard", string.Empty).Trim();
             }
-            else if (engine == WhisperChoice.PurfviewFasterWhisper &&
+            else if ((engine == WhisperChoice.PurfviewFasterWhisper || engine == WhisperChoice.PurfviewFasterWhisperXXL) &&
                      !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
                      Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
             {
