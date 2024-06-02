@@ -2124,11 +2124,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Configuration.Settings.Tools.WhisperChoice = oldChoice;
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
-                    using (var downloadForm = new WhisperDownload(WhisperChoice.PurfviewFasterWhisper))
+                    using (var downloadForm = new WhisperDownload(whisperChoice))
                     {
                         if (downloadForm.ShowDialog(this) == DialogResult.OK)
                         {
-                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.PurfviewFasterWhisper;
+                            Configuration.Settings.Tools.WhisperChoice = whisperChoice;
                         }
                         else
                         {
