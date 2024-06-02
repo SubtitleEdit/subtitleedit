@@ -2125,7 +2125,9 @@ Command line: {1} {2}
     <DurationLessThan>时长小于</DurationLessThan>
     <DurationGreaterThan>时长大于</DurationGreaterThan>
     <CpsLessThan>CPS 小于</CpsLessThan>
-    <CpsGreaterThan>CP S大于</CpsGreaterThan>
+    <CpsGreaterThan>CPS 大于</CpsGreaterThan>
+    <LengthLessThan>长度少于</LengthLessThan>
+    <LengthGreaterThan>长度大于</LengthGreaterThan>
     <ExactlyOneLine>正好一行</ExactlyOneLine>
     <ExactlyTwoLines>正好两行</ExactlyTwoLines>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
