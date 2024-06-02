@@ -520,8 +520,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var i = 0;
             var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageIsoCode);
 
-            foreach (TranslationPair item in comboBox.Items)
+            foreach (var comboBoxItem in comboBox.Items)
             {
+                var item = comboBoxItem as TranslationPair;
+                if (item == null)
+                {
+                    continue;
+                }
+
                 if (!string.IsNullOrEmpty(item.TwoLetterIsoLanguageName) && item.TwoLetterIsoLanguageName == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
