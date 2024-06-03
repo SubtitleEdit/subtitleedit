@@ -876,6 +876,7 @@
     <Word from="koaj" to="koja" />
     <Word from="kofu" to="kavu" />
     <Word from="kogao" to="mogao" />
+    <Word from="kojiam" to="kojima" />
     <Word from="kola" to="auto" />
     <Word from="kolima" to="autu" />
     <Word from="komandni" to="zapovjedni" />
@@ -2710,6 +2711,7 @@
     <Word from="uopšte" to="uopće" />
     <Word from="uopše" to="uopće" />
     <Word from="uopče" to="uopće" />
+    <Word from="uopcr" to="uopće" />
     <Word from="upakujem" to="upakiram" />
     <Word from="upakovano" to="upakirano" />
     <Word from="upustva" to="uputstva" />
@@ -3035,6 +3037,7 @@
     <Word from="zevati" to="zijevati" />
     <Word from="zevali" to="zijevali" />
     <Word from="zobg" to="zbog" />
+    <Word from="zgob" to="zbog" />
     <Word from="zdelu" to="zdjelu" />
     <Word from="zdrvo" to="zdravo" />
     <Word from="Zdrvo" to="Zdravo" />
@@ -5517,6 +5520,7 @@
     <RegEx find="rčaće" replaceWith="rčat će" />
     <RegEx find="renaduvan" replaceWith="renapuhan" />
     <RegEx find="resed" replaceWith="resjed" />
+    <RegEx find="rgk" replaceWith="rgl" />
     <RegEx find="rgv" replaceWith="rgov" />
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
@@ -5720,6 +5724,7 @@
     <RegEx find="zvešć" replaceWith="zvest ć" />
     <RegEx find="zvolić" replaceWith="zvolit ć" />
     <RegEx find="zwm" replaceWith="zem" />
+    <RegEx find="žw" replaceWith="ze" />
     <RegEx find="žbać" replaceWith="žbat ć" />
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <RegEx find="([žzt])ivać" replaceWith="$1ivat ć" />
