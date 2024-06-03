@@ -5383,6 +5383,7 @@
     <RegEx find="mrn" replaceWith="men" />
     <RegEx find="mro([as])" replaceWith="mor$1" />
     <RegEx find="msč" replaceWith="mač" />
+    <RegEx find="msd" replaceWith="mad" />
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
     <RegEx find="mtić" replaceWith="mtit ć" />
     <RegEx find="mzn" replaceWith="mun" />
