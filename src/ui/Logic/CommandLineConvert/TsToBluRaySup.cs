@@ -21,13 +21,19 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             using (var form = new ExportPngXml())
             {
-                form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
+                var sub = tsParser.GetDvbSubtitles(pid);
 
+                var tempSubtitle = new Subtitle();
+                foreach (var x in sub)
+                {
+                    tempSubtitle.Paragraphs.Add(new Paragraph(string.Empty, x.StartMilliseconds, x.EndMilliseconds));
+                }
+
+                form.Initialize(tempSubtitle, new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
 
                 var language = GetFileNameEnding(programMapTableParser, pid);
                 var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
                 stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> PID {pid} to {outputFileName}...");
-                var sub = tsParser.GetDvbSubtitles(pid);
                 progressCallback?.Invoke($"Save PID {pid}");
                 var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
                 using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
