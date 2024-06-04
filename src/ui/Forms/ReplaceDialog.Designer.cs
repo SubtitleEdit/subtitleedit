@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
@@ -42,6 +43,18 @@
             this.comboBoxFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxFind = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.contextMenuStripNormal = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripReplace = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemCutReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCopyReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPasteReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemDeleteReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripNormal.SuspendLayout();
+            this.contextMenuStripReplace.SuspendLayout();
             this.SuspendLayout();
             // 
             // radioButtonRegEx
@@ -116,6 +129,7 @@
             // 
             // textBoxReplace
             // 
+            this.textBoxReplace.ContextMenuStrip = this.contextMenuStripReplace;
             this.textBoxReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxReplace.Location = new System.Drawing.Point(15, 71);
             this.textBoxReplace.Name = "textBoxReplace";
@@ -220,6 +234,90 @@
             this.comboBoxFind.UsePopupWindow = false;
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFind_KeyDown);
             // 
+            // contextMenuStripNormal
+            // 
+            this.contextMenuStripNormal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStripNormal.Name = "contextMenuStripNormal";
+            this.contextMenuStripNormal.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuStripNormal.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripNormal_Opening);
+            // 
+            // cutToolStripMenuItem
+            // 
+            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.cutToolStripMenuItem.Text = "Cut";
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // contextMenuStripReplace
+            // 
+            this.contextMenuStripReplace.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemCutReplace,
+            this.toolStripMenuItemCopyReplace,
+            this.toolStripMenuItemPasteReplace,
+            this.toolStripMenuItemDeleteReplace});
+            this.contextMenuStripReplace.Name = "contextMenuStripNormal";
+            this.contextMenuStripReplace.Size = new System.Drawing.Size(145, 92);
+            this.contextMenuStripReplace.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripReplace_Opening);
+            // 
+            // toolStripMenuItemCutReplace
+            // 
+            this.toolStripMenuItemCutReplace.Name = "toolStripMenuItemCutReplace";
+            this.toolStripMenuItemCutReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.toolStripMenuItemCutReplace.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemCutReplace.Text = "Cut";
+            this.toolStripMenuItemCutReplace.Click += new System.EventHandler(this.toolStripMenuItemCutReplace_Click);
+            // 
+            // toolStripMenuItemCopyReplace
+            // 
+            this.toolStripMenuItemCopyReplace.Name = "toolStripMenuItemCopyReplace";
+            this.toolStripMenuItemCopyReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.toolStripMenuItemCopyReplace.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemCopyReplace.Text = "Copy";
+            this.toolStripMenuItemCopyReplace.Click += new System.EventHandler(this.toolStripMenuItemCopyReplace_Click);
+            // 
+            // toolStripMenuItemPasteReplace
+            // 
+            this.toolStripMenuItemPasteReplace.Name = "toolStripMenuItemPasteReplace";
+            this.toolStripMenuItemPasteReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.toolStripMenuItemPasteReplace.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemPasteReplace.Text = "Paste";
+            this.toolStripMenuItemPasteReplace.Click += new System.EventHandler(this.toolStripMenuItemPasteReplace_Click);
+            // 
+            // toolStripMenuItemDeleteReplace
+            // 
+            this.toolStripMenuItemDeleteReplace.Name = "toolStripMenuItemDeleteReplace";
+            this.toolStripMenuItemDeleteReplace.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemDeleteReplace.Text = "Delete";
+            this.toolStripMenuItemDeleteReplace.Click += new System.EventHandler(this.toolStripMenuItemDeleteReplace_Click);
+            // 
             // ReplaceDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,6 +350,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReplaceDialog_FormClosing);
             this.Shown += new System.EventHandler(this.ReplaceDialog_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormReplaceDialog_KeyDown);
+            this.contextMenuStripNormal.ResumeLayout(false);
+            this.contextMenuStripReplace.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,5 +373,15 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFindReplaceIn;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelFindReplaceIn;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFind;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripNormal;
+        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripReplace;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCutReplace;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopyReplace;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPasteReplace;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteReplace;
     }
 }
