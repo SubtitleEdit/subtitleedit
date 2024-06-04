@@ -2132,10 +2132,12 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <RegEx>Expressão regular</RegEx>
     <OddLines>Linhas ímpares</OddLines>
     <EvenLines>Linhas pares</EvenLines>
-    <DurationLessThan>Duração menor que</DurationLessThan>
-    <DurationGreaterThan>Duração maior que</DurationGreaterThan>
-    <CpsLessThan>CPS menor que</CpsLessThan>
-    <CpsGreaterThan>CPS maior que</CpsGreaterThan>
+    <DurationLessThan>Duração inferior a</DurationLessThan>
+    <DurationGreaterThan>Duração superior a</DurationGreaterThan>
+    <CpsLessThan>CPS inferior a</CpsLessThan>
+    <CpsGreaterThan>CPS superior a</CpsGreaterThan>
+    <LengthLessThan>Comprimento inferior a</LengthLessThan>
+    <LengthGreaterThan>Comprimento superior a</LengthGreaterThan>
     <ExactlyOneLine>Exactamente uma linha</ExactlyOneLine>
     <ExactlyTwoLines>Exactamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
