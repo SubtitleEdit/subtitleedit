@@ -91,12 +91,27 @@
             // 
             // comboBoxFrom
             // 
+            this.comboBoxFrom.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrom.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrom.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrom.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrom.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrom.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrom.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrom.DropDownHeight = 400;
             this.comboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFrom.DropDownWidth = 121;
             this.comboBoxFrom.FormattingEnabled = true;
             this.comboBoxFrom.Location = new System.Drawing.Point(256, 12);
+            this.comboBoxFrom.MaxLength = 32767;
             this.comboBoxFrom.Name = "comboBoxFrom";
+            this.comboBoxFrom.SelectedIndex = -1;
+            this.comboBoxFrom.SelectedItem = null;
+            this.comboBoxFrom.SelectedText = "";
             this.comboBoxFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrom.TabIndex = 0;
+            this.comboBoxFrom.UsePopupWindow = false;
+            this.comboBoxFrom.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrom_SelectedIndexChanged);
             // 
             // buttonTranslate
             // 
@@ -119,12 +134,27 @@
             // 
             // comboBoxTo
             // 
+            this.comboBoxTo.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTo.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTo.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTo.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTo.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTo.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTo.DropDownHeight = 400;
             this.comboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTo.DropDownWidth = 121;
             this.comboBoxTo.FormattingEnabled = true;
             this.comboBoxTo.Location = new System.Drawing.Point(426, 12);
+            this.comboBoxTo.MaxLength = 32767;
             this.comboBoxTo.Name = "comboBoxTo";
+            this.comboBoxTo.SelectedIndex = -1;
+            this.comboBoxTo.SelectedItem = null;
+            this.comboBoxTo.SelectedText = "";
             this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTo.TabIndex = 1;
+            this.comboBoxTo.UsePopupWindow = false;
+            this.comboBoxTo.SelectedIndexChanged += new System.EventHandler(this.comboBoxTo_SelectedIndexChanged);
             // 
             // labelFrom
             // 
@@ -137,6 +167,7 @@
             // 
             // textBoxSourceText
             // 
+            this.textBoxSourceText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSourceText.Location = new System.Drawing.Point(17, 71);
             this.textBoxSourceText.Multiline = true;
             this.textBoxSourceText.Name = "textBoxSourceText";

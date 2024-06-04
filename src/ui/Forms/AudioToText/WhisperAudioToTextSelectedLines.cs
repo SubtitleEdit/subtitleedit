@@ -1,12 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -82,10 +82,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Init()
         {
-            comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
-            var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-            comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+            WhisperAudioToText.InitializeLanguageNames(comboBoxLanguages);
+
             WhisperAudioToText.FillModels(comboBoxModels, string.Empty);
 
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
@@ -467,6 +465,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void comboBoxLanguages_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxLanguages.SelectedIndex > 0 && comboBoxLanguages.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                WhisperAudioToText.InitializeLanguageNames(comboBoxLanguages);
+                return;
+            }
+
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
 

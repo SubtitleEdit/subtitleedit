@@ -107,8 +107,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationGreaterThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.CpsLessThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.CpsGreaterThan);
-            comboBoxRule.Items.Add("Length less than");
-            comboBoxRule.Items.Add("Length greater than");
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.LengthLessThan);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.LengthGreaterThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.ExactlyOneLine);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.ExactlyTwoLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
