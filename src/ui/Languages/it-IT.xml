@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 19.05.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 04.06.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2135,6 +2135,8 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <DurationGreaterThan>Durata maggiore di</DurationGreaterThan>
     <CpsLessThan>CPS inferiore a</CpsLessThan>
     <CpsGreaterThan>CPS superiore a</CpsGreaterThan>
+    <LengthLessThan>Lunghezza inferiore a</LengthLessThan>
+    <LengthGreaterThan>Lunghezza superiore a</LengthGreaterThan>
     <ExactlyOneLine>Esattamente una linea</ExactlyOneLine>
     <ExactlyTwoLines>Esattamente due linee</ExactlyTwoLines>
     <MoreThanTwoLines>Più di due righe</MoreThanTwoLines>
