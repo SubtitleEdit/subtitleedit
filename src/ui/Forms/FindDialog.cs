@@ -32,6 +32,11 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonRegEx.Text = LanguageSettings.Current.FindDialog.RegularExpression;
             checkBoxWholeWord.Text = LanguageSettings.Current.FindDialog.WholeWord;
             buttonCount.Text = LanguageSettings.Current.FindDialog.Count;
+            cutToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Cut;
+            copyToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Copy;
+            pasteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Paste;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
+
             labelCount.Text = string.Empty;
             _subtitle = subtitle;
             _findAndReplaceMethods = findAndReplaceMethods;
@@ -213,22 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            // remove any existing context menu
-            textBoxFind.ContextMenuStrip = null;
-            comboBoxFind.ContextMenuStrip = null;
-            
-            // only hook context menu if regex radio button is checked
-            if (sender == radioButtonRegEx && radioButtonRegEx.Checked)
-            {
-                if (textBoxFind.Visible)
-                {
-                    textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
-                }
-                else if (radioButtonRegEx.Checked)
-                {
-                    comboBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
-                }
-            }
+            SetContextMenuStrip();
 
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
             labelCount.Text = string.Empty;
@@ -337,6 +327,32 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindPrev.Focus();
         }
 
+        private void SetContextMenuStrip()
+        {
+            comboBoxFind.ContextMenuStrip = null;
+            textBoxFind.ContextMenuStrip = null;
+
+            if (radioButtonRegEx.Checked)
+            {
+                if (textBoxFind.Visible)
+                {
+                    textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                }
+                else if (radioButtonRegEx.Checked)
+                {
+                    comboBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
+                }
+            }
+            else if (comboBoxFind.Visible)
+            {
+                comboBoxFind.ContextMenuStrip = contextMenuStripNormal;
+            }
+            else
+            {
+                textBoxFind.ContextMenuStrip = contextMenuStripNormal;
+            }
+        }
+
         private void FindDialog_Shown(object sender, EventArgs e)
         {
             if (comboBoxFind.Visible)
@@ -347,6 +363,103 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Focus();
             }
+
+            SetContextMenuStrip();
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBoxFind.Visible)
+                {
+                    textBoxFind.Cut();
+                }
+                else if (comboBoxFind.Visible)
+                {
+                    if (comboBoxFind.SelectedText.Length > 0)
+                    {
+                        Clipboard.SetText(comboBoxFind.SelectedText);
+                        comboBoxFind.SelectedText = string.Empty;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBoxFind.Visible)
+                {
+                    textBoxFind.Copy();
+                }
+                else if (comboBoxFind.Visible)
+                {
+                    if (comboBoxFind.SelectedText.Length > 0)
+                    {
+                        Clipboard.SetText(comboBoxFind.SelectedText);
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var text = Clipboard.GetText();
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
+
+                if (textBoxFind.Visible)
+                {
+                    textBoxFind.Paste(text);
+                }
+                else if (comboBoxFind.Visible)
+                {
+                    comboBoxFind.SelectedText = text;
+                }
+
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBoxFind.Visible)
+                {
+                    textBoxFind.SelectedText = string.Empty;
+                }
+                else if (comboBoxFind.Visible)
+                {
+                    comboBoxFind.SelectedText = string.Empty;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private void contextMenuStripNormal_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            pasteToolStripMenuItem.Enabled = Clipboard.ContainsText();
         }
     }
 }
