@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Editare subtitrare</Title>
-    <Version>4.0.5</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu, Mihai Pavelescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -487,7 +487,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <BottomAlignSelectedLines>Linii selectate aliniate jos (poziția orizontală păstrată)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Comutare „Forțată” ptr. liniile selectate</ToggleForcedSelectedLines>
     <SelectForcedLines>Selectare linii forțate</SelectForcedLines>
-    <SelectNonForcedLines></SelectNonForcedLines>
+    <SelectNonForcedLines>
+    </SelectNonForcedLines>
     <SizeXY>Mărime: {0}x{1}</SizeXY>
     <SetAspectRatio11>Setare raport de aspect 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Ajustare luminozitate</ChangeBrightnessTitle>
@@ -511,7 +512,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <OnlyChangeAllUppercaseLines>Schimbă doar toate majusculele.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TOTUL CU MAJUSCULE</AllUppercase>
     <AllLowercase>totul cu minuscule</AllLowercase>
-    <ProperCase></ProperCase>
+    <ProperCase>
+    </ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Schimbarea încasetării - Nume</Title>
@@ -519,7 +521,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <Enabled>Permis</Enabled>
     <Name>Nume</Name>
     <LinesFoundX>Linii găsite: {0}</LinesFoundX>
-    <ExtraNames></ExtraNames>
+    <ExtraNames>
+    </ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Schimbarea ratei cadrului</Title>
@@ -536,7 +539,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <Custom>Personalizat</Custom>
     <ToDropFrame>La drop frame (cadru sărit)</ToDropFrame>
     <FromDropFrame>De la drop frame (cadru sărit)</FromDropFrame>
-    <AllowOverlap></AllowOverlap>
+    <AllowOverlap>
+    </AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verificarea actualizărilor</Title>
@@ -546,9 +550,12 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <CheckingForUpdatesNewVersion>Versiune nouă disponibilă!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Pagina de descărcare</InstallUpdate>
     <NoUpdates>Nicio actualizare</NoUpdates>
-    <XPluginsHasAnUpdate></XPluginsHasAnUpdate>
-    <OnePluginsHasAnUpdate></OnePluginsHasAnUpdate>
-    <Update></Update>
+    <XPluginsHasAnUpdate>
+    </XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>
+    </OnePluginsHasAnUpdate>
+    <Update>
+    </Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Alegerea pistei audio</Title>
@@ -591,16 +598,21 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1:0.##}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Arată doar diferențele</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoră întreruperile de linie</IgnoreLineBreaks>
-    <IgnoreWhitespace></IgnoreWhitespace>
+    <IgnoreWhitespace>
+    </IgnoreWhitespace>
     <IgnoreFormatting>Ignoră formatarea</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Caută numai diferențele din text</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Comparare imposibilă cu subtitrări bazate pe imagine</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <ConvertColorsToDialog>
-    <Title></Title>
-    <RemoveColorTags></RemoveColorTags>
-    <AddNewLines></AddNewLines>
-    <ReBreakLines></ReBreakLines>
+    <Title>
+    </Title>
+    <RemoveColorTags>
+    </RemoveColorTags>
+    <AddNewLines>
+    </AddNewLines>
+    <ReBreakLines>
+    </ReBreakLines>
   </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>Proprietăți D-Cinema (interop)</Title>
@@ -628,7 +640,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <ZPositionHelp>Numerele pozitive înlătură textul; numerele negative apropie textul; dacă poziția Z=0, atunci avem 2D</ZPositionHelp>
     <ChooseColor>Alege culoarea...</ChooseColor>
     <Generate>Generează</Generate>
-    <GenerateNewIdOnSave></GenerateNewIdOnSave>
+    <GenerateNewIdOnSave>
+    </GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Acoperirea decalărilor mici dintre subtitrări</Title>
@@ -722,8 +735,10 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <ChooseColor>Alege culoarea:</ChooseColor>
     <TotalSeconds>Total secunde:</TotalSeconds>
     <EndDelayInSeconds>Amânare sfârșit în secunde:</EndDelayInSeconds>
-    <WordEffect></WordEffect>
-    <CharacterEffect></CharacterEffect>
+    <WordEffect>
+    </WordEffect>
+    <CharacterEffect>
+    </CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efect „mașină de scris”</Title>
@@ -741,15 +756,24 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <SubtitleExportedInCustomFormatToX>Subtitrare personalizată exportată la: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
-    <Title></Title>
-    <Template></Template>
-    <Header></Header>
-    <TextLine></TextLine>
-    <TimeCode></TimeCode>
-    <NewLine></NewLine>
-    <Footer></Footer>
-    <FileExtension></FileExtension>
-    <DoNotModify></DoNotModify>
+    <Title>
+    </Title>
+    <Template>
+    </Template>
+    <Header>
+    </Header>
+    <TextLine>
+    </TextLine>
+    <TimeCode>
+    </TimeCode>
+    <NewLine>
+    </NewLine>
+    <Footer>
+    </Footer>
+    <FileExtension>
+    </FileExtension>
+    <DoNotModify>
+    </DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
     <Title>Export Final Cut Pro XML avansat</Title>
@@ -1435,6 +1459,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <SetVideoOffset>Setează decalarea video...</SetVideoOffset>
         <SmptTimeMode>Sincronizare SMPTE (cadru sărit)</SmptTimeMode>
         <GenerateTextFromVideo>Generare text din video...</GenerateTextFromVideo>
+<<<<<<< HEAD
         <GenerateBlankVideo>Generare videoclip gol...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generare videoclip cu subtitrare inscripționată...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generare videoclip cu subtitrări încorporate adăugate/eliminate...</GenerateVideoWithEmbeddedSubs>
@@ -1445,6 +1470,24 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <WaveformBatchGenerate>Pachet audio generat...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Arată/ascunde Audio și Spectrogramă</ShowHideWaveformAndSpectrogram>
         <TextToSpeechAndAddToVideo>Din text în voce și adaugă la videoclip...</TextToSpeechAndAddToVideo>
+=======
+        <GenerateBlankVideo>
+        </GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>
+        </GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>
+        </GenerateVideoWithEmbeddedSubs>
+        <VideoAudioToTextX>
+        </VideoAudioToTextX>
+        <ImportChaptersFromVideo>Importare capitole din video</ImportChaptersFromVideo>
+        <GenerateImportShotChanges>Generare/importare schimbări de scenă...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>
+        </RemoveOrExportShotChanges>
+        <WaveformBatchGenerate>Pachet audio generat...</WaveformBatchGenerate>
+        <ShowHideWaveformAndSpectrogram>Arată/ascunde Audio și Spectrogramă</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>
+        </TextToSpeechAndAddToVideo>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <UnDockVideoControls>Dezactivare comenzi video</UnDockVideoControls>
         <ReDockVideoControls>Reactivare comenzi video</ReDockVideoControls>
       </Video>
@@ -1501,6 +1544,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <VisualSync>Sincronizare vizuală</VisualSync>
         <SpellCheck>Verifică ortografia</SpellCheck>
         <NetflixQualityCheck>Verificare calitate Netflix</NetflixQualityCheck>
+<<<<<<< HEAD
         <BeautifyTimeCodes>Înfrumusețare coduri de timp</BeautifyTimeCodes>
         <Settings>Setări</Settings>
         <Help>Ajutor</Help>
@@ -1515,21 +1559,58 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <AssaTools>Instrumente ASSA</AssaTools>
         <SubStationAlphaStyles>Stiluri Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Stiluri avansate de Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+=======
+        <BeautifyTimeCodes>
+        </BeautifyTimeCodes>
+        <Settings>Setări</Settings>
+        <Help>Ajutor</Help>
+        <Layout>
+        </Layout>
+        <AssaDraw>
+        </AssaDraw>
+      </ToolBar>
+      <ContextMenu>
+        <SizeAllColumnsToFit>Mărimea tuturor coloanelor „Text” ptr. potrivire</SizeAllColumnsToFit>
+        <SetStyle>
+        </SetStyle>
+        <SetActor>Setare actor</SetActor>
+        <SetLayer>
+        </SetLayer>
+        <AssaTools>
+        </AssaTools>
+        <SubStationAlphaStyles>Stiluri Sub Station Alpha...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>
+        </AdvancedSubStationAlphaStyles>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <TimedTextSetRegion>Text temporizat - setare regiune</TimedTextSetRegion>
         <TimedTextSetStyle>Text temporizat - setare stil</TimedTextSetStyle>
         <TimedTextStyles>Stiluri text temporizat...</TimedTextStyles>
         <TimedTextSetLanguage>Text temporizat - setare limbă</TimedTextSetLanguage>
         <SamiSetStyle>Sami - setare clasă</SamiSetStyle>
         <NuendoSetStyle>Nuendo - setare caracter</NuendoSetStyle>
+<<<<<<< HEAD
         <WebVttSetStyle>WebVTT - set stil</WebVttSetStyle>
         <WebVttSetVoice>WebVTT - seti voce</WebVttSetVoice>
         <WebVttBrowserPreview>WebVTT - previzualizare browser</WebVttBrowserPreview>
+=======
+        <WebVttSetStyle>
+        </WebVttSetStyle>
+        <WebVttSetVoice>
+        </WebVttSetVoice>
+        <WebVttBrowserPreview>
+        </WebVttBrowserPreview>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <Cut>Decupează</Cut>
         <Copy>Copiază</Copy>
         <Paste>Lipește</Paste>
         <Delete>Șterge</Delete>
         <SplitLineAtCursorPosition>Scindează linia la poziția cursorului</SplitLineAtCursorPosition>
+<<<<<<< HEAD
         <SplitLineAtCursorPositionAndAutoBr>Linie împărțită la poziția cursorului și întrerupe automat</SplitLineAtCursorPositionAndAutoBr>
+=======
+        <SplitLineAtCursorPositionAndAutoBr>
+        </SplitLineAtCursorPositionAndAutoBr>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <SplitLineAtCursorAndWaveformPosition>Scindează linia la poziția cursorului/video-ului</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto-durată (linia actuală)</AutoDurationCurrentLine>
         <SelectAll>Selectează tot</SelectAll>
@@ -1548,7 +1629,12 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <ColumnTextUp>Ridică textul</ColumnTextUp>
         <ColumnTextDown>Coboară textul</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copiază textul original în cel actual</ColumnCopyOriginalTextToCurrent>
+<<<<<<< HEAD
         <OcrSelectedLines>OCR linii selectate</OcrSelectedLines>
+=======
+        <OcrSelectedLines>
+        </OcrSelectedLines>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <Split>Scindează</Split>
         <MergeSelectedLines>Îmbină liniile selectate</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Îmbină liniile selectate ca dialog</MergeSelectedLinesAsDialog>
@@ -1572,12 +1658,18 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <Subscript>Indice</Subscript>
         <Alignment>Aliniere...</Alignment>
         <AutoBalanceSelectedLines>Auto-echilibrare linii selectate...</AutoBalanceSelectedLines>
+<<<<<<< HEAD
         <EvenlyDistributeSelectedLines>Distribuie uniform liniile selectate (CPS)</EvenlyDistributeSelectedLines>
+=======
+        <EvenlyDistributeSelectedLines>
+        </EvenlyDistributeSelectedLines>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <RemoveLineBreaksFromSelectedLines>Elimină întreruperile în liniile selectate...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efect „mașină de scris”...</TypewriterEffect>
         <KaraokeEffect>Efect Karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Arată liniile selectate mai devreme/mai târziu...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronizează vizual liniile selectate...</VisualSyncSelectedLines>
+<<<<<<< HEAD
         <BeautifyTimeCodesOfSelectedLines>Înfrumusețați coduri de timp pentru liniile selectate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traducere Google/Microsoft a liniei originale</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linii selectate</SelectedLines>
@@ -1590,6 +1682,28 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <AssaResolutionChanger>Schimbă rezoluția scriptului ASSA...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Generează caseta de fundal...</AssaGenerateBackgroundBox>
         <ImageColorPicker>Selector de culoare pentru imagine...</ImageColorPicker>
+=======
+        <BeautifyTimeCodesOfSelectedLines>
+        </BeautifyTimeCodesOfSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Traducere Google/Microsoft a liniei originale</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>
+        </SelectedLines>
+        <TranslateSelectedLines>Traduce liniile selectate...</TranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Ajustează limitele de timp în liniile selectate...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>Aplică limitele de timp în liniile selectate...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>
+        </ApplyCustomOverrideTag>
+        <SetPosition>
+        </SetPosition>
+        <GenerateProgressBar>
+        </GenerateProgressBar>
+        <AssaResolutionChanger>
+        </AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>
+        </AssaGenerateBackgroundBox>
+        <ImageColorPicker>
+        </ImageColorPicker>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
         <FixCommonErrorsInSelectedLines>Repară erorile uzuale în liniile selectate...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Schimbă încasetarea pentru liniile selectate...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Salvează liniile selectate ca...</SaveSelectedLines>
@@ -1601,8 +1715,10 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <RemoveBookmark>Elimină marcajul</RemoveBookmark>
         <GoToSourceView>Accesează vizualizare sursă</GoToSourceView>
         <GoToListView>Accesează vizualizare listă</GoToListView>
-        <ExtractAudio></ExtractAudio>
-        <MediaInfo></MediaInfo>
+        <ExtractAudio>
+        </ExtractAudio>
+        <MediaInfo>
+        </MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1639,7 +1755,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
       <StillTypingAutoContinueStopped>Încă tastează... auto-continuare oprită</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Introdu subt. la poziția video</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Introdu subtitrare nouă la poziția video (niciun text casetat)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
-      <InsertNewSubtitleAtVideoPositionMax></InsertNewSubtitleAtVideoPositionMax>
+      <InsertNewSubtitleAtVideoPositionMax>
+      </InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Redă exact înaintea &amp;textului</PlayFromJustBeforeText>
       <PlayFromBeginning>Redă video de la început</PlayFromBeginning>
@@ -1683,7 +1800,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <LoadedEmptyOrShort>Subtitrare blanc sau foarte scurtă încărcată {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Fișier blanc sau foarte scurt!</FileIsEmptyOrShort>
     <FileNotFound>Fișier de negăsit: {0}</FileNotFound>
-    <FileLocked></FileLocked>
+    <FileLocked>
+    </FileLocked>
     <SavedSubtitleX>Subtitrare salvată {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Subtitrare originală salvată {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fișier modificat pe disc</FileOnDiskModified>
@@ -1736,10 +1854,14 @@ Reiei căutarea de la începutul documentului, cu căutare și înlocuire?</Repl
     <CommonErrorsFixed>Erori uzuale reparate</CommonErrorsFixed>
     <BeforeRenumbering>Înaintea renumerotării</BeforeRenumbering>
     <RenumberedStartingFromX>Începutul renumerotării de la: {0</RenumberedStartingFromX>
-    <BeforeBeautifyTimeCodes></BeforeBeautifyTimeCodes>
-    <BeforeBeautifyTimeCodesSelectedLines></BeforeBeautifyTimeCodesSelectedLines>
-    <BeautifiedTimeCodes></BeautifiedTimeCodes>
-    <BeautifiedTimeCodesSelectedLines></BeautifiedTimeCodesSelectedLines>
+    <BeforeBeautifyTimeCodes>
+    </BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>
+    </BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>
+    </BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>
+    </BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Înaintea eliminării textului ptr. deficiențe de auz</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Scrierea textului eliminat ptr. deficiențe de auz: o linie</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Scrierea textului eliminat ptr. deficiențe de auz: {0} linii</TextingForHearingImpairedRemovedXLines>
@@ -1771,7 +1893,8 @@ Continui?</SubtitleAppendPrompt>
     <NothingToUndo>Nimic de anulat</NothingToUndo>
     <InvalidLanguageNameX>Limba nevalabilă: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Nu mai afișa acest mesaj</DoNotDisplayMessageAgain>
-    <DoNotAutoLoadVideo></DoNotAutoLoadVideo>
+    <DoNotAutoLoadVideo>
+    </DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Numărul cuvintelor corectate: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Numărul cuvintelor omise: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Numărul cuvintelor corecte: {0}</NumberOfCorrectWords>
@@ -1797,15 +1920,19 @@ Continui?</SubtitleAppendPrompt>
     <LineSplitted>Linia s-a scindat</LineSplitted>
     <BeforeMergeLines>Înaintea îmbinării liniilor</BeforeMergeLines>
     <LinesMerged>Linii îmbinate</LinesMerged>
-    <MergeSentences></MergeSentences>
-    <MergeSentencesXLines></MergeSentencesXLines>
+    <MergeSentences>
+    </MergeSentences>
+    <MergeSentencesXLines>
+    </MergeSentencesXLines>
     <BeforeSettingColor>Înaintea setării culorii</BeforeSettingColor>
     <BeforeSettingFontName>Înaintea setării numelui fontului</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Înaintea efectului „mașină de scris”</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Înaintea efectului Karaoke</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Înaintea importării subtitrării de pe DVD</BeforeImportingDvdSubtitle>
-    <OpenSubtitleVideoFile></OpenSubtitleVideoFile>
-    <VideoFiles></VideoFiles>
+    <OpenSubtitleVideoFile>
+    </OpenSubtitleVideoFile>
+    <VideoFiles>
+    </VideoFiles>
     <NoSubtitlesFound>Nicio subtitrare găsită</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Nu-i valabil fișierul Matroska: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Fișierul Blu-ray sup nu conține vreo subtitrare sau conține erori - încearcă iar demuxing.</BlurayNotSubtitlesFound>
@@ -1816,7 +1943,8 @@ Continui?</SubtitleAppendPrompt>
     <BeforeImportFromMatroskaFile>Înaintea importării subtitrării din fișier Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitrare importată din fișier Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Fișierul lăsat '{0}' neacceptat - fișierul e prea mare</DropFileXNotAccepted>
-    <DropSubtitleFileXNotAccepted></DropSubtitleFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>
+    </DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Poți lăsa doar un singur fișier</DropOnlyOneFile>
     <OpenAnsiSubtitle>Deschide...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Înaintea schimbării încasetării</BeforeChangeCasing>
@@ -1847,8 +1975,10 @@ Continui?</SubtitleAppendPrompt>
     <SortedByX>Sortare după: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Înaintea auto-echilibrării liniilor selectate</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Numărul liniilor auto-echilibrate: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeEvenlyDistributeSelectedLines></BeforeEvenlyDistributeSelectedLines>
-    <NumberOfLinesEvenlyDistributedX></NumberOfLinesEvenlyDistributedX>
+    <BeforeEvenlyDistributeSelectedLines>
+    </BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>
+    </NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Înaintea eliminării pauzelor din liniile selectate</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Numărul de linii cu pauze de linii eliminate: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Înaintea înlocuirilor multiple</BeforeMultipleReplace>
@@ -1947,22 +2077,38 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
     <NoSupportHereVobSub>Fișierele VobSub neacceptate.</NoSupportHereVobSub>
     <NoSupportHereDivx>Fișierele Divx files neacceptate.</NoSupportHereDivx>
     <NoChapters>Fișierul video, fără capitole.</NoChapters>
-    <VideoFromUrlRequirements></VideoFromUrlRequirements>
-    <Url></Url>
-    <Errors></Errors>
-    <ShowVideoControls></ShowVideoControls>
-    <HideVideoControls></HideVideoControls>
-    <GeneratingWaveformInBackground></GeneratingWaveformInBackground>
-    <AutoBackupSaved></AutoBackupSaved>
-    <UsingOnlyFrontCenterChannel></UsingOnlyFrontCenterChannel>
-    <BeforeConvertingColorsToDialog></BeforeConvertingColorsToDialog>
-    <ConvertedColorsToDialog></ConvertedColorsToDialog>
-    <PleaseInstallVideoPlayer></PleaseInstallVideoPlayer>
-    <UnableToPlayMediaFile></UnableToPlayMediaFile>
-    <SubtitleEditNeedsVideoPlayer></SubtitleEditNeedsVideoPlayer>
-    <UseRecommendMpv></UseRecommendMpv>
-    <DownloadAndUseMpv></DownloadAndUseMpv>
-    <ChooseLayout></ChooseLayout>
+    <VideoFromUrlRequirements>
+    </VideoFromUrlRequirements>
+    <Url>
+    </Url>
+    <Errors>
+    </Errors>
+    <ShowVideoControls>
+    </ShowVideoControls>
+    <HideVideoControls>
+    </HideVideoControls>
+    <GeneratingWaveformInBackground>
+    </GeneratingWaveformInBackground>
+    <AutoBackupSaved>
+    </AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>
+    </UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>
+    </BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>
+    </ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>
+    </PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>
+    </UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>
+    </SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>
+    </UseRecommendMpv>
+    <DownloadAndUseMpv>
+    </DownloadAndUseMpv>
+    <ChooseLayout>
+    </ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
@@ -1976,7 +2122,8 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
     <ConvertTo>Conversie la</ConvertTo>
     <CopyToClipboard>Copiere în clipboard</CopyToClipboard>
     <CloseOnInsert>Închide la introducere</CloseOnInsert>
-    <Insert></Insert>
+    <Insert>
+    </Insert>
     <Length>Lungime</Length>
     <Mass>Masă</Mass>
     <Volume>Volum</Volume>
@@ -2097,7 +2244,8 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
   <MergeTextWithSameTimeCodes>
     <Title>Îmbinare linii cu aceleași coduri de timp</Title>
     <MaxDifferenceMilliseconds>Diferență maximă de milisec.</MaxDifferenceMilliseconds>
-    <MakeDialog></MakeDialog>
+    <MakeDialog>
+    </MakeDialog>
     <ReBreakLines>Reîntrerupere linii</ReBreakLines>
     <NumberOfMergesX>Număr de îmbinări: {0}</NumberOfMergesX>
     <MergedText>Text îmbinat</MergedText>
@@ -2121,15 +2269,27 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
     <EvenLines>Linii pare</EvenLines>
     <DurationLessThan>Durată mai mică de</DurationLessThan>
     <DurationGreaterThan>Durată mai mare de</DurationGreaterThan>
+<<<<<<< HEAD
     <CpsLessThan></CpsLessThan>
     <CpsGreaterThan></CpsGreaterThan>
     <LengthLessThan></LengthLessThan>
     <LengthGreaterThan></LengthGreaterThan>
     <ExactlyOneLine></ExactlyOneLine>
     <ExactlyTwoLines></ExactlyTwoLines>
+=======
+    <CpsLessThan>
+    </CpsLessThan>
+    <CpsGreaterThan>
+    </CpsGreaterThan>
+    <ExactlyOneLine>
+    </ExactlyOneLine>
+    <ExactlyTwoLines>
+    </ExactlyTwoLines>
+>>>>>>> a2bbe632a2e902562be4ba9e4643312375773b98
     <MoreThanTwoLines>Mai mult de două linii</MoreThanTwoLines>
     <Bookmarked>Marcat</Bookmarked>
-    <BlankLines></BlankLines>
+    <BlankLines>
+    </BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Înlocuire multiplă</Title>
@@ -2162,7 +2322,8 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
     <RenameGroup>Redenumește grupul...</RenameGroup>
     <NewGroup>Grup nou...</NewGroup>
     <NothingToImport>Nimic de importat</NothingToImport>
-    <RuleInfo></RuleInfo>
+    <RuleInfo>
+    </RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -2244,10 +2405,12 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <LinesFoundX>Linii găsite: {0}</LinesFoundX>
     <RemoveTextIfContains>Eliminare textul care conține:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Elimină linia cu MAJUSCULE</RemoveTextIfAllUppercase>
-    <RemoveIfOnlyMusicSymbols></RemoveIfOnlyMusicSymbols>
+    <RemoveIfOnlyMusicSymbols>
+    </RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Elimină interjecții (shh, hmm, etc)</RemoveInterjections>
     <EditInterjections>Editare...</EditInterjections>
-    <Apply></Apply>
+    <Apply>
+    </Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Înlocuire</Title>
@@ -2259,10 +2422,14 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <Find>&amp;Caută</Find>
     <Replace>&amp;Înlocuiește</Replace>
     <ReplaceAll>Înlocuiește &amp;tot</ReplaceAll>
-    <FindReplaceIn></FindReplaceIn>
-    <TranslationAndOriginal></TranslationAndOriginal>
-    <TranslationOnly></TranslationOnly>
-    <OriginalOnly></OriginalOnly>
+    <FindReplaceIn>
+    </FindReplaceIn>
+    <TranslationAndOriginal>
+    </TranslationAndOriginal>
+    <TranslationOnly>
+    </TranslationOnly>
+    <OriginalOnly>
+    </OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurare din auto-backup</Title>
@@ -2300,7 +2467,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
   <Settings>
     <Title>Setări</Title>
     <General>Generalități</General>
-    <SubtitleFormats></SubtitleFormats>
+    <SubtitleFormats>
+    </SubtitleFormats>
     <Toolbar>Bară de unelte</Toolbar>
     <VideoPlayer>Video player</VideoPlayer>
     <WaveformAndSpectrogram>Audio/Spectrogramă</WaveformAndSpectrogram>
@@ -2308,7 +2476,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WordLists>Cuvinte listate</WordLists>
     <SsaStyle>Stil ASS/SSA</SsaStyle>
     <Network>Rețea</Network>
-    <FileTypeAssociations></FileTypeAssociations>
+    <FileTypeAssociations>
+    </FileTypeAssociations>
     <Rules>Reguli</Rules>
     <ShowToolBarButtons>Arată butoanele barei de unelte</ShowToolBarButtons>
     <New>Nou</New>
@@ -2318,13 +2487,16 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <Find>Caută</Find>
     <Replace>Înlocuiește</Replace>
     <VisualSync>Sincronizare vizuală</VisualSync>
-    <BurnIn></BurnIn>
+    <BurnIn>
+    </BurnIn>
     <SpellCheck>Verifică ortografia</SpellCheck>
     <NetflixQualityCheck>Verif. calitate Netflix</NetflixQualityCheck>
-    <BeautifyTimeCodes></BeautifyTimeCodes>
+    <BeautifyTimeCodes>
+    </BeautifyTimeCodes>
     <SettingsName>Setări</SettingsName>
     <ToggleBookmarks>Comută la marcaje</ToggleBookmarks>
-    <FocusTextBox></FocusTextBox>
+    <FocusTextBox>
+    </FocusTextBox>
     <ToggleBookmarksWithComment>Comută la marcaje - adaugă comentarii</ToggleBookmarksWithComment>
     <ClearBookmarks>Curăță marcajele</ClearBookmarks>
     <ExportBookmarks>Exportă marcajele...</ExportBookmarks>
@@ -2332,7 +2504,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <GoToPreviousBookmark>Accesează marcajul precedent</GoToPreviousBookmark>
     <GoToNextBookmark>Accesează marcajul următor</GoToNextBookmark>
     <ChooseProfile>Alege profilul</ChooseProfile>
-    <OpenDataFolder></OpenDataFolder>
+    <OpenDataFolder>
+    </OpenDataFolder>
     <DuplicateLine>Linie dublată</DuplicateLine>
     <ToggleView>Comută vizualizarea listă/sursă</ToggleView>
     <ToggleMode>Comută modulul Traducere/Creare/Corectare</ToggleMode>
@@ -2344,7 +2517,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <DefaultFrameRate>Rata implicită a cadrului</DefaultFrameRate>
     <DefaultFileEncoding>Codarea implicită</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto-detectare codare ANSI</AutoDetectAnsiEncoding>
-    <LanguageFilter></LanguageFilter>
+    <LanguageFilter>
+    </LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profiluri</Profiles>
     <ImportProfiles>Importare profiluri</ImportProfiles>
@@ -2352,7 +2526,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <SubtitleLineMaximumLength>Lungime maximă (linie unică)</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Număr optim de caractere/sec.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maxim de caractere/sec.</MaximumCharactersPerSecond>
-    <MaximumWordsPerMinute></MaximumWordsPerMinute>
+    <MaximumWordsPerMinute>
+    </MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-încadrare în timpul tastării</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durată minimă, în milisecunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durată maximă, în milisecunde</DurationMaximumMilliseconds>
@@ -2373,12 +2548,18 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <RememberPositionAndSize>Memorează poziția și mărimea ferestrei principale</RememberPositionAndSize>
     <StartInSourceView>Start în sursa de proiecție</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Elimină liniile blanc la deschiderea unei subtitrări</RemoveBlankLinesWhenOpening>
-    <RemoveBlankLines></RemoveBlankLines>
-    <ApplyAssaOverrideTags></ApplyAssaOverrideTags>
-    <SetAssaPosition></SetAssaPosition>
-    <SetAssaResolution></SetAssaResolution>
-    <SetAssaBgBox></SetAssaBgBox>
-    <TakeAutoBackup></TakeAutoBackup>
+    <RemoveBlankLines>
+    </RemoveBlankLines>
+    <ApplyAssaOverrideTags>
+    </ApplyAssaOverrideTags>
+    <SetAssaPosition>
+    </SetAssaPosition>
+    <SetAssaResolution>
+    </SetAssaResolution>
+    <SetAssaBgBox>
+    </SetAssaBgBox>
+    <TakeAutoBackup>
+    </TakeAutoBackup>
     <ShowLineBreaksAs>Arată pauzele liniei din listă cu</ShowLineBreaksAs>
     <SaveAsFileNameFrom>Salvare ca...</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dublul-click pe linia din fereastra principală a listei</MainListViewDoubleClickAction>
@@ -2386,7 +2567,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <MainListViewNothing>Nimic</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Accesează poziția video în pauză</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Accesează poziția video în redare</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewVideoGoToPositionAndPlayCurrentAndPause></MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    </MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Accesează editarea casetei text</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Accesează poziția video la - 1 sec., în pauză</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Accesează poziția video la - 0,5 sec., în pauză</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2399,7 +2581,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AutoBackupEveryFiveMinutes>la fiecare 5 minute</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>la fiecare 15 minute</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Ștergere după</AutoBackupDeleteAfter>
-    <TranslationAutoSuffix></TranslationAutoSuffix>
+    <TranslationAutoSuffix>
+    </TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 lună</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} luni</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verifică actualizările</CheckForUpdates>
@@ -2429,7 +2612,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <ShowFullscreenButton>Arată butonul Ecran complet</ShowFullscreenButton>
     <PreviewFontName>Alege numele fontului din subtitrare</PreviewFontName>
     <PreviewFontSize>Alege mărimea fontului din subtitrare</PreviewFontSize>
-    <PreviewVerticalMargin></PreviewVerticalMargin>
+    <PreviewVerticalMargin>
+    </PreviewVerticalMargin>
     <MainWindowVideoControls>Fereastra principală a comenzilor video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Căutare personalizată de text și URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Aspectul undei audio</WaveformAppearance>
@@ -2444,8 +2628,10 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WaveformListViewFocusMouseEnter>Setează focalizarea lista cu Enter-ul mouse-ului</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Selectează subtitrările cu un singur click</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Fixează schimbările de scenă (Shift apăsat pentru suprapunere)</WaveformSnapToShotChanges>
-    <WaveformEditShotChangesProfile></WaveformEditShotChangesProfile>
-    <WaveformAutoGen></WaveformAutoGen>
+    <WaveformEditShotChangesProfile>
+    </WaveformEditShotChangesProfile>
+    <WaveformAutoGen>
+    </WaveformAutoGen>
     <WaveformBorderHitMs1>Limitarea trebuie să fie de ordinul</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisecunde</WaveformBorderHitMs2>
     <WaveformColor>Culoarea undei</WaveformColor>
@@ -2462,8 +2648,10 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <SpectrogramOneColorGradient>În culoare degradé</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clasic</SpectrogramClassic>
     <WaveformUseFFmpeg>Folosește FFmpeg ptr. extragerea formei de undă</WaveformUseFFmpeg>
-    <WaveformUseCenterChannelOnly></WaveformUseCenterChannelOnly>
-    <DownloadX></DownloadX>
+    <WaveformUseCenterChannelOnly>
+    </WaveformUseCenterChannelOnly>
+    <DownloadX>
+    </DownloadX>
     <WaveformFFmpegPath>Calea spre FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Navigarea ptr. FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Navigarea ptr. VLC portabil</WaveformBrowseToVLC>
@@ -2494,8 +2682,10 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <ProxyUserName>Nume utilizator</ProxyUserName>
     <ProxyPassword>Parola</ProxyPassword>
     <ProxyDomain>Domeniu</ProxyDomain>
-    <ProxyAuthType></ProxyAuthType>
-    <ProxyUseDefaultCredentials></ProxyUseDefaultCredentials>
+    <ProxyAuthType>
+    </ProxyAuthType>
+    <ProxyUseDefaultCredentials>
+    </ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Setările sesiunii de rețea</NetworkSessionSettings>
     <NetworkSessionNewSound>Redă fișierul audio la apariția unui nou mesaj</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Redă X sec. și înapoi, X este</PlayXSecondsAndBack>
@@ -2515,38 +2705,61 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <ContinuationStyleNone>Niciunul</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Niciunul, puncte de suspensie (doar la final)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Niciunul, puncte de suspensie</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleNoneTrailingEllipsis></ContinuationStyleNoneTrailingEllipsis>
-    <ContinuationStyleNoneLeadingTrailingEllipsis></ContinuationStyleNoneLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>
+    </ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>
+    </ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Puncte (doar la final)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Puncte</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingEllipsis></ContinuationStyleOnlyTrailingEllipsis>
-    <ContinuationStyleLeadingTrailingEllipsis></ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>
+    </ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>
+    </ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Liniuță de dialog</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Liniuță de dialog, dar și puncte de suspensie</ContinuationStyleLeadingTrailingDashDots>
-    <ContinuationStyleCustom></ContinuationStyleCustom>
-    <CpsLineLengthStyle></CpsLineLengthStyle>
-    <CpsLineLengthStyleCalcAll></CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly></CpsLineLengthStyleCalcNoSpaceCpsOnly>
-    <CpsLineLengthStyleCalcNoSpace></CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk></CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace></CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIncludeCompositionCharacters></CpsLineLengthStyleCalcIncludeCompositionCharacters>
-    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace></CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuation></CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly></CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <ContinuationStyleCustom>
+    </ContinuationStyleCustom>
+    <CpsLineLengthStyle>
+    </CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>
+    </CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    </CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>
+    </CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>
+    </CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>
+    </CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    </CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
+    </CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    </CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    </CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Simbol muzical</MusicSymbol>
     <MusicSymbolsReplace>Simboluri muzicale de înlocuit (separare prin virgulă)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Repară erorile uzuale OCR - folosește și regulile hard-codare</FixCommonOcrErrorsUseHardcodedRules>
-    <UseWordSplitList></UseWordSplitList>
-    <AvoidPropercase></AvoidPropercase>
+    <UseWordSplitList>
+    </UseWordSplitList>
+    <AvoidPropercase>
+    </AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Repară afișarea scurtă - permite mutarea startului</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Salt peste primul pas (alege regulile de corectare)</FixCommonErrorsSkipStepOne>
-    <DefaultFormat></DefaultFormat>
-    <DefaultSaveAsFormat></DefaultSaveAsFormat>
-    <DefaultSaveAsFormatAuto></DefaultSaveAsFormatAuto>
-    <Favorites></Favorites>
-    <FavoriteFormats></FavoriteFormats>
-    <FavoriteSubtitleFormatsNote></FavoriteSubtitleFormatsNote>
+    <DefaultFormat>
+    </DefaultFormat>
+    <DefaultSaveAsFormat>
+    </DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>
+    </DefaultSaveAsFormatAuto>
+    <Favorites>
+    </Favorites>
+    <FavoriteFormats>
+    </FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>
+    </FavoriteSubtitleFormatsNote>
     <Shortcuts>Comenzi rapide</Shortcuts>
     <Shortcut>Comandă rapidă</Shortcut>
     <Control>Ctrl</Control>
@@ -2559,12 +2772,15 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <UseSyntaxColoring>Folosește colorarea sintaxei</UseSyntaxColoring>
     <HtmlColor>color Html</HtmlColor>
     <AssaColor>color ASSA</AssaColor>
-    <Theme></Theme>
-    <Automatic></Automatic>
+    <Theme>
+    </Theme>
+    <Automatic>
+    </Automatic>
     <DarkTheme>Temă întunecată</DarkTheme>
     <DarkThemeEnabled>Folosește tema întunecată</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Arată liniile grilă ale listei</DarkThemeShowGridViewLines>
-    <GraphicsButtons></GraphicsButtons>
+    <GraphicsButtons>
+    </GraphicsButtons>
     <UpdateShortcut>Actualizare</UpdateShortcut>
     <FocusSetVideoPosition>Focalizarea setării poziției video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Comută între cuplarea/decuplarea comenzilor video</ToggleDockUndockOfVideoControls>
@@ -2572,8 +2788,10 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AdjustViaEndAutoStart>Setează cu poziția de final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Setează cu poziția de final și continuă</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Setează sfârșitul fără decalare, continuă și începe de aici</AdjustSetEndMinusGapAndStartNextHere>
-    <AdjustSetEndAndStartNextAfterGap></AdjustSetEndAndStartNextAfterGap>
-    <AdjustSetStartTimeAndGoToNext></AdjustSetStartTimeAndGoToNext>
+    <AdjustSetEndAndStartNextAfterGap>
+    </AdjustSetEndAndStartNextAfterGap>
+    <AdjustSetStartTimeAndGoToNext>
+    </AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Setează sfârșitul și continuă</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Setează sfârșitul și pauaza</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Setează pornirea, auto-durata și continuă</AdjustSetStartAutoDurationAndGoToNext>
@@ -2596,9 +2814,12 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AdjustEndOneFrameBackKeepGapNext>Mută sfârșitul cu 1 cadru înapoi (reține decalarea față de următorul la închidere)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Mută sfârștul cu 1 cadru înainte (reține decalarea față de următorul la închidere)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Setează timpul de pornire, reține durata</AdjustSetStartTimeKeepDuration>
-    <AdjustVideoSetStartForAppropriateLine></AdjustVideoSetStartForAppropriateLine>
-    <AdjustVideoSetEndForAppropriateLine></AdjustVideoSetEndForAppropriateLine>
-    <AdjustSetStartAndOffsetTheWholeSubtitle></AdjustSetStartAndOffsetTheWholeSubtitle>
+    <AdjustVideoSetStartForAppropriateLine>
+    </AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>
+    </AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>
+    </AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Setează timpul de oprire, decalarea restului</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Setează timpul de oprire, decalarea restului și continuarea</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Fixează startul liniilor selectate pâna la următoarea schimbare de scenă</AdjustSnapStartToNextShotChange>
@@ -2607,44 +2828,64 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AdjustExtendToPreviousShotChange>Extinde liniile selectate până la schimbarea precedentă de scenă (sau subtitrarea precedentă)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>Extinde liniile selectate până la următoarea subtitrare</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extinde liniile selectate până la subtitrarea precedentă</AdjustExtendToPreviousSubtitle>
-    <AdjustExtendToNextSubtitleMinusChainingGap></AdjustExtendToNextSubtitleMinusChainingGap>
-    <AdjustExtendToPreviousSubtitleMinusChainingGap></AdjustExtendToPreviousSubtitleMinusChainingGap>
+    <AdjustExtendToNextSubtitleMinusChainingGap>
+    </AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>
+    </AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Extinde linia actuală până la subtitrarea următoare sau la durată max.</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Extinde sfârșitul liniei precedente până la startul celei actuale</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extinde startul liniei următoare până la sfârșitul celei actuale</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalculează limitele de timp în subtitrarea actuală</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed></RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
-    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed></RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
-    <SetInCueToClosestShotChangeLeftGreenZone></SetInCueToClosestShotChangeLeftGreenZone>
-    <SetInCueToClosestShotChangeRightGreenZone></SetInCueToClosestShotChangeRightGreenZone>
-    <SetOutCueToClosestShotChangeLeftGreenZone></SetOutCueToClosestShotChangeLeftGreenZone>
-    <SetOutCueToClosestShotChangeRightGreenZone></SetOutCueToClosestShotChangeRightGreenZone>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    </RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    </RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>
+    </SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>
+    </SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>
+    </SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>
+    </SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Inserează subtitrare nouă cu tasta ↓, setează sfârșitul cu tasta ↑</MainCreateStartDownEndUp>
     <MergeDialog>Îmbină dialogul (inserează liniuțe de dialog)</MergeDialog>
-    <MergeDialogWithNext></MergeDialogWithNext>
-    <MergeDialogWithPrevious></MergeDialogWithPrevious>
-    <AutoBalanceSelectedLines></AutoBalanceSelectedLines>
-    <EvenlyDistributeSelectedLines></EvenlyDistributeSelectedLines>
+    <MergeDialogWithNext>
+    </MergeDialogWithNext>
+    <MergeDialogWithPrevious>
+    </MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>
+    </AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>
+    </EvenlyDistributeSelectedLines>
     <GoToNext>Accesează linia următoare</GoToNext>
-    <GoToNextPlayTranslate></GoToNextPlayTranslate>
+    <GoToNextPlayTranslate>
+    </GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Accesează linia următoare și fixează cursorul la capăt</GoToNextCursorAtEnd>
     <GoToPrevious>Accesează linia predentă</GoToPrevious>
-    <GoToPreviousPlayTranslate></GoToPreviousPlayTranslate>
+    <GoToPreviousPlayTranslate>
+    </GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Accesează linia actuală de start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Accesează linia actuală de sfârșit</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Accesează linia precedentă și setează poziția video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Accesează linia următoare și setează poziția video</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Accesează linia precedentă și redă</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Accesează linia următoare și redă</GoToNextSubtitleAndPlay>
-    <GoToPreviousSubtitleAndFocusWaveform></GoToPreviousSubtitleAndFocusWaveform>
-    <GoToNextSubtitleAndFocusWaveform></GoToNextSubtitleAndFocusWaveform>
+    <GoToPreviousSubtitleAndFocusWaveform>
+    </GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>
+    </GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Comută focalizarea între vizualizarea listată și caseta text a subtitrării</ToggleFocus>
     <ToggleFocusWaveform>Comută focalizarea între vizualizarea listată și formă de undă/spectrogramă</ToggleFocusWaveform>
-    <ToggleFocusWaveformTextBox></ToggleFocusWaveformTextBox>
+    <ToggleFocusWaveformTextBox>
+    </ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Comută la liniuțele de dialog</ToggleDialogDashes>
-    <ToggleQuotes></ToggleQuotes>
-    <ToggleHiTags></ToggleHiTags>
-    <ToggleCustomTags></ToggleCustomTags>
+    <ToggleQuotes>
+    </ToggleQuotes>
+    <ToggleHiTags>
+    </ToggleHiTags>
+    <ToggleCustomTags>
+    </ToggleCustomTags>
     <ToggleMusicSymbols>Comută la simbolurile muzicale</ToggleMusicSymbols>
     <Alignment>Aliniere (linii selectate)</Alignment>
     <AlignmentN1>Aliniere stânga-jos - {\an1}</AlignmentN1>
@@ -2658,7 +2899,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AlignmentN9>Aliniere dreapta-sus - {\an9}</AlignmentN9>
     <ColorX>Culoare {0} ({1})</ColorX>
     <CopyTextOnly>Copiază doar textul în clipboard (linii selectate)</CopyTextOnly>
-    <CopyPlainText></CopyPlainText>
+    <CopyPlainText>
+    </CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copiază textul original în cel actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-durată (linii selectate)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Fix RTL cu Unicode</FixRTLViaUnicodeChars>
@@ -2669,7 +2911,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WaveformSeekSilenceForward>Caută tacit înainte</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Caută tacit înapoi</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adaugă text aici (pentru noua selecție)</WaveformAddTextHere>
-    <ChooseLayoutX></ChooseLayoutX>
+    <ChooseLayoutX>
+    </ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Adaugă text aici (pentru noua selecție din clipboard)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Setează selecția actuală ca una nouă</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection>
@@ -2678,7 +2921,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WaveformGoToPreviousShotChange>Accesează schimbarea precedentă de scenă</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Accesează schimbarea următoare de scenă</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Comută schimbarea de scenă</WaveformToggleShotChange>
-    <WaveformRemoveOrExportShotChanges></WaveformRemoveOrExportShotChanges>
+    <WaveformRemoveOrExportShotChanges>
+    </WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Auto-corectarea startului prin volum/schimbare de scenă</WaveformGuessStart>
     <GoBack1Frame>Un cadru înapoi</GoBack1Frame>
     <GoForward1Frame>Un cadru înainte</GoForward1Frame>
@@ -2691,7 +2935,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <GoBack1Second>Înapoi 1 secundă</GoBack1Second>
     <GoForward1Second>Înainte 1 secundă</GoForward1Second>
     <GoBack3Seconds>Înapoi 3 secunde</GoBack3Seconds>
-    <GoForward3Seconds></GoForward3Seconds>
+    <GoForward3Seconds>
+    </GoForward3Seconds>
     <GoBack5Seconds>Înapoi 5 secunde</GoBack5Seconds>
     <GoForward5Seconds>Înainte 5 secunde</GoForward5Seconds>
     <GoBackXSSeconds>Întoarcere redusă selectată</GoBackXSSeconds>
@@ -2700,31 +2945,44 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <GoForwardXLSeconds>Avansare majoră selectată</GoForwardXLSeconds>
     <GoToStartCurrent>Setează poziția video la startul subtitrării actuale</GoToStartCurrent>
     <ToggleStartEndCurrent>Comută poziția video între startul/sfârșitul subtitrării actuale</ToggleStartEndCurrent>
-    <PlaySelectedLines></PlaySelectedLines>
-    <LoopSelectedLines></LoopSelectedLines>
+    <PlaySelectedLines>
+    </PlaySelectedLines>
+    <LoopSelectedLines>
+    </LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Accesează subtitrarea precedentă (de la poziția video)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Accesează subtitrarea următoare (de la poziția video)</WaveformGoToNextSubtitle>
-    <WaveformGoToPrevTimeCode></WaveformGoToPrevTimeCode>
-    <WaveformGoToNextTimeCode></WaveformGoToNextTimeCode>
+    <WaveformGoToPrevTimeCode>
+    </WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>
+    </WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Accesează capitolul precedent</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Accesează capitolul următor</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Selectează subtitrarea următoare (de la poziția video, reține poziția video)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Comută între Redare/Pauză</TogglePlayPause>
     <Pause>Pauză</Pause>
     <Fullscreen>Tot ecranul</Fullscreen>
-    <Play150Speed></Play150Speed>
-    <Play200Speed></Play200Speed>
+    <Play150Speed>
+    </Play150Speed>
+    <Play200Speed>
+    </Play200Speed>
     <PlayRateSlower>Rata redării mai lente</PlayRateSlower>
     <PlayRateFaster>Rata redării mai rapide</PlayRateFaster>
-    <PlayRateToggle></PlayRateToggle>
+    <PlayRateToggle>
+    </PlayRateToggle>
     <VideoResetSpeedAndZoom>Resetează viteza/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Comută la comenzile video</MainToggleVideoControls>
-    <VideoToggleContrast></VideoToggleContrast>
-    <AudioToTextX></AudioToTextX>
-    <AudioExtractSelectedLines></AudioExtractSelectedLines>
-    <AudioToTextSelectedLinesX></AudioToTextSelectedLinesX>
-    <VideoToggleBrightness></VideoToggleBrightness>
-    <AutoTranslateSelectedLines></AutoTranslateSelectedLines>
+    <VideoToggleContrast>
+    </VideoToggleContrast>
+    <AudioToTextX>
+    </AudioToTextX>
+    <AudioExtractSelectedLines>
+    </AudioExtractSelectedLines>
+    <AudioToTextSelectedLinesX>
+    </AudioToTextSelectedLinesX>
+    <VideoToggleBrightness>
+    </VideoToggleBrightness>
+    <AutoTranslateSelectedLines>
+    </AutoTranslateSelectedLines>
     <CustomSearch1>Traducere, căutare personalizată 1</CustomSearch1>
     <CustomSearch2>Traducere, căutare personalizată 2</CustomSearch2>
     <CustomSearch3>Traducere, căutare personalizată 3</CustomSearch3>

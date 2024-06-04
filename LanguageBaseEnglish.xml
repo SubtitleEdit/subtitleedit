@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.5</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -2135,6 +2135,8 @@ Download and continue?</VideoFromUrlRequirements>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
     <CpsLessThan>CPS less than</CpsLessThan>
     <CpsGreaterThan>CPS greater than</CpsGreaterThan>
+    <LengthLessThan>Length less than</LengthLessThan>
+    <LengthGreaterThan>Length greater than</LengthGreaterThan>
     <ExactlyOneLine>Exactly one line</ExactlyOneLine>
     <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>

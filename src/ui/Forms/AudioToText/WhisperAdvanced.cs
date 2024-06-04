@@ -51,6 +51,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisper;
             }
+            else if (whisperEngine == WhisperChoice.PurfviewFasterWhisperXXL)
+            {
+                tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisperXxl;
+            }
             else
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageOpenAI;
@@ -136,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             comboBoxWhisperExtra.Text = "--standard";
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonHighlightWord_Click(object sender, EventArgs e)
         {
             comboBoxWhisperExtra.Text = $"--highlight_words true --max_line_width {Configuration.Settings.General.SubtitleLineMaximumLength} --max_line_count {Configuration.Settings.General.MaxNumberOfLines}";
         }
@@ -144,6 +148,36 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void buttonStandardAsia_Click(object sender, EventArgs e)
         {
             comboBoxWhisperExtra.Text = "--standard_asia";
+        }
+
+        private void buttonXxlStandard_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--standard";
+        }
+
+        private void buttonXxlStandardAsia_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--standard_asia";
+        }
+
+        private void WhisperAdvanced_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonXxlSentence_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--sentence";
+        }
+
+        private void buttonXxlSingleWord_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--one_word 2";
+        }
+
+        private void buttonXxlHighlightWord_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = $"--highlight_words true --max_line_width {Configuration.Settings.General.SubtitleLineMaximumLength} --max_line_count {Configuration.Settings.General.MaxNumberOfLines}";
         }
     }
 }

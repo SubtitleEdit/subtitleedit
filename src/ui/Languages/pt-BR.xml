@@ -2,7 +2,7 @@
 <Language Name="Português (Brasil)">
 	<General>
 		<Title>Subtitle Edit</Title>
-		<Version>4.0.5</Version>
+		<Version>4.0.6</Version>
 		<TranslatedBy>Tradução (Português do Brasil): igorruckert</TranslatedBy>
 		<CultureName>pt-BR</CultureName>
 		<HelpFile/>
@@ -18,6 +18,7 @@
 		<Preview>Prévia</Preview>
 		<ShowPreview>Mostrar prévia</ShowPreview>
 		<HidePreview>Ocultar prévia</HidePreview>
+		<SubtitleFile>Arquivo de legenda</SubtitleFile>
 		<SubtitleFiles>Arquivos de legenda</SubtitleFiles>
 		<AllFiles>Todos os arquivos</AllFiles>
 		<VideoFiles>Arquivos de vídeo</VideoFiles>
@@ -1018,6 +1019,9 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
 		<AlignRight>Alinhar à direita</AlignRight>
 		<GetStartPosition>Obter posição inicial</GetStartPosition>
 		<GetEndPosition>Obter posição final</GetEndPosition>
+		<UseSource>Usar fonte</UseSource>
+		<UseSourceResolution>Usar resolução da fonte</UseSourceResolution>
+		<OutputSettings>Arquivo/pasta de saída...</OutputSettings>
 	</GenerateVideoWithBurnedInSubs>
 	<GenerateVideoWithEmbeddedSubs>
 		<Title>Gerar vídeo com legendas incorporadas adicionadas/removidas</Title>
@@ -1057,15 +1061,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
 		<To>Para:</To>
 		<Translate>Traduzir</Translate>
 		<PleaseWait>Por favor, aguarde... isto pode levar um tempo</PleaseWait>
-		<PoweredByGoogleTranslate>Fornecido pelo Google Tradutor</PoweredByGoogleTranslate>
-		<PoweredByMicrosoftTranslate>Fornecido pelo Tradutor da Microsoft</PoweredByMicrosoftTranslate>
 		<PoweredByX>Desenvolvido por {0}</PoweredByX>
-		<MsClientSecretNeeded>Desculpe, você precisa de uma chave de serviço cognitivo 'Tradução de texto' da Microsoft para usar o Microsoft Translator mais recente.
-
-Vá para "Opções -&gt; Configurações -&gt; Tradução automática" para entrar sua chave.</MsClientSecretNeeded>
-		<GoogleNoApiKeyWarning>Tentando traduzir sem chave API... (lento e dados limitados).
-Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Tradução automática" para entrar sua chave API do Google Translate.</GoogleNoApiKeyWarning>
-		<Service>Serviço:</Service>
 		<LineMergeHandling>Junção de linha:</LineMergeHandling>
 		<ProcessorMergeNext>Juntar máximo de duas linhas</ProcessorMergeNext>
 		<ProcessorSentence>Juntar frases</ProcessorSentence>
@@ -1086,6 +1082,13 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Tradução
 		<XRequiresAnApiKey>"{0}" requer uma chave API.</XRequiresAnApiKey>
 		<ReadMore>Ler mais?</ReadMore>
 		<Formality>Formalidade</Formality>
+		<TranslateCurrentLine>Traduzir somente linha atual</TranslateCurrentLine>
+		<ReTranslateCurrentLine>Retraduzir a linha atual</ReTranslateCurrentLine>
+		<MergeSplitStrategy>Manipulação de divisão/mesclagem</MergeSplitStrategy>
+		<Delay>Pausa entre chamadas do servidor</Delay>
+		<MaxBytes>Máximo de bytes em cada chamada de servidor</MaxBytes>
+		<PromptX>Solicitar por {0}</PromptX>
+		<TranslateLinesSeparately>Traduzir cada linha separadamente</TranslateLinesSeparately>
 	</GoogleTranslate>
 	<GoogleOrMicrosoftTranslate>
 		<Title>Tradutor Google vs Microsoft</Title>
@@ -2535,6 +2538,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<CpsLineLengthStyleCalcNoSpace>Contar todos, menos espaços</CpsLineLengthStyleCalcNoSpace>
 		<CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
 		<CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
+		<CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composição</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+		<CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composição, não espaço</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
 		<CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
 		<CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, somente cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
 		<MusicSymbol>Símbolo musical</MusicSymbol>
@@ -3170,6 +3175,7 @@ Continuar?</RestoreDefaultSettingsMsg>
 		<Play>Reproduzir</Play>
 		<AutoContinue>Continuar automaticamente</AutoContinue>
 		<Regenerate>Regenerar</Regenerate>
+		<Speed>Velocidade</Speed>
 	</TextToSpeech>
 	<TimedTextSmpteTiming>
 		<Title>Tempo SMPTE</Title>
@@ -3340,6 +3346,13 @@ Manter as alterações?</KeepChangesMessage>
 		<InspectItems>Inspecionar itens</InspectItems>
 		<AddBetterMatch>Adicionar a melhor coincidência</AddBetterMatch>
 		<Add>Adicionar</Add>
+		<AddBetterMultiMatch>Adicionar melhor correspondência múltipla</AddBetterMultiMatch>
+		<AddOrUpdateMatch>Adicionar ou atualizar correspondência</AddOrUpdateMatch>
+		<SelectPrevousMatch>Selecionar correspondência anterior</SelectPrevousMatch>
+		<SelectNextMatch>Selecionar próxima correspondência</SelectNextMatch>
+		<JumpPreviousMissingMatch>Saltar para a correspondência em falta anterior</JumpPreviousMissingMatch>
+		<JumpNextMissingMatch>Saltar para a próxima correspondência em falta</JumpNextMissingMatch>
+		<FocusTextbox>Focar na entrada de texto</FocusTextbox>
 	</VobSubOcrCharacterInspect>
 	<VobSubOcrNewFolder>
 		<Title>Nova pasta</Title>
@@ -3404,7 +3417,7 @@ Manter as alterações?</KeepChangesMessage>
 		<RemoveShotChangesFromSelection>Remover mudanças de cena da seleção</RemoveShotChangesFromSelection>
 		<GuessTimeCodes>Identificar códigos de tempo...</GuessTimeCodes>
 		<SeekSilence>Procurar silêncio...</SeekSilence>
-		<InsertSubtitleHere>Inserir legenda aqui</InsertSubtitleHere>
+		<InsertSubtitleHere>Insira o texto aqui</InsertSubtitleHere>
 		<InsertSubtitleFileHere>Inserir arquivo de legenda aqui...</InsertSubtitleFileHere>
 		<CharsSecX>CPS: {0:0.00}</CharsSecX>
 		<WordsMinX>WPM: {0:0.00}</WordsMinX>

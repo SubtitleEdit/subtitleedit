@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
-            useSourceResolutionToolStripMenuItem.Text =  LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
+            useSourceResolutionToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
             columnHeaderVideoFile.Text = LanguageSettings.Current.Settings.VideoFileName;
             columnHeaderResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             columnHeaderSize.Text = LanguageSettings.Current.General.Size;
@@ -618,10 +618,35 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = true;
+                    progressBar1.Visible = false;
+                    labelPleaseWait.Visible = false;
+                    timer1.Stop();
+                    MillisecondsEncoding = stopWatch.ElapsedMilliseconds;
+                    labelProgress.Text = string.Empty;
+                    groupBoxSettings.Enabled = true;
+
+                    if (!_abort && _log.ToString().Length > 10)
+                    {
+                        var title = "Error occurred during encoding";
+                        if (_log.ToString().Contains("Cannot load nvcuda.dll"))
+                        {
+                            title = "Error: Cannot load nvcuda.dll";
+                        }
+                        else if (_log.ToString().Contains("amfrt64.dll"))
+                        {
+                            title = "Error: Cannot load amfrt64.dll";
+                        }
+                        else if (_log.ToString().Contains("The minimum required Nvidia driver for nvenc is"))
+                        {
+                            title = "Nvidia driver needs updating";
+                        }
+
+                        MessageBox.Show($"Encoding with ffmpeg failed: {Environment.NewLine}{_log}", title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
                     return;
                 }
             }
-
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
@@ -1826,7 +1851,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxBox.Checked)
             {
                 style.BorderStyle = "4"; // box - multi line
-                style.ShadowWidth = 0; 
+                style.ShadowWidth = 0;
                 style.OutlineWidth = numericUpDownOutline.Value;
             }
             else
@@ -2478,8 +2503,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            useSourceResolutionToolStripMenuItem.Visible = 
-                BatchMode || 
+            useSourceResolutionToolStripMenuItem.Visible =
+                BatchMode ||
                 (_videoInfo != null && !string.IsNullOrEmpty(_inputVideoFileName));
         }
 

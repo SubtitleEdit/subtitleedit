@@ -1169,7 +1169,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         Cursor = Cursors.Default;
                         var error = Encoding.UTF8.GetString(bytes).Trim();
                         SeLogger.Error($"Failed getting voices form Azure via url \"{url}\" : Status code={result.StatusCode} {error}");
-                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error + Environment.NewLine + result.StatusCode);
                         return new List<AzureVoiceModel>();
                     }
 
@@ -1420,6 +1420,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
 
+                _azureVoices.Clear();
                 var azureVoices = GetAzureVoices(true);
                 _azureVoices.AddRange(azureVoices);
                 nikseComboBoxVoice.Items.AddRange(_azureVoices.Select(p => p.ToString()).ToArray());

@@ -5797,6 +5797,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/CpsGreaterThan":
                     language.ModifySelection.CpsGreaterThan = reader.Value;
                     break;
+                case "ModifySelection/LengthLessThan":
+                    language.ModifySelection.LengthLessThan = reader.Value;
+                    break;
+                case "ModifySelection/LengthGreaterThan":
+                    language.ModifySelection.LengthGreaterThan = reader.Value;
+                    break;
                 case "ModifySelection/ExactlyOneLine":
                     language.ModifySelection.ExactlyOneLine = reader.Value;
                     break;
