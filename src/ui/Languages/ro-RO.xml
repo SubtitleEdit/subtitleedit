@@ -1435,16 +1435,16 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <SetVideoOffset>Setează decalarea video...</SetVideoOffset>
         <SmptTimeMode>Sincronizare SMPTE (cadru sărit)</SmptTimeMode>
         <GenerateTextFromVideo>Generare text din video...</GenerateTextFromVideo>
-        <GenerateBlankVideo></GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub></GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs></GenerateVideoWithEmbeddedSubs>
-        <VideoAudioToTextX></VideoAudioToTextX>
+        <GenerateBlankVideo>Generare videoclip gol...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>Generare videoclip cu subtitrare inscripționată...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Generare videoclip cu subtitrări încorporate adăugate/eliminate...</GenerateVideoWithEmbeddedSubs>
+        <VideoAudioToTextX>Audio la text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importare capitole din video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generare/importare schimbări de scenă...</GenerateImportShotChanges>
-        <RemoveOrExportShotChanges></RemoveOrExportShotChanges>
+        <RemoveOrExportShotChanges>Elimină/exportăi modificările de fotografie...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Pachet audio generat...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Arată/ascunde Audio și Spectrogramă</ShowHideWaveformAndSpectrogram>
-        <TextToSpeechAndAddToVideo></TextToSpeechAndAddToVideo>
+        <TextToSpeechAndAddToVideo>Din text în voce și adaugă la videoclip...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Dezactivare comenzi video</UnDockVideoControls>
         <ReDockVideoControls>Reactivare comenzi video</ReDockVideoControls>
       </Video>
@@ -1501,35 +1501,35 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <VisualSync>Sincronizare vizuală</VisualSync>
         <SpellCheck>Verifică ortografia</SpellCheck>
         <NetflixQualityCheck>Verificare calitate Netflix</NetflixQualityCheck>
-        <BeautifyTimeCodes></BeautifyTimeCodes>
+        <BeautifyTimeCodes>Înfrumusețare coduri de timp</BeautifyTimeCodes>
         <Settings>Setări</Settings>
         <Help>Ajutor</Help>
-        <Layout></Layout>
-        <AssaDraw></AssaDraw>
+        <Layout>Aspect</Layout>
+        <AssaDraw>Extragere avansată a Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Mărimea tuturor coloanelor „Text” ptr. potrivire</SizeAllColumnsToFit>
-        <SetStyle></SetStyle>
+        <SetStyle>Setare stil</SetStyle>
         <SetActor>Setare actor</SetActor>
-        <SetLayer></SetLayer>
-        <AssaTools></AssaTools>
+        <SetLayer>Setare layer</SetLayer>
+        <AssaTools>Instrumente ASSA</AssaTools>
         <SubStationAlphaStyles>Stiluri Sub Station Alpha...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles></AdvancedSubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Stiluri avansate de Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Text temporizat - setare regiune</TimedTextSetRegion>
         <TimedTextSetStyle>Text temporizat - setare stil</TimedTextSetStyle>
         <TimedTextStyles>Stiluri text temporizat...</TimedTextStyles>
         <TimedTextSetLanguage>Text temporizat - setare limbă</TimedTextSetLanguage>
         <SamiSetStyle>Sami - setare clasă</SamiSetStyle>
         <NuendoSetStyle>Nuendo - setare caracter</NuendoSetStyle>
-        <WebVttSetStyle></WebVttSetStyle>
-        <WebVttSetVoice></WebVttSetVoice>
-        <WebVttBrowserPreview></WebVttBrowserPreview>
+        <WebVttSetStyle>WebVTT - set stil</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - seti voce</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - previzualizare browser</WebVttBrowserPreview>
         <Cut>Decupează</Cut>
         <Copy>Copiază</Copy>
         <Paste>Lipește</Paste>
         <Delete>Șterge</Delete>
         <SplitLineAtCursorPosition>Scindează linia la poziția cursorului</SplitLineAtCursorPosition>
-        <SplitLineAtCursorPositionAndAutoBr></SplitLineAtCursorPositionAndAutoBr>
+        <SplitLineAtCursorPositionAndAutoBr>Linie împărțită la poziția cursorului și întrerupe automat</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Scindează linia la poziția cursorului/video-ului</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto-durată (linia actuală)</AutoDurationCurrentLine>
         <SelectAll>Selectează tot</SelectAll>
@@ -1548,7 +1548,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <ColumnTextUp>Ridică textul</ColumnTextUp>
         <ColumnTextDown>Coboară textul</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copiază textul original în cel actual</ColumnCopyOriginalTextToCurrent>
-        <OcrSelectedLines></OcrSelectedLines>
+        <OcrSelectedLines>OCR linii selectate</OcrSelectedLines>
         <Split>Scindează</Split>
         <MergeSelectedLines>Îmbină liniile selectate</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Îmbină liniile selectate ca dialog</MergeSelectedLinesAsDialog>
@@ -1572,24 +1572,24 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <Subscript>Indice</Subscript>
         <Alignment>Aliniere...</Alignment>
         <AutoBalanceSelectedLines>Auto-echilibrare linii selectate...</AutoBalanceSelectedLines>
-        <EvenlyDistributeSelectedLines></EvenlyDistributeSelectedLines>
+        <EvenlyDistributeSelectedLines>Distribuie uniform liniile selectate (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Elimină întreruperile în liniile selectate...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efect „mașină de scris”...</TypewriterEffect>
         <KaraokeEffect>Efect Karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Arată liniile selectate mai devreme/mai târziu...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronizează vizual liniile selectate...</VisualSyncSelectedLines>
-        <BeautifyTimeCodesOfSelectedLines></BeautifyTimeCodesOfSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Înfrumusețați coduri de timp pentru liniile selectate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traducere Google/Microsoft a liniei originale</GoogleAndMicrosoftTranslateSelectedLine>
-        <SelectedLines></SelectedLines>
+        <SelectedLines>Linii selectate</SelectedLines>
         <TranslateSelectedLines>Traduce liniile selectate...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustează limitele de timp în liniile selectate...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplică limitele de timp în liniile selectate...</ApplyDurationLimitsForSelectedLines>
-        <ApplyCustomOverrideTag></ApplyCustomOverrideTag>
-        <SetPosition></SetPosition>
-        <GenerateProgressBar></GenerateProgressBar>
-        <AssaResolutionChanger></AssaResolutionChanger>
-        <AssaGenerateBackgroundBox></AssaGenerateBackgroundBox>
-        <ImageColorPicker></ImageColorPicker>
+        <ApplyCustomOverrideTag>Aplică etichete de înlocuire personalizate...</ApplyCustomOverrideTag>
+        <SetPosition>Setare poziție...</SetPosition>
+        <GenerateProgressBar>Generarei bara de progres...</GenerateProgressBar>
+        <AssaResolutionChanger>Schimbă rezoluția scriptului ASSA...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Generează caseta de fundal...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Selector de culoare pentru imagine...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Repară erorile uzuale în liniile selectate...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Schimbă încasetarea pentru liniile selectate...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Salvează liniile selectate ca...</SaveSelectedLines>
@@ -2123,6 +2123,8 @@ Dacă ai de editat acest fișier cu S.E., ai putea găsi o copie de rezervă în
     <DurationGreaterThan>Durată mai mare de</DurationGreaterThan>
     <CpsLessThan></CpsLessThan>
     <CpsGreaterThan></CpsGreaterThan>
+    <LengthLessThan></LengthLessThan>
+    <LengthGreaterThan></LengthGreaterThan>
     <ExactlyOneLine></ExactlyOneLine>
     <ExactlyTwoLines></ExactlyTwoLines>
     <MoreThanTwoLines>Mai mult de două linii</MoreThanTwoLines>
