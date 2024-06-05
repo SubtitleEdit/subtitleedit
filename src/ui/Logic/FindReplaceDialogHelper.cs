@@ -302,6 +302,12 @@ namespace Nikse.SubtitleEdit.Logic
             cm.Items.Add(l.OneOrMore, null, delegate { textBox.SelectedText = "+"; });
             cm.Items.Add(l.InCharacterGroup, null, delegate { textBox.SelectedText = "[test]"; });
             cm.Items.Add(l.NotInCharacterGroup, null, delegate { textBox.SelectedText = "[^test]"; });
+
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(cm);
+            }
+
             return cm;
         }
 
