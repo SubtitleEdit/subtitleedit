@@ -633,6 +633,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return false;
         }
+
+        private static readonly string[] BeginTagVariations = { "< i >", "< i>", "<i >", "< I >", "< I>", "<I >", "<i<", "<I<", "<I>" };
+
+        private static readonly string[] EndTagVariations =
+        {
+            "< / i >", "< /i>", "</ i>", "< /i >", "</i >", "</ i >",
+            "< / i>", "</I>", "< / I >", "< /I>", "</ I>", "< /I >", "</I >", "</ I >", "< / I>", "</i<", "</I<", "</I>"
+        };
         
         public static string FixInvalidItalicTags(string input)
         {
@@ -651,36 +659,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             const string beginTag = "<i>";
             const string endTag = "</i>";
+            foreach (var beginTagVariation in BeginTagVariations)
+            {
+                text = text.Replace(beginTagVariation, beginTag);
+            }
 
-            text = text.Replace("< i >", beginTag);
-            text = text.Replace("< i>", beginTag);
-            text = text.Replace("<i >", beginTag);
-            text = text.Replace("< I >", beginTag);
-            text = text.Replace("< I>", beginTag);
-            text = text.Replace("<I >", beginTag);
-            text = text.Replace("<i<", beginTag);
-            text = text.Replace("<I<", beginTag);
-
-            text = text.Replace("< / i >", endTag);
-            text = text.Replace("< /i>", endTag);
-            text = text.Replace("</ i>", endTag);
-            text = text.Replace("< /i >", endTag);
-            text = text.Replace("</i >", endTag);
-            text = text.Replace("</ i >", endTag);
-            text = text.Replace("< / i>", endTag);
-            text = text.Replace("</I>", endTag);
-            text = text.Replace("< / I >", endTag);
-            text = text.Replace("< /I>", endTag);
-            text = text.Replace("</ I>", endTag);
-            text = text.Replace("< /I >", endTag);
-            text = text.Replace("</I >", endTag);
-            text = text.Replace("</ I >", endTag);
-            text = text.Replace("< / I>", endTag);
-            text = text.Replace("</i<", endTag);
-            text = text.Replace("</I<", endTag);
-
-            text = text.Replace("<I>", beginTag);
-            text = text.Replace("</I>", endTag);
+            foreach (var endTagVariation in EndTagVariations)
+            {
+                text = text.Replace(endTagVariation, endTag);
+            }
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
