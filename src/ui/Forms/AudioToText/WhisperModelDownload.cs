@@ -108,9 +108,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                     labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
                 });
-                foreach (var url in LastDownloadedModel.Urls)
+
+                using (var httpClient = DownloaderFactory.CreateProxiedHttpClient())
                 {
-                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    foreach (var url in LastDownloadedModel.Urls)
                     {
                         currentDownloadUrl = url;
                         _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
@@ -137,6 +138,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 {
                                     // ignore
                                 }
+
                                 return;
                             }
 
