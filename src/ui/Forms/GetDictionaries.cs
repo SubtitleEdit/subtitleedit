@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.CreateProxiedHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(_downloadLink, downloadStream, new Progress<float>((progress) =>

@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public void Initialize()
         {
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = DownloaderFactory.CreateProxiedHttpClient();
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
             _httpClient.BaseAddress = new Uri("https://api.mymemory.translated.net/get");

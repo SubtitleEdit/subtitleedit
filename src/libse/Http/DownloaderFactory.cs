@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Http
 {
     public static class DownloaderFactory
     {
-        public static IDownloader MakeHttpClient()
+        public static IDownloader CreateProxiedHttpClient()
         {
             var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
             if (Configuration.Settings.General.UseLegacyDownloader)

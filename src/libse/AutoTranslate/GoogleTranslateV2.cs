@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public void Initialize()
         {
             _apiKey = Configuration.Settings.Tools.GoogleApiV2Key;
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = DownloaderFactory.CreateProxiedHttpClient();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
