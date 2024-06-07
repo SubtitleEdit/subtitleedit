@@ -1286,6 +1286,8 @@ namespace Nikse.SubtitleEdit.Controls
             Fill(subtitle.Paragraphs, subtitleOriginal?.Paragraphs ?? new List<Paragraph>());
         }
 
+        internal void Fill(List<Paragraph> paragraphs) => Fill(paragraphs, new List<Paragraph>());
+
         internal void Fill(List<Paragraph> paragraphs, List<Paragraph> paragraphsOriginal)
         {
             SaveFirstVisibleIndex();
