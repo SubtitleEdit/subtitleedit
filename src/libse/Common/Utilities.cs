@@ -1282,6 +1282,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return isStart && isEnd;
         }
 
+        /// <summary>
+        /// Gets the original paragraph from a list of original paragraphs based on the index and the current paragraph.
+        /// </summary>
+        /// <param name="index">The index of the current paragraph.</param>
+        /// <param name="paragraph">The current paragraph.</param>
+        /// <param name="originalParagraphs">The list of original paragraphs.</param>
+        /// <returns>The original paragraph corresponding to the current paragraph, or null if not found.</returns>
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
         {
             if (index < 0)

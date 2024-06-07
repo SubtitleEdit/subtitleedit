@@ -1283,55 +1283,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal void Fill(Subtitle subtitle, Subtitle subtitleOriginal = null)
         {
-            if (subtitleOriginal == null || subtitleOriginal.Paragraphs.Count == 0)
-            {
-                Fill(subtitle.Paragraphs);
-            }
-            else
-            {
-                Fill(subtitle.Paragraphs, subtitleOriginal.Paragraphs);
-            }
-        }
-
-        internal void Fill(List<Paragraph> paragraphs)
-        {
-            SaveFirstVisibleIndex();
-            BeginUpdate();
-            Items.Clear();
-            var x = ListViewItemSorter;
-            ListViewItemSorter = null;
-            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
-            var items = new ListViewItem[paragraphs.Count];
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                var paragraph = paragraphs[index];
-                Paragraph next = null;
-                if (index + 1 < paragraphs.Count)
-                {
-                    next = paragraphs[index + 1];
-                }
-                items[index] = MakeListViewItem(paragraph, next, null, font);
-            }
-
-            Items.AddRange(items);
-
-            if (UseSyntaxColoring && _settings != null)
-            {
-                for (var index = 0; index < paragraphs.Count; index++)
-                {
-                    var paragraph = paragraphs[index];
-                    var item = items[index];
-                    SyntaxColorListViewItem(paragraphs, index, paragraph, item);
-                }
-            }
-
-            ListViewItemSorter = x;
-            EndUpdate();
-
-            if (FirstVisibleIndex == 0)
-            {
-                FirstVisibleIndex = -1;
-            }
+            Fill(subtitle.Paragraphs, subtitleOriginal?.Paragraphs ?? new List<Paragraph>());
         }
 
         internal void Fill(List<Paragraph> paragraphs, List<Paragraph> paragraphsOriginal)
@@ -1352,6 +1304,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     next = paragraphs[index + 1];
                 }
+
                 items[index] = MakeListViewItem(paragraph, next, original, font);
             }
 
