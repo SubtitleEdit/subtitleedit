@@ -62,7 +62,6 @@
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    </Reference>
     <Reference Include="System.Speech, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'">
       <HintPath>DLLs\System.Speech.dll</HintPath>
     </Reference>
