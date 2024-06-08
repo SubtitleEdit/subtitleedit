@@ -583,9 +583,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        public static void FillComboWithLanguages(NikseComboBox comboBox, List<TranslationPair> languages)
+        public static void FillComboWithLanguages(NikseComboBox comboBoxLanguages, List<TranslationPair> languages)
         {
-            comboBox.Items.Clear();
+            comboBoxLanguages.Items.Clear();
             var languagesFilled = false;
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
@@ -606,15 +606,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
                 }
 
-                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
+                comboBoxLanguages.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
             }
 
             if (!languagesFilled)
             {
-                comboBox.Items.AddRange(languages.OrderBy(p => p.Name).ToArray<object>());
+                comboBoxLanguages.Items.AddRange(languages.OrderBy(p => p.Name).ToArray<object>());
             }
 
-            comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+            comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
         }
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
