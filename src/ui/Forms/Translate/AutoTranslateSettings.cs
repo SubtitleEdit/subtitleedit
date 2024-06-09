@@ -89,6 +89,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
+            if (nikseTextBoxPrompt.Text.Contains('{'))
+            {
+                MessageBox.Show("Character not allowed: {");
+                return;
+            }
+
+            if (nikseTextBoxPrompt.Text.Contains('}'))
+            {
+                MessageBox.Show("Character not allowed: }");
+                return;
+            }
+
             Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)nikseUpDownDelay.Value;
             Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)nikseUpDownMaxBytes.Value;
 
