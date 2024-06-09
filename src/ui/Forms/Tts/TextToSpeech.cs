@@ -121,6 +121,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
             labelRegion.Text = LanguageSettings.Current.General.Region;
             checkBoxShowPreview.Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
+            checkBoxAudioEncoding.Text = LanguageSettings.Current.TextToSpeech.CustomAudioEncoding;
+            linkLabelCustomAudio.Text = LanguageSettings.Current.Settings.Title;
+            linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right + 3;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -179,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechLastVoice;
             checkBoxAddToVideoFile.Checked = Configuration.Settings.Tools.TextToSpeechAddToVideoFile;
             checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
-
+            checkBoxAudioEncoding.Checked = Configuration.Settings.Tools.TextToSpeechCustomAudio;
             checkBoxAddToVideoFile.Enabled = _videoFileName != null;
         }
 
@@ -392,7 +395,20 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             labelProgress.Text = "Add audio to video file...";
             var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
+
+            var audioEncoding = Configuration.Settings.Tools.TextToSpeechCustomAudioEncoding;
+            if (string.IsNullOrWhiteSpace(audioEncoding) || !checkBoxAudioEncoding.Checked)
+            {
+                audioEncoding = string.Empty;
+            }
+
+            bool? stereo = null;
+            if (Configuration.Settings.Tools.TextToSpeechCustomAudioStereo && checkBoxAudioEncoding.Checked)
+            {
+                stereo = true;
+            }
+
+            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             addAudioProcess.Start();
             while (!addAudioProcess.HasExited)
             {
@@ -2311,6 +2327,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             finally
             {
                 Cursor = Cursors.Default;
+            }
+        }
+
+        private void linkLabelCustomAudio_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using (var form = new TtsAudioEncoding())
+            {
+                 form.ShowDialog(this);
             }
         }
     }

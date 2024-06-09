@@ -199,6 +199,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TextToSpeechAzureApiKey { get; set; }
         public string TextToSpeechAzureRegion { get; set; }
         public bool TextToSpeechPreview { get; set; }
+        public bool TextToSpeechCustomAudio { get; set; }
+        public bool TextToSpeechCustomAudioStereo { get; set; }
+        public string TextToSpeechCustomAudioEncoding { get; set; }
         public bool TextToSpeechAddToVideoFile { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
@@ -5536,6 +5539,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechPreview = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudio");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudio = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudioStereo");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudioStereo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudioEncoding");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudioEncoding = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TextToSpeechAddToVideoFile");
@@ -12092,6 +12113,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudio", settings.Tools.TextToSpeechCustomAudio.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudioStereo", settings.Tools.TextToSpeechCustomAudioStereo.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudioEncoding", settings.Tools.TextToSpeechCustomAudioEncoding);
                 textWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));

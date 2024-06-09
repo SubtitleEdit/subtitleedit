@@ -1434,6 +1434,12 @@
     <Compile Include="Forms\Tts\ReviewAudioClips.Designer.cs">
       <DependentUpon>ReviewAudioClips.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Tts\TtsAudioEncoding.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Tts\TtsAudioEncoding.Designer.cs">
+      <DependentUpon>TtsAudioEncoding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UnknownSubtitle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2337,6 +2343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Tts\ReviewAudioClips.resx">
       <DependentUpon>ReviewAudioClips.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Tts\TtsAudioEncoding.resx">
+      <DependentUpon>TtsAudioEncoding.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UnknownSubtitle.resx">
       <DependentUpon>UnknownSubtitle.cs</DependentUpon>
