@@ -91,13 +91,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             if (nikseTextBoxPrompt.Text.Contains('{'))
             {
-                MessageBox.Show("Character not allowed: {");
+                MessageBox.Show("Character not allowed in prompt: {");
                 return;
             }
 
             if (nikseTextBoxPrompt.Text.Contains('}'))
             {
-                MessageBox.Show("Character not allowed: }");
+                MessageBox.Show("Character not allowed in prompt: }");
+                return;
+            }
+
+            if (nikseTextBoxPrompt.Text.Length > 1000)
+            {
+                MessageBox.Show("Too many characters in prompt");
                 return;
             }
 

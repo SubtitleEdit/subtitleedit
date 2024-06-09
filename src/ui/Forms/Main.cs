@@ -1086,7 +1086,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioWaveform_OnSingleClick(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
-            timerWaveform.Stop();
+            timerWaveform?.Stop();
             ResetPlaySelection();
             if (mediaPlayer.VideoPlayer != null)
             {
@@ -1108,7 +1108,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SelectListViewIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
             }
 
-            timerWaveform.Start();
+            timerWaveform?.Start();
         }
 
         private void AudioWaveform_OnParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
