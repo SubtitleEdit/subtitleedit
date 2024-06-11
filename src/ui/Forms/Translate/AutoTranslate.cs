@@ -583,38 +583,44 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        public static void FillComboWithLanguages(NikseComboBox comboBoxLanguages, List<TranslationPair> languages)
+        public static void FillComboWithLanguages(NikseComboBox comboBoxLanguages, List<TranslationPair> availableLanguages)
         {
+            comboBoxLanguages.BeginUpdate();
             comboBoxLanguages.Items.Clear();
-            var languagesFilled = false;
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
-            {
-                var favorites = Utilities.GetSubtitleLanguageCultures(true).ToList();
-                var languagesToAdd = new List<TranslationPair>();
-
-                foreach (var language in languages)
-                {
-                    if (favorites.Any(p0 => p0.TwoLetterISOLanguageName == language.Code) ||
-                        favorites.Any(p1 => p1.ThreeLetterISOLanguageName == language.Code) ||
-                        (!string.IsNullOrWhiteSpace(language.Code) && favorites.Any(p2 => p2.TwoLetterISOLanguageName.StartsWith(language.Code, StringComparison.OrdinalIgnoreCase))) ||
-                        favorites.Any(p3 => p3.EnglishName.Contains(language.Name, StringComparison.OrdinalIgnoreCase)) ||
-                        favorites.Any(p4 => language.Name.Contains(p4.EnglishName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        languagesFilled = true;
-                        languagesToAdd.Add(language);
-                    }
-                }
-
-                comboBoxLanguages.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
-            }
-
-            if (!languagesFilled)
-            {
-                comboBoxLanguages.Items.AddRange(languages.OrderBy(p => p.Name).ToArray<object>());
-            }
-
+            comboBoxLanguages.Items.AddRange(GetComboboxLanguage(availableLanguages).OrderBy(p => p.Name).ToArray<object>());
             comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+            comboBoxLanguages.EndUpdate();
+        }
+
+        private static IEnumerable<TranslationPair> GetComboboxLanguage(List<TranslationPair> availableTranslationPairs)
+        {
+            // return all available translation pair if no preferred/defaults is present
+            if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
+            {
+                return availableTranslationPairs;
+            }
+            
+            var preferredLanguages = Utilities.GetSubtitleLanguageCultures(true).ToArray();
+
+            var preferredTranslationPairs = new List<TranslationPair>();
+            foreach (var language in availableTranslationPairs)
+            {
+                if (preferredLanguages.Any(prefLang => SemanticallyIgual(prefLang, language)))
+                {
+                    preferredTranslationPairs.Add(language);
+                }
+            }
+
+            return preferredTranslationPairs.Count == 0 ? availableTranslationPairs : preferredTranslationPairs;
+
+            bool SemanticallyIgual(CultureInfo prefLangCi, TranslationPair lang)
+            {
+                return prefLangCi.TwoLetterISOLanguageName == lang.Code ||
+                       prefLangCi.ThreeLetterISOLanguageName == lang.Code ||
+                       (!string.IsNullOrWhiteSpace(lang.Code) && prefLangCi.TwoLetterISOLanguageName.StartsWith(lang.Code, StringComparison.OrdinalIgnoreCase)) ||
+                       prefLangCi.EnglishName.Contains(lang.Name, StringComparison.OrdinalIgnoreCase) ||
+                       lang.Name.Contains(prefLangCi.EnglishName, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
