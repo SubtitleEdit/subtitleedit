@@ -339,47 +339,25 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private bool GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
-            if (engine.Id == TextToSpeechEngineId.MsSpeechSynthesizer)
+            switch (engine.Id)
             {
-                GenerateParagraphAudioMs(subtitle, showProgressBar, overrideFileName);
-                return true;
+                case TextToSpeechEngineId.MsSpeechSynthesizer:
+                    GenerateParagraphAudioMs(subtitle, showProgressBar, overrideFileName);
+                    return true;
+                case TextToSpeechEngineId.Piper:
+                    return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName);
+                case TextToSpeechEngineId.Tortoise:
+                    return GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar, overrideFileName);
+                case TextToSpeechEngineId.Coqui:
+                    return GenerateParagraphAudioCoqui(subtitle, showProgressBar, overrideFileName);
+                case TextToSpeechEngineId.AllTalk:
+                    return GenerateParagraphAudioAllTalk(subtitle, showProgressBar, overrideFileName);
+                case TextToSpeechEngineId.ElevenLabs:
+                    return GenerateParagraphAudioElevenLabs(subtitle, showProgressBar, overrideFileName);
+                case TextToSpeechEngineId.AzureTextToSpeech:
+                    return GenerateParagraphAudioAzure(subtitle, showProgressBar, overrideFileName);
+                default: return false;
             }
-
-            if (engine.Id == TextToSpeechEngineId.Piper)
-            {
-                return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName);
-            }
-
-            if (engine.Id == TextToSpeechEngineId.Tortoise)
-            {
-                return GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar, overrideFileName);
-            }
-
-            if (engine.Id == TextToSpeechEngineId.Coqui)
-            {
-                var result = GenerateParagraphAudioCoqui(subtitle, showProgressBar, overrideFileName);
-                return result;
-            }
-
-            if (engine.Id == TextToSpeechEngineId.AllTalk)
-            {
-                var result = GenerateParagraphAudioAllTalk(subtitle, showProgressBar, overrideFileName);
-                return result;
-            }
-
-            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
-            {
-                var result = GenerateParagraphAudioElevenLabs(subtitle, showProgressBar, overrideFileName);
-                return result;
-            }
-
-            if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
-            {
-                var result = GenerateParagraphAudioAzure(subtitle, showProgressBar, overrideFileName);
-                return result;
-            }
-
-            return false;
         }
 
         private void AddAudioToVideoFile(string audioFileName)
