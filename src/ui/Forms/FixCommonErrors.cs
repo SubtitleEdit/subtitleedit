@@ -1899,35 +1899,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Hunspell _hunspell;
-
-        public bool DoSpell(string word)
-        {
-            if (_hunspell == null && Language != null)
-            {
-                var fileMatches = Directory.GetFiles(Utilities.DictionaryFolder, Language + "*.dic");
-                if (fileMatches.Length > 0)
-                {
-                    var dictionary = fileMatches[0].Substring(0, fileMatches[0].Length - 4);
-                    try
-                    {
-                        _hunspell = Hunspell.GetHunspell(dictionary);
-                    }
-                    catch
-                    {
-                        _hunspell = null;
-                    }
-                }
-            }
-
-            if (_hunspell == null)
-            {
-                return false;
-            }
-
-            return _hunspell.Spell(word);
-        }
-
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
             listViewFixes.CheckAll();
