@@ -587,12 +587,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             comboBoxLanguages.BeginUpdate();
             comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(GetComboboxLanguage(availableLanguages).OrderBy(p => p.Name).ToArray<object>());
+            comboBoxLanguages.Items.AddRange(GetComboBoxLanguage(availableLanguages).OrderBy(p => p.Name).ToArray<object>());
             comboBoxLanguages.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
             comboBoxLanguages.EndUpdate();
         }
 
-        private static IEnumerable<TranslationPair> GetComboboxLanguage(List<TranslationPair> availableTranslationPairs)
+        private static IEnumerable<TranslationPair> GetComboBoxLanguage(List<TranslationPair> availableTranslationPairs)
         {
             // return all available translation pair if no preferred/defaults is present
             if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages))
