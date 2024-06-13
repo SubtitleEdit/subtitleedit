@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
     <ApplicationIcon>SE.ico</ApplicationIcon>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <ManifestCertificateThumbprint>DCCE7922B5E425ADB221E06DC2FB405664CF8F63</ManifestCertificateThumbprint>
@@ -18,16 +18,6 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Speech" />
-    <Reference Include="System.Web.Services" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Update="Controls\CuesPreviewView.cs">
       <SubType>Component</SubType>
@@ -312,8 +302,28 @@
     <PackageReference Include="NHunspell" Version="1.2.5554.16953" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="Vosk" Version="0.3.38" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <PackageReference Include="System.Speech" Version="8.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Web.Services" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
