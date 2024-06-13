@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Interfaces
 {
-    public interface IFixCallbacks : IDoSpell
+    public interface IFixCallbacks
     {
         bool AllowFix(Paragraph p, string action);
         void AddFixToListView(Paragraph p, string action, string before, string after);
