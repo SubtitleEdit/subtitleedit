@@ -2324,7 +2324,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if ((formatType == typeof(AdvancedSubStationAlpha) ||
                  formatType == typeof(SubStationAlpha) ||
-                 formatType == typeof(CsvNuendo)) && (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)) ||
+                 formatType == typeof(CsvNuendo) ||
+                 formatType == typeof(PodcastIndexer)) && (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)) ||
                                                       Configuration.Settings.Tools.ListViewShowColumnActor))
             {
                 bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
@@ -4132,6 +4133,20 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
                         SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Character);
+                        if (!wasVisible)
+                        {
+                            SaveSubtitleListviewIndices();
+                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                            RestoreSubtitleListviewIndices();
+                        }
+                    }
+                }
+                else if (formatType == typeof(PodcastIndexer))
+                {
+                    if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
+                    {
+                        bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
+                        SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Actor);
                         if (!wasVisible)
                         {
                             SaveSubtitleListviewIndices();
@@ -8952,7 +8967,7 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 cm.Items.Add(contextMenuStripLvHeaderGapToolStripMenuItem);
 
-                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo))
+                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo) || formatType == typeof(PodcastIndexer))
                 {
                     // ACTOR
                     var actorTitle = formatType == typeof(CsvNuendo) ? LanguageSettings.Current.General.Character : LanguageSettings.Current.General.Actor;
@@ -9171,7 +9186,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetLanguage.Visible = false;
             toolStripMenuItemSetLayer.Visible = false;
             List<string> actors = null;
-            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo)) && SubtitleListview1.SelectedItems.Count > 0)
+            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo) || formatType == typeof(PodcastIndexer)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 actors = new List<string>();
                 toolStripMenuItemWebVTT.Visible = false;
