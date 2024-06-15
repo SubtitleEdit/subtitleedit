@@ -52,6 +52,9 @@
             this.translateCurrentLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelApiKey = new System.Windows.Forms.Label();
             this.buttonStrategy = new System.Windows.Forms.Button();
+            this.contextMenuStripOlamaModels = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.updateLocalModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelFormality = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxFormality = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
@@ -63,6 +66,7 @@
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStripOlamaModels.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -261,6 +265,28 @@
             this.buttonStrategy.Text = "Advanced";
             this.buttonStrategy.UseVisualStyleBackColor = true;
             this.buttonStrategy.Click += new System.EventHandler(this.buttonStrategy_Click);
+            // 
+            // contextMenuStripOlamaModels
+            // 
+            this.contextMenuStripOlamaModels.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.updateLocalModelsToolStripMenuItem,
+            this.findModelsToolStripMenuItem});
+            this.contextMenuStripOlamaModels.Name = "contextMenuStripOlamaModels";
+            this.contextMenuStripOlamaModels.Size = new System.Drawing.Size(184, 70);
+            // 
+            // updateLocalModelsToolStripMenuItem
+            // 
+            this.updateLocalModelsToolStripMenuItem.Name = "updateLocalModelsToolStripMenuItem";
+            this.updateLocalModelsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.updateLocalModelsToolStripMenuItem.Text = "Refresh local models";
+            this.updateLocalModelsToolStripMenuItem.Click += new System.EventHandler(this.UpdateLocalModelsToolStripMenuItem_Click);
+            // 
+            // findModelsToolStripMenuItem
+            // 
+            this.findModelsToolStripMenuItem.Name = "findModelsToolStripMenuItem";
+            this.findModelsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.findModelsToolStripMenuItem.Text = "Find models online";
+            this.findModelsToolStripMenuItem.Click += new System.EventHandler(this.findModelsToolStripMenuItem_Click);
             // 
             // labelFormality
             // 
@@ -495,6 +521,7 @@
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStripOlamaModels.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -534,5 +561,8 @@
         private System.Windows.Forms.Button buttonStrategy;
         private System.Windows.Forms.ToolStripMenuItem translateCurrentLineToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem translateCurrentLineToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripOlamaModels;
+        private System.Windows.Forms.ToolStripMenuItem updateLocalModelsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findModelsToolStripMenuItem;
     }
 }
