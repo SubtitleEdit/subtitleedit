@@ -315,6 +315,8 @@
     <Reference Include="System.Speech" />
     <Reference Include="System.Web.Services" />
   </ItemGroup>
+  
+<!--  Todo: Move to net48 section? -->
   <ItemGroup>
     <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -322,6 +324,7 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
