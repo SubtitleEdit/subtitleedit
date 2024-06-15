@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -170,6 +171,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             nikseTextBoxApiKey.Top = nikseComboBoxUrl.Top;
             labelApiKey.Text = LanguageSettings.Current.Settings.GoogleTranslateApiKey;
             labelFormality.Visible = false;
+            comboBoxFormality.ContextMenuStrip = null;
             comboBoxFormality.Visible = false;
             var engineType = _autoTranslator.GetType();
 
@@ -343,36 +345,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
 
-                //TODO: move to refresh models context menu
-                //using (var httpClient = new HttpClient())
-                //{
-                //    try
-                //    {
-                //        httpClient.Timeout = TimeSpan.FromSeconds(5);
-                //        var url = "http://localhost:11434/api/tags";
-                //        var resultTask = httpClient.GetAsync(new Uri(url));
-
-                //        var result = resultTask.Result;
-                //        var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                //        if (result.IsSuccessStatusCode)
-                //        {
-                //            var parser = new SeJsonParser();
-                //            var resultJson = Encoding.UTF8.GetString(bytes);
-                //            var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
-                //            foreach (var name in names.OrderByDescending(p => p))
-                //            {
-                //                models.Remove(name);
-                //                models.Insert(0, name);
-                //            }
-                //        }
-                //    }
-                //    catch (Exception exception)
-                //    {
-                //        SeLogger.Error(exception, "Unable to get ollama models");
-                //    }
-                //}
-
                 labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Enabled = true;
                 labelFormality.Visible = true;
 
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
@@ -385,6 +359,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     comboBoxFormality.Items.Add(model);
                 }
                 comboBoxFormality.Text = Configuration.Settings.Tools.OllamaModel;
+
+                comboBoxFormality.ContextMenuStrip = contextMenuStripOlamaModels;
 
                 return;
             }
@@ -1465,6 +1441,53 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 SetupLanguageSettings();
             }
+        }
+
+        private void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+                    var url = nikseComboBoxUrl.Text.Replace("generate", "tags");
+                    var resultTask = httpClient.GetAsync(new Uri(url));
+
+                    var result = resultTask.Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var parser = new SeJsonParser();
+                        var resultJson = Encoding.UTF8.GetString(bytes);
+                        var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
+                        foreach (var name in names.OrderByDescending(p => p))
+                        {
+                            models.Remove(name);
+                            models.Insert(0, name);
+                        }
+
+                        Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
+
+                        var v = comboBoxFormality.Text;
+                        comboBoxFormality.Items.Clear();
+                        foreach (var model in models)
+                        {
+                            comboBoxFormality.Items.Add(model);
+                        }
+                        comboBoxFormality.Text = v;
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    SeLogger.Error(exception, "Unable to get ollama models");
+                }
+            }
+        }
+
+        private void findModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UiUtil.OpenUrl("https://ollama.com/library");
         }
     }
 }
