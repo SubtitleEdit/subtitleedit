@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialogStyle.FileName = "multiple_replace_groups.template";
             saveFileDialogStyle.Title = LanguageSettings.Current.MultipleReplace.ExportRulesTitle;
             saveFileDialogStyle.Filter = LanguageSettings.Current.MultipleReplace.Rules + "|*.template";
+            saveFileDialogStyle.OverwritePrompt = true;
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
