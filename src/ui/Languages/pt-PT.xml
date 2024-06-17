@@ -3176,6 +3176,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>A combinar a faixa de áudio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>A gerar voz a partir de texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Rever clipes de áudio</ReviewAudioClips>
+    <CustomAudioEncoding>Codificação áudio personalizada</CustomAudioEncoding>
     <ReviewInfo>Rever e editar/remover clipes de áudio</ReviewInfo>
     <Play>Reproduzir</Play>
     <AutoContinue>Continuar automaticamente</AutoContinue>
