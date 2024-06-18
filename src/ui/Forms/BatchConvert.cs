@@ -735,6 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new LibreTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
+                new OllamaTranslate(),
             };
             nikseComboBoxEngine.Items.Clear();
             nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
