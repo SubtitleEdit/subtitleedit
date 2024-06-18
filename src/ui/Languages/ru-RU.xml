@@ -198,7 +198,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Аудио в текст</Title>
     <Info>Создание текста из аудио с помощью системы распознавания речи Vosk/Kaldi</Info>
     <WhisperInfo>Создание текста из аудио с помощью системы распознавания речи Whisper</WhisperInfo>
-    <Engine>Движок:</Engine>
+    <Engine>Движок</Engine>
     <VoskWebsite>Сайт Vosk</VoskWebsite>
     <WhisperWebsite>Сайт Whisper</WhisperWebsite>
     <Model>Модель</Model>
@@ -1080,7 +1080,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranslateBlockInfo>Переведите исходный текст, затем скопируйте результат в буфер обмена и нажмите кнопку ниже</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>Получить переведённый текст из буфера обмена
 (Ctrl + V)</TranslateBlockGetFromClipboard>
-    <TranslateBlockCopySourceText>Копировать исходный текст в буфер обмена</TranslateBlockCopySourceText>
+    <TranslateBlockCopySourceText>Копировать исходный текст</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Буфер обмена содержит исходный текст!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Переведите исходный текст, затем скопируйте результат в буфер обмена и повторите попытку</TranslateBlockClipboardError2>
     <StartWebServerX>Запустить веб-сервер «{0}»</StartWebServerX>
@@ -2144,6 +2144,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationGreaterThan>Продолжите-ность больше</DurationGreaterThan>
     <CpsLessThan>Симв./сек. меньше</CpsLessThan>
     <CpsGreaterThan>Симв./сек. больше</CpsGreaterThan>
+    <LengthLessThan>Длина меньше</LengthLessThan>
+    <LengthGreaterThan>Длина больше</LengthGreaterThan>
     <ExactlyOneLine>Ровно одна строка</ExactlyOneLine>
     <ExactlyTwoLines>Ровно две строчки</ExactlyTwoLines>
     <MoreThanTwoLines>Более двух строк</MoreThanTwoLines>
@@ -3184,6 +3186,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergingAudioTrackXOfY>Объединение аудиодорожек: {0} / {1}…</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Создание речи из текста: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Просмотр аудиоклипов</ReviewAudioClips>
+    <CustomAudioEncoding>Пользовательское кодирование звука</CustomAudioEncoding>
     <ReviewInfo>Просмотр и редактирование/удаление аудиоклипов</ReviewInfo>
     <Play>Воспроизвести</Play>
     <AutoContinue>Автопродолжение</AutoContinue>
