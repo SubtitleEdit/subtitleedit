@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialogStyle.FileName = "multiple_replace_groups.template";
             saveFileDialogStyle.Title = LanguageSettings.Current.MultipleReplace.ExportRulesTitle;
             saveFileDialogStyle.Filter = LanguageSettings.Current.MultipleReplace.Rules + "|*.template";
+            saveFileDialogStyle.OverwritePrompt = true;
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
@@ -136,18 +137,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = true;
-            }
+            listViewExportStyles.CheckAll();
         }
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewExportStyles.InvertCheck();
         }
     }
 }

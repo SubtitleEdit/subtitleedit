@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -29,6 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewParts.Columns[1].Text = LanguageSettings.Current.JoinSubtitles.StartTime;
             listViewParts.Columns[2].Text = LanguageSettings.Current.JoinSubtitles.EndTime;
             listViewParts.Columns[3].Text = LanguageSettings.Current.JoinSubtitles.FileName;
+
+            moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
 
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
@@ -88,14 +94,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in files)
+
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1), () =>
             {
-                if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                var fileNames = files.ToList();
+                fileNames.Sort(ListViewSorter.NaturalComparer);
+                foreach (var fileName in fileNames)
                 {
-                    _fileNamesToJoin.Add(fileName);
+                    if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        _fileNamesToJoin.Add(fileName);
+                    }
                 }
-            }
-            SortAndLoad();
+
+                SortAndLoad();
+            });
         }
 
         private void SortAndLoad()
@@ -260,21 +273,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!radioButtonJoinAddTime.Checked)
             {
-                for (int outer = 0; outer < subtitles.Count; outer++)
+                for (var outer = 0; outer < subtitles.Count; outer++)
                 {
-                    for (int inner = 1; inner < subtitles.Count; inner++)
+                    for (var inner = 1; inner < subtitles.Count; inner++)
                     {
                         var a = subtitles[inner - 1];
                         var b = subtitles[inner];
                         if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
                         {
-                            var t1 = _fileNamesToJoin[inner - 1];
-                            _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
-                            _fileNamesToJoin[inner] = t1;
-
-                            var t2 = subtitles[inner - 1];
-                            subtitles[inner - 1] = subtitles[inner];
-                            subtitles[inner] = t2;
+                            (_fileNamesToJoin[inner - 1], _fileNamesToJoin[inner]) = (_fileNamesToJoin[inner], _fileNamesToJoin[inner - 1]);
+                            (subtitles[inner - 1], subtitles[inner]) = (subtitles[inner], subtitles[inner - 1]);
                         }
                     }
                 }
@@ -287,6 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var sub = subtitles[i];
                 var lvi = new ListViewItem($"{sub.Paragraphs.Count:#,###,###}");
+                lvi.Tag = fileName;
                 if (sub.Paragraphs.Count > 0)
                 {
                     lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());
@@ -323,6 +332,11 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds += addMs;
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
+            }
+
+            if (radioButtonJoinPlain.Checked)
+            {
+                JoinedSubtitle.Sort(SubtitleSortCriteria.StartTime);
             }
 
             JoinedSubtitle.Renumber();
@@ -364,7 +378,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var sb = new StringBuilder();
-                foreach (string fileName in openFileDialog1.FileNames)
+                var fileNames = openFileDialog1.FileNames.ToList();
+                fileNames.Sort(ListViewSorter.NaturalComparer);
+                foreach (var fileName in fileNames)
                 {
                     Application.DoEvents();
                     if (File.Exists(fileName))
@@ -383,11 +399,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 SortAndLoad();
                 if (sb.Length > 0)
                 {
                     MessageBox.Show(sb.ToString());
                 }
+
                 JoinSubtitles_Resize(sender, e);
             }
         }
@@ -436,6 +454,218 @@ namespace Nikse.SubtitleEdit.Forms
         {
             numericUpDownAddMs.Enabled = radioButtonJoinAddTime.Checked;
             labelAddTime.Enabled = radioButtonJoinAddTime.Checked;
+            SortAndLoad();
+            ListViewSorter.SetSortArrow(listViewParts.Columns[3], SortOrder.None);
+        }
+
+        private void contextMenuStripParts_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void MoveUp(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+            var style = _fileNamesToJoin[idx];
+            _fileNamesToJoin.RemoveAt(idx);
+            _fileNamesToJoin.Insert(idx - 1, style);
+
+            idx--;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveDown(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx >= listView.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+            var style = _fileNamesToJoin[idx];
+            _fileNamesToJoin.RemoveAt(idx);
+            _fileNamesToJoin.Insert(idx + 1, style);
+
+            idx++;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveToTop(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+            var style = _fileNamesToJoin[idx];
+            _fileNamesToJoin.RemoveAt(idx);
+            _fileNamesToJoin.Insert(0, style);
+
+            idx = 0;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveToBottom(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == listView.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+            var style = _fileNamesToJoin[idx];
+            _fileNamesToJoin.RemoveAt(idx);
+            _fileNamesToJoin.Add(style);
+
+            listView.Items.Add(item);
+            UpdateSelectedIndices(listView);
+        }
+
+        private static void UpdateSelectedIndices(ListView listView, int startingIndex = -1, int numberOfSelectedItems = 1)
+        {
+            if (numberOfSelectedItems == 0)
+            {
+                return;
+            }
+
+            if (startingIndex == -1 || startingIndex >= listView.Items.Count)
+            {
+                startingIndex = listView.Items.Count - 1;
+            }
+
+            if (startingIndex - numberOfSelectedItems < -1)
+            {
+                return;
+            }
+
+            listView.SelectedItems.Clear();
+            for (var i = 0; i < numberOfSelectedItems; i++)
+            {
+                listView.Items[startingIndex - i].Selected = true;
+                listView.Items[startingIndex - i].EnsureVisible();
+                listView.Items[startingIndex - i].Focused = true;
+            }
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked)
+            {
+                return;
+            }
+
+            ListViewSorter.SetSortArrow(listViewParts.Columns[3], SortOrder.None);
+            MoveUp(listViewParts);
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked)
+            {
+                return;
+            }
+
+            ListViewSorter.SetSortArrow(listViewParts.Columns[3], SortOrder.None);
+            MoveDown(listViewParts);
+        }
+
+        private void moveTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked)
+            {
+                return;
+            }
+
+            ListViewSorter.SetSortArrow(listViewParts.Columns[3], SortOrder.None);
+            MoveToTop(listViewParts);
+        }
+
+        private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked)
+            {
+                return;
+            }
+
+            ListViewSorter.SetSortArrow(listViewParts.Columns[3], SortOrder.None);
+            MoveToBottom(listViewParts);
+        }
+
+        private void listViewParts_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (radioButtonJoinPlain.Checked || e.Column != 3)
+            {
+                return;
+            }
+
+            var lv = (ListView)sender;
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+            }
+
+            lv.Sort();
+
+            ListViewSorter.SetSortArrow(listViewParts.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
+
+            _fileNamesToJoin.Clear();
+            foreach (ListViewItem item in listViewParts.Items)
+            {
+                _fileNamesToJoin.Add((string)item.Tag);
+            }
             SortAndLoad();
         }
     }

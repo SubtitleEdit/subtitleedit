@@ -174,11 +174,35 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int TranslateViaCopyPasteMaxSize { get; set; }
         public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
         public string ChatGptUrl { get; set; }
+        public string ChatGptPrompt { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
+        public string LmStudioApiUrl { get; set; }
+        public string LmStudioModel { get; set; }
+        public string LmStudioPrompt { get; set; }
+        public string OllamaApiUrl { get; set; }
+        public string OllamaModels { get; set; }
+        public string OllamaModel { get; set; }
+        public string OllamaPrompt { get; set; }
+
+        public string AnthropicApiUrl { get; set; }
+        public string AnthropicPrompt { get; set; }
+        public string AnthropicApiKey { get; set; }
+        public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
+        public int AutoTranslateMaxBytes { get; set; }
+        public string AutoTranslateStrategy { get; set; }
         public string GeminiProApiKey { get; set; }
-        public bool DisableVidoInfoViaLabel { get; set; }
+        public string TextToSpeechEngine { get; set; }
+        public string TextToSpeechLastVoice { get; set; }
+        public string TextToSpeechElevenLabsApiKey { get; set; }
+        public string TextToSpeechAzureApiKey { get; set; }
+        public string TextToSpeechAzureRegion { get; set; }
+        public bool TextToSpeechPreview { get; set; }
+        public bool TextToSpeechCustomAudio { get; set; }
+        public bool TextToSpeechCustomAudioStereo { get; set; }
+        public string TextToSpeechCustomAudioEncoding { get; set; }
+        public bool TextToSpeechAddToVideoFile { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -447,6 +471,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
 
         public string GenVideoFontName { get; set; }
+        public bool GenVideoFontBold { get; set; }
+        public decimal GenVideoOutline { get; set; }
         public int GenVideoFontSize { get; set; }
         public string GenVideoEncoding { get; set; }
         public string GenVideoPreset { get; set; }
@@ -462,9 +488,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color GenVideoNonAssaTextColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
-
         public string GenVideoEmbedOutputExt { get; set; }
-
+        public string GenVideoEmbedOutputSuffix { get; set; }
+        public string GenVideoEmbedOutputReplace { get; set; }
+        public bool GenVideoDeleteInputVideoFile { get; set; }
+        public bool GenVideoUseOutputFolder { get; set; }
+        public string GenVideoOutputFolder { get; set; }
+        public string GenVideoOutputFileSuffix { get; set; }
 
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
@@ -531,7 +561,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
-            ChatGptModel = "gpt-3.5-turbo";
+            ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            ChatGptModel = "gpt-4o";
+            LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            OllamaApiUrl = "http://localhost:11434/api/generate";
+            OllamaModels = "llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
+            OllamaModel = "llama3";
+            OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
+            AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
+            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
+            AnthropicApiModel = "claude-3-opus-20240229";
+            TextToSpeechAzureRegion = "westeurope";
+            AutoTranslateMaxBytes = 2000;
+            TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
@@ -706,10 +748,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioEncoding = "copy";
             GenVideoAudioForceStereo = true;
             GenVideoAudioSampleRate = "48000";
+            GenVideoFontBold = true;
+            GenVideoOutline = 6;
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
+            GenVideoEmbedOutputSuffix = "embed";
+            GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
+            GenVideoOutputFileSuffix = "_new";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
@@ -1337,6 +1384,7 @@ $HorzAlign          =   Center
         public string CurrentProfile { get; set; }
         public bool ShowToolbarNew { get; set; }
         public bool ShowToolbarOpen { get; set; }
+        public bool ShowToolbarOpenVideo { get; set; }
         public bool ShowToolbarSave { get; set; }
         public bool ShowToolbarSaveAs { get; set; }
         public bool ShowToolbarFind { get; set; }
@@ -1528,6 +1576,7 @@ $HorzAlign          =   Center
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
+        public bool DisableShowingLoadErrors { get; set; }
         public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
         public bool NewEmptyUseAutoDuration { get; set; }
@@ -1876,7 +1925,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 240,
-                CpsLineLengthStrategy = typeof(CalcIgnoreArabicDiacritics).Name,
+                CpsLineLengthStrategy = typeof(CalcAll).Name,
                 MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
@@ -2545,6 +2594,7 @@ $HorzAlign          =   Center
         public string MainVideoAudioToTextVosk { get; set; }
         public string MainVideoAudioToTextWhisper { get; set; }
         public string MainVideoAudioExtractAudioSelectedLines { get; set; }
+        public string MainVideoTextToSpeech { get; set; }
 
         // spell check
         public string MainSpellCheck { get; set; }
@@ -2641,6 +2691,7 @@ $HorzAlign          =   Center
         public string MainTextBoxSelectionToRuby { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
+        public string MainCreateInsertSubAtVideoPosMax { get; set; }
         public string MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
@@ -3496,7 +3547,6 @@ $HorzAlign          =   Center
                     settings.General.Profiles.Clear();
                 }
 
-                var p = new RulesProfile();
                 var subtitleLineMaximumLength = listNode.SelectSingleNode("SubtitleLineMaximumLength")?.InnerText;
                 var subtitleMaximumCharactersPerSeconds = listNode.SelectSingleNode("SubtitleMaximumCharactersPerSeconds")?.InnerText;
                 var subtitleOptimalCharactersPerSeconds = listNode.SelectSingleNode("SubtitleOptimalCharactersPerSeconds")?.InnerText;
@@ -3547,6 +3597,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowToolbarOpen = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarOpenVideo");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarOpenVideo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowToolbarSave");
@@ -4663,6 +4719,12 @@ $HorzAlign          =   Center
                 settings.General.DisableVideoAutoLoading = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
+            subNode = node.SelectSingleNode("DisableShowingLoadErrors");
+            if (subNode != null)
+            {
+                settings.General.DisableShowingLoadErrors = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("AllowVolumeBoost");
             if (subNode != null)
             {
@@ -5329,6 +5391,12 @@ $HorzAlign          =   Center
                 settings.Tools.ChatGptUrl = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("ChatGptPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.ChatGptPrompt = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ChatGptApiKey");
             if (subNode != null)
             {
@@ -5341,10 +5409,88 @@ $HorzAlign          =   Center
                 settings.Tools.ChatGptModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("LmStudioApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("LmStudioModel");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("LmStudioPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaModels");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaModels = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaModel");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiModel");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateDelaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateMaxBytes");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMaxBytes = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateStrategy");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateStrategy = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("GeminiProApiKey");
@@ -5353,16 +5499,70 @@ $HorzAlign          =   Center
                 settings.Tools.GeminiProApiKey = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechEngine");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechEngine = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechLastVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechLastVoice = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAzureApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechAzureRegion");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAzureRegion = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
             if (subNode != null)
             {
                 settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("DisableVidoInfoViaLabel");
+            subNode = node.SelectSingleNode("TextToSpeechPreview");
             if (subNode != null)
             {
-                settings.Tools.DisableVidoInfoViaLabel = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.TextToSpeechPreview = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudio");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudio = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudioStereo");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudioStereo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechCustomAudioEncoding");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechCustomAudioEncoding = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechAddToVideoFile");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAddToVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -6945,6 +7145,18 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoFontName = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoFontBold");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoFontBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutline");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutline = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GenVideoFontSize");
             if (subNode != null)
             {
@@ -7040,6 +7252,43 @@ $HorzAlign          =   Center
             {
                 settings.Tools.GenVideoEmbedOutputExt = subNode.InnerText;
             }
+
+            subNode = node.SelectSingleNode("GenVideoEmbedOutputSuffix");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEmbedOutputSuffix = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoEmbedOutputReplace");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEmbedOutputReplace = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoDeleteInputVideoFile");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoDeleteInputVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoUseOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoUseOutputFolder = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFolder = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFileSuffix");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFileSuffix = subNode.InnerText;
+            }
+
 
             subNode = node.SelectSingleNode("VoskPostProcessing");
             if (subNode != null)
@@ -10168,6 +10417,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoAudioExtractAudioSelectedLines = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoTextToSpeech");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoTextToSpeech = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                 {
@@ -10779,6 +11034,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPosMax");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateInsertSubAtVideoPosMax = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPosNoTextBoxFocus");
@@ -11512,6 +11773,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
                 textWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarOpenVideo", settings.General.ShowToolbarOpenVideo.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSaveAs", settings.General.ShowToolbarSaveAs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString(CultureInfo.InvariantCulture));
@@ -11706,6 +11968,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("Company", settings.General.Company);
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DisableShowingLoadErrors", settings.General.DisableShowingLoadErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
@@ -11826,11 +12089,34 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
+                textWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
+                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
+                textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
+                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                textWriter.WriteElementString("OllamaModels", settings.Tools.OllamaModels);
+                textWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
+                textWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
+                textWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);
+                textWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
+                textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
+                textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
-                textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
+                textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
+                textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
+                textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
+                textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
+                textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudio", settings.Tools.TextToSpeechCustomAudio.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudioStereo", settings.Tools.TextToSpeechCustomAudioStereo.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechCustomAudioEncoding", settings.Tools.TextToSpeechCustomAudioEncoding);
+                textWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
@@ -12093,6 +12379,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoFontName", settings.Tools.GenVideoFontName);
+                textWriter.WriteElementString("GenVideoFontBold", settings.Tools.GenVideoFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoOutline", settings.Tools.GenVideoOutline.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
@@ -12109,6 +12397,12 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
+                textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
+                textWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
+                textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoUseOutputFolder", settings.Tools.GenVideoUseOutputFolder.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoOutputFolder", settings.Tools.GenVideoOutputFolder);
+                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFileSuffix);
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
@@ -12828,6 +13122,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoAudioToTextVosk", shortcuts.MainVideoAudioToTextVosk);
             textWriter.WriteElementString("MainVideoAudioToTextWhisper", shortcuts.MainVideoAudioToTextWhisper);
             textWriter.WriteElementString("MainVideoAudioExtractAudioSelectedLines", shortcuts.MainVideoAudioExtractAudioSelectedLines);
+            textWriter.WriteElementString("MainVideoTextToSpeech", shortcuts.MainVideoTextToSpeech);
             textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
             textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);
@@ -12929,6 +13224,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxSelectionToRuby", shortcuts.MainTextBoxSelectionToRuby);
             textWriter.WriteElementString("MainTextBoxToggleAutoDuration", shortcuts.MainTextBoxToggleAutoDuration);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", shortcuts.MainCreateInsertSubAtVideoPos);
+            textWriter.WriteElementString("MainCreateInsertSubAtVideoPosMax", shortcuts.MainCreateInsertSubAtVideoPosMax);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
             textWriter.WriteElementString("MainCreateSetStart", shortcuts.MainCreateSetStart);
             textWriter.WriteElementString("MainCreateSetEnd", shortcuts.MainCreateSetEnd);

@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -2964,7 +2964,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <RemoveShotChangesFromSelection>Remove scene changes from selection</RemoveShotChangesFromSelection>
     <GuessTimeCodes>猜測時間碼...</GuessTimeCodes>
     <SeekSilence>搜尋靜音...</SeekSilence>
-    <InsertSubtitleHere>在這裡插入字幕...</InsertSubtitleHere>
+    <InsertSubtitleHere>在這裡插入字幕</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

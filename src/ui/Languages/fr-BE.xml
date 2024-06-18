@@ -2902,7 +2902,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <RemoveSceneChange>Supprimer un changement de scène</RemoveSceneChange>
     <GuessTimeCodes>Supposer l'horodatage ...</GuessTimeCodes>
     <SeekSilence>Recherche de silence ...</SeekSilence>
-    <InsertSubtitleHere>Insérer le sous-titre ici ...</InsertSubtitleHere>
+    <InsertSubtitleHere>Insérer le sous-titre ici </InsertSubtitleHere>
     <CharsSecX>CPS : {0:0.00}</CharsSecX>
     <WordsMinX>MPM : {0:0.00}</WordsMinX>
   </Waveform>

@@ -97,6 +97,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideoAudioToTextVosk { get; set; }
         public Keys MainVideoAudioToTextWhisper { get; set; }
         public Keys MainVideoAudioExtractSelectedLines { get; set; }
+        public Keys MainVideoTextToSpeech { get; set; }
         public Keys MainVideoToggleContrast { get; set; }
         public Keys MainGoToPreviousSubtitleAndFocusVideo { get; set; }
         public Keys MainGoToNextSubtitleAndFocusVideo { get; set; }
@@ -136,6 +137,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxToggleAutoDuration { get; set; }
         public Keys MainCreateInsertSubAtVideoPos { get; set; }
         public Keys MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
+        public Keys MainCreateInsertSubAtVideoPosMax { get; set; }
         public Keys MainCreateSetStart { get; set; }
         public Keys MainCreateSetEnd { get; set; }
         public Keys MainAdjustVideoSetStartForAppropriateLine { get; set; }
@@ -192,6 +194,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainInsertAfter { get; set; }
         public Keys MainInsertBefore { get; set; }
         public Keys MainTextBoxAutoBreak { get; set; }
+        public Keys MainAutoTranslateSelectedLines { get; set; }
         public Keys MainTextBoxRecord { get; set; }
         public Keys MainTextBoxUnbreak { get; set; }
         public Keys MainTextBoxUnbreakNoSpace { get; set; }
@@ -392,6 +395,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoAudioToTextVosk = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoAudioToTextVosk);
             MainVideoAudioToTextWhisper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoAudioToTextWhisper);
             MainVideoAudioExtractSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoAudioExtractAudioSelectedLines);
+            MainVideoTextToSpeech = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoTextToSpeech);
             MainVideoToggleBrightness = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleBrightness);
             MainVideoToggleContrast = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleContrast);
             MainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
@@ -453,6 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
             MainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             MainCreateInsertSubAtVideoPosNoTextBoxFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
+            MainCreateInsertSubAtVideoPosMax = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosMax);
             MainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             MainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
             MainAdjustVideoSetStartForAppropriateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustVideoSetStartForAppropriateLine);
@@ -509,6 +514,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             MainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             MainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
+            MainAutoTranslateSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAutoSelectedLines);
             MainTextBoxBreakAtCursorPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition);
             MainTextBoxBreakAtCursorPositionAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             MainTextBoxRecord = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxRecord);

@@ -7,11 +7,12 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
-    public class NikseComboBox : Control
+    public class NikseComboBox : Control, ISelectedText
     {
         // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
 
-        private readonly TextBox _textBox;
+        private readonly InnerTextBox _textBox;
 
         private NikseComboBoxPopUp _popUp;
 
@@ -106,12 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _selectedIndex = value;
                     _textBox.Text = string.Empty;
 
-                    if (!_loading)
-                    {
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                        TextChanged?.Invoke(this, EventArgs.Empty);
-                    }
+                    NotifyTextChanged();
 
                     if (!_skipPaint)
                     {
@@ -137,9 +133,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _listView.Items[_selectedIndex].Focused = true;
                     }
 
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    TextChanged?.Invoke(this, EventArgs.Empty);
+                    NotifyTextChanged();
                 }
 
                 if (!_skipPaint)
@@ -174,77 +168,78 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private string GetValue(string textOrSelectedText)
+        {
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                return textOrSelectedText;
+            }
+
+            return _selectedIndex < 0 ? string.Empty : _items[_selectedIndex].ToString();
+        }
+
+        private bool HasValueChanged(string preValue, string value)
+        {
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                return !preValue.Equals(value, StringComparison.Ordinal);
+            }
+
+            var count = _items.Count;
+            for (var i = 0; i < count; i++)
+            {
+                // skip previous-current selected value
+                // as it indicates that the previous and current are same value
+                if (i == _selectedIndex)
+                {
+                    continue;
+                }
+
+                // this means that the new value is present on the list aka '_items' and is not the same as previously selected
+                if (_items[i].ToString().Equals(value, StringComparison.Ordinal))
+                {
+                    _selectedIndex = i; // update new selected value
+                    return true;
+                }
+            }
+
+            return false; // item not found in the list
+        }
+
+        private void NotifyTextChanged()
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+            TextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public override string Text
         {
-            get => SelectedText;
-            set => SelectedText = value;
+            get => GetValue(_textBox.Text);
+            set
+            {
+                if (HasValueChanged(_textBox.Text, value))
+                {
+                    _textBox.Text = value;
+                    NotifyTextChanged();
+                }
+            }
         }
 
         public string SelectedText
         {
-            get
-            {
-                if (_textBox == null)
-                {
-                    return string.Empty;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    return _textBox.Text;
-                }
-
-                if (_selectedIndex < 0)
-                {
-                    return string.Empty;
-                }
-
-                return _items[_selectedIndex].ToString();
-            }
+            get => GetValue(_textBox.SelectedText);
             set
             {
-                if (_textBox == null)
+                if (HasValueChanged(_textBox.SelectedText, value))
                 {
-                    return;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    if (_textBox.Text != value)
-                    {
-                        _textBox.Text = value;
-
-                        if (!_loading)
-                        {
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                            TextChanged?.Invoke(this, EventArgs.Empty);
-                        }
-                    }
-
-                    return;
-                }
-
-                var hit = _items.FirstOrDefault(p => p.ToString() == value);
-                if (hit == null)
-                {
-                    return;
-                }
-
-                var idx = _items.IndexOf(hit);
-                if (idx == _selectedIndex)
-                {
-                    return;
-                }
-
-                _textBox.Text = value;
-                _selectedIndex = idx;
-
-                if (!_loading)
-                {
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    TextChanged?.Invoke(this, EventArgs.Empty);
+                    _textBox.SelectedText = value;
+                    NotifyTextChanged();
                 }
             }
         }
@@ -422,13 +417,36 @@ namespace Nikse.SubtitleEdit.Controls
             return base.IsInputKey(keyData);
         }
 
+        private void NavigateUp() => Navigate(_selectedIndex - 1);
+
+        private void NavigateDown() => Navigate(_selectedIndex + 1);
+        
+        private void Navigate(int index)
+        {
+            if (index < 0 || index >= _items.Count)
+            {
+                return;
+            }
+
+            _selectedIndex = index;
+            _textBox.Text = Items[_selectedIndex].ToString();
+            
+            if (!_skipPaint)
+            {
+                Invalidate();
+            }
+
+            _textBox.SelectionStart = 0;
+            _textBox.SelectionLength = _textBox.Text.Length;
+            NotifyTextChanged();
+        }
+        
         public NikseComboBox()
         {
             _loading = true;
-            _textBox = new TextBox();
+            _textBox = new InnerTextBox(this);
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
-
 
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -559,48 +577,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox.KeyDown += (sender, e) =>
             {
-                if (DropDownStyle != ComboBoxStyle.DropDown)
+                if (e.KeyCode == Keys.Up)
                 {
-
-                    if (e.KeyCode == Keys.Up)
-                    {
-                        if (_selectedIndex > 0)
-                        {
-                            _selectedIndex--;
-                            _textBox.Text = Items[_selectedIndex].ToString();
-                            Invalidate();
-                            if (!_loading)
-                            {
-                                SelectedIndexChanged?.Invoke(sender, e);
-                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                                TextChanged?.Invoke(this, EventArgs.Empty);
-                            }
-                        }
-                        e.Handled = true;
-                    }
-                    else if (e.KeyCode == Keys.Down)
-                    {
-                        if (_selectedIndex < Items.Count - 1)
-                        {
-                            _selectedIndex++;
-                            _textBox.Text = Items[_selectedIndex].ToString();
-                            if (!_loading)
-                            {
-                                SelectedIndexChanged?.Invoke(sender, e);
-                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                                TextChanged?.Invoke(this, EventArgs.Empty);
-                            }
-                            if (!_skipPaint)
-                            {
-                                Invalidate();
-                            }
-                        }
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        KeyDown?.Invoke(this, e);
-                    }
+                    NavigateUp();
+                    e.Handled = true;
+                }
+                else if (e.KeyCode == Keys.Down)
+                {
+                    NavigateDown();
+                    e.Handled = true;
                 }
                 else
                 {
@@ -716,10 +701,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Focus();
                 _textBox.SelectionLength = 0;
-            }
-            else
-            {
-                Focus();
             }
         }
 
@@ -1033,13 +1014,7 @@ namespace Nikse.SubtitleEdit.Controls
                         Invalidate();
                     }
 
-                    if (!_loading)
-                    {
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                        TextChanged?.Invoke(this, EventArgs.Empty);
-                    }
-
+                    NotifyTextChanged();
                 }
                 else
                 {
@@ -1068,12 +1043,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _textBox.Focus();
                         _textBox.SelectionLength = 0;
 
-                        if (!_loading)
-                        {
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                            TextChanged?.Invoke(this, EventArgs.Empty);
-                        }
+                        NotifyTextChanged();
 
                         return;
                     }
@@ -1332,6 +1302,30 @@ namespace Nikse.SubtitleEdit.Controls
             if (_textBox != null && DropDownStyle == ComboBoxStyle.DropDown)
             {
                 _textBox.SelectAll();
+            }
+        }
+
+        private class InnerTextBox : TextBox
+        {
+            private readonly NikseComboBox _owner;
+
+            public InnerTextBox(NikseComboBox owner)
+            {
+                _owner = owner;
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x0204) // WM_RBUTTONDOWN
+                {
+                    var x = _owner.Location.X + (short)m.LParam.ToInt32();
+                    var y = _owner.Location.Y + (short)m.LParam.ToInt32() >> 16;
+                    _owner.ContextMenuStrip?.Show(_owner, new Point(x, y));
+                }
+                else // this "else" is important as we don't want to show the OS default context menu
+                {
+                    base.WndProc(ref m);
+                }
             }
         }
     }

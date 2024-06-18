@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names with specific casing - and specific to English only -->
 <names>
-  <blacklist>
-    <name>Bill</name>
-    <name>Black</name>
-    <name>Male</name>
-  </blacklist>
+	<blacklist>
+		<name>Bill</name>
+		<name>Black</name>
+		<name>Male</name>
+	</blacklist>
 	<name>AI</name>
 	<name>AT&amp;T</name>
 	<name>Aarav</name>
@@ -1936,4 +1936,8 @@
 	<name>Maddie</name>
 	<name>Hallander</name>
 	<name>McGrath</name>	
+	<name>D'arcy</name>
+	<name>San Gimignano</name>
+	<name>Ferrara</name>
+	<name>TensorFlow</name>
 </names>

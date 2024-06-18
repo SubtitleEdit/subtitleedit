@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = FixShortDuration(subtitle);
                 }
 
-                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
+                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && AllowLineContentMove(engine))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
                     subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = TryForWholeSentences(subtitle, TwoLetterLanguageCode, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
 
-                if (mergeLines && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
+                if (mergeLines && AllowLineContentMove(engine))
                 {
                     subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
                     subtitle = AutoBalanceLines(subtitle, TwoLetterLanguageCode);
@@ -138,6 +138,25 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             subtitle.Renumber();
             return subtitle;
+        }
+
+        private static bool AllowLineContentMove(Engine engine)
+        {
+            if (engine != Engine.Whisper)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
+            {
+                return true;
+            }
+
+            var es = Configuration.Settings.Tools.WhisperExtraSettings.ToLowerInvariant();
+            return !es.Contains("--highlight_words", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("-hw ", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("-hw=true", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("--one_word", StringComparison.OrdinalIgnoreCase);
         }
 
         public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)
@@ -169,8 +188,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     continue;
                 }
 
-                // check for period in last part of p
-                var lastPeriodIdx = p.Text.LastIndexOfAny(new char[] { '.', '?', '!' });
+                // check for period in last part of current
+                var lastPeriodIdx = p.Text.LastIndexOfAny(new[] { '.', '?', '!' });
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -189,6 +208,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     if (currentOk && nextOk && allOk)
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
@@ -199,7 +220,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                         else
                         {
-                            //TODO: calc time
+                            var durationToMove = CalcDurationToMove(oldP, p, next);
+                            p.EndTime.TotalMilliseconds += durationToMove;
+                            next.StartTime.TotalMilliseconds += durationToMove;
                         }
 
                         continue;
@@ -207,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOfAny(new char[] { '.', '?', '!' });
+                var firstPeriodIdx = next.Text.IndexOfAny(new[] { '.', '?', '!' });
                 if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();
@@ -221,11 +244,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
                     var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
-                    var allOk = newCurrentText.Length < lineMaxLength * 2 && 
+                    var allOk = newCurrentText.Length < lineMaxLength * 2 &&
                                      newNextText.Length < lineMaxLength * 2;
 
                     if (currentOk && nextOk && allOk)
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
@@ -236,7 +261,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                         else
                         {
-                            //TODO: calc time
+                            var durationToMove = CalcDurationToMove(oldP, p, next);
+                            p.EndTime.TotalMilliseconds += durationToMove;
+                            next.StartTime.TotalMilliseconds += durationToMove;
                         }
                     }
                 }
@@ -372,9 +399,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                                     arr = text.SplitToLines();
                                     if (arr.Count == 2)
                                     {
+                                        var oldP = new Paragraph(p);
+
                                         p.Text = Utilities.AutoBreakLine(arr[0], language);
                                         next.Text = Utilities.AutoBreakLine(arr[1], language);
-                                        //TODO: calc time
+
+                                        var durationToMove = CalcDurationToMove(oldP, p, next);
+                                        p.EndTime.TotalMilliseconds += durationToMove;
+                                        next.StartTime.TotalMilliseconds += durationToMove;
+
                                         splitDone = true;
                                     }
 
@@ -465,8 +498,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                     else
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = Utilities.AutoBreakLine(arr[0], language);
                         next.Text = Utilities.AutoBreakLine(arr[1], language);
+
+                        var durationToMove = CalcDurationToMove(oldP, p, next);
+                        p.EndTime.TotalMilliseconds += durationToMove;
+                        next.StartTime.TotalMilliseconds += durationToMove;
                     }
                 }
             }
@@ -478,6 +517,22 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             s.Renumber();
             return s;
+        }
+
+        private static double CalcDurationToMove(Paragraph oldCurrent, Paragraph current, Paragraph next)
+        {
+            if (current.DurationTotalMilliseconds < 0 || next.DurationTotalMilliseconds < 0)
+            {
+                return 0;
+            }
+
+            var totalDuration = current.DurationTotalMilliseconds + next.DurationTotalMilliseconds;
+            var totalChars = current.Text.Length + next.Text.Length;
+            var durChar = totalDuration / totalChars;
+
+            var diffLength = current.Text.Length - oldCurrent.Text.Length;
+            var result = durChar * diffLength;
+            return result;
         }
 
         private bool IsNextCloseAndAlone(Paragraph p, Paragraph next, Paragraph nextNext, int maxMillisecondsBetweenLines, bool onlyContinuousLines)

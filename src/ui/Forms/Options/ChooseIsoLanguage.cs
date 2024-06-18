@@ -96,6 +96,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            comboBoxLanguages.UsePopupWindow = true;
         }
 
         private void ChangeLanguage_KeyDown(object sender, KeyEventArgs e)

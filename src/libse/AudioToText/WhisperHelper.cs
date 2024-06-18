@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return new WhisperCTranslate2Model();
             }
 
-            if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisper || whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
             {
                 return new WhisperPurfviewFasterWhisperModel();
             }
@@ -46,7 +46,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2 ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
             {
                 return string.Empty;
             }
@@ -76,7 +77,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return "https://github.com/jordimas/whisper-ctranslate2";
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
             {
                 return "https://github.com/Purfview/whisper-standalone-win";
             }
@@ -159,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisper || whisperChoice  == WhisperChoice.PurfviewFasterWhisperXXL)
                 {
                     var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
                     if (!string.IsNullOrEmpty(location))
@@ -321,6 +323,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return "whisper-faster.exe";
                 }
 
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+                {
+                    return "faster-whisper-xxl.exe";
+                }
+
                 if (whisperChoice == WhisperChoice.WhisperX)
                 {
                     return "whisperx";
@@ -364,6 +371,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
                 {
                     return "whisper-faster.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+                {
+                    return "faster-whisper-xxl.exe";
                 }
 
                 if (whisperChoice == WhisperChoice.StableTs)
@@ -451,7 +463,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         return f;
                     }
                 }
-                else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+                else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper || whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
                 {
                     var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
@@ -500,6 +512,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
                 return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
+            }
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && model == "large-v3")
+            {
+                return "large";
             }
 
             return model;

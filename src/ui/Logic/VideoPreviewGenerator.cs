@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -75,6 +75,42 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
+        public static Process GenerateEmptyAudio(string outputFileName, float seconds, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-f lavfi -i anullsrc -t {seconds.ToString(CultureInfo.InvariantCulture)} \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false[aout]\" -map [aout] \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
         private static void SetupDataReceiveHandler(DataReceivedEventHandler dataReceivedHandler, Process processMakeVideo)
         {
             if (dataReceivedHandler != null)
@@ -89,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null, string audioCutTrack = "")
         {
             if (width % 2 == 1)
             {
@@ -120,6 +156,9 @@ namespace Nikse.SubtitleEdit.Logic
                     audioSettings += " -ac 2";
                 }
             }
+
+            audioSettings = audioCutTrack + " " + audioSettings;
+
 
             var presetSettings = string.Empty;
             if (!string.IsNullOrEmpty(preset))
@@ -232,7 +271,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd}-vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
+                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd} -vf scale={width}:{height} -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
@@ -355,24 +394,124 @@ namespace Nikse.SubtitleEdit.Logic
             return ffmpegLocation;
         }
 
-        public static Process GenerateSoftCodedVideoFile(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
+        public static Process GenerateSoftCodedVideoFile(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, List<VideoPreviewGeneratorSub> softSubsToDelete, string outputVideoFileName, DataReceivedEventHandler outputHandler)
         {
-            var subsInput = string.Empty;
-            var subsMap = string.Empty;
-            var subsMeta = string.Empty;
-            var subsFormat = string.Empty;
-
-            var ffmpegInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
-            var audioTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio);
-
             var isMp4 = outputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            if (isMp4)
+            {
+                return GenerateSoftCodedVideoFileMp4(inputVideoFileName, softSubs, outputVideoFileName, outputHandler);
+            }
+
+            var subsInput = string.Empty;
+            var subsMeta = string.Empty;
+            var isSourceMp4 = inputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            var map = isSourceMp4 ? "-map 0:a -map 0:v" : "-map 0";
+
+            foreach (var trackToDelete in softSubsToDelete)
+            {
+                if (!trackToDelete.IsNew && trackToDelete.Tag is MatroskaTrackInfo trackInfo)
+                {
+                    map += $" -map -0:{trackInfo.TrackNumber - 1}";
+                }
+            }
 
             var count = 1;
+            var number = 0;
+            foreach (var softSub in softSubs.Where(p => p.IsNew))
+            {
+                map += $" -map {count}";
+
+                subsInput += $" -i \"{softSub.FileName}\"";
+
+                if (!string.IsNullOrEmpty(softSub.Language))
+                {
+                    var lang = string.IsNullOrEmpty(softSub.Language) ? string.Empty : softSub.Language.ToLowerInvariant();
+                    var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang);
+                    if (lang.Length == 3)
+                    {
+                        threeLetterCode = lang;
+                    }
+                    else if (lang.IndexOf('-') == 2)
+                    {
+                        threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.Substring(0, 2));
+                    }
+
+                    var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
+                    if (languageName == null)
+                    {
+                        languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == lang || p.EnglishName.ToLowerInvariant() == lang)?.EnglishName;
+                    }
+
+                    if (!string.IsNullOrEmpty(softSub.Title))
+                    {
+                        languageName = softSub.Title;
+                    }
+
+                    if (!string.IsNullOrEmpty(threeLetterCode) && !string.IsNullOrEmpty(languageName))
+                    {
+                        subsMeta += $" -metadata:s:s:{number} language=\"{threeLetterCode}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{languageName}\"";
+                    }
+                    else if (!string.IsNullOrEmpty(softSub.Language))
+                    {
+                        subsMeta += $" -metadata:s:s:{number} language=\"{softSub.Language}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{softSub.Language}\"";
+                    }
+                }
+
+                if (softSub.IsDefault)
+                {
+                    subsMeta += $" -disposition:s:s:{number} default";
+                }
+
+                if (softSub.IsForced)
+                {
+                    subsMeta += $" -disposition:s:s:{number} forced";
+                    subsMeta += $" -metadata:s:s:{number} forced=1";
+                }
+
+                count++;
+                number++;
+            }
+
+            subsInput = " " + subsInput.Trim();
+            if (subsInput.Trim().Length == 0)
+            {
+                subsInput = string.Empty;
+            }
+
+            subsMeta = " " + subsMeta.Trim();
+            if (subsMeta.Trim().Length == 0)
+            {
+                subsMeta = string.Empty;
+            }
+
+            var arguments = $"-i \"{inputVideoFileName}\" {subsInput.Trim()} {map.Trim()} -c copy {subsMeta.Trim()} \"{outputVideoFileName}\"".TrimStart();
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(outputHandler, processMakeVideo);
+            return processMakeVideo;
+        }
+
+        private static Process GenerateSoftCodedVideoFileMp4(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
+        {
+            var subsInput = string.Empty;
+            var subsMeta = string.Empty;
+
             var number = 0;
             foreach (var softSub in softSubs)
             {
                 subsInput += $" -i \"{softSub.FileName}\"";
-                subsMap += $" -map {count}";
 
                 if (!string.IsNullOrEmpty(softSub.Language))
                 {
@@ -416,33 +555,6 @@ namespace Nikse.SubtitleEdit.Logic
                     subsMeta += $" -metadata:s:s:{number} forced=1";
                 }
 
-                if (isMp4)
-                {
-                    subsFormat = " -c:s mov_text";
-                }
-                else if (softSub.SubtitleFormat == null && softSub.Format == "Blu-ray sup")
-                {
-                    subsFormat += $" -c:s:s:{number} copy"; // should be "pgs" or "pgssub" or ?
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(SubRip))
-                {
-                    subsFormat += $" -c:s:s:{number} srt";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(AdvancedSubStationAlpha))
-                {
-                    subsFormat += $" -c:s:s:{number} ass";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(SubStationAlpha))
-                {
-                    subsFormat += $" -c:s:s:{number} ssa";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(WebVTT) ||
-                         softSub.SubtitleFormat?.GetType() == typeof(WebVTTFileWithLineNumber))
-                {
-                    subsFormat += $" -c:s:s:{number} webvtt";
-                }
-
-                count++;
                 number++;
             }
 
@@ -450,18 +562,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (subsInput.Trim().Length == 0)
             {
                 subsInput = string.Empty;
-            }
-
-            subsMap = " " + subsMap.Trim();
-            if (subsMap.Trim().Length == 0)
-            {
-                subsMap = string.Empty;
-            }
-
-            subsFormat = " " + subsFormat.Trim();
-            if (subsFormat.Trim().Length == 0)
-            {
-                subsFormat = string.Empty;
             }
 
             subsMeta = " " + subsMeta.Trim();
@@ -475,7 +575,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0 -c copy -map -0:s{subsMap}{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
+                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} {subsMeta} -c:a copy -c:v copy -c:s mov_text \"{outputVideoFileName}\"".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
@@ -483,6 +583,103 @@ namespace Nikse.SubtitleEdit.Logic
 
             processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
             SetupDataReceiveHandler(outputHandler, processMakeVideo);
+            return processMakeVideo;
+        }
+
+        public static Process ChangeSpeed(string inputFileName, string outputFileName, float inputSpeed, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var speed = Math.Max(0.5f, inputSpeed);
+            speed = Math.Min(100, speed);
+            speed = (float)Math.Round(speed, 3, MidpointRounding.AwayFromZero);
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -filter:a \"atempo={speed.ToString(CultureInfo.InvariantCulture)}\" \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : "-c:a copy ";
+            var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process ConvertFormat(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process ConvertToAc2(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -ac 2 \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
             return processMakeVideo;
         }
     }

@@ -103,41 +103,45 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
+                var progressReport = new Progress<float>((progress) =>
+                {
+                    var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                });
                 foreach (var url in LastDownloadedModel.Urls)
                 {
-                    var httpClient = DownloaderFactory.MakeHttpClient();
-                    currentDownloadUrl = url;
-                    _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
-                    labelFileName.Text = url.Split('/').Last();
-                    using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
+                    using (var httpClient = DownloaderFactory.MakeHttpClient())
                     {
-                        var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                        currentDownloadUrl = url;
+                        _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
+                        labelFileName.Text = url.Split('/').Last();
+                        using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
                         {
-                            var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                            labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                        }), _cancellationTokenSource.Token);
+                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, progressReport,
+                                _cancellationTokenSource.Token);
 
-                        while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                        {
-                            Application.DoEvents();
-                        }
-
-                        if (downloadTask.IsCanceled)
-                        {
-                            DialogResult = DialogResult.Cancel;
-                            labelPleaseWait.Refresh();
-                            try
+                            while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
                             {
-                                File.Delete(_downloadFileName);
+                                Application.DoEvents();
                             }
-                            catch
-                            {
-                                // ignore
-                            }
-                            return;
-                        }
 
-                        CompleteDownload(downloadStream);
+                            if (downloadTask.IsCanceled)
+                            {
+                                DialogResult = DialogResult.Cancel;
+                                labelPleaseWait.Refresh();
+                                try
+                                {
+                                    File.Delete(_downloadFileName);
+                                }
+                                catch
+                                {
+                                    // ignore
+                                }
+                                return;
+                            }
+
+                            CompleteDownload(downloadStream);
+                        }
                     }
                 }
 

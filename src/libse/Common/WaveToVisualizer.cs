@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private readonly Stream _stream;
-        private readonly WaveHeader _header;
+        public readonly WaveHeader Header;
 
         private delegate int ReadSampleDataValue(byte[] data, ref int index);
 
@@ -436,13 +436,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public WavePeakGenerator(Stream stream)
         {
             _stream = stream;
-            _header = new WaveHeader(_stream);
+            Header = new WaveHeader(_stream);
         }
 
         /// <summary>
         /// Returns true if the current wave file can be processed. Compressed wave files are not supported.
         /// </summary>
-        public bool IsSupported => _header.AudioFormat == WaveHeader.AudioFormatPcm && _header.Format == "WAVE";
+        public bool IsSupported => Header.AudioFormat == WaveHeader.AudioFormatPcm && Header.Format == "WAVE";
 
         /// <summary>
         /// Generates peaks and saves them to disk.
@@ -451,15 +451,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="peakFileName">Path of the output file (writing is skipped if null/empty)</param>
         public WavePeakData GeneratePeaks(int delayInMilliseconds, string peakFileName)
         {
-            int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, _header.SampleRate);
+            int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, Header.SampleRate);
 
             // ensure that peaks per second is a factor of the sample rate
-            while (_header.SampleRate % peaksPerSecond != 0)
+            while (Header.SampleRate % peaksPerSecond != 0)
             {
                 peaksPerSecond++;
             }
 
-            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
+            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
             // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
@@ -467,18 +467,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             var peaks = new List<WavePeak>();
             var readSampleDataValue = GetSampleDataReader();
             float sampleAndChannelScale = (float)GetSampleAndChannelScale();
-            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleCount = Header.LengthInSamples;
             long fileSampleOffset = -delaySampleCount;
-            int chunkSampleCount = _header.SampleRate / peaksPerSecond;
-            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            int chunkSampleCount = Header.SampleRate / peaksPerSecond;
+            byte[] data = new byte[chunkSampleCount * Header.BlockAlign];
             float[] chunkSamples = new float[chunkSampleCount * 2];
 
-            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
+            _stream.Seek(Header.DataStartPosition, SeekOrigin.Begin);
 
             // for negative delays, skip samples at the beginning
             if (fileSampleOffset > 0)
             {
-                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
+                _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
             }
 
             while (fileSampleOffset < fileSampleCount)
@@ -498,7 +498,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // read samples from the file
                 if (fileReadSampleCount > 0)
                 {
-                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
                     _stream.Read(data, 0, fileReadByteCount);
                     fileSampleOffset += fileReadSampleCount;
 
@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         float valuePositive = 0F;
                         float valueNegative = -0F;
-                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
                         {
                             var v = readSampleDataValue(data, ref dataByteOffset);
                             if (v < 0)
@@ -621,25 +621,25 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         internal WavePeakData LoadPeaks()
         {
-            if (_header.BitsPerSample != 16)
+            if (Header.BitsPerSample != 16)
             {
                 throw new Exception("Peaks file must be 16 bits per sample.");
             }
 
-            if (_header.NumberOfChannels != 1 && _header.NumberOfChannels != 2)
+            if (Header.NumberOfChannels != 1 && Header.NumberOfChannels != 2)
             {
                 throw new Exception("Peaks file must have 1 or 2 channels.");
             }
 
             // load data
-            byte[] data = new byte[_header.DataChunkSize];
-            _stream.Position = _header.DataStartPosition;
+            byte[] data = new byte[Header.DataChunkSize];
+            _stream.Position = Header.DataStartPosition;
             _stream.Read(data, 0, data.Length);
 
             // read peak values
-            WavePeak[] peaks = new WavePeak[_header.LengthInSamples];
+            WavePeak[] peaks = new WavePeak[Header.LengthInSamples + 5];
             int peakIndex = 0;
-            if (_header.NumberOfChannels == 2)
+            if (Header.NumberOfChannels == 2)
             {
                 // max value in left channel, min value in right channel
                 int byteIndex = 0;
@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            return new WavePeakData(_header.SampleRate, peaks);
+            return new WavePeakData(Header.SampleRate, peaks);
         }
 
         private static int ReadValue8Bit(byte[] data, ref int index)
@@ -735,17 +735,17 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private double GetSampleScale()
         {
-            return (1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
+            return (1.0 / Math.Pow(2.0, Header.BytesPerSample * 8 - 1));
         }
 
         private double GetSampleAndChannelScale()
         {
-            return GetSampleScale() / _header.NumberOfChannels;
+            return GetSampleScale() / Header.NumberOfChannels;
         }
 
         private ReadSampleDataValue GetSampleDataReader()
         {
-            switch (_header.BytesPerSample)
+            switch (Header.BytesPerSample)
             {
                 case 1:
                     return ReadValue8Bit;
@@ -756,13 +756,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 4:
                     return ReadValue32Bit;
                 default:
-                    throw new InvalidDataException("Cannot read bits per sample of " + _header.BitsPerSample);
+                    throw new InvalidDataException("Cannot read bits per sample of " + Header.BitsPerSample);
             }
         }
 
         private WriteSampleDataValue GetSampleDataWriter()
         {
-            switch (_header.BytesPerSample)
+            switch (Header.BytesPerSample)
             {
                 case 1:
                     return WriteValue8Bit;
@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 4:
                     return WriteValue32Bit;
                 default:
-                    throw new InvalidDataException("Cannot write bits per sample of " + _header.BitsPerSample);
+                    throw new InvalidDataException("Cannot write bits per sample of " + Header.BitsPerSample);
             }
         }
 
@@ -797,7 +797,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             const int fftSize = 256; // image height = fft size / 2
             const int imageWidth = 1024;
 
-            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
+            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
             // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
@@ -807,21 +807,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             var readSampleDataValue = GetSampleDataReader();
             Task saveImageTask = null;
             double sampleAndChannelScale = GetSampleAndChannelScale();
-            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleCount = Header.LengthInSamples;
             long fileSampleOffset = -delaySampleCount;
             int chunkSampleCount = fftSize * imageWidth;
             int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
-            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            byte[] data = new byte[chunkSampleCount * Header.BlockAlign];
             double[] chunkSamples = new double[chunkSampleCount];
 
             Directory.CreateDirectory(spectrogramDirectory);
 
-            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
+            _stream.Seek(Header.DataStartPosition, SeekOrigin.Begin);
 
             // for negative delays, skip samples at the beginning
             if (fileSampleOffset > 0)
             {
-                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
+                _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
             }
 
             for (int iChunk = 0; iChunk < chunkCount; iChunk++)
@@ -853,7 +853,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // read samples from the file
                 if (fileReadSampleCount > 0)
                 {
-                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
                     _stream.Read(data, 0, fileReadByteCount);
                     fileSampleOffset += fileReadSampleCount;
 
@@ -861,7 +861,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     while (dataByteOffset < fileReadByteCount)
                     {
                         double value = 0D;
-                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
                         {
                             value += readSampleDataValue(data, ref dataByteOffset);
                         }
@@ -896,12 +896,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
-            double sampleDuration = (double)fftSize / _header.SampleRate;
+            double sampleDuration = (double)fftSize / Header.SampleRate;
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(culture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = fftSize.ToString(culture);
             doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = imageWidth.ToString(culture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / _header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return new SpectrogramData(fftSize, imageWidth, sampleDuration, images);

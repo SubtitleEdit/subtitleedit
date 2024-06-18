@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                subtitle.Header = new TimedText10().ToText(new Subtitle(), "tt");
+                subtitle.Header = new TimedTextImsc11().ToText(new Subtitle(), "tt");
                 _xml.LoadXml(subtitle.Header); // load default xml
             }
             _namespaceManager = new XmlNamespaceManager(_xml.NameTable);
@@ -45,10 +45,19 @@ namespace Nikse.SubtitleEdit.Forms
             _namespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
             _namespaceManager.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
-            XmlAttribute attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
-            if (attr != null)
+            if (_xml.DocumentElement != null)
             {
-                comboBoxTimeBase.Text = attr.InnerText;
+                var nodeTitle = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
+                if (nodeTitle != null)
+                {
+                    textBoxTitle.Text = nodeTitle.InnerText;
+                }
+
+                var attrTimeBase = _xml.DocumentElement.Attributes["ttp:timeBase"];
+                if (attrTimeBase != null)
+                {
+                    comboBoxTimeBase.Text = attrTimeBase.InnerText;
+                }
             }
 
             comboBoxFrameRate.Items.Add("23.976");
@@ -56,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRate.Items.Add("25.0");
             comboBoxFrameRate.Items.Add("29.97");
             comboBoxFrameRate.Items.Add("30.0");
-            attr = _xml.DocumentElement.Attributes["ttp:frameRate"];
+            var attr = _xml.DocumentElement.Attributes["ttp:frameRate"];
             if (attr != null)
             {
                 comboBoxFrameRate.Text = attr.InnerText;
@@ -125,6 +134,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
+            if (node != null)
+            {
+                if (string.IsNullOrWhiteSpace(textBoxTitle.Text))
+                {
+                    _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager));
+                }
+                else
+                {
+                    node.InnerText = textBoxTitle.Text;
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(textBoxTitle.Text))
+            {
+                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager);
+                if (head == null)
+                {
+                    head = _xml.CreateElement("ttml", "head", _namespaceManager.LookupNamespace("ttml"));
+                    _xml.DocumentElement.PrependChild(head);
+                }
+
+                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager);
+                if (metadata == null)
+                {
+                    metadata = _xml.CreateElement("ttml", "metadata", _namespaceManager.LookupNamespace("ttml"));
+                    head.PrependChild(metadata);
+                }
+
+                var title = _xml.CreateElement("ttml", "title", _namespaceManager.LookupNamespace("ttml"));
+                metadata.InnerText = textBoxTitle.Text;
+                metadata.AppendChild(title);
+            }
+
             XmlAttribute attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
             if (attr != null)
             {
@@ -189,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _xml.DocumentElement.Attributes.Append(attr);
             }
 
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
+            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
             if (node != null && node.Attributes["style"] != null)
             {
                 node.Attributes["style"].Value = comboBoxDefaultStyle.Text;
@@ -224,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
                 var currentTimedTextWithExt = $"Timed Text 1.0 ({currentTimedTextExt})";
                 var newTimedTextWithExt = $"Timed Text 1.0 ({newTimedTextExt})";
-                if (favoriteFormats.Contains(currentTimedTextWithExt))
+                if (favoriteFormats != null && favoriteFormats.Contains(currentTimedTextWithExt))
                 {
                     Configuration.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentTimedTextWithExt, newTimedTextWithExt);
                 }

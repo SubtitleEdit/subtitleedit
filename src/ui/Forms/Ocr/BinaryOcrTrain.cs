@@ -328,12 +328,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SelectAll_Click(object sender, EventArgs e)
         {
-            listViewFonts.BeginUpdate();
-            foreach (ListViewItem fontItem in listViewFonts.Items)
-            {
-                fontItem.Checked = true;
-            }
-            listViewFonts.EndUpdate();
+            listViewFonts.CheckAll();
         }
 
         public void InitializeDetectFont(BinaryOcrBitmap bob, string text)

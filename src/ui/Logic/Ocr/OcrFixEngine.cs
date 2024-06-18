@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public string FixOcrErrors(string input, Subtitle subtitle, int index, string lastLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
+        public string FixOcrErrors(string input, Subtitle subtitle, int index, string prevLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
             while (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
@@ -447,14 +447,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             text = text.RemoveRecursiveLineBreaks().Trim();
-            
+
             var textNoAssa = Utilities.RemoveSsaTags(text, true);
             if (textNoAssa.Length == 0)
             {
                 return text;
             }
-
-
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
             var sb = new StringBuilder(text.Length + 2);
@@ -519,7 +517,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = ReplaceWordsBeforeLineFixes(text);
 
-            text = FixCommonOcrLineErrors(text, subtitle, index, lastLine, lastLastLine);
+            text = FixCommonOcrLineErrors(text, subtitle, index, prevLine, lastLastLine);
 
             // check words split by only space and new line (as other split chars might by a part of from-replace-string, like "\/\/e're" contains slash)
             sb = new StringBuilder();
@@ -574,10 +572,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 FixOcrErrorsWord(lastWord, word, sb);
             }
 
-            text = FixCommonOcrLineErrors(sb.ToString(), subtitle, index, lastLine, lastLastLine);
+            text = FixCommonOcrLineErrors(sb.ToString(), subtitle, index, prevLine, lastLastLine);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                text = FixLowercaseIToUppercaseI(text, lastLine);
+                text = FixLowercaseIToUppercaseI(text, prevLine);
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     var oldText = text;
@@ -586,12 +584,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
                 {
-                    text = FixFrenchLApostrophe(text, " I'", lastLine);
-                    text = FixFrenchLApostrophe(text, " L'", lastLine);
-                    text = FixFrenchLApostrophe(text, " l'", lastLine);
-                    text = FixFrenchLApostrophe(text, " I’", lastLine);
-                    text = FixFrenchLApostrophe(text, " L’", lastLine);
-                    text = FixFrenchLApostrophe(text, " l’", lastLine);
+                    // the item can be prefix, infix and suffix
+                    var affixes = new[] { " I'", " L'", " l'", " I’", " L’", " l’" };
+                    foreach (var affix in affixes)
+                    {
+                        text = FixFrenchLApostrophe(text, affix, prevLine);    
+                    }
                 }
 
                 text = Utilities.RemoveSpaceBetweenNumbers(text);
@@ -665,12 +663,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-        public static string FixFrenchLApostrophe(string input, string tag, string lastLine)
+        private static bool IsToKeepCasing(string sentence)
+        {
+            // related to https://github.com/SubtitleEdit/subtitleedit/issues/8052
+            if (sentence.Length > 2)
+            {
+                // do not change 'L' to lowercase in text like "L'ASSASSIN"
+                return char.IsUpper(sentence[2]) && (sentence[1] == '\'' || sentence[1] == '’');
+            }
+
+            return false;
+        }
+        
+        public static string FixFrenchLApostrophe(string input, string affix, string prevLine)
         {
             var text = input;
-            var isPreviousLineClose = lastLine.HasSentenceEnding();
+            var isPreviousLineClose = prevLine.HasSentenceEnding();
             
-            if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
+            if (text.StartsWith(affix.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (isPreviousLineClose || char.IsUpper(text[2]))
                 {
@@ -681,7 +691,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = @"l" + text.Substring(1);
                 }
             }
-            else if (text.StartsWith("<i>" + tag.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
+            else if (text.StartsWith("<i>" + affix.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
             {
                 if (isPreviousLineClose || char.IsUpper(text[5]))
                 {
@@ -693,11 +703,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            var start = text.IndexOf(tag, StringComparison.Ordinal);
+            var start = text.IndexOf(affix, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?');
+                prevLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                isPreviousLineClose = string.IsNullOrEmpty(prevLine) || prevLine.EndsWith('.') || prevLine.EndsWith('!') || prevLine.EndsWith('?');
                 if (start < text.Length - 4)
                 {
                     if (start == 1 && text.StartsWith('-'))
@@ -711,7 +721,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    if (isPreviousLineClose)
+                    if (isPreviousLineClose || IsToKeepCasing(text.Substring(start + 1)))
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
@@ -720,15 +730,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + 1, 1).Insert(start + 1, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(affix, start + 1, StringComparison.Ordinal);
             }
 
-            tag = Environment.NewLine + tag.Trim();
-            start = text.IndexOf(tag, StringComparison.Ordinal);
+            affix = Environment.NewLine + affix.Trim();
+            start = text.IndexOf(affix, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
+                prevLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                isPreviousLineClose = string.IsNullOrEmpty(prevLine) || prevLine.EndsWith('.') || prevLine.EndsWith('!') || prevLine.EndsWith('?') || prevLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 5)
                 {
                     if (start > 1)
@@ -746,15 +756,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(affix, start + 1, StringComparison.Ordinal);
             }
 
-            tag = Environment.NewLine + "<i>" + tag.Trim();
-            start = text.IndexOf(tag, StringComparison.Ordinal);
+            affix = Environment.NewLine + "<i>" + affix.Trim();
+            start = text.IndexOf(affix, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
+                prevLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                isPreviousLineClose = string.IsNullOrEmpty(prevLine) || prevLine.EndsWith('.') || prevLine.EndsWith('!') || prevLine.EndsWith('?') || prevLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 8)
                 {
                     if (isPreviousLineClose || char.IsUpper(text[start + 5 + Environment.NewLine.Length]))
@@ -766,7 +776,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(affix, start + 1, StringComparison.Ordinal);
             }
             return text;
         }
@@ -868,9 +878,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string FixCommonOcrLineErrors(string input, Subtitle subtitle, int index, string lastLine, string lastLastLine)
         {
             var text = input;
-            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, subtitle, index);
             text = FixOcrErrorsViaHardcodedRules(text, lastLine, lastLastLine, _abbreviationList);
-            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, subtitle, index);
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {

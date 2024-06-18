@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -18,6 +18,7 @@
     <Preview>Förhandsgranska</Preview>
     <ShowPreview>Visa förhandsgranskning</ShowPreview>
     <HidePreview>Dölj förhandsgranskning</HidePreview>
+    <SubtitleFile>Undertextfil</SubtitleFile>
     <SubtitleFiles>Text filer</SubtitleFiles>
     <AllFiles>Alla filer</AllFiles>
     <VideoFiles>Videofiler</VideoFiles>
@@ -197,9 +198,6 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Vosk hemsida</VoskWebsite>
     <WhisperWebsite>Whisper hemsida</WhisperWebsite>
-    <WhisperNotFound>Whisper hittades inte.
-
-Läs mer information (webb)?</WhisperNotFound>
     <Model>Modell</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Språk och modeller</LanguagesAndModels>
@@ -216,12 +214,14 @@ Läs mer information (webb)?</WhisperNotFound>
     <BatchMode>Batch-läge</BatchMode>
     <KeepPartialTranscription>Behåll partiell transkription</KeepPartialTranscription>
     <TranslateToEnglish>Översätt till engelska</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max.  tecken per undertextrad</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Ta bort temporära filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ställ in mappen för CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kör endast efterbearbetning/justera tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Ladda ner cuBLAS och cuDNN libs för Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Ingen text hittades!</NoTextFound>
+    <FixCasing>Höger till versaler</FixCasing>
+    <AddPeriods>Lägg till perioder</AddPeriods>
+    <FixShortDuration>Fixa kort varaktighet</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerade Sub Station Alpha-tillbehör</Title>
@@ -735,6 +735,8 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <ChooseColor>Välj färg:</ChooseColor>
     <TotalSeconds>Totalt antal sekunder:</TotalSeconds>
     <EndDelayInSeconds>Slutfördröjning i sekunder:</EndDelayInSeconds>
+    <WordEffect>Ord effekt</WordEffect>
+    <CharacterEffect>Bokstavseffekt</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
@@ -1021,16 +1023,22 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <AlignRight>Justera höger</AlignRight>
     <GetStartPosition>Få startposition</GetStartPosition>
     <GetEndPosition>Få slutposition</GetEndPosition>
+    <UseSource>Använd källa</UseSource>
+    <UseSourceResolution>Använd källupplösning</UseSourceResolution>
+    <OutputSettings>Utdatafil/mapp...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Skapa video med inbäddade undertexter</Title>
     <InputVideoFile>Mata in videofil</InputVideoFile>
     <SubtitlesX>Undertexter ({0})</SubtitlesX>
     <SetLanguage>Ställ in språk...</SetLanguage>
+    <LanguageAndTitle>Språk/titel</LanguageAndTitle>
     <ToggleForced>Växla tvingad</ToggleForced>
     <ToggleDefault>Växla standard</ToggleDefault>
     <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereras med inbäddade undertexter</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Ta bort ingångsvideofil efter "Generera"</DeleteInputVideo>
+    <OutputFileNameSettings>Inställningar för utdatafilnamn...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Behövs ordböcker?</Title>
@@ -1057,14 +1065,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <To>Till:</To>
     <Translate>Översätt</Translate>
     <PleaseWait>Vänta... detta kan ta en stund</PleaseWait>
-    <PoweredByGoogleTranslate>Använder sig av Google översätt</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Använder sig av Microsoft översätt</PoweredByMicrosoftTranslate>
     <PoweredByX>Drivs av {0}</PoweredByX>
-    <MsClientSecretNeeded>Tyvärr, du behöver en Cognitive Services 'Translator Text'-nyckel från Microsoft för att använda den senaste Microsoft Translator.
-
-Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nyckel.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Provar att översätta utan API-nyckel... (långsam och databegränsad)</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Linjesammanfogning:</LineMergeHandling>
     <ProcessorMergeNext>Slå samman max två rader</ProcessorMergeNext>
     <ProcessorSentence>Slå samman meningar</ProcessorSentence>
@@ -1085,6 +1086,13 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
     <XRequiresAnApiKey>"{0}" kräver en API-nyckel.</XRequiresAnApiKey>
     <ReadMore>Läs mer?</ReadMore>
     <Formality>Formalitet</Formality>
+    <TranslateCurrentLine>Översätt endast aktuell rad</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Översätt aktuell linje igen</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Dela/sammanfoga hantering</MergeSplitStrategy>
+    <Delay>Fördröjning mellan serversamtal</Delay>
+    <MaxBytes>Maximalt antal byte i varje serveranrop</MaxBytes>
+    <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Översätt varje rad separat</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google mot Microsoft translate</Title>
@@ -1449,6 +1457,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <RemoveOrExportShotChanges>Ta bort/exportera bildändringar...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch genererar vågformdata...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Visa/dölj ljudformat och spektrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Text till tal och lägg till video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Avdocka videokontrollerna</UnDockVideoControls>
         <ReDockVideoControls>Docka videokontrollerna</ReDockVideoControls>
       </Video>
@@ -1606,6 +1615,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <GoToSourceView>Gå till källvy</GoToSourceView>
         <GoToListView>Gå till listvy</GoToListView>
         <ExtractAudio>Extrahera ljud...</ExtractAudio>
+        <MediaInfo>Mediainformation</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1642,6 +1652,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
       <StillTypingAutoContinueStopped>Skriver fortfarande, auto fortsätt stoppad</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Infoga ny text på video pos.</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Infoga ny undertext vid videoposition (ingen textrutafokus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Infoga ny undertext vid videoposition (maximal längd)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spela från strax före text</PlayFromJustBeforeText>
       <PlayFromBeginning>Spela upp från början av videon</PlayFromBeginning>
@@ -2124,6 +2135,8 @@ Ladda ner och fortsätta?</VideoFromUrlRequirements>
     <EvenLines>Jämna radnummer</EvenLines>
     <DurationLessThan>Varaktighet kortare än</DurationLessThan>
     <DurationGreaterThan>Varaktighet längre än</DurationGreaterThan>
+    <CpsLessThan>CPS mindre än</CpsLessThan>
+    <CpsGreaterThan>CPS större än</CpsGreaterThan>
     <ExactlyOneLine>Exakt en rad</ExactlyOneLine>
     <ExactlyTwoLines>Exakt två rader</ExactlyTwoLines>
     <MoreThanTwoLines>Mer än två rader</MoreThanTwoLines>
@@ -2529,8 +2542,8 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <CpsLineLengthStyleCalcNoSpace>Räkna alla utom mellanslag</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, mellanslag 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorera arabiska diakritiska tecken</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorera arabiska diakritiska tecken/mellanslag</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Inkludera kompositionstecken</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Inkludera kompositionstecken, inte mellanslag</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Inget mellanslag eller skiljetecken ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Inget mellanslag eller skiljetecken, endast cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Musiksymbol</MusicSymbol>
@@ -3151,6 +3164,24 @@ och N bryter</WrapStyle2>
     <Info>En synkpunkt kommer att justera positionen. två eller flera synkroniseringspunkter kommer att justera position och hastighet</Info>
     <ApplySync>Verkställ</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Text till tal</Title>
+    <Voice>Röst</Voice>
+    <TestVoice>Testa röst</TestVoice>
+    <DefaultVoice>Standardröst</DefaultVoice>
+    <AddAudioToVideo>Lägg till ljud till videofil (ny fil)</AddAudioToVideo>
+    <GenerateSpeech>Generera tal från text</GenerateSpeech>
+    <ActorInfo>Högerklicka för att tilldela skådespelare till röst</ActorInfo>
+    <AdjustingSpeedXOfY>Justerar hastighet: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Slår ihop ljudspår: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Genererar tal från text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Granska ljudklipp</ReviewAudioClips>
+    <ReviewInfo>Granska och redigera/ta bort ljudklipp</ReviewInfo>
+    <Play>Spela</Play>
+    <AutoContinue>Auto-fortsätt</AutoContinue>
+    <Regenerate>Regenerera</Regenerate>
+    <Speed>Fart</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
     <UseSmpteTiming>Använd SMPTE-timing för aktuell undertext?</UseSmpteTiming>
@@ -3320,6 +3351,13 @@ Behålla ändringarna?</KeepChangesMessage>
     <InspectItems>Inspektera objekt</InspectItems>
     <AddBetterMatch>Lägg till en bättre matchning</AddBetterMatch>
     <Add>Lägg till</Add>
+    <AddBetterMultiMatch>Lägg till bättre multimatch</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Lägg till eller uppdatera matchning</AddOrUpdateMatch>
+    <SelectPrevousMatch>Välj föregående match</SelectPrevousMatch>
+    <SelectNextMatch>Välj nästa match</SelectNextMatch>
+    <JumpPreviousMissingMatch>Hoppa till föregående saknade match</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Hoppa till nästa saknade match</JumpNextMissingMatch>
+    <FocusTextbox>Fokusera textinmatningen</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mapp</Title>
@@ -3361,7 +3399,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zooma in</ZoomIn>
     <ZoomOut>Zooma ut</ZoomOut>
-    <AddParagraphHere>Lägg till text här</AddParagraphHere>
+    <AddParagraphHere>Lägg till text här (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Lägg till text från urklipp här</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Ställ in aktuellt som nytt val</SetParagraphAsSelection>
     <FocusTextBox>Fokusera textrutan</FocusTextBox>
@@ -3372,6 +3410,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <SplitAtCursor>Dela vid markören</SplitAtCursor>
     <MergeWithPrevious>Sammanfoga med tidigare</MergeWithPrevious>
     <MergeWithNext>Sammanfoga med nästa</MergeWithNext>
+    <RunWhisperSelectedParagraph>Kör Whisper på valt stycke...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Utöka till föregående</ExtendToPrevious>
     <ExtendToNext>Förläng till nästa</ExtendToNext>
     <PlaySelection>Spela urval</PlaySelection>
@@ -3383,7 +3422,8 @@ Behålla ändringarna?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Ta bort skottändringar från markeringen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gissa tidskoder...</GuessTimeCodes>
     <SeekSilence>Sök efter tystnad...</SeekSilence>
-    <InsertSubtitleHere>Infoga undertexter här...</InsertSubtitleHere>
+    <InsertSubtitleHere>Infoga undertext här</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Infoga undertextfil här...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3419,5 +3459,10 @@ Behålla ändringarna?</KeepChangesMessage>
     <Title>Whisper Advanced - extra kommandoradsargument</Title>
     <CommandLineArguments>Extra parametrar för Whisper kommandorad:</CommandLineArguments>
     <Info>Obs: Olika Whisper-implementationer har olika kommandoradsparametrar!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asien</StandardAsia>
+    <HighlightCurrentWord>Markera aktuellt ord</HighlightCurrentWord>
+    <SingleWords>Enstaka ord</SingleWords>
+    <Sentence>Mening</Sentence>
   </WhisperAdvanced>
 </Language>

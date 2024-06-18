@@ -1121,6 +1121,36 @@ namespace Nikse.SubtitleEdit.Logic
         public static void AutoSizeLastColumn(this ListView listView) =>
             listView.Columns[listView.Columns.Count - 1].Width = -2;
 
+        public static void CheckAll(this ListView lv)
+        {
+            lv.BeginUpdate();
+            foreach (ListViewItem item in lv.Items)
+            {
+                item.Checked = true;
+            }
+            lv.EndUpdate();
+        }
+        
+        public static void InvertCheck(this ListView lv)
+        {
+            lv.BeginUpdate();
+            foreach (ListViewItem item in lv.Items)
+            {
+                item.Checked = !item.Checked;
+            }
+            lv.EndUpdate();
+        }
+        
+        public static void UncheckAll(this ListView lv)
+        {
+            lv.BeginUpdate();
+            foreach (ListViewItem item in lv.Items)
+            {
+                item.Checked = false;
+            }
+            lv.EndUpdate();
+        }
+        
         public static void SelectAll(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1195,6 +1225,8 @@ namespace Nikse.SubtitleEdit.Logic
         public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeBackColor : Control.DefaultBackColor;
 
         public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Control.DefaultForeColor;
+
+        public static Color WarningColor => Configuration.Settings.General.UseDarkTheme ? Color.Yellow : Color.DarkGoldenrod;
 
         public static void OpenFolderFromFileName(string fileName)
         {

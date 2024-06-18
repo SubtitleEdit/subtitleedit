@@ -2,8 +2,8 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.02.2024</TranslatedBy>
+    <Version>4.0.6</Version>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 14.06.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -18,6 +18,7 @@
     <Preview>Anteprima</Preview>
     <ShowPreview>Visualizza anteprima</ShowPreview>
     <HidePreview>Nascondi anteprima</HidePreview>
+    <SubtitleFile>File sottotitoli</SubtitleFile>
     <SubtitleFiles>File sottotitoli</SubtitleFiles>
     <AllFiles>Tutti i file</AllFiles>
     <VideoFiles>File video</VideoFiles>
@@ -197,9 +198,6 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Engine>Motore</Engine>
     <VoskWebsite>Sito web Vosk</VoskWebsite>
     <WhisperWebsite>Sito web Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper non trovato.
-
-Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <Model>Modello</Model>
     <Models>Modelli</Models>
     <LanguagesAndModels>Lingue e modelli</LanguagesAndModels>
@@ -216,12 +214,14 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <BatchMode>Modo batch</BatchMode>
     <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Caratteri max per riga sottotitoli</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Nessun testo trovato!</NoTextFound>
+    <FixCasing>Correggi maiuscolo/minuscolo</FixCasing>
+    <AddPeriods>Aggiungi periodo</AddPeriods>
+    <FixShortDuration>Correggi breve durata</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -733,6 +733,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <ChooseColor>Scegli colore:</ChooseColor>
     <TotalSeconds>Secondi totali:</TotalSeconds>
     <EndDelayInSeconds>Fine ritardo (secondi):</EndDelayInSeconds>
+    <WordEffect>Effetto parola</WordEffect>
+    <CharacterEffect>Effetto carattere</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effetto macchina da scrivere</Title>
@@ -1019,16 +1021,22 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <AlignRight>Allinea a destra</AlignRight>
     <GetStartPosition>Ottieni posizione iniziale</GetStartPosition>
     <GetEndPosition>Ottieni posizione finale</GetEndPosition>
+    <UseSource>Usa sorgente</UseSource>
+    <UseSourceResolution>Usa risoluzione sorgente</UseSourceResolution>
+    <OutputSettings>File/cartella destinazione...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Genera video con sottotitoli incorporati aggiunti/rimossi</Title>
     <InputVideoFile>File video sorgente</InputVideoFile>
     <SubtitlesX>Sottotitoli ({0})</SubtitlesX>
     <SetLanguage>Imposta lingua...</SetLanguage>
+    <LanguageAndTitle>Lingua/titolo</LanguageAndTitle>
     <ToggleForced>Attiva/disattiva sottotitoli forzati</ToggleForced>
     <ToggleDefault>Attiva/disattiva impostazione predefinita</ToggleDefault>
     <Default>Predefinita</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generato con sottotitoli incorporati</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Elimina file video sorgente dopo "Genera"</DeleteInputVideo>
+    <OutputFileNameSettings>Impostazioni nome file destinazione...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Aggiunta dizionari</Title>
@@ -1055,15 +1063,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <To>A:</To>
     <Translate>Traduci</Translate>
     <PleaseWait>Attendi. Ci potrebbe volere un po di tempo.</PleaseWait>
-    <PoweredByGoogleTranslate>Servizio traduzione di Google</PoweredByGoogleTranslate>
     <PoweredByX>Offerto da {0}</PoweredByX>
-    <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Per usare il traduttore Microsoft più recente, è necessaria una chiave "Testo traduttore" dei servizi cognitivi.
-
-Per inserire la chiave vai in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica" .</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Tentativo di tradurre senza chiave API... (dati lenti e limitati). 
-Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica".</GoogleNoApiKeyWarning>
-    <Service>Servizio:</Service>
     <LineMergeHandling>Unione righe:</LineMergeHandling>
     <ProcessorMergeNext>Unisci massimo due righe</ProcessorMergeNext>
     <ProcessorSentence>Unisci frasi</ProcessorSentence>
@@ -1084,6 +1084,13 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
     <XRequiresAnApiKey>"{0}" richiede una chiave API.</XRequiresAnApiKey>
     <ReadMore>Vuoi saperne di più?</ReadMore>
     <Formality>Formalità</Formality>
+    <TranslateCurrentLine>Traduci solo riga attuale</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Ritraduci riga attuale</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Gestione divisione/unione</MergeSplitStrategy>
+    <Delay>Ritardo tra chiamate al server</Delay>
+    <MaxBytes>Numero massimo byte in ciascuna chiamata al server</MaxBytes>
+    <PromptX>Prompt per {0}</PromptX>
+    <TranslateLinesSeparately>Traduci ogni riga separatamente</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traduttore Google contro traduttore Microsoft</Title>
@@ -1448,6 +1455,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
         <RemoveOrExportShotChanges>Rimuovi cambi scena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Genera forma d'onda batch...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Visualizza/nascondi onda e spettrogramma</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Sintesi vocale e aggiunta al video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Sblocca controlli video</UnDockVideoControls>
         <ReDockVideoControls>Blocca controlli video</ReDockVideoControls>
       </Video>
@@ -1605,6 +1613,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
         <GoToSourceView>Vista sorgente</GoToSourceView>
         <GoToListView>Vista elenco</GoToListView>
         <ExtractAudio>Estrai audio...</ExtractAudio>
+        <MediaInfo>Info media</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1641,6 +1650,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
       <StillTypingAutoContinueStopped>Immissione testo... continua automaticamente fermato</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Inserisci nuovo a posizione video</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserisci nuovo sottotitolo per il video (non concentrarti sulla casella di testo)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Inserisci nuovo sottotitolo nella posizione del video (il più lungo possibile)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Automatico</Auto>
       <PlayFromJustBeforeText>Riproduci dal testo precedente</PlayFromJustBeforeText>
       <PlayFromBeginning>Riproduci dall'inizio del video</PlayFromBeginning>
@@ -2123,6 +2133,10 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <EvenLines>Righe uguali</EvenLines>
     <DurationLessThan>Durata inferiore a</DurationLessThan>
     <DurationGreaterThan>Durata maggiore di</DurationGreaterThan>
+    <CpsLessThan>CPS inferiore a</CpsLessThan>
+    <CpsGreaterThan>CPS superiore a</CpsGreaterThan>
+    <LengthLessThan>Lunghezza inferiore a</LengthLessThan>
+    <LengthGreaterThan>Lunghezza superiore a</LengthGreaterThan>
     <ExactlyOneLine>Esattamente una linea</ExactlyOneLine>
     <ExactlyTwoLines>Esattamente due linee</ExactlyTwoLines>
     <MoreThanTwoLines>Più di due righe</MoreThanTwoLines>
@@ -2528,8 +2542,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <CpsLineLengthStyleCalcNoSpace>Conta tutto tranne gli spazi</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, spazio 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignora i segni diacritici arabi</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignora i segni diacritici arabi/spazi</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Includi caratteri di composizione</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Includi caratteri composizione, non lo spazio</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Nessuno spazio o punteggiatura ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nessuno spazio o punteggiatura, solo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Sostituisci con simbolo musicale:</MusicSymbol>
@@ -3149,6 +3163,25 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <Info>Un punto di sincr. regolerà la posizione, due o più punti di sincr. regoleranno posizione e velocità</Info>
     <ApplySync>Applica</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Sintesi vocale</Title>
+    <Voice>Voce</Voice>
+    <TestVoice>Test voce</TestVoice>
+    <DefaultVoice>Voce predefinita</DefaultVoice>
+    <AddAudioToVideo>Aggiungi audio al file video (nuovo file)</AddAudioToVideo>
+    <GenerateSpeech>Genera discorso dal testo</GenerateSpeech>
+    <ActorInfo>Clic destro per assegnare l'attore alla voce</ActorInfo>
+    <AdjustingSpeedXOfY>Regolazione velocità: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Unione traccia audio: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generazione parlato dal testo: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Rivedi clip audio</ReviewAudioClips>
+    <CustomAudioEncoding>Codifica audio personalizzata</CustomAudioEncoding>
+    <ReviewInfo>Rivedi e modifica/rimuovi clip audio</ReviewInfo>
+    <Play>Riproduci</Play>
+    <AutoContinue>Continua automaticamente</AutoContinue>
+    <Regenerate>Rigenera</Regenerate>
+    <Speed>Velocità</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
     <UseSmpteTiming>Vuoi usare i tempi SMPTE per sottotitoli attuali?</UseSmpteTiming>
@@ -3318,6 +3351,13 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <InspectItems>Elementi dei sottotitoli</InspectItems>
     <AddBetterMatch>Aggiungi corrispondenza migliore</AddBetterMatch>
     <Add>Aggiungi</Add>
+    <AddBetterMultiMatch>Aggiungi migliore corrispondenza multipla</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Aggiungi o aggiorna corrispondenza</AddOrUpdateMatch>
+    <SelectPrevousMatch>Seleziona corrispondenza precedente</SelectPrevousMatch>
+    <SelectNextMatch>Seleziona corrispondenza successiva</SelectNextMatch>
+    <JumpPreviousMissingMatch>Vai alla corrispondenza mancante precedente</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Vai alla corrispondenza mancante successiva</JumpNextMissingMatch>
+    <FocusTextbox>Metti a fuoco input testo</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nuova cartella</Title>
@@ -3359,7 +3399,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Seconds>secondi</Seconds>
     <ZoomIn>Aumenta zoom</ZoomIn>
     <ZoomOut>Diminuisci zoom</ZoomOut>
-    <AddParagraphHere>Aggiungi testo qui</AddParagraphHere>
+    <AddParagraphHere>Aggiungi testo qui (Invio)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Aggiungi testo qui dagli Appunti</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Imposta attuale come nuova selezione</SetParagraphAsSelection>
     <FocusTextBox>Evidenzia Casella di testo</FocusTextBox>
@@ -3370,6 +3410,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <SplitAtCursor>Dividi alla posizione del cursore</SplitAtCursor>
     <MergeWithPrevious>Unisci con il precedente</MergeWithPrevious>
     <MergeWithNext>Unisci con il successivo</MergeWithNext>
+    <RunWhisperSelectedParagraph>Esegui Whisper sul paragrafo selezionato...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Estendi al precedente</ExtendToPrevious>
     <ExtendToNext>Estendi al successivo</ExtendToNext>
     <PlaySelection>Riproduci</PlaySelection>
@@ -3381,7 +3422,8 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Rimuovi le modifiche alla scena dalla selezione</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Riconosci codici temporali...</GuessTimeCodes>
     <SeekSilence>Cerca il silenzio...</SeekSilence>
-    <InsertSubtitleHere>Inserisci qui i sottotitoli...</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserisci qui testo sottotitoli</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Inserisci qui file sottotitoli...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3417,5 +3459,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>Sussurro avanzato - argomenti extra riga di comando</Title>
     <CommandLineArguments>Parametri aggiuntivi riga di comando sussurro:</CommandLineArguments>
     <Info>Nota: diverse implementazioni del sussurro hanno diversi parametri della riga di comando!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asia</StandardAsia>
+    <HighlightCurrentWord>Evidenzia parola attuale</HighlightCurrentWord>
+    <SingleWords>Singola parola</SingleWords>
+    <Sentence>Frase</Sentence>
   </WhisperAdvanced>
 </Language>

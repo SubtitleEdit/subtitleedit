@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class NoLanguageLeftBehindApi : IAutoTranslator
+    public class NoLanguageLeftBehindApi : IAutoTranslator, IDisposable
     {
         private IDownloader _httpClient;
 
@@ -58,5 +58,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             return resultText;
         }
+
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

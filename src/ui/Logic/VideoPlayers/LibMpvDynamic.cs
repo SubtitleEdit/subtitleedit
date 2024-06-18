@@ -691,6 +691,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
                     _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
                 }
+
+                
+                if (_mpvSetOptionString(_mpvHandle, GetUtf8Bytes("input-cursor-passthrough"), GetUtf8Bytes("yes")) != 0)
+                {
+                    // if --input-cursor-passthrough=yes is not avaliable, use --input-cursor=no
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("input-cursor"), GetUtf8Bytes("no"));
+                }
             }
             else if (!Directory.Exists(videoFileName))
             {
@@ -844,9 +851,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
             Application.DoEvents();
-            OnVideoLoaded?.Invoke(this, null);
-            Application.DoEvents();
             Pause();
+            Application.DoEvents();
+            OnVideoLoaded?.Invoke(this, null);
         }
 
         public override void DisposeVideoPlayer()

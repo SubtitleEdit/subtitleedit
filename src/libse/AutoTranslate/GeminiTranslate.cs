@@ -83,9 +83,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (!string.IsNullOrEmpty(outputText))
             {
-                outputText = outputText.Replace("<br />", Environment.NewLine);
-                outputText = outputText.Replace("<br/>", Environment.NewLine);
-                outputText = outputText.Replace("<br>", Environment.NewLine);
+                outputText = ChatGptTranslate.FixNewLines(outputText);
             }
 
             return outputText;
@@ -176,6 +174,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Slovene","sl"),
                MakePair("Slovenian","sl"),
                MakePair("Spanish","es"),
+               MakePair("Swedish","sv"),
                MakePair("Turkish","tr"),
                MakePair("Ukrainian","uk"),
                MakePair("Urdu","ur"),

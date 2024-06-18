@@ -13,10 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Http
     {
         private readonly HttpClient _httpClient;
 
-        public HttpClientDownloader(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        public HttpClientDownloader(HttpClient httpClient) => _httpClient = httpClient;
 
         public Uri BaseAddress
         {
@@ -102,9 +99,6 @@ namespace Nikse.SubtitleEdit.Core.Http
             }
         }
 
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
-        }
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

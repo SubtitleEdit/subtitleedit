@@ -2348,8 +2348,6 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <CpsLineLengthStyleCalcNoSpace>ספור הכל מלבד החלל</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, לטינית 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, לטינית 0.5, רווח 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>התעלם מהדיאקריטיות בערבית</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>התעלם מהדיאקריטיות/רווח בערבית</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>אין רווח או סימני פיסוק ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>ללא רווח או סימני פיסוק, cps בלבד</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>סמל מוזיקה</MusicSymbol>
@@ -3154,7 +3152,7 @@ Keep changes?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>הסר שינויי צילום מהבחירה</RemoveShotChangesFromSelection>
     <GuessTimeCodes>נחשו קודי זמן...</GuessTimeCodes>
     <SeekSilence>חפש שקט...</SeekSilence>
-    <InsertSubtitleHere>הוסף כתובית כאן...</InsertSubtitleHere>
+    <InsertSubtitleHere>הוסף כתובית כאן</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

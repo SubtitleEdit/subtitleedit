@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsConvert
     {
-        public static bool ConvertFromTs(string targetFormat, string fileName, string outputFolder, bool overwrite, ref int count, ref int converted, ref int errors, List<SubtitleFormat> formats, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution, TextEncoding targetEncoding, List<CommandLineConverter.BatchAction> actions, TimeSpan offset, string deleteContains, int pacCodePage, double? targetFrameRate, HashSet<string> multipleReplaceImportFiles, string ocrEngine, bool teletextOnly, string teletextOnlyPage)
+        public static bool ConvertFromTs(string targetFormat, string fileName, string outputFolder, bool overwrite, ref int count, ref int converted, ref int errors, List<SubtitleFormat> formats, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution, TextEncoding targetEncoding, List<string> actions, TimeSpan offset, int pacCodePage, double? targetFrameRate, HashSet<string> multipleReplaceImportFiles, string ocrEngine, bool teletextOnly, string teletextOnlyPage)
         {
             if (!string.IsNullOrEmpty(teletextOnlyPage))
             {
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
                         }
 
-                        success = CommandLineConverter.BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine, preExt);
+                        success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine, preExt);
                         if (success)
                         {
                             converted--;
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     var subtitle = new Subtitle(kvp.Value);
                     subtitle.Renumber();
                     var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
-                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt);
+                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt);
                     if (success)
                     {
                         converted--;

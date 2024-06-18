@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +29,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var tempSubtitle = new Subtitle(sourceSubtitle);
             var formattingList = HandleFormatting(tempSubtitle, index, target.Code);
 
-            // Merge text for better translation and save info enough to split again later
-            var maxChars = autoTranslator.MaxCharacters;
+            if (Configuration.Settings.Tools.AutoTranslateMaxBytes <= 0)
+            {
+                Configuration.Settings.Tools.AutoTranslateMaxBytes = new ToolsSettings().AutoTranslateMaxBytes;
+            }
+            var maxChars = Math.Min(autoTranslator.MaxCharacters, Configuration.Settings.Tools.AutoTranslateMaxBytes);
+
             if (MergeSplitProblems)
             {
                 MergeSplitProblems = false;
@@ -39,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
+            // Merge text for better translation and save info enough to split again later
             var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
             var mergeCount = mergeResult.ParagraphCount;
             var text = mergeResult.Text;
@@ -62,18 +68,76 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             var linesTranslate = 0;
-            if (mergeResult != null)
-            {
-                var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken);
-                var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
-                if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index))
-                {
-                    // Split by line ending chars
+            var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken);
 
-                    var idx = 0;
-                    foreach (var line in splitResult)
+
+            // Split by line ending chars where period count matches
+            var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index) &&
+                Utilities.CountTagInText(text, '.') == Utilities.CountTagInText(mergedTranslation, '.'))
+            {
+                var idx = 0;
+                foreach (var line in splitResult)
+                {
+                    var reformattedText = formattingList[idx].ReAddFormatting(line);
+                    targetSubtitle.Paragraphs[index].Text = reformattedText;
+                    index++;
+                    linesTranslate++;
+                    idx++;
+                }
+
+                return linesTranslate;
+            }
+
+
+            // Split per number of lines
+            var translatedLines = mergedTranslation.SplitToLines();
+            if (translatedLines.Count == mergeResult.Text.SplitToLines().Count)
+            {
+                var newSub = new Subtitle();
+                for (var i = 0; i < mergeResult.ParagraphCount; i++)
+                {
+                    newSub.Paragraphs.Add(new Paragraph());
+                }
+
+                var translatedLinesIdx = 0;
+                var paragraphIdx = 0;
+                foreach (var mergeItem in mergeResult.MergeResultItems)
+                {
+                    var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
+                    var numberOfLines = mergeItem.Text.SplitToLines().Count;
+
+                    var sb = new StringBuilder();
+                    for (var j = 0; j < numberOfLines && translatedLinesIdx < translatedLines.Count; j++)
                     {
-                        var reformattedText = formattingList[idx].ReAddFormatting(line);
+                        sb.AppendLine(translatedLines[translatedLinesIdx]);
+                        translatedLinesIdx++;
+                    }
+
+                    var translatedText = sb.ToString().Trim();
+
+                    var arr = TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
+                    for (var i = 0; i < arr.Count && paragraphIdx < newSub.Paragraphs.Count; i++)
+                    {
+                        var res = arr[i];
+                        if (res.Contains('\n') ||
+                            res.TrimEnd('.').Contains('.') ||
+                            res.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+                        {
+                            res = Utilities.AutoBreakLine(arr[i], Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.MergeLinesShorterThan, target.TwoLetterIsoLanguageName);
+                        }
+
+                        newSub.Paragraphs[paragraphIdx].Text = res;
+                        paragraphIdx++;
+                    }
+                }
+
+                if (paragraphIdx == mergeCount && HasSameEmptyLines(newSub, sourceSubtitle, index))
+                {
+                    var idx = 0;
+                    foreach (var p in newSub.Paragraphs)
+                    {
+                        var reformattedText = formattingList[idx].ReAddFormatting(p.Text);
                         targetSubtitle.Paragraphs[index].Text = reformattedText;
                         index++;
                         linesTranslate++;
@@ -82,61 +146,68 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                     return linesTranslate;
                 }
-
-                var translatedLines = mergedTranslation.SplitToLines();
-                if (translatedLines.Count == mergeResult.Text.SplitToLines().Count)
-                {
-                    // Split per number of lines
-
-                    var newSub = new Subtitle();
-                    for (var i = 0; i < mergeResult.ParagraphCount; i++)
-                    {
-                        newSub.Paragraphs.Add(new Paragraph());
-                    }
-
-                    var translatedLinesIdx = 0;
-                    var paragraphIdx = 0;
-                    foreach (var mergeItem in mergeResult.MergeResultItems)
-                    {
-                        var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
-                        var numberOfLines = mergeItem.Text.SplitToLines().Count;
-
-                        var sb = new StringBuilder();
-                        for (var j = 0; j < numberOfLines && translatedLinesIdx < translatedLines.Count; j++)
-                        {
-                            sb.AppendLine(translatedLines[translatedLinesIdx]);
-                            translatedLinesIdx++;
-                        }
-                        var translatedText = sb.ToString().Trim();
-
-                        var arr = TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
-                        for (var i = 0; i < arr.Count && paragraphIdx < newSub.Paragraphs.Count; i++)
-                        {
-                            newSub.Paragraphs[paragraphIdx].Text = Utilities.AutoBreakLine(arr[i], Configuration.Settings.General.SubtitleLineMaximumLength * 2, 0, target.TwoLetterIsoLanguageName);
-                            paragraphIdx++;
-                        }
-                    }
-
-                    if (paragraphIdx == mergeCount && HasSameEmptyLines(newSub, sourceSubtitle, index))
-                    {
-                        var idx = 0;
-                        foreach (var p in newSub.Paragraphs)
-                        {
-                            var reformattedText = formattingList[idx].ReAddFormatting(p.Text);
-                            targetSubtitle.Paragraphs[index].Text = reformattedText;
-                            index++;
-                            linesTranslate++;
-                            idx++;
-                        }
-
-                        return linesTranslate;
-                    }
-                }
             }
+
+            // Split by line ending chars - periods in numbers removed
+            var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
+            splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index) &&
+                Utilities.CountTagInText(text, '.') == Utilities.CountTagInText(noPeriodsInNumbersTranslation, '.'))
+            {
+                var idx = 0;
+                foreach (var line in splitResult)
+                {
+                    var reformattedText = formattingList[idx].ReAddFormatting(line.Replace('¤', '.'));
+                    targetSubtitle.Paragraphs[index].Text = reformattedText;
+                    index++;
+                    linesTranslate++;
+                    idx++;
+                }
+
+                return linesTranslate;
+            }
+
+
+            // Split by line ending chars
+            splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index))
+            {
+                var idx = 0;
+                foreach (var line in splitResult)
+                {
+                    var reformattedText = formattingList[idx].ReAddFormatting(line);
+                    targetSubtitle.Paragraphs[index].Text = reformattedText;
+                    index++;
+                    linesTranslate++;
+                    idx++;
+                }
+
+                return linesTranslate;
+            }
+
 
             MergeSplitProblems = true;
 
             return linesTranslate;
+        }
+
+        private static string FixPeriodInNumbers(string mergedTranslation)
+        {
+            var findCommaNumber = new Regex(@"\d\.\d");
+            var s = mergedTranslation;
+            while (true)
+            {
+                var match = findCommaNumber.Match(s);
+                if (match.Success)
+                {
+                    s = s.Remove(match.Index + 1, 1);
+                    s = s.Insert(match.Index + 1, "¤");
+                }
+                else
+                {
+                    return s;
+                }
+            }
         }
 
         private static bool HasSameEmptyLines(Subtitle newSub, Subtitle sourceSubtitle, int index)
@@ -411,6 +482,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
+            if (!string.IsNullOrEmpty(text))
+            {
+                return new List<string>();
+            }
+
             return lines;
         }
 
@@ -432,7 +508,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 if (count == item.EndCharOccurrences)
                 {
-                    return input.Substring(0, idx + 1);
+                    var s = input.Substring(0, idx + 1);
+                    return s;
                 }
 
                 idx = input.IndexOf(item.EndChar, idx + 1);
@@ -465,7 +542,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
 
                     // use best match of the three arrays considering line separator, adherence to chars/sec
-                    
+
                     // same result for char split + duration split
                     if (pctCharArr[0].Length > 0 && pctCharArr[0] == pctDurationArr[0])
                     {

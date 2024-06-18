@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.SubStationAlphaStylesCategoriesManager SubStationAlphaStylesCategoriesManager;
         public LanguageStructure.PointSync PointSync;
+        public LanguageStructure.TextToSpeech TextToSpeech;
         public LanguageStructure.TimedTextSmpteTiming TimedTextSmpteTiming;
         public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
@@ -155,6 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Preview = "Preview",
                 ShowPreview = "Show preview",
                 HidePreview = "Hide preview",
+                SubtitleFile = "Subtitle file",
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
                 VideoFiles = "Video files",
@@ -352,7 +354,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Engine = "Engine",
                 VoskWebsite = "Vosk website",
                 WhisperWebsite = "Whisper website",
-                WhisperNotFound = "Whisper not found.\r\n\r\nRead more info (web)?",
                 Model = "Model",
                 Models = "Models",
                 LanguagesAndModels = "Languages and models",
@@ -369,12 +370,14 @@ namespace Nikse.SubtitleEdit.Logic
                 XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
                 KeepPartialTranscription = "Keep partial transcription",
                 TranslateToEnglish = "Translate to English",
-                MaxCharsPerSubtitle = "Max. chars per subtitle line",
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
                 DownloadFasterWhisperCuda = "Download cuBLAS and cuDNN libs for Faster-Whisper",
                 NoTextFound = "No text found!",
+                FixCasing = "Fix casing",
+                AddPeriods = "Add periods",
+                FixShortDuration = "Fix short duration",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
@@ -651,17 +654,17 @@ namespace Nikse.SubtitleEdit.Logic
                 CreateSimpleChainingGapAfterShotChanges = "After an out cue on a shot change, the gap may be smaller",
                 CreateSimpleChainingToolTip =
                     "Chaining subtitles is recommended to ensure a consistent \"rhythm\" in the \"flashing\" of the subtitles." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "This offers a more relaxed viewing experience." +
                     Environment.NewLine +
                     Environment.NewLine +
                     "After chaining, subtitles are either connected (i.e. a subtitle disappears and a new subtitle appears immediately after a slight pause) or not." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "This gives the viewer some sense on when they can shift their focus back to the screen." +
                     Environment.NewLine +
                     Environment.NewLine +
                     "The length of the chaining gap can be a bit smaller right after a subtitle disappears on a shot change, because the changing shot \"resets\" the image in a way." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "We leverage the intrinsic rhythm of the image.",
                 CreateSimpleLoadNetflixRules = "Load Netflix rules",
                 Frames = "frames",
@@ -962,6 +965,8 @@ namespace Nikse.SubtitleEdit.Logic
                 ChooseColor = "Choose color:",
                 TotalSeconds = "Total seconds:",
                 EndDelayInSeconds = "End delay in seconds:",
+                WordEffect = "Word effect",
+                CharacterEffect = "Character effect",
             };
 
             EffectTypewriter = new LanguageStructure.EffectTypewriter
@@ -1271,6 +1276,9 @@ namespace Nikse.SubtitleEdit.Logic
                 AlignRight = "Align right",
                 GetStartPosition = "Get start position",
                 GetEndPosition = "Get end position",
+                UseSource = "Use source",
+                UseSourceResolution = "Use source resolution",
+                OutputSettings = "Output file/folder...",
             };
 
             GenerateVideoWithEmbeddedSubs = new LanguageStructure.GenerateVideoWithEmbeddedSubs
@@ -1282,7 +1290,10 @@ namespace Nikse.SubtitleEdit.Logic
                 ToggleDefault = "Toggle default",
                 Default = "Default",
                 SetLanguage = "Set language...",
+                LanguageAndTitle = "Language/title",
                 XGeneratedWithEmbeddedSubs = "\"{0}\" generated with embedded subtitles",
+                DeleteInputVideo = "Delete input video file after \"Generate\"",
+                OutputFileNameSettings = "Output file name settings...",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
@@ -1315,14 +1326,7 @@ namespace Nikse.SubtitleEdit.Logic
                 To = "To:",
                 Translate = "Translate",
                 PleaseWait = "Please wait... this may take a while",
-                PoweredByGoogleTranslate = "Powered by Google translate",
-                PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
                 PoweredByX = "Powered by {0}",
-                MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
-                                       Environment.NewLine +
-                                       "Go to \"Options -> Settings -> Auto-translate\" to enter your key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key, go to \"Options -> Settings -> Auto-translate\" to enter your Google translate API key.",
-                Service = "Service:",
                 LineMergeHandling = "Line merge:",
                 ProcessorMergeNext = "Merge max two lines",
                 ProcessorSentence = "Merge sentences",
@@ -1342,6 +1346,13 @@ namespace Nikse.SubtitleEdit.Logic
                 XRequiresAnApiKey = "\"{0}\" requires an API key.",
                 ReadMore = "Read more?",
                 Formality = "Formality",
+                TranslateCurrentLine = "Translate only current line",
+                ReTranslateCurrentLine = "Re-translate current line",
+                Delay = "Delay between server calls",
+                MaxBytes = "Maximum bytes in each server call",
+                MergeSplitStrategy = "Split/merge handling",
+                PromptX = "Prompt for {0}",
+                TranslateLinesSeparately = "Translate each line separately",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
@@ -2029,6 +2040,7 @@ namespace Nikse.SubtitleEdit.Logic
                         RemoveOrExportShotChanges = "Remove/export shot changes...",
                         WaveformBatchGenerate = "Batch generate waveforms...",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
+                        TextToSpeechAndAddToVideo = "Text to speech and add to video...",
                         UnDockVideoControls = "Un-dock video controls",
                         ReDockVideoControls = "Re-dock video controls",
                     },
@@ -2202,6 +2214,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GoToSourceView = "Go to source view",
                         GoToListView = "Go to list view",
                         ExtractAudio = "Extract audio...",
+                        MediaInfo = "Media information",
                     }
                 },
 
@@ -2243,6 +2256,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     InsertNewSubtitleAtVideoPosition = "Insert new subtitle at video pos",
                     InsertNewSubtitleAtVideoPositionNoTextBoxFocus = "Insert new subtitle at video pos (no text box focus)",
+                    InsertNewSubtitleAtVideoPositionMax = "Insert new subtitle at video pos (as long as possible)",
                     Auto = "Auto",
                     PlayFromJustBeforeText = "Play from just before text",
                     PlayFromBeginning = "Play from beginning of video",
@@ -2452,6 +2466,10 @@ namespace Nikse.SubtitleEdit.Logic
                 EvenLines = "Even-numbered lines",
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
+                CpsLessThan = "CPS less than",
+                CpsGreaterThan = "CPS greater than",
+                LengthLessThan = "Length less than",
+                LengthGreaterThan = "Length greater than",
                 ExactlyOneLine = "Exactly one line",
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",
@@ -2703,7 +2721,7 @@ can edit in same subtitle file (collaboration)",
                 DefaultFrameRate = "Default frame rate",
                 DefaultFileEncoding = "Default file encoding",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
-                LanguageFilter ="Language filter",
+                LanguageFilter = "Language filter",
                 Profile = "Profile",
                 Profiles = "Profiles",
                 ImportProfiles = "Import profiles",
@@ -2875,8 +2893,8 @@ can edit in same subtitle file (collaboration)",
                 CpsLineLengthStyleCalcNoSpace = "Count all except space",
                 CpsLineLengthStyleCalcCjk = "CJK 1, Latin 0.5",
                 CpsLineLengthStyleCalcCjkNoSpace = "CJK 1, Latin 0.5, space 0",
-                CpsLineLengthStyleCalcIgnoreArabicDiacritics = "Ignore Arabic diacritics",
-                CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = "Ignore Arabic diacritics/space",
+                CpsLineLengthStyleCalcIncludeCompositionCharacters = "Include composition characters",
+                CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace = "Include composition characters, not space",
                 CpsLineLengthStyleCalcNoSpaceOrPunctuation = "No space or punctuation ()[]-:;,.!?",
                 CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly = "No space or punctuation, cps only",
                 ContinuationStyleNone = "None",
@@ -3542,6 +3560,27 @@ can edit in same subtitle file (collaboration)",
                 ApplySync = "Apply",
             };
 
+            TextToSpeech = new LanguageStructure.TextToSpeech
+            {
+                Title = "Text to speech",
+                Voice = "Voice",
+                DefaultVoice = "Default voice",
+                TestVoice = "Test voice",
+                ActorInfo = "Right-click to assign actor to voice",
+                AddAudioToVideo = "Add audio to video file (new file)",
+                GenerateSpeech = "Generate speech from text",
+                AdjustingSpeedXOfY = "Adjusting speed: {0} / {1}...",
+                MergingAudioTrackXOfY = "Merging audio track: {0} / {1}...",
+                GeneratingSpeechFromTextXOfY = "Generating speech from text: {0} / {1}...",
+                ReviewAudioClips = "Review audio clips",
+                ReviewInfo = "Review and edit/remove audio clips",
+                CustomAudioEncoding = "Custom audio encoding",
+                AutoContinue = "Auto-continue",
+                Play = "Play",
+                Regenerate = "Regenerate",
+                Speed = "Speed",
+            };
+
             TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming
             {
                 Title = "SMPTE timing",
@@ -3728,6 +3767,13 @@ Keep changes?",
                 InspectItems = "Inspect items",
                 AddBetterMatch = "Add better match",
                 Add = "Add",
+                AddBetterMultiMatch = "Add better multi match",
+                AddOrUpdateMatch = "Add or update match",
+                SelectPrevousMatch = "Select the previous match",
+                SelectNextMatch = "Select the next match",
+                JumpPreviousMissingMatch = "Jump to the previous missing match",
+                JumpNextMissingMatch = "Jump to the next missing match",
+                FocusTextbox = "Focus the text input",
             };
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder
@@ -3779,7 +3825,7 @@ Keep changes?",
                 Seconds = "seconds",
                 ZoomIn = "Zoom in",
                 ZoomOut = "Zoom out",
-                AddParagraphHere = "Add text here",
+                AddParagraphHere = "Add text here (Enter)",
                 AddParagraphHereAndPasteText = "Add text from clipboard here",
                 SetParagraphAsSelection = "Set current as new selection",
                 FocusTextBox = "Focus text box",
@@ -3792,6 +3838,7 @@ Keep changes?",
                 MergeWithNext = "Merge with next",
                 ExtendToPrevious = "Extend to previous",
                 ExtendToNext = "Extend to next",
+                RunWhisperSelectedParagraph = "Run Whisper on selected paragraph...",
                 PlaySelection = "Play selection",
                 ShowWaveformAndSpectrogram = "Show waveform and spectrogram",
                 ShowWaveformOnly = "Show waveform only",
@@ -3800,7 +3847,8 @@ Keep changes?",
                 RemoveShotChange = "Remove shot change",
                 RemoveShotChangesFromSelection = "Remove shot changes from selection",
                 SeekSilence = "Seek silence...",
-                InsertSubtitleHere = "Insert subtitle here...",
+                InsertSubtitleHere = "Insert text here",
+                InsertSubtitleFileHere = "Insert subtitle file here...",
                 GuessTimeCodes = "Guess time codes...",
                 CharsSecX = "CPS: {0:0.00}",
                 WordsMinX = "WPM: {0:0.00}",
@@ -3847,6 +3895,11 @@ Keep changes?",
                 Title = "Whisper Advanced - extra command line arguments",
                 CommandLineArguments = "Extra parameters for Whisper command line:",
                 Info = "Note: Different Whisper implementations have different command line parameters!",
+                Standard = "Standard",
+                StandardAsia = "Standard Asia",
+                HighlightCurrentWord = "Highlight current word",
+                Sentence = "Sentence",
+                SingleWords = "Single words",
             };
         }
 

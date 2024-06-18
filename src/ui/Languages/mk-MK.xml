@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -2611,7 +2611,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveShotChange>Отстрани промена на сцена</RemoveShotChange>
     <GuessTimeCodes>Претпостави временски кодови...</GuessTimeCodes>
     <SeekSilence>Откриј тишина...</SeekSilence>
-    <InsertSubtitleHere>Тука внеси титл...</InsertSubtitleHere>
+    <InsertSubtitleHere>Тука внеси титл</InsertSubtitleHere>
     <CharsSecX>ЗВС: {0:0.00}</CharsSecX>
     <WordsMinX>ЗПМ: {0:0.00}</WordsMinX>
   </Waveform>

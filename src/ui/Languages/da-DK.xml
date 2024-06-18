@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -18,6 +18,7 @@
     <Preview>Vist test</Preview>
     <ShowPreview>Vis forhåndsvisning</ShowPreview>
     <HidePreview>Skjul forhåndsvisning</HidePreview>
+    <SubtitleFile>Undertekst fil</SubtitleFile>
     <SubtitleFiles>Undertekst filer</SubtitleFiles>
     <AllFiles>Alle filer</AllFiles>
     <VideoFiles>Video filer</VideoFiles>
@@ -192,7 +193,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
     <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
-    <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
@@ -209,12 +209,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
     <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Maks.  tegn pr. undertekstlinje</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Fjern midlertidige filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS og cuDNN til Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Ingen tekst fundet!</NoTextFound>
+    <FixCasing>Fix store/små bogstaver</FixCasing>
+    <AddPeriods>Tilføj punktum</AddPeriods>
+    <FixShortDuration>Fix kort varighed</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -727,6 +729,8 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <ChooseColor>Vælg farve:</ChooseColor>
     <TotalSeconds>Total sekunder:</TotalSeconds>
     <EndDelayInSeconds>Afslut forsinkelse i sekunder:</EndDelayInSeconds>
+    <WordEffect>Ord effekt</WordEffect>
+    <CharacterEffect>Bogstav effekt</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskine effekt</Title>
@@ -1013,16 +1017,22 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <AlignRight>Juster til højre</AlignRight>
     <GetStartPosition>Hent startposition</GetStartPosition>
     <GetEndPosition>Hent slutposition</GetEndPosition>
+    <UseSource>Brug kilde</UseSource>
+    <UseSourceResolution>Brug kildeopløsning</UseSourceResolution>
+    <OutputSettings>Output fil/mappe...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generer video med indlejrede undertekster</Title>
     <InputVideoFile>Input videofil</InputVideoFile>
     <SubtitlesX>Undertekster ({0})</SubtitlesX>
     <SetLanguage>Indstil sprog...</SetLanguage>
+    <LanguageAndTitle>Sprog/titel</LanguageAndTitle>
     <ToggleForced>Skift tvunget</ToggleForced>
     <ToggleDefault>Skift standard</ToggleDefault>
     <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereret med indlejrede undertekster</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Slet input videofil efter "Generer"</DeleteInputVideo>
+    <OutputFileNameSettings>Indstillinger for outputfilnavn...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1049,14 +1059,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <To>Til:</To>
     <Translate>Oversæt</Translate>
     <PleaseWait>Vent venligst... dette kan tage et stykke tid</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft Bing Translate</PoweredByMicrosoftTranslate>
     <PoweredByX>Drevet af {0}</PoweredByX>
-    <MsClientSecretNeeded>Der kræver en Bing "client secret" from Microsoft for at benytte Bing Translate.
-
-Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bing "client secret".</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Forsøger at oversætte uden API nøgle... (langsomt/begrænser/risiko for fejl)</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Linjesammenlægning:</LineMergeHandling>
     <ProcessorMergeNext>Flet maks to linjer</ProcessorMergeNext>
     <ProcessorSentence>Flet sætninger</ProcessorSentence>
@@ -1077,6 +1080,13 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <XRequiresAnApiKey>"{0}" kræver en API-nøgle.</XRequiresAnApiKey>
     <ReadMore>Læs mere?</ReadMore>
     <Formality>Formalitet</Formality>
+    <TranslateCurrentLine>Oversæt kun den aktuelle linje</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Oversæt den nuværende linje igen</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Split/flet håndtering</MergeSplitStrategy>
+    <Delay>Forsinkelse mellem serveropkald</Delay>
+    <MaxBytes>Maksimalt antal bytes i hvert serverkald</MaxBytes>
+    <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Oversæt hver linje separat</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
@@ -1441,6 +1451,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Tekst til tale og føj til video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
       </Video>
@@ -1598,6 +1609,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GoToSourceView>Gå til kildevisning</GoToSourceView>
         <GoToListView>Gå til listevisning</GoToListView>
         <ExtractAudio>Uddrag lyd...</ExtractAudio>
+        <MediaInfo>Medieoplysninger</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1634,6 +1646,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
       <StillTypingAutoContinueStopped>Stadig skriver... auto fortsæt stoppet</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Indsæt tekst v. video pos</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Indsæt ny undertekst ved videopos (ikke fokus på tekstboks)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Indsæt ny undertekst ved videoposition (max længde mulig)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spil fra lige før &amp;tekst</PlayFromJustBeforeText>
       <PlayFromBeginning>Afspil fra starten af ​​video</PlayFromBeginning>
@@ -2113,6 +2126,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <EvenLines>Lige linjer</EvenLines>
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
+    <CpsLessThan>CPS mindre end</CpsLessThan>
+    <CpsGreaterThan>CPS større end</CpsGreaterThan>
     <ExactlyOneLine>Præcis én linje</ExactlyOneLine>
     <ExactlyTwoLines>Præcis to linjer</ExactlyTwoLines>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
@@ -2518,8 +2533,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CpsLineLengthStyleCalcNoSpace>Tæl alle undtagen mellemrum</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, mellemrum 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorer arabiske diakritiske tegn</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorer arabiske diakritiske tegn/mellemrum</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Kompositionstegn tæller ekstra</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>kompositionstegn tæller ekstra, tæl ikke mellemrum</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Intet mellemrum eller tegnsætning ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Ingen mellemrum eller tegnsætning, kun cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Musik symbol</MusicSymbol>
@@ -3139,6 +3154,24 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
     <ApplySync>Anvend</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Tekst til tale</Title>
+    <Voice>Stemme</Voice>
+    <TestVoice>Test stemme</TestVoice>
+    <DefaultVoice>Standardstemme</DefaultVoice>
+    <AddAudioToVideo>Tilføj lyd til videofil (ny fil)</AddAudioToVideo>
+    <GenerateSpeech>Generer tale fra tekst</GenerateSpeech>
+    <ActorInfo>Højreklik for at tildele skuespiller til stemme</ActorInfo>
+    <AdjustingSpeedXOfY>Justerer hastighed: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Samler lydspor: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Genererer tale fra tekst: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Gennemgå lydklip</ReviewAudioClips>
+    <ReviewInfo>Gennemgå og rediger/fjern lydklip</ReviewInfo>
+    <Play>Spil</Play>
+    <AutoContinue>Auto-fortsæt</AutoContinue>
+    <Regenerate>Regenerer</Regenerate>
+    <Speed>Fart</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
     <UseSmpteTiming>Vil du bruge SMPTE-timing til aktuelle undertekster?</UseSmpteTiming>
@@ -3306,6 +3339,13 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <InspectItems>Undersøg elementer</InspectItems>
     <AddBetterMatch>Tilføj bedre match</AddBetterMatch>
     <Add>Tilføj</Add>
+    <AddBetterMultiMatch>Tilføj bedre multimatch</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Tilføj eller opdater match</AddOrUpdateMatch>
+    <SelectPrevousMatch>Vælg den forrige kamp</SelectPrevousMatch>
+    <SelectNextMatch>Vælg næste kamp</SelectNextMatch>
+    <JumpPreviousMissingMatch>Hop til den forrige manglende kamp</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Hop til den næste manglende kamp</JumpNextMissingMatch>
+    <FocusTextbox>Fokuser tekstinputtet</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mappe</Title>
@@ -3347,7 +3387,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
-    <AddParagraphHere>Tilføj tekst her</AddParagraphHere>
+    <AddParagraphHere>Tilføj tekst her (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Sæt Aktuel som nyt valg</SetParagraphAsSelection>
     <FocusTextBox>Gå til tekstboks</FocusTextBox>
@@ -3358,6 +3398,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SplitAtCursor>Split ved markør</SplitAtCursor>
     <MergeWithPrevious>Flet med forrige</MergeWithPrevious>
     <MergeWithNext>Flet med næste</MergeWithNext>
+    <RunWhisperSelectedParagraph>Kør Whisper på den valgte undertekst...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Udvid til forrige</ExtendToPrevious>
     <ExtendToNext>Udvid til næste</ExtendToNext>
     <PlaySelection>Afspil markering</PlaySelection>
@@ -3369,7 +3410,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <RemoveShotChangesFromSelection>Fjern sceneskift fra markering</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
-    <InsertSubtitleHere>Indsæt undertekst her...</InsertSubtitleHere>
+    <InsertSubtitleHere>Indsæt undertekst her</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Indsæt undertekstfil her...</InsertSubtitleFileHere>
     <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
     <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3405,5 +3447,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>Whisper Advanced - ekstra kommandolinjeargumenter</Title>
     <CommandLineArguments>Ekstra parametre til Whisper kommandolinje:</CommandLineArguments>
     <Info>Bemærk: Forskellige Whisper-implementeringer har forskellige kommandolinjeparametre!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asien</StandardAsia>
+    <HighlightCurrentWord>Fremhæv det aktuelle ord</HighlightCurrentWord>
+    <SingleWords>Enkelte ord</SingleWords>
+    <Sentence>Sætning</Sentence>
   </WhisperAdvanced>
 </Language>

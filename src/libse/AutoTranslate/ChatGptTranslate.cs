@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +22,32 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 
+        public static string RemovePreamble(string original, string translation)
+        {
+            if (original.Contains(":"))
+            {
+                return translation;
+            }
+
+            var regex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:");
+            var match = regex.Match(translation);
+            if (match.Success)
+            {
+                var result = translation.Remove(match.Index, match.Value.Length);
+                return result.Trim();
+            }
+
+            return translation;
+        }
+
         public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl);
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl.TrimEnd('/'));
+            _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptApiKey))
             {
@@ -47,14 +67,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.ChatGptApiKey;
+            var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "gpt-3.5-turbo";
-                Configuration.Settings.Tools.ChatGptApiKey = model;
+                model = "gpt-4o";
+                Configuration.Settings.Tools.ChatGptModel = model;
             }
 
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptPrompt))
+            {
+                Configuration.Settings.Tools.ChatGptPrompt = new ToolsSettings().ChatGptPrompt;
+            }
+            var prompt = string.Format(Configuration.Settings.Tools.ChatGptPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
@@ -81,10 +106,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
-            return outputText;
+            outputText = FixNewLines(outputText);
+            outputText = RemovePreamble(text, outputText);
+            return outputText.Trim();
         }
 
-        private static List<TranslationPair> ListLanguages()
+        public static List<TranslationPair> ListLanguages()
         {
             return new List<TranslationPair>
             {
@@ -169,6 +196,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Slovene","sl"),
                MakePair("Slovenian","sl"),
                MakePair("Spanish","es"),
+               MakePair("Swedish","sv"),
                MakePair("Turkish","tr"),
                MakePair("Ukrainian","uk"),
                MakePair("Urdu","ur"),
@@ -182,6 +210,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private static TranslationPair MakePair(string nameCode, string twoLetter)
         {
             return new TranslationPair(nameCode, nameCode, twoLetter);
+        }
+
+        internal static string FixNewLines(string outputText)
+        {
+            outputText = outputText.Replace("<br/>", Environment.NewLine);
+            outputText = outputText.Replace("<br />", Environment.NewLine);
+            outputText = outputText.Replace("<br  />", Environment.NewLine);
+            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            return outputText.Trim();
         }
     }
 }

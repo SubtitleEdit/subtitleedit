@@ -1,17 +1,89 @@
 ﻿Subtitle Edit Changelog
 
-4.0.5 (xth May 2024) BETA
+4.0.6 (1st June 2024)
 * NEW:
-   * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
-   * Add French interjections
+   * Add "Text To Speech" - thx darnn/cvrle77/BlueBlue7891
+   * Add burn-in batch mode - thx Leon/David
+   * Add new LRC with milliseconds format - thx eadmaster 
+   * Add new subtitle format (Whisper output) - thx lererledd
+   * Add CPS option to modify selection - thx uckthis
 * IMPROVED:
+   * Update Portuguese translation - thx hugok79
+   * Update Bulgarian translation - thx Калин
+   * Update Finnish translation - thx Teijo S	
+   * Update Italian language - thx bovirus
+   * Update Chinese translation - thx nkh0472
+   * Update Polish translation - thx admas
+   * Update Korean translation - thx domddol
+   * Update Greek translation - thx PMitsakis
+   * Update Russian translation - thx elfriob
+   * Update Romanian translation - thx MediaExpres
+   * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
+   * Allow re-encode with burn-in without subtitle - thx Leon
+   * Add the new llama3 model and set as default for "Ollama translate"
+   * Allow vertical zoom out in waveform (ctrl+shift+mouse-wheel) - thx Leon
+   * Add auto-translate advanced settings
+   * Some improvements for auto-translate
+   * Set default ChatGPT model to the new "gpt-4o"
+   * Add hot keys to the binary OCR "character-inspect-window" - thx trienow
+   * Update ffmpeg to 2024-05-23
+   * Enable language filter in Whisper window - thx rRobis
+   * Add .m4b file extension to audio formats - thx janot
+   * Update DeepL languages - thx Uncle-Tio/Ihab
+   * Add Swedish to ChatGPT translate - thx Stefan
+   * Allow larger subtitle preview font size - thx kadrimarzouki
+* FIXED:
+   * Fix for Antrophic translate - thx venomousraid 
+   * Fix possible crash in teletext reading - thx yellobyte
+   * Fix unwanted text boxes background color change - thx Leon
+   * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
+   * Fix image export shadow when border is zero - thx pixelhunterX
+   * Fix crash in translate with empty API key - thx lambdacore12
+   * Fix FixMissingPeriodsAtEndOfLine for Chinese - thx Leon
+
+
+4.0.5 (13th April 2024) 
+* NEW:
+   * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
+   * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
+   * Add support for Bluray .sup (PGS) embedding in Matroska (.mkv) file
+   * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
+   * Add a few animation templates for ASSA tool "Apply custom override tags"
+   * Add French interjections
+   * Add new shortcut "Insert new subtitle at video pos (fill)" - thx Leon/AuroraMartell
+   * Add "LM Studio" translate (local) - thx fznx922
+   * Add Ollama translate (local) - thx despairTK/Copy2Translator
+   * Add Antrophic translate 
+   * Add distilled models for Purfview Faster Whisper
+* IMPROVED:
+   * Update German translation - thx Netspark
+   * Update Spanish AR & MX translation - thx jmaraujouy
+   * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Italian language - thx bovirus
+   * Update Russian translation - thx elfriob
+   * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx hugok79
+   * Update Greek translation - thx PMitsakis
+   * Improve "Karaoke effect" + new option - thx ivandrofly
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
    * Update yt-dlp to 2024-03-10
+   * Update ffmpeg to 2024-03-25
+   * Update Purfview Faster Whisper to r189.1
+   * Add a few settings for embed output file name - thx liam1900
+   * Allow up/down to navigate through combobox - thx ivandrofly/fraternl
+   * Change "Fix invalid italics" to add more tags - thx ivandrofly/uckthis
 * FIXED:
-   * Fix for Whisper Post-processing - thx Purfview/cvrle77
+   * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
+   * Fix issue with Combobox and ContextMenuStrip - thx ivandrofly
+   * Fix ChatGPT translate - thx longhoang1993
+   * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
+   * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
+   * Fix layout change crash from un-docked state - thx highflowerG
+   * Fix crash in export to "Cavena 890" - thx yovelcohen
+   * Fix D-Cinema SMPTE 2014/png - thx ischeriad
 
 
 4.0.4 (17th March 2024)

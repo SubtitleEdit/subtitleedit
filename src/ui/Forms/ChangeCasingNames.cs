@@ -335,18 +335,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void toolStripMenuItem1SelectAll_Click(object sender, EventArgs e)

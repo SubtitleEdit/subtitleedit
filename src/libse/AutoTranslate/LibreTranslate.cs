@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKey + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync("translate", content).Result;
+            var result = _httpClient.PostAsync("translate", content, cancellationToken).Result;
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
@@ -73,6 +73,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 return string.Empty;
             }
+
+            resultText = resultText.Replace("<br />", Environment.NewLine);
+            resultText = resultText.Replace(". />", "." + Environment.NewLine);
+            resultText = resultText.Replace(" /> ", " "); // https://github.com/SubtitleEdit/subtitleedit/issues/8223
+            resultText = resultText.Replace("/> ", " "); 
+            resultText = resultText.Replace("  ", " ");
+            resultText = resultText.Replace("<br ", Environment.NewLine); //
 
             return Json.DecodeJsonText(resultText).Trim();
         }

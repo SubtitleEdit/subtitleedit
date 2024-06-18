@@ -117,6 +117,310 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="nikseTextBox1.Text" xml:space="preserve">
+    <value>[--device DEVICE]
+[--verbose VERBOSE]
+[--task {transcribe,translate}]
+[--best_of BEST_OF]
+[--beam_size BEAM_SIZE]
+[--patience PATIENCE]
+[--length_penalty LENGTH_PENALTY]
+[--repetition_penalty REPETITION_PENALTY]
+[--no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE]
+[--suppress_blank SUPPRESS_BLANK]
+[--suppress_tokens SUPPRESS_TOKENS]
+[--initial_prompt INITIAL_PROMPT]
+[--prefix PREFIX]
+[--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT]
+[--prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE]
+[--without_timestamps WITHOUT_TIMESTAMPS]
+[--max_initial_timestamp MAX_INITIAL_TIMESTAMP]
+[--temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK]
+[--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
+[--logprob_threshold LOGPROB_THRESHOLD]
+[--no_speech_threshold NO_SPEECH_THRESHOLD]
+[--v3_offsets_off]
+[--hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD]
+[--hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}]
+[--clip_timestamps CLIP_TIMESTAMPS]
+[--no_speech_strict_lvl {0,1,2}]
+[--word_timestamps WORD_TIMESTAMPS]
+[--highlight_words HIGHLIGHT_WORDS]
+[--prepend_punctuations PREPEND_PUNCTUATIONS]
+[--append_punctuations APPEND_PUNCTUATIONS]
+[--threads THREADS]
+[--version]
+[--vad_filter VAD_FILTER]
+[--vad_threshold VAD_THRESHOLD]
+[--vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS]
+[--vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S]
+[--vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS]
+[--vad_speech_pad_ms VAD_SPEECH_PAD_MS]
+[--vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES]
+[--vad_dump]
+[--max_new_tokens MAX_NEW_TOKENS]
+[--chunk_length CHUNK_LENGTH]
+[--compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}]
+[--batch_recursive]
+[--beep_off]
+[--skip]
+[--checkcuda]
+[--print_progress]
+[--postfix]
+[--check_files]
+[--PR163_off]
+[--hallucinations_list_off]
+[--one_word {0,1,2}]
+[--sentence]
+[--standard]
+[--standard_asia]
+[--max_comma MAX_COMMA]
+[--max_comma_cent {50,60,70,80,90,100}]
+[--max_gap MAX_GAP]
+[--max_line_width MAX_LINE_WIDTH]
+[--max_line_count MAX_LINE_COUNT]
+[--min_dist_to_end {0,4,5,6,7,8,9,10,11,12}]
+[--prompt_max {16,32,64,128,223}]
+[--reprompt {0,1,2}]
+[--prompt_reset_on_no_end {0,1,2}]
+[--ff_dump]
+[--ff_track {1,2,3,4,5,6}]
+[--ff_fc]
+[--ff_mp3]
+[--ff_sync]
+[--ff_rnndn_sh]
+[--ff_rnndn_xiph]
+[--ff_fftdn
+[0 - 97]]
+[--ff_tempo
+[0.5 - 2.0]]
+[--ff_gate]
+[--ff_speechnorm]
+[--ff_loudnorm]
+[--ff_silence_suppress noise duration]
+[--ff_lowhighpass]
+                          audio
+[audio ...]
+
+positional arguments:
+  audio                 audio file(s). You can enter a file wildcard, filelist (txt. m3u, m3u8, lst) or directory to
+                        do batch processing. Note: non-media files in list or directory are filtered out by extension.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --model MODEL, -m MODEL
+                        name of the Whisper model to use (default: medium)
+  --model_dir MODEL_DIR
+                        the path to save model files; uses C:\git\subtitleedit\src\ui\bin\Debug\Whisper\Purfview-
+                        Whisper-Faster\_models by default (default: None)
+  --device DEVICE, -d DEVICE
+                        Device to use. Default is 'cuda' if CUDA device is detected, else is 'cpu'. If CUDA GPU is a
+                        second device then set 'cuda:1'. (default: cpu)
+  --output_dir OUTPUT_DIR, -o OUTPUT_DIR
+                        directory to save the outputs. By default the same folder where the executable file is or
+                        where media file is if --batch_recursive=True. '.'- sets to the current folder. 'source' -
+                        sets to where media file is. (default: default)
+  --output_format {lrc,txt,text,vtt,srt,tsv,json,all}, -f {lrc,txt,text,vtt,srt,tsv,json,all}
+                        format of the output file; if not specified srt will be produced (default: srt)
+  --verbose VERBOSE, -v VERBOSE
+                        whether to print out debug messages (default: False)
+  --task {transcribe,translate}
+                        whether to perform X-&gt;X speech recognition ('transcribe') or X-&gt;English translation
+                        ('translate') (default: transcribe)
+  --language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}, -l {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}
+                        language spoken in the audio, specify None to perform language detection (default: None)
+  --language_detection_threshold LANGUAGE_DETECTION_THRESHOLD
+                        If the maximum probability of the language tokens is higher than this value, the language is
+                        detected. (default: None)
+  --language_detection_segments LANGUAGE_DETECTION_SEGMENTS
+                        Number of segments/chunks to consider for the language detection. (default: 1)
+  --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF, -bo BEST_OF
+                        number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE, -bs BEAM_SIZE
+                        number of beams in beam search, only applicable when temperature is zero (default: 5)
+  --patience PATIENCE, -p PATIENCE
+                        optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+                        default (1.0) is equivalent to conventional beam search (default: 2.0)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
+                        simple length normalization by default (default: 1.0)
+  --repetition_penalty REPETITION_PENALTY
+                        Penalty applied to the score of previously generated tokens (set &gt; 1.0 to penalize). (default:
+                        1.0)
+  --no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE
+                        Prevent repetitions of ngrams with this size (set 0 to disable). (default: 0)
+  --suppress_blank SUPPRESS_BLANK
+                        Suppress blank outputs at the beginning of the sampling. (default: True)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+                        characters except common punctuations (default: -1)
+  --initial_prompt INITIAL_PROMPT, -prompt INITIAL_PROMPT
+                        optional text to provide context as a prompt for the first window. Use 'None' to disable it.
+                        Note: 'auto' and 'default' are experimental ~universal prompt presets, they work if --language
+                        is set. (default: auto)
+  --prefix PREFIX       Optional text to provide as a prefix for the first window (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT, -condition CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output of the model as a prompt for the next window; disabling
+                        may make the text inconsistent across windows, but the model becomes less prone to getting
+                        stuck in a failure loop. If disabled then you may want to disable --reprompt too. (default:
+                        True)
+  --prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE
+                        Resets prompt if temperature is above this value. Arg has effect only if
+                        condition_on_previous_text is True. (default: 0.5)
+  --without_timestamps WITHOUT_TIMESTAMPS
+                        Only sample text tokens. (default: False)
+  --max_initial_timestamp MAX_INITIAL_TIMESTAMP
+                        The initial timestamp cannot be later than this. (default: 1.0)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK, -fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back when the decoding fails to meet either of the
+                        thresholds below. To disable fallback set it to 'None'. (default: 0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed
+                        (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if the average log probability is lower than this value, treat the decoding as failed
+                        (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has
+                        failed due to 'logprob_threshold', consider the segment as silence (default: 0.6)
+  --v3_offsets_off      Disables custom offsets to the defaults of pseudo-vad thresholds when 'large-v3' models are in
+                        use. Those offset were made to make 'large-v3' to hallucinate less by default. (default:
+                        False)
+  --hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD, -hst HALLUCINATION_SILENCE_THRESHOLD
+                        (Experimental) When word_timestamps is True, skip silent periods longer than this threshold
+                        (in seconds) when a possible hallucination is detected. Optimal value is somewhere between 2 -
+                        8 seconds. Inactive if None. (default: None)
+  --hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}, -hst_temp {0.0,0.2,0.5,0.8,1.0}
+                        (Experimental) Additional heuristic for '--hallucination_silence_threshold'. If temperature is
+                        higher that this threshold then consider segment as possible hallucination ignoring the hst
+                        score. Inactive if 1.0. (default: 1.0)
+  --clip_timestamps CLIP_TIMESTAMPS
+                        Comma-separated list start,end,start,end,... timestamps (in seconds) of clips to process. The
+                        last end timestamp defaults to the end of the file. VAD is auto-disabled. (default: 0)
+  --no_speech_strict_lvl {0,1,2}
+                        (experimental) Level of stricter actions when no_speech_prob &gt; 0.93. Use beam_size=5 if this
+                        is enabled. Options: 0 - Disabled (do nothing), 1 - Reset propmt (see
+                        condition_on_previous_text), 2 - Invalidate the cached encoder output (if no_speech_threshold
+                        is not None). Arg meant to combat cases where the model is getting stuck in a failure loop or
+                        outputs nonsense (default: 0)
+  --word_timestamps WORD_TIMESTAMPS, -wt WORD_TIMESTAMPS
+                        Extract word-level timestamps and refine the results based on them (default: True)
+  --highlight_words HIGHLIGHT_WORDS, -hw HIGHLIGHT_WORDS
+                        underline each word as it is spoken AKA karaoke in srt and vtt output formats (default: False)
+  --prepend_punctuations PREPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
+                        "'“¿([{-)
+  --append_punctuations APPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
+                        "'.。,，!！?？:：”)]}、)
+  --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that
+                        4 (default: 0)
+  --version             Show Faster-Whisper's version number
+  --vad_filter VAD_FILTER, -vad VAD_FILTER
+                        Enable the voice activity detection (VAD) to filter out parts of the audio without speech.
+                        (default: True)
+  --vad_threshold VAD_THRESHOLD
+                        Probabilities above this value are considered as speech. (default: 0.45)
+  --vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS
+                        Final speech chunks shorter min_speech_duration_ms are thrown out. (default: 350)
+  --vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S
+                        Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the
+                        last silence. (default: None)
+  --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
+                        In the end of each speech chunk time to wait before separating it. (default: 3000)
+  --vad_speech_pad_ms VAD_SPEECH_PAD_MS
+                        Final speech chunks are padded by speech_pad_ms each side. (default: 900)
+  --vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES
+                        Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect
+                        model perfomance!!! (default: 1536)
+  --vad_dump            Dumps VAD timings to a subtitle file for inspection. (default: False)
+  --max_new_tokens MAX_NEW_TOKENS
+                        Maximum number of new tokens to generate per-chunk. (default: None)
+  --chunk_length CHUNK_LENGTH
+                        The length of audio segments. If it is not None, it will overwrite the default chunk_length of
+                        the FeatureExtractor. (default: None)
+  --compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}, -ct {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}
+                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html). (default:
+                        auto)
+  --batch_recursive, -br
+                        Enables recursive batch processing. Note: If set then it changes defaults of --output_dir.
+                        (default: False)
+  --beep_off            Disables the beep sound when operation is finished. (default: False)
+  --skip                Skips media file if subtitle exists. Works if input is wildcard or directory. (default: False)
+  --checkcuda, -cc      Returns CUDA device count. (for Subtitle Edit's internal use)
+  --print_progress, -pp
+                        Prints progress bar instead of transcription. (default: False)
+  --postfix             Adds language as a postfix to subtitle's filename. (default: False)
+  --check_files         Checks input files for errors before passing all them for transcription. Works if input is
+                        wildcard or directory. (default: False)
+  --PR163_off           (For dev experiments) Disables PR163. . (default: False)
+  --hallucinations_list_off
+                        (For dev experiments) Disables hallucinations_list, allows hallucinations added to prompt.
+                        (default: False)
+  --one_word {0,1,2}    0) Disabled. 1) Outputs srt and vtt subtitles with one word per line. 2) As '1', plus removes
+                        whitespace and ensures &gt;= 50ms for sub lines. Note: VAD may slightly reduce the accuracy of
+                        timestamps on some lines. (default: 0)
+  --sentence            Enables splitting lines to sentences for srt and vtt subs. Every sentence starts in the new
+                        segment. By default meant to output whole sentence per line for better translations, but not
+                        limited to, read about '--max_...' parameters. Note: has no effect on 'highlight_words'.
+                        (default: False)
+  --standard            Quick hardcoded preset to split lines in standard way. 42 chars per 2 lines with
+                        max_comma_cent=70 and --sentence are activated automatically. (default: False)
+  --standard_asia       Quick hardcoded preset to split lines in standard way for some Asian languages. 16 chars per 2
+                        lines with max_comma_cent=80 and --sentence are activated automatically. (default: False)
+  --max_comma MAX_COMMA
+                        (requires --sentence) After this line length a comma is treated as the end of sentence. Note:
+                        disabled if it's over or equal to --max_line_width. (default: 250)
+  --max_comma_cent {50,60,70,80,90,100}
+                        (requires --sentence) Percentage of --max_line_width when it starts breaking the line after
+                        comma. Note: 100 = disabled. (default: 100)
+  --max_gap MAX_GAP     (requires --sentence) Threshold for a gap length in seconds, longer gaps are treated as dots.
+                        (default: 3.0)
+  --max_line_width MAX_LINE_WIDTH
+                        The maximum number of characters in a line before breaking the line. (default: 1000)
+  --max_line_count MAX_LINE_COUNT
+                        The maximum number of lines in one sub segment. (default: 1)
+  --min_dist_to_end {0,4,5,6,7,8,9,10,11,12}
+                        (requires --sentence) If from words like 'the', 'Mr.' and ect. to the end of line distance is
+                        less than set then it starts in a new line. Note: 0 = disabled. (default: 0)
+  --prompt_max {16,32,64,128,223}
+                        (experimental) The maximum size of prompt. (default: 223)
+  --reprompt {0,1,2}    (experimental) 0) Disabled. 1) Inserts initial_prompt after the prompt resets. 2) Ensures that
+                        initial_prompt is present in prompt for all windows/chunks. Note: auto-disabled if
+                        initial_prompt=None. It's similar to 'hotwords' feature. (default: 2)
+  --prompt_reset_on_no_end {0,1,2}
+                        (experimental) Resets prompt if there is no end of sentence in window/chunk. 0 - disabled, 1 -
+                        looks for period, 2 - looks for period or comma. Note: it's auto-disabled if reprompt=0.
+                        (default: 2)
+  --ff_dump             Dumps pre-processed audio by the filters to the 16000Hz file and prevents deletion of some
+                        intermediate audio files. (default: False)
+  --ff_track {1,2,3,4,5,6}
+                        Audio track selector. 1 - selects the first audio track. (default: 1)
+  --ff_fc               Selects only front-center channel (FC) to process. (default: False)
+  --ff_mp3              Audio filter: Conversion to MP3 and back. (default: False)
+  --ff_sync             Audio filter: Stretch/squeeze samples to the given timestamps, with a maximum of 3600 samples
+                        per second compensation. Input file must be container that support storing PTS like mp4,
+                        mkv... (default: False)
+  --ff_rnndn_sh         Audio filter: Suppress non-speech with GregorR's SH model using Recurrent Neural Networks.
+                        Notes: It's more aggressive than Xiph, discards singing. (default: False)
+  --ff_rnndn_xiph       Audio filter: Suppress non-speech with Xiph's original model using Recurrent Neural Networks.
+                        (default: False)
+  --ff_fftdn [0 - 97]   Audio filter: General denoise with Fast Fourier Transform. Notes: 12 - normal strength, 0 -
+                        disabled. (default: 0)
+  --ff_tempo [0.5 - 2.0]
+                        Audio filter: Adjust audio tempo. Values below 1.0 slows down audio, above - speeds up. 1.0 =
+                        disabled. (default: 1.0)
+  --ff_gate             Audio filter: Reduce lower parts of a signal. (default: False)
+  --ff_speechnorm       Audio filter: Extreme and fast speech amplification. (default: False)
+  --ff_loudnorm         Audio filter: EBU R128 loudness normalization. (default: False)
+  --ff_silence_suppress noise duration
+                        Audio filter: Suppress quiet parts of audio. Takes two values. First value - noise tolerance
+                        in decibels [-70 - 0] (0=disabled), second value - minimum silence duration in seconds [0.1 -
+                        10]. (default: [0, 3.0])
+  --ff_lowhighpass      Audio filter: Pass 50Hz - 7800 band. sinc + afir. (default: False)</value>
+  </data>
   <data name="textBoxCpp.Text" xml:space="preserve">
     <value>  -t N,      --threads N         [4      ] number of threads to use during computation
   -p N,      --processors N      [1      ] number of processors to use during computation
@@ -239,11 +543,8 @@
   </data>
   <data name="textBoxPurfviewFasterWhisper.Text" xml:space="preserve">
     <value>[--device DEVICE]
-[--output_dir OUTPUT_DIR]
-[--output_format {lrc,txt,text,vtt,srt,tsv,json,all}]
 [--verbose VERBOSE]
 [--task {transcribe,translate}]
-[--temperature TEMPERATURE]
 [--best_of BEST_OF]
 [--beam_size BEAM_SIZE]
 [--patience PATIENCE]
@@ -262,7 +563,9 @@
 [--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
 [--logprob_threshold LOGPROB_THRESHOLD]
 [--no_speech_threshold NO_SPEECH_THRESHOLD]
+[--v3_offsets_off]
 [--hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD]
+[--hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}]
 [--clip_timestamps CLIP_TIMESTAMPS]
 [--no_speech_strict_lvl {0,1,2}]
 [--word_timestamps WORD_TIMESTAMPS]
@@ -278,6 +581,7 @@
 [--vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS]
 [--vad_speech_pad_ms VAD_SPEECH_PAD_MS]
 [--vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES]
+[--vad_dump]
 [--max_new_tokens MAX_NEW_TOKENS]
 [--chunk_length CHUNK_LENGTH]
 [--compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}]
@@ -304,17 +608,241 @@
 [--reprompt {0,1,2}]
 [--prompt_reset_on_no_end {0,1,2}]
 [--ff_dump]
+[--ff_track {1,2,3,4,5,6}]
+[--ff_fc]
 [--ff_mp3]
 [--ff_sync]
 [--ff_rnndn_sh]
 [--ff_rnndn_xiph]
-[--ff_fftdn [0 - 97]]
-[--ff_tempo [0.5 - 2.0]]
+[--ff_fftdn
+[0 - 97]]
+[--ff_tempo
+[0.5 - 2.0]]
 [--ff_gate]
 [--ff_speechnorm]
 [--ff_loudnorm]
 [--ff_silence_suppress noise duration]
 [--ff_lowhighpass]
-</value>
+                          audio
+[audio ...]
+
+positional arguments:
+  audio                 audio file(s). You can enter a file wildcard, filelist (txt. m3u, m3u8, lst) or directory to
+                        do batch processing. Note: non-media files in list or directory are filtered out by extension.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --model MODEL, -m MODEL
+                        name of the Whisper model to use (default: medium)
+  --model_dir MODEL_DIR
+                        the path to save model files; uses C:\git\subtitleedit\src\ui\bin\Debug\Whisper\Purfview-
+                        Whisper-Faster\_models by default (default: None)
+  --device DEVICE, -d DEVICE
+                        Device to use. Default is 'cuda' if CUDA device is detected, else is 'cpu'. If CUDA GPU is a
+                        second device then set 'cuda:1'. (default: cpu)
+  --output_dir OUTPUT_DIR, -o OUTPUT_DIR
+                        directory to save the outputs. By default the same folder where the executable file is or
+                        where media file is if --batch_recursive=True. '.'- sets to the current folder. 'source' -
+                        sets to where media file is. (default: default)
+  --output_format {lrc,txt,text,vtt,srt,tsv,json,all}, -f {lrc,txt,text,vtt,srt,tsv,json,all}
+                        format of the output file; if not specified srt will be produced (default: srt)
+  --verbose VERBOSE, -v VERBOSE
+                        whether to print out debug messages (default: False)
+  --task {transcribe,translate}
+                        whether to perform X-&gt;X speech recognition ('transcribe') or X-&gt;English translation
+                        ('translate') (default: transcribe)
+  --language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}, -l {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}
+                        language spoken in the audio, specify None to perform language detection (default: None)
+  --language_detection_threshold LANGUAGE_DETECTION_THRESHOLD
+                        If the maximum probability of the language tokens is higher than this value, the language is
+                        detected. (default: None)
+  --language_detection_segments LANGUAGE_DETECTION_SEGMENTS
+                        Number of segments/chunks to consider for the language detection. (default: 1)
+  --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF, -bo BEST_OF
+                        number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE, -bs BEAM_SIZE
+                        number of beams in beam search, only applicable when temperature is zero (default: 5)
+  --patience PATIENCE, -p PATIENCE
+                        optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+                        default (1.0) is equivalent to conventional beam search (default: 2.0)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
+                        simple length normalization by default (default: 1.0)
+  --repetition_penalty REPETITION_PENALTY
+                        Penalty applied to the score of previously generated tokens (set &gt; 1.0 to penalize). (default:
+                        1.0)
+  --no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE
+                        Prevent repetitions of ngrams with this size (set 0 to disable). (default: 0)
+  --suppress_blank SUPPRESS_BLANK
+                        Suppress blank outputs at the beginning of the sampling. (default: True)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+                        characters except common punctuations (default: -1)
+  --initial_prompt INITIAL_PROMPT, -prompt INITIAL_PROMPT
+                        optional text to provide context as a prompt for the first window. Use 'None' to disable it.
+                        Note: 'auto' and 'default' are experimental ~universal prompt presets, they work if --language
+                        is set. (default: auto)
+  --prefix PREFIX       Optional text to provide as a prefix for the first window (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT, -condition CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output of the model as a prompt for the next window; disabling
+                        may make the text inconsistent across windows, but the model becomes less prone to getting
+                        stuck in a failure loop. If disabled then you may want to disable --reprompt too. (default:
+                        True)
+  --prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE
+                        Resets prompt if temperature is above this value. Arg has effect only if
+                        condition_on_previous_text is True. (default: 0.5)
+  --without_timestamps WITHOUT_TIMESTAMPS
+                        Only sample text tokens. (default: False)
+  --max_initial_timestamp MAX_INITIAL_TIMESTAMP
+                        The initial timestamp cannot be later than this. (default: 1.0)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK, -fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back when the decoding fails to meet either of the
+                        thresholds below. To disable fallback set it to 'None'. (default: 0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed
+                        (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if the average log probability is lower than this value, treat the decoding as failed
+                        (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has
+                        failed due to 'logprob_threshold', consider the segment as silence (default: 0.6)
+  --v3_offsets_off      Disables custom offsets to the defaults of pseudo-vad thresholds when 'large-v3' models are in
+                        use. Those offset were made to make 'large-v3' to hallucinate less by default. (default:
+                        False)
+  --hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD, -hst HALLUCINATION_SILENCE_THRESHOLD
+                        (Experimental) When word_timestamps is True, skip silent periods longer than this threshold
+                        (in seconds) when a possible hallucination is detected. Optimal value is somewhere between 2 -
+                        8 seconds. Inactive if None. (default: None)
+  --hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}, -hst_temp {0.0,0.2,0.5,0.8,1.0}
+                        (Experimental) Additional heuristic for '--hallucination_silence_threshold'. If temperature is
+                        higher that this threshold then consider segment as possible hallucination ignoring the hst
+                        score. Inactive if 1.0. (default: 1.0)
+  --clip_timestamps CLIP_TIMESTAMPS
+                        Comma-separated list start,end,start,end,... timestamps (in seconds) of clips to process. The
+                        last end timestamp defaults to the end of the file. VAD is auto-disabled. (default: 0)
+  --no_speech_strict_lvl {0,1,2}
+                        (experimental) Level of stricter actions when no_speech_prob &gt; 0.93. Use beam_size=5 if this
+                        is enabled. Options: 0 - Disabled (do nothing), 1 - Reset propmt (see
+                        condition_on_previous_text), 2 - Invalidate the cached encoder output (if no_speech_threshold
+                        is not None). Arg meant to combat cases where the model is getting stuck in a failure loop or
+                        outputs nonsense (default: 0)
+  --word_timestamps WORD_TIMESTAMPS, -wt WORD_TIMESTAMPS
+                        Extract word-level timestamps and refine the results based on them (default: True)
+  --highlight_words HIGHLIGHT_WORDS, -hw HIGHLIGHT_WORDS
+                        underline each word as it is spoken AKA karaoke in srt and vtt output formats (default: False)
+  --prepend_punctuations PREPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
+                        "'“¿([{-)
+  --append_punctuations APPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
+                        "'.。,，!！?？:：”)]}、)
+  --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that
+                        4 (default: 0)
+  --version             Show Faster-Whisper's version number
+  --vad_filter VAD_FILTER, -vad VAD_FILTER
+                        Enable the voice activity detection (VAD) to filter out parts of the audio without speech.
+                        (default: True)
+  --vad_threshold VAD_THRESHOLD
+                        Probabilities above this value are considered as speech. (default: 0.45)
+  --vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS
+                        Final speech chunks shorter min_speech_duration_ms are thrown out. (default: 350)
+  --vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S
+                        Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the
+                        last silence. (default: None)
+  --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
+                        In the end of each speech chunk time to wait before separating it. (default: 3000)
+  --vad_speech_pad_ms VAD_SPEECH_PAD_MS
+                        Final speech chunks are padded by speech_pad_ms each side. (default: 900)
+  --vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES
+                        Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect
+                        model perfomance!!! (default: 1536)
+  --vad_dump            Dumps VAD timings to a subtitle file for inspection. (default: False)
+  --max_new_tokens MAX_NEW_TOKENS
+                        Maximum number of new tokens to generate per-chunk. (default: None)
+  --chunk_length CHUNK_LENGTH
+                        The length of audio segments. If it is not None, it will overwrite the default chunk_length of
+                        the FeatureExtractor. (default: None)
+  --compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}, -ct {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}
+                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html). (default:
+                        auto)
+  --batch_recursive, -br
+                        Enables recursive batch processing. Note: If set then it changes defaults of --output_dir.
+                        (default: False)
+  --beep_off            Disables the beep sound when operation is finished. (default: False)
+  --skip                Skips media file if subtitle exists. Works if input is wildcard or directory. (default: False)
+  --checkcuda, -cc      Returns CUDA device count. (for Subtitle Edit's internal use)
+  --print_progress, -pp
+                        Prints progress bar instead of transcription. (default: False)
+  --postfix             Adds language as a postfix to subtitle's filename. (default: False)
+  --check_files         Checks input files for errors before passing all them for transcription. Works if input is
+                        wildcard or directory. (default: False)
+  --PR163_off           (For dev experiments) Disables PR163. . (default: False)
+  --hallucinations_list_off
+                        (For dev experiments) Disables hallucinations_list, allows hallucinations added to prompt.
+                        (default: False)
+  --one_word {0,1,2}    0) Disabled. 1) Outputs srt and vtt subtitles with one word per line. 2) As '1', plus removes
+                        whitespace and ensures &gt;= 50ms for sub lines. Note: VAD may slightly reduce the accuracy of
+                        timestamps on some lines. (default: 0)
+  --sentence            Enables splitting lines to sentences for srt and vtt subs. Every sentence starts in the new
+                        segment. By default meant to output whole sentence per line for better translations, but not
+                        limited to, read about '--max_...' parameters. Note: has no effect on 'highlight_words'.
+                        (default: False)
+  --standard            Quick hardcoded preset to split lines in standard way. 42 chars per 2 lines with
+                        max_comma_cent=70 and --sentence are activated automatically. (default: False)
+  --standard_asia       Quick hardcoded preset to split lines in standard way for some Asian languages. 16 chars per 2
+                        lines with max_comma_cent=80 and --sentence are activated automatically. (default: False)
+  --max_comma MAX_COMMA
+                        (requires --sentence) After this line length a comma is treated as the end of sentence. Note:
+                        disabled if it's over or equal to --max_line_width. (default: 250)
+  --max_comma_cent {50,60,70,80,90,100}
+                        (requires --sentence) Percentage of --max_line_width when it starts breaking the line after
+                        comma. Note: 100 = disabled. (default: 100)
+  --max_gap MAX_GAP     (requires --sentence) Threshold for a gap length in seconds, longer gaps are treated as dots.
+                        (default: 3.0)
+  --max_line_width MAX_LINE_WIDTH
+                        The maximum number of characters in a line before breaking the line. (default: 1000)
+  --max_line_count MAX_LINE_COUNT
+                        The maximum number of lines in one sub segment. (default: 1)
+  --min_dist_to_end {0,4,5,6,7,8,9,10,11,12}
+                        (requires --sentence) If from words like 'the', 'Mr.' and ect. to the end of line distance is
+                        less than set then it starts in a new line. Note: 0 = disabled. (default: 0)
+  --prompt_max {16,32,64,128,223}
+                        (experimental) The maximum size of prompt. (default: 223)
+  --reprompt {0,1,2}    (experimental) 0) Disabled. 1) Inserts initial_prompt after the prompt resets. 2) Ensures that
+                        initial_prompt is present in prompt for all windows/chunks. Note: auto-disabled if
+                        initial_prompt=None. It's similar to 'hotwords' feature. (default: 2)
+  --prompt_reset_on_no_end {0,1,2}
+                        (experimental) Resets prompt if there is no end of sentence in window/chunk. 0 - disabled, 1 -
+                        looks for period, 2 - looks for period or comma. Note: it's auto-disabled if reprompt=0.
+                        (default: 2)
+  --ff_dump             Dumps pre-processed audio by the filters to the 16000Hz file and prevents deletion of some
+                        intermediate audio files. (default: False)
+  --ff_track {1,2,3,4,5,6}
+                        Audio track selector. 1 - selects the first audio track. (default: 1)
+  --ff_fc               Selects only front-center channel (FC) to process. (default: False)
+  --ff_mp3              Audio filter: Conversion to MP3 and back. (default: False)
+  --ff_sync             Audio filter: Stretch/squeeze samples to the given timestamps, with a maximum of 3600 samples
+                        per second compensation. Input file must be container that support storing PTS like mp4,
+                        mkv... (default: False)
+  --ff_rnndn_sh         Audio filter: Suppress non-speech with GregorR's SH model using Recurrent Neural Networks.
+                        Notes: It's more aggressive than Xiph, discards singing. (default: False)
+  --ff_rnndn_xiph       Audio filter: Suppress non-speech with Xiph's original model using Recurrent Neural Networks.
+                        (default: False)
+  --ff_fftdn [0 - 97]   Audio filter: General denoise with Fast Fourier Transform. Notes: 12 - normal strength, 0 -
+                        disabled. (default: 0)
+  --ff_tempo [0.5 - 2.0]
+                        Audio filter: Adjust audio tempo. Values below 1.0 slows down audio, above - speeds up. 1.0 =
+                        disabled. (default: 1.0)
+  --ff_gate             Audio filter: Reduce lower parts of a signal. (default: False)
+  --ff_speechnorm       Audio filter: Extreme and fast speech amplification. (default: False)
+  --ff_loudnorm         Audio filter: EBU R128 loudness normalization. (default: False)
+  --ff_silence_suppress noise duration
+                        Audio filter: Suppress quiet parts of audio. Takes two values. First value - noise tolerance
+                        in decibels [-70 - 0] (0=disabled), second value - minimum silence duration in seconds [0.1 -
+                        10]. (default: [0, 3.0])
+  --ff_lowhighpass      Audio filter: Pass 50Hz - 7800 band. sinc + afir. (default: False)</value>
   </data>
 </root>

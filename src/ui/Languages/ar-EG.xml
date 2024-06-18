@@ -2,7 +2,7 @@
 <Language Name="arbic">
   <General>
     <Title>تحرير العنوان الفرعي</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>تمت الترجمة بواسطة نيكسي</TranslatedBy>
     <CultureName>ar-EG</CultureName>
     <HelpFile />
@@ -2521,8 +2521,6 @@ ames.xml)</FixOnlyNamesCasing>
     <CpsLineLengthStyleCalcNoSpace>عد كل شيء باستثناء الفضاء</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1، اللاتينية 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1، اللاتينية 0.5، المسافة 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>تجاهل علامات التشكيل العربية</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>تجاهل علامات التشكيل/المسافة العربية</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>بدون مسافة أو علامات ترقيم ()[]-:;,.!؟</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>لا يوجد مسافة أو علامات الترقيم، CPS فقط</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>رمز الموسيقى</MusicSymbol>
@@ -3355,7 +3353,7 @@ ames.xml)</FixOnlyNamesCasing>
     <RemoveShotChangesFromSelection>قم بإزالة تغييرات اللقطة من التحديد</RemoveShotChangesFromSelection>
     <GuessTimeCodes>تخمين رموز الوقت...</GuessTimeCodes>
     <SeekSilence>ابحث عن الصمت...</SeekSilence>
-    <InsertSubtitleHere>أدخل العنوان الفرعي هنا...</InsertSubtitleHere>
+    <InsertSubtitleHere>أدخل العنوان الفرعي هنا</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

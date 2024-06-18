@@ -123,19 +123,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
-                        for (var j = 0; j < dataUnitLen; j++)
+                        for (var j = 0; j < dataUnitLen && i + j < _dataBuffer.Length; j++)
                         {
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
-                        var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
-                        if (!pages.Contains(pageNumber) && pageNumber > 0)
+
+                        if (_dataBuffer.Length > i + 43)
                         {
-                            pages.Add(pageNumber);
+                            var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
+                            if (!pages.Contains(pageNumber) && pageNumber > 0)
+                            {
+                                pages.Add(pageNumber);
+                            }
                         }
                     }
                 }
+
                 i += dataUnitLen;
             }
+
             return pages;
         }
 
@@ -168,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var dataUnitLen = _dataBuffer[i++];
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
+                    if (dataUnitLen == 44 && _dataBuffer.Length > i + 43) // teletext payload has always size 44 bytes
                     {
                         Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), timestamp, teletextRunSettings, pageNumberBcd, pageNumber);
                     }

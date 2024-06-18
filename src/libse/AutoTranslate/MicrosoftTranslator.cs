@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.Translate;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -6,11 +10,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -47,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             catch (Exception e)
             {
-                throw new TranslationException("Can't get Access Token", e);
+                throw new Exception("Can't get Access Token", e);
             }
         }
 
@@ -70,51 +69,45 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             var results = new List<string>();
-            try
+
+            var httpClient = GetTranslateClient();
+            var jsonBuilder = new StringBuilder();
+            jsonBuilder.Append("[");
+            jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
+            jsonBuilder.Append("]");
+            var json = jsonBuilder.ToString();
+            var content = new StringContent(json, Encoding.UTF8);
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            var result = httpClient.PostAsync(url, content).Result;
+            var parser = new JsonParser();
+            var jsonResult = result.Content.ReadAsStringAsync().Result;
+
+            if (!result.IsSuccessStatusCode)
             {
-                var httpClient = GetTranslateClient();
-                var jsonBuilder = new StringBuilder();
-                jsonBuilder.Append("[");
-                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
-                jsonBuilder.Append("]");
-                var json = jsonBuilder.ToString();
-                var content = new StringContent(json, Encoding.UTF8);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = httpClient.PostAsync(url, content).Result;
-                var parser = new JsonParser();
-                var jsonResult = result.Content.ReadAsStringAsync().Result;
+                Error = json;
 
-                if (!result.IsSuccessStatusCode)
+                if (result.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Error = json;
-
-                    if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        throw new Exception("API key is not valid!" + Environment.NewLine + Environment.NewLine + jsonResult);
-                    }
-
-                    throw new Exception("An error occurred during translate:" + Environment.NewLine + Environment.NewLine + jsonResult);
+                    throw new Exception("API key is not valid!" + Environment.NewLine + Environment.NewLine + jsonResult);
                 }
 
-                var x = (List<object>)parser.Parse(jsonResult);
-                foreach (var xElement in x)
-                {
-                    var dict = (Dictionary<string, object>)xElement;
-                    var y = (List<object>)dict["translations"];
-                    foreach (var o in y)
-                    {
-                        var textDictionary = (Dictionary<string, object>)o;
-                        var res = (string)textDictionary["text"];
-                        res = res.Replace("<br />", Environment.NewLine);
-                        res = res.Replace("<br/>", Environment.NewLine);
-                        res = res.Replace("<br>", Environment.NewLine);
-                        results.Add(res);
-                    }
-                }
+                throw new Exception("An error occurred during translate:" + Environment.NewLine + Environment.NewLine + jsonResult);
             }
-            catch (WebException webException)
+
+            var x = (List<object>)parser.Parse(jsonResult);
+            foreach (var xElement in x)
             {
-                throw new TranslationException(webException);
+                var dict = (Dictionary<string, object>)xElement;
+                var y = (List<object>)dict["translations"];
+                foreach (var o in y)
+                {
+                    var textDictionary = (Dictionary<string, object>)o;
+                    var res = (string)textDictionary["text"];
+                    res = res.Replace("<br />", Environment.NewLine);
+                    res = res.Replace("<br/>", Environment.NewLine);
+                    res = res.Replace("<br>", Environment.NewLine);
+                    results.Add(res);
+                }
             }
 
             return Task.FromResult(string.Join(Environment.NewLine, results));
@@ -135,13 +128,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            var httpClient = DownloaderFactory.MakeHttpClient();
-            httpClient.DefaultRequestHeaders
-                .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
-            var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
-            return response.Content.ReadAsStringAsync().Result;
+            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
+                var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
+                var result = response.Content.ReadAsStringAsync().Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+                }
+
+                return response.Content.ReadAsStringAsync().Result;
+            }
         }
 
         private static List<TranslationPair> GetTranslationPairs()

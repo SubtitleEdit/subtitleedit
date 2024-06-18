@@ -143,11 +143,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void buttonFixesSelectAll_Click(object sender, EventArgs e)
         {
             listView1.ItemChecked -= listView1_ItemChecked;
-
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = true;
-            }
+            listView1.CheckAll();
 
             foreach (ListViewData d in _data)
             {

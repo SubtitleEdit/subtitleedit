@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -2854,7 +2854,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <RemoveShotChange>Bölüm değişikliğini kaldır...</RemoveShotChange>
     <GuessTimeCodes>Zaman kodlarını tahmin et...</GuessTimeCodes>
     <SeekSilence>Sessizlik arama...</SeekSilence>
-    <InsertSubtitleHere>Altyazıyı buraya ekleyin...</InsertSubtitleHere>
+    <InsertSubtitleHere>Altyazıyı buraya ekleyin</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

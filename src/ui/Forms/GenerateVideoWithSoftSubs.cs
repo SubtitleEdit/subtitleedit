@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _inputVideoFileName;
         private StringBuilder _log;
         private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
+        private readonly List<VideoPreviewGeneratorSub> _tracksToDelete = new List<VideoPreviewGeneratorSub>();
         private bool _promptFFmpegParameters;
         private readonly List<string> _cleanUpFolders = new List<string>();
 
@@ -58,13 +59,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSetDefault.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
             buttonSetLanguage.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
             columnHeader1Type.Text = LanguageSettings.Current.Main.Controls.SubtitleFormat;
-            columnHeader2Language.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            columnHeader2Language.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.LanguageAndTitle;
             columnHeader3Default.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Default;
             columnHeader4Forced.Text = LanguageSettings.Current.ExportPngXml.Forced;
             columnHeader5FileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
+            checkBoxDeleteInputVideoAfterGeneration.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.DeleteInputVideo;
             addToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Add;
             toolStripMenuItemStorageRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             toolStripMenuItemStorageRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
@@ -74,6 +75,8 @@ namespace Nikse.SubtitleEdit.Forms
             toggleDefaultToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
             setLanguageToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
             viewToolStripMenuItem.Text = LanguageSettings.Current.General.ShowPreview;
+            setSuffixToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings;
+            toolStripMenuItemSuffix2.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings;
 
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
@@ -82,6 +85,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadVideo(inputVideoFileName);
             AddCurrentSubtitle();
+
+            checkBoxDeleteInputVideoAfterGeneration.Checked = Configuration.Settings.Tools.GenVideoDeleteInputVideoFile;
+            checkBoxDeleteInputVideoAfterGeneration.Left = buttonGenerate.Left - checkBoxDeleteInputVideoAfterGeneration.Width - 10;
         }
 
         private void AddCurrentSubtitle()
@@ -129,7 +135,6 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
-
             using (var matroska = new MatroskaFile(inputVideoFileName))
             {
                 if (matroska.IsValid)
@@ -156,6 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewSubtitles.EndUpdate();
             }
+
+            _tracksToDelete.Clear();
         }
 
         private void AddListViewItem(Trak track)
@@ -182,44 +189,65 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem
             {
                 Tag = sub,
-                Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Format,
+                Text = sub.SubtitleFormat ?? sub.Format,
             };
-            item.SubItems.Add(GetDisplayLanguage(sub.Language));
+
+            _softSubs.Add(sub);
+
+            item.SubItems.Add(GetDisplayLanguage(sub));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(sub.IsForced.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(sub.IsNew ? sub.FileName : string.Empty);
             listViewSubtitles.Items.Add(item);
 
-            _softSubs.Add(sub);
-
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
 
-        private static string GetDisplayLanguage(string language)
+        private static string GetDisplayLanguage(VideoPreviewGeneratorSub sub)
         {
-            if (string.IsNullOrWhiteSpace(language))
+            if (string.IsNullOrWhiteSpace(sub.Language) && string.IsNullOrWhiteSpace(sub.Title))
             {
                 return "Undefined";
             }
 
-            var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(language);
-            if (language.Length == 3)
+            if (!string.IsNullOrWhiteSpace(sub.Language) && !string.IsNullOrWhiteSpace(sub.Title))
             {
-                threeLetterCode = language;
+                return sub.Language + "/" + sub.Title;
             }
 
-            if (language.IndexOf('-') == 2)
+            if (!string.IsNullOrWhiteSpace(sub.Language))
             {
-                threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(language.Substring(0, 2));
+                return sub.Language;
             }
 
-            return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
+            if (!string.IsNullOrWhiteSpace(sub.Title))
+            {
+                return sub.Title;
+            }
+
+            return string.Empty;
         }
 
         private void AddListViewItem(MatroskaTrackInfo track, MatroskaFile matroska)
         {
+            if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+            {
+                AddListViewItem(new VideoPreviewGeneratorSub
+                {
+                    Name = track.CodecId,
+                    Language = track.Language,
+                    Title = track.Name,
+                    IsNew = false,
+                    IsForced = track.IsForced,
+                    IsDefault = track.IsDefault,
+                    Tag = track,
+                    SubtitleFormat = track.CodecId,
+                });
+
+                return;
+            }
+
             if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase) ||
-                track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase) ||
                 track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase) ||
                 track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
             {
@@ -246,11 +274,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Name = track.CodecId,
                 Language = track.Language,
+                Title = track.Name,
                 IsNew = false,
                 IsForced = track.IsForced,
                 IsDefault = track.IsDefault,
                 Tag = track,
-                SubtitleFormat = format,
+                SubtitleFormat = format.GetType().Name,
                 FileName = fileName,
             });
         }
@@ -265,19 +294,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
                 FileUtil.IsBluRaySup(fileName))
             {
-                MessageBox.Show("FFmpeg does not support embedding of PGS/Blu-ray sup :(");
+                AddListViewItem(new VideoPreviewGeneratorSub
+                {
+                    Name = Path.GetFileName(fileName),
+                    Language = GetLanguageFromFileName(fileName),
+                    Format = "S_HDMV/PGS",
+                    SubtitleFormat = null,
+                    IsNew = true,
+                    IsForced = false,
+                    IsDefault = false,
+                    FileName = fileName,
+                });
 
-                //AddListViewItem(new VideoPreviewGeneratorSub
-                //{
-                //    Name = Path.GetFileName(fileName),
-                //    Language = "eng", //TODO: get from file name or sup
-                //    Format = "Blu-ray sup",
-                //    SubtitleFormat = null,
-                //    IsNew = true,
-                //    IsForced = false,
-                //    IsDefault = false,
-                //    FileName = fileName,
-                //});
                 return;
             }
 
@@ -293,17 +321,66 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle = Subtitle.Parse(fileName);
             }
 
+            var language = string.Empty;
+            var title = string.Empty;
+            var twoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            if (twoLetterCode != null && twoLetterCode.Length == 2)
+            {
+                var iso = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == twoLetterCode);
+                if (iso != null)
+                {
+                    language = iso.ThreeLetterCode;
+                    title = iso.EnglishName;
+                }
+            }
+
             AddListViewItem(new VideoPreviewGeneratorSub
             {
                 Name = Path.GetFileName(fileName),
-                Language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle),
+                Language = language,
+                Title = title,
                 Format = subtitle.OriginalFormat.FriendlyName,
-                SubtitleFormat = subtitle.OriginalFormat,
+                SubtitleFormat = subtitle.OriginalFormat.GetType().Name,
                 IsNew = true,
                 IsForced = false,
                 IsDefault = false,
                 FileName = fileName,
             });
+        }
+
+        private static string GetLanguageFromFileName(string fileName)
+        {
+            var defaultLanguage = "eng";
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return defaultLanguage;
+            }
+
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
+            var split = fileNameNoExt.Split('.', '_', '_');
+            var last = split.LastOrDefault();
+
+            if (last == null)
+            {
+                return defaultLanguage;
+            }
+
+            if (last.Length == 3)
+            {
+                return last;
+            }
+
+            if (last.Length == 2)
+            {
+                var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(last);
+                if (threeLetterCode.Length == 3)
+                {
+                    return threeLetterCode;
+                }
+            }
+
+            return defaultLanguage;
         }
 
         private string GetKnownFileNameOrConvertToSrtOrUtf8(string fileName, Subtitle subtitle)
@@ -387,6 +464,19 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = saveDialog.FileName;
             }
 
+            if (VideoFileName.Equals(_inputVideoFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Input video file name and output file name cannot be the same.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var isMp4 = VideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            if (isMp4 && _softSubs.Any(p => p.SubtitleFormat == "S_HDMV/PGS"))
+            {
+                MessageBox.Show("Cannot embed S_HDMV/PGS in MP4", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (File.Exists(VideoFileName))
             {
                 try
@@ -395,7 +485,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show($"Cannot overwrite video file {VideoFileName} - probably in use!");
+                    MessageBox.Show($"Cannot overwrite video file {VideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     buttonGenerate.Enabled = true;
                     return;
                 }
@@ -424,10 +514,34 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SeLogger.Error(Environment.NewLine + "Generate embedded video failed: " + Environment.NewLine + _log);
                 MessageBox.Show("Generate embedded video failed" + Environment.NewLine +
-                                "For more info see the error log: " + SeLogger.ErrorFile);
+                                "For more info see the error log: " + SeLogger.ErrorFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 buttonGenerate.Enabled = true;
                 groupBoxSettings.Enabled = true;
                 return;
+            }
+
+            var inputFileInfo = new FileInfo(_inputVideoFileName);
+            var outputFileInfo = new FileInfo(VideoFileName);
+            if (inputFileInfo.Length > 5_000_000 && outputFileInfo.Length < 9_000)
+            {
+                SeLogger.Error(Environment.NewLine + "Generate embedded video file very small: " + Environment.NewLine + _log);
+                MessageBox.Show("Generate embedded video seems very small - it probably failed!" + Environment.NewLine +
+                                "For more info see the error log: " + SeLogger.ErrorFile, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                buttonGenerate.Enabled = true;
+                groupBoxSettings.Enabled = true;
+                return;
+            }
+
+            if (checkBoxDeleteInputVideoAfterGeneration.Checked && File.Exists(_inputVideoFileName))
+            {
+                try
+                {
+                    File.Delete(_inputVideoFileName);
+                }
+                catch
+                {
+                    MessageBox.Show($"Cannot delete input video file {_inputVideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             DialogResult = DialogResult.OK;
@@ -451,9 +565,30 @@ namespace Nikse.SubtitleEdit.Forms
         private string SuggestNewVideoFileName()
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
-            fileName += ".embed";
-            fileName = fileName.Replace(".", "_");
+
+            var suffixesToRemove = new List<string> { Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
+            if (Configuration.Settings.Tools.GenVideoEmbedOutputReplace != null)
+            {
+                suffixesToRemove.AddRange(Configuration.Settings.Tools.GenVideoEmbedOutputReplace.SplitToLines());
+            }
+
+            foreach (var suffix in suffixesToRemove.Where(p => p.Length > 0).OrderByDescending(p => p.Length))
+            {
+                fileName = fileName.Replace("." + suffix, string.Empty);
+                fileName = fileName.Replace("_" + suffix, string.Empty);
+                fileName = fileName.Replace("-" + suffix, string.Empty);
+                fileName = fileName.Replace(suffix, string.Empty);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix))
+            {
+                fileName = fileName.TrimEnd('_', '-', '.') + "-" + Configuration.Settings.Tools.GenVideoEmbedOutputSuffix;
+            }
+
+            fileName = fileName.Replace('.', '-');
+
             fileName += Configuration.Settings.Tools.GenVideoEmbedOutputExt == ".mp4" ? ".mp4" : ".mkv";
+
             return fileName;
         }
 
@@ -520,6 +655,7 @@ namespace Nikse.SubtitleEdit.Forms
             return VideoPreviewGenerator.GenerateSoftCodedVideoFile(
                 inputVideoFileName,
                 _softSubs,
+                _tracksToDelete,
                 outputVideoFileName,
                 OutputHandler);
         }
@@ -578,6 +714,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.GenVideoEmbedOutputExt = Path.GetExtension(VideoFileName).ToLowerInvariant();
             }
 
+            Configuration.Settings.Tools.GenVideoDeleteInputVideoFile = checkBoxDeleteInputVideoAfterGeneration.Checked;
+
             foreach (var cleanUpFolder in _cleanUpFolders)
             {
                 try
@@ -621,8 +759,11 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                buttonClear_Click(null, null);
                 LoadVideo(openFileDialog1.FileName);
             }
+
+            listViewSubtitles_SelectedIndexChanged(null, null);
         }
 
         private void buttonAddSubtitles_Click(object sender, EventArgs e)
@@ -644,6 +785,8 @@ namespace Nikse.SubtitleEdit.Forms
                     AddListViewItem(fileName);
                 }
             }
+
+            listViewSubtitles_SelectedIndexChanged(null, null);
         }
 
         private static string GetOpenSubtitleDialogFilter()
@@ -724,6 +867,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var index in list.OrderByDescending(p => p))
             {
+                _tracksToDelete.Add(_softSubs[index]);
                 _softSubs.RemoveAt(index);
                 listViewSubtitles.Items.RemoveAt(index);
             }
@@ -748,6 +892,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonClear_Click(object sender, EventArgs e)
         {
             listViewSubtitles.Items.Clear();
+            _tracksToDelete.AddRange(_softSubs);
             _softSubs.Clear();
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
@@ -892,14 +1037,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var cl = new Options.ChooseIsoLanguage())
+            var first = _softSubs[listViewSubtitles.SelectedIndices[0]];
+
+            using (var cl = new GenerateVideoWithSoftSubsLanguage(first.Language, first.Title))
             {
                 if (cl.ShowDialog(this) == DialogResult.OK)
                 {
                     foreach (int index in listViewSubtitles.SelectedIndices)
                     {
-                        _softSubs[index].Language = cl.CultureName;
-                        listViewSubtitles.Items[index].SubItems[IndexLanguage].Text = GetDisplayLanguage(cl.CultureName);
+                        var ss = _softSubs[index];
+                        ss.Language = cl.Result.ThreeLetterLanguageCode;
+                        ss.Title = cl.Result.Title;
+                        listViewSubtitles.Items[index].SubItems[IndexLanguage].Text = ss.Language + "/" + ss.Title;
                     }
                 }
             }
@@ -910,7 +1059,7 @@ namespace Nikse.SubtitleEdit.Forms
             var count = listViewSubtitles.SelectedItems.Count;
 
             ButtonRemoveSubtitles.Enabled = count > 0;
-            buttonClear.Enabled = count > 0;
+            buttonClear.Enabled = listViewSubtitles.Items.Count > 0;
             ButtonMoveSubUp.Enabled = count == 1;
             ButtonMoveSubDown.Enabled = count == 1;
             buttonToggleForced.Enabled = count > 0;
@@ -959,6 +1108,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemStorageRemoveAll_Click(object sender, EventArgs e)
         {
             buttonClear_Click(null, null);
+        }
+
+        private void setSuffixToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new GenerateVideoWithSoftSubsOutFileName(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix, Configuration.Settings.Tools.GenVideoEmbedOutputReplace))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.GenVideoEmbedOutputSuffix = form.Suffix;
+                    Configuration.Settings.Tools.GenVideoEmbedOutputReplace = form.ReplaceList;
+                }
+            }
         }
     }
 }

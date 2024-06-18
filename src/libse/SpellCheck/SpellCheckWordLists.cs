@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private readonly HashSet<string> _userWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
         private readonly string _dictionaryFolder;
-        private HashSet<string> _skipAllList = new HashSet<string>();
         private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
         private readonly string _languageName;
         private readonly IDoSpell _doSpell;
@@ -51,14 +50,14 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 LoadUseAlwaysList();
             }
 
-            foreach (string namesItem in _names)
+            foreach (var namesItem in _names)
             {
                 _namesListUppercase.Add(namesItem.ToUpperInvariant());
             }
 
             if (languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (string namesItem in _names)
+                foreach (var namesItem in _names)
                 {
                     if (!namesItem.EndsWith('s'))
                     {
@@ -72,33 +71,20 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
 
-            if (File.Exists(dictionaryFolder + languageName + "_user.xml"))
+            var paths = new[] { 
+                dictionaryFolder + languageName + "_user.xml", 
+                dictionaryFolder + languageName + "_se.xml" };
+            
+            var xmlDoc = new XmlDocument();
+            foreach (var path in paths)
             {
-                var userWordDictionary = new XmlDocument();
-                userWordDictionary.Load(dictionaryFolder + languageName + "_user.xml");
-                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
-                if (xmlNodeList != null)
+                if (!File.Exists(path))
                 {
-                    foreach (XmlNode node in xmlNodeList)
-                    {
-                        string word = node.InnerText.Trim().ToLowerInvariant();
-                        if (word.Contains(' '))
-                        {
-                            _userPhraseList.Add(word);
-                        }
-                        else
-                        {
-                            _userWordList.Add(word);
-                        }
-                    }
+                    continue;
                 }
-            }
 
-            if (File.Exists(dictionaryFolder + languageName + "_se.xml"))
-            {
-                var userWordDictionary = new XmlDocument();
-                userWordDictionary.Load(dictionaryFolder + languageName + "_se.xml");
-                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
+                xmlDoc.Load(path);
+                var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("word");
                 if (xmlNodeList != null)
                 {
                     foreach (XmlNode node in xmlNodeList)
@@ -117,34 +103,21 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
 
             // Add names/userdic with "." or " " or "-"
-            foreach (var word in namesMultiWordList)
+            foreach (var word in GetSingleUnifiedCollection(namesMultiWordList))
             {
                 if (word.Contains(PeriodAndDash))
                 {
                     _wordsWithDashesOrPeriods.Add(word);
                 }
             }
-            foreach (string name in _names)
-            {
-                if (name.Contains(PeriodAndDash))
-                {
-                    _wordsWithDashesOrPeriods.Add(name);
-                }
-            }
-            foreach (string word in _userWordList)
-            {
-                if (word.Contains(PeriodAndDash))
-                {
-                    _wordsWithDashesOrPeriods.Add(word);
-                }
-            }
-            foreach (var phrase in _userPhraseList)
-            {
-                if (phrase.Contains(PeriodAndDash))
-                {
-                    _wordsWithDashesOrPeriods.Add(phrase);
-                }
-            }
+        }
+
+        private IEnumerable<string> GetSingleUnifiedCollection(IEnumerable<string> namesMultiWordList)
+        {
+            return namesMultiWordList
+                .Union(_names)
+                .Union(_userWordList)
+                .Union(_userPhraseList);
         }
 
         public Dictionary<string, string> GetUseAlwaysList()
@@ -181,10 +154,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     }
                 }
             }
-            else
-            {
-                xmlDoc.LoadXml("<UseAlways></UseAlways>");
-            }
         }
 
         private string GetUseAlwaysListFileName()
@@ -220,7 +189,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 _useAlwaysList.Remove(oldKey.Trim());
             }
-            _skipAllList = new HashSet<string>(_skipAllList.OrderBy(p => p).ToList());
 
             foreach (KeyValuePair<string, string> kvp in _useAlwaysList)
             {

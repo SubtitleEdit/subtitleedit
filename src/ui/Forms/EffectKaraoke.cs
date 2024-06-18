@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextEffect;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            radioButtonByWordEffect.Text = LanguageSettings.Current.EffectKaraoke.WordEffect;
+            radioButtonByCharEffect.Text = LanguageSettings.Current.EffectKaraoke.CharacterEffect;
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -109,34 +113,25 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
-
             if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.DurationTotalMilliseconds < 0.001)
             {
                 _animation.Add(new Paragraph(_paragraph));
                 return;
             }
 
-            var duration = _paragraph.DurationTotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
-            var partsBase = EffectAnimationPart.MakeBase(_paragraph.Text);
-            var stepsLength = duration / partsBase.Count+1;
-            for (var index = 0; index <= partsBase.Count; index++)
+            var delaySeconds = (double)numericUpDownDelay.Value;
+            var karaokeEffect = new KaraokeEffect(SelectStrategy());
+            _animation.AddRange(karaokeEffect.Transform(_paragraph, panelColor.BackColor, delaySeconds * TimeCode.BaseUnit));
+        }
+
+        private TextEffectBase SelectStrategy()
+        {
+            if (radioButtonByCharEffect.Checked)
             {
-                var list = EffectAnimationPart.MakeEffectKaraoke(partsBase, panelColor.BackColor, index);
-                var text = EffectAnimationPart.ToString(list);
-                var startMilliseconds = index * stepsLength;
-                startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                var endMilliseconds = ((index + 1) * stepsLength) - 1;
-                endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                var start = new TimeCode(startMilliseconds);
-                var end = new TimeCode(endMilliseconds);
-                _animation.Add(new Paragraph(start, end, text));
+                return new KaraokeCharTransform();
             }
 
-            // All remaining time should go to the last paragraph.
-            if (_animation.Count > 0)
-            {
-                _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
-            }
+            return new KaraokeWordTransform();
         }
 
         private void Timer1Tick(object sender, EventArgs e)

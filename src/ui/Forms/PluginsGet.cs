@@ -164,19 +164,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var plugin in _downloadList)
             {
-                var item = new ListViewItem(plugin.Name) { Tag = plugin };
-                item.SubItems.Add(plugin.Description);
-                item.SubItems.Add(plugin.Version.ToString(CultureInfo.InvariantCulture));
-                item.SubItems.Add(plugin.Date);
-
                 if (!search ||
                     plugin.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Version.ToString(CultureInfo.InvariantCulture).Contains(searchText, StringComparison.OrdinalIgnoreCase))
                 {
+                    var item = new ListViewItem(plugin.Name) { Tag = plugin };
+                    item.SubItems.Add(plugin.Description);
+                    item.SubItems.Add(plugin.Version.ToString(CultureInfo.InvariantCulture));
+                    item.SubItems.Add(plugin.Date);
                     listViewGetPlugins.Items.Add(item);
                 }
             }
+
             listViewGetPlugins.EndUpdate();
         }
 
@@ -405,9 +405,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _updatingAllPluginsCount = 0;
                 _updatingAllPlugins = true;
-                foreach (var url in _updateAllListUrls)
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    foreach (var url in _updateAllListUrls)
                     {
                         using (var downloadStream = new MemoryStream())
                         {

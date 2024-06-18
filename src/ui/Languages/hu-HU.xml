@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -2342,8 +2342,6 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <CpsLineLengthStyleCalcNoSpace>Összes számolása a szóközt kivéve</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, szóköz 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Az arab diakritikus jelek figyelmen kívül hagyása</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Az arab diakritikus jelek/közök figyelmen kívül hagyása</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Nincs szóköz vagy írásjel ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nincs szóköz vagy írásjel, csak cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Zene szimbólum</MusicSymbol>
@@ -3147,7 +3145,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Felvételváltozás eltávolítása a kiválasztásból</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend keresése...</SeekSilence>
-    <InsertSubtitleHere>Szúrja be a feliratot ide...</InsertSubtitleHere>
+    <InsertSubtitleHere>Szúrja be a feliratot ide</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

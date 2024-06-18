@@ -684,6 +684,9 @@
         ZW1zBV9zaXplCF92ZXJzaW9uBwAABggIAgAAAAkDAAAAAAAAAAAAAAAPAwAAAAAAAAAGCw==
 </value>
   </data>
+  <metadata name="contextMenuStripVideoFileName.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>929, 92</value>
+  </metadata>
   <metadata name="toolStripWaveControls.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>652, 56</value>
   </metadata>
@@ -730,9 +733,9 @@
   <data name="toolStripButtonLockCenter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACJSURBVEhLYxjioPT6M4aKawVQHvEApAekFydIu/6bofx6
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACJSURBVEhLYxjioPT6M4aKawVQHvEApAekFyeIv/6bofx6
         A5RHPADpAenFCbAZXHk1ACi2nqHi6n44BokhA5INrrpiwFBx/T9Q7DxYHILPg8VAcjBAssEgNsgQdACx
-        DFXdqMFgMGowlDdqMCUG0yxLgwCowEEugEAFEsWFELGAoME0K+gHP2BgAABpZBhW3VPvKwAAAABJRU5E
+        DFXdqMFgMGowlDdqMCUG0yxLgwCowEEugEAFEsWFELGAoME0K+gHP2BgAAAQJxd2BqH7LAAAAABJRU5E
         rkJggg==
 </value>
   </data>
@@ -788,6 +791,6 @@
     <value>676, 92</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>98</value>
+    <value>144</value>
   </metadata>
 </root>

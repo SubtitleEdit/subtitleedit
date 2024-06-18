@@ -31,6 +31,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.textBoxTitle = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.comboBoxFileExtensions = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFileExtension = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeFormat = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -53,7 +55,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(329, 321);
+            this.buttonOK.Location = new System.Drawing.Point(329, 342);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 98;
@@ -65,7 +67,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(410, 321);
+            this.buttonCancel.Location = new System.Drawing.Point(410, 342);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 99;
@@ -78,6 +80,8 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOptions.Controls.Add(this.textBoxTitle);
+            this.groupBoxOptions.Controls.Add(this.label6);
             this.groupBoxOptions.Controls.Add(this.comboBoxFileExtensions);
             this.groupBoxOptions.Controls.Add(this.labelFileExtension);
             this.groupBoxOptions.Controls.Add(this.comboBoxTimeCodeFormat);
@@ -96,9 +100,44 @@
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 12);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(473, 303);
+            this.groupBoxOptions.Size = new System.Drawing.Size(473, 324);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
+            // 
+            // textBoxTitle
+            // 
+            this.textBoxTitle.BackColor = System.Drawing.Color.DarkGray;
+            this.textBoxTitle.CurrentLanguage = "";
+            this.textBoxTitle.CurrentLineIndex = 0;
+            this.textBoxTitle.HideSelection = true;
+            this.textBoxTitle.IsDictionaryDownloaded = true;
+            this.textBoxTitle.IsSpellCheckerInitialized = false;
+            this.textBoxTitle.IsSpellCheckRequested = false;
+            this.textBoxTitle.IsWrongWord = false;
+            this.textBoxTitle.LanguageChanged = false;
+            this.textBoxTitle.Location = new System.Drawing.Point(191, 19);
+            this.textBoxTitle.MaxLength = 32767;
+            this.textBoxTitle.Multiline = true;
+            this.textBoxTitle.Name = "textBoxTitle";
+            this.textBoxTitle.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxTitle.ReadOnly = false;
+            this.textBoxTitle.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxTitle.SelectedText = "";
+            this.textBoxTitle.SelectionLength = 0;
+            this.textBoxTitle.SelectionStart = 0;
+            this.textBoxTitle.Size = new System.Drawing.Size(263, 20);
+            this.textBoxTitle.TabIndex = 1;
+            this.textBoxTitle.TextBoxFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxTitle.UseSystemPasswordChar = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 21);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(27, 13);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "Title";
             // 
             // comboBoxFileExtensions
             // 
@@ -113,11 +152,11 @@
             this.comboBoxFileExtensions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFileExtensions.DropDownWidth = 263;
             this.comboBoxFileExtensions.FormattingEnabled = true;
-            this.comboBoxFileExtensions.Items.AddRange(new object[] {
+            this.comboBoxFileExtensions.Items.AddRange(new string[] {
             ".xml",
             ".ttml",
             ".dfxp"});
-            this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 251);
+            this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 276);
             this.comboBoxFileExtensions.MaxLength = 32767;
             this.comboBoxFileExtensions.Name = "comboBoxFileExtensions";
             this.comboBoxFileExtensions.SelectedIndex = -1;
@@ -130,7 +169,7 @@
             // labelFileExtension
             // 
             this.labelFileExtension.AutoSize = true;
-            this.labelFileExtension.Location = new System.Drawing.Point(6, 254);
+            this.labelFileExtension.Location = new System.Drawing.Point(6, 279);
             this.labelFileExtension.Name = "labelFileExtension";
             this.labelFileExtension.Size = new System.Drawing.Size(71, 13);
             this.labelFileExtension.TabIndex = 22;
@@ -149,7 +188,7 @@
             this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeFormat.DropDownWidth = 263;
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
-            this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
+            this.comboBoxTimeCodeFormat.Items.AddRange(new string[] {
             "Source",
             "Seconds",
             "Milliseconds",
@@ -159,7 +198,7 @@
             "hh:mm:ss.ms-two-digits",
             "hh:mm:ss,ms",
             "Frames"});
-            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 214);
+            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 239);
             this.comboBoxTimeCodeFormat.MaxLength = 32767;
             this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
             this.comboBoxTimeCodeFormat.SelectedIndex = -1;
@@ -172,7 +211,7 @@
             // labelTimeCode
             // 
             this.labelTimeCode.AutoSize = true;
-            this.labelTimeCode.Location = new System.Drawing.Point(6, 217);
+            this.labelTimeCode.Location = new System.Drawing.Point(6, 242);
             this.labelTimeCode.Name = "labelTimeCode";
             this.labelTimeCode.Size = new System.Drawing.Size(89, 13);
             this.labelTimeCode.TabIndex = 20;
@@ -191,11 +230,11 @@
             this.comboBoxFrameRateMultiplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxFrameRateMultiplier.DropDownWidth = 263;
             this.comboBoxFrameRateMultiplier.FormattingEnabled = true;
-            this.comboBoxFrameRateMultiplier.Items.AddRange(new object[] {
+            this.comboBoxFrameRateMultiplier.Items.AddRange(new string[] {
             "999 1000",
             "1 1",
             "1000 1001"});
-            this.comboBoxFrameRateMultiplier.Location = new System.Drawing.Point(191, 81);
+            this.comboBoxFrameRateMultiplier.Location = new System.Drawing.Point(191, 106);
             this.comboBoxFrameRateMultiplier.MaxLength = 32767;
             this.comboBoxFrameRateMultiplier.Name = "comboBoxFrameRateMultiplier";
             this.comboBoxFrameRateMultiplier.SelectedIndex = -1;
@@ -219,7 +258,7 @@
             this.comboBoxDefaultRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDefaultRegion.DropDownWidth = 263;
             this.comboBoxDefaultRegion.FormattingEnabled = true;
-            this.comboBoxDefaultRegion.Location = new System.Drawing.Point(191, 175);
+            this.comboBoxDefaultRegion.Location = new System.Drawing.Point(191, 200);
             this.comboBoxDefaultRegion.MaxLength = 32767;
             this.comboBoxDefaultRegion.Name = "comboBoxDefaultRegion";
             this.comboBoxDefaultRegion.SelectedIndex = -1;
@@ -232,7 +271,7 @@
             // labelDefaultRegion
             // 
             this.labelDefaultRegion.AutoSize = true;
-            this.labelDefaultRegion.Location = new System.Drawing.Point(6, 178);
+            this.labelDefaultRegion.Location = new System.Drawing.Point(6, 203);
             this.labelDefaultRegion.Name = "labelDefaultRegion";
             this.labelDefaultRegion.Size = new System.Drawing.Size(73, 13);
             this.labelDefaultRegion.TabIndex = 12;
@@ -251,12 +290,12 @@
             this.comboBoxDropMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDropMode.DropDownWidth = 263;
             this.comboBoxDropMode.FormattingEnabled = true;
-            this.comboBoxDropMode.Items.AddRange(new object[] {
+            this.comboBoxDropMode.Items.AddRange(new string[] {
             "[N/A]",
             "dropNTSC",
             "dropPAL",
             "nonDrop"});
-            this.comboBoxDropMode.Location = new System.Drawing.Point(191, 108);
+            this.comboBoxDropMode.Location = new System.Drawing.Point(191, 133);
             this.comboBoxDropMode.MaxLength = 32767;
             this.comboBoxDropMode.Name = "comboBoxDropMode";
             this.comboBoxDropMode.SelectedIndex = -1;
@@ -269,7 +308,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 111);
+            this.label4.Location = new System.Drawing.Point(6, 136);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 13);
             this.label4.TabIndex = 10;
@@ -278,7 +317,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 84);
+            this.label3.Location = new System.Drawing.Point(6, 109);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
             this.label3.TabIndex = 8;
@@ -297,7 +336,7 @@
             this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxFrameRate.DropDownWidth = 263;
             this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(191, 54);
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(191, 79);
             this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.SelectedIndex = -1;
@@ -311,7 +350,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 57);
+            this.label2.Location = new System.Drawing.Point(6, 82);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 6;
@@ -330,12 +369,12 @@
             this.comboBoxTimeBase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeBase.DropDownWidth = 263;
             this.comboBoxTimeBase.FormattingEnabled = true;
-            this.comboBoxTimeBase.Items.AddRange(new object[] {
+            this.comboBoxTimeBase.Items.AddRange(new string[] {
             "[N/A]",
             "media",
             "smpte",
             "clock"});
-            this.comboBoxTimeBase.Location = new System.Drawing.Point(191, 27);
+            this.comboBoxTimeBase.Location = new System.Drawing.Point(191, 52);
             this.comboBoxTimeBase.MaxLength = 32767;
             this.comboBoxTimeBase.Name = "comboBoxTimeBase";
             this.comboBoxTimeBase.SelectedIndex = -1;
@@ -348,7 +387,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 30);
+            this.label1.Location = new System.Drawing.Point(6, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 4;
@@ -367,7 +406,7 @@
             this.comboBoxDefaultStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDefaultStyle.DropDownWidth = 263;
             this.comboBoxDefaultStyle.FormattingEnabled = true;
-            this.comboBoxDefaultStyle.Location = new System.Drawing.Point(191, 148);
+            this.comboBoxDefaultStyle.Location = new System.Drawing.Point(191, 173);
             this.comboBoxDefaultStyle.MaxLength = 32767;
             this.comboBoxDefaultStyle.Name = "comboBoxDefaultStyle";
             this.comboBoxDefaultStyle.SelectedIndex = -1;
@@ -380,17 +419,17 @@
             // labelWrapStyle
             // 
             this.labelWrapStyle.AutoSize = true;
-            this.labelWrapStyle.Location = new System.Drawing.Point(6, 151);
+            this.labelWrapStyle.Location = new System.Drawing.Point(6, 176);
             this.labelWrapStyle.Name = "labelWrapStyle";
             this.labelWrapStyle.Size = new System.Drawing.Size(65, 13);
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
             // 
-            // TimedTextPropertiesIms11
+            // TimedTextPropertiesImsc11
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 354);
+            this.ClientSize = new System.Drawing.Size(497, 375);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxOptions);
@@ -398,7 +437,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "TimedTextPropertiesIms11";
+            this.Name = "TimedTextPropertiesImsc11";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -431,5 +470,7 @@
         private System.Windows.Forms.Label labelTimeCode;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFileExtensions;
         private System.Windows.Forms.Label labelFileExtension;
+        private Controls.SETextBox textBoxTitle;
+        private System.Windows.Forms.Label label6;
     }
 }

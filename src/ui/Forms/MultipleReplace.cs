@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Controls.Adapters;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -207,7 +208,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) : null;
+            // remove regex context menu from find text box
+            textBoxFind.ContextMenuStrip = null;
+
+            // only get the regex context menu if we select the regex option
+            if (sender == radioButtonRegEx && radioButtonRegEx.Checked)
+            {
+                textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(new NativeTextBoxAdapter(textBoxFind));
+            }
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
@@ -562,18 +570,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonReplacesSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void buttonReplacesInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1438,18 +1440,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewRules.Items)
-            {
-                item.Checked = true;
-            }
+            listViewRules.CheckAll();
         }
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewRules.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewRules.InvertCheck();
         }
 
         private void ContextMenuStripListViewFixesOpening(object sender, System.ComponentModel.CancelEventArgs e)

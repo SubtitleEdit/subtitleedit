@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -2324,7 +2324,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Traži tišinu...</SeekSilence>
-    <InsertSubtitleHere>Umetni titl ovdje...</InsertSubtitleHere>
+    <InsertSubtitleHere>Umetni titl ovdje</InsertSubtitleHere>
     <CharsSecX />
     <WordsMinX />
   </Waveform>

@@ -659,7 +659,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 lines = Utilities.AutoBreakLine(text).SplitToLines();
             }
 
-            string line1 = string.Empty;
+            var line1 = string.Empty;
             string line2;
             if (lines.Count > 1)
             {
@@ -695,15 +695,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static byte[] GetTextAsBytes(string text, int languageId)
         {
             var buffer = new byte[51];
-            int skipCount = 0;
-            for (int i = 0; i < buffer.Length; i++)
+            var skipCount = 0;
+            for (var i = 0; i < buffer.Length; i++)
             {
                 buffer[i] = 0x7F;
             }
 
             if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
             {
-                for (int i = 0; i < buffer.Length; i++)
+                for (var i = 0; i < buffer.Length; i++)
                 {
                     buffer[i] = 0;
                 }
@@ -718,23 +718,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var encoding = Encoding.Default;
-            int index = 0;
+            var index = 0;
 
             if (languageId == LanguageIdHebrew)
             {
                 text = ReverseAnsi(text);
             }
 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 var current = text[i];
                 if (skipCount > 0)
                 {
                     skipCount--;
                 }
+                else if (index >= 51)
+                {
+                    SeLogger.Error($"Cavena890: Text will be truncated as line is longer than 51 ({text.Length}): {text}" );
+                    skipCount = text.Length;
+                }
                 else if (languageId == LanguageIdHebrew)
                 {
-                    int letterIndex = HebrewLetters.IndexOf(current.ToString(CultureInfo.InvariantCulture));
+                    var letterIndex = HebrewLetters.IndexOf(current.ToString(CultureInfo.InvariantCulture));
                     if (letterIndex >= 0)
                     {
                         buffer[index] = (byte)HebrewCodes[letterIndex];
@@ -753,6 +758,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         buffer[index] = encoding.GetBytes(new[] { current })[0];
                     }
+
                     index++;
                 }
                 else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
@@ -1312,6 +1318,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             buffer[index] = encoding.GetBytes(new[] { current })[0];
                         }
+
                         index++;
                     }
                 }
@@ -1340,6 +1347,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ansi.Append(ch);
                 }
             }
+
             if (ansi.Length > 0)
             {
                 sb.Append(Utilities.ReverseString(ansi.ToString()));
@@ -1878,12 +1886,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(s);
                 }
             }
+
             if (fontColorOn)
             {
                 sb.Append("</font>"); // white
             }
+
             return sb.ToString();
         }
-
     }
 }

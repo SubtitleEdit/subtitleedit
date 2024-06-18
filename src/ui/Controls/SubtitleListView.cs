@@ -394,8 +394,8 @@ namespace Nikse.SubtitleEdit.Controls
             _setLastColumnWidthTimer.Stop();
             if (Columns.Count > 0)
             {
-                int width = 0;
-                for (int i = 0; i < Columns.Count - 1; i++)
+                var width = 0;
+                for (var i = 0; i < Columns.Count - 1; i++)
                 {
                     width += Columns[i].Width;
                 }
@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var stringFormat = new StringFormat
             {
-                FormatFlags = (StringFormatFlags)0,
+                FormatFlags = 0,
                 Alignment = StringAlignment.Near,
                 LineAlignment = StringAlignment.Near,
                 HotkeyPrefix = HotkeyPrefix.None,
@@ -2383,6 +2383,18 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             EndUpdate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                _setLastColumnWidthTimer?.Dispose();
+                _syntaxColorLineTimer?.Dispose();
+                _setStartAndDurationTimer?.Dispose();
+            }
         }
     }
 }

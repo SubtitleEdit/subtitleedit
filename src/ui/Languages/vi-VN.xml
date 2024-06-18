@@ -2,7 +2,7 @@
 <Language Name="Vietnamese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Ghé thăm www.nikse.dk của chủ phần mềm - Nikse
 thường xuyên để biết thêm thông tin và tải về phiên bản mới nhất.
 Rất hân hạnh chào đón các bạn :))
@@ -2257,8 +2257,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <CpsLineLengthStyleCalcNoSpace>Đếm tất cả ngoại trừ dấu cách</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, dấu cách 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Bỏ qua các dấu phụ tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Bỏ qua dấu/dấu cách tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Kí hiệu Âm nhạc</MusicSymbol>
     <MusicSymbolsReplace>Các ký hiệu âm nhạc cần thay thế (phân tách bằng dấu phẩy)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Sửa lỗi OCR phổ biến - cũng sử dụng quy tắc hardcoded</FixCommonOcrErrorsUseHardcodedRules>
@@ -3013,7 +3011,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <RemoveShotChangesFromSelection>Xóa các scene change khỏi lựa chọn</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Tự tạo time...</GuessTimeCodes>
     <SeekSilence>Tìm vùng im lặng...</SeekSilence>
-    <InsertSubtitleHere>Chèn phụ đề ở đây...</InsertSubtitleHere>
+    <InsertSubtitleHere>Chèn phụ đề ở đây</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

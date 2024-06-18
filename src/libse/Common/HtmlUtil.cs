@@ -588,6 +588,60 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        public static bool IsTextFormattable(in string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            var len = text.Length;
+            var index = 0;
+            while (index < len && text[index] == '<')
+            {
+                index = text.IndexOf('>', index + 1);
+                if (index < 0) break;
+                index += 1;
+            }
+
+            // buggy text of no closing present
+            index = Math.Max(0, index);
+
+            var fromLenIdx = len - 1;
+            while (fromLenIdx >= 0 && text[fromLenIdx] == '>')
+            {
+                fromLenIdx = text.LastIndexOf('<', fromLenIdx);
+                if (fromLenIdx < 0) break;
+                fromLenIdx--;
+            }
+
+            fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len - 1;
+            
+            // no formattable text in between
+            if (fromLenIdx < index)
+            {
+                return false;
+            }
+
+            for (var i = index; i <= fromLenIdx; i++)
+            {
+                if (char.IsLetterOrDigit(text[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly string[] BeginTagVariations = { "< i >", "< i>", "<i >", "< I >", "< I>", "<I >", "<i<", "<I<", "<I>" };
+
+        private static readonly string[] EndTagVariations =
+        {
+            "< / i >", "< /i>", "</ i>", "< /i >", "</i >", "</ i >",
+            "< / i>", "</I>", "< / I >", "< /I>", "</ I>", "< /I >", "</I >", "</ I >", "< / I>", "</i<", "</I<", "</I>"
+        };
+        
         public static string FixInvalidItalicTags(string input)
         {
             var text = input;
@@ -605,36 +659,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             const string beginTag = "<i>";
             const string endTag = "</i>";
+            foreach (var beginTagVariation in BeginTagVariations)
+            {
+                text = text.Replace(beginTagVariation, beginTag);
+            }
 
-            text = text.Replace("< i >", beginTag);
-            text = text.Replace("< i>", beginTag);
-            text = text.Replace("<i >", beginTag);
-            text = text.Replace("< I >", beginTag);
-            text = text.Replace("< I>", beginTag);
-            text = text.Replace("<I >", beginTag);
-            text = text.Replace("<i<", beginTag);
-            text = text.Replace("<I<", beginTag);
-
-            text = text.Replace("< / i >", endTag);
-            text = text.Replace("< /i>", endTag);
-            text = text.Replace("</ i>", endTag);
-            text = text.Replace("< /i >", endTag);
-            text = text.Replace("</i >", endTag);
-            text = text.Replace("</ i >", endTag);
-            text = text.Replace("< / i>", endTag);
-            text = text.Replace("</I>", endTag);
-            text = text.Replace("< / I >", endTag);
-            text = text.Replace("< /I>", endTag);
-            text = text.Replace("</ I>", endTag);
-            text = text.Replace("< /I >", endTag);
-            text = text.Replace("</I >", endTag);
-            text = text.Replace("</ I >", endTag);
-            text = text.Replace("< / I>", endTag);
-            text = text.Replace("</i<", endTag);
-            text = text.Replace("</I<", endTag);
-
-            text = text.Replace("<I>", beginTag);
-            text = text.Replace("</I>", endTag);
+            foreach (var endTagVariation in EndTagVariations)
+            {
+                text = text.Replace(endTagVariation, endTag);
+            }
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
@@ -739,21 +772,44 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 1 && italicEndTagCount == 0)
             {
-                var lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                var lines = text.SplitToLines();
+                var sc = StringComparison.Ordinal;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    var line = lines[i];
+                    var italicIndex = line.LastIndexOf(beginTag, StringComparison.Ordinal);
+                    
+                    // no italic in current 'i' line, try next
+                    if (italicIndex < 0)
+                    {
+                        continue;
+                    }
 
-                if (text.StartsWith(beginTag, StringComparison.Ordinal) || text.Contains(": <i>"))
-                {
-                    text += endTag;
+                    // try earlier insert if possible e.g: <b><i>foobar</b> => <b><i>foobar</i></b>
+                    lines[i] = IsTextFormattable(line.Substring(italicIndex + 3))
+                        ? line.Insert(CalculateEarlyInsertIndex(line), endTag)
+                        : line.Replace(beginTag, string.Empty);
+
+                    break; // break as soon as we reach here since italicBeginTagCount == 1
+
+                    int CalculateEarlyInsertIndex(string s)
+                    {
+                        var len = s.Length;
+                        var lastClosingTagIndex = s.LastIndexOf("</", len - 1, len - italicIndex - 3, sc);
+                        while (lastClosingTagIndex > italicIndex + 3)
+                        {
+                            var tempClosingIdx = s.LastIndexOf("</", lastClosingTagIndex, lastClosingTagIndex - italicIndex - 3, sc);
+                            if (tempClosingIdx < 0) break;
+                            lastClosingTagIndex = tempClosingIdx;
+                        }
+                        // try finding first closing tag index and insert the new closing there
+                        // to avoid having text with closed tags like <b><i>foo</b></i>
+                        return lastClosingTagIndex > italicIndex ? lastClosingTagIndex : len;
+                    }
                 }
-                else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
-                {
-                    text += endTag;
-                }
-                else
-                {
-                    text = text.Replace(beginTag, string.Empty);
-                }
+                
+                // reconstruct the text from lines
+                text = string.Join(Environment.NewLine, lines);
             }
 
             if (italicBeginTagCount == 0 && italicEndTagCount == 1)
@@ -1332,5 +1388,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
             return text;
         }
+        
+        public static string GetClosingPair(string tag)
+        {
+            switch (tag)
+            {
+                case "<i>" : return "</i>";
+                case "<b>" : return "</b>";
+                case "<u>" : return "</u>";
+            }
+            return tag.StartsWith("<font ", StringComparison.Ordinal) ? "</font>" : string.Empty;
+        }
+        
+        public static char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
+
+        public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
+
+        public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
     }
 }

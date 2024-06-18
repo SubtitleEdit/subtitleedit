@@ -2,7 +2,7 @@
 <Language Name="Español (España)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Traducido por m2s y paconaranjo</TranslatedBy>
     <CultureName>es-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -2335,8 +2335,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <CpsLineLengthStyleCalcNoSpace>Contar todo excepto los espacios</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latín 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latín 0.5, espacios 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorar diacríticos árabes</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorar diacríticos árabes/espacios</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sin espacios ni signos de puntuación ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sin espacios ni puntuación, solo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolos musicales</MusicSymbol>
@@ -3141,7 +3139,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <RemoveShotChangesFromSelection>Eliminar cambios de escena de la selección</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>
-    <InsertSubtitleHere>Insertar subtítulo aquí...</InsertSubtitleHere>
+    <InsertSubtitleHere>Insertar subtítulo aquí</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>

@@ -1,10 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate.Service;
+using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,8 +16,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
@@ -145,7 +144,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.SelectedIndex = GeneralSection;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
-            checkBoxTBpen.Checked = gs.ShowToolbarOpen;
+            checkBoxTBOpen.Checked = gs.ShowToolbarOpen;
+            checkBoxTBOpenVideo.Checked = gs.ShowToolbarOpenVideo;
             checkBoxTBSave.Checked = gs.ShowToolbarSave;
             checkBoxTBSaveAs.Checked = gs.ShowToolbarSaveAs;
             checkBoxTBFind.Checked = gs.ShowToolbarFind;
@@ -273,12 +273,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
 
-            var videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
-            if (videoPlayerPreviewFontSizeIndex >= 0 && videoPlayerPreviewFontSizeIndex < comboBoxlVideoPlayerPreviewFontSize.Items.Count)
+            comboBoxlVideoPlayerPreviewFontSize.Items.Clear();
+            for (var i = 8; i <= 120; i++)
             {
-                comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = videoPlayerPreviewFontSizeIndex;
+                comboBoxlVideoPlayerPreviewFontSize.Items.Add(i.ToString());
             }
-            else
+            comboBoxlVideoPlayerPreviewFontSize.Text = gs.VideoPlayerPreviewFontSize.ToString();
+            if (string.IsNullOrEmpty(comboBoxlVideoPlayerPreviewFontSize.Text))
             {
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
@@ -405,6 +406,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
+            labelTBOpenVideo.Text = LanguageSettings.Current.Main.Menu.Video.OpenVideo.Trim('.');
             labelTBSave.Text = language.Save;
             labelTBSaveAs.Text = language.SaveAs;
             labelTBFind.Text = language.Find;
@@ -421,7 +423,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBHelp.Text = language.Help;
             labelToolbarIconTheme.Text = language.Theme;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
-            checkBoxTBpen.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBOpen.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBOpenVideo.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSave.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSaveAs.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBFind.Text = LanguageSettings.Current.General.Visible;
@@ -443,11 +446,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
             pictureBoxTBOpen.Left = labelTBOpen.Left;
-            checkBoxTBpen.Left = labelTBOpen.Left;
-            checkBoxTBpen.TabIndex = tbTabIndex;
+            checkBoxTBOpen.Left = labelTBOpen.Left;
+            checkBoxTBOpen.TabIndex = tbTabIndex;
             tbTabIndex++;
 
-            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxTBpen.Right) + 18;
+            labelTBOpenVideo.Left = Math.Max(labelTBOpen.Right, checkBoxTBOpen.Right) + 18;
+            pictureBoxTBOpenVideo.Left = labelTBOpenVideo.Left;
+            checkBoxTBOpenVideo.Left = labelTBOpenVideo.Left;
+            checkBoxTBOpenVideo.TabIndex = tbTabIndex;
+            tbTabIndex++;
+
+            labelTBSave.Left = Math.Max(labelTBOpenVideo.Right, checkBoxTBOpenVideo.Right) + 18;
             pictureBoxTBSave.Left = labelTBSave.Left;
             checkBoxTBSave.Left = labelTBSave.Left;
             checkBoxTBSave.TabIndex = tbTabIndex;
@@ -1692,6 +1701,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Vosk"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextVosk));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Whisper"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextWhisper));
+            AddNode(videoNode, LanguageSettings.Current.TextToSpeech.Title, nameof(Configuration.Settings.Shortcuts.MainVideoTextToSpeech));
             AddNode(videoNode, language.AudioExtractSelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoAudioExtractAudioSelectedLines));
             AddNode(videoNode, language.VideoToggleContrast, nameof(Configuration.Settings.Shortcuts.MainVideoToggleContrast));
             AddNode(videoNode, language.VideoToggleBrightness, nameof(Configuration.Settings.Shortcuts.MainVideoToggleBrightness));
@@ -1834,6 +1844,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var createAndAdjustNode = new ShortcutNode(LanguageSettings.Current.Main.VideoControls.CreateAndAdjust);
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos));
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPositionNoTextBoxFocus, nameof(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus));
+            AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPositionMax, nameof(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosMax));
             AddNode(createAndAdjustNode, language.MainCreateStartDownEndUp, nameof(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.SetStartTime, nameof(Configuration.Settings.Shortcuts.MainCreateSetStart));
             AddNode(createAndAdjustNode, language.AdjustSetStartTimeKeepDuration, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration));
@@ -2069,13 +2080,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image openVideo, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
                                Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
             pictureBoxPreview1.Image = (Image)newFile.Clone();
             pictureBoxTBOpen.Image = (Image)openFile.Clone();
+            pictureBoxTBOpenVideo.Image = (Image)openVideo.Clone();
             pictureBoxPreview2.Image = (Image)openFile.Clone();
             pictureBoxTBSave.Image = (Image)saveFile.Clone();
             pictureBoxPreview3.Image = (Image)saveFile.Clone();
@@ -2098,7 +2110,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var gs = Configuration.Settings.General;
 
             gs.ShowToolbarNew = checkBoxToolbarNew.Checked;
-            gs.ShowToolbarOpen = checkBoxTBpen.Checked;
+            gs.ShowToolbarOpen = checkBoxTBOpen.Checked;
+            gs.ShowToolbarOpenVideo = checkBoxTBOpenVideo.Checked;
             gs.ShowToolbarSave = checkBoxTBSave.Checked;
             gs.ShowToolbarSaveAs = checkBoxTBSaveAs.Checked;
             gs.ShowToolbarFind = checkBoxTBFind.Checked;
@@ -3009,7 +3022,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             openFileDialogFFmpeg.Title = LanguageSettings.Current.Settings.WaveformBrowseToVLC;
             if (Configuration.IsRunningOnWindows)
             {
-                openFileDialogFFmpeg.Filter = $"{LanguageSettings.Current.Settings.VlcMediaPlayer} (vlc.exe)|vlc.exe";
+                openFileDialogFFmpeg.Filter = $"{LanguageSettings.Current.Settings.VlcMediaPlayer} (vlc.exe)|vlc.exe|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
@@ -3104,7 +3117,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(MicrosoftTranslationService.SignUpUrl);
+            UiUtil.OpenUrl("https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource");
         }
 
         private void ValidateShortcut(object sender, EventArgs e)
@@ -3161,6 +3174,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             buttonMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             panelMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            labelMarginVertical.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            numericUpDownMarginVertical.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void checkBoxMpvHandlesPreviewText_CheckedChanged(object sender, EventArgs e)
@@ -3173,6 +3188,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             buttonMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             panelMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            labelMarginVertical.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            numericUpDownMarginVertical.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void buttonClearShortcut_Click(object sender, EventArgs e)
@@ -3329,6 +3346,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
+            ResetApplied = true;
             var result = MessageBox.Show(LanguageSettings.Current.Settings.RestoreDefaultSettingsMsg, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
@@ -3338,6 +3356,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 Init();
             }
         }
+
+        public bool ResetApplied { get; private set; }
 
         private void toolStripMenuItemShortcutsCollapse_Click(object sender, EventArgs e)
         {

@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -2527,8 +2527,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <CpsLineLengthStyleCalcNoSpace>Alle tekens behalve spaties meetellen</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0,5, spatie 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Arabische diakritische tekens negeren</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Arabische diakritische tekens/spaties negeren</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Geen spaties of interpunctie ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Geen spaties of interpunctie, alleen voor CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
@@ -3382,7 +3380,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Geselecteerde beeldwissels verwijderen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
-    <InsertSubtitleHere>Ondertitel hier invoegen...</InsertSubtitleHere>
+    <InsertSubtitleHere>Ondertitel hier invoegen</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

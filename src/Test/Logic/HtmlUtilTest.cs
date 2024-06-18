@@ -68,5 +68,22 @@ namespace Test.Logic
 
             Assert.AreEqual("Hallo!", c);
         }
+
+        [TestMethod]
+        public void IsTextFormattableFalse()
+        {
+            Assert.IsFalse(HtmlUtil.IsTextFormattable("<i></i>"));
+            Assert.IsFalse(HtmlUtil.IsTextFormattable("<i>!?."));
+            Assert.IsFalse(HtmlUtil.IsTextFormattable("!?.</i>"));
+        }
+
+        [TestMethod]
+        public void IsTextFormattableTrue()
+        {
+            Assert.IsTrue(HtmlUtil.IsTextFormattable("<i>a</i>"));
+            Assert.IsTrue(HtmlUtil.IsTextFormattable("<u>1</u>"));
+            Assert.IsTrue(HtmlUtil.IsTextFormattable("<i>A</i>"));
+            Assert.IsTrue(HtmlUtil.IsTextFormattable("</i")); // invalid closing tag
+        }
     }
 }

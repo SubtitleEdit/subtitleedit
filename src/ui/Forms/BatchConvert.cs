@@ -413,6 +413,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxDrawing.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionDrawing;
             labelSource.Text = LanguageSettings.Current.GoogleTranslate.From;
             labelTarget.Text = LanguageSettings.Current.GoogleTranslate.To;
+            groupBoxAutoTranslate.Text = LanguageSettings.Current.Main.VideoControls.AutoTranslate;
+
+            labelSource.Left = comboBoxSource.Left - labelSource.Width - 5;
+            labelTarget.Left = comboBoxTarget.Left - labelTarget.Width - 5;
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
@@ -1370,7 +1374,10 @@ namespace Nikse.SubtitleEdit.Forms
                     var isMatroska = false;
                     var isTs = false;
                     var isMp4 = false;
-                    if (fromFormat == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
+                    if (fromFormat == null &&
+                        (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) ||
+                        fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase)) &&
+                        FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
@@ -1757,7 +1764,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                         var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
                                         var dummy = 0;
-                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, string.Empty, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<string>(), null, true, null, null, null, preExt);
                                         tsConvertedCount++;
                                     }
                                 }
@@ -1809,7 +1816,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         binaryParagraphs);
                                     ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
 
-                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, string.Empty, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<string>(), null, true, null, null, null, preExt);
                                     tsConvertedCount++;
                                 }
                             }
@@ -2997,7 +3004,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var binaryParagraphs = new List<IBinaryParagraphWithPosition>();
                     if (p.FileName != null && !p.Subtitle.Paragraphs.Any(s => !string.IsNullOrEmpty(s.Text)) &&
-                        p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                        (p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) ||
+                        p.FileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase)) &&
                         FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
                         binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraphWithPosition>().ToList();
@@ -3021,7 +3029,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, p.TargetFileName, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, null, _preprocessingSettings, _cancellationTokenSource.Token);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(p.FileName), dir, p.TargetFileName, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, null, _preprocessingSettings, _cancellationTokenSource.Token);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
@@ -3674,7 +3682,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             AddFromSearch(fileName, fi, "VobSub");
                         }
-                        else if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
+                        else if ((ext == ".sup" || ext == ".sub") && FileUtil.IsBluRaySup(fileName))
                         {
                             AddFromSearch(fileName, fi, "Blu-ray");
                         }
@@ -3973,18 +3981,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = true;
-            }
+            listViewConvertOptions.CheckAll();
         }
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewConvertOptions.InvertCheck();
         }
 
         private void listViewInputFiles_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -3992,6 +3994,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_converting)
             {
                 return;
+            }
+
+            for (var i = 0; i < listViewInputFiles.Columns.Count; i++)
+            {
+                ListViewSorter.SetSortArrow(listViewInputFiles.Columns[i], SortOrder.None);
             }
 
             if (!(listViewInputFiles.ListViewItemSorter is ListViewSorter sorter))
@@ -4016,7 +4023,10 @@ namespace Nikse.SubtitleEdit.Forms
                 sorter.IsNumber = false;
                 sorter.IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex;
             }
+
             listViewInputFiles.Sort();
+
+            ListViewSorter.SetSortArrow(listViewInputFiles.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
         }
 
         private void buttonBrowseEncoding_Click(object sender, EventArgs e)

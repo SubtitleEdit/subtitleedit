@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -2933,7 +2933,7 @@ Zachovat změny?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Odebrat změnu scén z výběru</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odhadnout časové kódy...</GuessTimeCodes>
     <SeekSilence>Hledat ticho...</SeekSilence>
-    <InsertSubtitleHere>Vložit titulek sem...</InsertSubtitleHere>
+    <InsertSubtitleHere>Vložit titulek sem</InsertSubtitleHere>
     <CharsSecX>ZZS: {0:0.00}</CharsSecX>
     <WordsMinX>SZM: {0:0.00}</WordsMinX>
   </Waveform>

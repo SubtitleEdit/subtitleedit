@@ -2,7 +2,7 @@
 <Language Name="Slovenščina">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Prevod: Jadran Rudec, Pošta: jrudec@gmail.com</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -2360,8 +2360,6 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <CpsLineLengthStyleCalcNoSpace>Preštej vse razen presledka</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latinica 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latinica 0,5, presledek 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Prezri arabske diakritične znake</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Prezri arabske diakritične znake/presledek</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Brez presledkov ali ločil ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Brez presledkov ali ločil, samo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Glasbeni simbol</MusicSymbol>
@@ -3171,7 +3169,7 @@ Nastavitev pisave za podnapise se običajno izvaja v predvajalniku videoposnetko
     <RemoveShotChangesFromSelection>Odstrani spremembo posnetka iz izbora</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Ugani časovne kode...</GuessTimeCodes>
     <SeekSilence>Išči tišino...</SeekSilence>
-    <InsertSubtitleHere>Tukaj vstavi podnapis...</InsertSubtitleHere>
+    <InsertSubtitleHere>Tukaj vstavi podnapis</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

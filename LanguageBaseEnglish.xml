@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.4</Version>
+    <Version>4.0.6</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -18,6 +18,7 @@
     <Preview>Preview</Preview>
     <ShowPreview>Show preview</ShowPreview>
     <HidePreview>Hide preview</HidePreview>
+    <SubtitleFile>Subtitle file</SubtitleFile>
     <SubtitleFiles>Subtitle files</SubtitleFiles>
     <AllFiles>All files</AllFiles>
     <VideoFiles>Video files</VideoFiles>
@@ -197,9 +198,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Engine>Engine</Engine>
     <VoskWebsite>Vosk website</VoskWebsite>
     <WhisperWebsite>Whisper website</WhisperWebsite>
-    <WhisperNotFound>Whisper not found.
-
-Read more info (web)?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
@@ -216,12 +214,14 @@ Read more info (web)?</WhisperNotFound>
     <BatchMode>Batch mode</BatchMode>
     <KeepPartialTranscription>Keep partial transcription</KeepPartialTranscription>
     <TranslateToEnglish>Translate to English</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max. chars per subtitle line</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS and cuDNN libs for Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>No text found!</NoTextFound>
+    <FixCasing>Fix casing</FixCasing>
+    <AddPeriods>Add periods</AddPeriods>
+    <FixShortDuration>Fix short duration</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -733,6 +733,8 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <ChooseColor>Choose color:</ChooseColor>
     <TotalSeconds>Total seconds:</TotalSeconds>
     <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
+    <WordEffect>Word effect</WordEffect>
+    <CharacterEffect>Character effect</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typewriter effect</Title>
@@ -1019,16 +1021,22 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <AlignRight>Align right</AlignRight>
     <GetStartPosition>Get start position</GetStartPosition>
     <GetEndPosition>Get end position</GetEndPosition>
+    <UseSource>Use source</UseSource>
+    <UseSourceResolution>Use source resolution</UseSourceResolution>
+    <OutputSettings>Output file/folder...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generate video with added/removed embedded subtitles</Title>
     <InputVideoFile>Input video file</InputVideoFile>
     <SubtitlesX>Subtitles ({0})</SubtitlesX>
     <SetLanguage>Set language...</SetLanguage>
+    <LanguageAndTitle>Language/title</LanguageAndTitle>
     <ToggleForced>Toggle forced</ToggleForced>
     <ToggleDefault>Toggle default</ToggleDefault>
     <Default>Default</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generated with embedded subtitles</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Delete input video file after "Generate"</DeleteInputVideo>
+    <OutputFileNameSettings>Output file name settings...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -1055,15 +1063,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <To>To:</To>
     <Translate>Translate</Translate>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
     <PoweredByX>Powered by {0}</PoweredByX>
-    <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
-
-Go to "Options -&gt; Settings -&gt; Auto-translate" to enter your key.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
-To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter your Google translate API key.</GoogleNoApiKeyWarning>
-    <Service>Service:</Service>
     <LineMergeHandling>Line merge:</LineMergeHandling>
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
     <ProcessorSentence>Merge sentences</ProcessorSentence>
@@ -1084,6 +1084,13 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
     <XRequiresAnApiKey>"{0}" requires an API key.</XRequiresAnApiKey>
     <ReadMore>Read more?</ReadMore>
     <Formality>Formality</Formality>
+    <TranslateCurrentLine>Translate only current line</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Re-translate current line</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Split/merge handling</MergeSplitStrategy>
+    <Delay>Delay between server calls</Delay>
+    <MaxBytes>Maximum bytes in each server call</MaxBytes>
+    <PromptX>Prompt for {0}</PromptX>
+    <TranslateLinesSeparately>Translate each line separately</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -1448,6 +1455,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Text to speech and add to video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
       </Video>
@@ -1605,6 +1613,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
         <ExtractAudio>Extract audio...</ExtractAudio>
+        <MediaInfo>Media information</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1641,6 +1650,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
       <StillTypingAutoContinueStopped>Still typing... auto continue stopped</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Insert new subtitle at video pos (as long as possible)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Play from just before text</PlayFromJustBeforeText>
       <PlayFromBeginning>Play from beginning of video</PlayFromBeginning>
@@ -2123,6 +2133,10 @@ Download and continue?</VideoFromUrlRequirements>
     <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
+    <CpsLessThan>CPS less than</CpsLessThan>
+    <CpsGreaterThan>CPS greater than</CpsGreaterThan>
+    <LengthLessThan>Length less than</LengthLessThan>
+    <LengthGreaterThan>Length greater than</LengthGreaterThan>
     <ExactlyOneLine>Exactly one line</ExactlyOneLine>
     <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
@@ -2528,8 +2542,8 @@ can edit in same subtitle file (collaboration)</Information>
     <CpsLineLengthStyleCalcNoSpace>Count all except space</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignore Arabic diacritics</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignore Arabic diacritics/space</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Include composition characters</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Include composition characters, not space</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>No space or punctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>No space or punctuation, cps only</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Music symbol</MusicSymbol>
@@ -3149,6 +3163,25 @@ Continue?</RestoreDefaultSettingsMsg>
     <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
     <ApplySync>Apply</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Text to speech</Title>
+    <Voice>Voice</Voice>
+    <TestVoice>Test voice</TestVoice>
+    <DefaultVoice>Default voice</DefaultVoice>
+    <AddAudioToVideo>Add audio to video file (new file)</AddAudioToVideo>
+    <GenerateSpeech>Generate speech from text</GenerateSpeech>
+    <ActorInfo>Right-click to assign actor to voice</ActorInfo>
+    <AdjustingSpeedXOfY>Adjusting speed: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Merging audio track: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Review audio clips</ReviewAudioClips>
+    <CustomAudioEncoding>Custom audio encoding</CustomAudioEncoding>
+    <ReviewInfo>Review and edit/remove audio clips</ReviewInfo>
+    <Play>Play</Play>
+    <AutoContinue>Auto-continue</AutoContinue>
+    <Regenerate>Regenerate</Regenerate>
+    <Speed>Speed</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
     <UseSmpteTiming>Use SMPTE timing for current subtitle?</UseSmpteTiming>
@@ -3318,6 +3351,13 @@ Keep changes?</KeepChangesMessage>
     <InspectItems>Inspect items</InspectItems>
     <AddBetterMatch>Add better match</AddBetterMatch>
     <Add>Add</Add>
+    <AddBetterMultiMatch>Add better multi match</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Add or update match</AddOrUpdateMatch>
+    <SelectPrevousMatch>Select the previous match</SelectPrevousMatch>
+    <SelectNextMatch>Select the next match</SelectNextMatch>
+    <JumpPreviousMissingMatch>Jump to the previous missing match</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Jump to the next missing match</JumpNextMissingMatch>
+    <FocusTextbox>Focus the text input</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>New folder</Title>
@@ -3359,7 +3399,7 @@ Keep changes?</KeepChangesMessage>
     <Seconds>seconds</Seconds>
     <ZoomIn>Zoom in</ZoomIn>
     <ZoomOut>Zoom out</ZoomOut>
-    <AddParagraphHere>Add text here</AddParagraphHere>
+    <AddParagraphHere>Add text here (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Set current as new selection</SetParagraphAsSelection>
     <FocusTextBox>Focus text box</FocusTextBox>
@@ -3370,6 +3410,7 @@ Keep changes?</KeepChangesMessage>
     <SplitAtCursor>Split at cursor</SplitAtCursor>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <MergeWithNext>Merge with next</MergeWithNext>
+    <RunWhisperSelectedParagraph>Run Whisper on selected paragraph...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Extend to previous</ExtendToPrevious>
     <ExtendToNext>Extend to next</ExtendToNext>
     <PlaySelection>Play selection</PlaySelection>
@@ -3381,7 +3422,8 @@ Keep changes?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Remove shot changes from selection</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
-    <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>
+    <InsertSubtitleHere>Insert text here</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Insert subtitle file here...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3417,5 +3459,10 @@ Keep changes?</KeepChangesMessage>
     <Title>Whisper Advanced - extra command line arguments</Title>
     <CommandLineArguments>Extra parameters for Whisper command line:</CommandLineArguments>
     <Info>Note: Different Whisper implementations have different command line parameters!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asia</StandardAsia>
+    <HighlightCurrentWord>Highlight current word</HighlightCurrentWord>
+    <SingleWords>Single words</SingleWords>
+    <Sentence>Sentence</Sentence>
   </WhisperAdvanced>
 </Language>
