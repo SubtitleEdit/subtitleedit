@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -35,7 +34,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private bool _breakTranslation;
         private bool _translationInProgress;
         private bool _singleLineMode;
-        private bool _ollamaModelsDone;
         private CancellationTokenSource _cancellationTokenSource;
 
         public AutoTranslate(Subtitle subtitle, Subtitle targetLines, string title, Encoding encoding)
@@ -1166,63 +1164,16 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             DialogResult = DialogResult.Cancel;
         }
 
-        private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
+        private async void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetAutoTranslatorEngine();
             SetupLanguageSettings();
 
             if (GetCurrentEngine().GetType() == typeof(OllamaTranslate))
             {
-                var bw = new BackgroundWorker();
-                bw.DoWork += (o, args) =>
-                {
-                    using (var httpClient = new HttpClient())
-                    {
-                        try
-                        {
-                            var url = nikseComboBoxUrl.Text.Replace("generate", "tags");
-                            var resultTask = httpClient.GetAsync(new Uri(url));
-
-                            var result = resultTask.Result;
-                            var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                            if (result.IsSuccessStatusCode)
-                            {
-                                _ollamaModelsDone = true;
-                                var parser = new SeJsonParser();
-                                var resultJson = Encoding.UTF8.GetString(bytes);
-                                var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
-                                args.Result = names;
-                            }
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                };
-                bw.RunWorkerCompleted += (o, args) =>
-                {
-                    if (args.Result is List<string> names)
-                    {
-                        var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
-                        var newModels = false;
-                        foreach (var name in names.OrderByDescending(p => p))
-                        {
-                            if (!models.Contains(name))
-                            {
-                                models.Insert(0, name);
-                                newModels = true;
-                            }
-                        }
-
-                        if (newModels)
-                        {
-                            Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
-                            FillOllamaModels(models);
-                        }
-                    }
-                };
-                bw.RunWorkerAsync();
+                nikseComboBoxEngine.Enabled = false;
+                await DownloadOllamaModelsAsync().ConfigureAwait(true);
+                nikseComboBoxEngine.Enabled = true;
             }
         }
 
@@ -1499,38 +1450,43 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        private void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await DownloadOllamaModelsAsync();
+        }
+
+        private async Task DownloadOllamaModelsAsync()
         {
             using (var httpClient = new HttpClient())
             {
                 try
                 {
-                    var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
                     var url = nikseComboBoxUrl.Text.Replace("generate", "tags");
-                    var resultTask = httpClient.GetAsync(new Uri(url));
-
-                    var result = resultTask.Result;
-                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                    if (result.IsSuccessStatusCode)
+                    var result = await httpClient.GetAsync(new Uri(url)).ConfigureAwait(true);
+                    var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(true);
+                    if (!result.IsSuccessStatusCode)
                     {
-                        var parser = new SeJsonParser();
-                        var resultJson = Encoding.UTF8.GetString(bytes);
-                        var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
-                        var newModels = false;
-                        foreach (var name in names.OrderByDescending(p => p))
-                        {
-                            if (!models.Contains(name))
-                            {
-                                models.Insert(0, name);
-                                newModels = true;
-                            }
-                        }
+                        return;
+                    }
 
-                        if (newModels)
+                    var parser = new SeJsonParser();
+                    var resultJson = Encoding.UTF8.GetString(bytes);
+                    var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
+                    var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+                    var newModels = false;
+                    foreach (var name in names.OrderByDescending(p => p))
+                    {
+                        if (!models.Contains(name))
                         {
-                            Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
-                            FillOllamaModels(models);
+                            models.Insert(0, name);
+                            newModels = true;
                         }
+                    }
+
+                    if (newModels)
+                    {
+                        Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
+                        FillOllamaModels(models.ToArray());
                     }
                 }
                 catch (Exception exception)
@@ -1540,22 +1496,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
         }
-
-        private void FillOllamaModels(List<string> models)
+        private void FillOllamaModels(string[] models)
         {
             if (!(GetCurrentEngine() is OllamaTranslate))
             {
                 return;
             }
 
+            comboBoxFormality.BeginUpdate();
             var v = comboBoxFormality.Text;
             comboBoxFormality.Items.Clear();
-            foreach (var model in models)
-            {
-                comboBoxFormality.Items.Add(model);
-            }
-
+            comboBoxFormality.Items.AddRange(models);
             comboBoxFormality.Text = v;
+            comboBoxFormality.EndUpdate();
         }
 
         private void findModelsToolStripMenuItem_Click(object sender, EventArgs e)
