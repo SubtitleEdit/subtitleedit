@@ -1467,8 +1467,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             catch (Exception exception)
             {
+#if DEBUG
+                MessageBox.Show(exception.Message);
+#else
                 MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 SeLogger.Error(exception, "Unable to get ollama models");
+#endif
             }
 
             async Task<List<string>> GetModelsAsync(string url)
