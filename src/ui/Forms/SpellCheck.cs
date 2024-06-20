@@ -11,10 +11,13 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -64,22 +67,6 @@ namespace Nikse.SubtitleEdit.Forms
         private List<IBinaryParagraphWithPosition> _binSubtitles;
         private ContextMenuStrip _bookmarkContextMenu;
         private readonly Main _mainForm;
-
-        public class SuggestionParameter
-        {
-            public string InputWord { get; set; }
-            public List<string> Suggestions { get; set; }
-            public Hunspell Hunspell { get; set; }
-            public bool Success { get; set; }
-
-            public SuggestionParameter(string word, Hunspell hunspell)
-            {
-                InputWord = word;
-                Suggestions = new List<string>();
-                Hunspell = hunspell;
-                Success = false;
-            }
-        }
 
         public string LanguageString
         {
@@ -602,41 +589,41 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Abort;
         }
 
-        private void ButtonChangeClick(object sender, EventArgs e)
+        private async void ButtonChangeClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
-            DoAction(SpellCheckAction.Change);
+            await DoActionAsync(SpellCheckAction.Change);
         }
 
-        private void ButtonUseSuggestionClick(object sender, EventArgs e)
+        private async void ButtonUseSuggestionClick(object sender, EventArgs e)
         {
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
                 PushUndo($"{LanguageSettings.Current.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
-                DoAction(SpellCheckAction.Change);
+                await DoActionAsync(SpellCheckAction.Change);
             }
         }
 
-        private void ButtonSkipAllClick(object sender, EventArgs e)
+        private async void ButtonSkipAllClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.SkipAll}: {textBoxWord.Text}", SpellCheckAction.SkipAll);
-            DoAction(SpellCheckAction.SkipAll);
+            await DoActionAsync(SpellCheckAction.SkipAll);
         }
 
-        private void ButtonSkipOnceClick(object sender, EventArgs e)
+        private async void ButtonSkipOnceClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.SkipOnce}: {textBoxWord.Text}", SpellCheckAction.Skip);
-            DoAction(SpellCheckAction.Skip);
+            await DoActionAsync(SpellCheckAction.Skip);
         }
 
-        private void ButtonAddToDictionaryClick(object sender, EventArgs e)
+        private async void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.AddToUserDictionary}: {textBoxWord.Text}", SpellCheckAction.AddToDictionary);
-            DoAction(SpellCheckAction.AddToDictionary);
+            await DoActionAsync(SpellCheckAction.AddToDictionary);
         }
 
-        private void ComboBoxDictionariesSelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxDictionariesSelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
             Configuration.Settings.Save();
@@ -644,7 +631,7 @@ namespace Nikse.SubtitleEdit.Forms
             var dictionary = Utilities.DictionaryFolder + _languageName;
             LoadDictionaries(Utilities.DictionaryFolder, dictionary, _languageName);
             _wordsIndex--;
-            PrepareNextWord();
+            await PrepareNextWordAsync();
         }
 
         private void LoadHunspell(string dictionary)
@@ -659,40 +646,41 @@ namespace Nikse.SubtitleEdit.Forms
             return _hunspell.Spell(word);
         }
 
-        public List<string> DoSuggest(string word)
+        private async Task<List<string>> DoSuggestAsync(string word)
         {
-            var parameter = new SuggestionParameter(word, _hunspell);
-            var suggestThread = new System.Threading.Thread(DoWork);
-            suggestThread.Start(parameter);
-            suggestThread.Join(3000); // wait max 3 seconds
-            if (!parameter.Success)
+            try
             {
+                return await Task.Run(() => _hunspell.Suggest(word), NewAutoCancelTokenAfter3Sec().Token);
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.Message);
                 LoadHunspell(_currentDictionary);
             }
 
-            return parameter.Suggestions;
+            return new List<string>();
         }
 
-        public static void DoWork(object data)
+        private CancellationTokenSource NewAutoCancelTokenAfter3Sec()
         {
-            var parameter = (SuggestionParameter)data;
-            parameter.Suggestions = parameter.Hunspell.Suggest(parameter.InputWord);
-            parameter.Success = true;
+            var tokenSource = new CancellationTokenSource();
+            tokenSource.CancelAfter(3 * 1000);
+            return tokenSource;
         }
 
-        private void ButtonChangeAllClick(object sender, EventArgs e)
+        private async void ButtonChangeAllClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
-            DoAction(SpellCheckAction.ChangeAll);
+            await DoActionAsync(SpellCheckAction.ChangeAll);
         }
 
-        private void ButtonUseSuggestionAlwaysClick(object sender, EventArgs e)
+        private async void ButtonUseSuggestionAlwaysClick(object sender, EventArgs e)
         {
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
                 PushUndo($"{LanguageSettings.Current.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
-                DoAction(SpellCheckAction.ChangeAll);
+                await DoActionAsync(SpellCheckAction.ChangeAll);
             }
         }
 
@@ -705,10 +693,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonAddToNamesClick(object sender, EventArgs e)
+        private async void ButtonAddToNamesClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList}: {textBoxWord.Text}", SpellCheckAction.AddToNames);
-            DoAction(SpellCheckAction.AddToNames);
+            await DoActionAsync(SpellCheckAction.AddToNames);
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)
@@ -729,16 +717,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonSkipTextClick(object sender, EventArgs e)
+        private async void ButtonSkipTextClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.SkipOnce}", SpellCheckAction.Skip);
-            DoAction(SpellCheckAction.SkipWholeLine);
+            await DoActionAsync(SpellCheckAction.SkipWholeLine);
         }
 
-        private void ButtonChangeWholeTextClick(object sender, EventArgs e)
+        private async void ButtonChangeWholeTextClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.EditWholeText}", SpellCheckAction.ChangeWholeText);
-            DoAction(SpellCheckAction.ChangeWholeText);
+            await DoActionAsync(SpellCheckAction.ChangeWholeText);
         }
 
         private void ContextMenuStrip1Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -756,32 +744,32 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator1.Visible = showAddItems;
         }
 
-        private void AddXToNamesNoiseListToolStripMenuItemClick(object sender, EventArgs e)
+        private async void AddXToNamesNoiseListToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
-                DoAction(SpellCheckAction.AddToNamesOnly);
+                await DoActionAsync(SpellCheckAction.AddToNamesOnly);
             }
         }
 
-        private void AddXToUserDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void AddXToUserDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
-                DoAction(SpellCheckAction.AddToDictionary);
+                await DoActionAsync(SpellCheckAction.AddToDictionary);
             }
         }
 
-        private void CheckBoxAutoChangeNamesCheckedChanged(object sender, EventArgs e)
+        private async void CheckBoxAutoChangeNamesCheckedChanged(object sender, EventArgs e)
         {
             if (textBoxWord.Text.Length < 2)
             {
                 return;
             }
 
-            DoAutoFixNames(textBoxWord.Text, _suggestions);
+            await DoAutoFixNamesAsync(textBoxWord.Text, _suggestions);
         }
 
         private void ListBoxSuggestionsMouseDoubleClick(object sender, MouseEventArgs e)
@@ -789,7 +777,7 @@ namespace Nikse.SubtitleEdit.Forms
             ButtonUseSuggestionAlwaysClick(null, null);
         }
 
-        public void DoAction(SpellCheckAction action)
+        public async Task DoActionAsync(SpellCheckAction action)
         {
             switch (action)
             {
@@ -865,7 +853,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
             }
             labelActionInfo.Text = string.Empty;
-            PrepareNextWord();
+            await PrepareNextWordAsync();
             CheckActions();
         }
 
@@ -890,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PrepareNextWord()
+        private async Task PrepareNextWordAsync()
         {
             while (true)
             {
@@ -982,7 +970,6 @@ namespace Nikse.SubtitleEdit.Forms
                         // ignore short/empty words and special chars
                     }
                     else if (IsBetweenActiveAssaTags(_words[_wordsIndex].Index, _currentParagraph, _subtitleFormat))
-
                     {
                         // ignore words between {} in ASSA/SSA
                     }
@@ -1233,7 +1220,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (_currentWord.ToUpperInvariant() != "LT'S" && _currentWord.ToUpperInvariant() != "SOX'S" && !_currentWord.ToUpperInvariant().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
                                 {
-                                    suggestions.AddRange(DoSuggest(_currentWord)); // TODO: 0.9.6 fails on "Lt'S"
+                                    suggestions.AddRange(await DoSuggestAsync(_currentWord)); // TODO: 0.9.6 fails on "Lt'S"
                                 }
 
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
@@ -1264,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             suggestions = suggestions.Distinct().ToList();
 
-                            if (DoAutoFixNames(_currentWord, suggestions))
+                            if (await DoAutoFixNamesAsync(_currentWord, suggestions))
                             {
                                 return;
                             }
@@ -1341,23 +1328,23 @@ namespace Nikse.SubtitleEdit.Forms
             return lastIndexOfStart > lastIndexOfEnd;
         }
 
-        private bool DoAutoFixNames(string word, List<string> suggestions)
+        private async Task<bool> DoAutoFixNamesAsync(string word, List<string> suggestions)
         {
             if (AutoFixNames && word.Length > 3)
             {
                 if (Configuration.Settings.Tools.SpellCheckAutoChangeNamesUseSuggestions)
                 {
                     if (suggestions.Contains(word.ToUpperInvariant()))
-                    { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
+                    { // does not work well with two letters words like "da" and "de" which get auto-corrected to "DA" and "DE"
                         ChangeWord = word.ToUpperInvariant();
-                        DoAction(SpellCheckAction.ChangeAll);
+                        await DoActionAsync(SpellCheckAction.ChangeAll);
                         return true;
                     }
 
                     if (suggestions.Contains(char.ToUpperInvariant(word[0]) + word.Substring(1)))
                     {
                         ChangeWord = char.ToUpperInvariant(word[0]) + word.Substring(1);
-                        DoAction(SpellCheckAction.ChangeAll);
+                        await DoActionAsync(SpellCheckAction.ChangeAll);
                         return true;
                     }
                 }
@@ -1365,21 +1352,21 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_spellCheckWordLists.HasName(char.ToUpper(word[0]) + word.Substring(1)))
                 {
                     ChangeWord = char.ToUpper(word[0]) + word.Substring(1);
-                    DoAction(SpellCheckAction.ChangeAll);
+                    await DoActionAsync(SpellCheckAction.ChangeAll);
                     return true;
                 }
 
                 if (word.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(word[0]) + word.Substring(1, 1) + char.ToUpper(word[2]) + word.Remove(0, 3)))
                 {
                     ChangeWord = char.ToUpper(word[0]) + word.Substring(1, 1) + char.ToUpper(word[2]) + word.Remove(0, 3);
-                    DoAction(SpellCheckAction.ChangeAll);
+                    await DoActionAsync(SpellCheckAction.ChangeAll);
                     return true;
                 }
 
                 if (_spellCheckWordLists.HasName(word.ToUpperInvariant()))
                 {
                     ChangeWord = word.ToUpperInvariant();
-                    DoAction(SpellCheckAction.ChangeAll);
+                    await DoActionAsync(SpellCheckAction.ChangeAll);
                     return true;
                 }
             }
@@ -1449,7 +1436,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
-            PrepareNextWord();
+            PrepareNextWordAsync();
         }
 
         public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
@@ -1522,7 +1509,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
-            PrepareNextWord();
+            PrepareNextWordAsync();
         }
 
         private void LoadDictionaries(string dictionaryFolder, string dictionary, string languageName)
@@ -1672,7 +1659,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUndo.Visible = true;
         }
 
-        private void buttonUndo_Click(object sender, EventArgs e)
+        private async void buttonUndo_Click(object sender, EventArgs e)
         {
             if (_undoList.Count > 0)
             {
@@ -1726,7 +1713,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonUndo.Visible = false;
                 }
             }
-            PrepareNextWord();
+            await PrepareNextWordAsync();
         }
 
         /// <summary>
@@ -1788,11 +1775,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!Configuration.Settings.General.PromptDeleteLines || MessageBox.Show(LanguageSettings.Current.Main.DeleteOneLinePrompt, LanguageSettings.Current.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
-                DoAction(SpellCheckAction.DeleteLine);
+                await DoActionAsync(SpellCheckAction.DeleteLine);
             }
         }
 
