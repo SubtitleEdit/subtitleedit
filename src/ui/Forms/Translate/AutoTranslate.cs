@@ -1457,42 +1457,45 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private async Task DownloadOllamaModelsAsync()
         {
-            using (var httpClient = new HttpClient())
+            try
             {
-                try
+                var models = await GetModelsAsync(nikseComboBoxUrl.Text.Replace("generate", "tags"));
+                if (models.Count > 0)
                 {
-                    var url = nikseComboBoxUrl.Text.Replace("generate", "tags");
+                    Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
+                    FillOllamaModels(models.ToArray());
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SeLogger.Error(exception, "Unable to get ollama models");
+            }
+
+            async Task<List<string>> GetModelsAsync(string url)
+            {
+                using (var httpClient = new HttpClient())
+                {
                     var result = await httpClient.GetAsync(new Uri(url)).ConfigureAwait(true);
                     var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(true);
                     if (!result.IsSuccessStatusCode)
                     {
-                        return;
+                        return new List<string>();
                     }
 
                     var parser = new SeJsonParser();
                     var resultJson = Encoding.UTF8.GetString(bytes);
                     var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
                     var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
-                    var newModels = false;
                     foreach (var name in names.OrderByDescending(p => p))
                     {
                         if (!models.Contains(name))
                         {
                             models.Insert(0, name);
-                            newModels = true;
                         }
                     }
 
-                    if (newModels)
-                    {
-                        Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
-                        FillOllamaModels(models.ToArray());
-                    }
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    SeLogger.Error(exception, "Unable to get ollama models");
+                    return models;
                 }
             }
         }
