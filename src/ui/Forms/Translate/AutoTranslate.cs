@@ -1455,7 +1455,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             await DownloadOllamaModelsAsync();
         }
 
-        
         private async Task DownloadOllamaModelsAsync()
         {
             try
