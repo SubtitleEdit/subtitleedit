@@ -36898,5 +36898,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
+
+        private void generaeTransparentVideoWithSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var saveDialog = new SaveFileDialog
+            {
+                FileName = string.Empty,
+                Filter = "mkv|*.mkv|mp4|*.mp4|mov|*.mov"
+            })
+            {
+                if (saveDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+            }
+        }
     }
 }
