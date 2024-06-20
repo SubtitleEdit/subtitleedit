@@ -646,11 +646,16 @@ namespace Nikse.SubtitleEdit.Forms
             return _hunspell.Spell(word);
         }
 
+        /// <summary>
+        /// Asynchronously suggests alternative words for a misspelled word using Hunspell spell-checker.
+        /// </summary>
+        /// <param name="word">The misspelled word to suggest alternatives for.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of suggested alternative words for the misspelled word.</returns>
         private async Task<List<string>> DoSuggestAsync(string word)
         {
             try
             {
-                return await Task.Run(() => _hunspell.Suggest(word), NewAutoCancelTokenAfter3Sec().Token).ConfigureAwait(false);
+                return await Task.Run(() => _hunspell.Suggest(word), CancellationToken.None).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -660,21 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             return new List<string>();
         }
-
-        private CancellationTokenSource _cancellationTokenSource;
-
-        private CancellationTokenSource NewAutoCancelTokenAfter3Sec()
-        {
-            // only create new if previous is null or cancelled
-            if (_cancellationTokenSource == null || _cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                _cancellationTokenSource = new CancellationTokenSource();
-                _cancellationTokenSource.CancelAfter(3 * 1000);
-            }
-
-            return _cancellationTokenSource;
-        }
-
+        
         private async void ButtonChangeAllClick(object sender, EventArgs e)
         {
             PushUndo($"{LanguageSettings.Current.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
