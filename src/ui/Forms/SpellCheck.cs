@@ -661,11 +661,18 @@ namespace Nikse.SubtitleEdit.Forms
             return new List<string>();
         }
 
+        private CancellationTokenSource _cancellationTokenSource;
+
         private CancellationTokenSource NewAutoCancelTokenAfter3Sec()
         {
-            var tokenSource = new CancellationTokenSource();
-            tokenSource.CancelAfter(3 * 1000);
-            return tokenSource;
+            // only create new if previous is null or cancelled
+            if (_cancellationTokenSource == null || _cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+                _cancellationTokenSource.CancelAfter(3 * 1000);
+            }
+
+            return _cancellationTokenSource;
         }
 
         private async void ButtonChangeAllClick(object sender, EventArgs e)
