@@ -14,8 +14,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class RestoreAutoBackup : PositionAndSizeForm
     {
-        private static readonly object Locker = new object();
-
         //2011-12-13_20-19-18_title
         private static readonly Regex RegexFileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
         private string[] _files;
@@ -294,9 +292,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        /// <summary>
+        /// Represents a locker object for thread synchronization.
+        /// </summary>
+        private static readonly object Locker = new object();
+
+        /// <summary>
+        /// Cleans up the auto backup folder by deleting files older than the specified number of months.
+        /// </summary>
+        /// <param name="autoBackupFolder">The path to the auto backup folder.</param>
+        /// <param name="autoBackupDeleteAfterMonths">The number of months after which to delete the files.</param>
         public static void CleanAutoBackupFolder(string autoBackupFolder, int autoBackupDeleteAfterMonths)
         {
-            lock (Locker) // only allow one thread
+            // Prevent thread-2 waiting to enter and executing the operation if thread-1 already doing it.
+            // using "lock statement" thread-2 would wait until thread-1 is done and enter to do the same thing!
+            if (Monitor.TryEnter(Locker))
             {
                 if (Directory.Exists(autoBackupFolder))
                 {
@@ -318,6 +328,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
+                Monitor.Exit(Locker);
             }
         }
     }
