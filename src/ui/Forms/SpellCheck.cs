@@ -650,7 +650,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                return await Task.Run(() => _hunspell.Suggest(word), NewAutoCancelTokenAfter3Sec().Token);
+                return await Task.Run(() => _hunspell.Suggest(word), NewAutoCancelTokenAfter3Sec().Token).ConfigureAwait(false);
             }
             catch (Exception e)
             {
