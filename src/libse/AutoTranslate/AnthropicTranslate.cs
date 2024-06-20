@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.AnthropicApiModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "claude-3-opus-20240229";
+                model = "claude-3-5-sonnet-20240620";
                 Configuration.Settings.Tools.AnthropicApiModel = model;
             }
 

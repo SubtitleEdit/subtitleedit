@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-3-opus-20240229";
+            AnthropicApiModel = "claude-3-5-sonnet-20240620";
             TextToSpeechAzureRegion = "westeurope";
             AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;
