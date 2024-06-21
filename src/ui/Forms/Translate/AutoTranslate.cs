@@ -384,6 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.Add("claude-3-5-sonnet-20240620");
                 comboBoxFormality.Items.Add("claude-3-opus-20240229");
                 comboBoxFormality.Items.Add("claude-3-sonnet-20240229");
                 comboBoxFormality.Items.Add("claude-3-haiku-20240307");
@@ -1164,10 +1165,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             DialogResult = DialogResult.Cancel;
         }
 
-        private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
+        private async void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetAutoTranslatorEngine();
             SetupLanguageSettings();
+
+            if (GetCurrentEngine().GetType() == typeof(OllamaTranslate))
+            {
+                nikseComboBoxEngine.Enabled = false;
+                await DownloadOllamaModelsAsync().ConfigureAwait(true);
+                nikseComboBoxEngine.Enabled = true;
+            }
         }
 
         private void nikseComboBoxUrl_SelectedIndexChanged(object sender, EventArgs e)
@@ -1443,38 +1451,43 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        private void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await DownloadOllamaModelsAsync();
+        }
+
+        private async Task DownloadOllamaModelsAsync()
         {
             using (var httpClient = new HttpClient())
             {
                 try
                 {
-                    var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
                     var url = nikseComboBoxUrl.Text.Replace("generate", "tags");
-                    var resultTask = httpClient.GetAsync(new Uri(url));
-
-                    var result = resultTask.Result;
-                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                    if (result.IsSuccessStatusCode)
+                    var result = await httpClient.GetAsync(new Uri(url)).ConfigureAwait(true);
+                    var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(true);
+                    if (!result.IsSuccessStatusCode)
                     {
-                        var parser = new SeJsonParser();
-                        var resultJson = Encoding.UTF8.GetString(bytes);
-                        var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
-                        foreach (var name in names.OrderByDescending(p => p))
+                        return;
+                    }
+
+                    var parser = new SeJsonParser();
+                    var resultJson = Encoding.UTF8.GetString(bytes);
+                    var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
+                    var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+                    var newModels = false;
+                    foreach (var name in names.OrderByDescending(p => p))
+                    {
+                        if (!models.Contains(name))
                         {
-                            models.Remove(name);
                             models.Insert(0, name);
+                            newModels = true;
                         }
+                    }
 
+                    if (newModels)
+                    {
                         Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
-
-                        var v = comboBoxFormality.Text;
-                        comboBoxFormality.Items.Clear();
-                        foreach (var model in models)
-                        {
-                            comboBoxFormality.Items.Add(model);
-                        }
-                        comboBoxFormality.Text = v;
+                        FillOllamaModels(models.ToArray());
                     }
                 }
                 catch (Exception exception)
@@ -1483,6 +1496,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     SeLogger.Error(exception, "Unable to get ollama models");
                 }
             }
+        }
+        private void FillOllamaModels(string[] models)
+        {
+            if (!(GetCurrentEngine() is OllamaTranslate))
+            {
+                return;
+            }
+
+            comboBoxFormality.BeginUpdate();
+            var v = comboBoxFormality.Text;
+            comboBoxFormality.Items.Clear();
+            comboBoxFormality.Items.AddRange(models);
+            comboBoxFormality.Text = v;
+            comboBoxFormality.EndUpdate();
         }
 
         private void findModelsToolStripMenuItem_Click(object sender, EventArgs e)
