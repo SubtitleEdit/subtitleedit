@@ -5,25 +5,23 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class BookmarkPersistence
+    public class Bookmarks
     {
         private readonly Subtitle _subtitle;
-        private readonly string _fileName;
 
-        public BookmarkPersistence(Subtitle subtitle, string fileName)
+        public Bookmarks(Subtitle subtitle)
         {
             _subtitle = subtitle;
-            _fileName = fileName;
         }
 
         private string GetBookmarksFileName()
         {
-            return _fileName + ".SE.bookmarks";
+            return _subtitle.FileName + ".SE.bookmarks";
         }
 
         public bool Save()
         {
-            if (_fileName == null)
+            if (_subtitle.FileName == null)
             {
                 return false;
             }
@@ -79,34 +77,30 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool Load()
         {
-            if (_fileName == null)
+            var fileName = GetBookmarksFileName();
+            if (!File.Exists(fileName))
             {
                 return false;
             }
 
-            var fileName = GetBookmarksFileName();
-            if (File.Exists(fileName))
+            try
             {
-                try
+                var dic = DeserializeBookmarks(File.ReadAllText(fileName, Encoding.UTF8));
+                foreach (var kvp in dic)
                 {
-                    var dic = DeserializeBookmarks(File.ReadAllText(fileName, Encoding.UTF8));
-                    foreach (var kvp in dic)
+                    var p = _subtitle.GetParagraphOrDefault(kvp.Key);
+                    if (p != null)
                     {
-                        var p = _subtitle.GetParagraphOrDefault(kvp.Key);
-                        if (p != null)
-                        {
-                            p.Bookmark = kvp.Value;
-                        }
+                        p.Bookmark = kvp.Value;
                     }
+                }
 
-                }
-                catch
-                {
-                    return false;
-                }
+                return true;
             }
-
-            return true;
+            catch
+            {
+                return false;
+            }
         }
 
         private static Dictionary<int, string> DeserializeBookmarks(string input)

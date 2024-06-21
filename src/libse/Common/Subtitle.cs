@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string Header { get; set; } = string.Empty;
         public string Footer { get; set; } = string.Empty;
 
+        public Bookmarks Bookmarks { get; }
+
         public string FileName { get; set; }
 
         public static int MaximumHistoryItems => 100;
@@ -44,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             HistoryItems = historyItems;
             Paragraphs = paragraphs;
             FileName = "Untitled";
+            Bookmarks = new Bookmarks(this);
         }
 
         /// <summary>
@@ -73,6 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             FileName = subtitle.FileName;
             OriginalFormat = subtitle.OriginalFormat;
             OriginalEncoding = subtitle.OriginalEncoding;
+            Bookmarks = new Bookmarks(this);
         }
 
 

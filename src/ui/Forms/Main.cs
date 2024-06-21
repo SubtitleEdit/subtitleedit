@@ -3889,7 +3889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.ShowExtraColumn(_languageGeneral.Style);
                 }
 
-                new BookmarkPersistence(newSubtitle, fileName).Load();
+                newSubtitle.Bookmarks.Load();
 
                 if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                 {
@@ -5322,7 +5322,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 Configuration.Settings.Save();
-                new BookmarkPersistence(_subtitle, _fileName).Save();
+                _subtitle.Bookmarks.Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 _oldSubtitleFormat = format;
                 _formatManuallyChanged = false;
@@ -20311,7 +20311,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetListViewStateImages();
-            new BookmarkPersistence(_subtitle, _fileName).Save();
+            _subtitle.Bookmarks.Save();
         }
 
         private void SetListViewStateImages()
@@ -20367,7 +20367,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetListViewStateImages();
-            new BookmarkPersistence(_subtitle, _fileName).Save();
+            _subtitle.Bookmarks.Save();
         }
 
         private void MoveTextFromCursorToNext(SETextBox tb)
@@ -34809,7 +34809,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.ShowState(_subtitleListViewIndex, p);
                 ShowHideBookmark(p);
                 SetListViewStateImages();
-                new BookmarkPersistence(_subtitle, _fileName).Save();
+                _subtitle.Bookmarks.Save();
             }
         }
 
@@ -34833,7 +34833,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.ShowState(_subtitleListViewIndex, p);
                         ShowHideBookmark(p);
                         SetListViewStateImages();
-                        new BookmarkPersistence(_subtitle, _fileName).Save();
+                        _subtitle.Bookmarks.Save();
                     }
                 }
             }
