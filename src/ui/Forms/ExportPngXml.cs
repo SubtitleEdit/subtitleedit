@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -5861,7 +5862,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Common.Settings settings)
+        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
             var columnIndexNumber = 0;
             var columnIndexStart = 1;

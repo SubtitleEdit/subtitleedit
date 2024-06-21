@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class ProxySettings
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static Nikse.SubtitleEdit.Core.Common.VerifyCompletenessSettings;
+using static Nikse.SubtitleEdit.Core.Settings.VerifyCompletenessSettings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
