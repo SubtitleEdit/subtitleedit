@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class AssaStorageCategory
     {

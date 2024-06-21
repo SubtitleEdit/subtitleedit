@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class RecentFilesSettings
     {

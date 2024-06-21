@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class Shortcuts
     {

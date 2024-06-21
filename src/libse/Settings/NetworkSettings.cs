@@ -1,6 +1,6 @@
 using System;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class NetworkSettings
     {

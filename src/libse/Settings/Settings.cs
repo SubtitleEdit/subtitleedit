@@ -1,13 +1,14 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     // The settings classes are built for easy xml-serialization (makes save/load code simple)
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!

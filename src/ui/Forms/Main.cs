@@ -47,6 +47,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Forms.Tts;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
