@@ -933,126 +933,130 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private bool GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
+                httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
+
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
+
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    if (showProgressBar)
+                    {
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var result = httpClient.GetAsync("?text=" + Utilities.UrlEncode(text)).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"coqui TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}");
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
                 }
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
-
-                var text = Utilities.UnbreakLine(p.Text);
-                var result = httpClient.GetAsync("?text=" + Utilities.UrlEncode(text)).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    SeLogger.Error($"coqui TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}");
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private bool GenerateParagraphAudioAllTalk(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
 
-                var voice = nikseComboBoxVoice.Text;
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        voice = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var voice = nikseComboBoxVoice.Text;
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            voice = f.Voice;
+                        }
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+
+                    var multipartContent = new MultipartFormDataContent();
+                    var text = Utilities.UnbreakLine(p.Text);
+                    multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
+                    multipartContent.Add(new StringContent("standard"), "text_filtering");
+                    multipartContent.Add(new StringContent(voice), "character_voice_gen");
+                    multipartContent.Add(new StringContent("false"), "narrator_enabled");
+                    multipartContent.Add(new StringContent(voice), "narrator_voice_gen");
+                    multipartContent.Add(new StringContent("character"), "text_not_inside");
+                    multipartContent.Add(new StringContent(nikseComboBoxRegion.Text), "language");
+                    multipartContent.Add(new StringContent("output"), "output_file_name");
+                    multipartContent.Add(new StringContent("false"), "output_file_timestamp");
+                    multipartContent.Add(new StringContent("false"), "autoplay");
+                    multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
+                    var result = httpClient.PostAsync("/api/tts-generate", multipartContent).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                    var resultJson = Encoding.UTF8.GetString(bytes);
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"All Talk TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
+                    }
+
+                    var jsonParser = new SeJsonParser();
+                    var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
+                    File.Copy(allTalkOutput, outputFileName);
+                    SafeFileDelete(allTalkOutput);
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
                     }
                 }
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var multipartContent = new MultipartFormDataContent();
-                var text = Utilities.UnbreakLine(p.Text);
-                multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
-                multipartContent.Add(new StringContent("standard"), "text_filtering");
-                multipartContent.Add(new StringContent(voice), "character_voice_gen");
-                multipartContent.Add(new StringContent("false"), "narrator_enabled");
-                multipartContent.Add(new StringContent(voice), "narrator_voice_gen");
-                multipartContent.Add(new StringContent("character"), "text_not_inside");
-                multipartContent.Add(new StringContent(nikseComboBoxRegion.Text), "language");
-                multipartContent.Add(new StringContent("output"), "output_file_name");
-                multipartContent.Add(new StringContent("false"), "output_file_timestamp");
-                multipartContent.Add(new StringContent("false"), "autoplay");
-                multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
-                var result = httpClient.PostAsync("/api/tts-generate", multipartContent).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                var resultJson = Encoding.UTF8.GetString(bytes);
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    SeLogger.Error($"All Talk TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
-                }
-
-                var jsonParser = new SeJsonParser();
-                var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
-                File.Copy(allTalkOutput, outputFileName);
-                SafeFileDelete(allTalkOutput);
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
-
-                if (_abort)
-                {
-                    return false;
-                }
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private bool GenerateParagraphAudioElevenLabs(Subtitle subtitle, bool showProgressBar, string overrideFileName)
@@ -1064,72 +1068,74 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            var voices = _elevenLabVoices;
-            var v = nikseComboBoxVoice.Text;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+                var voices = _elevenLabVoices;
+                var v = nikseComboBoxVoice.Text;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        v = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
                     }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            v = f.Voice;
+                        }
+                    }
+
+                    var voice = voices.First(x => x.ToString() == v);
+
+                    var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
+                    var content = new StringContent(data, Encoding.UTF8);
+                    content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                    var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"ElevenLabs TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
+                        return false;
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
                 }
 
-                var voice = voices.First(x => x.ToString() == v);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
-                var text = Utilities.UnbreakLine(p.Text);
-                var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
-                var content = new StringContent(data, Encoding.UTF8);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"ElevenLabs TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
-                    return false;
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private List<AzureVoiceModel> GetAzureVoices(bool useCache)
@@ -1233,73 +1239,75 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "ssml+xml");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "audio-16khz-32kbitrate-mono-mp3");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "SubtitleEdit");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            var voices = _azureVoices;
-            var v = nikseComboBoxVoice.Text;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "ssml+xml");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "audio-16khz-32kbitrate-mono-mp3");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "SubtitleEdit");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+                var voices = _azureVoices;
+                var v = nikseComboBoxVoice.Text;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        v = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
                     }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            v = f.Voice;
+                        }
+                    }
+
+                    var voice = voices.First(x => x.ToString() == v);
+
+                    var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/v1";
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var data = $"<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='{voice.Gender}' name='{voice.ShortName}'>{System.Net.WebUtility.HtmlEncode(text)}</voice></speak>";
+                    var content = new StringContent(data, Encoding.UTF8);
+                    var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Azure TTS failed calling API on address {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error + result);
+                        return false;
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
                 }
 
-                var voice = voices.First(x => x.ToString() == v);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/v1";
-                var text = Utilities.UnbreakLine(p.Text);
-                var data = $"<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='{voice.Gender}' name='{voice.ShortName}'>{System.Net.WebUtility.HtmlEncode(text)}</voice></speak>";
-                var content = new StringContent(data, Encoding.UTF8);
-                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Azure TTS failed calling API on address {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error + result);
-                    return false;
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -1806,22 +1814,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-                var url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/voices.json?download=true";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form Piper via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error + " " + result);
-                    return result;
-                }
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+                    var url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/voices.json?download=true";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
 
-                File.WriteAllBytes(jsonFileName, bytes);
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form Piper via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error + " " + result);
+                        return result;
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
             }
 
             if (File.Exists(jsonFileName))
@@ -1903,29 +1913,31 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-
-                if (!string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+                using (var httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+
+                    if (!string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+                    {
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
+                    }
+
+                    var url = "https://api.elevenlabs.io/v1/voices";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form ElevenLabs via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<ElevenLabModel>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
                 }
-
-                var url = "https://api.elevenlabs.io/v1/voices";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    Cursor = Cursors.Default;
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form ElevenLabs via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
-                    return new List<ElevenLabModel>();
-                }
-
-                File.WriteAllBytes(jsonFileName, bytes);
             }
 
             if (File.Exists(jsonFileName))
@@ -1991,24 +2003,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-
-                var url = "http://127.0.0.1:7851/api/voices";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
+                using(var httpClient = new HttpClient())
                 {
-                    Cursor = Cursors.Default;
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form AllTalk via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
-                    return new List<string>();
-                }
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
 
-                File.WriteAllBytes(jsonFileName, bytes);
+                    var url = "http://127.0.0.1:7851/api/voices";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form AllTalk via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<string>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
             }
 
             if (File.Exists(jsonFileName))
