@@ -682,5 +682,36 @@ namespace Nikse.SubtitleEdit.Logic
 
             return processMakeVideo;
         }
+
+        public static Process GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, DataReceivedEventHandler dataReceivedHandler)
+        {
+            if (width % 2 == 1)
+            {
+                width++;
+            }
+
+            if (height % 2 == 1)
+            {
+                height++;
+            }
+
+            outputVideoFileName = $"\"{outputVideoFileName}\"";
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $" -y -f lavfi -i \"color=c=black@0.0:s={width}x{height}:r={frameRate}:d=00\\\\:00\\\\:30,format=rgba,subtitles=f={Path.GetFileName(assaSubtitleFileName)}:alpha=1\" -c:v png {outputVideoFileName}".TrimStart(),
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+            return processMakeVideo;
+        }
     }
 }

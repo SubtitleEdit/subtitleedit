@@ -36901,13 +36901,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generaeTransparentVideoWithSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var saveDialog = new SaveFileDialog
+            if (!IsSubtitleLoaded)
             {
-                FileName = string.Empty,
-                Filter = "mkv|*.mkv|mp4|*.mp4|mov|*.mov"
-            })
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, GetCurrentSubtitleFormat(), _videoInfo))
             {
-                if (saveDialog.ShowDialog(this) != DialogResult.OK)
+                if (form.ShowDialog(this) != DialogResult.OK)
                 {
                     return;
                 }
