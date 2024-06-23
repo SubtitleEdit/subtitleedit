@@ -384,6 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.Add("claude-3-5-sonnet-20240620");
                 comboBoxFormality.Items.Add("claude-3-opus-20240229");
                 comboBoxFormality.Items.Add("claude-3-sonnet-20240229");
                 comboBoxFormality.Items.Add("claude-3-haiku-20240307");

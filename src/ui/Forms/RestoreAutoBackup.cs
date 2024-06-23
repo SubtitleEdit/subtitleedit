@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using System.Threading;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
