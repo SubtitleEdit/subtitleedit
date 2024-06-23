@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         private static readonly Lazy<Configuration> Instance = new Lazy<Configuration>(() => new Configuration());
 
-        private readonly Lazy<Settings> _settings;
+        private readonly Lazy<Settings.Settings> _settings;
         private readonly IEnumerable<Encoding> _encodings;
 
         public static readonly string BaseDirectory = GetBaseDirectory();
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private Configuration()
         {
             _encodings = GetAvailableEncodings();
-            _settings = new Lazy<Settings>(Settings.GetSettings);
+            _settings = new Lazy<Settings.Settings>(Core.Settings.Settings.GetSettings);
         }
 
         private const int PlatformWindows = 1;
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                  : PlatformWindows;
         }
 
-        public static Settings Settings => Instance.Value._settings.Value;
+        public static Settings.Settings Settings => Instance.Value._settings.Value;
 
         public static IEnumerable<Encoding> AvailableEncodings => Instance.Value._encodings;
 

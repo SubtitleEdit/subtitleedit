@@ -1451,6 +1451,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Generera tom video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generera video med inbränd sub...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Skapa video med inbäddade undertexter...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Skapa transparent video med undertexter...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Ljud till text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importera kapitel från video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Skapa/importera scenändringar...</GenerateImportShotChanges>
@@ -2137,6 +2138,8 @@ Ladda ner och fortsätta?</VideoFromUrlRequirements>
     <DurationGreaterThan>Varaktighet längre än</DurationGreaterThan>
     <CpsLessThan>CPS mindre än</CpsLessThan>
     <CpsGreaterThan>CPS större än</CpsGreaterThan>
+    <LengthLessThan>Längd mindre än</LengthLessThan>
+    <LengthGreaterThan>Längd större än</LengthGreaterThan>
     <ExactlyOneLine>Exakt en rad</ExactlyOneLine>
     <ExactlyTwoLines>Exakt två rader</ExactlyTwoLines>
     <MoreThanTwoLines>Mer än två rader</MoreThanTwoLines>
@@ -3176,6 +3179,7 @@ och N bryter</WrapStyle2>
     <MergingAudioTrackXOfY>Slår ihop ljudspår: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Genererar tal från text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Granska ljudklipp</ReviewAudioClips>
+    <CustomAudioEncoding>Anpassad ljudkodning</CustomAudioEncoding>
     <ReviewInfo>Granska och redigera/ta bort ljudklipp</ReviewInfo>
     <Play>Spela</Play>
     <AutoContinue>Auto-fortsätt</AutoContinue>
