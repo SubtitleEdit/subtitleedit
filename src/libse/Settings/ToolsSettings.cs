@@ -377,6 +377,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool GenVideoTargetFileSize { get; set; }
         public float GenVideoFontSizePercentOfHeight { get; set; }
         public bool GenVideoNonAssaBox { get; set; }
+        public bool GenTransparentVideoNonAssaBox { get; set; }
         public Color GenVideoNonAssaBoxColor { get; set; }
         public Color GenVideoNonAssaTextColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }

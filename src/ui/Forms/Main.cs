@@ -1841,6 +1841,7 @@ namespace Nikse.SubtitleEdit.Forms
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
             generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
             generateVideoWithSoftcodedSubtitlesToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithEmbeddedSubs;
+            generaeTransparentVideoWithSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateTransparentVideoWithSubs;
             videoaudioToTextToolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi");
             audioToTextWhisperTolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Whisper");
             textToSpeechAndAddToVideoToolStripMenuItem.Text = _language.Menu.Video.TextToSpeechAndAddToVideo;

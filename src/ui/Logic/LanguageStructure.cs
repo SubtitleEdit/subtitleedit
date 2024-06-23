@@ -1845,6 +1845,7 @@
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string GenerateVideoWithEmbeddedSubs { get; set; }
+                    public string GenerateTransparentVideoWithSubs { get; set; }
                     public string VideoAudioToTextX { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportShotChanges { get; set; }

@@ -4000,6 +4000,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GenVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenTransparentVideoNonAssaBox");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
             if (subNode != null)
             {
@@ -9169,6 +9175,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenTransparentVideoNonAssaBox", settings.Tools.GenTransparentVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
                 textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));

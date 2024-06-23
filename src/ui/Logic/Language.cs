@@ -2034,6 +2034,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateBlankVideo = "Generate blank video...",
                         GenerateVideoWithEmbeddedSubs = "Generate video with added/removed embedded subtitles...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in subtitle...",
+                        GenerateTransparentVideoWithSubs = "Generate transparent video with subtitles...",
                         VideoAudioToTextX = "Audio to text ({0})...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportShotChanges = "Generate/import shot changes...",
