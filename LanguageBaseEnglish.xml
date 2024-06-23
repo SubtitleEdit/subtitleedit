@@ -1449,6 +1449,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in subtitle...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generate video with added/removed embedded subtitles...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generate transparent video with subtitles...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
