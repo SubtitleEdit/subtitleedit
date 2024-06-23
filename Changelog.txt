@@ -7,7 +7,7 @@
    * Add support for Faster-Whisper-XXL
    * Add audio settings for TTS final video file
    * Add subtitle format "PodcastIndexer json" - thx rjgout 
-   * Add new Claude 3.5 Sonnet model - thx Flash
+   * Add new Anthropic Claude 3.5 Sonnet model - thx Flash
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Brazilian Portuguese translation - thx igorruckert
@@ -21,7 +21,7 @@
    * Fix auto translate crash - thx soscaster
    * Fix crash in Vosk audio to text on selected lines - thx MediaExpres
    * Prompt for overwrite in "Multiple replace" export - thx redactedscribe
-   * Fix abort for TTS Azure/ElevenLabs - thx cvrle77
+   * Fix "abort" for TTS Azure/ElevenLabs - thx cvrle77
 
 4.0.6 (1st June 2024)
 * NEW:
@@ -56,7 +56,7 @@
    * Add Swedish to ChatGPT translate - thx Stefan
    * Allow larger subtitle preview font size - thx kadrimarzouki
 * FIXED:
-   * Fix for Antrophic translate - thx venomousraid 
+   * Fix for Anthropic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
    * Fix unwanted text boxes background color change - thx Leon
    * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
@@ -76,7 +76,7 @@
    * Add new shortcut "Insert new subtitle at video pos (fill)" - thx Leon/AuroraMartell
    * Add "LM Studio" translate (local) - thx fznx922
    * Add Ollama translate (local) - thx despairTK/Copy2Translator
-   * Add Antrophic translate 
+   * Add Anthropic translate 
    * Add distilled models for Purfview Faster Whisper
 * IMPROVED:
    * Update German translation - thx Netspark
