@@ -18,7 +18,7 @@
                 components.Dispose();
             }
 
-            _httpClient.Dispose();
+            _httpClient?.Dispose();
             base.Dispose(disposing);
         }
 
