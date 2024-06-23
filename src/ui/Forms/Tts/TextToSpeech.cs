@@ -1129,6 +1129,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     progressBar1.Refresh();
                     labelProgress.Refresh();
                     Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
+                    }
                 }
 
                 progressBar1.Visible = false;
@@ -1301,6 +1306,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     progressBar1.Refresh();
                     labelProgress.Refresh();
                     Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
+                    }
                 }
 
                 progressBar1.Visible = false;
