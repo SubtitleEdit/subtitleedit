@@ -1172,9 +1172,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (GetCurrentEngine().GetType() == typeof(OllamaTranslate))
             {
-                nikseComboBoxEngine.Enabled = false;
                 await DownloadOllamaModelsAsync();
-                nikseComboBoxEngine.Enabled = true;
             }
         }
 
@@ -1453,10 +1451,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private async void UpdateLocalModelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await DownloadOllamaModelsAsync();
+            await DownloadOllamaModelsAsync(shouldNotifyOnError: true);
         }
 
-        private async Task DownloadOllamaModelsAsync()
+        private async Task DownloadOllamaModelsAsync(bool shouldNotifyOnError = false)
         {
             try
             {
@@ -1468,12 +1466,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             catch (Exception exception)
             {
-#if DEBUG
-                MessageBox.Show(exception.Message);
-#else
-                MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                SeLogger.Error(exception, "Unable to get ollama models");
-#endif
+                if (shouldNotifyOnError)
+                {
+                    MessageBox.Show("Unable to get ollama models - is ollama running?" + Environment.NewLine + exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    SeLogger.Error(exception, "Unable to get ollama models");
+                }
             }
 
             async Task<List<string>> GetModelsAsync(string url)
@@ -1504,14 +1501,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private HttpClient _httpClient;
 
-        private HttpClient GetOllamaClient()
-        {
-            return _httpClient ?? (_httpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromSeconds(3)
-            });
-        }
-        
+        private HttpClient GetOllamaClient() => _httpClient ?? (_httpClient = new HttpClient());
+
         private void FillOllamaModels(string[] models)
         {
             if (!(GetCurrentEngine() is OllamaTranslate))
