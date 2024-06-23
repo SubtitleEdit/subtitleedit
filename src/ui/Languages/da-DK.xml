@@ -1445,6 +1445,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generer video med indlejrede undertekster...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generer gennemsigtig video med undertekster...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Lyd til tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
@@ -2128,6 +2129,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
     <CpsLessThan>CPS mindre end</CpsLessThan>
     <CpsGreaterThan>CPS større end</CpsGreaterThan>
+    <LengthLessThan>Længde mindre end</LengthLessThan>
+    <LengthGreaterThan>Længde større end</LengthGreaterThan>
     <ExactlyOneLine>Præcis én linje</ExactlyOneLine>
     <ExactlyTwoLines>Præcis to linjer</ExactlyTwoLines>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
@@ -3166,6 +3169,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Samler lydspor: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Genererer tale fra tekst: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Gennemgå lydklip</ReviewAudioClips>
+    <CustomAudioEncoding>Brugerdefineret lyd encoding</CustomAudioEncoding>
     <ReviewInfo>Gennemgå og rediger/fjern lydklip</ReviewInfo>
     <Play>Spil</Play>
     <AutoContinue>Auto-fortsæt</AutoContinue>
