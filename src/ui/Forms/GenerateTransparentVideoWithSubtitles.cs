@@ -62,7 +62,6 @@ namespace Nikse.SubtitleEdit.Forms
             deleteToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Remove;
             clearToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Clear;
             addFilesToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Add;
-            useSourceResolutionToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
             labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
 
             progressBar1.Visible = false;
