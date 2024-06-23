@@ -28,7 +28,6 @@ namespace Nikse.SubtitleEdit.Forms
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
-
         public GenerateTransparentVideoWithSubtitles(Subtitle subtitle, SubtitleFormat format, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
@@ -46,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new AdvancedSubStationAlpha().LoadSubtitle(_assaSubtitle, raw.SplitToLines(), null);
             }
 
-            Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
+            Text = LanguageSettings.Current.Main.Menu.Video.GenerateTransparentVideoWithSubs.Trim('.');
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
@@ -74,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxVideo.Text = LanguageSettings.Current.Main.Menu.Video.Title;
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
 
-            checkBoxBox.Checked = Configuration.Settings.Tools.GenVideoNonAssaBox;
+            checkBoxBox.Checked = Configuration.Settings.Tools.GenTransparentVideoNonAssaBox;
             checkBoxAlignRight.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
             checkBoxRightToLeft.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
 
@@ -160,6 +159,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRate.SelectedIndex = 2;
 
             FontEnableOrDisable(_isAssa);
+
+            panelOutlineColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaBoxColor;
+            panelForeColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaTextColor;
         }
 
         private void FontEnableOrDisable(bool assa)
@@ -181,14 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
             panelOutlineColor.Enabled = enabled;
             panelForeColor.Enabled = enabled;
 
-            if (assa)
-            {
-                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
-            }
-            else
-            {
-                labelInfo.Text = string.Empty;
-            }
+            labelInfo.Text = assa ? LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn : string.Empty;
         }
 
         private void FixRightToLeft(Subtitle subtitle)
@@ -258,14 +253,13 @@ namespace Nikse.SubtitleEdit.Forms
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
-            Stopwatch stopWatch;
             using (var saveDialog = new SaveFileDialog
-            {
-                FileName = SuggestNewVideoFileName(),
-                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov",
-                AddExtension = true,
-                InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
-            })
+                   {
+                       FileName = SuggestNewVideoFileName(),
+                       Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov",
+                       AddExtension = true,
+                       InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
+                   })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
@@ -277,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = saveDialog.FileName;
             }
 
-            stopWatch = Stopwatch.StartNew();
+            var stopWatch = Stopwatch.StartNew();
             if (!ConvertVideo(oldFontSizeEnabled, _assaSubtitle))
             {
                 buttonGenerate.Enabled = true;
@@ -292,19 +286,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!_abort && _log.ToString().Length > 10)
                 {
                     var title = "Error occurred during encoding";
-                    if (_log.ToString().Contains("Cannot load nvcuda.dll"))
-                    {
-                        title = "Error: Cannot load nvcuda.dll";
-                    }
-                    else if (_log.ToString().Contains("amfrt64.dll"))
-                    {
-                        title = "Error: Cannot load amfrt64.dll";
-                    }
-                    else if (_log.ToString().Contains("The minimum required Nvidia driver for nvenc is"))
-                    {
-                        title = "Nvidia driver needs updating";
-                    }
-
                     MessageBox.Show($"Encoding with ffmpeg failed: {Environment.NewLine}{_log}", title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
@@ -611,6 +592,51 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
+        }
+
+        private void buttonForeColor_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelForeColor.BackColor })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelForeColor.BackColor = colorChooser.Color;
+                }
+            }
+        }
+
+        private void buttonOutlineColor_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelOutlineColor.BackColor })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelOutlineColor.BackColor = colorChooser.Color;
+                }
+            }
+        }
+
+        private void panelForeColor_Click(object sender, EventArgs e)
+        {
+            buttonForeColor_Click(null, null);
+        }
+
+        private void panelOutlineColor_Click(object sender, EventArgs e)
+        {
+            buttonOutlineColor_Click(null, null);
+        }
+
+        private void GenerateTransparentVideoWithSubtitles_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.GenVideoFontName = comboBoxSubtitleFont.Text;
+            Configuration.Settings.Tools.GenVideoFontBold = checkBoxFontBold.Checked;
+            Configuration.Settings.Tools.GenVideoOutline = (int)numericUpDownOutline.Value;
+            Configuration.Settings.Tools.GenVideoFontSize = (int)numericUpDownFontSize.Value;
+            Configuration.Settings.Tools.GenTransparentVideoNonAssaBox = checkBoxBox.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaAlignRight = checkBoxAlignRight.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaBoxColor = panelOutlineColor.BackColor;
+            Configuration.Settings.Tools.GenVideoNonAssaTextColor = panelForeColor.BackColor;
         }
     }
 }
