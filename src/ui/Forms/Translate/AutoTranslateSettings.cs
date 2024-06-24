@@ -89,15 +89,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            if (nikseTextBoxPrompt.Text.Contains('{'))
+            if (nikseTextBoxPrompt.Text.Replace("{0}", string.Empty).Replace("{1}", string.Empty).Contains('{'))
             {
-                MessageBox.Show("Character not allowed in prompt: {");
+                MessageBox.Show("Character not allowed in prompt: '{' (besides '{0}' and '{1}')");
                 return;
             }
 
-            if (nikseTextBoxPrompt.Text.Contains('}'))
+            if (nikseTextBoxPrompt.Text.Replace("{0}", string.Empty).Replace("{1}", string.Empty).Contains('}'))
             {
-                MessageBox.Show("Character not allowed in prompt: }");
+                MessageBox.Show("Character not allowed in prompt: '}' (besides '{0}' and '{1}')");
                 return;
             }
 
