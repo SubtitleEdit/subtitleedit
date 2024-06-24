@@ -36909,6 +36909,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
             using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, GetCurrentSubtitleFormat(), _videoInfo))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
