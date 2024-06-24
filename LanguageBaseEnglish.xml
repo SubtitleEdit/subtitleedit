@@ -1449,6 +1449,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in subtitle...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generate video with added/removed embedded subtitles...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generate transparent video with subtitles...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
@@ -3175,6 +3176,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Merging audio track: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Review audio clips</ReviewAudioClips>
+    <CustomAudioEncoding>Custom audio encoding</CustomAudioEncoding>
     <ReviewInfo>Review and edit/remove audio clips</ReviewInfo>
     <Play>Play</Play>
     <AutoContinue>Auto-continue</AutoContinue>

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Init();
             _loading = false;
 
-            _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
+            _oldSettings = Core.Settings.Settings.CustomSerialize(Configuration.Settings);
         }
 
         public void Init()
@@ -2455,7 +2456,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            if (_oldSettings == Core.Common.Settings.CustomSerialize(Configuration.Settings))
+            if (_oldSettings == Core.Settings.Settings.CustomSerialize(Configuration.Settings))
             {
                 DialogResult = DialogResult.Cancel;
                 return;

@@ -1845,6 +1845,7 @@
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string GenerateVideoWithEmbeddedSubs { get; set; }
+                    public string GenerateTransparentVideoWithSubs { get; set; }
                     public string VideoAudioToTextX { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportShotChanges { get; set; }
@@ -3384,6 +3385,7 @@
             public string MergingAudioTrackXOfY { get; set; }
             public string GeneratingSpeechFromTextXOfY { get; set; }
             public string ReviewAudioClips { get; set; }
+            public string CustomAudioEncoding { get; set; }
             public string ReviewInfo { get; set; }
             public string Play { get; set; }
             public string AutoContinue { get; set; }

@@ -245,6 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithSoftcodedSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToTextWhisperTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoaudioToTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToSpeechAndAddToVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2302,6 +2303,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithSoftcodedSubtitlesToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem,
             this.audioToTextWhisperTolStripMenuItem,
             this.videoaudioToTextToolStripMenuItem,
             this.textToSpeechAndAddToVideoToolStripMenuItem,
@@ -2417,6 +2419,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = "Generate video with hardcoded subtitle...";
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Click += new System.EventHandler(this.GenerateVideoWithHardcodedSubtitleToolStripMenuItemClick);
+            // 
+            // generaeTransparentVideoWithSubtitleToolStripMenuItem
+            // 
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem.Name = "generaeTransparentVideoWithSubtitleToolStripMenuItem";
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem.Text = "Generae transparent video with subtitle";
+            this.generaeTransparentVideoWithSubtitleToolStripMenuItem.Click += new System.EventHandler(this.generaeTransparentVideoWithSubtitleToolStripMenuItem_Click);
             // 
             // audioToTextWhisperTolStripMenuItem
             // 
@@ -6545,5 +6554,6 @@ namespace Nikse.SubtitleEdit.Forms
         private ToolStripMenuItem videoInfoToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private ToolStripMenuItem insertNewSubtitleHereToolStripMenuItem;
+        private ToolStripMenuItem generaeTransparentVideoWithSubtitleToolStripMenuItem;
     }
 }

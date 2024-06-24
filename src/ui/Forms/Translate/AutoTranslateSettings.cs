@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
@@ -89,6 +90,24 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
+            if (nikseTextBoxPrompt.Text.Contains('{'))
+            {
+                MessageBox.Show("Character not allowed in prompt: {");
+                return;
+            }
+
+            if (nikseTextBoxPrompt.Text.Contains('}'))
+            {
+                MessageBox.Show("Character not allowed in prompt: }");
+                return;
+            }
+
+            if (nikseTextBoxPrompt.Text.Length > 1000)
+            {
+                MessageBox.Show("Too many characters in prompt");
+                return;
+            }
+
             Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)nikseUpDownDelay.Value;
             Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)nikseUpDownMaxBytes.Value;
 

@@ -626,14 +626,17 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler dataReceivedHandler = null)
         {
+            var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : "-c:a copy ";
+            var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c copy -map 0:v:0 -map 1:a:0 \"{outputFileName}\"",
+                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
@@ -677,6 +680,37 @@ namespace Nikse.SubtitleEdit.Logic
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 
+            return processMakeVideo;
+        }
+
+        public static Process GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, DataReceivedEventHandler dataReceivedHandler)
+        {
+            if (width % 2 == 1)
+            {
+                width++;
+            }
+
+            if (height % 2 == 1)
+            {
+                height++;
+            }
+
+            outputVideoFileName = $"\"{outputVideoFileName}\"";
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $" -y -f lavfi -i \"color=c=black@0.0:s={width}x{height}:r={frameRate}:d=00\\\\:00\\\\:30,format=rgba,subtitles=f={Path.GetFileName(assaSubtitleFileName)}:alpha=1\" -c:v png {outputVideoFileName}".TrimStart(),
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
             return processMakeVideo;
         }
     }
