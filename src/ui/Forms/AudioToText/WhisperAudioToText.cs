@@ -911,6 +911,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (!_useCenterChannelOnly &&
                 (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
                  comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL) &&
+                (videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
+                 videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)) &&
                 _audioTrackNumber <= 0)
             {
                 inputFile = videoFileName;

@@ -43,7 +43,7 @@
 #define VerBuild
 #define VerRevision
 
-#define bindir "..\src\ui\bin\Release"
+#define bindir "..\src\ui\bin\Release\net48"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first

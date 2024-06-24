@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.6</Version>
-    <TranslatedBy>Последен превод на български 20.05.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 24.06.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -18,6 +18,7 @@
     <Preview>Преглед</Preview>
     <ShowPreview>Покажи преглед</ShowPreview>
     <HidePreview>Скрий прегледа</HidePreview>
+    <SubtitleFile>Файл със субтитри</SubtitleFile>
     <SubtitleFiles>Субтитри</SubtitleFiles>
     <AllFiles>Всички файлове</AllFiles>
     <VideoFiles>Видео файлове</VideoFiles>
@@ -1021,6 +1022,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GetEndPosition>Заемане на крайна позиция</GetEndPosition>
     <UseSource>Използване на източника</UseSource>
     <UseSourceResolution>Използване резолюцията на източника</UseSourceResolution>
+    <OutputSettings>Изходен файл/папка...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Генериране на видео с Добавяне/Премахване на вградени субтитри</Title>
@@ -1060,15 +1062,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <To>Към:</To>
     <Translate>Превод</Translate>
     <PleaseWait>Моля изчакайте... това може да продължи малко</PleaseWait>
-    <PoweredByGoogleTranslate>С помощта на Google преводач</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>С помощта на Microsoft преводач</PoweredByMicrosoftTranslate>
     <PoweredByX>С помощта на {0}</PoweredByX>
-    <MsClientSecretNeeded>Съжаляваме, но за да използвате най-новия преводач на Microsoft, ви е необходим ключ от Microsoft за когнитивни услуги «Преводач на текст".
-
-Отворете "Опции -&gt; Настройки -&gt; Автоматичен превод", за да въведете вашия ключ.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Трудно се превежда без API ключ... (бавни и ограничени данни)
-За да използвате API ключ, отворете "Опции -&gt; Настройки -&gt; Автоматичен превод", за да въведете вашия API ключ за преводач на Google.</GoogleNoApiKeyWarning>
-    <Service>Услуги:</Service>
     <LineMergeHandling>Обединяване на редове:</LineMergeHandling>
     <ProcessorMergeNext>Обединяване макс. два реда</ProcessorMergeNext>
     <ProcessorSentence>Обединяване на изречения</ProcessorSentence>
@@ -1095,6 +1089,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Delay>Закъснение между повикванията на сървъра</Delay>
     <MaxBytes>Макс. брой байтове при всяко повикване на сървъра</MaxBytes>
     <PromptX>Запитване за {0}</PromptX>
+    <TranslateLinesSeparately>Превеждане на всеки ред поотделно</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Сравнителен превод в Google и Microsoft</Title>
@@ -1453,6 +1448,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateBlankVideo>Генериране на празно видео ...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео с вградени субтитри ...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Генериране на видео с Добавяне/Премахване на вградени субтитри ...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Генериране на прозрачно видео със субтитри...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Аудио в текст чрез {0} разпознаване на реч ...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт на глави от видео</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Създаване/Импортиране на промените в сцената ...</GenerateImportShotChanges>
@@ -2141,6 +2137,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
     <CpsLessThan>CPS по-малко от</CpsLessThan>
     <CpsGreaterThan>CPS по-голям от</CpsGreaterThan>
+    <LengthLessThan>Дължината е по-малка от</LengthLessThan>
+    <LengthGreaterThan>Дължината е по-голяма от</LengthGreaterThan>
     <ExactlyOneLine>Точно един ред</ExactlyOneLine>
     <ExactlyTwoLines>Точно два реда</ExactlyTwoLines>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>
@@ -3179,6 +3177,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergingAudioTrackXOfY>Обединяване на аудио запис: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Генериране на реч от текст: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Преглед на аудио клипове</ReviewAudioClips>
+    <CustomAudioEncoding>Потребителско аудио кодиране</CustomAudioEncoding>
     <ReviewInfo>Преглеждане и редактиране/премахване на аудио клипове</ReviewInfo>
     <Play>Възпроизвеждане</Play>
     <AutoContinue>Авт. продължаване</AutoContinue>

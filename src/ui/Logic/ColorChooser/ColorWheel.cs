@@ -557,6 +557,5 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }

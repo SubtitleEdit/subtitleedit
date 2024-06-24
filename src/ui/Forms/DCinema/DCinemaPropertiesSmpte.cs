@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {

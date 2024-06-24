@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -92,6 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialogStyle.FileName = "multiple_replace_groups.template";
             saveFileDialogStyle.Title = LanguageSettings.Current.MultipleReplace.ExportRulesTitle;
             saveFileDialogStyle.Filter = LanguageSettings.Current.MultipleReplace.Rules + "|*.template";
+            saveFileDialogStyle.OverwritePrompt = true;
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {

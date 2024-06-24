@@ -4744,6 +4744,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateVideoWithEmbeddedSubs":
                     language.Main.Menu.Video.GenerateVideoWithEmbeddedSubs = reader.Value;
                     break;
+                case "Main/Menu/Video/GenerateTransparentVideoWithSubs":
+                    language.Main.Menu.Video.GenerateTransparentVideoWithSubs = reader.Value;
+                    break;
                 case "Main/Menu/Video/VideoAudioToTextX":
                     language.Main.Menu.Video.VideoAudioToTextX = reader.Value;
                     break;
@@ -8706,6 +8709,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "TextToSpeech/ReviewAudioClips":
                     language.TextToSpeech.ReviewAudioClips = reader.Value;
+                    break;
+                case "TextToSpeech/CustomAudioEncoding":
+                    language.TextToSpeech.CustomAudioEncoding = reader.Value;
                     break;
                 case "TextToSpeech/ReviewInfo":
                     language.TextToSpeech.ReviewInfo = reader.Value;
