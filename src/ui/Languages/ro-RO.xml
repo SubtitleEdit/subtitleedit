@@ -5,7 +5,8 @@
     <Version>4.0.5</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu, Mihai Pavelescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>A&amp;nulează</Cancel>
     <Yes>Da</Yes>
@@ -1050,7 +1051,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <Title>Traducere Google</Title>
     <From>De la:</From>
     <To>La:</To>
-    <Translate>Traduce</Translate>
+    <Translate>Tradu acum</Translate>
     <PleaseWait>Te rog, așteaptă... poate dura ceva timp</PleaseWait>
     <PoweredByX>Produs de {0}</PoweredByX>
     <LineMergeHandling>Îmbinare linii:</LineMergeHandling>
@@ -1061,7 +1062,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <CopyPasteMaxSize>Bloc de mărime maximă</CopyPasteMaxSize>
     <AutoCopyToClipboard>Auto-copiere în clipboard</AutoCopyToClipboard>
     <AutoCopyLineSeparator>Separator de linie</AutoCopyLineSeparator>
-    <TranslateBlockXOfY>Traduce blocul {0} din {1}</TranslateBlockXOfY>
+    <TranslateBlockXOfY>Tradu blocul {0} din {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Accesează translatorul și lipește textul, copiază rezultatul în clipboard și apasă pe butonul de mai jos</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>Adu textul tradus din clipboard
 (Ctrl + V)</TranslateBlockGetFromClipboard>
@@ -1074,18 +1075,18 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
     <ReadMore>Citeşte mai mult?</ReadMore>
     <Formality>Formalitate</Formality>
     <TranslateCurrentLine>Tradu numai linia curentă</TranslateCurrentLine>
-    <ReTranslateCurrentLine>Retraducere linia curentă</ReTranslateCurrentLine>
+    <ReTranslateCurrentLine>Retradu linia curentă</ReTranslateCurrentLine>
     <MergeSplitStrategy>Gestionarea divizării/imbinarii</MergeSplitStrategy>
     <Delay>Întârziere între apelurile pe server</Delay>
     <MaxBytes>Octeți maxim în fiecare apel de server</MaxBytes>
     <PromptX>Solicitare pentru {0}</PromptX>
-    <TranslateLinesSeparately>Traducere fiecare rând separat</TranslateLinesSeparately>
+    <TranslateLinesSeparately>Tradu fiecare rând separat</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traducere Google vs Microsoft</Title>
     <From>De la:</From>
     <To>La:</To>
-    <Translate>Traducere</Translate>
+    <Translate>Tradu</Translate>
     <SourceText>Sursa text</SourceText>
     <GoogleTranslate>Traducere Google</GoogleTranslate>
     <MicrosoftTranslate>Traducere Bing Microsoft</MicrosoftTranslate>
@@ -1438,6 +1439,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <GenerateBlankVideo>Generare videoclip gol...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generare videoclip cu subtitrare inscripționată...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generare videoclip cu subtitrări încorporate adăugate/eliminate...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generează un videoclip transparent cu subtitrări...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio la text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importare capitole din video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generare/importare schimbări de scenă...</GenerateImportShotChanges>
@@ -1466,8 +1468,8 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-traducere</Title>
-        <AutoTranslate>Auto-traduce...</AutoTranslate>
-        <AutoTranslateViaCopyPaste>Auto-traduce cu copiere-lipire...</AutoTranslateViaCopyPaste>
+        <AutoTranslate>Auto-traducere...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>Auto-tradu cu copiere-lipire...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>Opțiuni</Title>
@@ -1581,7 +1583,7 @@ Lungimea pauzei dintre subtitrările conectate poate fi puțin mai mică imediat
         <BeautifyTimeCodesOfSelectedLines>Înfrumusețați coduri de timp pentru liniile selectate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traducere Google/Microsoft a liniei originale</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linii selectate</SelectedLines>
-        <TranslateSelectedLines>Traduce liniile selectate...</TranslateSelectedLines>
+        <TranslateSelectedLines>Tradu liniile selectate...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustează limitele de timp în liniile selectate...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplică limitele de timp în liniile selectate...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Aplică etichete de înlocuire personalizate...</ApplyCustomOverrideTag>
@@ -2724,7 +2726,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AudioExtractSelectedLines>Extrage audio (linii selectate)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Rândurile selectate audio la text ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Comută între luminozități (numai mpv)</VideoToggleBrightness>
-    <AutoTranslateSelectedLines>Traduceți automat liniile selectate</AutoTranslateSelectedLines>
+    <AutoTranslateSelectedLines>Tradu automat liniile selectate</AutoTranslateSelectedLines>
     <CustomSearch1>Traducere, căutare personalizată 1</CustomSearch1>
     <CustomSearch2>Traducere, căutare personalizată 2</CustomSearch2>
     <CustomSearch3>Traducere, căutare personalizată 3</CustomSearch3>
@@ -3163,6 +3165,8 @@ Continui?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Îmbinarea pistei audio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generează vorbire din text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Examinează clipuri audio</ReviewAudioClips>
+    <CustomAudioEncoding>
+    </CustomAudioEncoding>
     <ReviewInfo>Examinează și editează/elimină clipuri audio</ReviewInfo>
     <Play>Pornește</Play>
     <AutoContinue>Continuare automată</AutoContinue>
