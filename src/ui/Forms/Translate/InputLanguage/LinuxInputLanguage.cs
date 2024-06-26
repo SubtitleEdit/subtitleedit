@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
         {
             try
             {
+                // TODO: Parse 
                 // xkb:us::eng  English (US)
                 // xkb:fr::fra  French
                 // xkb:de::ger  German
