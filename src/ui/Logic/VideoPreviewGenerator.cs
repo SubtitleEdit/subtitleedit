@@ -683,7 +683,7 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        public static Process GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, DataReceivedEventHandler dataReceivedHandler)
+        public static Process GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, string timeCode, DataReceivedEventHandler dataReceivedHandler)
         {
             if (width % 2 == 1)
             {
@@ -702,7 +702,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $" -y -f lavfi -i \"color=c=black@0.0:s={width}x{height}:r={frameRate}:d=00\\\\:00\\\\:30,format=rgba,subtitles=f={Path.GetFileName(assaSubtitleFileName)}:alpha=1\" -c:v png {outputVideoFileName}".TrimStart(),
+                    Arguments = $" -y -f lavfi -i \"color=c=black@0.0:s={width}x{height}:r={frameRate}:d={timeCode},format=rgba,subtitles=f={Path.GetFileName(assaSubtitleFileName)}:alpha=1\" -c:v png {outputVideoFileName}".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
