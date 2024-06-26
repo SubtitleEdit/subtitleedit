@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
             }
             catch
             {
+                // use thread/ui-thread culture english-name as fallbacks
                 return new[]
                 {
                     Thread.CurrentThread.CurrentCulture.EnglishName,
