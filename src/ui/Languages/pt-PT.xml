@@ -1450,6 +1450,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda gravada...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Gerar vídeo com legendas embutidas adicionadas/removidas...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Gerar vídeo transparente com legendas...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Áudio para texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>

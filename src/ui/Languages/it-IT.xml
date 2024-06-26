@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 14.06.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 26.06.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1449,6 +1449,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
         <GenerateBlankVideo>Genera video vuoto...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Genera video con sottotitoli forzati...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Genera video con sottotitoli incorporati aggiunti/rimossi...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Genera video trasparenti con sottotitoli...</GenerateTransparentVideoWithSubs>
         <VideoAudioToText>Audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
