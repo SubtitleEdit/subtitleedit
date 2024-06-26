@@ -18,7 +18,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
             }
             catch
             {
-                return new[] { Thread.CurrentThread.CurrentCulture.EnglishName };
+                return new[]
+                {
+                    Thread.CurrentThread.CurrentCulture.EnglishName,
+                    Thread.CurrentThread.CurrentUICulture.EnglishName
+                };
             }
         }
 
