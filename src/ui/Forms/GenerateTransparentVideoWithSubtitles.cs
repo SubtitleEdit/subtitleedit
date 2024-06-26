@@ -457,12 +457,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Process GetFfmpegProcess(string outputVideoFileName, string assaTempFileName)
         {
+            var totalMs = _assaSubtitle.Paragraphs.Max(p => p.EndTime.TotalMilliseconds);
+            var ts = TimeSpan.FromMilliseconds(totalMs + 2000);
+            var timeCode = string.Format($"{ts.Hours:00}\\\\:{ts.Minutes:00}\\\\:{ts.Seconds:00}");
+
             return VideoPreviewGenerator.GenerateTransparentVideoFile(
                 assaTempFileName,
                 outputVideoFileName,
                 (int)numericUpDownWidth.Value,
                 (int)numericUpDownHeight.Value,
                 comboBoxFrameRate.Text,
+                timeCode,
                 OutputHandler);
         }
 
