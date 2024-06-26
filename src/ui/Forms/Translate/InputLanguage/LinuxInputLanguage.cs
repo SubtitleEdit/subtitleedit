@@ -1,6 +1,6 @@
-using System;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
 {
@@ -16,9 +16,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
                 // xkb:es::spa  Spanish
                 return GetFromIbusProcess();
             }
-            catch (Exception ex)
+            catch
             {
-                return Array.Empty<string>();
+                return new[] { Thread.CurrentThread.CurrentCulture.EnglishName };
             }
         }
 
