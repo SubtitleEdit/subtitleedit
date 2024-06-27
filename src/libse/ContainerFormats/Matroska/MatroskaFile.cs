@@ -520,10 +520,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private string GetChapterName(Element ChapterDisplay)
+        private string GetChapterName(Element chapterDisplay)
         {
             Element element;
-            while (_stream.Position < ChapterDisplay.EndPosition && (element = ReadElement()) != null)
+            while (_stream.Position < chapterDisplay.EndPosition && (element = ReadElement()) != null)
             {
                 if (element.Id == ElementId.ChapString)
                 {
