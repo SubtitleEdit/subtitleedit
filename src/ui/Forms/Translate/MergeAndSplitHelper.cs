@@ -56,8 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 if (!noSentenceEndingSource)
                 {
-                    noSentenceEndingSource = true;
-                    mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
+                    mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource: true, noSentenceEndingTarget);
                     mergeCount = mergeResult.ParagraphCount;
                     text = mergeResult.Text;
                 }
