@@ -678,7 +678,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
-            // Set target language to something different than source language
+            // Set target language to something different from source language
             if (uiCultureTargetLanguage == defaultSourceLanguage && defaultSourceLanguage == "en")
             {
                 uiCultureTargetLanguage = "es";
