@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var inputBlank = string.IsNullOrWhiteSpace(sourceSubtitle.Paragraphs[i + index].Text);
                 var outputBlank = string.IsNullOrWhiteSpace(newSub.Paragraphs[i].Text);
-                if (inputBlank || outputBlank && (inputBlank != outputBlank))
+                if (inputBlank || outputBlank)
                 {
                     return false;
                 }
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var inputBlank = string.IsNullOrWhiteSpace(tempSubtitle.Paragraphs[i + index].Text);
                 var outputBlank = string.IsNullOrWhiteSpace(splitResult[i]);
-                if (inputBlank || outputBlank && (inputBlank != outputBlank))
+                if (inputBlank || outputBlank)
                 {
                     return false;
                 }
