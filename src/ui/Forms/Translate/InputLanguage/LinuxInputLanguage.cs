@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -10,12 +11,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
         {
             try
             {
-                // TODO: Parse 
-                // xkb:us::eng  English (US)
-                // xkb:fr::fra  French
-                // xkb:de::ger  German
-                // xkb:es::spa  Spanish
-                return GetFromIbusProcess();
+                return ParseTokens(GetFromIbusProcess());
             }
             catch
             {
@@ -28,6 +24,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
             }
         }
 
+        private static string[] ParseTokens(string[] tokens)
+        {
+            // xkb:us::eng  English (US)
+            // xkb:fr::fra  French
+            // xkb:de::ger  German
+            // xkb:es::spa  Spanish
+            return tokens.Select(token =>
+            {
+                var whiteSpaceIndex = token.IndexOf(' ');
+                return whiteSpaceIndex < 0 ? token : token.Substring(whiteSpaceIndex + 1).Trim();
+            }).ToArray();
+        }
+
         private string[] GetFromIbusProcess()
         {
             var process = new Process
@@ -38,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate.InputLanguage
                     Arguments = "-c \"ibus list-engine\"",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
                 }
             };
 
