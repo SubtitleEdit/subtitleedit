@@ -671,11 +671,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             return _subtitleRip;
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public void Dispose() => Dispose(true);
 
         private void Dispose(bool disposing)
         {
@@ -685,7 +681,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _memoryMappedFile?.Dispose();
             }
         }
-
 
         private void ReadSegmentInfoAndTracks()
         {
