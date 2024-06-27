@@ -1444,7 +1444,8 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>生成带有嵌入式字幕的视频...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>生成带有内嵌字幕的视频...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>生成带有字幕的透明视频...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
