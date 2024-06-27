@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             deleteAllToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
             moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
-            moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop; ;
+            moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
             moveToBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
             importToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.Import;
             exportToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.Export;
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         if (inputForm.ShowDialog(this) == DialogResult.OK)
                         {
                             var oldCategorySelectedIndex = listViewCategories.SelectedIndices.Count == 0 ? -1 : listViewCategories.SelectedIndices[0];
-                            foreach (var importCategory in importCategories.Where(Category => inputForm.ChosenCategories.Contains(Category.Name)))
+                            foreach (var importCategory in importCategories.Where(category => inputForm.ChosenCategories.Contains(category.Name)))
                             {
                                 int insertIndex = listViewCategories.Items.Count;
                                 var importedName = importCategory.Name;
@@ -381,7 +381,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message);
-                    return;
                 }
             }
         }
