@@ -535,5 +535,31 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowVideoControls = checkBoxHideVideoControls.Checked;
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _gray1?.Dispose();
+                _gray2?.Dispose();
+                _gray3?.Dispose();
+                _gray4?.Dispose();
+                _gray5?.Dispose();
+                _gray6?.Dispose();
+                _gray7?.Dispose();
+                _gray8?.Dispose();
+                _gray9?.Dispose();
+                _gray10?.Dispose();
+                _gray11?.Dispose();
+                _gray12?.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
