@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             NativeMethods.libvlc_media_player_pause(_mediaPlayer);
             _videoLoadedTimer.Stop();
 
-            OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
+            OnVideoLoaded?.Invoke(_mediaPlayer, EventArgs.Empty);
         }
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 Stop();
                 Play();
                 Pause();
-                OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());
+                OnVideoEnded.Invoke(_mediaPlayer, EventArgs.Empty);
             }
         }
 
