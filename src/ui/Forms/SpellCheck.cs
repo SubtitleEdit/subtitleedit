@@ -1218,7 +1218,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (_currentWord.ToUpperInvariant() != "LT'S" && _currentWord.ToUpperInvariant() != "SOX'S" && !_currentWord.ToUpperInvariant().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
                                 {
-                                    suggestions.AddRange(await DoSuggestAsync(_currentWord)); // TODO: 0.9.6 fails on "Lt'S"
+                                    suggestions.AddRange(await DoSuggestAsync(_currentWord).ConfigureAwait(true)); // TODO: 0.9.6 fails on "Lt'S"
                                 }
 
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
@@ -1413,7 +1413,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ContinueSpellCheck(Subtitle subtitle)
+        public Task ResumeSpellCheckAsync(Subtitle subtitle)
         {
             _subtitle = subtitle;
 
@@ -1428,16 +1428,16 @@ namespace Nikse.SubtitleEdit.Forms
             _currentParagraph = _subtitle.GetParagraphOrDefault(_currentIndex);
             if (_currentParagraph == null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
             SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
-            PrepareNextWordAsync();
+            return PrepareNextWordAsync();
         }
 
-        public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
+        public async Task DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
         {
             _subtitle = subtitle;
             LanguageStructure.Main mainLanguage = LanguageSettings.Current.Main;
@@ -1507,7 +1507,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
-            PrepareNextWordAsync();
+            await PrepareNextWordAsync();
         }
 
         private void LoadDictionaries(string dictionaryFolder, string dictionary, string languageName)
