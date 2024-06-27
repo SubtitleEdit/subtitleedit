@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 // ignore
             }
-            OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
+            OnVideoLoaded?.Invoke(_mediaPlayer, EventArgs.Empty);
         }
 
         public static string GetVlcPath(string fileName)
@@ -1065,7 +1065,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 Stop();
                 Play();
                 Pause();
-                OnVideoEnded?.Invoke(_mediaPlayer, new EventArgs());
+                OnVideoEnded?.Invoke(_mediaPlayer, EventArgs.Empty);
             }
         }
 
