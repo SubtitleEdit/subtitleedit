@@ -36914,7 +36914,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, GetCurrentSubtitleFormat(), _videoInfo))
+            var selectedLines = SubtitleListview1.GetSelectedIndices().ToList();
+            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, selectedLines, GetCurrentSubtitleFormat(), _videoInfo))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
