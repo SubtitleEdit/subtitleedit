@@ -46,18 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateButtons(int initialLayout)
         {
-            _gray1?.Dispose();
-            _gray2?.Dispose();
-            _gray3?.Dispose();
-            _gray4?.Dispose();
-            _gray5?.Dispose();
-            _gray6?.Dispose();
-            _gray7?.Dispose();
-            _gray8?.Dispose();
-            _gray9?.Dispose();
-            _gray10?.Dispose();
-            _gray11?.Dispose();
-            _gray12?.Dispose();
+            DisposeGraphics();
 
             _gray1 = GrayScale(Properties.Resources.L1, initialLayout == 0);
             _gray2 = GrayScale(Properties.Resources.L2, initialLayout == 1);
@@ -534,6 +523,37 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxHideVideoControls_CheckedChanged(object sender, EventArgs e)
         {
             ShowVideoControls = checkBoxHideVideoControls.Checked;
+        }
+
+        private void DisposeGraphics()
+        {
+            _gray1?.Dispose();
+            _gray2?.Dispose();
+            _gray3?.Dispose();
+            _gray4?.Dispose();
+            _gray5?.Dispose();
+            _gray6?.Dispose();
+            _gray7?.Dispose();
+            _gray8?.Dispose();
+            _gray9?.Dispose();
+            _gray10?.Dispose();
+            _gray11?.Dispose();
+            _gray12?.Dispose();
+        }
+        
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DisposeGraphics();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
