@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private bool _abort;
         private readonly Subtitle _assaSubtitle;
+        private readonly List<int> _selectedLines;
         private readonly VideoInfo _videoInfo;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private long _processedFrames;
@@ -28,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
-        public GenerateTransparentVideoWithSubtitles(Subtitle subtitle, SubtitleFormat format, VideoInfo videoInfo)
+        public GenerateTransparentVideoWithSubtitles(Subtitle subtitle, List<int> selectedLines, SubtitleFormat format, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -37,6 +38,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             _videoInfo = videoInfo;
             _assaSubtitle = new Subtitle(subtitle);
+            _selectedLines = selectedLines;
+
+            if (selectedLines.Count > 1)
+            {
+                radioButtonSelectedLinesOnly.Checked = true;
+            }
+            else
+            {
+                radioButtonAllLines.Checked = true;
+            }
 
             if (format.GetType() == typeof(NetflixImsc11Japanese) && _videoInfo != null)
             {
@@ -63,6 +74,9 @@ namespace Nikse.SubtitleEdit.Forms
             clearToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Clear;
             addFilesToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Add;
             labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
+            radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
+            radioButtonSelectedLinesOnly.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesOnly;
+            radioButtonSelectedLineAndForward.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesAndForward;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
@@ -242,7 +256,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            CalculateTotalFrames();
+            var subtitle = GetSubtitleBasedOnSelection();
+
+            CalculateTotalFrames(subtitle);
 
             labelProgress.Text = string.Empty;
             labelProgress.ForeColor = UiUtil.ForeColor;
@@ -253,12 +269,12 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownFontSize.Enabled = false;
 
             using (var saveDialog = new SaveFileDialog
-                   {
-                       FileName = SuggestNewVideoFileName(),
-                       Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov",
-                       AddExtension = true,
-                       InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
-                   })
+            {
+                FileName = SuggestNewVideoFileName(),
+                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov",
+                AddExtension = true,
+                InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
+            })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
@@ -271,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var stopWatch = Stopwatch.StartNew();
-            if (!ConvertVideo(oldFontSizeEnabled, _assaSubtitle))
+            if (!ConvertVideo(oldFontSizeEnabled, subtitle))
             {
                 buttonGenerate.Enabled = true;
                 numericUpDownFontSize.Enabled = true;
@@ -326,9 +342,38 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownFontSize.Enabled = true;
         }
 
-        private void CalculateTotalFrames()
+        private Subtitle GetSubtitleBasedOnSelection()
         {
-            var seconds = _assaSubtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);    
+            var subtitle = new Subtitle(_assaSubtitle);
+            if (radioButtonSelectedLinesOnly.Checked)
+            {
+                subtitle.Paragraphs.Clear();
+                foreach (var index in _selectedLines)
+                {
+                    subtitle.Paragraphs.Add(_assaSubtitle.Paragraphs[index]);
+                }
+            }
+            else if (radioButtonSelectedLineAndForward.Checked)
+            {
+                subtitle.Paragraphs.Clear();
+                foreach (var index in _selectedLines)
+                {
+                    subtitle.Paragraphs.Add(_assaSubtitle.Paragraphs[index]);
+                }
+
+                var last = _selectedLines.Max();
+                for (var i = last + 1; i < _assaSubtitle.Paragraphs.Count; i++)
+                {
+                    subtitle.Paragraphs.Add(_assaSubtitle.Paragraphs[i]);
+                }
+            }
+
+            return subtitle;
+        }
+
+        private void CalculateTotalFrames(Subtitle subtitle)
+        {
+            var seconds = subtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
             var frameRate = double.Parse(comboBoxFrameRate.Text, CultureInfo.InvariantCulture);
             _totalFrames = (long)Math.Round(seconds * frameRate, MidpointRounding.AwayFromZero) + 1;
         }
@@ -420,7 +465,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Visible = true;
             }
 
-            var result = RunOnePassEncoding(assaTempFileName);
+            var result = RunOnePassEncoding(assaTempFileName, subtitle);
 
             try
             {
@@ -455,9 +500,9 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private Process GetFfmpegProcess(string outputVideoFileName, string assaTempFileName)
+        private Process GetFfmpegProcess(string outputVideoFileName, string assaTempFileName, Subtitle subtitle)
         {
-            var totalMs = _assaSubtitle.Paragraphs.Max(p => p.EndTime.TotalMilliseconds);
+            var totalMs = subtitle.Paragraphs.Max(p => p.EndTime.TotalMilliseconds);
             var ts = TimeSpan.FromMilliseconds(totalMs + 2000);
             var timeCode = string.Format($"{ts.Hours:00}\\\\:{ts.Minutes:00}\\\\:{ts.Seconds:00}");
 
@@ -498,9 +543,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool RunOnePassEncoding(string assaTempFileName)
+        private bool RunOnePassEncoding(string assaTempFileName, Subtitle subtitle)
         {
-            var process = GetFfmpegProcess(VideoFileName, assaTempFileName);
+            var process = GetFfmpegProcess(VideoFileName, assaTempFileName, subtitle);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
 
             if (!CheckForPromptParameters(process, Text))
@@ -641,6 +686,21 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaBoxColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.GenVideoNonAssaTextColor = panelForeColor.BackColor;
+        }
+
+        private void radioButtonAllLines_CheckedChanged(object sender, EventArgs e)
+        {
+            var lineCount = GetSubtitleBasedOnSelection().Paragraphs.Count;
+            groupBoxSelection.Text = string.Format(LanguageSettings.Current.Split.NumberOfLinesX, lineCount);
+        }
+
+        private void GenerateTransparentVideoWithSubtitles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                _abort = true;
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }
