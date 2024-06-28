@@ -226,6 +226,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TimedText200604Ooyala(),
                     new TimedText(),
                     new TimedTextImsc11(),
+                    new TimedTextNoNs(),
                     new TitleExchangePro(),
                     new Titra(),
                     new TmpegEncText(),
