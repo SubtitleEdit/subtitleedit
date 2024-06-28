@@ -1810,7 +1810,6 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-
                 try
                 {
                     File.Delete(tempVideoFileName);
