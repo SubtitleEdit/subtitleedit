@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         }
 
                         Resize(_initialWidth, _initialHeight);
-                        OnVideoLoaded?.Invoke(this, new EventArgs());
+                        OnVideoLoaded?.Invoke(this, EventArgs.Empty);
 
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
 
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:
-                    OnVideoEnded?.Invoke(this, new EventArgs());
+                    OnVideoEnded?.Invoke(this, EventArgs.Empty);
 
                     break;
                 case MpcHcCommand.CurrentPosition:

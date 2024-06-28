@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
-                    OnVideoLoaded.Invoke(_quartzFilgraphManager, new EventArgs());
+                    OnVideoLoaded.Invoke(_quartzFilgraphManager, EventArgs.Empty);
                 }
                 catch
                 {
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _isPaused = true;
                 if (OnVideoEnded != null && _quartzFilgraphManager != null)
                 {
-                    OnVideoEnded.Invoke(_quartzFilgraphManager, new EventArgs());
+                    OnVideoEnded.Invoke(_quartzFilgraphManager, EventArgs.Empty);
                 }
             }
         }
