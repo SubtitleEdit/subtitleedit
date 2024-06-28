@@ -37,7 +37,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.nikseLabelOutline = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownOutline = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxFontBold = new System.Windows.Forms.CheckBox();
+            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelForeColor = new System.Windows.Forms.Panel();
             this.nikseLabelOutputFileFolder = new System.Windows.Forms.Label();
@@ -49,17 +52,53 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxCut = new System.Windows.Forms.GroupBox();
             this.buttonCutTo = new System.Windows.Forms.Button();
             this.buttonCutFrom = new System.Windows.Forms.Button();
+            this.numericUpDownCutToSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutToMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutToHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelCutTo = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelCutFrom = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxCut = new System.Windows.Forms.CheckBox();
+            this.labelVideoBitrate = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxBox = new System.Windows.Forms.CheckBox();
             this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
+            this.labelInfo = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
+            this.comboBoxSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxVideo = new System.Windows.Forms.GroupBox();
+            this.labelCrfHint = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
+            this.labelResolution = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelX = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelPreset = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxTune = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxPreset = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelTune = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelCRF = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxCrf = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxAudio = new System.Windows.Forms.GroupBox();
             this.listViewAudioTracks = new System.Windows.Forms.ListView();
             this.columnHeaderAudioTrack = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelAudioEnc = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxAudioEnc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxMakeStereo = new System.Windows.Forms.CheckBox();
+            this.labelAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.numericUpDownTargetFileSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelFileSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
+            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.listViewBatch = new System.Windows.Forms.ListView();
             this.columnHeaderVideoFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -99,45 +138,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.aAspectRatio916270480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bAspectRatio916180270ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonMode = new System.Windows.Forms.Button();
-            this.nikseLabelOutline = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.numericUpDownOutline = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.numericUpDownCutToSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutToMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutToHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelCutTo = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelCutFrom = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelVideoBitrate = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelInfo = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelCrfHint = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelResolution = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelX = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelPreset = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxTune = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxPreset = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelTune = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelCRF = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxCrf = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelAudioEnc = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxAudioEnc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.numericUpDownTargetFileSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelFileSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPreviewPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPass = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
@@ -156,9 +156,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 615);
+            this.progressBar1.Location = new System.Drawing.Point(18, 946);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(603, 11);
+            this.progressBar1.Size = new System.Drawing.Size(904, 17);
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
@@ -167,9 +168,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(621, 615);
+            this.buttonGenerate.Location = new System.Drawing.Point(932, 946);
+            this.buttonGenerate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonGenerate.Name = "buttonGenerate";
-            this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
+            this.buttonGenerate.Size = new System.Drawing.Size(182, 35);
             this.buttonGenerate.TabIndex = 140;
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
@@ -177,15 +179,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripGenerate
             // 
+            this.contextMenuStripGenerate.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.promptParameterBeforeGenerateToolStripMenuItem});
             this.contextMenuStripGenerate.Name = "contextMenuStripGenerate";
-            this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 26);
+            this.contextMenuStripGenerate.Size = new System.Drawing.Size(410, 36);
             // 
             // promptParameterBeforeGenerateToolStripMenuItem
             // 
             this.promptParameterBeforeGenerateToolStripMenuItem.Name = "promptParameterBeforeGenerateToolStripMenuItem";
-            this.promptParameterBeforeGenerateToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.promptParameterBeforeGenerateToolStripMenuItem.Size = new System.Drawing.Size(409, 32);
             this.promptParameterBeforeGenerateToolStripMenuItem.Text = "Prompt FFmpeg parameter and generate";
             this.promptParameterBeforeGenerateToolStripMenuItem.Click += new System.EventHandler(this.promptParameterBeforeGenerateToolStripMenuItem_Click);
             // 
@@ -194,9 +197,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(748, 615);
+            this.buttonCancel.Location = new System.Drawing.Point(1122, 946);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(125, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(188, 35);
             this.buttonCancel.TabIndex = 141;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -242,31 +246,110 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Controls.Add(this.listViewBatch);
             this.groupBoxSettings.Controls.Add(this.buttonOutputFileSettings);
-            this.groupBoxSettings.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxSettings.Location = new System.Drawing.Point(18, 18);
+            this.groupBoxSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(861, 548);
+            this.groupBoxSettings.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxSettings.Size = new System.Drawing.Size(1292, 843);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // nikseLabelOutline
+            // 
+            this.nikseLabelOutline.AutoSize = true;
+            this.nikseLabelOutline.Location = new System.Drawing.Point(28, 89);
+            this.nikseLabelOutline.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.nikseLabelOutline.Name = "nikseLabelOutline";
+            this.nikseLabelOutline.Size = new System.Drawing.Size(59, 20);
+            this.nikseLabelOutline.TabIndex = 151;
+            this.nikseLabelOutline.Text = "Outline";
+            // 
+            // numericUpDownOutline
+            // 
+            this.numericUpDownOutline.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOutline.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutline.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutline.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutline.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutline.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutline.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutline.DecimalPlaces = 1;
+            this.numericUpDownOutline.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOutline.Location = new System.Drawing.Point(178, 83);
+            this.numericUpDownOutline.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownOutline.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.Name = "numericUpDownOutline";
+            this.numericUpDownOutline.Size = new System.Drawing.Size(81, 35);
+            this.numericUpDownOutline.TabIndex = 40;
+            this.numericUpDownOutline.TabStop = false;
+            this.numericUpDownOutline.ThousandsSeparator = false;
+            this.numericUpDownOutline.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
             // 
             // checkBoxFontBold
             // 
             this.checkBoxFontBold.AutoSize = true;
             this.checkBoxFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxFontBold.Location = new System.Drawing.Point(187, 31);
+            this.checkBoxFontBold.Location = new System.Drawing.Point(280, 48);
+            this.checkBoxFontBold.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxFontBold.Name = "checkBoxFontBold";
-            this.checkBoxFontBold.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxFontBold.Size = new System.Drawing.Size(73, 24);
             this.checkBoxFontBold.TabIndex = 20;
             this.checkBoxFontBold.Text = "Bold";
             this.checkBoxFontBold.UseVisualStyleBackColor = true;
             this.checkBoxFontBold.CheckedChanged += new System.EventHandler(this.checkBoxFontBold_CheckedChanged);
             // 
+            // videoPlayerContainer1
+            // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.videoPlayerContainer1.Chapters = null;
+            this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.LastParagraph = null;
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(645, 482);
+            this.videoPlayerContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
+            this.videoPlayerContainer1.ShowStopButton = true;
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(646, 349);
+            this.videoPlayerContainer1.SubtitleText = "";
+            this.videoPlayerContainer1.TabIndex = 110;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
+            this.videoPlayerContainer1.VideoHeight = 0;
+            this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
+            this.videoPlayerContainer1.Volume = 0D;
+            // 
             // buttonClear
             // 
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonClear.Location = new System.Drawing.Point(165, 514);
+            this.buttonClear.Location = new System.Drawing.Point(248, 791);
+            this.buttonClear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(74, 23);
+            this.buttonClear.Size = new System.Drawing.Size(111, 35);
             this.buttonClear.TabIndex = 146;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -275,9 +358,10 @@ namespace Nikse.SubtitleEdit.Forms
             // panelForeColor
             // 
             this.panelForeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelForeColor.Location = new System.Drawing.Point(369, 28);
+            this.panelForeColor.Location = new System.Drawing.Point(554, 43);
+            this.panelForeColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panelForeColor.Name = "panelForeColor";
-            this.panelForeColor.Size = new System.Drawing.Size(21, 21);
+            this.panelForeColor.Size = new System.Drawing.Size(30, 31);
             this.panelForeColor.TabIndex = 6;
             this.panelForeColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelForeColor_MouseClick);
             // 
@@ -285,18 +369,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.nikseLabelOutputFileFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseLabelOutputFileFolder.AutoSize = true;
-            this.nikseLabelOutputFileFolder.Location = new System.Drawing.Point(334, 519);
+            this.nikseLabelOutputFileFolder.Location = new System.Drawing.Point(501, 798);
+            this.nikseLabelOutputFileFolder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.nikseLabelOutputFileFolder.Name = "nikseLabelOutputFileFolder";
-            this.nikseLabelOutputFileFolder.Size = new System.Drawing.Size(90, 13);
+            this.nikseLabelOutputFileFolder.Size = new System.Drawing.Size(134, 20);
             this.nikseLabelOutputFileFolder.TabIndex = 144;
             this.nikseLabelOutputFileFolder.Text = "Use source folder";
             // 
             // buttonRemoveFile
             // 
             this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonRemoveFile.Location = new System.Drawing.Point(85, 514);
+            this.buttonRemoveFile.Location = new System.Drawing.Point(128, 791);
+            this.buttonRemoveFile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRemoveFile.Name = "buttonRemoveFile";
-            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
+            this.buttonRemoveFile.Size = new System.Drawing.Size(111, 35);
             this.buttonRemoveFile.TabIndex = 145;
             this.buttonRemoveFile.Text = "Remove";
             this.buttonRemoveFile.UseVisualStyleBackColor = true;
@@ -304,9 +390,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonForeColor
             // 
-            this.buttonForeColor.Location = new System.Drawing.Point(274, 25);
+            this.buttonForeColor.Location = new System.Drawing.Point(411, 38);
+            this.buttonForeColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonForeColor.Name = "buttonForeColor";
-            this.buttonForeColor.Size = new System.Drawing.Size(89, 23);
+            this.buttonForeColor.Size = new System.Drawing.Size(134, 35);
             this.buttonForeColor.TabIndex = 30;
             this.buttonForeColor.Text = "Color";
             this.buttonForeColor.UseVisualStyleBackColor = true;
@@ -315,9 +402,10 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAddFile
             // 
             this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddFile.Location = new System.Drawing.Point(6, 514);
+            this.buttonAddFile.Location = new System.Drawing.Point(9, 791);
+            this.buttonAddFile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
+            this.buttonAddFile.Size = new System.Drawing.Size(110, 35);
             this.buttonAddFile.TabIndex = 144;
             this.buttonAddFile.Text = "Add...";
             this.buttonAddFile.UseVisualStyleBackColor = true;
@@ -326,17 +414,19 @@ namespace Nikse.SubtitleEdit.Forms
             // panelOutlineColor
             // 
             this.panelOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelOutlineColor.Location = new System.Drawing.Point(369, 56);
+            this.panelOutlineColor.Location = new System.Drawing.Point(554, 86);
+            this.panelOutlineColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panelOutlineColor.Name = "panelOutlineColor";
-            this.panelOutlineColor.Size = new System.Drawing.Size(21, 20);
+            this.panelOutlineColor.Size = new System.Drawing.Size(30, 30);
             this.panelOutlineColor.TabIndex = 4;
             this.panelOutlineColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelOutlineColor_MouseClick);
             // 
             // buttonOutlineColor
             // 
-            this.buttonOutlineColor.Location = new System.Drawing.Point(274, 54);
+            this.buttonOutlineColor.Location = new System.Drawing.Point(411, 83);
+            this.buttonOutlineColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOutlineColor.Name = "buttonOutlineColor";
-            this.buttonOutlineColor.Size = new System.Drawing.Size(89, 23);
+            this.buttonOutlineColor.Size = new System.Drawing.Size(134, 35);
             this.buttonOutlineColor.TabIndex = 60;
             this.buttonOutlineColor.Text = "Color";
             this.buttonOutlineColor.UseVisualStyleBackColor = true;
@@ -355,17 +445,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxCut.Controls.Add(this.labelCutTo);
             this.groupBoxCut.Controls.Add(this.labelCutFrom);
             this.groupBoxCut.Controls.Add(this.checkBoxCut);
-            this.groupBoxCut.Location = new System.Drawing.Point(430, 21);
+            this.groupBoxCut.Location = new System.Drawing.Point(645, 32);
+            this.groupBoxCut.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxCut.Name = "groupBoxCut";
-            this.groupBoxCut.Size = new System.Drawing.Size(425, 96);
+            this.groupBoxCut.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxCut.Size = new System.Drawing.Size(638, 148);
             this.groupBoxCut.TabIndex = 50;
             this.groupBoxCut.TabStop = false;
             // 
             // buttonCutTo
             // 
-            this.buttonCutTo.Location = new System.Drawing.Point(255, 62);
+            this.buttonCutTo.Location = new System.Drawing.Point(382, 95);
+            this.buttonCutTo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCutTo.Name = "buttonCutTo";
-            this.buttonCutTo.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutTo.Size = new System.Drawing.Size(50, 35);
             this.buttonCutTo.TabIndex = 24;
             this.buttonCutTo.Text = "...";
             this.buttonCutTo.UseVisualStyleBackColor = true;
@@ -373,31 +466,292 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonCutFrom
             // 
-            this.buttonCutFrom.Location = new System.Drawing.Point(97, 62);
+            this.buttonCutFrom.Location = new System.Drawing.Point(146, 95);
+            this.buttonCutFrom.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCutFrom.Name = "buttonCutFrom";
-            this.buttonCutFrom.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutFrom.Size = new System.Drawing.Size(50, 35);
             this.buttonCutFrom.TabIndex = 23;
             this.buttonCutFrom.Text = "...";
             this.buttonCutFrom.UseVisualStyleBackColor = true;
             this.buttonCutFrom.Click += new System.EventHandler(this.buttonCutFrom_Click);
             // 
+            // numericUpDownCutToSeconds
+            // 
+            this.numericUpDownCutToSeconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutToSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutToSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutToSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutToSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutToSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutToSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutToSeconds.DecimalPlaces = 0;
+            this.numericUpDownCutToSeconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToSeconds.Location = new System.Drawing.Point(490, 55);
+            this.numericUpDownCutToSeconds.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutToSeconds.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToSeconds.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToSeconds.Name = "numericUpDownCutToSeconds";
+            this.numericUpDownCutToSeconds.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutToSeconds.TabIndex = 22;
+            this.numericUpDownCutToSeconds.TabStop = false;
+            this.numericUpDownCutToSeconds.ThousandsSeparator = false;
+            this.numericUpDownCutToSeconds.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCutToMinutes
+            // 
+            this.numericUpDownCutToMinutes.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutToMinutes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutToMinutes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutToMinutes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutToMinutes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutToMinutes.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutToMinutes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutToMinutes.DecimalPlaces = 0;
+            this.numericUpDownCutToMinutes.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToMinutes.Location = new System.Drawing.Point(436, 55);
+            this.numericUpDownCutToMinutes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutToMinutes.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToMinutes.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToMinutes.Name = "numericUpDownCutToMinutes";
+            this.numericUpDownCutToMinutes.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutToMinutes.TabIndex = 21;
+            this.numericUpDownCutToMinutes.TabStop = false;
+            this.numericUpDownCutToMinutes.ThousandsSeparator = false;
+            this.numericUpDownCutToMinutes.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCutToHours
+            // 
+            this.numericUpDownCutToHours.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutToHours.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutToHours.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutToHours.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutToHours.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutToHours.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutToHours.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutToHours.DecimalPlaces = 0;
+            this.numericUpDownCutToHours.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToHours.Location = new System.Drawing.Point(382, 55);
+            this.numericUpDownCutToHours.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutToHours.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToHours.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutToHours.Name = "numericUpDownCutToHours";
+            this.numericUpDownCutToHours.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutToHours.TabIndex = 20;
+            this.numericUpDownCutToHours.TabStop = false;
+            this.numericUpDownCutToHours.ThousandsSeparator = false;
+            this.numericUpDownCutToHours.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCutFromSeconds
+            // 
+            this.numericUpDownCutFromSeconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutFromSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutFromSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutFromSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutFromSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutFromSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutFromSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutFromSeconds.DecimalPlaces = 0;
+            this.numericUpDownCutFromSeconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromSeconds.Location = new System.Drawing.Point(254, 55);
+            this.numericUpDownCutFromSeconds.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutFromSeconds.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromSeconds.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromSeconds.Name = "numericUpDownCutFromSeconds";
+            this.numericUpDownCutFromSeconds.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutFromSeconds.TabIndex = 19;
+            this.numericUpDownCutFromSeconds.TabStop = false;
+            this.numericUpDownCutFromSeconds.ThousandsSeparator = false;
+            this.numericUpDownCutFromSeconds.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCutFromMinutes
+            // 
+            this.numericUpDownCutFromMinutes.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutFromMinutes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutFromMinutes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutFromMinutes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutFromMinutes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutFromMinutes.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutFromMinutes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutFromMinutes.DecimalPlaces = 0;
+            this.numericUpDownCutFromMinutes.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromMinutes.Location = new System.Drawing.Point(200, 55);
+            this.numericUpDownCutFromMinutes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutFromMinutes.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromMinutes.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromMinutes.Name = "numericUpDownCutFromMinutes";
+            this.numericUpDownCutFromMinutes.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutFromMinutes.TabIndex = 18;
+            this.numericUpDownCutFromMinutes.TabStop = false;
+            this.numericUpDownCutFromMinutes.ThousandsSeparator = false;
+            this.numericUpDownCutFromMinutes.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCutFromHours
+            // 
+            this.numericUpDownCutFromHours.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCutFromHours.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCutFromHours.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCutFromHours.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCutFromHours.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCutFromHours.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCutFromHours.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCutFromHours.DecimalPlaces = 0;
+            this.numericUpDownCutFromHours.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromHours.Location = new System.Drawing.Point(146, 55);
+            this.numericUpDownCutFromHours.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownCutFromHours.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromHours.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownCutFromHours.Name = "numericUpDownCutFromHours";
+            this.numericUpDownCutFromHours.Size = new System.Drawing.Size(60, 35);
+            this.numericUpDownCutFromHours.TabIndex = 17;
+            this.numericUpDownCutFromHours.TabStop = false;
+            this.numericUpDownCutFromHours.ThousandsSeparator = false;
+            this.numericUpDownCutFromHours.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // labelCutTo
+            // 
+            this.labelCutTo.AutoSize = true;
+            this.labelCutTo.Location = new System.Drawing.Point(382, 23);
+            this.labelCutTo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutTo.Name = "labelCutTo";
+            this.labelCutTo.Size = new System.Drawing.Size(27, 20);
+            this.labelCutTo.TabIndex = 16;
+            this.labelCutTo.Text = "To";
+            // 
+            // labelCutFrom
+            // 
+            this.labelCutFrom.AutoSize = true;
+            this.labelCutFrom.Location = new System.Drawing.Point(141, 23);
+            this.labelCutFrom.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutFrom.Name = "labelCutFrom";
+            this.labelCutFrom.Size = new System.Drawing.Size(46, 20);
+            this.labelCutFrom.TabIndex = 14;
+            this.labelCutFrom.Text = "From";
+            // 
             // checkBoxCut
             // 
             this.checkBoxCut.AutoSize = true;
-            this.checkBoxCut.Location = new System.Drawing.Point(12, 36);
+            this.checkBoxCut.Location = new System.Drawing.Point(18, 55);
+            this.checkBoxCut.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxCut.Name = "checkBoxCut";
-            this.checkBoxCut.Size = new System.Drawing.Size(42, 17);
+            this.checkBoxCut.Size = new System.Drawing.Size(60, 24);
             this.checkBoxCut.TabIndex = 0;
             this.checkBoxCut.Text = "Cut";
             this.checkBoxCut.UseVisualStyleBackColor = true;
             this.checkBoxCut.CheckedChanged += new System.EventHandler(this.checkBoxCut_CheckedChanged);
             // 
+            // labelVideoBitrate
+            // 
+            this.labelVideoBitrate.AutoSize = true;
+            this.labelVideoBitrate.Location = new System.Drawing.Point(290, 542);
+            this.labelVideoBitrate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelVideoBitrate.Name = "labelVideoBitrate";
+            this.labelVideoBitrate.Size = new System.Drawing.Size(130, 20);
+            this.labelVideoBitrate.TabIndex = 14;
+            this.labelVideoBitrate.Text = "labelVideoBitrate";
+            // 
             // checkBoxBox
             // 
             this.checkBoxBox.AutoSize = true;
-            this.checkBoxBox.Location = new System.Drawing.Point(187, 60);
+            this.checkBoxBox.Location = new System.Drawing.Point(280, 92);
+            this.checkBoxBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxBox.Name = "checkBoxBox";
-            this.checkBoxBox.Size = new System.Drawing.Size(44, 17);
+            this.checkBoxBox.Size = new System.Drawing.Size(62, 24);
             this.checkBoxBox.TabIndex = 50;
             this.checkBoxBox.Text = "Box";
             this.checkBoxBox.UseVisualStyleBackColor = true;
@@ -406,24 +760,72 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxAlignRight
             // 
             this.checkBoxAlignRight.AutoSize = true;
-            this.checkBoxAlignRight.Location = new System.Drawing.Point(218, 114);
+            this.checkBoxAlignRight.Location = new System.Drawing.Point(327, 175);
+            this.checkBoxAlignRight.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxAlignRight.Name = "checkBoxAlignRight";
-            this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxAlignRight.Size = new System.Drawing.Size(105, 24);
             this.checkBoxAlignRight.TabIndex = 76;
             this.checkBoxAlignRight.Text = "Align right";
             this.checkBoxAlignRight.UseVisualStyleBackColor = true;
             this.checkBoxAlignRight.CheckedChanged += new System.EventHandler(this.checkBoxAlignRight_CheckedChanged);
             // 
+            // labelInfo
+            // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(8, 811);
+            this.labelInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(37, 20);
+            this.labelInfo.TabIndex = 1;
+            this.labelInfo.Text = "Info";
+            // 
             // checkBoxRightToLeft
             // 
             this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 114);
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(180, 175);
+            this.checkBoxRightToLeft.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(117, 24);
             this.checkBoxRightToLeft.TabIndex = 75;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
             this.checkBoxRightToLeft.CheckedChanged += new System.EventHandler(this.checkBoxRightToLeft_CheckedChanged);
+            // 
+            // comboBoxSubtitleFont
+            // 
+            this.comboBoxSubtitleFont.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxSubtitleFont.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxSubtitleFont.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSubtitleFont.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxSubtitleFont.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxSubtitleFont.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxSubtitleFont.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxSubtitleFont.DropDownHeight = 400;
+            this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFont.DropDownWidth = 250;
+            this.comboBoxSubtitleFont.FormattingEnabled = true;
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(180, 134);
+            this.comboBoxSubtitleFont.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxSubtitleFont.MaxLength = 32767;
+            this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
+            this.comboBoxSubtitleFont.SelectedIndex = -1;
+            this.comboBoxSubtitleFont.SelectedItem = null;
+            this.comboBoxSubtitleFont.SelectedText = "";
+            this.comboBoxSubtitleFont.Size = new System.Drawing.Size(365, 32);
+            this.comboBoxSubtitleFont.TabIndex = 70;
+            this.comboBoxSubtitleFont.UsePopupWindow = false;
+            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
+            // 
+            // labelSubtitleFont
+            // 
+            this.labelSubtitleFont.AutoSize = true;
+            this.labelSubtitleFont.Location = new System.Drawing.Point(28, 138);
+            this.labelSubtitleFont.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelSubtitleFont.Name = "labelSubtitleFont";
+            this.labelSubtitleFont.Size = new System.Drawing.Size(95, 20);
+            this.labelSubtitleFont.TabIndex = 7;
+            this.labelSubtitleFont.Text = "Subtitle font";
             // 
             // groupBoxVideo
             // 
@@ -441,24 +843,311 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
             this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
             this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
-            this.groupBoxVideo.Location = new System.Drawing.Point(6, 141);
+            this.groupBoxVideo.Location = new System.Drawing.Point(9, 217);
+            this.groupBoxVideo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(416, 166);
+            this.groupBoxVideo.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxVideo.Size = new System.Drawing.Size(624, 255);
             this.groupBoxVideo.TabIndex = 70;
             this.groupBoxVideo.TabStop = false;
             this.groupBoxVideo.Text = "Video";
+            // 
+            // labelCrfHint
+            // 
+            this.labelCrfHint.AutoSize = true;
+            this.labelCrfHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCrfHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelCrfHint.Location = new System.Drawing.Point(330, 163);
+            this.labelCrfHint.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCrfHint.Name = "labelCrfHint";
+            this.labelCrfHint.Size = new System.Drawing.Size(33, 17);
+            this.labelCrfHint.TabIndex = 32;
+            this.labelCrfHint.Text = "Hint";
             // 
             // buttonVideoChooseStandardRes
             // 
             this.buttonVideoChooseStandardRes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(257, 15);
+            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(386, 23);
+            this.buttonVideoChooseStandardRes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonVideoChooseStandardRes.Name = "buttonVideoChooseStandardRes";
-            this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(79, 23);
+            this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(118, 35);
             this.buttonVideoChooseStandardRes.TabIndex = 3;
             this.buttonVideoChooseStandardRes.Text = "...";
             this.buttonVideoChooseStandardRes.UseVisualStyleBackColor = true;
             this.buttonVideoChooseStandardRes.Click += new System.EventHandler(this.buttonVideoChooseStandardRes_Click);
+            // 
+            // labelResolution
+            // 
+            this.labelResolution.AutoSize = true;
+            this.labelResolution.Location = new System.Drawing.Point(15, 29);
+            this.labelResolution.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelResolution.Name = "labelResolution";
+            this.labelResolution.Size = new System.Drawing.Size(85, 20);
+            this.labelResolution.TabIndex = 0;
+            this.labelResolution.Text = "Resolution";
+            // 
+            // numericUpDownWidth
+            // 
+            this.numericUpDownWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownWidth.DecimalPlaces = 0;
+            this.numericUpDownWidth.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownWidth.Location = new System.Drawing.Point(144, 26);
+            this.numericUpDownWidth.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownWidth.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownWidth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownWidth.Name = "numericUpDownWidth";
+            this.numericUpDownWidth.Size = new System.Drawing.Size(96, 35);
+            this.numericUpDownWidth.TabIndex = 1;
+            this.numericUpDownWidth.TabStop = false;
+            this.numericUpDownWidth.ThousandsSeparator = false;
+            this.numericUpDownWidth.Value = new decimal(new int[] {
+            1280,
+            0,
+            0,
+            0});
+            this.numericUpDownWidth.ValueChanged += new System.EventHandler(this.numericUpDownWidth_ValueChanged);
+            // 
+            // numericUpDownHeight
+            // 
+            this.numericUpDownHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownHeight.DecimalPlaces = 0;
+            this.numericUpDownHeight.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Location = new System.Drawing.Point(276, 26);
+            this.numericUpDownHeight.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownHeight.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Name = "numericUpDownHeight";
+            this.numericUpDownHeight.Size = new System.Drawing.Size(96, 35);
+            this.numericUpDownHeight.TabIndex = 2;
+            this.numericUpDownHeight.TabStop = false;
+            this.numericUpDownHeight.ThousandsSeparator = false;
+            this.numericUpDownHeight.Value = new decimal(new int[] {
+            720,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
+            // 
+            // labelX
+            // 
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(249, 29);
+            this.labelX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(16, 20);
+            this.labelX.TabIndex = 31;
+            this.labelX.Text = "x";
+            // 
+            // labelPreset
+            // 
+            this.labelPreset.AutoSize = true;
+            this.labelPreset.Location = new System.Drawing.Point(15, 120);
+            this.labelPreset.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelPreset.Name = "labelPreset";
+            this.labelPreset.Size = new System.Drawing.Size(55, 20);
+            this.labelPreset.TabIndex = 5;
+            this.labelPreset.Text = "Preset";
+            // 
+            // comboBoxTune
+            // 
+            this.comboBoxTune.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTune.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTune.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTune.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTune.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTune.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTune.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTune.DropDownHeight = 400;
+            this.comboBoxTune.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTune.DropDownWidth = 121;
+            this.comboBoxTune.FormattingEnabled = true;
+            this.comboBoxTune.Items.AddRange(new string[] {
+            "",
+            "film",
+            "animation",
+            "grain"});
+            this.comboBoxTune.Location = new System.Drawing.Point(142, 200);
+            this.comboBoxTune.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxTune.MaxLength = 32767;
+            this.comboBoxTune.Name = "comboBoxTune";
+            this.comboBoxTune.SelectedIndex = 0;
+            this.comboBoxTune.SelectedItem = "";
+            this.comboBoxTune.SelectedText = "";
+            this.comboBoxTune.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxTune.TabIndex = 10;
+            this.comboBoxTune.UsePopupWindow = false;
+            // 
+            // comboBoxPreset
+            // 
+            this.comboBoxPreset.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxPreset.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxPreset.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxPreset.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxPreset.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxPreset.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxPreset.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxPreset.DropDownHeight = 400;
+            this.comboBoxPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPreset.DropDownWidth = 121;
+            this.comboBoxPreset.FormattingEnabled = true;
+            this.comboBoxPreset.Items.AddRange(new string[] {
+            "ultrafast",
+            "superfast",
+            "veryfast",
+            "faster",
+            "fast",
+            "medium",
+            "slow",
+            "slower",
+            "veryslow "});
+            this.comboBoxPreset.Location = new System.Drawing.Point(142, 117);
+            this.comboBoxPreset.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxPreset.MaxLength = 32767;
+            this.comboBoxPreset.Name = "comboBoxPreset";
+            this.comboBoxPreset.SelectedIndex = -1;
+            this.comboBoxPreset.SelectedItem = null;
+            this.comboBoxPreset.SelectedText = "";
+            this.comboBoxPreset.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxPreset.TabIndex = 6;
+            this.comboBoxPreset.UsePopupWindow = false;
+            // 
+            // labelTune
+            // 
+            this.labelTune.AutoSize = true;
+            this.labelTune.Location = new System.Drawing.Point(15, 203);
+            this.labelTune.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTune.Name = "labelTune";
+            this.labelTune.Size = new System.Drawing.Size(45, 20);
+            this.labelTune.TabIndex = 9;
+            this.labelTune.Text = "Tune";
+            // 
+            // labelCRF
+            // 
+            this.labelCRF.AutoSize = true;
+            this.labelCRF.Location = new System.Drawing.Point(15, 162);
+            this.labelCRF.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCRF.Name = "labelCRF";
+            this.labelCRF.Size = new System.Drawing.Size(42, 20);
+            this.labelCRF.TabIndex = 7;
+            this.labelCRF.Text = "CRF";
+            // 
+            // comboBoxVideoEncoding
+            // 
+            this.comboBoxVideoEncoding.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxVideoEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxVideoEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxVideoEncoding.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxVideoEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxVideoEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxVideoEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxVideoEncoding.DropDownHeight = 400;
+            this.comboBoxVideoEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVideoEncoding.DropDownWidth = 121;
+            this.comboBoxVideoEncoding.FormattingEnabled = true;
+            this.comboBoxVideoEncoding.Items.AddRange(new string[] {
+            "libx264",
+            "libx265",
+            "libvpx-vp9",
+            "h264_nvenc",
+            "hevc_nvenc",
+            "h264_amf",
+            "hevc_amf",
+            "prores_ks"});
+            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(142, 75);
+            this.comboBoxVideoEncoding.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxVideoEncoding.MaxLength = 32767;
+            this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
+            this.comboBoxVideoEncoding.SelectedIndex = -1;
+            this.comboBoxVideoEncoding.SelectedItem = null;
+            this.comboBoxVideoEncoding.SelectedText = "";
+            this.comboBoxVideoEncoding.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxVideoEncoding.TabIndex = 4;
+            this.comboBoxVideoEncoding.UsePopupWindow = false;
+            this.comboBoxVideoEncoding.SelectedIndexChanged += new System.EventHandler(this.comboBoxVideoEncoding_SelectedIndexChanged);
+            // 
+            // comboBoxCrf
+            // 
+            this.comboBoxCrf.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCrf.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCrf.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCrf.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCrf.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCrf.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCrf.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCrf.DropDownHeight = 400;
+            this.comboBoxCrf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCrf.DropDownWidth = 121;
+            this.comboBoxCrf.FormattingEnabled = true;
+            this.comboBoxCrf.Items.AddRange(new string[] {
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28"});
+            this.comboBoxCrf.Location = new System.Drawing.Point(142, 158);
+            this.comboBoxCrf.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxCrf.MaxLength = 32767;
+            this.comboBoxCrf.Name = "comboBoxCrf";
+            this.comboBoxCrf.SelectedIndex = -1;
+            this.comboBoxCrf.SelectedItem = null;
+            this.comboBoxCrf.SelectedText = "";
+            this.comboBoxCrf.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxCrf.TabIndex = 8;
+            this.comboBoxCrf.UsePopupWindow = false;
+            // 
+            // labelVideoEncoding
+            // 
+            this.labelVideoEncoding.AutoSize = true;
+            this.labelVideoEncoding.Location = new System.Drawing.Point(15, 78);
+            this.labelVideoEncoding.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelVideoEncoding.Name = "labelVideoEncoding";
+            this.labelVideoEncoding.Size = new System.Drawing.Size(80, 20);
+            this.labelVideoEncoding.TabIndex = 3;
+            this.labelVideoEncoding.Text = "Video enc";
             // 
             // groupBoxAudio
             // 
@@ -472,9 +1161,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
             this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
             this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
-            this.groupBoxAudio.Location = new System.Drawing.Point(430, 141);
+            this.groupBoxAudio.Location = new System.Drawing.Point(645, 217);
+            this.groupBoxAudio.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(425, 166);
+            this.groupBoxAudio.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxAudio.Size = new System.Drawing.Size(638, 255);
             this.groupBoxAudio.TabIndex = 90;
             this.groupBoxAudio.TabStop = false;
             this.groupBoxAudio.Text = "Audio";
@@ -487,9 +1178,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewAudioTracks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderAudioTrack});
             this.listViewAudioTracks.HideSelection = false;
-            this.listViewAudioTracks.Location = new System.Drawing.Point(229, 29);
+            this.listViewAudioTracks.Location = new System.Drawing.Point(344, 45);
+            this.listViewAudioTracks.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewAudioTracks.Name = "listViewAudioTracks";
-            this.listViewAudioTracks.Size = new System.Drawing.Size(190, 122);
+            this.listViewAudioTracks.Size = new System.Drawing.Size(283, 186);
             this.listViewAudioTracks.TabIndex = 45;
             this.listViewAudioTracks.UseCompatibleStateImageBehavior = false;
             this.listViewAudioTracks.View = System.Windows.Forms.View.Details;
@@ -499,28 +1191,257 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeaderAudioTrack.Text = "Audio tracks";
             this.columnHeaderAudioTrack.Width = 160;
             // 
+            // labelAudioEnc
+            // 
+            this.labelAudioEnc.AutoSize = true;
+            this.labelAudioEnc.Location = new System.Drawing.Point(21, 48);
+            this.labelAudioEnc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAudioEnc.Name = "labelAudioEnc";
+            this.labelAudioEnc.Size = new System.Drawing.Size(76, 20);
+            this.labelAudioEnc.TabIndex = 0;
+            this.labelAudioEnc.Text = "Encoding";
+            // 
+            // comboBoxAudioBitRate
+            // 
+            this.comboBoxAudioBitRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxAudioBitRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxAudioBitRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxAudioBitRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxAudioBitRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxAudioBitRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxAudioBitRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxAudioBitRate.DropDownHeight = 400;
+            this.comboBoxAudioBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioBitRate.DropDownWidth = 121;
+            this.comboBoxAudioBitRate.FormattingEnabled = true;
+            this.comboBoxAudioBitRate.Items.AddRange(new string[] {
+            "64k",
+            "128k",
+            "160k",
+            "196k",
+            "320k"});
+            this.comboBoxAudioBitRate.Location = new System.Drawing.Point(136, 169);
+            this.comboBoxAudioBitRate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxAudioBitRate.MaxLength = 32767;
+            this.comboBoxAudioBitRate.Name = "comboBoxAudioBitRate";
+            this.comboBoxAudioBitRate.SelectedIndex = -1;
+            this.comboBoxAudioBitRate.SelectedItem = null;
+            this.comboBoxAudioBitRate.SelectedText = "";
+            this.comboBoxAudioBitRate.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxAudioBitRate.TabIndex = 5;
+            this.comboBoxAudioBitRate.UsePopupWindow = false;
+            this.comboBoxAudioBitRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioBitRate_SelectedValueChanged);
+            // 
+            // comboBoxAudioEnc
+            // 
+            this.comboBoxAudioEnc.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxAudioEnc.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxAudioEnc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxAudioEnc.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxAudioEnc.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxAudioEnc.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxAudioEnc.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxAudioEnc.DropDownHeight = 400;
+            this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioEnc.DropDownWidth = 121;
+            this.comboBoxAudioEnc.FormattingEnabled = true;
+            this.comboBoxAudioEnc.Items.AddRange(new string[] {
+            "copy",
+            "aac"});
+            this.comboBoxAudioEnc.Location = new System.Drawing.Point(136, 45);
+            this.comboBoxAudioEnc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxAudioEnc.MaxLength = 32767;
+            this.comboBoxAudioEnc.Name = "comboBoxAudioEnc";
+            this.comboBoxAudioEnc.SelectedIndex = -1;
+            this.comboBoxAudioEnc.SelectedItem = null;
+            this.comboBoxAudioEnc.SelectedText = "";
+            this.comboBoxAudioEnc.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxAudioEnc.TabIndex = 1;
+            this.comboBoxAudioEnc.UsePopupWindow = false;
+            this.comboBoxAudioEnc.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioEnc_SelectedIndexChanged);
+            // 
+            // labelAudioBitRate
+            // 
+            this.labelAudioBitRate.AutoSize = true;
+            this.labelAudioBitRate.Location = new System.Drawing.Point(21, 172);
+            this.labelAudioBitRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAudioBitRate.Name = "labelAudioBitRate";
+            this.labelAudioBitRate.Size = new System.Drawing.Size(60, 20);
+            this.labelAudioBitRate.TabIndex = 4;
+            this.labelAudioBitRate.Text = "Bit rate";
+            // 
             // checkBoxMakeStereo
             // 
             this.checkBoxMakeStereo.AutoSize = true;
             this.checkBoxMakeStereo.Checked = true;
             this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMakeStereo.Location = new System.Drawing.Point(91, 58);
+            this.checkBoxMakeStereo.Location = new System.Drawing.Point(136, 89);
+            this.checkBoxMakeStereo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
-            this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxMakeStereo.Size = new System.Drawing.Size(83, 24);
             this.checkBoxMakeStereo.TabIndex = 2;
             this.checkBoxMakeStereo.Text = "Stereo";
             this.checkBoxMakeStereo.UseVisualStyleBackColor = true;
             // 
+            // labelAudioSampleRate
+            // 
+            this.labelAudioSampleRate.AutoSize = true;
+            this.labelAudioSampleRate.Location = new System.Drawing.Point(21, 131);
+            this.labelAudioSampleRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAudioSampleRate.Name = "labelAudioSampleRate";
+            this.labelAudioSampleRate.Size = new System.Drawing.Size(95, 20);
+            this.labelAudioSampleRate.TabIndex = 44;
+            this.labelAudioSampleRate.Text = "Sample rate";
+            // 
+            // comboBoxAudioSampleRate
+            // 
+            this.comboBoxAudioSampleRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxAudioSampleRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxAudioSampleRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxAudioSampleRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxAudioSampleRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxAudioSampleRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxAudioSampleRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxAudioSampleRate.DropDownHeight = 400;
+            this.comboBoxAudioSampleRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioSampleRate.DropDownWidth = 121;
+            this.comboBoxAudioSampleRate.FormattingEnabled = true;
+            this.comboBoxAudioSampleRate.Items.AddRange(new string[] {
+            "44100 Hz",
+            "48000 Hz",
+            "88200 Hz",
+            "96000 Hz",
+            "192000 Hz"});
+            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(136, 128);
+            this.comboBoxAudioSampleRate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxAudioSampleRate.MaxLength = 32767;
+            this.comboBoxAudioSampleRate.Name = "comboBoxAudioSampleRate";
+            this.comboBoxAudioSampleRate.SelectedIndex = -1;
+            this.comboBoxAudioSampleRate.SelectedItem = null;
+            this.comboBoxAudioSampleRate.SelectedText = "";
+            this.comboBoxAudioSampleRate.Size = new System.Drawing.Size(182, 32);
+            this.comboBoxAudioSampleRate.TabIndex = 3;
+            this.comboBoxAudioSampleRate.UsePopupWindow = false;
+            // 
+            // numericUpDownTargetFileSize
+            // 
+            this.numericUpDownTargetFileSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownTargetFileSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownTargetFileSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownTargetFileSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownTargetFileSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownTargetFileSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownTargetFileSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownTargetFileSize.DecimalPlaces = 0;
+            this.numericUpDownTargetFileSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(180, 538);
+            this.numericUpDownTargetFileSize.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownTargetFileSize.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetFileSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetFileSize.Name = "numericUpDownTargetFileSize";
+            this.numericUpDownTargetFileSize.Size = new System.Drawing.Size(96, 35);
+            this.numericUpDownTargetFileSize.TabIndex = 101;
+            this.numericUpDownTargetFileSize.TabStop = false;
+            this.numericUpDownTargetFileSize.ThousandsSeparator = false;
+            this.numericUpDownTargetFileSize.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetFileSize.ValueChanged += new System.EventHandler(this.numericUpDownTargetFileSize_ValueChanged);
+            // 
+            // labelFileSize
+            // 
+            this.labelFileSize.AutoSize = true;
+            this.labelFileSize.Location = new System.Drawing.Point(52, 542);
+            this.labelFileSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelFileSize.Name = "labelFileSize";
+            this.labelFileSize.Size = new System.Drawing.Size(110, 20);
+            this.labelFileSize.TabIndex = 12;
+            this.labelFileSize.Text = "File size in MB";
+            // 
             // checkBoxTargetFileSize
             // 
             this.checkBoxTargetFileSize.AutoSize = true;
-            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 327);
+            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(33, 503);
+            this.checkBoxTargetFileSize.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
-            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(283, 24);
             this.checkBoxTargetFileSize.TabIndex = 100;
             this.checkBoxTargetFileSize.Text = "Target file size (two pass encoding)";
             this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
             this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(28, 612);
+            this.labelFileName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(78, 20);
+            this.labelFileName.TabIndex = 0;
+            this.labelFileName.Text = "File name";
+            // 
+            // numericUpDownFontSize
+            // 
+            this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFontSize.DecimalPlaces = 0;
+            this.numericUpDownFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(180, 38);
+            this.numericUpDownFontSize.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(81, 31);
+            this.numericUpDownFontSize.TabIndex = 10;
+            this.numericUpDownFontSize.TabStop = false;
+            this.numericUpDownFontSize.ThousandsSeparator = false;
+            this.numericUpDownFontSize.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
+            // 
+            // labelFontSize
+            // 
+            this.labelFontSize.AutoSize = true;
+            this.labelFontSize.Location = new System.Drawing.Point(28, 42);
+            this.labelFontSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelFontSize.Name = "labelFontSize";
+            this.labelFontSize.Size = new System.Drawing.Size(74, 20);
+            this.labelFontSize.TabIndex = 0;
+            this.labelFontSize.Text = "Font size";
             // 
             // listViewBatch
             // 
@@ -537,9 +1458,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
             this.listViewBatch.FullRowSelect = true;
             this.listViewBatch.HideSelection = false;
-            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
+            this.listViewBatch.Location = new System.Drawing.Point(9, 486);
+            this.listViewBatch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewBatch.Name = "listViewBatch";
-            this.listViewBatch.Size = new System.Drawing.Size(852, 192);
+            this.listViewBatch.Size = new System.Drawing.Size(1276, 293);
             this.listViewBatch.TabIndex = 3;
             this.listViewBatch.UseCompatibleStateImageBehavior = false;
             this.listViewBatch.View = System.Windows.Forms.View.Details;
@@ -575,6 +1497,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripBatch
             // 
+            this.contextMenuStripBatch.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addFilesToolStripMenuItem,
             this.toolStripSeparator2,
@@ -584,60 +1507,61 @@ namespace Nikse.SubtitleEdit.Forms
             this.deleteToolStripMenuItem,
             this.clearToolStripMenuItem});
             this.contextMenuStripBatch.Name = "contextMenuStripBatch";
-            this.contextMenuStripBatch.Size = new System.Drawing.Size(179, 126);
+            this.contextMenuStripBatch.Size = new System.Drawing.Size(240, 176);
             this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
             // 
             // addFilesToolStripMenuItem
             // 
             this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(239, 32);
             this.addFilesToolStripMenuItem.Text = "Add video files...";
             this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(236, 6);
             // 
             // pickSubtitleFileToolStripMenuItem
             // 
             this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
-            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(239, 32);
             this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
             this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
             // 
             // removeSubtitleFileToolStripMenuItem
             // 
             this.removeSubtitleFileToolStripMenuItem.Name = "removeSubtitleFileToolStripMenuItem";
-            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(239, 32);
             this.removeSubtitleFileToolStripMenuItem.Text = "Remove subtitle file";
             this.removeSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.removeSubtitleFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(236, 6);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(239, 32);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(239, 32);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // buttonOutputFileSettings
             // 
             this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOutputFileSettings.Location = new System.Drawing.Point(255, 514);
+            this.buttonOutputFileSettings.Location = new System.Drawing.Point(382, 791);
+            this.buttonOutputFileSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
-            this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
+            this.buttonOutputFileSettings.Size = new System.Drawing.Size(250, 35);
             this.buttonOutputFileSettings.TabIndex = 148;
             this.buttonOutputFileSettings.Text = "Output file/folder...";
             this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
@@ -646,9 +1570,10 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPreview
             // 
             this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreview.Location = new System.Drawing.Point(621, 586);
+            this.buttonPreview.Location = new System.Drawing.Point(932, 902);
+            this.buttonPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
+            this.buttonPreview.Size = new System.Drawing.Size(182, 35);
             this.buttonPreview.TabIndex = 130;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
@@ -658,9 +1583,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelHelp.AutoSize = true;
-            this.linkLabelHelp.Location = new System.Drawing.Point(844, 563);
+            this.linkLabelHelp.Location = new System.Drawing.Point(1266, 866);
+            this.linkLabelHelp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkLabelHelp.Name = "linkLabelHelp";
-            this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
+            this.linkLabelHelp.Size = new System.Drawing.Size(42, 20);
             this.linkLabelHelp.TabIndex = 120;
             this.linkLabelHelp.TabStop = true;
             this.linkLabelHelp.Text = "Help";
@@ -668,6 +1594,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripRes
             // 
+            this.contextMenuStripRes.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.useSourceResolutionToolStripMenuItem,
             this.toolStripSeparator3,
@@ -690,142 +1617,142 @@ namespace Nikse.SubtitleEdit.Forms
             this.aAspectRatio916270480ToolStripMenuItem,
             this.bAspectRatio916180270ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(368, 412);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(534, 592);
             this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
             // 
             // useSourceResolutionToolStripMenuItem
             // 
             this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
-            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.useSourceResolutionToolStripMenuItem.Text = "Use source resolution";
             this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(364, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(530, 6);
             // 
             // x2160ToolStripMenuItem
             // 
             this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
-            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.x2160ToolStripMenuItem.Text = "4K DCI - Aspect Ratio 16∶9 - (4096x2160)";
             this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // uHD3840x2160ToolStripMenuItem
             // 
             this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
-            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.uHD3840x2160ToolStripMenuItem.Text = "4K UHD - Aspect Ratio 16∶9 - (3840x2160)";
             this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // k2048x1080ToolStripMenuItem
             // 
             this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
-            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.k2048x1080ToolStripMenuItem.Text = "2K WQHD - Aspect Ratio 16∶9 - (2560x1440)";
             this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KScope2048x858ToolStripMenuItem
             // 
             this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
-            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.dCI2KScope2048x858ToolStripMenuItem.Text = "2K DCI - Aspect Ratio 16∶9 - (2048x1080)";
             this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KFlat1998x1080ToolStripMenuItem
             // 
             this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "Full HD 1080p - Aspect Ratio 16∶9 - (1920x1080)";
             this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1920x1080ToolStripMenuItem
             // 
             this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
-            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.p1920x1080ToolStripMenuItem.Text = "HD 720p - Aspect Ratio 16∶9 - (1280x720)";
             this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x1080ToolStripMenuItem
             // 
             this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
-            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.x1080ToolStripMenuItem.Text = "540p - Aspect Ratio 16∶9 - (960x540)";
             this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1280x720ToolStripMenuItem
             // 
             this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
-            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.p1280x720ToolStripMenuItem.Text = "SD PAL - Aspect Ratio 4:3 - (720x576)";
             this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x720ToolStripMenuItem
             // 
             this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
-            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.x720ToolStripMenuItem.Text = "SD NTSC - Aspect Ratio 3:2 - (720x480)";
             this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p848x480ToolStripMenuItem
             // 
             this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
-            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.p848x480ToolStripMenuItem.Text = "VGA - Aspect Ratio 4:3 - (640x480)";
             this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // pAL720x576ToolStripMenuItem
             // 
             this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
-            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.pAL720x576ToolStripMenuItem.Text = "360p - Aspect Ratio 16∶9 - (640x360)";
             this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(364, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(530, 6);
             // 
             // youTubeShortsTikTok10801920ToolStripMenuItem
             // 
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Name = "youTubeShortsTikTok10801920ToolStripMenuItem";
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (1080x1920)";
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem
             // 
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Name = "youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem";
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (720x1280)";
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // aAspectRatio916540960ToolStripMenuItem
             // 
             this.aAspectRatio916540960ToolStripMenuItem.Name = "aAspectRatio916540960ToolStripMenuItem";
-            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.aAspectRatio916540960ToolStripMenuItem.Text = "1/2 A - Aspect Ratio 9∶16 - (540x960)";
             this.aAspectRatio916540960ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // bAspectRatio916360540ToolStripMenuItem
             // 
             this.bAspectRatio916360540ToolStripMenuItem.Name = "bAspectRatio916360540ToolStripMenuItem";
-            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.bAspectRatio916360540ToolStripMenuItem.Text = "1/2 B - Aspect Ratio 9∶16 - (360x540)";
             this.bAspectRatio916360540ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // aAspectRatio916270480ToolStripMenuItem
             // 
             this.aAspectRatio916270480ToolStripMenuItem.Name = "aAspectRatio916270480ToolStripMenuItem";
-            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.aAspectRatio916270480ToolStripMenuItem.Text = "1/4 A - Aspect Ratio 9∶16 - (270x480)";
             this.aAspectRatio916270480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // bAspectRatio916180270ToolStripMenuItem
             // 
             this.bAspectRatio916180270ToolStripMenuItem.Name = "bAspectRatio916180270ToolStripMenuItem";
-            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(533, 32);
             this.bAspectRatio916180270ToolStripMenuItem.Text = "1/4 B - Aspect Ratio 9∶16 - (180x270)";
             this.bAspectRatio916180270ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
@@ -833,872 +1760,23 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMode.Location = new System.Drawing.Point(748, 586);
+            this.buttonMode.Location = new System.Drawing.Point(1122, 902);
+            this.buttonMode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonMode.Name = "buttonMode";
-            this.buttonMode.Size = new System.Drawing.Size(125, 23);
+            this.buttonMode.Size = new System.Drawing.Size(188, 35);
             this.buttonMode.TabIndex = 143;
             this.buttonMode.Text = "Batch mode";
             this.buttonMode.UseVisualStyleBackColor = true;
             this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
             // 
-            // nikseLabelOutline
-            // 
-            this.nikseLabelOutline.AutoSize = true;
-            this.nikseLabelOutline.Location = new System.Drawing.Point(19, 58);
-            this.nikseLabelOutline.Name = "nikseLabelOutline";
-            this.nikseLabelOutline.Size = new System.Drawing.Size(40, 13);
-            this.nikseLabelOutline.TabIndex = 151;
-            this.nikseLabelOutline.Text = "Outline";
-            // 
-            // numericUpDownOutline
-            // 
-            this.numericUpDownOutline.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownOutline.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownOutline.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownOutline.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownOutline.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownOutline.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownOutline.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownOutline.DecimalPlaces = 1;
-            this.numericUpDownOutline.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownOutline.Location = new System.Drawing.Point(119, 54);
-            this.numericUpDownOutline.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDownOutline.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownOutline.Name = "numericUpDownOutline";
-            this.numericUpDownOutline.Size = new System.Drawing.Size(54, 23);
-            this.numericUpDownOutline.TabIndex = 40;
-            this.numericUpDownOutline.TabStop = false;
-            this.numericUpDownOutline.ThousandsSeparator = false;
-            this.numericUpDownOutline.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
-            // 
-            // videoPlayerContainer1
-            // 
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = null;
-            this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
-            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
-            this.videoPlayerContainer1.ShowFullscreenButton = true;
-            this.videoPlayerContainer1.ShowMuteButton = true;
-            this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 227);
-            this.videoPlayerContainer1.SubtitleText = "";
-            this.videoPlayerContainer1.TabIndex = 110;
-            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
-            this.videoPlayerContainer1.VideoHeight = 0;
-            this.videoPlayerContainer1.VideoPlayer = null;
-            this.videoPlayerContainer1.VideoWidth = 0;
-            this.videoPlayerContainer1.Volume = 0D;
-            // 
-            // numericUpDownCutToSeconds
-            // 
-            this.numericUpDownCutToSeconds.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutToSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutToSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutToSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutToSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutToSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutToSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutToSeconds.DecimalPlaces = 0;
-            this.numericUpDownCutToSeconds.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToSeconds.Location = new System.Drawing.Point(327, 36);
-            this.numericUpDownCutToSeconds.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToSeconds.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToSeconds.Name = "numericUpDownCutToSeconds";
-            this.numericUpDownCutToSeconds.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutToSeconds.TabIndex = 22;
-            this.numericUpDownCutToSeconds.TabStop = false;
-            this.numericUpDownCutToSeconds.ThousandsSeparator = false;
-            this.numericUpDownCutToSeconds.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCutToMinutes
-            // 
-            this.numericUpDownCutToMinutes.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutToMinutes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutToMinutes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutToMinutes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutToMinutes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutToMinutes.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutToMinutes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutToMinutes.DecimalPlaces = 0;
-            this.numericUpDownCutToMinutes.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToMinutes.Location = new System.Drawing.Point(291, 36);
-            this.numericUpDownCutToMinutes.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToMinutes.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToMinutes.Name = "numericUpDownCutToMinutes";
-            this.numericUpDownCutToMinutes.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutToMinutes.TabIndex = 21;
-            this.numericUpDownCutToMinutes.TabStop = false;
-            this.numericUpDownCutToMinutes.ThousandsSeparator = false;
-            this.numericUpDownCutToMinutes.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCutToHours
-            // 
-            this.numericUpDownCutToHours.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutToHours.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutToHours.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutToHours.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutToHours.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutToHours.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutToHours.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutToHours.DecimalPlaces = 0;
-            this.numericUpDownCutToHours.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToHours.Location = new System.Drawing.Point(255, 36);
-            this.numericUpDownCutToHours.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToHours.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutToHours.Name = "numericUpDownCutToHours";
-            this.numericUpDownCutToHours.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutToHours.TabIndex = 20;
-            this.numericUpDownCutToHours.TabStop = false;
-            this.numericUpDownCutToHours.ThousandsSeparator = false;
-            this.numericUpDownCutToHours.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCutFromSeconds
-            // 
-            this.numericUpDownCutFromSeconds.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutFromSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutFromSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutFromSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutFromSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutFromSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutFromSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutFromSeconds.DecimalPlaces = 0;
-            this.numericUpDownCutFromSeconds.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromSeconds.Location = new System.Drawing.Point(169, 36);
-            this.numericUpDownCutFromSeconds.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromSeconds.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromSeconds.Name = "numericUpDownCutFromSeconds";
-            this.numericUpDownCutFromSeconds.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutFromSeconds.TabIndex = 19;
-            this.numericUpDownCutFromSeconds.TabStop = false;
-            this.numericUpDownCutFromSeconds.ThousandsSeparator = false;
-            this.numericUpDownCutFromSeconds.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCutFromMinutes
-            // 
-            this.numericUpDownCutFromMinutes.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutFromMinutes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutFromMinutes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutFromMinutes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutFromMinutes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutFromMinutes.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutFromMinutes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutFromMinutes.DecimalPlaces = 0;
-            this.numericUpDownCutFromMinutes.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromMinutes.Location = new System.Drawing.Point(133, 36);
-            this.numericUpDownCutFromMinutes.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromMinutes.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromMinutes.Name = "numericUpDownCutFromMinutes";
-            this.numericUpDownCutFromMinutes.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutFromMinutes.TabIndex = 18;
-            this.numericUpDownCutFromMinutes.TabStop = false;
-            this.numericUpDownCutFromMinutes.ThousandsSeparator = false;
-            this.numericUpDownCutFromMinutes.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCutFromHours
-            // 
-            this.numericUpDownCutFromHours.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownCutFromHours.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownCutFromHours.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownCutFromHours.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownCutFromHours.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownCutFromHours.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownCutFromHours.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownCutFromHours.DecimalPlaces = 0;
-            this.numericUpDownCutFromHours.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromHours.Location = new System.Drawing.Point(97, 36);
-            this.numericUpDownCutFromHours.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromHours.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownCutFromHours.Name = "numericUpDownCutFromHours";
-            this.numericUpDownCutFromHours.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDownCutFromHours.TabIndex = 17;
-            this.numericUpDownCutFromHours.TabStop = false;
-            this.numericUpDownCutFromHours.ThousandsSeparator = false;
-            this.numericUpDownCutFromHours.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // labelCutTo
-            // 
-            this.labelCutTo.AutoSize = true;
-            this.labelCutTo.Location = new System.Drawing.Point(255, 15);
-            this.labelCutTo.Name = "labelCutTo";
-            this.labelCutTo.Size = new System.Drawing.Size(20, 13);
-            this.labelCutTo.TabIndex = 16;
-            this.labelCutTo.Text = "To";
-            // 
-            // labelCutFrom
-            // 
-            this.labelCutFrom.AutoSize = true;
-            this.labelCutFrom.Location = new System.Drawing.Point(94, 15);
-            this.labelCutFrom.Name = "labelCutFrom";
-            this.labelCutFrom.Size = new System.Drawing.Size(30, 13);
-            this.labelCutFrom.TabIndex = 14;
-            this.labelCutFrom.Text = "From";
-            // 
-            // labelVideoBitrate
-            // 
-            this.labelVideoBitrate.AutoSize = true;
-            this.labelVideoBitrate.Location = new System.Drawing.Point(193, 352);
-            this.labelVideoBitrate.Name = "labelVideoBitrate";
-            this.labelVideoBitrate.Size = new System.Drawing.Size(86, 13);
-            this.labelVideoBitrate.TabIndex = 14;
-            this.labelVideoBitrate.Text = "labelVideoBitrate";
-            // 
-            // labelInfo
-            // 
-            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(5, 527);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(25, 13);
-            this.labelInfo.TabIndex = 1;
-            this.labelInfo.Text = "Info";
-            // 
-            // comboBoxSubtitleFont
-            // 
-            this.comboBoxSubtitleFont.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxSubtitleFont.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxSubtitleFont.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxSubtitleFont.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxSubtitleFont.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxSubtitleFont.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxSubtitleFont.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxSubtitleFont.DropDownHeight = 400;
-            this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleFont.DropDownWidth = 250;
-            this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 87);
-            this.comboBoxSubtitleFont.MaxLength = 32767;
-            this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
-            this.comboBoxSubtitleFont.SelectedIndex = -1;
-            this.comboBoxSubtitleFont.SelectedItem = null;
-            this.comboBoxSubtitleFont.SelectedText = "";
-            this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
-            this.comboBoxSubtitleFont.TabIndex = 70;
-            this.comboBoxSubtitleFont.UsePopupWindow = false;
-            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
-            // 
-            // labelSubtitleFont
-            // 
-            this.labelSubtitleFont.AutoSize = true;
-            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 90);
-            this.labelSubtitleFont.Name = "labelSubtitleFont";
-            this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
-            this.labelSubtitleFont.TabIndex = 7;
-            this.labelSubtitleFont.Text = "Subtitle font";
-            // 
-            // labelCrfHint
-            // 
-            this.labelCrfHint.AutoSize = true;
-            this.labelCrfHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCrfHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelCrfHint.Location = new System.Drawing.Point(220, 106);
-            this.labelCrfHint.Name = "labelCrfHint";
-            this.labelCrfHint.Size = new System.Drawing.Size(22, 12);
-            this.labelCrfHint.TabIndex = 32;
-            this.labelCrfHint.Text = "Hint";
-            // 
-            // labelResolution
-            // 
-            this.labelResolution.AutoSize = true;
-            this.labelResolution.Location = new System.Drawing.Point(10, 19);
-            this.labelResolution.Name = "labelResolution";
-            this.labelResolution.Size = new System.Drawing.Size(57, 13);
-            this.labelResolution.TabIndex = 0;
-            this.labelResolution.Text = "Resolution";
-            // 
-            // numericUpDownWidth
-            // 
-            this.numericUpDownWidth.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownWidth.DecimalPlaces = 0;
-            this.numericUpDownWidth.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.Location = new System.Drawing.Point(96, 17);
-            this.numericUpDownWidth.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 23);
-            this.numericUpDownWidth.TabIndex = 1;
-            this.numericUpDownWidth.TabStop = false;
-            this.numericUpDownWidth.ThousandsSeparator = false;
-            this.numericUpDownWidth.Value = new decimal(new int[] {
-            1280,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.ValueChanged += new System.EventHandler(this.numericUpDownWidth_ValueChanged);
-            // 
-            // numericUpDownHeight
-            // 
-            this.numericUpDownHeight.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownHeight.DecimalPlaces = 0;
-            this.numericUpDownHeight.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Location = new System.Drawing.Point(184, 17);
-            this.numericUpDownHeight.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 23);
-            this.numericUpDownHeight.TabIndex = 2;
-            this.numericUpDownHeight.TabStop = false;
-            this.numericUpDownHeight.ThousandsSeparator = false;
-            this.numericUpDownHeight.Value = new decimal(new int[] {
-            720,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
-            // 
-            // labelX
-            // 
-            this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(166, 19);
-            this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(12, 13);
-            this.labelX.TabIndex = 31;
-            this.labelX.Text = "x";
-            // 
-            // labelPreset
-            // 
-            this.labelPreset.AutoSize = true;
-            this.labelPreset.Location = new System.Drawing.Point(10, 78);
-            this.labelPreset.Name = "labelPreset";
-            this.labelPreset.Size = new System.Drawing.Size(37, 13);
-            this.labelPreset.TabIndex = 5;
-            this.labelPreset.Text = "Preset";
-            // 
-            // comboBoxTune
-            // 
-            this.comboBoxTune.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxTune.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxTune.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxTune.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxTune.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxTune.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxTune.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxTune.DropDownHeight = 400;
-            this.comboBoxTune.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTune.DropDownWidth = 121;
-            this.comboBoxTune.FormattingEnabled = true;
-            this.comboBoxTune.Items.AddRange(new string[] {
-            "",
-            "film",
-            "animation",
-            "grain"});
-            this.comboBoxTune.Location = new System.Drawing.Point(95, 130);
-            this.comboBoxTune.MaxLength = 32767;
-            this.comboBoxTune.Name = "comboBoxTune";
-            this.comboBoxTune.SelectedIndex = 0;
-            this.comboBoxTune.SelectedItem = "";
-            this.comboBoxTune.SelectedText = "";
-            this.comboBoxTune.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTune.TabIndex = 10;
-            this.comboBoxTune.UsePopupWindow = false;
-            // 
-            // comboBoxPreset
-            // 
-            this.comboBoxPreset.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxPreset.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxPreset.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxPreset.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxPreset.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxPreset.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxPreset.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxPreset.DropDownHeight = 400;
-            this.comboBoxPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPreset.DropDownWidth = 121;
-            this.comboBoxPreset.FormattingEnabled = true;
-            this.comboBoxPreset.Items.AddRange(new string[] {
-            "ultrafast",
-            "superfast",
-            "veryfast",
-            "faster",
-            "fast",
-            "medium",
-            "slow",
-            "slower",
-            "veryslow "});
-            this.comboBoxPreset.Location = new System.Drawing.Point(95, 76);
-            this.comboBoxPreset.MaxLength = 32767;
-            this.comboBoxPreset.Name = "comboBoxPreset";
-            this.comboBoxPreset.SelectedIndex = -1;
-            this.comboBoxPreset.SelectedItem = null;
-            this.comboBoxPreset.SelectedText = "";
-            this.comboBoxPreset.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPreset.TabIndex = 6;
-            this.comboBoxPreset.UsePopupWindow = false;
-            // 
-            // labelTune
-            // 
-            this.labelTune.AutoSize = true;
-            this.labelTune.Location = new System.Drawing.Point(10, 132);
-            this.labelTune.Name = "labelTune";
-            this.labelTune.Size = new System.Drawing.Size(32, 13);
-            this.labelTune.TabIndex = 9;
-            this.labelTune.Text = "Tune";
-            // 
-            // labelCRF
-            // 
-            this.labelCRF.AutoSize = true;
-            this.labelCRF.Location = new System.Drawing.Point(10, 105);
-            this.labelCRF.Name = "labelCRF";
-            this.labelCRF.Size = new System.Drawing.Size(28, 13);
-            this.labelCRF.TabIndex = 7;
-            this.labelCRF.Text = "CRF";
-            // 
-            // comboBoxVideoEncoding
-            // 
-            this.comboBoxVideoEncoding.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxVideoEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxVideoEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxVideoEncoding.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxVideoEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxVideoEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxVideoEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxVideoEncoding.DropDownHeight = 400;
-            this.comboBoxVideoEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxVideoEncoding.DropDownWidth = 121;
-            this.comboBoxVideoEncoding.FormattingEnabled = true;
-            this.comboBoxVideoEncoding.Items.AddRange(new string[] {
-            "libx264",
-            "libx265",
-            "libvpx-vp9",
-            "h264_nvenc",
-            "hevc_nvenc",
-            "h264_amf",
-            "hevc_amf",
-            "prores_ks"});
-            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 49);
-            this.comboBoxVideoEncoding.MaxLength = 32767;
-            this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
-            this.comboBoxVideoEncoding.SelectedIndex = -1;
-            this.comboBoxVideoEncoding.SelectedItem = null;
-            this.comboBoxVideoEncoding.SelectedText = "";
-            this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxVideoEncoding.TabIndex = 4;
-            this.comboBoxVideoEncoding.UsePopupWindow = false;
-            this.comboBoxVideoEncoding.SelectedIndexChanged += new System.EventHandler(this.comboBoxVideoEncoding_SelectedIndexChanged);
-            // 
-            // comboBoxCrf
-            // 
-            this.comboBoxCrf.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxCrf.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxCrf.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxCrf.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxCrf.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxCrf.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxCrf.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxCrf.DropDownHeight = 400;
-            this.comboBoxCrf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCrf.DropDownWidth = 121;
-            this.comboBoxCrf.FormattingEnabled = true;
-            this.comboBoxCrf.Items.AddRange(new string[] {
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28"});
-            this.comboBoxCrf.Location = new System.Drawing.Point(95, 103);
-            this.comboBoxCrf.MaxLength = 32767;
-            this.comboBoxCrf.Name = "comboBoxCrf";
-            this.comboBoxCrf.SelectedIndex = -1;
-            this.comboBoxCrf.SelectedItem = null;
-            this.comboBoxCrf.SelectedText = "";
-            this.comboBoxCrf.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxCrf.TabIndex = 8;
-            this.comboBoxCrf.UsePopupWindow = false;
-            // 
-            // labelVideoEncoding
-            // 
-            this.labelVideoEncoding.AutoSize = true;
-            this.labelVideoEncoding.Location = new System.Drawing.Point(10, 51);
-            this.labelVideoEncoding.Name = "labelVideoEncoding";
-            this.labelVideoEncoding.Size = new System.Drawing.Size(55, 13);
-            this.labelVideoEncoding.TabIndex = 3;
-            this.labelVideoEncoding.Text = "Video enc";
-            // 
-            // labelAudioEnc
-            // 
-            this.labelAudioEnc.AutoSize = true;
-            this.labelAudioEnc.Location = new System.Drawing.Point(14, 31);
-            this.labelAudioEnc.Name = "labelAudioEnc";
-            this.labelAudioEnc.Size = new System.Drawing.Size(52, 13);
-            this.labelAudioEnc.TabIndex = 0;
-            this.labelAudioEnc.Text = "Encoding";
-            // 
-            // comboBoxAudioBitRate
-            // 
-            this.comboBoxAudioBitRate.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxAudioBitRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxAudioBitRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxAudioBitRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxAudioBitRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxAudioBitRate.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxAudioBitRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxAudioBitRate.DropDownHeight = 400;
-            this.comboBoxAudioBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioBitRate.DropDownWidth = 121;
-            this.comboBoxAudioBitRate.FormattingEnabled = true;
-            this.comboBoxAudioBitRate.Items.AddRange(new string[] {
-            "64k",
-            "128k",
-            "160k",
-            "196k",
-            "320k"});
-            this.comboBoxAudioBitRate.Location = new System.Drawing.Point(91, 110);
-            this.comboBoxAudioBitRate.MaxLength = 32767;
-            this.comboBoxAudioBitRate.Name = "comboBoxAudioBitRate";
-            this.comboBoxAudioBitRate.SelectedIndex = -1;
-            this.comboBoxAudioBitRate.SelectedItem = null;
-            this.comboBoxAudioBitRate.SelectedText = "";
-            this.comboBoxAudioBitRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioBitRate.TabIndex = 5;
-            this.comboBoxAudioBitRate.UsePopupWindow = false;
-            this.comboBoxAudioBitRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioBitRate_SelectedValueChanged);
-            // 
-            // comboBoxAudioEnc
-            // 
-            this.comboBoxAudioEnc.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxAudioEnc.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxAudioEnc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxAudioEnc.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxAudioEnc.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxAudioEnc.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxAudioEnc.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxAudioEnc.DropDownHeight = 400;
-            this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioEnc.DropDownWidth = 121;
-            this.comboBoxAudioEnc.FormattingEnabled = true;
-            this.comboBoxAudioEnc.Items.AddRange(new string[] {
-            "copy",
-            "aac"});
-            this.comboBoxAudioEnc.Location = new System.Drawing.Point(91, 29);
-            this.comboBoxAudioEnc.MaxLength = 32767;
-            this.comboBoxAudioEnc.Name = "comboBoxAudioEnc";
-            this.comboBoxAudioEnc.SelectedIndex = -1;
-            this.comboBoxAudioEnc.SelectedItem = null;
-            this.comboBoxAudioEnc.SelectedText = "";
-            this.comboBoxAudioEnc.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioEnc.TabIndex = 1;
-            this.comboBoxAudioEnc.UsePopupWindow = false;
-            this.comboBoxAudioEnc.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioEnc_SelectedIndexChanged);
-            // 
-            // labelAudioBitRate
-            // 
-            this.labelAudioBitRate.AutoSize = true;
-            this.labelAudioBitRate.Location = new System.Drawing.Point(14, 112);
-            this.labelAudioBitRate.Name = "labelAudioBitRate";
-            this.labelAudioBitRate.Size = new System.Drawing.Size(40, 13);
-            this.labelAudioBitRate.TabIndex = 4;
-            this.labelAudioBitRate.Text = "Bit rate";
-            // 
-            // labelAudioSampleRate
-            // 
-            this.labelAudioSampleRate.AutoSize = true;
-            this.labelAudioSampleRate.Location = new System.Drawing.Point(14, 85);
-            this.labelAudioSampleRate.Name = "labelAudioSampleRate";
-            this.labelAudioSampleRate.Size = new System.Drawing.Size(63, 13);
-            this.labelAudioSampleRate.TabIndex = 44;
-            this.labelAudioSampleRate.Text = "Sample rate";
-            // 
-            // comboBoxAudioSampleRate
-            // 
-            this.comboBoxAudioSampleRate.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxAudioSampleRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxAudioSampleRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxAudioSampleRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxAudioSampleRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxAudioSampleRate.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxAudioSampleRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxAudioSampleRate.DropDownHeight = 400;
-            this.comboBoxAudioSampleRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioSampleRate.DropDownWidth = 121;
-            this.comboBoxAudioSampleRate.FormattingEnabled = true;
-            this.comboBoxAudioSampleRate.Items.AddRange(new string[] {
-            "44100 Hz",
-            "48000 Hz",
-            "88200 Hz",
-            "96000 Hz",
-            "192000 Hz"});
-            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(91, 83);
-            this.comboBoxAudioSampleRate.MaxLength = 32767;
-            this.comboBoxAudioSampleRate.Name = "comboBoxAudioSampleRate";
-            this.comboBoxAudioSampleRate.SelectedIndex = -1;
-            this.comboBoxAudioSampleRate.SelectedItem = null;
-            this.comboBoxAudioSampleRate.SelectedText = "";
-            this.comboBoxAudioSampleRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioSampleRate.TabIndex = 3;
-            this.comboBoxAudioSampleRate.UsePopupWindow = false;
-            // 
-            // numericUpDownTargetFileSize
-            // 
-            this.numericUpDownTargetFileSize.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownTargetFileSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownTargetFileSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownTargetFileSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownTargetFileSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownTargetFileSize.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownTargetFileSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownTargetFileSize.DecimalPlaces = 0;
-            this.numericUpDownTargetFileSize.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 350);
-            this.numericUpDownTargetFileSize.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetFileSize.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetFileSize.Name = "numericUpDownTargetFileSize";
-            this.numericUpDownTargetFileSize.Size = new System.Drawing.Size(64, 23);
-            this.numericUpDownTargetFileSize.TabIndex = 101;
-            this.numericUpDownTargetFileSize.TabStop = false;
-            this.numericUpDownTargetFileSize.ThousandsSeparator = false;
-            this.numericUpDownTargetFileSize.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetFileSize.ValueChanged += new System.EventHandler(this.numericUpDownTargetFileSize_ValueChanged);
-            // 
-            // labelFileSize
-            // 
-            this.labelFileSize.AutoSize = true;
-            this.labelFileSize.Location = new System.Drawing.Point(35, 352);
-            this.labelFileSize.Name = "labelFileSize";
-            this.labelFileSize.Size = new System.Drawing.Size(74, 13);
-            this.labelFileSize.TabIndex = 12;
-            this.labelFileSize.Text = "File size in MB";
-            // 
-            // labelFileName
-            // 
-            this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(19, 398);
-            this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(52, 13);
-            this.labelFileName.TabIndex = 0;
-            this.labelFileName.Text = "File name";
-            // 
-            // numericUpDownFontSize
-            // 
-            this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownFontSize.DecimalPlaces = 0;
-            this.numericUpDownFontSize.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(120, 25);
-            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(54, 20);
-            this.numericUpDownFontSize.TabIndex = 10;
-            this.numericUpDownFontSize.TabStop = false;
-            this.numericUpDownFontSize.ThousandsSeparator = false;
-            this.numericUpDownFontSize.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
-            // 
-            // labelFontSize
-            // 
-            this.labelFontSize.AutoSize = true;
-            this.labelFontSize.Location = new System.Drawing.Point(19, 27);
-            this.labelFontSize.Name = "labelFontSize";
-            this.labelFontSize.Size = new System.Drawing.Size(49, 13);
-            this.labelFontSize.TabIndex = 0;
-            this.labelFontSize.Text = "Font size";
-            // 
             // labelPreviewPleaseWait
             // 
             this.labelPreviewPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPreviewPleaseWait.AutoSize = true;
-            this.labelPreviewPleaseWait.Location = new System.Drawing.Point(668, 570);
+            this.labelPreviewPleaseWait.Location = new System.Drawing.Point(1002, 877);
+            this.labelPreviewPleaseWait.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPreviewPleaseWait.Name = "labelPreviewPleaseWait";
-            this.labelPreviewPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPreviewPleaseWait.Size = new System.Drawing.Size(101, 20);
             this.labelPreviewPleaseWait.TabIndex = 48;
             this.labelPreviewPleaseWait.Text = "Please wait...";
             // 
@@ -1706,9 +1784,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPass.AutoSize = true;
-            this.labelPass.Location = new System.Drawing.Point(564, 599);
+            this.labelPass.Location = new System.Drawing.Point(846, 922);
+            this.labelPass.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPass.Name = "labelPass";
-            this.labelPass.Size = new System.Drawing.Size(51, 13);
+            this.labelPass.Size = new System.Drawing.Size(75, 20);
             this.labelPass.TabIndex = 47;
             this.labelPass.Text = "Pass one";
             // 
@@ -1716,9 +1795,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 629);
+            this.labelProgress.Location = new System.Drawing.Point(18, 968);
+            this.labelProgress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelProgress.Name = "labelProgress";
-            this.labelProgress.Size = new System.Drawing.Size(88, 13);
+            this.labelProgress.Size = new System.Drawing.Size(131, 20);
             this.labelProgress.TabIndex = 29;
             this.labelProgress.Text = "Remaining time...";
             // 
@@ -1726,27 +1806,29 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 599);
+            this.labelPleaseWait.Location = new System.Drawing.Point(18, 922);
+            this.labelPleaseWait.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPleaseWait.Size = new System.Drawing.Size(101, 20);
             this.labelPleaseWait.TabIndex = 25;
             this.labelPleaseWait.Text = "Please wait...";
             // 
             // textBoxLog
             // 
             this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
+            this.textBoxLog.Location = new System.Drawing.Point(18, 20);
+            this.textBoxLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
+            this.textBoxLog.Size = new System.Drawing.Size(280, 38);
             this.textBoxLog.TabIndex = 31;
             // 
             // GenerateVideoWithHardSubs
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(885, 650);
+            this.ClientSize = new System.Drawing.Size(1328, 1000);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonMode);
             this.Controls.Add(this.labelPreviewPleaseWait);
@@ -1760,7 +1842,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxLog);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(890, 680);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MinimumSize = new System.Drawing.Size(1324, 1016);
             this.Name = "GenerateVideoWithHardSubs";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
