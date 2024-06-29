@@ -242,15 +242,6 @@
     <Content Include="Icons\VideoToggle.png" />
     <Content Include="Icons\VisualSync.png" />
     <Content Include="Icons\WaveformToggle.png" />
-    <Content Include="Resources\TesseractDictionaries.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\HunspellBackupDictionaries.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\HunspellDictionaries.xml">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
