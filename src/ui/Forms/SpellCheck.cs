@@ -653,17 +653,22 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of suggested alternative words for the misspelled word.</returns>
         private async Task<List<string>> DoSuggestAsync(string word)
         {
-            try
+            using (var cts = new CancellationTokenSource())
             {
-                return await Task.Run(() => _hunspell.Suggest(word), CancellationToken.None).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                Debug.Write(e.Message);
-                LoadHunspell(_currentDictionary);
-            }
+                // don't wait indefinitely
+                cts.CancelAfter(TimeSpan.FromSeconds(1.8));
+                try
+                {
+                    return await Task.Run(() => _hunspell.Suggest(word), cts.Token).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Debug.Write(e.Message);
+                    LoadHunspell(_currentDictionary);
+                }
 
-            return new List<string>();
+                return new List<string>();
+            }
         }
         
         private async void ButtonChangeAllClick(object sender, EventArgs e)
