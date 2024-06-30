@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxVolumeBarBackground.BringToFront();
             _pictureBoxVolumeBar.BringToFront();
+            _labelVolume.BringToFront();
 
             _labelTimeCode.Click += LabelTimeCodeClick;
             _loading = false;
@@ -293,6 +294,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _labelTimeCode.Visible = true;
             _labelTimeCode.BringToFront();
+            _labelVolume.BringToFront();
         }
 
         public void EnableMouseWheelStep()
