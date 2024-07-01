@@ -7,6 +7,7 @@
    * Add support for Faster-Whisper-XXL
    * Add audio settings for TTS final video file
    * Add subtitle format "PodcastIndexer json" - thx rjgout 
+   * Add new subtitle format - thx Louie
    * Add new Anthropic Claude 3.5 Sonnet model - thx Flash
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
@@ -22,6 +23,7 @@
    * Fix crash in Vosk audio to text on selected lines - thx MediaExpres
    * Prompt for overwrite in "Multiple replace" export - thx redactedscribe
    * Fix "abort" for TTS Azure/ElevenLabs - thx cvrle77
+   * UI fix for volume text in video player - thx Emiritus1
 
 4.0.6 (1st June 2024)
 * NEW:
