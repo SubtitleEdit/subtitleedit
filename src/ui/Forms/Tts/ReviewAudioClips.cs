@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
@@ -18,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly TextToSpeech _textToSpeech;
         private readonly List<TextToSpeech.FileNameAndSpeedFactor> _fileNames;
         private bool _abortPlay;
+        private bool _playing;
         private LibMpvDynamic _libMpv;
         private Timer _mpvDoneTimer;
 
@@ -109,6 +112,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             if (listViewAudioClips.SelectedItems.Count == 0)
             {
+                _playing = false;
+                buttonPlay.Enabled = true;
                 return;
             }
 
@@ -129,6 +134,22 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 if (checkBoxContinuePlay.Checked && !noAutoContinue)
                 {
                     _mpvDoneTimer.Start();
+                }
+                else
+                {
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1000), () =>
+                    {
+                        var i = 0;
+                        while (i < 100 && !_libMpv.IsPaused)
+                        {
+                            i++;
+                            Thread.Sleep(100);
+                            Application.DoEvents();
+                        }
+
+                        _playing = false;
+                        buttonPlay.Enabled = true;
+                    });
                 }
             }
             else
@@ -156,6 +177,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Play());
                 Application.DoEvents();
             }
+            else
+            {
+                _playing = false;
+                buttonPlay.Enabled = true;
+            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -173,7 +199,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
+            if (_playing)
+            {
+                return;
+            }
+
+            buttonPlay.Enabled = false;
+            _playing = true;
             _abortPlay = false;
+            Application.DoEvents();
             Play();
         }
 
@@ -181,6 +215,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             _libMpv?.Stop();
             _abortPlay = true;
+            _playing = false;
+            buttonPlay.Enabled = true;
         }
 
         private void VoicePreviewList_Shown(object sender, EventArgs e)
@@ -194,6 +230,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     if (listViewAudioClips.SelectedItems.Count == 0)
                     {
+                        _playing = false;
+                        buttonPlay.Enabled = true;
                         return;
                     }
 
