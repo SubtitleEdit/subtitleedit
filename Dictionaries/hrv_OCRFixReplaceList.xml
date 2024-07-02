@@ -5281,7 +5281,6 @@
     <RegEx find="efiniši" replaceWith="efiniraj" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
     <RegEx find="empton" replaceWith="ampton" />
-    <RegEx find="enrm" replaceWith="enem" />
     <!-- bjegunac -->
     <RegEx find="(?&lt;!j)egun" replaceWith="jegun" />
     <RegEx find="(?&lt;!j)elokup" replaceWith="jelokup" />
