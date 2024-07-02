@@ -563,6 +563,28 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'esprit.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'esprit.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'Esprit tue et.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'Esprit tue et.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces

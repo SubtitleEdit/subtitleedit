@@ -588,7 +588,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     var affixes = new[] { " I'", " L'", " l'", " I’", " L’", " l’" };
                     foreach (var affix in affixes)
                     {
-                        text = FixFrenchLApostrophe(text, affix, prevLine);    
+                        text = FixFrenchLApostrophe(text, affix, prevLine);
                     }
                 }
 
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static bool IsToKeepCasing(string sentence)
         {
             // related to https://github.com/SubtitleEdit/subtitleedit/issues/8052
-            if (sentence.Length > 2)
+            if (sentence.Length > 2 && IsCurrentWordUpperCase(sentence))
             {
                 // do not change 'L' to lowercase in text like "L'ASSASSIN"
                 return char.IsUpper(sentence[2]) && (sentence[1] == '\'' || sentence[1] == '’');
@@ -674,12 +674,37 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             return false;
         }
-        
+
+        private static bool IsCurrentWordUpperCase(string sentence)
+        {
+            var maxMinusOne = sentence.Length - 1;
+            for (var i = 2; i <= maxMinusOne; i++)
+            {
+                var ch = sentence[i];
+                if (!char.IsLetter(ch))
+                {
+                    return true;
+                }
+
+                if (!char.IsUpper(ch))
+                {
+                    return false;
+                }
+
+                if (i == maxMinusOne)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string FixFrenchLApostrophe(string input, string affix, string prevLine)
         {
             var text = input;
             var isPreviousLineClose = prevLine.HasSentenceEnding();
-            
+
             if (text.StartsWith(affix.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (isPreviousLineClose || char.IsUpper(text[2]))
