@@ -3,12 +3,12 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Test.FixCommonErrors
 {
@@ -1021,6 +1021,7 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
+                Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
                 InitializeFixCommonErrorsLine(target, "-Person one speaks." + Environment.NewLine +
                                                       "-The other person starts speaking and continues" + Environment.NewLine +
                                                       "to speak loudly for a little white.");
