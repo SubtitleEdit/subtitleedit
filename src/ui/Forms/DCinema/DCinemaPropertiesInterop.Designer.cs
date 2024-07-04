@@ -524,7 +524,7 @@
             this.comboBoxFontEffect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFontEffect.DropDownWidth = 112;
             this.comboBoxFontEffect.FormattingEnabled = true;
-            this.comboBoxFontEffect.Items.AddRange(new object[] {
+            this.comboBoxFontEffect.Items.AddRange(new string[] {
             "None",
             "Border",
             "Shadow"});
@@ -707,6 +707,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "D-Cinema properties (interop)";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DCinemaPropertiesInterop_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBoxFont.ResumeLayout(false);

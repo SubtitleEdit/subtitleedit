@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (ss.CurrentDCinemaFontSize == 0)
             {
-                Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
+                Configuration.Settings.SubtitleSettings.InitializeDCinemaSettings(true);
             }
 
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
@@ -140,9 +140,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["Id"].InnerText = loadedFontId;
             var fontSize = ss.CurrentDCinemaFontSize;
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Id"].InnerText = loadedFontId;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
+            xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = ColorToHexWithTransparency(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Effect"].InnerText = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
+            xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = ColorToHexWithTransparency(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].InnerText = ss.CurrentDCinemaFontSize.ToString();
 
             var mainListFont = xml.DocumentElement.SelectSingleNode("Font");
@@ -568,8 +568,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
-                    var color = HtmlUtil.GetColorFromString(c);
-                    c = "FF" + Utilities.ColorToHex(color).TrimStart('#').ToUpperInvariant();
+                    var color = GetColorFromString(c);
+                    c = ColorToHexWithTransparency(color).TrimStart('#').ToUpperInvariant();
                 }
                 catch
                 {
@@ -578,6 +578,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return c;
+        }
+
+        internal static Color GetColorFromString(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return Color.Black;
+            }
+
+            s = s.TrimStart('#');
+            if (s.Length == 8)
+            {
+                if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                {
+                    alpha = 255; // full solid color
+                }
+
+                s = s.Substring(2);
+
+                var c = ColorTranslator.FromHtml("#" + s);
+                return Color.FromArgb(alpha, c);
+            }
+
+            return ColorTranslator.FromHtml("#" + s.TrimStart('#'));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -596,7 +620,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var ss = Configuration.Settings.SubtitleSettings;
             try
             {
-                ss.InitializeDCinameSettings(false);
+                ss.InitializeDCinemaSettings(false);
                 XmlNode node = xml.DocumentElement.SelectSingleNode("SubtitleID");
                 if (node != null)
                 {
@@ -642,7 +666,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (node.Attributes?["Color"] != null)
                     {
-                        ss.CurrentDCinemaFontColor = HtmlUtil.GetColorFromString("#" + node.Attributes["Color"].InnerText);
+                        ss.CurrentDCinemaFontColor = GetColorFromString("#" + node.Attributes["Color"].InnerText);
                     }
 
                     if (node.Attributes?["Effect"] != null)
@@ -652,7 +676,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (node.Attributes?["EffectColor"] != null)
                     {
-                        ss.CurrentDCinemaFontEffectColor = HtmlUtil.GetColorFromString("#" + node.Attributes["EffectColor"].InnerText);
+                        ss.CurrentDCinemaFontEffectColor = GetColorFromString("#" + node.Attributes["EffectColor"].InnerText);
                     }
                 }
             }
@@ -975,6 +999,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return s;
             }
 
+            if (s.Length == 8)
+            {
+                return "#" + s.Remove(0,2) + s.Substring(0, 2); // move alpha back
+            }
+
             var hex = s.TrimStart('#');
             for (var i = s.Length - 1; i >= 0; i--)
             {
@@ -1008,6 +1037,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string ConvertToTimeString(TimeCode time)
         {
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 4:000}";
+        }
+
+        public static string ColorToHexWithTransparency(Color c)
+        {
+            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
         }
     }
 }

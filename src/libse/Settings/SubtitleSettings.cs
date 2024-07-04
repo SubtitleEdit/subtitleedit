@@ -192,7 +192,7 @@ $HorzAlign          =   Center
             TeletextItalicFix = true;
         }
 
-        public void InitializeDCinameSettings(bool smpte)
+        public void InitializeDCinemaSettings(bool smpte)
         {
             if (smpte)
             {
