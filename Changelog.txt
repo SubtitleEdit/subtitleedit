@@ -24,6 +24,9 @@
    * Prompt for overwrite in "Multiple replace" export - thx redactedscribe
    * Fix "abort" for TTS Azure/ElevenLabs - thx cvrle77
    * UI fix for volume text in video player - thx Emiritus1
+   * Fix wrong casing fix after "L'" for French - thx Codling/ivandrofly
+   * Fix crash when double clicking on Play in TTS review window - thx cvrle77
+   * Fix for DCinema colors - thx Pamela
 
 4.0.6 (1st June 2024)
 * NEW:
