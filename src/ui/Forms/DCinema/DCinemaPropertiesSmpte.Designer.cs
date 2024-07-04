@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.comboBoxTimeCodeRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxTimeCodeRate.DropDownWidth = 112;
             this.comboBoxTimeCodeRate.FormattingEnabled = true;
-            this.comboBoxTimeCodeRate.Items.AddRange(new object[] {
+            this.comboBoxTimeCodeRate.Items.AddRange(new string[] {
             "24",
             "25",
             "30",
@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.comboBoxFontEffect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFontEffect.DropDownWidth = 112;
             this.comboBoxFontEffect.FormattingEnabled = true;
-            this.comboBoxFontEffect.Items.AddRange(new object[] {
+            this.comboBoxFontEffect.Items.AddRange(new string[] {
             "None",
             "Border",
             "Shadow"});
@@ -825,6 +825,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "D-Cinema properties (SMPTE)";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DCinemaPropertiesSmpte_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBoxFont.ResumeLayout(false);
