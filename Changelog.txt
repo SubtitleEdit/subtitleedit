@@ -17,7 +17,7 @@
    * Update Italian language - thx bovirus
    * Update Russian translation - thx elfriob
    * Update mpv to 2024-06-09
-   * Update yt-dlp to 2024-05-27
+   * Update yt-dlp to 2024-07-02
 * FIXED:
    * Fix auto translate crash - thx soscaster
    * Fix crash in Vosk audio to text on selected lines - thx MediaExpres
