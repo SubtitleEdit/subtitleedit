@@ -1313,6 +1313,7 @@
     <Word from="neog" to="nego" />
     <Word from="nepto" to="nešto" />
     <Word from="Nerešivo" to="Nerješivo" />
+    <Word from="nerzovan" to="nervozan" />
     <Word from="nesluži" to="ne služi" />
     <Word from="neslazem" to="ne slažem" />
     <Word from="nešalju" to="ne šalju" />
@@ -5761,6 +5762,7 @@
     <!-- rizikuj - riskiraj -->
     <RegEx find="zikuj" replaceWith="skiraj" />
     <RegEx find="zleč([ei])" replaceWith="zliječ$1" />
+    <RegEx find="zlg" replaceWith="zgl" />
     <RegEx find="zmern" replaceWith="zmjern" />
     <RegEx find="zmes" replaceWith="zmjes" />
     <RegEx find="znč" replaceWith="znač" />
