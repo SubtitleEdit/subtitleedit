@@ -381,7 +381,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message);
-                    return;
                 }
             }
         }

@@ -1745,7 +1745,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 if (downloadForm.ShowDialog(this) != DialogResult.OK)
                                 {
                                     Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
                                 }
                             }
                         }
@@ -1759,7 +1758,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         {
                             if (downloadForm.ShowDialog(this) != DialogResult.OK)
                             {
-                                return;
+                                // ignore
                             }
                         }
                     }
@@ -1780,7 +1779,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 if (downloadForm.ShowDialog(this) != DialogResult.OK)
                                 {
                                     Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
                                 }
                             }
                         }
@@ -1794,7 +1792,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         {
                             if (downloadForm.ShowDialog(this) != DialogResult.OK)
                             {
-                                return;
+                                // ignore
                             }
                         }
                     }
@@ -1816,7 +1814,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 if (downloadForm.ShowDialog(this) != DialogResult.OK)
                                 {
                                     Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
                                 }
                             }
                         }
@@ -1857,7 +1854,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 if (downloadForm.ShowDialog(this) != DialogResult.OK)
                                 {
                                     Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
                                 }
                             }
                         }
@@ -1871,7 +1867,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         {
                             if (downloadForm.ShowDialog(this) != DialogResult.OK)
                             {
-                                return;
+                                // ignore
                             }
                         }
                     }
