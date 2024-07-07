@@ -3020,15 +3020,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfAlignmentTags>Брой поправени тагове: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Дължина на субтитър - минимум: {0}</LineLengthMinimum>
     <LineLengthMaximum>Дължина на субтитър - максимум: {0}</LineLengthMaximum>
-    <LineLengthAverage>Дължина на субтитър - средно: {0}</LineLengthAverage>
+    <LineLengthAverage>Дължина на субтитър - средно: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Субтитри, брой редове - средно: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Дължина на един ред - минимум: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Дължина на един ред - максимум: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Дължина на един ред - средно: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Дължина на един ред - средно: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Дължина на един ред - превишава максимума ({0} символи): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ширина на един ред - минимум: {0} пиксела</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ширина на един ред - максимум: {0} пиксела</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ширина на един ред - средно: {0} пиксела</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ширина на един ред - средно: {0:#.###} пиксела</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Ширина на един ред- надвишава максимума ({0} пиксела): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Времетраене - минимум: {0:0.000} секунди</DurationMinimum>
     <DurationMaximum>Времетраене - максимум: {0:0.000} секунди</DurationMaximum>

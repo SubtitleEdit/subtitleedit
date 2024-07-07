@@ -1902,11 +1902,11 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NumberOfAlignmentTags>配置タグの数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕の長さ - 最小: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕の長さ - 最大: {0}</LineLengthMaximum>
-    <LineLengthAverage>字幕の長さ - 平均: {0}</LineLengthAverage>
+    <LineLengthAverage>字幕の長さ - 平均: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>1 行の長さ - 最小: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>1 行の長さ - 最大: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>1 行の長さ - 平均: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>1 行の長さ - 平均: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>表示時間 - 最小: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>表示時間 - 最大: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>表示時間 - 平均: {0:0.000} 秒</DurationAverage>

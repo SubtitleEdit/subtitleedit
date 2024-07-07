@@ -3012,15 +3012,15 @@ emmän kuin</LengthGreaterThan>
     <NumberOfAlignmentTags>Tasaustunnisteiden määrä: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Tekstityksen pituus - pienin: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tekstityksen pituus - suurin: {0}</LineLengthMaximum>
-    <LineLengthAverage>Tekstityksen pituus - keskiarvo: {0}</LineLengthAverage>
+    <LineLengthAverage>Tekstityksen pituus - keskiarvo: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Tekstitys, rivien määrä - keskiarvo: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Yhden rivin pituus - pienin: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Yhden rivin pituus - suurin: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Yhden rivin pituus - keskiarvo: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Yhden rivin pituus - keskiarvo: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Yhden rivin pituus - ylitettäessä ({0} merkkiä): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Tekstityksen pituus - pienin: {0} kuvapistettä</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Tekstityksen pituus - suurin: {0} kuvapistettä</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Yhden rivin pituus - keskiarvo: {0} kuvapistettä</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Yhden rivin pituus - keskiarvo: {0:#.###} kuvapistettä</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Yhden rivin pituus - ylitettäen ({0} pikseliä): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Kesto - pienin: {0:0.000} sekuntia</DurationMinimum>
     <DurationMaximum>Kesto - suurin: {0:0.000} sekuntia</DurationMaximum>

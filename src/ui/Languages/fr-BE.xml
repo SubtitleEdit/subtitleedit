@@ -2576,14 +2576,14 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Nombre balises alignement : {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longueur sous-titres - le plus petit : {0} caractères</LineLengthMinimum>
     <LineLengthMaximum>Longueur sous-titres - le plus grand : {0} caractères</LineLengthMaximum>
-    <LineLengthAverage>Longueur sous-titres - moyenne : {0} caractères</LineLengthAverage>
+    <LineLengthAverage>Longueur sous-titres - moyenne : {0:#.###} caractères</LineLengthAverage>
     <LinesPerSubtitleAverage>Lignes par sous-titres - moyenne : {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longueur de ligne unique - minimum : {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longueur de ligne unique - maximum : {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Longueur de ligne unique - moyenne : {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Longueur de ligne unique - moyenne : {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Largeur de ligne unique - minimum : {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Largeur de ligne unique - maximum : {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Largeur de ligne unique - moyenne : {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Largeur de ligne unique - moyenne : {0:#.###} pixels</SingleLineWidthAverage>
     <DurationMinimum>Durée - minimum : {0:0.000} secondes</DurationMinimum>
     <DurationMaximum>Durée - maximum : {0:0.000} secondes</DurationMaximum>
     <DurationAverage>Durée - moyenne : {0:0.000} secondes</DurationAverage>

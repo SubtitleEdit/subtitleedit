@@ -3014,15 +3014,15 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <NumberOfAlignmentTags>정렬 태그 수: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>자막 길이 - 최소: {0}</LineLengthMinimum>
     <LineLengthMaximum>자막 길이 - 최대: {0}</LineLengthMaximum>
-    <LineLengthAverage>자막 길이 - 평균: {0}</LineLengthAverage>
+    <LineLengthAverage>자막 길이 - 평균: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>자막 안의 줄 수 - 평균: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>한 줄의 길이 - 최소: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>한 줄의 길이 - 최대: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>한 줄의 길이 - 평균: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>한 줄의 길이 - 평균: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>한 줄의 길이 - 최대값 초과 ({0} 문자): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>한 줄의 너비 - 최소: {0} 픽셀</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>한 줄의 너비 - 최대: {0} 픽셀</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>한 줄의 너비 - 평균: {0} 픽셀</SingleLineWidthAverage>
+    <SingleLineWidthAverage>한 줄의 너비 - 평균: {0:#.###} 픽셀</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>한 줄의 너비 - 최대값 초과 ({0} 픽셀): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>표시시간 - 최소: {0:0.000}초</DurationMinimum>
     <DurationMaximum>표시시간 - 최대: {0:0.000}초</DurationMaximum>

@@ -2324,14 +2324,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Тагови за порамнување: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Должина на титл - минимум: {0} знаци</LineLengthMinimum>
     <LineLengthMaximum>Должина на титл - максимум: {0} знаци</LineLengthMaximum>
-    <LineLengthAverage>Должина на титл - просек: {0} знаци</LineLengthAverage>
+    <LineLengthAverage>Должина на титл - просек: {0:#.###} знаци</LineLengthAverage>
     <LinesPerSubtitleAverage>Број на линии во титлот - просек: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Должина на линија - минимум: {0} знаци</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Должина на линија - максимум: {0} знаци</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Должина на линија - просек: {0} (знаци)</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Должина на линија - просек: {0:#.###} (знаци)</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Ширина на линија - минимум: {0} пиксели</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ширина на линија - максимум: {0} пиксели</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ширина на линија - просек: {0} пиксели</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ширина на линија - просек: {0:#.###} пиксели</SingleLineWidthAverage>
     <DurationMinimum>Траење - минимум: {0:0.000} секунди</DurationMinimum>
     <DurationMaximum>Траење - максимум: {0:0.000} секунди</DurationMaximum>
     <DurationAverage>Траење - просечно: {0:0.000} секунди</DurationAverage>

@@ -3014,15 +3014,15 @@ Continuar?</RestoreDefaultSettingsMsg>
 		<NumberOfAlignmentTags>Número de marcas de alinhamento: {0:#,##0}</NumberOfAlignmentTags>
 		<LineLengthMinimum>Tamanho da legenda - mínimo: {0}</LineLengthMinimum>
 		<LineLengthMaximum>Tamanho da legenda - máximo: {0}</LineLengthMaximum>
-		<LineLengthAverage>Tamanho da legenda - média: {0}</LineLengthAverage>
+		<LineLengthAverage>Tamanho da legenda - média: {0:#.###}</LineLengthAverage>
 		<LinesPerSubtitleAverage>Legenda, número de linhas - média: {0:0.0}</LinesPerSubtitleAverage>
 		<SingleLineLengthMinimum>Tamanho linha simples - mínimo: {0}</SingleLineLengthMinimum>
 		<SingleLineLengthMaximum>Tamanho linha simples - máximo: {0}</SingleLineLengthMaximum>
-		<SingleLineLengthAverage>Tamanho linha simples - média: {0}</SingleLineLengthAverage>
+		<SingleLineLengthAverage>Tamanho linha simples - média: {0:#.###}</SingleLineLengthAverage>
 		<SingleLineLengthExceedingMaximum>Comprimento de linha única - excedendo o máximo ({0} caract.): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
 		<SingleLineWidthMinimum>Largura de linha simples - mínimo: {0} pixels</SingleLineWidthMinimum>
 		<SingleLineWidthMaximum>Largura de linha simples - máximo: {0} pixels</SingleLineWidthMaximum>
-		<SingleLineWidthAverage>Largura de linha simples - média: {0} pixels</SingleLineWidthAverage>
+		<SingleLineWidthAverage>Largura de linha simples - média: {0:#.###} pixels</SingleLineWidthAverage>
 		<SingleLineWidthExceedingMaximum>Comprimento de linha única - excedendo o máximo ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
 		<DurationMinimum>Duração - mínimo: {0:0.000} segundos</DurationMinimum>
 		<DurationMaximum>Duração - máximo: {0:0.000} segundos</DurationMaximum>

@@ -2794,14 +2794,14 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Igazítási címkék száma: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Felirat hossza - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Felirat hossza - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Felirat hossza - átlagos: {0}</LineLengthAverage>
+    <LineLengthAverage>Felirat hossza - átlagos: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Felirat, sorok száma - átlagos: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Egyetlen sor hossza - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Egyetlen sor hossza - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Egyetlen sor hossza - átlag: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Egyetlen sor hossza - átlag: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Egy sor szélessége - legalább: {0} képpont</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Egy sor szélessége - legfeljebb: {0} képpont</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Egy sor szélessége - átlagosan: {0} képpont</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Egy sor szélessége - átlagosan: {0:#.###} képpont</SingleLineWidthAverage>
     <DurationMinimum>Időtartam - minimum: {0:0.000} másodperc</DurationMinimum>
     <DurationMaximum>Időtartam - maximum: {0:0.000} másodperc</DurationMaximum>
     <DurationAverage>Időtartam - átlagos: {0:0.000} másodperc</DurationAverage>

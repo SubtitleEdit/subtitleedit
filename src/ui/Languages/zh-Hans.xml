@@ -3007,11 +3007,11 @@ Command line: {1} {2}
     <NumberOfAlignmentTags>排列位置标签数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕长度（最短）: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕长度（最长）: {0}</LineLengthMaximum>
-    <LineLengthAverage>字幕长度（平均）: {0}</LineLengthAverage>
+    <LineLengthAverage>字幕长度（平均）: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>平均行数: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>单行长度（最短）: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度（最长）: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>单行长度（平均）: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>单行长度（平均）: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>单行长度 - 超过最大值（{0} 个字符）: {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>单行宽度（最短）: {0} 像素</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>单行宽度（最长）: {0} 像素</SingleLineWidthMaximum>

@@ -3021,15 +3021,15 @@ Fortsätt?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Antal placeringstaggar: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Text längd - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Text längd - maximal: {0}</LineLengthMaximum>
-    <LineLengthAverage>Text längd - genomsnitt: {0}</LineLengthAverage>
+    <LineLengthAverage>Text längd - genomsnitt: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Undertext, antal rader - genomsnitt: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Enkel linjelängd - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkel linjelängd - maximal: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Enkel linjelängd - genomsnitt: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Enkel linjelängd - genomsnitt: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>En rads längd - överskrider max ({0} tecken): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>En linjebredd - minst: {0} pixlar</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Enkel radbredd – maximalt: {0} pixlar</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>En linjebredd - genomsnitt: {0} pixlar</SingleLineWidthAverage>
+    <SingleLineWidthAverage>En linjebredd - genomsnitt: {0:#.###} pixlar</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Enstaka radbredd – överstiger max ({0} pixlar): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Längd - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Längd - maximal: {0:0.000} sekunder</DurationMaximum>

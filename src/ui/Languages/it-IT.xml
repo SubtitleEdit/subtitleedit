@@ -3019,16 +3019,16 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Numero tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
-    <LineLengthAverage>Lunghezza sottotitolo - media: {0}</LineLengthAverage>
+    <LineLengthAverage>Lunghezza sottotitolo - media: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Sottotitolo, numero di righe - media: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lunghezza riga singola - minimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lunghezza riga singola - massima: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lunghezza riga singola - media: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lunghezza riga singola - media: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Lunghezza riga singola - superiore al massimo ({0} caratteri): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixel</SingleLineWidthMaximum>
     <SingleLineWidthExceedingMaximum>Larghezza riga singola - superiore al massimo ({0} pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
-    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixel</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Larghezza riga singola - media: {0:#.###} pixel</SingleLineWidthAverage>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
