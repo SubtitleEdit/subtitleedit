@@ -3029,15 +3029,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfAlignmentTags>Число тегов выравнивания: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Длина субтитра - минимальная: {0}</LineLengthMinimum>
     <LineLengthMaximum>Длина субтитра - максимальная: {0}</LineLengthMaximum>
-    <LineLengthAverage>Длина субтитра - средняя: {0}</LineLengthAverage>
+    <LineLengthAverage>Длина субтитра - средняя: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Субтитр, число строк - среднее: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Длина одной строки - минимальная: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Длина одной строки - максимальная: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Длина одной строки - средняя: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Длина одной строки - средняя: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Длина одной строки - выше максимальной ({0} симв.): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ширина одной строки - минимальная: {0} пикс.</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ширина одной строки - максимальная: {0} пикс.</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ширина одной строки - средняя: {0} пикс.</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ширина одной строки - средняя: {0:#.###} пикс.</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Ширина одной строки - выше максимальной ({0} пикс.): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Продолжительность - минимальная: {0:0.000} сек.</DurationMinimum>
     <DurationMaximum>Продолжительность - максимальная: {0:0.000} сек.</DurationMaximum>

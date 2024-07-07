@@ -3006,15 +3006,15 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <NumberOfAlignmentTags>Cantidad de etiquetas de alineación: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>duración - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>longitud - máximo: {0}</LineLengthMaximum>
-    <LineLengthAverage>longitud Subtítulo - promedio: {0}</LineLengthAverage>
+    <LineLengthAverage>longitud Subtítulo - promedio: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtítulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>longitud de una sola línea - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Una sola línea longitud - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>longitud de línea individual - Media: {0} Duración</SingleLineLengthAverage>
+    <SingleLineLengthAverage>longitud de línea individual - Media: {0:#.###} Duración</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Longitud de línea única - excede el máximo ({0} caracteres): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ancho de línea simple - mínimo: {0} píxeles</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ancho de línea simple - máximo: {0} píxeles</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ancho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ancho de línea simple - promedio: {0:#.###} píxeles</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Ancho de línea única - excede el máximo ({0} píxeles): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>

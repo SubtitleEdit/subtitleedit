@@ -2421,14 +2421,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Nombre etiquetes alínia: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Llargària subtítol - mínim: {0}</LineLengthMinimum>
     <LineLengthMaximum>Llargària subtítol - màxim: {0}</LineLengthMaximum>
-    <LineLengthAverage>Llargària subtítol - mitjana: {0}</LineLengthAverage>
+    <LineLengthAverage>Llargària subtítol - mitjana: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtítol, nombre de línies - mitjana: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Llargària línia única - mínim: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Llargària línia única - màxim: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Llargària línia única - mitjana: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Llargària línia única - mitjana: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Amplada línia única - mínim {0}</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Amplada línia única - màxim {0}</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Amplada línia única - mitjana {0}</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Amplada línia única - mitjana {0:#.###}</SingleLineWidthAverage>
     <DurationMinimum>Durada - mínim: {0:0.000} segons</DurationMinimum>
     <DurationMaximum>Durada - màxim: {0:0.000} segons</DurationMaximum>
     <DurationAverage>Durada - mitjana: {0:0.000} segons</DurationAverage>

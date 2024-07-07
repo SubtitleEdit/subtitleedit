@@ -2532,11 +2532,11 @@ Devam et?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Altı çizili etiket sayısı: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Altyazı uzunluğu - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Altyazı uzunluğu - maksimum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Altyazı uzunluğu - ortalama: {0}</LineLengthAverage>
+    <LineLengthAverage>Altyazı uzunluğu - ortalama: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Altyazı, satır sayısı - ortalama: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tek satır uzunluğu - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tek satır uzunluğu - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Tek satır uzunluğu - ortalama: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Tek satır uzunluğu - ortalama: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Tek satır genişliği - minimum: {0} piksel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Tek satır genişliği - maksimum: {0} piksel</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Tek satır genişliği - ortalama: {0} piksel</SingleLineWidthAverage>

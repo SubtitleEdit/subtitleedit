@@ -1973,11 +1973,11 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <NumberOfAlignmentTags>Antall plasseringsmarkeringer: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Undertekstlengde - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Undertekstlengde - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Undertekstlengde - average: {0}</LineLengthAverage>
+    <LineLengthAverage>Undertekstlengde - average: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Undertekst, antall linjer - gjennomsnitt: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lengde på enkeltlinje - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lengde på enkeltlinje - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lengde på enkeltlinje - gjennomsnitt: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lengde på enkeltlinje - gjennomsnitt: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Varighet - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varighet - maksimum: {0:0.000} sekunder</DurationMaximum>
     <DurationAverage>Varighet - gjennomsnitt: {0:0.000} sekunder</DurationAverage>

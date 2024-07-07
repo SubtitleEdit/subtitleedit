@@ -3003,15 +3003,15 @@ Probeer het later opnieuw.</XDownloadFailed>
     <NumberOfAlignmentTags>Aantal uitlĳning-tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Ondertitellengte – minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Ondertitellengte – maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Ondertitellengte – gemiddeld: {0}</LineLengthAverage>
+    <LineLengthAverage>Ondertitellengte – gemiddeld: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Regels per ondertitel – gemiddeld: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lengte enkele regel – minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lengte enkele regel – maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lengte enkele regel – gemiddeld: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lengte enkele regel – gemiddeld: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Lengte enkele regel – boven maximum ({0} tekens): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Breedte enkele regel – minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Breedte enkele regel – maximum: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Breedte enkele regel – gemiddeld: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Breedte enkele regel – gemiddeld: {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Breedte enkele regel – boven maximum ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duur – minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur – maximum: {0:0.000} seconden</DurationMaximum>

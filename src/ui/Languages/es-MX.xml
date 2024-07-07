@@ -3006,15 +3006,15 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <NumberOfAlignmentTags>Cantidad de etiquetas de alineación: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longitud del subtítulo - mínima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Longitud del subtítulo - máxima: {0}</LineLengthMaximum>
-    <LineLengthAverage>Longitud del subtítulo - promedio: {0}</LineLengthAverage>
+    <LineLengthAverage>Longitud del subtítulo - promedio: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtitulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longitud de una sola línea - mínima: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longitud de una sola línea - máxima: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0} Duración</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0:#.###} Duración</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Longitud de línea única - excede el máximo ({0} caracteres): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ancho de línea simple - mínimo: {0} píxeles</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ancho de línea simple - máximo: {0} píxeles</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ancho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ancho de línea simple - promedio: {0:#.###} píxeles</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Ancho de línea única - excede el máximo ({0} píxeles): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>

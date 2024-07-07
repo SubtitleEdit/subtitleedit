@@ -3008,15 +3008,15 @@ Continui?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Marcaje aliniate: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lungime minimă a subtitrării: {0} linii</LineLengthMinimum>
     <LineLengthMaximum>Lungime maximă a subtitrării: {0} linii</LineLengthMaximum>
-    <LineLengthAverage>Lungime medie a subtitrării: {0} linii</LineLengthAverage>
+    <LineLengthAverage>Lungime medie a subtitrării: {0:#.###} linii</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtitrare cu număr mediu al liniilor: {0:0.0} linii</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lungime minimă a liniei unice: {0} linii</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lungimea maximă a liniei unice: {0} linii</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lungime media a liniei unice: {0} linii</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lungime media a liniei unice: {0:#.###} linii</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Lungimea unei singure linii - depășește maximul ({0} caractere): {1} ({2:0,00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Lățime minimă a liniei unice: {0} pixeli</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Lățime maximă a liniei unice: {0} pixeli</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Lățime medie a liniei unice: {0} pixeli</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Lățime medie a liniei unice: {0:#.###} pixeli</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Lățimea unei singure linii - depășește maximul ({0} pixeli): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Durata minimă: {0:0.000} secunde</DurationMinimum>
     <DurationMaximum>Durata maximă: {0:0.000} secunde</DurationMaximum>

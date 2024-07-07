@@ -3014,15 +3014,15 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Liczba tagów wyrównania: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Długość napisów - minimalna: {0}</LineLengthMinimum>
     <LineLengthMaximum>Długość napisów - maksymalna: {0}</LineLengthMaximum>
-    <LineLengthAverage>Długość napisów - średnia: {0}</LineLengthAverage>
+    <LineLengthAverage>Długość napisów - średnia: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Napisy, liczba linii - średnia: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Długość pojedynczej linii - minimalna: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Długość pojedynczej linii - maksymalna: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Długość pojedynczej linii - przekroczenie wartości maksymalnej ({0} znaków): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Szerokość pojedynczej linii - minimum: {0} piks.</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Szerokość pojedynczej linii - maksimum: {0} pikseli</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Szerokość pojedynczej linii - średnio: {0} pikseli</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Szerokość pojedynczej linii - średnio: {0:#.###} pikseli</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Szerokość pojedynczej linii - przekroczenie wartości maksymalnej ({0} pikseli): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Czas trwania - minimalny: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Czas trwania - maksymalny: {0:0.000} sekund</DurationMaximum>

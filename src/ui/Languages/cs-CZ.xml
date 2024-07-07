@@ -2604,14 +2604,14 @@ Pokračovat?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Počet značek zarovnání: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Minimální délka titulku: {0}</LineLengthMinimum>
     <LineLengthMaximum>Maximální délka titulku: {0}</LineLengthMaximum>
-    <LineLengthAverage>Průměrná délka titulku: {0}</LineLengthAverage>
+    <LineLengthAverage>Průměrná délka titulku: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Průměrný počet řádků titulku: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Minimální délka jednotlivého řádku: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Maximální délka jednotlivého řádku: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Šířka jednoho řádku - minimálně: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Šířka jednoho řádku - maximálně: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Šířka jednoho řádku - průměrně: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Šířka jednoho řádku - průměrně: {0:#.###} pixels</SingleLineWidthAverage>
     <DurationMinimum>Minimální trvání: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Maximální trvání: {0:0.000} sekund</DurationMaximum>
     <DurationAverage>Průměrné trvání: {0:0.000} sekund</DurationAverage>

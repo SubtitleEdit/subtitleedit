@@ -3019,15 +3019,15 @@ Continue?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Number of alignment tags: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Subtitle length - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle length - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Subtitle length - average: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAverage>
+    <LineLengthAverage>Subtitle length - average: {0:#.###}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Single line length - average: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Single line length - exceeding maximum ({0} chars): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Single line width - minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Single line width - maximum: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Single line width - average: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Single line width - average: {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Single line width - exceeding maximum ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>

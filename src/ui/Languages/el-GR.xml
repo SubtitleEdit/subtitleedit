@@ -2998,15 +2998,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Αριθμός ετικετών στοίχισης: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Ελάχιστο μήκος υποτίτλου: {0}</LineLengthMinimum>
     <LineLengthMaximum>Μέγιστο μήκος υποτίτλου: {0}</LineLengthMaximum>
-    <LineLengthAverage>Μέσο μήκος υποτίτλου: {0}</LineLengthAverage>
+    <LineLengthAverage>Μέσο μήκος υποτίτλου: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Μέσος αριθμός γραμμών υποτίτλων: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Ελάχιστο μήκος μονής γραμμής: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Μέγιστο μήκος μονής γραμμής: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} χαρακτήρες): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ελάχιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Μέγιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0:#.###} εικονοστοιχεία</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} εικονοστοιχεία): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Ελάχιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMinimum>
     <DurationMaximum>Μέγιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMaximum>

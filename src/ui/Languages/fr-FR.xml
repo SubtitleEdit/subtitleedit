@@ -2986,15 +2986,15 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Nombre balises alignement : {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longueur sous-titres - minimum : {0} caractères</LineLengthMinimum>
     <LineLengthMaximum>Longueur sous-titres - maximum : {0} caractères</LineLengthMaximum>
-    <LineLengthAverage>Longueur sous-titres - moyenne : {0} caractères</LineLengthAverage>
+    <LineLengthAverage>Longueur sous-titres - moyenne : {0:#.###} caractères</LineLengthAverage>
     <LinesPerSubtitleAverage>Lignes par sous-titres - moyenne : {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longueur de ligne unique - minimum : {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longueur de ligne unique - maximum : {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Longueur de ligne unique - moyenne : {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Longueur de ligne unique - moyenne : {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Longueur de ligne unique - dépassant le maximum ({0} carac.) : {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Largeur de ligne unique - minimum : {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Largeur de ligne unique - maximum : {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Largeur de ligne unique - moyenne : {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Largeur de ligne unique - moyenne : {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Largeur de ligne unique - dépassant le maximum ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Durée - minimum : {0:0.000} secondes</DurationMinimum>
     <DurationMaximum>Durée - maximum : {0:0.000} secondes</DurationMaximum>

@@ -1965,11 +1965,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Кількість тегів розташування: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Довжина субтитру - мінімальна: {0}</LineLengthMinimum>
     <LineLengthMaximum>Довжина субтитру - максимальна: {0}</LineLengthMaximum>
-    <LineLengthAverage>Довжина субтитру - середня: {0}</LineLengthAverage>
+    <LineLengthAverage>Довжина субтитру - середня: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Кількість рядків у субтитрі - середня: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Довжина одного рядка - мінімальна: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Довжина одного рядка - максимальна: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Довжина одного рядка - середня: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Довжина одного рядка - середня: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Тривалість - мінімум: {0:0.000} секунд</DurationMinimum>
     <DurationMaximum>Тривалість - максимум: {0:0.000} секунд</DurationMaximum>
     <DurationAverage>Тривалість - середня: {0:0.000} секунд</DurationAverage>

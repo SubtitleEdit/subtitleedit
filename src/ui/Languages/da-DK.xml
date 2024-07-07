@@ -3012,15 +3012,15 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Antal tilpasning tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Undertekst længde - mindste: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle længde - største: {0}</LineLengthMaximum>
-    <LineLengthAverage>Undertekst længde - gennemsnit: {0}</LineLengthAverage>
+    <LineLengthAverage>Undertekst længde - gennemsnit: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Undertekst, antal linjer - gennemsnit: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Enkelt linje længde - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkelt linjelængde - maks.: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Enkelt linje længde - gennemsnit: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Enkelt linjelængde - overskrider maksimum ({0} tegn): {1} ({2:0,00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Enkelt linjebredde - minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Enkelt linjebredde - maksimalt: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Enkelt linjebredde - gennemsnit: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Enkelt linjebredde - gennemsnit: {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Enkelt linjebredde - overskrider maksimum ({0} pixels): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
