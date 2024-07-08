@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 4.0.6
+PackageVersion: 4.0.7.0
 PackageLocale: en-US
 Publisher: Nikse
 PublisherUrl: https://www.nikse.dk/
@@ -20,3 +20,4 @@ Tags:
 - video
 ManifestType: defaultLocale
 ManifestVersion: 1.6.0
+

@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.7 (9th July 2024) 
+4.0.7 (8th July 2024) 
 * NEW:
    * Add "Generate transparent video with subtitles" - thx JeditPro
    * Add Edit - Modify selection - Line length
