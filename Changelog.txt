@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.7 (xth July 2024) BETA
+4.0.7 (9th July 2024) 
 * NEW:
    * Add "Generate transparent video with subtitles" - thx JeditPro
    * Add Edit - Modify selection - Line length
@@ -12,12 +12,14 @@
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update French translation - thx Pierre
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S	
    * Update Italian translation - thx bovirus
    * Update Russian translation - thx elfriob
    * Update mpv to 2024-06-09
    * Update yt-dlp to 2024-07-02
+   * Add decimals to a few averages in statistics - thx Dvid
 * FIXED:
    * Fix auto translate crash - thx soscaster
    * Fix crash in Vosk audio to text on selected lines - thx MediaExpres

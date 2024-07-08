@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.7</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Jul, 07 2024)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -408,7 +408,8 @@ Cliquez sur "{0}" pour d'abord générer / importet les changements de plan ou d
     <UnfixableParagraphsTitle>Réviser les s/titres non enchaînés</UnfixableParagraphsTitle>
     <UnfixableParagraphsInstructions>Certains sous-titres n'ont pas été complètement enchaînés conformément à votre profil, probablement en raison de changements de plans trop rapprochés (peut-être des faux positifs).
 
-Peut-être voulez-vous revoir ces cas manuellement pour vous assurer que vos repères sont adaptés aux changements de plan corrects (réels).</UnfixableParagraphsInstructions>    <UnfixableParagraphsColumnParagraphs>Lines</UnfixableParagraphsColumnParagraphs>
+Peut-être voulez-vous revoir ces cas manuellement pour vous assurer que vos repères sont adaptés aux changements de plan corrects (réels).</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Lines</UnfixableParagraphsColumnParagraphs>
     <UnfixableParagraphsColumnParagraphs>Lignes</UnfixableParagraphsColumnParagraphs>
     <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
     <UnfixableParagraphsColumnGap>Gap (frames)</UnfixableParagraphsColumnGap>

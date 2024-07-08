@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UpdateAssemblyInfo": {
+      "commandName": "Project",
+      "commandLineArgs": "\"..\\..\\ui\\Properties\\AssemblyInfo.cs.template\" \"..\\..\\src\\libse\\Properties\\AssemblyInfo.cs.template\""
+    }
+  }
+}
