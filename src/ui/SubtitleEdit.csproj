@@ -17,6 +17,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <FileVersion>4.0.7.0</FileVersion>
+    <AssemblyVersion>4.0.7.0</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -298,8 +300,6 @@
     </HunspellAssemblies>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl" Version="1.1.10" />
-    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="NAudio.Core" Version="2.2.1" />
@@ -322,11 +322,11 @@
     <PropertyGroup>
       <HunspellDir>..\..\packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
     </PropertyGroup>
-    <Copy SourceFiles="@(HunspellAssemblies -&gt; '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
+    <Copy SourceFiles="@(HunspellAssemblies -> '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
     <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
     <Exec Condition="'$(OS)' == 'Unix'" Command="bash $(ProjectDir)../../build_helpers.sh rev $(ConfigurationName)" />
   </Target>
   <Target Name="BeforeClean">
-    <Delete Files="@(HunspellAssemblies -&gt; '$(OutputPath)%(Identity)')" />
+    <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
   </Target>
 </Project>
