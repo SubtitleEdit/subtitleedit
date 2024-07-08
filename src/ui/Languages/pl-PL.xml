@@ -1447,6 +1447,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z dodanymi/usuniętymi osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Wygeneruj przezroczyste wideo z napisami...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany ujęcia...</GenerateImportShotChanges>
@@ -2133,6 +2134,8 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
     <CpsLessThan>ZNS mniej niż</CpsLessThan>
     <CpsGreaterThan>ZNS więcej niż</CpsGreaterThan>
+    <LengthLessThan>Długość mniejsza niż</LengthLessThan>
+    <LengthGreaterThan>Długość większa niż</LengthGreaterThan>
     <ExactlyOneLine>Dokładnie jedna linia</ExactlyOneLine>
     <ExactlyTwoLines>Dokładnie dwie linie</ExactlyTwoLines>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
@@ -3015,7 +3018,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <LineLengthMinimum>Długość napisów - minimalna: {0}</LineLengthMinimum>
     <LineLengthMaximum>Długość napisów - maksymalna: {0}</LineLengthMaximum>
     <LineLengthAverage>Długość napisów - średnia: {0:#.###}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Napisy, liczba linii - średnia: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>Napisy, liczba linii - średnia: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Długość pojedynczej linii - minimalna: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Długość pojedynczej linii - maksymalna: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0:#.###}</SingleLineLengthAverage>
@@ -3171,6 +3174,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Łączenie ścieżki audio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generowanie mowy z tekstu: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Przegląd klipów audio</ReviewAudioClips>
+    <CustomAudioEncoding>Niestandardowe kodowanie audio</CustomAudioEncoding>
     <ReviewInfo>Przegląd i edycja/usuwanie klipów audio</ReviewInfo>
     <Play>Odtwarzaj</Play>
     <AutoContinue>Auto-kontynuacja</AutoContinue>
