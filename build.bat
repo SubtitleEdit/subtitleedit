@@ -237,7 +237,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 ECHO.
 ECHO ZIP archive created successfully!
-MOVE /Y "SubtitleEdit-%VERSION%.zip" "..\..\..\..\.." >NUL
+MOVE /Y "SubtitleEdit-%VERSION%.zip" "..\..\..\..\..\.." >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD
