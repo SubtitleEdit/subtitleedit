@@ -1435,6 +1435,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateBlankVideo>Δημιουργία κενού αρχείου βίντεο…</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Δημιουργία βίντεο με προσθήκη / αφαίρεση ενσωματωμένων υποτίτλων…</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Δημιουργία διαφανούς βίντεο με υπότιτλους</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Ήχος σε κείμενο ({0})…</VideoAudioToTextX>
         <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Δημιουργία / εισαγωγή αλλαγών λήψης…</GenerateImportShotChanges>
@@ -2120,6 +2121,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
     <CpsLessThan>Χαρ. / δευτ. λιγότεροι από</CpsLessThan>
     <CpsGreaterThan>Χαρ. / δευτ. περισσότεροι από</CpsGreaterThan>
+    <LengthLessThan>Μήκος μικρότερο από</LengthLessThan>
+    <LengthGreaterThan>Μήκος μεγαλύτερο από</LengthGreaterThan>
     <ExactlyOneLine>Ακριβώς μία γραμμή</ExactlyOneLine>
     <ExactlyTwoLines>Ακριβώς δύο γραμμές</ExactlyTwoLines>
     <MoreThanTwoLines>Πάνω από δύο γραμμές</MoreThanTwoLines>
@@ -3155,6 +3158,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergingAudioTrackXOfY>Συγχώνευση κομματιού ήχου: {0} / {1}…</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Δημιουργία ομιλίας από κείμενο: {0} / {1}…</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Έλεγχος ήχων</ReviewAudioClips>
+    <CustomAudioEncoding>Προσαρμοσμένη κωδικοποίηση ήχου</CustomAudioEncoding>
     <ReviewInfo>Έλεγχος κι επεξεργασία / αφαίρεση ήχων</ReviewInfo>
     <Play>Αναπαραγωγή</Play>
     <AutoContinue>Αυτόματη συνέχεια</AutoContinue>
