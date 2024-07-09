@@ -61,15 +61,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxDictionaries.Items.Clear();
                 var doc = new XmlDocument();
-                using (var rdr = new StreamReader(stream))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                using (var zip = new GZipStream(stream, CompressionMode.Decompress))
+                using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
                 {
-                    var data = new byte[195000];
-                    var bytesRead = zip.Read(data, 0, data.Length);
-                    var s = System.Text.Encoding.UTF8.GetString(data, 0, bytesRead).Trim();
                     try
                     {
-                        doc.LoadXml(s);
+                        doc.Load(reader);
                     }
                     catch (Exception exception)
                     {
