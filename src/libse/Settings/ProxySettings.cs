@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         /// Decodes the given password by converting it from base64 string representation to plain text.
         /// </summary>
         /// <returns>The decoded plain text password.</returns>
-        /// <param name="password">The password to be decoded.</param>
         public string DecodePassword()
         {
             return Encoding.UTF8.GetString(Convert.FromBase64String(Password));
