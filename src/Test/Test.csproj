@@ -13,8 +13,7 @@
     <RootNamespace>Test</RootNamespace>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
