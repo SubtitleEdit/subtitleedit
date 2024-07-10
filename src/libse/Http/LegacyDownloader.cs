@@ -90,7 +90,10 @@ namespace Nikse.SubtitleEdit.Core.Http
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            var webClient = new WebClient { Proxy = GetProxy() };
+            var webClient = new WebClient
+            {
+                Proxy = Configuration.Settings.Proxy.CreateProxyFromSettings()
+            };
             foreach (var header in _httpClient.DefaultRequestHeaders)
             {
                 foreach (var v in header.Value)
@@ -140,33 +143,6 @@ namespace Nikse.SubtitleEdit.Core.Http
 
                 bytesRead = source.Read(buffer, 0, buffer.Length);
             }
-        }
-
-        public static WebProxy GetProxy()
-        {
-            if (string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
-            {
-                return null;
-            }
-
-            var proxy = new WebProxy(Configuration.Settings.Proxy.ProxyAddress);
-            if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.UserName))
-            {
-                if (string.IsNullOrEmpty(Configuration.Settings.Proxy.Domain))
-                {
-                    proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword());
-                }
-                else
-                {
-                    proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword(), Configuration.Settings.Proxy.Domain);
-                }
-            }
-            else
-            {
-                proxy.UseDefaultCredentials = true;
-            }
-
-            return proxy;
         }
     }
 }
