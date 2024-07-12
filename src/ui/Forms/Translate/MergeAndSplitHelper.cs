@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             var linesTranslate = 0;
-            var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken);
+            var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken).ConfigureAwait(false);
 
 
             // Split by line ending chars where period count matches

@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new TranslationPair(name, code, twoLetterIsoName);
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var apiKey = string.Empty;
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             var url = $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKey}&q={Utilities.UrlEncode(text)}";
-            var jsonResultString = _httpClient.GetStringAsync(url).Result;
+            var jsonResultString = await _httpClient.GetStringAsync(url).ConfigureAwait(false);
             var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
 
@@ -224,8 +224,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 // ignore
             }
-
-            return Task.FromResult(result);
+            
+            return result;
         }
 
         public void Dispose() => _httpClient?.Dispose();

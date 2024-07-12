@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GoogleTranslateV1.GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var format = "text";
             var input = new StringBuilder();
@@ -54,13 +54,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             string content;
             try
             {
-                var result = _httpClient.PostAsync(uri, new StringContent(string.Empty)).Result;
+                var result = await _httpClient.PostAsync(uri, new StringContent(string.Empty)).ConfigureAwait(false);
 
                 if (!result.IsSuccessStatusCode)
                 {
                     try
                     {
-                        Error = result.Content.ReadAsStringAsync().Result;
+                        Error = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
                         SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
                     }
                     catch
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     throw new Exception($"An error occurred calling GT translate - status code: {result.StatusCode}");
                 }
 
-                content = result.Content.ReadAsStringAsync().Result;
+                content = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
             catch (WebException webException)
             {
@@ -140,7 +140,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     }
                 }
             }
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+
+            return string.Join(Environment.NewLine, resultList);
         }
 
         public void Dispose() => _httpClient?.Dispose();
