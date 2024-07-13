@@ -161,6 +161,7 @@
     <Word from="cenzurisan" to="cenzuriran" />
     <Word from="cenzurisana" to="cenzurirana" />
     <Word from="cenzurisao" to="cenzurirao" />
+    <Word from="cenzuriše" to="cenzurira" />
     <Word from="cenzurišem" to="cenzuriram" />
     <Word from="cenzurišemo" to="cenzuriramo" />
     <Word from="cenzurišeš" to="cenzuriraš" />
@@ -530,6 +531,7 @@
     <Word from="g-đu" to="gđu" />
     <Word from="gluhonem" to="gluhonijem" />
     <Word from="gluhoneme" to="gluhonijeme" />
+    <Word from="gobor" to="govor" />
     <Word from="gorele" to="gorjele" />
     <Word from="gorela" to="gorjela" />
     <Word from="greše" to="griješe" />
@@ -1124,7 +1126,9 @@
     <Word from="martu" to="ožujku" />
     <Word from="martom" to="ožujkom" />
     <Word from="matora" to="stara" />
+    <Word from="matore" to="stare" />
     <Word from="matori" to="stari" />
+    <Word from="matoru" to="staru" />
     <Word from="matorog" to="starog" />
     <Word from="matorom" to="starom" />
     <Word from="medju" to="među" />
@@ -1827,6 +1831,7 @@
     <Word from="Poželeo" to="Poželio" />
     <Word from="Poželjeo" to="Poželio" />
     <Word from="poželjeo" to="poželio" />
+    <Word from="požutela" to="požutjela" />
     <Word from="praće" to="prat će" />
     <Word from="praktikuj" to="prakticiraj" />
     <Word from="praktikuju" to="prakticiraju" />
@@ -3035,6 +3040,7 @@
     <Word from="zano" to="znao" />
     <Word from="zanma" to="zanima" />
     <Word from="zanimap" to="zanimaš" />
+    <Word from="zaoravo" to="zapravo" />
     <Word from="zapakujete" to="zapakirate" />
     <Word from="zaplena" to="zapljena" />
     <Word from="zapleni" to="zaplijeni" />
