@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
         {
-            var cps = Utilities.GetCharactersPerSecond(p);
+            var cps = p.GetCharactersPerSecond();
             var d = duration.ToString();
             if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
             {

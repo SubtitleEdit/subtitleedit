@@ -942,37 +942,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return maxLength;
         }
 
-        public static double GetCharactersPerSecond(Paragraph paragraph)
-        {
-            if (paragraph.DurationTotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return (double)paragraph.Text.CountCharacters(true) / paragraph.DurationTotalSeconds;
-        }
-
-        public static double GetCharactersPerSecond(Paragraph paragraph, double numberOfCharacters)
-        {
-            if (paragraph.DurationTotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return numberOfCharacters / paragraph.DurationTotalSeconds;
-        }
-
-
-        public static double GetCharactersPerSecond(Paragraph paragraph, ICalcLength calc)
-        {
-            if (paragraph.DurationTotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return (double)calc.CountCharacters(paragraph.Text, true) / paragraph.DurationTotalSeconds;
-        }
-
         public static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;

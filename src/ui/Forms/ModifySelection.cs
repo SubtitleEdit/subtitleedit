@@ -435,7 +435,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionCpsLessThan) // Cps less than
                     {
-                        if (Utilities.GetCharactersPerSecond(p) < (double)numericUpDownDuration.Value)
+                        if (p.GetCharactersPerSecond() < (double)numericUpDownDuration.Value)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }

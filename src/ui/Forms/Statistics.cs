@@ -143,7 +143,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
 
-                var charsSec = Utilities.GetCharactersPerSecond(p);
+                var charsSec = p.GetCharactersPerSecond();
                 minimumCharsSec = Math.Min(charsSec, minimumCharsSec);
                 maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
                 totalCharsSec += charsSec;
@@ -203,7 +203,7 @@ https://github.com/SubtitleEdit/subtitleedit
                     totalSingleLines++;
                 }
 
-                var cps = Utilities.GetCharactersPerSecond(p);
+                var cps = p.GetCharactersPerSecond();
                 if (cps > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
                 {
                     aboveOptimalCpsCount++;
@@ -343,7 +343,7 @@ https://github.com/SubtitleEdit/subtitleedit
             for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
-                if (Math.Abs(Utilities.GetCharactersPerSecond(p) - cps) < 0.01)
+                if (Math.Abs(p.GetCharactersPerSecond() - cps) < 0.01)
                 {
                     if (indices.Count >= NumberOfLinesToShow)
                     {

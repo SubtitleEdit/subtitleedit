@@ -1084,7 +1084,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                             if (Configuration.Settings.VideoControls.WaveformDrawCps)
                             {
-                                text = $"{Utilities.GetCharactersPerSecond(paragraph):0.00}" + Environment.NewLine + text;
+                                text = $"{paragraph.GetCharactersPerSecond():0.00}" + Environment.NewLine + text;
                             }
                         }
                         else
@@ -1096,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                             if (Configuration.Settings.VideoControls.WaveformDrawCps)
                             {
-                                text = string.Format(LanguageSettings.Current.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
+                                text = string.Format(LanguageSettings.Current.Waveform.CharsSecX, paragraph.GetCharactersPerSecond()) + Environment.NewLine + text;
                             }
                         }
                     }
