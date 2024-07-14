@@ -585,6 +585,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Á sėquencer l'ADN" + Environment.NewLine + "de micro-organismes ėteints");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Á sėquencer l'ADN" + Environment.NewLine + "de micro-organismes ėteints", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces

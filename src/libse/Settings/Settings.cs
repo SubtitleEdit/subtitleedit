@@ -3952,6 +3952,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GenVideoPreset = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoPixelFormat");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoPixelFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenVideoCrf");
             if (subNode != null)
             {
@@ -9165,6 +9171,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("GenVideoFontBold", settings.Tools.GenVideoFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoOutline", settings.Tools.GenVideoOutline.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoPixelFormat", settings.Tools.GenVideoPixelFormat);
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
                 textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);

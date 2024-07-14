@@ -1016,6 +1016,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Pixel format</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Tune for</TuneFor>
     <AlignRight>Align right</AlignRight>

@@ -369,6 +369,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int GenVideoFontSize { get; set; }
         public string GenVideoEncoding { get; set; }
         public string GenVideoPreset { get; set; }
+        public string GenVideoPixelFormat { get; set; }
         public string GenVideoCrf { get; set; }
         public string GenVideoTune { get; set; }
         public string GenVideoAudioEncoding { get; set; }

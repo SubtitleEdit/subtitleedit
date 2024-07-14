@@ -2689,6 +2689,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/Preset":
                     language.GenerateVideoWithBurnedInSubs.Preset = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/PixelFormat":
+                    language.GenerateVideoWithBurnedInSubs.PixelFormat = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/Crf":
                     language.GenerateVideoWithBurnedInSubs.Crf = reader.Value;
                     break;

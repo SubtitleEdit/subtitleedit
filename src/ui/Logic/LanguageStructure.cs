@@ -1091,6 +1091,7 @@
             public string Audio { get; set; }
             public string Stereo { get; set; }
             public string Preset { get; set; }
+            public string PixelFormat { get; set; }
             public string Crf { get; set; }
             public string TuneFor { get; set; }
             public string AlignRight { get; set; }
