@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMakeStereo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Stereo;
             labelCRF.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Crf;
             labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
-            labelPixelFormat.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PielFormat;
+            labelPixelFormat.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PixelFormat;
             labelTune.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TuneFor;
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
             checkBoxRightToLeft.Text = LanguageSettings.Current.Settings.FixRTLViaUnicodeChars;
