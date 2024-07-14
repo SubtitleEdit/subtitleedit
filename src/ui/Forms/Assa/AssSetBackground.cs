@@ -1173,6 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 null,
                 null,
                 null,
+                null,
                 false,
                 null,
                 null,

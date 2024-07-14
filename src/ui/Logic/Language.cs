@@ -1271,6 +1271,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Audio = "Audio",
                 Stereo = "Stereo",
                 Preset = "Preset",
+                PixelFormat = "Pixel format",
                 Crf = "CRF",
                 TuneFor = "Tune for",
                 AlignRight = "Align right",

@@ -98,6 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMakeStereo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Stereo;
             labelCRF.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Crf;
             labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
+            labelPixelFormat.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PielFormat;
             labelTune.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TuneFor;
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
             checkBoxRightToLeft.Text = LanguageSettings.Current.Settings.FixRTLViaUnicodeChars;
@@ -145,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAudioEnc.Text = Configuration.Settings.Tools.GenVideoAudioEncoding;
             comboBoxAudioSampleRate.Text = Configuration.Settings.Tools.GenVideoAudioSampleRate;
             checkBoxMakeStereo.Checked = Configuration.Settings.Tools.GenVideoAudioForceStereo;
+            nikseComboBoxPixelFormat.Text = Configuration.Settings.Tools.GenVideoPixelFormat;
             checkBoxTargetFileSize.Checked = Configuration.Settings.Tools.GenVideoTargetFileSize;
             checkBoxBox.Checked = Configuration.Settings.Tools.GenVideoNonAssaBox;
             checkBoxAlignRight.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
@@ -168,6 +170,14 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
+
+            comboBoxVideoEncoding.Left = left;
+            comboBoxPreset.Left = left;
+            comboBoxCrf.Left = left;
+            comboBoxTune.Left = left;
+
+            labelPixelFormat.Left = comboBoxVideoEncoding.Right + 9;
+            nikseComboBoxPixelFormat.Left = labelPixelFormat.Right;
 
             checkBoxFontBold.Left = numericUpDownFontSize.Right + 12;
             checkBoxBox.Left = numericUpDownOutline.Right + 12;
@@ -1138,6 +1148,7 @@ namespace Nikse.SubtitleEdit.Forms
                 (int)numericUpDownHeight.Value,
                 comboBoxVideoEncoding.Text,
                 comboBoxPreset.Text,
+                GetPixelFormat(nikseComboBoxPixelFormat.Text),
                 comboBoxCrf.Text,
                 comboBoxAudioEnc.Text,
                 checkBoxMakeStereo.Checked,
@@ -1150,6 +1161,21 @@ namespace Nikse.SubtitleEdit.Forms
                 cutStart,
                 cutEnd,
                 audioCutTracks);
+        }
+
+        private string GetPixelFormat(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return string.Empty;
+            }
+
+            if (text.Contains("("))
+            {
+                return text.Substring(text.IndexOf("(", StringComparison.Ordinal) + 1).TrimEnd().TrimEnd(')');
+            }
+
+            return text;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -1281,6 +1307,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoFontSize = (int)numericUpDownFontSize.Value;
             Configuration.Settings.Tools.GenVideoEncoding = comboBoxVideoEncoding.Text;
             Configuration.Settings.Tools.GenVideoPreset = comboBoxPreset.Text;
+            Configuration.Settings.Tools.GenVideoPixelFormat = nikseComboBoxPixelFormat.Text;
             Configuration.Settings.Tools.GenVideoCrf = comboBoxCrf.Text;
             Configuration.Settings.Tools.GenVideoTune = comboBoxTune.Text;
             Configuration.Settings.Tools.GenVideoAudioEncoding = comboBoxAudioEnc.Text;
