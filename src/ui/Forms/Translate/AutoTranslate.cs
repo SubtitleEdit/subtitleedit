@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Translate.InputLanguage;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 
@@ -612,18 +613,26 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return defaultSourceLanguageCode;
         }
 
+        /// <summary>
+        /// Get the input language provider based on the running platform
+        /// </summary>
+        /// <returns>The input language provider</returns>
+        private static IInputLanguage GetInputLanguageProvider()
+        {
+            if (Configuration.IsRunningOnLinux)
+            {
+                return new LinuxInputLanguage();
+            }
+
+            return new WindowInputLanguage();
+        }
+        
         public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage)
         {
             var installedLanguages = new List<string>();
-            foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
+            foreach (var language in GetInputLanguageProvider().GetLanguages())
             {
-                var layoutName = language.LayoutName;
-                // related to https://github.com/SubtitleEdit/subtitleedit/issues/8084
-                if (string.IsNullOrEmpty(layoutName))
-                {
-                    continue;
-                }
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName);
+                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(language);
                 if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
                 {
                     installedLanguages.Add(iso639.ToLowerInvariant());
