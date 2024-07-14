@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var item = new ListViewItem { Tag = p, Checked = true };
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(_textToSpeech.GetParagraphAudio(p));
-                item.SubItems.Add(Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture));
+                item.SubItems.Add(p.GetCharactersPerSecond().ToString("0.#", CultureInfo.InvariantCulture));
 
                 var pInfo = fileNames[subtitle.GetIndex(p)];
                 if (pInfo.Factor == 1)
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var number = p.Number.ToString(CultureInfo.InvariantCulture);
                     var voice = _textToSpeech.GetParagraphAudio(p);
-                    var cps = Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture);
+                    var cps = p.GetCharactersPerSecond().ToString("0.#", CultureInfo.InvariantCulture);
                     var factor = "-";
                     if (pInfo.Factor != 1)
                     {
