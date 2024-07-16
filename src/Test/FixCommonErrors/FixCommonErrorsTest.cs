@@ -3701,9 +3701,9 @@ A las 7, practicar por la mañana
 con Issa.".SplitToLines(), null);
                 target.Initialize(_subtitle, new SubRip(), System.Text.Encoding.UTF8);
                 new FixShortGaps().Fix(_subtitle, new EmptyFixCallback());
-                Assert.IsTrue(_subtitle.Paragraphs[0].Duration.TotalMilliseconds > 0, "Gap should not be negative");
-                Assert.IsTrue(_subtitle.Paragraphs[1].Duration.TotalMilliseconds > 0, "Gap should not be negative");
-                Assert.IsTrue(_subtitle.Paragraphs[2].Duration.TotalMilliseconds > 0, "Gap should not be negative");
+                Assert.IsTrue(_subtitle.Paragraphs[0].Duration.Milliseconds > 0, "Gap should not be negative");
+                Assert.IsTrue(_subtitle.Paragraphs[1].Duration.Milliseconds > 0, "Gap should not be negative");
+                Assert.IsTrue(_subtitle.Paragraphs[2].Duration.Milliseconds > 0, "Gap should not be negative");
             }
         }
 

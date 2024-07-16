@@ -38,12 +38,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 sb.Append("{\"duration\":");
-                sb.Append(p.DurationTotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(p.Duration.Milliseconds.ToString(CultureInfo.InvariantCulture));
                 sb.Append(",\"content\":\"");
                 sb.Append(Json.EncodeJsonText(p.Text) + "\"");
                 sb.Append(",\"startOfParagraph\":true");
                 sb.Append(",\"startTime\":");
-                sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
                 sb.Append('}');
                 count++;
             }
@@ -76,8 +76,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string content = Json.ReadTag(s, "content");
                 if (start != null && duration != null && content != null)
                 {
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startSeconds) &&
-                        double.TryParse(duration, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var durationSeconds))
+                    if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
+                        double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var durationSeconds))
                     {
                         subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds, startSeconds + durationSeconds));
                     }

@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
 
                 // calculate milliseconds per char
-                var millisecondsPerChar = oldParagraph.DurationTotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
+                var millisecondsPerChar = oldParagraph.Duration.Milliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
 
                 oldParagraph.Text = lines[firstLine];
 

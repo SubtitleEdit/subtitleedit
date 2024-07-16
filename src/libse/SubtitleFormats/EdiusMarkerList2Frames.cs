@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(",\"");
                 sb.Append(EncodeTimeCode(p.StartTime));
                 sb.Append("\",\"");
-                sb.Append(EncodeTimeCode(p.Duration));
+                sb.Append(EncodeTimeCode(p.Duration.ToTimeCode()));
                 sb.Append("\",\"");
                 sb.Append(p.Text.Replace("\"", "\\\""));
                 sb.AppendLine("\"");

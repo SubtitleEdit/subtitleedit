@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(current.Text);
                 }
 
-                if (current.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (current.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }

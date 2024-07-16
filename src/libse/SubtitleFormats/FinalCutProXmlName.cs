@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 MakeTitleNodeWithText(video, text);
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 generatorNode.Attributes["offset"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
-                generatorNode.Attributes["duration"].Value = FinalCutProXml15.GetFrameTime(p.Duration);
+                generatorNode.Attributes["duration"].Value = FinalCutProXml15.GetFrameTime(p.Duration.ToTimeCode());
                 generatorNode.Attributes["start"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
                 generatorNode.Attributes["name"].Value = text;
                 gapNode.AppendChild(generatorNode);

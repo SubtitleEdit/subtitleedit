@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 var p = subtitle.Paragraphs[i];
                 var oldP = new Paragraph(p);
-                if (p.DurationTotalMilliseconds < 0) // negative display time...
+                if (p.Duration.Milliseconds < 0) // negative display time...
                 {
                     bool isFixed = false;
                     string status = string.Format(Language.StartTimeLaterThanEndTime, i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
@@ -100,18 +100,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 0.001 &&
-                        prev.DurationTotalMilliseconds > 100)
+                        prev.Duration.Milliseconds > 100)
                     {
                         if (callbacks.AllowFix(target, fixAction))
                         {
                             if (!canBeEqual)
                             {
                                 bool okEqual = true;
-                                if (prev.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                if (prev.Duration.Milliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
                                     prev.EndTime.TotalMilliseconds--;
                                 }
-                                else if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                else if (p.Duration.Milliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
                                     p.StartTime.TotalMilliseconds++;
                                 }
@@ -142,8 +142,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                         }
                     }
-                    else if (diff > 0 && currentOptimalDisplayTime <= p.DurationTotalMilliseconds - diffHalf &&
-                             prevOptimalDisplayTime <= prev.DurationTotalMilliseconds - diffHalf)
+                    else if (diff > 0 && currentOptimalDisplayTime <= p.Duration.Milliseconds - diffHalf &&
+                             prevOptimalDisplayTime <= prev.Duration.Milliseconds - diffHalf)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
@@ -167,8 +167,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    else if (diff > 0 && currentWantedDisplayTime <= p.DurationTotalMilliseconds - diffHalf &&
-                             prevWantedDisplayTime <= prev.DurationTotalMilliseconds - diffHalf)
+                    else if (diff > 0 && currentWantedDisplayTime <= p.Duration.Milliseconds - diffHalf &&
+                             prevWantedDisplayTime <= prev.Duration.Milliseconds - diffHalf)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10 && p.DurationTotalMilliseconds > 1)
+                    else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10 && p.Duration.Milliseconds > 1)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {

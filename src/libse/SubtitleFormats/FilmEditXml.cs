@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(num);
 
                 XmlNode dur = xml.CreateElement("dur");
-                dur.InnerText = EncodeDuration(p.Duration);
+                dur.InnerText = EncodeDuration(p.Duration.ToTimeCode());
                 paragraph.AppendChild(dur);
 
                 XmlNode textNode = xml.CreateElement("text");

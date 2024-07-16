@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             paragraph.Attributes.Append(start);
 
             XmlAttribute dur = xml.CreateAttribute("dur");
-            dur.InnerText = TimedText10.ConvertToTimeString(p.Duration);
+            dur.InnerText = TimedText10.ConvertToTimeString(p.Duration.ToTimeCode());
             paragraph.Attributes.Append(dur);
 
             XmlAttribute region = xml.CreateAttribute("region");

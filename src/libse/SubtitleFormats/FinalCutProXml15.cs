@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 WriteCurrentTextSegment(styles, styleTextPairs, video, number++, sbTrimmedTitle.ToString(), xml);
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 generatorNode.Attributes["offset"].Value = GetFrameTime(p.StartTime);
-                generatorNode.Attributes["duration"].Value = GetFrameTime(p.Duration);
+                generatorNode.Attributes["duration"].Value = GetFrameTime(p.Duration.ToTimeCode());
                 generatorNode.Attributes["start"].Value = GetFrameTime(p.StartTime);
                 videoNode.AppendChild(generatorNode);
             }

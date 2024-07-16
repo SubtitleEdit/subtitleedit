@@ -138,7 +138,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
 
-                var duration = p.DurationTotalMilliseconds;
+                var duration = p.Duration.Milliseconds;
                 minimumDuration = Math.Min(duration, minimumDuration);
                 maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
@@ -218,11 +218,11 @@ https://github.com/SubtitleEdit/subtitleedit
                     aboveMaximumWpmCount++;
                 }
 
-                if (p.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (p.Duration.Milliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     belowMinimumDurationCount++;
                 }
-                if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (p.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     aboveMaximumDurationCount++;
                 }
@@ -324,7 +324,7 @@ https://github.com/SubtitleEdit/subtitleedit
             for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
-                if (Math.Abs(p.DurationTotalMilliseconds - duration) < 0.01)
+                if (Math.Abs(p.Duration.Milliseconds - duration) < 0.01)
                 {
                     if (indices.Count >= NumberOfLinesToShow)
                     {

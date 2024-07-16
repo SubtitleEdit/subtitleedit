@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             sb.Append(paragraph.Number + separator);
             sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.EndTime.ToDisplayString()) + separator);
-            sb.Append(ToCsvText(paragraph.Duration.ToShortDisplayString()) + separator);
+            sb.Append(ToCsvText(paragraph.Duration.ToTimeCode().ToShortDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.Text) + separator);
             sb.Append(ToCsvText(paragraph.Bookmark) + separator);
             return sb.ToString();

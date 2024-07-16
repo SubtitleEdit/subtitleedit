@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexEnd);
                             }
                             // Duration
-                            if (!IsTimeEqual(p1.Duration, p2.Duration))
+                            if (!IsTimeEqual(p1.Duration.ToTimeCode(), p2.Duration.ToTimeCode()))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexDuration);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
@@ -581,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms
                 columnsEqual++;
             }
 
-            if (IsTimeEqual(p1.Duration, p2.Duration))
+            if (IsTimeEqual(p1.Duration.ToTimeCode(), p2.Duration.ToTimeCode()))
             {
                 columnsEqual++;
             }

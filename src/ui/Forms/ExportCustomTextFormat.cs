@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
                 var videoFileName = "C:\\Video\\MyVideo.mp4";
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", videoFileName, subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, gap1, comboBoxTimeCode.Text, p1, videoFileName) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, gap2, comboBoxTimeCode.Text, p2, videoFileName) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration.ToTimeCode(), gap1, comboBoxTimeCode.Text, p1, videoFileName) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration.ToTimeCode(), gap2, comboBoxTimeCode.Text, p2, videoFileName) +
                                       GetHeaderOrFooter("Demo", videoFileName, subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)

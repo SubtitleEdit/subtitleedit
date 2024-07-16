@@ -1512,13 +1512,13 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
+                if (paragraph.Duration.Milliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
                 {
                     item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }
             if (_settings.Tools.ListViewSyntaxColorDurationBig &&
-                paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
+                paragraph.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                 ColumnIndexDuration >= 0)
             {
                 item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -1694,7 +1694,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return "-";
             }
 
-            return paragraph.Duration.ToShortDisplayString();
+            return paragraph.Duration.ToTimeCode().ToShortDisplayString();
         }
 
         public void SelectNone()

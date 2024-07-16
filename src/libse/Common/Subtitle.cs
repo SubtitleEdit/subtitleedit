@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Get the paragraph of index, null if out of bounds
         /// </summary>
         /// <param name="index">Index of wanted paragraph</param>
-        /// <returns>Paragraph, null if index is index is out of bounds</returns>
+        /// <returns>Paragraph, null if index is out of bounds</returns>
         public Paragraph GetParagraphOrDefault(int index)
         {
             if (Paragraphs == null || Paragraphs.Count <= index || index < 0)
@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             
             p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
 
-            if (p.DurationTotalMilliseconds <= 0)
+            if (p.Duration.Milliseconds <= 0)
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
             }
@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
 
-                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping the earliest time
                     if (shotChanges != null)
                     {
                         bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
@@ -605,7 +605,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
 
-                    if (p.DurationTotalMilliseconds <= 0)
+                    if (p.Duration.Milliseconds <= 0)
                     {
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Duration:
-                    Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
+                    Paragraphs = Paragraphs.OrderBy(p => p.Duration.Milliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
                     var lookupDictionary = new Dictionary<string, double>();

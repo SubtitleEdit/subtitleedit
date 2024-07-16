@@ -1258,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.DurationTotalMilliseconds / 2.0;
+            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.Duration.Milliseconds / 2.0;
             if (index < originalParagraphs.Count)
             {
                 var o = originalParagraphs[index];
@@ -2758,7 +2758,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 subtitle.Paragraphs[i].Text = subtitle.Paragraphs[i].Text.TrimEnd();
-                if (subtitle.Paragraphs[i].DurationTotalMilliseconds < 1)
+                if (subtitle.Paragraphs[i].Duration.Milliseconds < 1)
                 {
                     // fix subtitles without duration
                     FixShortDisplayTime(subtitle, i);
@@ -2797,7 +2797,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Paragraph p = s.Paragraphs[i];
             var minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-            double displayTime = p.DurationTotalMilliseconds;
+            double displayTime = p.Duration.Milliseconds;
             if (displayTime < minDisplayTime)
             {
                 var next = s.GetParagraphOrDefault(i + 1);

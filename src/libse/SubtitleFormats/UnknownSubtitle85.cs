@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.DurationTotalMilliseconds < 0)
+                        if (p.Duration.Milliseconds < 0)
                         {
                             _errorCount++;
                         }

@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 if (_columnIndexDuration >= 0)
                 {
-                    count = AddListViewSubItem(item, count, paragraph.Duration.ToShortDisplayString());
+                    count = AddListViewSubItem(item, count, paragraph.Duration.ToTimeCode().ToShortDisplayString());
                 }
 
                 if (_columnIndexGap >= 0)
@@ -732,11 +732,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (_columnIndexDuration >= 0)
             {
-                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                if (paragraph.Duration.Milliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     colorDuration = true;
                 }
-                else if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                else if (paragraph.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     colorDuration = true;
                 }
@@ -838,7 +838,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (_columnIndexDuration >= 0)
             {
-                item.SubItems[_columnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                item.SubItems[_columnIndexDuration].Text = paragraph.Duration.ToTimeCode().ToShortDisplayString();
             }
 
             if (_columnIndexGap >= 0 && _subtitle != null)
@@ -1087,10 +1087,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                        if (last.DurationTotalMilliseconds < 100)
+                        if (last.Duration.Milliseconds < 100)
                         {
                             last.EndTime.TotalMilliseconds = msub.Start;
-                            if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            if (last.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                             {
                                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                             }
@@ -1118,7 +1118,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                if (p.DurationTotalMilliseconds < 200)
+                if (p.Duration.Milliseconds < 200)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 }
@@ -1666,7 +1666,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            var duration = SubtitleFormat.MillisecondsToFrames(p.DurationTotalMilliseconds, _frameRate);
+            var duration = SubtitleFormat.MillisecondsToFrames(p.Duration.Milliseconds, _frameRate);
             var start = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, _frameRate);
             var end = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, _frameRate);
 
@@ -4046,11 +4046,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (string.IsNullOrEmpty(errorText))
             {
-                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                if (paragraph.Duration.Milliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     errorText = "Duration too small";
                 }
-                else if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds && _columnIndexDuration >= 0)
+                else if (paragraph.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     errorText = "Duration too large";
                 }

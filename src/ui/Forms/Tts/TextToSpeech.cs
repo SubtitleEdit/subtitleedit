@@ -516,13 +516,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var waveInfo = UiUtil.GetVideoInfo(outputFileName1);
-                if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
+                if (waveInfo.TotalMilliseconds <= p.Duration.Milliseconds + addDuration)
                 {
                     fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
                     continue;
                 }
 
-                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
+                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.Duration.Milliseconds + addDuration);
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {

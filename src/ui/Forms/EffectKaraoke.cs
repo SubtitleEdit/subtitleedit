@@ -55,8 +55,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
-            labelTotalMilliseconds.Text = $"{paragraph.DurationTotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
-            numericUpDownDelay.Maximum = (decimal)((paragraph.DurationTotalMilliseconds - 500) / TimeCode.BaseUnit);
+            labelTotalMilliseconds.Text = $"{paragraph.Duration.Milliseconds / TimeCode.BaseUnit:#,##0.000}";
+            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.Milliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
-            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.DurationTotalMilliseconds < 0.001)
+            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.Duration.Milliseconds < 0.001)
             {
                 _animation.Add(new Paragraph(_paragraph));
                 return;

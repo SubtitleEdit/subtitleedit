@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
             var fontInsertIndex = CalculateColorInsertIndex(text);
             text = text.Insert(fontInsertIndex, GetColor(color));
             var result = _splitStrategy.Transform(text);
-            var duration = paragraph.DurationTotalMilliseconds - delay;
+            var duration = paragraph.Duration.Milliseconds - delay;
             var durationPerSentence = duration / result.Length;
             var baseStartTime = paragraph.StartTime.TotalMilliseconds;
 

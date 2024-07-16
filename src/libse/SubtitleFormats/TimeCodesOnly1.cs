@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int index = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"{index}\t{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{p.Duration}");
+                sb.AppendLine($"{index}\t{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{p.Duration.ToTimeCode()}");
                 index++;
             }
             return sb.ToString();

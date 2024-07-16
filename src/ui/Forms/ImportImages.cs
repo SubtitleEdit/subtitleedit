@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetEndTimeAndStartTime(name, p);
             item.SubItems.Add(p.StartTime.ToString());
             item.SubItems.Add(p.EndTime.ToString());
-            item.SubItems.Add(p.Duration.ToShortString());
+            item.SubItems.Add(p.Duration.ToTimeCode().ToShortString());
         }
 
         public static void SetEndTimeAndStartTime(string name, Paragraph p)

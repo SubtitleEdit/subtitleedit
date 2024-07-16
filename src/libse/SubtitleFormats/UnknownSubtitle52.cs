@@ -70,14 +70,17 @@ FILE_INFO_END";
 
                 // to avoid rounding errors in duration
                 var durationCalc = new Paragraph(
-                        new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
-                        new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
-                        string.Empty);
-                string duration = string.Format(timeFormat, durationCalc.Duration.Hours, durationCalc.Duration.Minutes, durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds));
+                    new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
+                    new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
+                    string.Empty);
+
+                var dur = durationCalc.Duration.ToTimeCode();
+                string duration = string.Format(timeFormat, dur.Hours, dur.Minutes, dur.Seconds, MillisecondsToFramesMaxFrameRate(dur.Milliseconds));
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, HtmlUtil.RemoveHtmlTags(p.Text)));
                 number++;
             }
+
             return sb.ToString().Trim();
         }
 
