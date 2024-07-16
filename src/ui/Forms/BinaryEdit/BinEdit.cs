@@ -650,7 +650,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 if (_columnIndexCps >= 0)
                 {
-                    count = AddListViewSubItem(item, count, $"{Utilities.GetCharactersPerSecond(paragraph):0.00}");
+                    count = AddListViewSubItem(item, count, $"{paragraph.GetCharactersPerSecond():0.00}");
                 }
 
                 if (_columnIndexWpm >= 0)

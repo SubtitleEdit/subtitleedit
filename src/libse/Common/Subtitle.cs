@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal, enforceDurationLimits);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
+            while (p.GetCharactersPerSecond() > maxCharactersPerSecond)
             {
                 duration++;
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.NumberOfLines).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.TextCharactersPerSeconds:
-                    Paragraphs = Paragraphs.OrderBy(Utilities.GetCharactersPerSecond).ThenBy(p => p.Number).ToList();
+                    Paragraphs = Paragraphs.OrderBy(p => p.GetCharactersPerSecond()).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.WordsPerMinute:
                     Paragraphs = Paragraphs.OrderBy(p => p.WordsPerMinute).ThenBy(p => p.Number).ToList();
