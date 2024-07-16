@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
                     {
                         var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
-                        if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        if (temp.GetCharactersPerSecond() <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
                             if (callbacks.AllowFix(p, fixAction))
                             {
@@ -66,12 +66,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
+                double charactersPerSecond = p.GetCharactersPerSecond();
                 if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     var temp = new Paragraph(p);
                     var numberOfCharacters = (double)temp.Text.CountCharacters(true);
-                    while (Utilities.GetCharactersPerSecond(temp, numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    while (temp.GetCharactersPerSecond(numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         temp.EndTime.TotalMilliseconds++;
                     }
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     // Make next subtitle duration shorter + make current subtitle duration longer
                     else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.DurationTotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.DurationTotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds).GetCharactersPerSecond() < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
                     else if (diffMs < 500 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
-                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs)).GetCharactersPerSecond() < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {

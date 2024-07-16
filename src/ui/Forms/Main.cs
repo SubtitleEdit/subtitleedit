@@ -873,7 +873,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var newDuration = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines - p.StartTime.TotalMilliseconds;
                                 if (newDuration >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
-                                    var cps = Utilities.GetCharactersPerSecond(p);
+                                    var cps = p.GetCharactersPerSecond();
                                     if (cps <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                                     {
                                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + newDuration;
@@ -11060,7 +11060,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (paragraph.DurationTotalSeconds > 0)
             {
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                double charactersPerSecond = paragraph.GetCharactersPerSecond();
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds &&
                     Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
@@ -20164,7 +20164,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var temp = new Paragraph(p);
                         temp.StartTime.TotalMilliseconds = newStartTimeMs;
                         if (temp.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ||
-                            Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                            temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
                             var next = _subtitle.GetParagraphOrDefault(index + 1);
                             if (next == null ||

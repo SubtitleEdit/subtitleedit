@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
                     errors.Add($"WPM: {paragraph.WordsPerMinute:#,###.00} > {Configuration.Settings.General.SubtitleMaximumWordsPerMinute}");
                 }
 
-                var charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                var charactersPerSecond = paragraph.GetCharactersPerSecond();
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     errors.Add($"CPS: {charactersPerSecond:#,###.00} > {Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds}");
