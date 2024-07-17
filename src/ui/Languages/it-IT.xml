@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 26.06.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.07.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1016,6 +1016,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Profilo</Preset>
+    <PixelFormat>Formato pixel</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizzati per</TuneFor>
     <AlignRight>Allinea a destra</AlignRight>
