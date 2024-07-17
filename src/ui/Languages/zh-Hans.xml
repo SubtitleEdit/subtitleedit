@@ -1013,6 +1013,7 @@ Command line: {1} {2}
     <Audio>音频</Audio>
     <Stereo>立体声</Stereo>
     <Preset>预设</Preset>
+    <PixelFormat>像素格式</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>视频类型</TuneFor>
     <AlignRight>右对齐</AlignRight>
