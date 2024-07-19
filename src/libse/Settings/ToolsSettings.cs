@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-            ChatGptModel = "gpt-4o";
+            ChatGptModel = "gpt-4o-mini";
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModels = "llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
