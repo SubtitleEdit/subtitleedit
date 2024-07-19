@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vosk;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 
@@ -307,6 +308,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     Configuration.Settings.Tools.ChatGptUrl.TrimEnd('/'),
                     Configuration.Settings.Tools.ChatGptUrl.StartsWith("http://localhost:1234/v1/chat/completions", StringComparison.OrdinalIgnoreCase) ? "https://api.openai.com/v1/chat/completions" : "http://localhost:1234/v1/chat/completions"
                 });
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Enabled = true;
+                labelFormality.Visible = true;
+
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Enabled = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.Items.AddRange(ChatGptTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.ChatGptModel;
 
                 labelApiKey.Left = nikseComboBoxUrl.Right + 12;
                 nikseTextBoxApiKey.Text = Configuration.Settings.Tools.ChatGptApiKey;
@@ -1055,6 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.ChatGptUrl = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.ChatGptModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(LmStudioTranslate))

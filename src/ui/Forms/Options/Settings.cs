@@ -911,6 +911,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxLibreTranslateApiKey.Left = labelLibreApiKey.Right + 3;
             nikseTextBoxLibreTranslateApiKey.Width = nikseTextBoxLibreTranslateUrl.Width - labelLibreApiKey.Width - 3;
 
+            nikseComboBoxChatGptModel.Items.Clear();
+            nikseComboBoxChatGptModel.Items.AddRange(ChatGptTranslate.Models);
+
             labelLibreUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
