@@ -8907,7 +8907,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
                 textWriter.WriteElementString("GroqUrl", settings.Tools.GroqUrl);
                 textWriter.WriteElementString("GroqPrompt", settings.Tools.GroqPrompt);
-                textWriter.WriteElementString("GroqKey", settings.Tools.GroqApiKey);
+                textWriter.WriteElementString("GroqApiKey", settings.Tools.GroqApiKey);
                 textWriter.WriteElementString("GroqModel", settings.Tools.GroqModel);
                 textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
                 textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
