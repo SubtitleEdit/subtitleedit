@@ -11,6 +11,8 @@
    * Update Polish translation - thx admas
    * Update French translation - thx Pierre
    * Update Greek translation - thx PMitsakis
+   * Allower for larger files via drop to list view - thx Jim
+
 * FIXED:
    * Fix crash in TTML IMSC 1.1 - thx Louie
    * Fix Romanian translation version number - thx MediaExpres

@@ -16334,6 +16334,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenSubtitle(fileName, null);
             }
+            else if (SubtitleFormat.AllSubtitleFormats.Any(p=>p.Extension == ext))
+            {
+                OpenSubtitle(fileName, null);
+            }
             else
             {
                 MessageBox.Show(string.Format(_language.DropSubtitleFileXNotAccepted, fileName));
