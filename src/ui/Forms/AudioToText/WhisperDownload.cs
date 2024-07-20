@@ -155,7 +155,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 UiUtil.OpenFolder(folder);
 
-                MessageBox.Show(this, $"Unpack and copy files from \"Faster-Whisper-XXL\" to: \"{folder}\"");
+                MessageBox.Show(this, $"Unpack and copy files from \"Faster-Whisper-XXL\" to: \"{folder}\"" + Environment.NewLine +
+                                               $"(so \"faster-whisper-xxl.exe\" should be in \"{folder}\")");
                 DialogResult = DialogResult.OK;
                 return;
             }
