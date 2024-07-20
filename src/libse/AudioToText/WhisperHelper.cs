@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.IO;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -166,12 +167,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
                     if (!string.IsNullOrEmpty(location))
                     {
-                        if (location.EndsWith("whisper-faster.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                        if (location.EndsWith(GetExecutableFileName(whisperChoice), StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
                         {
                             return Path.GetDirectoryName(location);
                         }
 
-                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper-faster.exe")))
+                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, GetExecutableFileName(whisperChoice))))
                         {
                             return location;
                         }

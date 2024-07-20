@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
                 comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL)
             {
-                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.PurfviewFasterWhisper);
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(comboBoxWhisperEngine.Text);
                 if (!File.Exists(fileName))
                 {
                     if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, comboBoxWhisperEngine.Text), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)

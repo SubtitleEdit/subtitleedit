@@ -12,12 +12,12 @@
    * Update French translation - thx Pierre
    * Update Greek translation - thx PMitsakis
    * Allower for larger files via drop to list view - thx Jim
-
 * FIXED:
    * Fix crash in TTML IMSC 1.1 - thx Louie
    * Fix Romanian translation version number - thx MediaExpres
    * Fix UI burn-in window spacing/width/height - thx Hafran420 
    * Fix crash in "Whisper Audio to text" if no audio - thx morrellaberdeen 
+   * Fix running "Faster-Whisper-XXL" without "Faster-Whisper" - thx shanedk 
 
 
 4.0.7 (8th July 2024) 
