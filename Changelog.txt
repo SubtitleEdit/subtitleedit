@@ -4,6 +4,7 @@
 * NEW:
    * Add pixel format paramter to burn-in - thx Hafran420
    * Add new ChatGPT "gpt-4o-mini" model
+   * Add translation via Groq (api.groq.com)
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus

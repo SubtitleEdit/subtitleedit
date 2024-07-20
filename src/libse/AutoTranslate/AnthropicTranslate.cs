@@ -22,6 +22,17 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Error { get; set; }
         public int MaxCharacters => 900;
 
+        /// <summary>
+        /// See https://docs.anthropic.com/en/docs/about-claude/models
+        /// </summary>
+        public static string[] Models => new[]
+        {
+            "claude-3-5-sonnet-20240620", 
+            "claude-3-opus-20240229", 
+            "claude-3-sonnet-20240229", 
+            "claude-3-haiku-20240307"
+        };
+
         public void Initialize()
         {
             _httpClient?.Dispose();
@@ -52,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.AnthropicApiModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "claude-3-5-sonnet-20240620";
+                model = Models[0];
                 Configuration.Settings.Tools.AnthropicApiModel = model;
             }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Settings
@@ -461,7 +462,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-            ChatGptModel = "gpt-4o-mini";
+            ChatGptModel = ChatGptTranslate.Models[0];
+            GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
+            GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            GroqModel = GroqTranslate.Models[0];
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModels = "llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
@@ -469,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-3-5-sonnet-20240620";
+            AnthropicApiModel = AnthropicTranslate.Models[0];
             TextToSpeechAzureRegion = "westeurope";
             AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;

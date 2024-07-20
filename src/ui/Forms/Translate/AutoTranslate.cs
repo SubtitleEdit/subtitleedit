@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new LmStudioTranslate(),
                 new OllamaTranslate(),
                 new AnthropicTranslate(),
+                new GroqTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
                 new NoLanguageLeftBehindServe(),
@@ -397,13 +398,37 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBoxFormality.Items.Clear();
-                comboBoxFormality.Items.Add("claude-3-5-sonnet-20240620");
-                comboBoxFormality.Items.Add("claude-3-opus-20240229");
-                comboBoxFormality.Items.Add("claude-3-sonnet-20240229");
-                comboBoxFormality.Items.Add("claude-3-haiku-20240307");
+                comboBoxFormality.Items.AddRange(AnthropicTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.AnthropicApiModel;
 
                 return;
             }
+
+            if (engineType == typeof(GroqTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.GroqUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.GroqApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(GroqTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.GroqModel;
+
+                return;
+            }
+
 
             if (engineType == typeof(GeminiTranslate))
             {
@@ -1087,6 +1112,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.AnthropicApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.AnthropicApiModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(GroqTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.GroqApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.GroqModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(GeminiTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
