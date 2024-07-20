@@ -1,5 +1,22 @@
 ﻿Subtitle Edit Changelog
 
+4.0.8 (xth September 2024) BETA
+* NEW:
+   * Add pixel format paramter to burn-in - thx Hafran420
+   * Add new ChatGPT "gpt-4o-mini" model
+* IMPROVED:
+   * Update Chinese translation - thx nkh0472
+   * Update Italian translation - thx bovirus
+   * Update Polish translation - thx admas
+   * Update French translation - thx Pierre
+   * Update Greek translation - thx PMitsakis
+* FIXED:
+   * Fix crash in TTML IMSC 1.1 - thx Louie
+   * Fix Romanian translation version number - thx MediaExpres
+   * Fix UI burn-in window spacing/width/height - thx Hafran420 
+   * Fix crash in "Whisper Audio to text" if no audio - thx morrellaberdeen 
+
+
 4.0.7 (8th July 2024) 
 * NEW:
    * Add "Generate transparent video with subtitles" - thx JeditPro
