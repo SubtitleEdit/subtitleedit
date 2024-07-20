@@ -2186,6 +2186,30 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.ChatGptModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GroqUrl");
+            if (subNode != null)
+            {
+                settings.Tools.GroqUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.GroqPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.GroqApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqModel");
+            if (subNode != null)
+            {
+                settings.Tools.GroqModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LmStudioApiUrl");
             if (subNode != null)
             {
@@ -8881,6 +8905,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
+                textWriter.WriteElementString("GroqUrl", settings.Tools.GroqUrl);
+                textWriter.WriteElementString("GroqPrompt", settings.Tools.GroqPrompt);
+                textWriter.WriteElementString("GroqKey", settings.Tools.GroqApiKey);
+                textWriter.WriteElementString("GroqModel", settings.Tools.GroqModel);
                 textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
                 textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
                 textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
