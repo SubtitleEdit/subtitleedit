@@ -17,7 +17,8 @@
    * Fix Romanian translation version number - thx MediaExpres
    * Fix UI burn-in window spacing/width/height - thx Hafran420 
    * Fix crash in "Whisper Audio to text" if no audio - thx morrellaberdeen 
-   * Fix running "Faster-Whisper-XXL" without "Faster-Whisper" - thx shanedk 
+   * Fix running "Faster-Whisper-XXL" without "Faster-Whisper" - thx shanedk
+   * Fix crash in "Fix common errors" - thx Hardstylest
 
 
 4.0.7 (8th July 2024) 
