@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "gpt-4o-mini";
+                model = Models[0];
                 Configuration.Settings.Tools.ChatGptModel = model;
             }
 

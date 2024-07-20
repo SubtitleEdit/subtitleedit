@@ -70,6 +70,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string ChatGptPrompt { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
+        public string GroqUrl { get; set; }
+        public string GroqPrompt { get; set; }
+        public string GroqApiKey { get; set; }
+        public string GroqModel { get; set; }
         public string LmStudioApiUrl { get; set; }
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
