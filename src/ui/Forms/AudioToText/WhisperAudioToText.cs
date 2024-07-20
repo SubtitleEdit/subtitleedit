@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         }
 
                         if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
-                            !IsFasterWhisperCudaInstalled() && 
+                            !IsFasterWhisperCudaInstalled() &&
                             IsFasterWhisperCudaSupported())
                         {
                             DownloadCudaForWhisperFaster(this);
@@ -490,16 +490,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            buttonGenerate.Enabled = false;
-            buttonDownload.Enabled = false;
-            buttonBatchMode.Enabled = false;
-            buttonAdvanced.Enabled = false;
-            comboBoxLanguages.Enabled = false;
-            comboBoxModels.Enabled = false;
-            linkLabelPostProcessingConfigure.Enabled = false;
+            SetEnabledState(false);
+
+            var mediaInfo = FfmpegMediaInfo.Parse(_videoFileName);
+            if (mediaInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio) == 0)
+            {
+                MessageBox.Show("No audio track in file: " + _videoFileName);
+                SetEnabledState(true);
+                return;
+            }
+
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
             if (_cancel)
             {
+                SetEnabledState(true);
                 return;
             }
 
@@ -573,6 +577,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             DialogResult = DialogResult.OK;
         }
 
+        private void SetEnabledState(bool enabled)
+        {
+            buttonGenerate.Enabled = enabled;
+            buttonDownload.Enabled = enabled;
+            buttonBatchMode.Enabled = enabled;
+            buttonAdvanced.Enabled = enabled;
+            comboBoxLanguages.Enabled = enabled;
+            comboBoxModels.Enabled = enabled;
+            linkLabelPostProcessingConfigure.Enabled = enabled;
+
+            progressBar1.Visible = !enabled;
+        }
+
         private static bool IsModelEnglishOnly(WhisperModel model)
         {
             return model.Name.EndsWith(".en", StringComparison.InvariantCulture) ||
@@ -618,6 +635,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonAdvanced.Enabled = false;
                 comboBoxModels.Enabled = false;
                 comboBoxLanguages.Enabled = false;
+
+                var mediaInfo = FfmpegMediaInfo.Parse(videoFileName);
+                if (mediaInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio) == 0)
+                {
+                    errors.AppendLine("No audio track in: " + videoFileName);
+                    errorCount++;
+                    continue;
+                }
+
                 var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
                 if (!File.Exists(waveFileName))
                 {
@@ -952,7 +978,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 if (_cancel)
                 {
                     if ((comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
-                         comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL) && 
+                         comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL) &&
                         KillProcessHelper.AttachConsole((uint)process.Id))
                     {
                         KillProcessHelper.TryToKillProcessViaCtrlC(process);
