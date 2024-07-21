@@ -36907,12 +36907,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generaeTransparentVideoWithSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
             if (!RequireFfmpegOk())
             {
                 return;
