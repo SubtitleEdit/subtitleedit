@@ -20,6 +20,7 @@
    * Fix crash in "Whisper Audio to text" if no audio - thx morrellaberdeen 
    * Fix running "Faster-Whisper-XXL" without "Faster-Whisper" - thx shanedk
    * Fix crash in "Fix common errors" - thx Hardstylest
+   * Fix for visual sync start/end time validation - thx improck
 
 
 4.0.7 (8th July 2024) 
