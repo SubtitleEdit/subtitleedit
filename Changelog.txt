@@ -2,7 +2,8 @@
 
 4.0.8 (xth September 2024) BETA
 * NEW:
-   * Add pixel format paramter to burn-in - thx Hafran420
+   * Add "Batch mode" for "Generate transparent video with subs" - thx David
+   * Add "Pixel format" paramter to burn-in - thx Hafran420
    * Add new ChatGPT "gpt-4o-mini" model
    * Add translation via Groq (api.groq.com)
 * IMPROVED:
