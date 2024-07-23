@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -1175,6 +1176,24 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 ";
             var subtitle = new Subtitle();
             subtitle.ReloadLoadSubtitle(text.SplitToLines(), null, new ScenaristClosedCaptionsDropFrame());
+            Assert.AreEqual("{\\an8}-♪ Come and knock" + Environment.NewLine + "on our door ♪", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void SceneristLoadStreamTextWithUppercaseHexCodes()
+        {
+            const string text = @"Scenarist_SCC V1.0
+
+01:00:00;09	942C 942C
+
+01:00:00;13	9429 9429 9154 9154 AD80 9137 9137 2043 EF6D E520 616E 6420 6B6E EFE3 6B80 91F4 91F4 97A2 97A2 EF6E 20EF 75F2 2064 EFEF F220 9137 9137
+
+01:00:01;10	9420 9420 94AE 94AE 9154 9154 97A1 97A1 AD80 9137 9137 2043 EF6D E520 616E 6420 6B6E EFE3 6B80 91F4 91F4 9723 9723 EF6E 20EF 75F2 2064 EFEF F220 9137 9137 942F 942F
+
+01:00:03;00	9420 9420 94AE 94AE 9152 9152 97A2 97A2 AD80 9137 9137 2057 E5A7 76E5 2062 E5E5 6E20 F761 E9F4 E96E 6780 9176 9176 E6EF F220 79EF 7520 9137 9137 942F 942F
+";
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(text));
+            var subtitle = Subtitle.Parse(ms, new ScenaristClosedCaptionsDropFrame().Extension);
             Assert.AreEqual("{\\an8}-♪ Come and knock" + Environment.NewLine + "on our door ♪", subtitle.Paragraphs[0].Text);
         }
 
