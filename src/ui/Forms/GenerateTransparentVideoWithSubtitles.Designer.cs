@@ -393,7 +393,7 @@
             this.linkLabelSourceFolder.Location = new System.Drawing.Point(522, 405);
             this.linkLabelSourceFolder.Name = "linkLabelSourceFolder";
             this.linkLabelSourceFolder.Size = new System.Drawing.Size(112, 13);
-            this.linkLabelSourceFolder.TabIndex = 159;
+            this.linkLabelSourceFolder.TabIndex = 150;
             this.linkLabelSourceFolder.TabStop = true;
             this.linkLabelSourceFolder.Text = "linkLabelSourceFolder";
             this.linkLabelSourceFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSourceFolder_LinkClicked);
@@ -414,7 +414,7 @@
             this.buttonOutputFileSettings.Location = new System.Drawing.Point(244, 400);
             this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
             this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
-            this.buttonOutputFileSettings.TabIndex = 157;
+            this.buttonOutputFileSettings.TabIndex = 140;
             this.buttonOutputFileSettings.Text = "Output file/folder...";
             this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
             this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
@@ -425,7 +425,7 @@
             this.buttonClear.Location = new System.Drawing.Point(164, 400);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(74, 23);
-            this.buttonClear.TabIndex = 156;
+            this.buttonClear.TabIndex = 130;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
@@ -436,7 +436,7 @@
             this.buttonRemoveFile.Location = new System.Drawing.Point(84, 400);
             this.buttonRemoveFile.Name = "buttonRemoveFile";
             this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
-            this.buttonRemoveFile.TabIndex = 155;
+            this.buttonRemoveFile.TabIndex = 120;
             this.buttonRemoveFile.Text = "Remove";
             this.buttonRemoveFile.UseVisualStyleBackColor = true;
             this.buttonRemoveFile.Click += new System.EventHandler(this.buttonRemoveFile_Click);
@@ -447,7 +447,7 @@
             this.buttonAddFile.Location = new System.Drawing.Point(5, 400);
             this.buttonAddFile.Name = "buttonAddFile";
             this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
-            this.buttonAddFile.TabIndex = 154;
+            this.buttonAddFile.TabIndex = 110;
             this.buttonAddFile.Text = "Add...";
             this.buttonAddFile.UseVisualStyleBackColor = true;
             this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
@@ -468,7 +468,7 @@
             this.listViewBatch.Location = new System.Drawing.Point(6, 250);
             this.listViewBatch.Name = "listViewBatch";
             this.listViewBatch.Size = new System.Drawing.Size(764, 144);
-            this.listViewBatch.TabIndex = 153;
+            this.listViewBatch.TabIndex = 100;
             this.listViewBatch.UseCompatibleStateImageBehavior = false;
             this.listViewBatch.View = System.Windows.Forms.View.Details;
             this.listViewBatch.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewBatch_ColumnClick);
@@ -509,7 +509,7 @@
             this.groupBoxCut.Location = new System.Drawing.Point(409, 19);
             this.groupBoxCut.Name = "groupBoxCut";
             this.groupBoxCut.Size = new System.Drawing.Size(361, 116);
-            this.groupBoxCut.TabIndex = 152;
+            this.groupBoxCut.TabIndex = 79;
             this.groupBoxCut.TabStop = false;
             // 
             // buttonCutTo
@@ -1170,7 +1170,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(664, 482);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(125, 23);
-            this.buttonCancel.TabIndex = 154;
+            this.buttonCancel.TabIndex = 203;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -1208,7 +1208,7 @@
             this.buttonGenerate.Location = new System.Drawing.Point(537, 482);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
-            this.buttonGenerate.TabIndex = 153;
+            this.buttonGenerate.TabIndex = 202;
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
@@ -1220,7 +1220,7 @@
             this.buttonMode.Location = new System.Drawing.Point(664, 453);
             this.buttonMode.Name = "buttonMode";
             this.buttonMode.Size = new System.Drawing.Size(125, 23);
-            this.buttonMode.TabIndex = 156;
+            this.buttonMode.TabIndex = 201;
             this.buttonMode.Text = "Batch mode";
             this.buttonMode.UseVisualStyleBackColor = true;
             this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
@@ -1231,7 +1231,7 @@
             this.buttonPreview.Location = new System.Drawing.Point(537, 453);
             this.buttonPreview.Name = "buttonPreview";
             this.buttonPreview.Size = new System.Drawing.Size(121, 23);
-            this.buttonPreview.TabIndex = 155;
+            this.buttonPreview.TabIndex = 200;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
             this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
