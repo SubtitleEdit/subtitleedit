@@ -1613,6 +1613,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportBluRaySup, nameof(Configuration.Settings.Shortcuts.MainFileExportBdSup), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> EDL/CLIPNAME", nameof(Configuration.Settings.Shortcuts.MainFileExportEdlClip), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 1", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText1));
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 2", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText2));
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 3", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText3));
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Exit, nameof(Configuration.Settings.Shortcuts.MainFileExit), true);
             _shortcuts.Nodes.Add(fileNode);
 
@@ -1647,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MergeDuplicateText, nameof(Configuration.Settings.Shortcuts.MainToolsMergeDuplicateText), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MergeSameTimeCodes, nameof(Configuration.Settings.Shortcuts.MainToolsMergeSameTimeCodes), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SplitLongLines, nameof(Configuration.Settings.Shortcuts.MainToolsSplitLongLines), true);
-            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.BatchConvert, nameof(Configuration.Settings.Shortcuts.MainToolsBatchConvert));
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.BatchConvert, nameof(Configuration.Settings.Shortcuts.MainToolsBatchConvert), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MeasurementConverter, nameof(Configuration.Settings.Shortcuts.MainToolsMeasurementConverter), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SplitSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsSplit), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.AppendSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsAppend), true);

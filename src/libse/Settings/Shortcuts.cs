@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainFileExportBdSup { get; set; }
         public string MainFileExportEdlClip { get; set; }
         public string MainFileExportPlainText { get; set; }
+        public string MainFileExportCustomText1 { get; set; }
+        public string MainFileExportCustomText2 { get; set; }
+        public string MainFileExportCustomText3 { get; set; }
         public string MainFileExit { get; set; }
 
         // Edit

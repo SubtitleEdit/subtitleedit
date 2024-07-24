@@ -18577,6 +18577,21 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainFileExportCustomText1 == e.KeyData)
+            {
+                FileExportCustomText(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainFileExportCustomText2 == e.KeyData)
+            {
+                FileExportCustomText(1);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainFileExportCustomText3 == e.KeyData)
+            {
+                FileExportCustomText(2);
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I)
             {
                 using (var form = new ImportUnknownFormat(string.Empty))
@@ -19160,6 +19175,56 @@ namespace Nikse.SubtitleEdit.Forms
             //{
             //    new WordSplitDictionaryGenerator().ShowDialog(this);
             //}
+        }
+
+        private void FileExportCustomText(int index)
+        {
+            var templates = new List<string>();
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
+            {
+                templates.Add("SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
+            }
+            else
+            {
+                foreach (var item in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                {
+                    templates.Add(item);
+                }
+            }
+
+            if (index >= templates.Count)
+            {
+                ShowStatus("Custom text template not found at index " + index, false);
+                return;
+            }
+
+            var template = templates[index];
+            var name = template.Split('Æ')[0];
+            var fileExt = ExportCustomText.GetFileExtension(template);
+            saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
+            if (!string.IsNullOrEmpty(_title))
+            {
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + fileExt;
+            }
+
+            saveFileDialog1.Filter =
+                name + "|*" + fileExt + "|" +
+                LanguageSettings.Current.General.AllFiles + "|*.*";
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    FileUtil.WriteAllText(saveFileDialog1.FileName, ExportCustomText.GenerateCustomText(_subtitle, null, _title, null, template), new TextEncoding(GetCurrentEncoding(), null));
+                    ShowStatus(string.Format(LanguageSettings.Current.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName));
+                    DialogResult = DialogResult.OK;
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
         }
 
         private int _layout = 0;
