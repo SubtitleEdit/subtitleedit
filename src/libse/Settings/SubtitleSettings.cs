@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool WebVttUseXTimestampMap { get; set; }
         public bool WebVttUseMultipleXTimestampMap { get; set; }
         public bool WebVttMergeLinesWithSameText { get; set; }
+        public bool WebVttDoNoMergeTags { get; set; }
         public long WebVttTimescale { get; set; }
         public string WebVttCueAn1 { get; set; }
         public string WebVttCueAn2 { get; set; }

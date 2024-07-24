@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
-using System;
-using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms.FormatProperties
+namespace Nikse.SubtitleEdit.Forms.VTT
 {
     public sealed partial class WebVttProperties : Form
     {
@@ -43,9 +43,11 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
 
             checkBoxUseXTimestampMap.Text = LanguageSettings.Current.WebVttProperties.UseXTimeStamp;
             checkBoxAutoMerge.Text = LanguageSettings.Current.WebVttProperties.MergeLines;
+            checkBoxMergeStyleTags.Text = LanguageSettings.Current.WebVttProperties.MergeStyleTags;
 
             checkBoxUseXTimestampMap.Checked = Configuration.Settings.SubtitleSettings.WebVttUseXTimestampMap;
             checkBoxAutoMerge.Checked = Configuration.Settings.SubtitleSettings.WebVttMergeLinesWithSameText;
+            checkBoxMergeStyleTags.Checked = !Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -62,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
 
             Configuration.Settings.SubtitleSettings.WebVttUseXTimestampMap = checkBoxUseXTimestampMap.Checked;
             Configuration.Settings.SubtitleSettings.WebVttMergeLinesWithSameText = checkBoxAutoMerge.Checked;
+            Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags = !checkBoxMergeStyleTags.Checked;
 
             DialogResult = DialogResult.OK;
         }
