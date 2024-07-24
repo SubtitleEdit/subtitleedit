@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new OllamaTranslate(),
                 new AnthropicTranslate(),
                 new GroqTranslate(),
+                new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
                 new NoLanguageLeftBehindServe(),
@@ -425,6 +426,32 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Items.Clear();
                 comboBoxFormality.Items.AddRange(GroqTranslate.Models);
                 comboBoxFormality.Text = Configuration.Settings.Tools.GroqModel;
+
+                return;
+            }
+
+
+            if (engineType == typeof(OpenRouterTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.OpenRouterUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.OpenRouterApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(OpenRouterTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.OpenRouterModel;
 
                 return;
             }
@@ -1118,6 +1145,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.GroqApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.GroqModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(OpenRouterTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.OpenRouterApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.OpenRouterModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(GeminiTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))

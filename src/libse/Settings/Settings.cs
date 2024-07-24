@@ -2210,6 +2210,30 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GroqModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("OpenRouterUrl");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterModel");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LmStudioApiUrl");
             if (subNode != null)
             {
@@ -8909,6 +8933,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("GroqPrompt", settings.Tools.GroqPrompt);
                 textWriter.WriteElementString("GroqApiKey", settings.Tools.GroqApiKey);
                 textWriter.WriteElementString("GroqModel", settings.Tools.GroqModel);
+                textWriter.WriteElementString("OpenRouterUrl", settings.Tools.OpenRouterUrl);
+                textWriter.WriteElementString("OpenRouterPrompt", settings.Tools.OpenRouterPrompt);
+                textWriter.WriteElementString("OpenRouterApiKey", settings.Tools.OpenRouterApiKey);
+                textWriter.WriteElementString("OpenRouterModel", settings.Tools.OpenRouterModel);
                 textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
                 textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
                 textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);

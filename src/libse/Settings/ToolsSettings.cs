@@ -75,6 +75,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GroqPrompt { get; set; }
         public string GroqApiKey { get; set; }
         public string GroqModel { get; set; }
+        public string OpenRouterUrl { get; set; }
+        public string OpenRouterPrompt { get; set; }
+        public string OpenRouterApiKey { get; set; }
+        public string OpenRouterModel { get; set; }
         public string LmStudioApiUrl { get; set; }
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
@@ -466,6 +470,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             GroqModel = GroqTranslate.Models[0];
+            OpenRouterUrl = "https://api.groq.com/openai/v1/chat/completions";
+            OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            OpenRouterModel = OpenRouterTranslate.Models[0];
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModels = "llama3.1,llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
