@@ -3885,6 +3885,7 @@ Keep changes?",
             {
                 UseXTimeStamp = "Use X-TIMESTAMP-MAP header value",
                 MergeLines = "Merge lines with same text on load",
+                MergeStyleTags = "Merge style tags",
             };
 
             WebVttStyleManager = new LanguageStructure.WebVttStyleManager

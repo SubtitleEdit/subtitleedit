@@ -4838,6 +4838,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 {
                     settings.SubtitleSettings.WebVttMergeLinesWithSameText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
+
+                subNode = node.SelectSingleNode("WebVttDoNoMergeTags");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttDoNoMergeTags = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             // Proxy
@@ -9412,6 +9418,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseMultipleXTimestampMap", settings.SubtitleSettings.WebVttUseMultipleXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttMergeLinesWithSameText", settings.SubtitleSettings.WebVttMergeLinesWithSameText.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WebVttDoNoMergeTags", settings.SubtitleSettings.WebVttDoNoMergeTags.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Proxy", string.Empty);

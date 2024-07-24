@@ -9433,6 +9433,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "WebVttProperties/MergeLines":
                     language.WebVttProperties.MergeLines = reader.Value;
                     break;
+                case "WebVttProperties/MergeStyleTags":
+                    language.WebVttProperties.MergeStyleTags = reader.Value;
+                    break;
                 case "WebVttStyleManager/Title":
                     language.WebVttStyleManager.Title = reader.Value;
                     break;

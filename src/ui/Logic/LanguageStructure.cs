@@ -3694,6 +3694,7 @@
         {
             public string UseXTimeStamp { get; set; }
             public string MergeLines { get; set; }
+            public string MergeStyleTags { get; set; }
         }
 
         public class WebVttStyleManager

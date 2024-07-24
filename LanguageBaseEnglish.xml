@@ -3453,6 +3453,7 @@ Keep changes?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Use X-TIMESTAMP-MAP header value</UseXTimeStamp>
     <MergeLines>Merge lines with same text on load</MergeLines>
+    <MergeStyleTags>Merge style tags</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT styles</Title>
