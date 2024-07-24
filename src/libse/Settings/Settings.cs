@@ -6756,6 +6756,24 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainFileExportPlainText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileExportCustomText1");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportCustomText2");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportCustomText3");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText3 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExit");
                 if (subNode != null)
                 {
@@ -9888,6 +9906,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainFileImportBdSupForEdit", shortcuts.MainFileImportBdSupForEdit);
             textWriter.WriteElementString("MainFileImportTimeCodes", shortcuts.MainFileImportTimeCodes);
             textWriter.WriteElementString("MainFileExportPlainText", shortcuts.MainFileExportPlainText);
+            textWriter.WriteElementString("MainFileExportCustomText1", shortcuts.MainFileExportCustomText1);
+            textWriter.WriteElementString("MainFileExportCustomText2", shortcuts.MainFileExportCustomText2);
+            textWriter.WriteElementString("MainFileExportCustomText3", shortcuts.MainFileExportCustomText3);
             textWriter.WriteElementString("MainFileExportEbu", shortcuts.MainFileExportEbu);
             textWriter.WriteElementString("MainFileExportPac", shortcuts.MainFileExportPac);
             textWriter.WriteElementString("MainFileExportBdSup", shortcuts.MainFileExportBdSup);

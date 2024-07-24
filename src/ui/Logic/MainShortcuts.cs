@@ -49,6 +49,9 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralSetAssaResolution { get; set; }
         public Keys MainGeneralTakeAutoBackupNow { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
+        public Keys MainFileExportCustomText1 { get; set; }
+        public Keys MainFileExportCustomText2 { get; set; }
+        public Keys MainFileExportCustomText3 { get; set; }
         public Keys MainVideoFocusSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
@@ -399,6 +402,9 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoToggleBrightness = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleBrightness);
             MainVideoToggleContrast = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleContrast);
             MainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
+            MainFileExportCustomText1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportCustomText1);
+            MainFileExportCustomText2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportCustomText2);
+            MainFileExportCustomText3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportCustomText3);
             MainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             MainListViewToggleQuotes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleQuotes);
             MainListViewToggleHiTags = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleHiTags);
