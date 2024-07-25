@@ -88,6 +88,13 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
             radioButtonSelectedLinesOnly.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesOnly;
             radioButtonSelectedLineAndForward.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesAndForward;
+            nikseLabelBoxType.Text = LanguageSettings.Current.SubStationAlphaStyles.BoxType;
+
+            comboBoxOpaqueBoxStyle.Items.Clear();
+            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxPerLineShort);
+            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxMultiLineShort);
+            comboBoxOpaqueBoxStyle.SelectedIndex = Configuration.Settings.Tools.GenTransparentVideoNonAssaBoxPerLine ? 0 : 1;
+            comboBoxOpaqueBoxStyle.Enabled = false;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
@@ -113,6 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOutline.Left = left;
             numericUpDownWidth.Left = left;
             comboBoxFrameRate.Left = left;
+            comboBoxOpaqueBoxStyle.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
@@ -129,6 +137,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonForeColor.Left = buttonOutlineColor.Left;
             panelForeColor.Left = panelOutlineColor.Left;
             buttonForeColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
+            buttonColorShadow.Left = buttonOutlineColor.Left;
+            panelShadowColor.Left = buttonColorShadow.Right + 3;
 
             _isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
 
@@ -188,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             panelOutlineColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaBoxColor;
             panelForeColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaTextColor;
+            panelShadowColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaShadowColor;
 
             var hasSubtitle = subtitle != null && subtitle.Paragraphs.Count > 0;
             BatchMode = hasSubtitle;
@@ -244,25 +255,37 @@ namespace Nikse.SubtitleEdit.Forms
             style.FontSize = numericUpDownFontSize.Value;
             style.Bold = checkBoxFontBold.Checked;
             style.FontName = comboBoxSubtitleFont.Text;
-            style.Background = panelOutlineColor.BackColor;
+            style.Background = Color.Cyan; // panelOutlineColor.Color;
+            style.Tertiary = panelShadowColor.BackColor;
             style.Primary = panelForeColor.BackColor;
+            style.Secondary = Color.Cyan;
+            style.Outline = panelOutlineColor.BackColor;
             style.OutlineWidth = numericUpDownOutline.Value;
             style.ShadowWidth = style.OutlineWidth * 0.5m;
+
+
+
+            if (comboBoxOpaqueBoxStyle.Enabled == false)
+            {
+                style.BorderStyle = "0"; // bo box
+                style.Background = panelShadowColor.BackColor;
+            }
+            else if (comboBoxOpaqueBoxStyle.SelectedIndex == 0)
+            {
+                style.BorderStyle = "3"; // box - per line
+                style.Outline = panelShadowColor.BackColor;
+                style.Background = panelOutlineColor.BackColor;
+            }
+            else
+            {
+                style.Background = panelShadowColor.BackColor;
+                style.BorderStyle = "4"; // box - multi line
+            }
+
 
             if (checkBoxAlignRight.Checked)
             {
                 style.Alignment = "3";
-            }
-
-            if (checkBoxBox.Checked)
-            {
-                style.BorderStyle = "4"; // box - multi line
-                style.ShadowWidth = 0;
-                style.OutlineWidth = numericUpDownOutline.Value;
-            }
-            else
-            {
-                style.Outline = panelOutlineColor.BackColor;
             }
 
             sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new List<SsaStyle> { style });
@@ -856,6 +879,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaBoxColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.GenVideoNonAssaTextColor = panelForeColor.BackColor;
+            Configuration.Settings.Tools.GenVideoNonAssaShadowColor = panelShadowColor.BackColor;
+            Configuration.Settings.Tools.GenTransparentVideoNonAssaBoxPerLine = comboBoxOpaqueBoxStyle.SelectedIndex == 0;
         }
 
         private void radioButtonAllLines_CheckedChanged(object sender, EventArgs e)
@@ -1105,13 +1130,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var videoFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
                 var result = RunOnePassEncoding(assaTempFileName, subtitle, videoFileName);
-                labelPleaseWait.Text = string.Empty;
-                labelProgress.Text = string.Empty;
+                timer1.Stop();
                 if (result)
                 {
                     try
                     {
                         var bmpFileName = VideoPreviewGenerator.GetScreenShot(videoFileName, "00:00:01");
+                        labelPleaseWait.Text = string.Empty;
+                        labelProgress.Text = string.Empty;
                         using (var bmp = new Bitmap(bmpFileName))
                         {
                             using (var form = new ExportPngXmlPreview(bmp))
@@ -1141,6 +1167,8 @@ namespace Nikse.SubtitleEdit.Forms
             finally
             {
                 Cursor = Cursors.Default;
+                labelPleaseWait.Text = string.Empty;
+                labelProgress.Text = string.Empty;
             }
         }
 
@@ -1362,6 +1390,50 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void checkBoxBox_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxOpaqueBoxStyle.Enabled = checkBoxBox.Checked;
+            if (checkBoxBox.Checked)
+            {
+                comboBoxOpaqueBoxStyle_SelectedIndexChanged(null, null);
+            }
+            else
+            {
+                buttonOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
+                buttonColorShadow.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            }
+        }
+
+        private void comboBoxOpaqueBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxOpaqueBoxStyle.SelectedIndex == 0)
+            {
+                buttonColorShadow.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Box;
+                buttonOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            }
+            else
+            {
+                buttonOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
+                buttonColorShadow.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Box;
+            }
+        }
+
+        private void buttonColorShadow_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelShadowColor.BackColor, ShowAlpha = true })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelShadowColor.BackColor = colorChooser.Color;
+                }
+            }
+        }
+
+        private void panelShadowColor_Click(object sender, EventArgs e)
+        {
+            buttonColorShadow_Click(null, null);
         }
     }
 }
