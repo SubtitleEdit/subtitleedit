@@ -3342,6 +3342,9 @@
             public string Angle { get; set; }
             public string BoxPerLine { get; set; }
             public string BoxMultiLine { get; set; }
+            public string BoxPerLineShort { get; set; }
+            public string BoxMultiLineShort { get; set; }
+            public string BoxType { get; set; }
             public string DuplicateStyleNames { get; set; }
         }
 

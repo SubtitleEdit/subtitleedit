@@ -4060,6 +4060,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GenTransparentVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenTransparentVideoNonAssaBoxPerLine");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoNonAssaBoxPerLine = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
             if (subNode != null)
             {
@@ -4070,6 +4076,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (subNode != null)
             {
                 settings.Tools.GenVideoNonAssaTextColor = FromHtml(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaShadowColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaShadowColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("GenVideoNonAssaAlignRight");
@@ -9263,8 +9275,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenTransparentVideoNonAssaBox", settings.Tools.GenTransparentVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenTransparentVideoNonAssaBoxPerLine", settings.Tools.GenTransparentVideoNonAssaBoxPerLine.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
                 textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
+                textWriter.WriteElementString("GenVideoNonAssaShadowColor", ToHtml(settings.Tools.GenVideoNonAssaShadowColor));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);

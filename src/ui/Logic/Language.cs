@@ -3531,6 +3531,9 @@ can edit in same subtitle file (collaboration)",
                 Angle = "Angle",
                 BoxPerLine = "Box per line (use outline color)",
                 BoxMultiLine = "One box (use shadow color)",
+                BoxPerLineShort = "Box per line",
+                BoxMultiLineShort = "One box",
+                BoxType = "Box type",
                 DuplicateStyleNames = "Duplicate style names: {0}",
             };
 

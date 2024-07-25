@@ -388,8 +388,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public float GenVideoFontSizePercentOfHeight { get; set; }
         public bool GenVideoNonAssaBox { get; set; }
         public bool GenTransparentVideoNonAssaBox { get; set; }
+        public bool GenTransparentVideoNonAssaBoxPerLine { get; set; }
         public Color GenVideoNonAssaBoxColor { get; set; }
         public Color GenVideoNonAssaTextColor { get; set; }
+        public Color GenVideoNonAssaShadowColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public string GenVideoEmbedOutputExt { get; set; }
@@ -664,6 +666,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoNonAssaBox = true;
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
+            GenVideoNonAssaShadowColor = Color.Black;
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
             GenVideoOutputFileSuffix = "_new";
