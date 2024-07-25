@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.07.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 25.07.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3453,6 +3453,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+    <MergeStyleTags>Unisci tag stile</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Stili WebVTT</Title>
