@@ -1009,6 +1009,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Audio>오디오</Audio>
     <Stereo>스테레오</Stereo>
     <Preset>프리셋</Preset>
+    <PixelFormat>픽셀 형식</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>튜닝</TuneFor>
     <AlignRight>오른쪽 정렬</AlignRight>
@@ -1442,6 +1443,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>자막이 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>자막이 내장된 비디오 파일 생성...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>자막이 있는 투명한 비디오 생성...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>오디오를 텍스트로 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportShotChanges>장면전환 생성/가져오기...</GenerateImportShotChanges>
@@ -2133,6 +2135,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
     <CpsLessThan>CPS 미달</CpsLessThan>
     <CpsGreaterThan>CPS 초과</CpsGreaterThan>
+    <LengthLessThan>다음 보다 짧게</LengthLessThan>
+    <LengthGreaterThan>다음 보다 길게</LengthGreaterThan>
     <ExactlyOneLine>정확히 한 줄</ExactlyOneLine>
     <ExactlyTwoLines>정확히 두 줄</ExactlyTwoLines>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
@@ -3015,7 +3019,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <LineLengthMinimum>자막 길이 - 최소: {0}</LineLengthMinimum>
     <LineLengthMaximum>자막 길이 - 최대: {0}</LineLengthMaximum>
     <LineLengthAverage>자막 길이 - 평균: {0:#.###}</LineLengthAverage>
-    <LinesPerSubtitleAverage>자막 안의 줄 수 - 평균: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>자막 안의 줄 수 - 평균: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>한 줄의 길이 - 최소: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>한 줄의 길이 - 최대: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>한 줄의 길이 - 평균: {0:#.###}</SingleLineLengthAverage>
@@ -3171,6 +3175,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MergingAudioTrackXOfY>오디오 트랙 병합: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>텍스트에서 음성 생성: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>오디오 클립 검토</ReviewAudioClips>
+    <CustomAudioEncoding>사용자 지정 오디오 인코딩</CustomAudioEncoding>
     <ReviewInfo>오디오 클립 검토 및 편집/제거</ReviewInfo>
     <Play>재생</Play>
     <AutoContinue>자동 계속</AutoContinue>
@@ -3445,6 +3450,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   <WebVttProperties>
     <UseXTimeStamp>X-TIMESTAMP-MAP 헤더 값 사용</UseXTimeStamp>
     <MergeLines>로드 시 동일한 텍스트가 있는 줄 병합</MergeLines>
+    <MergeStyleTags>스타일 태그 병합</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT 스타일</Title>
