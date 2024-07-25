@@ -1,12 +1,14 @@
 ﻿Subtitle Edit Changelog
 
-4.0.8 (xth September 2024) BETA
+4.0.8 (xth August 2024) BETA
 * NEW:
    * Add "Batch mode" for "Generate transparent video with subs" - thx David
    * Add "Pixel format" paramter to burn-in - thx Hafran420
    * Add new ChatGPT "gpt-4o-mini" model
    * Add translation via Groq (api.groq.com)
    * Add translation via OpenRouter - thx Nikodim
+   * Add custom shortcuts for custom export text templates - thx Oliver
+   * Add WebVTT setting for split of style tags - thx Oliver 
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
