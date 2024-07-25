@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.7</Version>
-    <TranslatedBy>Последен превод на български 24.06.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 25.07.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1015,6 +1015,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Audio>Аудио</Audio>
     <Stereo>Стерео</Stereo>
     <Preset>Предв.настр</Preset>
+    <PixelFormat>Пикселен формат</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Мотив за</TuneFor>
     <AlignRight>Подравняване вдясно</AlignRight>
@@ -3453,6 +3454,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <WebVttProperties>
     <UseXTimeStamp>Използване стойността на заглавието X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Обединяване на редове със същия текст при зареждане</MergeLines>
+    <MergeStyleTags>Обединяване на тагове за стил</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT стилове</Title>
