@@ -139,24 +139,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     text = text.Remove(indexOfI - 2, 3).Insert(indexOfI - 2, "I-I");
                 }
-                else if (text.Substring(indexOfI).StartsWith("i'll ", StringComparison.Ordinal))
-                {
-                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
-                }
-                else if (text.Substring(indexOfI).StartsWith("i've ", StringComparison.Ordinal))
-                {
-                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
-                }
-                else if (text.Substring(indexOfI).StartsWith("i'm ", StringComparison.Ordinal))
-                {
-                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
-                }
-                else if (text.Substring(indexOfI).StartsWith("i'd ", StringComparison.Ordinal))
+                else if (IsSubjectVerb(text.Substring(indexOfI)))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
             }
             return text;
+        }
+
+        private static bool IsSubjectVerb(string input)
+        {
+            return input.StartsWith("i'll ", StringComparison.Ordinal) ||
+                   input.StartsWith("i've ", StringComparison.Ordinal) ||
+                   input.StartsWith("i'm ", StringComparison.Ordinal) ||
+                   input.StartsWith("i'd ", StringComparison.Ordinal);
         }
 
         private string FixCasingAfterTitles(string input)
