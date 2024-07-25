@@ -8617,6 +8617,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/BoxMultiLine":
                     language.SubStationAlphaStyles.BoxMultiLine = reader.Value;
                     break;
+                case "SubStationAlphaStyles/BoxPerLineShort":
+                    language.SubStationAlphaStyles.BoxPerLineShort = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxMultiLineShort":
+                    language.SubStationAlphaStyles.BoxMultiLineShort = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxType":
+                    language.SubStationAlphaStyles.BoxType = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/DuplicateStyleNames":
                     language.SubStationAlphaStyles.DuplicateStyleNames = reader.Value;
                     break;
