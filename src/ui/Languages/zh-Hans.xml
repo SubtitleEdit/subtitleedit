@@ -3439,6 +3439,7 @@ Command line: {1} {2}
   <WebVttProperties>
     <UseXTimeStamp>使用 X-TIMESTAMP-MAP 标头值</UseXTimeStamp>
     <MergeLines>加载时合并具有相同文本的行</MergeLines>
+    <MergeStyleTags>合并样式标签</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT 样式</Title>
