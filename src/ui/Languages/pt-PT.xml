@@ -1017,6 +1017,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Predefinição</Preset>
+    <PixelFormat>Formato de pixéis</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizar para</TuneFor>
     <AlignRight>Alinhar à direita</AlignRight>
@@ -3453,6 +3454,7 @@ Manter as alterações?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Usar o valor de cabeçalho X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Combinar linhas com o mesmo texto no carregamento</MergeLines>
+    <MergeStyleTags>Combinar etiquetas de estilo</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Estilos WebVTT</Title>
