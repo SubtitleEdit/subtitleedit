@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class ColorUtils
+    public static class ColorExtensions
     {
         public static Color Blend(this Color baseColor, Color targetColor, double percentage = 0.5)
         {
