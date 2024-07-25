@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Get the paragraph of index, null if out of bounds
         /// </summary>
         /// <param name="index">Index of wanted paragraph</param>
-        /// <returns>Paragraph, null if index is index is out of bounds</returns>
+        /// <returns>Paragraph, null if index is out of bounds</returns>
         public Paragraph GetParagraphOrDefault(int index)
         {
             if (Paragraphs == null || Paragraphs.Count <= index || index < 0)
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
 
-                    // handle shot change if supplied -- keep earliest time
+                    // handle shot change if supplied -- keep the earliest time
                     if (shotChanges != null)
                     {
                         double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[i].EndTime) ?? double.MaxValue;
@@ -486,7 +486,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
 
-            // handle shot change if supplied -- keep earliest time
+            // handle shot change if supplied -- keep the earliest time
             if (shotChanges != null)
             {
                 newEndTimeInMs = Math.Min(newEndTimeInMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
 
-            // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+            // Then check for next shot change (if option is checked, and if any are supplied) -- keeping the earliest time
             if (shotChanges != null)
             {
                 bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, new TimeCode(originalEndTime)) ?? double.MaxValue);
@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
 
-                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping the earliest time
                     if (shotChanges != null)
                     {
                         bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
