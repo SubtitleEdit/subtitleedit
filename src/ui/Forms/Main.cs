@@ -19203,9 +19203,9 @@ namespace Nikse.SubtitleEdit.Forms
             var name = template.Split('Æ')[0];
             var fileExt = ExportCustomText.GetFileExtension(template);
             saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
-            if (!string.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(_fileName))
             {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + fileExt;
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName) + fileExt;
             }
 
             saveFileDialog1.Filter =
