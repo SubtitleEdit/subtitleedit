@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     tagOn = true;
                 }
-                else if (ch == '<' || ch == '}')
+                else if (ch == '>' || ch == '}')
                 {
                     tagOn = false;
                 }
