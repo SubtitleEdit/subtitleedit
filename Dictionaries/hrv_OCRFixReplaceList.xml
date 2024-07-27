@@ -5626,8 +5626,7 @@
     <RegEx find="sljen" replaceWith="slen" />
     <RegEx find="sj([pv])" replaceWith="s$1j" />
     <RegEx find="smeva" replaceWith="smijava" />
-    <RegEx find="sovji" replaceWith="svoji" />
-    <RegEx find="sovju" replaceWith="svoju" />
+    <RegEx find="sovj(?!e)" replaceWith="svoj" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
     <RegEx find="(?&lt;!star)aćemo" replaceWith="at ćemo" />
     <RegEx find="\bstaral" replaceWith="brinul" />
