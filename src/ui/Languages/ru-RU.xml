@@ -142,7 +142,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SourceVideoFile>Исходный видеофайл:</SourceVideoFile>
     <GenerateWaveformData>Создать форму(-ы) сигнала</GenerateWaveformData>
     <PleaseWait>Эта операция займёт некоторое время - подождите…</PleaseWait>
-    <FfmpegNotFound>Для извлечения с целью создания формы сигнала требуется FFmpeg.
+    <FfmpegNotFound>Subtitle Edit использует FFmpeg для извлечения аудиоданных и создания формы сигнала.
 
 Хотите скачать и использовать FFmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Создание файла пиков…</GeneratingPeakFile>
@@ -155,7 +155,9 @@ https://github.com/SubtitleEdit/subtitleedit
 Командная строка: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} не удалось извлечь форму сигнала из аудиофайла!
 
-Командная строка: {1} {2} Примечание: проверьте свободное место на диске</WaveFileMalformed>
+Командная строка: {1} {2}
+
+Примечание: проверьте свободное место на диске</WaveFileMalformed>
     <LowDiskSpace>Недостаточно свободного места на диске!</LowDiskSpace>
     <FreeDiskSpace>{0} свободно</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>Звуковые дорожки не найдены! Создать пустую форму сигнала?</NoAudioTracksFoundGenerateEmptyWaveform>
@@ -566,7 +568,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Update>обновить</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
-    <Title>Выбор аудиотрека</Title>
+    <Title>Выбор аудиодорожки</Title>
   </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Выбор кодировки субтитров</Title>
@@ -999,7 +1001,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GenerateWithFfmpegParametersPrompt>Генерировать - запрашивать параметры FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>Генерация видео со встроенными субтитрами</Title>
+    <Title>Создать видео с наложенными субтитрами (Хардсаб)</Title>
     <InfoAssaOff>Примечание: поддерживается стиль Advanced SubStation Alpha</InfoAssaOff>
     <InfoAssaOn>Примечание: будет применён стиль Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>«{0}» создано со встроенными субтитрами в {1}</XGeneratedWithBurnedInSubsInX>
@@ -1010,7 +1012,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TimeRemainingMinutesAndSeconds>Оставшееся время: {0} минут и {1} секунд</TimeRemainingMinutesAndSeconds>
     <TimeRemainingOneMinuteAndSeconds>Оставшееся время: одна минута и {0} секунд</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Имя целевого файла: {0}</TargetFileName>
-    <TargetFileSize>Целевой размер файла (требуется 2-проходное кодирование)</TargetFileSize>
+    <TargetFileSize>Целевой размер файла (требуется двухпроходное кодирование)</TargetFileSize>
     <FileSizeMb>Размер файла в МБ</FileSizeMb>
     <PassX>Проход {0}</PassX>
     <Encoding>Кодирование</Encoding>
@@ -1020,6 +1022,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Audio>Аудио</Audio>
     <Stereo>Стерео</Stereo>
     <Preset>Параметр</Preset>
+    <PixelFormat>Формат пикселей</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Тип</TuneFor>
     <AlignRight>Выровнять по правому краю</AlignRight>
@@ -1030,7 +1033,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OutputSettings>Выходной файл/папка…</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Создать видео со встроенными субтитрами</Title>
+    <Title>Создать видео с добавлением/удалением встроенных субтитров</Title>
     <InputVideoFile>Входной видеофайл</InputVideoFile>
     <SubtitlesX>Субтитры ({0})</SubtitlesX>
     <SetLanguage>Язык…</SetLanguage>
@@ -1149,7 +1152,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeShortLines>Объединить короткие строки с продолжением</MergeShortLines>
     <RemoveEmptyLines>Удалить пустые строки</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Удалить строки без букв</RemoveLinesWithoutLetters>
-    <GenerateTimeCodes>Создание временных кодов</GenerateTimeCodes>
+    <GenerateTimeCodes>Сгенерировать тайм-коды</GenerateTimeCodes>
     <TakeTimeFromCurrentFile>Взять время из текущего файла</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>Взять время из имени файла</TakeTimeFromFileName>
     <GapBetweenSubtitles>Промежуток между субтитрами (в мс)</GapBetweenSubtitles>
@@ -1334,7 +1337,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Save>Сохранить</Save>
         <SaveAs>Сохранить как…</SaveAs>
         <RestoreAutoBackup>Восстановить автокопию…</RestoreAutoBackup>
-        <FormatXProperties>{0} свойства…</FormatXProperties>
+        <FormatXProperties>Свойства {0}…</FormatXProperties>
         <OpenOriginal>Открыть исходные субтитры (Режим перевода)…</OpenOriginal>
         <SaveOriginal>Сохранить исходные субтитры</SaveOriginal>
         <CloseOriginal>Закрыть исходные субтитры</CloseOriginal>
@@ -1446,7 +1449,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <OpenVideo>Открыть видеофайл…</OpenVideo>
         <OpenVideoFromUrl>Открыть видео по ссылке…</OpenVideoFromUrl>
         <OpenDvd>Открыть DVD…</OpenDvd>
-        <ChooseAudioTrack>Выбор аудиотрека</ChooseAudioTrack>
+        <ChooseAudioTrack>Выбор аудиодорожки</ChooseAudioTrack>
         <CloseVideo>Закрыть видеофайл</CloseVideo>
         <OpenSecondSubtitle>Открыть второй (вспомогательный) файл субтитров…</OpenSecondSubtitle>
         <SetVideoOffset>Установить смещение видео…</SetVideoOffset>
@@ -1454,7 +1457,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateTextFromVideo>Создать текст из видео…</GenerateTextFromVideo>
         <GenerateBlankVideo>Создать пустое видео…</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Создать видео с наложенными субтитрами (Хардсаб)…</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Создать видео со встроенными субтитрами…</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Создать видео с добавлением/удалением встроенных субтитров…</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Создать прозрачное видео с субтитрами…</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Аудио в текст ({0})…</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт глав из видео</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Создание/Открытие изменений плана…</GenerateImportShotChanges>
@@ -1693,7 +1697,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeVisualSync>Перед визуальной синхронизацией</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Выполнена визуальная синхронизация для выбранных строк</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Выполнена визуальная синхронизация</VisualSyncPerformed>
-    <FileXIsLargerThan10MB>Размер файла больше, чем 10 Mб: {0}</FileXIsLargerThan10MB>
+    <FileXIsLargerThan10MB>Размер файла больше 10 МБ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Всё равно продолжить?</ContinueAnyway>
     <BeforeLoadOf>Перед загрузкой {0}</BeforeLoadOf>
     <LoadedSubtitleX>Загружен файл субтитров {0}</LoadedSubtitleX>
@@ -1764,7 +1768,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleAppendPrompt>Будет выполнено добавление существующих субтитров к загруженным,
 которые уже были синхронизированы с видеофайлом.
 
-Вы хотите продолжить?</SubtitleAppendPrompt>
+Продолжить?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Добавление субтитров</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Открыть субтитры для добавления…</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Визуальная синхронизация - добавить вторую часть субтитров</AppendViaVisualSyncTitle>
@@ -1877,13 +1881,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <OcrReplacePairXAdded>OCR пара «{0} -&gt; {1}» была добавлена в список замен</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>OCR пара «{0} -&gt; {1}» НЕ была добавлена в список замен</OcrReplacePairXNotAdded>
     <XLinesSelected>Выбрано строк: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Субтитры содержат символы в кодировке Unicode.
-При сохранении файла в кодировке ANSI они будут утеряны.
-
-Вы хотите продолжить запись?</UnicodeMusicSymbolsAnsiWarning>
-    <NegativeTimeWarning>Субтитры содержат отрицательные метки времени.
-
-Вы хотите продолжить запись?</NegativeTimeWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Субтитры содержат символы Unicode. При сохранении файла в кодировке ANSI они будут утеряны. Продолжить сохранение?</UnicodeMusicSymbolsAnsiWarning>
+    <NegativeTimeWarning>Субтитры содержат отрицательные тайм-коды. Продолжить сохранение?</NegativeTimeWarning>
     <BeforeMergeShortLines>Перед объединением коротких строк</BeforeMergeShortLines>
     <MergedShortLinesX>Число объединённых строк: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>Перед разделением длинных строк</BeforeSplitLongLines>
@@ -1959,16 +1958,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <ErrorLoadJpg>Вероятно, это JPG - файл изображения. Subtitle Edit не поддерживает открытие JPG файлов</ErrorLoadJpg>
     <ErrorLoadSrr>Вероятно, это ReScene .srr файл - не файл субтитров</ErrorLoadSrr>
     <ErrorLoadTorrent>Вероятно, это BitTorrent файл - не файл субтитров</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>К сожалению, этот файл содержит только двоичные нули! Если вы редактировали файл
-с помощью Subtitle Edit, то его можно восстановить через меню Файл -&gt; Восстановить автокопию…</ErrorLoadBinaryZeroes>
+    <ErrorLoadBinaryZeroes>К сожалению, этот файл содержит только двоичные нули!
+
+Если вы редактировали файл с помощью Subtitle Edit, то его можно восстановить через меню Файл -&gt; Восстановить автокопию…</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Перенос папок здесь не поддерживается</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Содержимое зашифрованного VobSub не поддерживается</NoSupportEncryptedVobSub>
-    <NoSupportHereBluRaySup>Файлы Blu-ray sup не поддерживаются здесь</NoSupportHereBluRaySup>
+    <NoSupportHereBluRaySup>Blu-ray sup файлы не поддерживаются здесь</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup файлы не поддерживаются здесь</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub файлы не поддерживаются здесь</NoSupportHereVobSub>
-    <NoSupportHereDivx>Divx файлы не поддерживаются здесь</NoSupportHereDivx>
+    <NoSupportHereDivx>DivX файлы не поддерживаются здесь</NoSupportHereDivx>
     <NoChapters>Главы в видео не найдены</NoChapters>
-    <VideoFromUrlRequirements>Для открытия видео по ссылке требуется mpv и youtube-dl. Скачать и продолжить?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Для открытия видео по ссылке требуется mpv и youtube-dl.
+	
+Скачать и продолжить?</VideoFromUrlRequirements>
     <Url>Ссылка</Url>
     <Errors>Ошибки</Errors>
     <ShowVideoControls>Показать элементы управления видео</ShowVideoControls>
@@ -3148,6 +3150,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <Angle>Угол</Angle>
     <BoxPerLine>Для каждой строки (цвет контура)</BoxPerLine>
     <BoxMultiLine>Общая рамка (цвет тени)</BoxMultiLine>
+    <BoxPerLineShort>Для каждой строки</BoxPerLineShort>
+    <BoxMultiLineShort>Общая</BoxMultiLineShort>
+    <BoxType>Тип рамки</BoxType>
     <DuplicateStyleNames>Повторяющиеся имена стилей: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3238,9 +3243,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <FindText>Найти</FindText>
     <GoToSubPosition>Перейти</GoToSubPosition>
     <KeepChangesTitle>Сохранить изменения?</KeepChangesTitle>
-    <KeepChangesMessage>Субтитры были изменены в диалоге «Визуальная синхронизация».
+    <KeepChangesMessage>Субтитры были изменены в меню «Визуальная синхронизация».
 
-Сохранить сделанные изменения?</KeepChangesMessage>
+Сохранить изменения?</KeepChangesMessage>
     <SynchronizationDone>Синхронизация завершена!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Начальная сцена должна быть перед конечной!</StartSceneMustComeBeforeEndScene>
     <Tip>Используйте &lt;Ctrl+←/→&gt; для
@@ -3465,6 +3470,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <WebVttProperties>
     <UseXTimeStamp>Использовать значение заголовка X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Объединять строки с одинаковым текстом при загрузке</MergeLines>
+    <MergeStyleTags>Объединять теги стилей</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Стили WebVTT</Title>
