@@ -5383,7 +5383,7 @@
     <RegEx find="jdi?n" replaceWith="jedin" />
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jho" replaceWith="jno" />
-    <RegEx find="jr([dgklnst])" replaceWith="je$1" />
+    <RegEx find="jr([dgklnpst])" replaceWith="je$1" />
     <RegEx find="jw" replaceWith="je" />
     <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
