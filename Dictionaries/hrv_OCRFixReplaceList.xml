@@ -5622,6 +5622,7 @@
     <RegEx find="seliće" replaceWith="selit će" />
     <RegEx find="shvt" replaceWith="shvat" />
     <RegEx find="Sistin" replaceWith="Sikstin" />
+    <RegEx find="skt" replaceWith="akt" />
     <RegEx find="slk" replaceWith="slj" />
     <RegEx find="sljen" replaceWith="slen" />
     <RegEx find="sj([pv])" replaceWith="s$1j" />
