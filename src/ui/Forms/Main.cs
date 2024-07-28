@@ -36977,7 +36977,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var selectedLines = SubtitleListview1.GetSelectedIndices().ToList();
-            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, selectedLines, GetCurrentSubtitleFormat(), _videoInfo))
+            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, selectedLines, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
