@@ -303,7 +303,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            _abort = true;
+            if (buttonGenerate.Enabled)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -353,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 for (var i = 0; i < listViewBatch.Items.Count; i++)
                 {
-                    listViewBatch.Items[i].SubItems[1].Text = string.Empty;
+                    listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = string.Empty;
                 }
 
                 listViewBatch.SelectedIndices.Clear();
@@ -1702,6 +1706,18 @@ namespace Nikse.SubtitleEdit.Forms
                     var subtitle = Subtitle.Parse(openFileDialog1.FileName);
                     CutToText(subtitle);
                 }
+            }
+        }
+
+        private void removeVideoFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (int i in listViewBatch.SelectedIndices)
+            {
+                listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnVideoFileName].Text = string.Empty;
+                listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnResolution].Text = string.Empty;
+                _batchItems[i].VideoFileName = string.Empty;
+                _batchItems[i].Width = 0;
+                _batchItems[i].Height = 0;
             }
         }
     }
