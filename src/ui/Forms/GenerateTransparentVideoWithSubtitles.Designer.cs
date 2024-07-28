@@ -140,19 +140,19 @@
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // addFilesToolStripMenuItem
             // 
             this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.addFilesToolStripMenuItem.Text = "Add subtitle files...";
             this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
             // 
@@ -168,30 +168,31 @@
             this.deleteToolStripMenuItem,
             this.clearToolStripMenuItem});
             this.contextMenuStripBatch.Name = "contextMenuStripBatch";
-            this.contextMenuStripBatch.Size = new System.Drawing.Size(172, 126);
+            this.contextMenuStripBatch.Size = new System.Drawing.Size(181, 148);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // pickVideoFileToolStripMenuItem
             // 
             this.pickVideoFileToolStripMenuItem.Name = "pickVideoFileToolStripMenuItem";
-            this.pickVideoFileToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.pickVideoFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.pickVideoFileToolStripMenuItem.Text = "Pick video file...";
             this.pickVideoFileToolStripMenuItem.Click += new System.EventHandler(this.pickVideoFileToolStripMenuItem_Click);
             // 
             // removeVideoFileToolStripMenuItem
             // 
             this.removeVideoFileToolStripMenuItem.Name = "removeVideoFileToolStripMenuItem";
-            this.removeVideoFileToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.removeVideoFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeVideoFileToolStripMenuItem.Text = "Remove video file";
+            this.removeVideoFileToolStripMenuItem.Click += new System.EventHandler(this.removeVideoFileToolStripMenuItem_Click);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
