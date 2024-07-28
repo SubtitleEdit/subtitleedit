@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -115,12 +114,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxBox.Checked = Configuration.Settings.Tools.GenTransparentVideoNonAssaBox;
             checkBoxAlignRight.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
             checkBoxRightToLeft.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
-
-            if (_videoInfo != null)
-            {
-                numericUpDownWidth.Value = _videoInfo.Width;
-                numericUpDownHeight.Value = _videoInfo.Height;
-            }
 
             var left = Math.Max(Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width), labelSubtitleFont.Left + labelSubtitleFont.Width) + 5;
             numericUpDownFontSize.Left = left;
@@ -1718,6 +1711,19 @@ namespace Nikse.SubtitleEdit.Forms
                 _batchItems[i].VideoFileName = string.Empty;
                 _batchItems[i].Width = 0;
                 _batchItems[i].Height = 0;
+            }
+        }
+
+        private void GenerateTransparentVideoWithSubtitles_Shown(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_inputVideoFileName))
+            {
+                var mediaInfo = FfmpegMediaInfo.Parse(_inputVideoFileName);
+                if (mediaInfo.Dimension.IsValid())
+                {
+                    numericUpDownWidth.Value = mediaInfo.Dimension.Width;
+                    numericUpDownHeight.Value = mediaInfo.Dimension.Height;
+                }
             }
         }
     }
