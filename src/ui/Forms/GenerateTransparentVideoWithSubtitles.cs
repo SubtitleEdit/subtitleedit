@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -23,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
         public long MillisecondsEncoding { get; private set; }
 
         private const int ListViewBatchSubItemIndexColumnSubtitleSize = 0;
-        private const int ListViewBatchSubItemIndexColumnStatus = 1;
+        private const int ListViewBatchSubItemIndexColumnVideoFileName = 2;
+        private const int ListViewBatchSubItemIndexColumnResolution = 3;
+        private const int ListViewBatchSubItemIndexColumnStatus = 4;
 
         private bool _abort;
         private readonly Subtitle _assaSubtitle;
@@ -38,8 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _promptFFmpegParameters;
         private readonly List<BatchItem> _batchItems;
         private bool _converting;
+        private readonly string _inputVideoFileName;
+        private bool _useVideoSourceResolution;
 
-        public GenerateTransparentVideoWithSubtitles(Subtitle subtitle, List<int> selectedLines, SubtitleFormat format, VideoInfo videoInfo)
+        public GenerateTransparentVideoWithSubtitles(Subtitle subtitle, List<int> selectedLines, SubtitleFormat format, string inputVideoFileName, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -47,9 +52,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             _videoInfo = videoInfo;
+            _inputVideoFileName = inputVideoFileName;
             _assaSubtitle = new Subtitle(subtitle);
             _selectedLines = selectedLines;
             _batchItems = new List<BatchItem>();
+            _useVideoSourceResolution = false;
 
             if (selectedLines.Count > 1)
             {
@@ -89,6 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSelectedLinesOnly.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesOnly;
             radioButtonSelectedLineAndForward.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesAndForward;
             nikseLabelBoxType.Text = LanguageSettings.Current.SubStationAlphaStyles.BoxType;
+            useSourceResolutionToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
 
             comboBoxOpaqueBoxStyle.Items.Clear();
             comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxPerLineShort);
@@ -330,6 +338,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (BatchMode)
             {
+                if (_useVideoSourceResolution)
+                {
+                    foreach (var batchItem in _batchItems)   
+                    {
+                        if (batchItem.Width <= 0 || batchItem.Height <= 0)
+                        {
+                            MessageBox.Show("Source resolution requires that all batch items has a video with resolution!" + Environment.NewLine +
+                                            "Check the list view context menu.");
+                            return;
+                        }
+                    }
+                }
+
                 for (var i = 0; i < listViewBatch.Items.Count; i++)
                 {
                     listViewBatch.Items[i].SubItems[1].Text = string.Empty;
@@ -349,7 +370,14 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewBatch.Items[index].EnsureVisible();
                     Refresh();
 
+                    if (_useVideoSourceResolution)
+                    {
+                        numericUpDownWidth.Value = batchItem.Width;
+                        numericUpDownHeight.Value = batchItem.Height;
+                    }
+
                     var batchSubtitle = Subtitle.Parse(batchItem.SubtitleFileName);
+                    CalculateTotalFrames(batchSubtitle);
                     if (ConvertVideo(oldFontSizeEnabled, batchSubtitle))
                     {
                         listViewBatch.Items[index].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = LanguageSettings.Current.BatchConvert.Converted;
@@ -574,6 +602,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CalculateTotalFrames(Subtitle subtitle)
         {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                _totalFrames = 0;
+                return;
+            }
+
             var seconds = subtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
             var frameRate = double.Parse(comboBoxFrameRate.Text, CultureInfo.InvariantCulture);
             _totalFrames = (long)Math.Round(seconds * frameRate, MidpointRounding.AwayFromZero) + 1;
@@ -818,6 +852,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResolutionPickClick(object sender, EventArgs e)
         {
+            _useVideoSourceResolution = false;
+
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownWidth.Visible = true;
             labelX.Text = "x";
@@ -992,31 +1028,96 @@ namespace Nikse.SubtitleEdit.Forms
             var ext = Path.GetExtension(subtitleFileName).ToLowerInvariant();
             if (SubtitleFormat.AllSubtitleFormats.Any(p => p.Extension == ext) && File.Exists(subtitleFileName))
             {
-                var batchVideoAndSub = CreateBatchItem(subtitleFileName);
-                var listViewItem = new ListViewItem(subtitleFileName) { Tag = batchVideoAndSub };
-                var s = Utilities.FormatBytesToDisplayFileSize(batchVideoAndSub.SubtitleFileFileSizeInBytes);
+                var batchItem = CreateBatchItem(subtitleFileName);
+                var listViewItem = new ListViewItem(subtitleFileName) { Tag = batchItem };
+                var s = Utilities.FormatBytesToDisplayFileSize(batchItem.SubtitleFileFileSizeInBytes);
                 listViewItem.SubItems.Add(s);
+                var videoText = Path.GetFileName(batchItem.VideoFileName);
+                var resolution = string.Empty;
+                if (!string.IsNullOrEmpty(videoText))
+                {
+                    resolution = $"{batchItem.Width}x{batchItem.Height}";
+                }
+                listViewItem.SubItems.Add(videoText);
+                listViewItem.SubItems.Add(resolution);
                 listViewItem.SubItems.Add(string.Empty); // status
                 listViewBatch.Items.Add(listViewItem);
-                _batchItems.Add(batchVideoAndSub);
+                _batchItems.Add(batchItem);
             }
         }
 
         private static BatchItem CreateBatchItem(string subtitleFileName)
         {
+            var fileNameOnlyNoExtension = Path.GetFileNameWithoutExtension(subtitleFileName);
+            var fileNameNoExtension = Path.Combine(Path.GetDirectoryName(subtitleFileName) ?? string.Empty, fileNameOnlyNoExtension);
+            var videoFileName = TryFindVideoFileName(fileNameNoExtension);
+            var width = 0;
+            var height = 0;
+
+            if (!string.IsNullOrEmpty(videoFileName))
+            {
+                var mediaInfo = FfmpegMediaInfo.Parse(videoFileName);
+                if (mediaInfo.Dimension.IsValid())
+                {
+                    width = mediaInfo.Dimension.Width;
+                    height = mediaInfo.Dimension.Height;
+                }
+            }
+
             var batchVideoAndSub = new BatchItem
             {
                 SubtitleFileName = subtitleFileName,
-                SubtitleFileFileSizeInBytes = new FileInfo(subtitleFileName).Length
+                SubtitleFileFileSizeInBytes = new FileInfo(subtitleFileName).Length,
+                VideoFileName = videoFileName,
+                Width = width,
+                Height = height,
             };
 
             return batchVideoAndSub;
+        }
+
+        private static string TryFindVideoFileName(string fileNameNoExtension)
+        {
+            if (string.IsNullOrEmpty(fileNameNoExtension))
+            {
+                return string.Empty;
+            }
+
+            foreach (var extension in Utilities.VideoFileExtensions.Concat(Utilities.AudioFileExtensions))
+            {
+                var fileName = fileNameNoExtension + extension;
+                if (File.Exists(fileName))
+                {
+                    var skipLoad = false;
+                    if (extension == ".m2ts" && new FileInfo(fileName).Length < 2000000)
+                    {
+                        var textSt = new TextST();
+                        skipLoad = textSt.IsMine(null, fileName); // don't load TextST files as video/audio file
+                    }
+
+                    if (!skipLoad)
+                    {
+                        return fileName;
+                    }
+                }
+            }
+
+            var index = fileNameNoExtension.LastIndexOf('.');
+            if (index > 0 && index > fileNameNoExtension.LastIndexOf(Path.DirectorySeparatorChar))
+            {
+                return TryFindVideoFileName(fileNameNoExtension.Remove(index));
+            }
+
+            return string.Empty;
         }
 
         public class BatchItem
         {
             public string SubtitleFileName { get; set; }
             public long SubtitleFileFileSizeInBytes { get; set; }
+            public string VideoFileName { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -1342,6 +1443,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCutFrom_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(_inputVideoFileName))
+            {
+                OpenCutFrom(_inputVideoFileName);
+                return;
+            }
+
             using (var openFileDialog1 = new OpenFileDialog())
             {
                 openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
@@ -1351,23 +1458,34 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.FileName = string.Empty;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    var videoInfo = UiUtil.GetVideoInfo(openFileDialog1.FileName);
-                    var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutFromMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
-                    using (var form = new GetVideoPosition(_assaSubtitle, openFileDialog1.FileName, videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetStartPosition))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            numericUpDownCutFromHours.Value = form.VideoPosition.Hours;
-                            numericUpDownCutFromMinutes.Value = form.VideoPosition.Minutes;
-                            numericUpDownCutFromSeconds.Value = form.VideoPosition.Seconds;
-                        }
-                    }
+                    OpenCutFrom(openFileDialog1.FileName);
+                }
+            }
+        }
+
+        private void OpenCutFrom(string fileName)
+        {
+            var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutFromMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
+            var videoInfo = UiUtil.GetVideoInfo(fileName);
+            using (var form = new GetVideoPosition(_assaSubtitle, fileName, videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetStartPosition))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    numericUpDownCutFromHours.Value = form.VideoPosition.Hours;
+                    numericUpDownCutFromMinutes.Value = form.VideoPosition.Minutes;
+                    numericUpDownCutFromSeconds.Value = form.VideoPosition.Seconds;
                 }
             }
         }
 
         private void buttonCutTo_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(_inputVideoFileName))
+            {
+                OpenCutTo(_inputVideoFileName);
+                return;
+            }
+
             using (var openFileDialog1 = new OpenFileDialog())
             {
                 openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
@@ -1377,17 +1495,22 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.FileName = string.Empty;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    var videoInfo = UiUtil.GetVideoInfo(openFileDialog1.FileName);
-                    var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutToMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
-                    using (var form = new GetVideoPosition(_assaSubtitle, openFileDialog1.FileName, videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetEndPosition))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            numericUpDownCutToHours.Value = form.VideoPosition.Hours;
-                            numericUpDownCutToMinutes.Value = form.VideoPosition.Minutes;
-                            numericUpDownCutToSeconds.Value = form.VideoPosition.Seconds;
-                        }
-                    }
+                    OpenCutTo(openFileDialog1.FileName);
+                }
+            }
+        }
+
+        private void OpenCutTo(string fileName)
+        {
+            var videoInfo = UiUtil.GetVideoInfo(fileName);
+            var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutToMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
+            using (var form = new GetVideoPosition(_assaSubtitle, fileName, videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetEndPosition))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    numericUpDownCutToHours.Value = form.VideoPosition.Hours;
+                    numericUpDownCutToMinutes.Value = form.VideoPosition.Minutes;
+                    numericUpDownCutToSeconds.Value = form.VideoPosition.Seconds;
                 }
             }
         }
@@ -1434,6 +1557,152 @@ namespace Nikse.SubtitleEdit.Forms
         private void panelShadowColor_Click(object sender, EventArgs e)
         {
             buttonColorShadow_Click(null, null);
+        }
+
+        private void useSourceResolutionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _useVideoSourceResolution = true;
+            numericUpDownWidth.Visible = false;
+            numericUpDownHeight.Visible = false;
+
+            labelX.Left = numericUpDownWidth.Left;
+            if (BatchMode)
+            {
+                labelX.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSource;
+
+                numericUpDownWidth.Value = 0;
+                numericUpDownHeight.Value = 0;
+            }
+            else
+            {
+                labelX.Text = $"{LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSource} ({_videoInfo.Width}x{_videoInfo.Height})";
+
+                numericUpDownWidth.Value = _videoInfo.Width;
+                numericUpDownHeight.Value = _videoInfo.Height;
+            }
+        }
+
+        private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            useSourceResolutionToolStripMenuItem.Visible =
+                BatchMode || (_videoInfo != null && !string.IsNullOrEmpty(_inputVideoFileName));
+
+        }
+
+        private void pickVideoFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFile;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
+                openFileDialog1.Multiselect = false;
+                if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var idx = listViewBatch.SelectedIndices[0];
+                var batchItem = _batchItems[idx];
+                batchItem.SubtitleFileName = openFileDialog1.FileName;
+                listViewBatch.Items[idx].SubItems[ListViewBatchSubItemIndexColumnVideoFileName].Text = Path.GetFileName(openFileDialog1.FileName);
+
+                var mediaInfo = FfmpegMediaInfo.Parse(openFileDialog1.FileName);
+                if (mediaInfo.Dimension.IsValid())
+                {
+                    batchItem.Width = mediaInfo.Dimension.Width;
+                    batchItem.Height = mediaInfo.Dimension.Height;
+                    listViewBatch.Items[idx].SubItems[ListViewBatchSubItemIndexColumnResolution].Text = $"{batchItem.Width}x{batchItem.Height}";
+                }
+            }
+        }
+
+        private void buttonCutFromText_Click(object sender, EventArgs e)
+        {
+            if (!BatchMode && _assaSubtitle.Paragraphs.Count > 0)
+            {
+                CutFromText(_assaSubtitle);
+                return;
+            }
+
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var subtitle = Subtitle.Parse(openFileDialog1.FileName);
+                    CutFromText(subtitle);
+                }
+            }
+        }
+
+        private void CutFromText(Subtitle subtitle)
+        {
+            using (var findSubtitle = new FindSubtitleLine())
+            {
+                var title = labelCutFrom.Text;
+                findSubtitle.Initialize(subtitle.Paragraphs, title);
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                {
+                    var p = subtitle.GetParagraphOrDefault(findSubtitle.SelectedIndex);
+                    if (p != null)
+                    {
+                        numericUpDownCutFromHours.Value = (decimal)p.StartTime.Hours;
+                        numericUpDownCutFromMinutes.Value = (decimal)p.StartTime.Minutes;
+                        numericUpDownCutFromSeconds.Value = (decimal)p.StartTime.Seconds;
+                    }
+                }
+            }
+        }
+
+        private void CutToText(Subtitle subtitle)
+        {
+            using (var findSubtitle = new FindSubtitleLine())
+            {
+                var title = labelCutTo.Text;
+                findSubtitle.Initialize(subtitle.Paragraphs, title);
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                {
+                    var p = subtitle.GetParagraphOrDefault(findSubtitle.SelectedIndex);
+                    if (p != null)
+                    {
+                        var endP = new Paragraph(p);
+                        endP.EndTime.TotalMilliseconds += 1000;
+                        numericUpDownCutToHours.Value = (decimal)endP.EndTime.Hours;
+                        numericUpDownCutToMinutes.Value = (decimal)endP.EndTime.Minutes;
+                        numericUpDownCutToSeconds.Value = (decimal)endP.EndTime.Seconds;
+                    }
+                }
+            }
+        }
+
+        private void buttonCutToText_Click(object sender, EventArgs e)
+        {
+            if (!BatchMode && _assaSubtitle.Paragraphs.Count > 0)
+            {
+                CutToText(_assaSubtitle);
+                return;
+            }
+
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var subtitle = Subtitle.Parse(openFileDialog1.FileName);
+                    CutToText(subtitle);
+                }
+            }
         }
     }
 }
