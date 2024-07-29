@@ -4066,6 +4066,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GenTransparentVideoNonAssaBoxPerLine = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenTransparentVideoExtension");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoExtension = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
             if (subNode != null)
             {
@@ -9276,6 +9282,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenTransparentVideoNonAssaBox", settings.Tools.GenTransparentVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenTransparentVideoNonAssaBoxPerLine", settings.Tools.GenTransparentVideoNonAssaBoxPerLine.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenTransparentVideoExtension", settings.Tools.GenTransparentVideoExtension);
                 textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
                 textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
                 textWriter.WriteElementString("GenVideoNonAssaShadowColor", ToHtml(settings.Tools.GenVideoNonAssaShadowColor));

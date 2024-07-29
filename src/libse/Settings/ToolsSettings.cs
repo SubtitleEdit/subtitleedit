@@ -389,6 +389,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool GenVideoNonAssaBox { get; set; }
         public bool GenTransparentVideoNonAssaBox { get; set; }
         public bool GenTransparentVideoNonAssaBoxPerLine { get; set; }
+        public string GenTransparentVideoExtension { get; set; }
         public Color GenVideoNonAssaBoxColor { get; set; }
         public Color GenVideoNonAssaTextColor { get; set; }
         public Color GenVideoNonAssaShadowColor { get; set; }
@@ -670,6 +671,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
             GenVideoOutputFileSuffix = "_new";
+            GenTransparentVideoExtension = ".mkv";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;

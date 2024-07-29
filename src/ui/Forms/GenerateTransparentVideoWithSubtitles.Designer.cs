@@ -128,6 +128,8 @@
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseLabelVideoExtension = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.nikseComboBoxVideoExtension = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.contextMenuStripBatch.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
@@ -1103,6 +1105,8 @@
             // 
             // groupBoxVideo
             // 
+            this.groupBoxVideo.Controls.Add(this.nikseLabelVideoExtension);
+            this.groupBoxVideo.Controls.Add(this.nikseComboBoxVideoExtension);
             this.groupBoxVideo.Controls.Add(this.labelFrameRate);
             this.groupBoxVideo.Controls.Add(this.comboBoxFrameRate);
             this.groupBoxVideo.Controls.Add(this.buttonVideoChooseStandardRes);
@@ -1139,7 +1143,7 @@
             this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxFrameRate.DropDownWidth = 200;
             this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(96, 46);
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(96, 47);
             this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.SelectedIndex = -1;
@@ -1417,6 +1421,39 @@
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 148;
             // 
+            // nikseLabelVideoExtension
+            // 
+            this.nikseLabelVideoExtension.AutoSize = true;
+            this.nikseLabelVideoExtension.Location = new System.Drawing.Point(185, 52);
+            this.nikseLabelVideoExtension.Name = "nikseLabelVideoExtension";
+            this.nikseLabelVideoExtension.Size = new System.Drawing.Size(82, 13);
+            this.nikseLabelVideoExtension.TabIndex = 34;
+            this.nikseLabelVideoExtension.Text = "Video extension";
+            // 
+            // nikseComboBoxVideoExtension
+            // 
+            this.nikseComboBoxVideoExtension.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxVideoExtension.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxVideoExtension.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxVideoExtension.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxVideoExtension.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxVideoExtension.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxVideoExtension.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxVideoExtension.DropDownHeight = 400;
+            this.nikseComboBoxVideoExtension.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.nikseComboBoxVideoExtension.DropDownWidth = 200;
+            this.nikseComboBoxVideoExtension.FormattingEnabled = true;
+            this.nikseComboBoxVideoExtension.Location = new System.Drawing.Point(268, 47);
+            this.nikseComboBoxVideoExtension.MaxLength = 32767;
+            this.nikseComboBoxVideoExtension.Name = "nikseComboBoxVideoExtension";
+            this.nikseComboBoxVideoExtension.SelectedIndex = -1;
+            this.nikseComboBoxVideoExtension.SelectedItem = null;
+            this.nikseComboBoxVideoExtension.SelectedText = "";
+            this.nikseComboBoxVideoExtension.Size = new System.Drawing.Size(64, 23);
+            this.nikseComboBoxVideoExtension.TabIndex = 35;
+            this.nikseComboBoxVideoExtension.TabStop = false;
+            this.nikseComboBoxVideoExtension.UsePopupWindow = false;
+            // 
             // GenerateTransparentVideoWithSubtitles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1560,5 +1597,7 @@
         private System.Windows.Forms.ToolStripMenuItem removeVideoFileToolStripMenuItem;
         private System.Windows.Forms.Button buttonCutToText;
         private System.Windows.Forms.Button buttonCutFromText;
+        private Controls.NikseLabel nikseLabelVideoExtension;
+        private Controls.NikseComboBox nikseComboBoxVideoExtension;
     }
 }
