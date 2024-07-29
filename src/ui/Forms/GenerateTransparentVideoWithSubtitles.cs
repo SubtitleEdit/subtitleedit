@@ -96,12 +96,18 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSelectedLineAndForward.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesAndForward;
             nikseLabelBoxType.Text = LanguageSettings.Current.SubStationAlphaStyles.BoxType;
             useSourceResolutionToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
+            nikseComboBoxVideoExtension.Text = LanguageSettings.Current.ExportCustomTextFormat.FileExtension;
 
             comboBoxOpaqueBoxStyle.Items.Clear();
             comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxPerLineShort);
             comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxMultiLineShort);
             comboBoxOpaqueBoxStyle.SelectedIndex = Configuration.Settings.Tools.GenTransparentVideoNonAssaBoxPerLine ? 0 : 1;
             comboBoxOpaqueBoxStyle.Enabled = false;
+
+            nikseComboBoxVideoExtension.Items.Clear();
+            nikseComboBoxVideoExtension.Items.Add(".mkv");
+            nikseComboBoxVideoExtension.Items.Add(".mp4");
+            nikseComboBoxVideoExtension.Text = Configuration.Settings.Tools.GenTransparentVideoExtension;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
@@ -126,6 +132,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
+            nikseLabelVideoExtension.Left = comboBoxFrameRate.Right + 9;
+            nikseComboBoxVideoExtension.Left = nikseLabelVideoExtension.Right + 3;
 
             checkBoxFontBold.Left = numericUpDownFontSize.Right + 12;
             checkBoxBox.Left = numericUpDownOutline.Right + 12;
@@ -337,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_useVideoSourceResolution)
                 {
-                    foreach (var batchItem in _batchItems)   
+                    foreach (var batchItem in _batchItems)
                     {
                         if (batchItem.Width <= 0 || batchItem.Height <= 0)
                         {
@@ -518,7 +526,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var nameNoExt = Path.GetFileNameWithoutExtension(batchItem.SubtitleFileName);
-            var ext = ".mp4"; //TODO: use setting form .mkv/.mp4/?
+
+            var ext = Configuration.Settings.Tools.GenTransparentVideoExtension;
+            if (string.IsNullOrEmpty(ext) || !ext.StartsWith("."))
+            {
+                ext = ".mkv";
+            }
 
             var outputFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}{ext}");
             return outputFileName;
@@ -914,6 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoNonAssaTextColor = panelForeColor.BackColor;
             Configuration.Settings.Tools.GenVideoNonAssaShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.GenTransparentVideoNonAssaBoxPerLine = comboBoxOpaqueBoxStyle.SelectedIndex == 0;
+            Configuration.Settings.Tools.GenTransparentVideoExtension = nikseComboBoxVideoExtension.Text;
         }
 
         private void radioButtonAllLines_CheckedChanged(object sender, EventArgs e)
