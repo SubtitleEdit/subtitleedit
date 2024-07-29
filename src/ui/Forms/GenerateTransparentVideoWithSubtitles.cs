@@ -107,6 +107,8 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxVideoExtension.Items.Clear();
             nikseComboBoxVideoExtension.Items.Add(".mkv");
             nikseComboBoxVideoExtension.Items.Add(".mp4");
+            nikseComboBoxVideoExtension.Items.Add(".webm");
+            nikseComboBoxVideoExtension.Items.Add(".mov");
             nikseComboBoxVideoExtension.Text = Configuration.Settings.Tools.GenTransparentVideoExtension;
 
             progressBar1.Visible = false;
