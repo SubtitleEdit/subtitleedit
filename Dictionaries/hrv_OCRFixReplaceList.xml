@@ -5587,6 +5587,7 @@
     <RegEx find="pulis" replaceWith="pulir" />
     <RegEx find="pva" replaceWith="ova" />
     <RegEx find="pzn" replaceWith="pozn" />
+    <RegEx find="refa" replaceWith="reda" />
     <RegEx find="rp([bd])" replaceWith="ro$1" />
     <RegEx find="rdk" replaceWith="rek" />
     <RegEx find="riaj" replaceWith="rija" />
@@ -5603,6 +5604,7 @@
     <RegEx find="roaj" replaceWith="rosj" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
+    <RegEx find="rpv" replaceWith="rov" />
     <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
     <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
