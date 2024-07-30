@@ -4039,6 +4039,7 @@
     <LinePart from="da li misliš" to="Misliš li" />
     <LinePart from="dali mogu" to="mogu li" />
     <LinePart from="dali možete" to="možete li" />
+    <LinePart from="Da li zna" to="Zna li" />
     <LinePart from="Da li želiš" to="Želiš li" />
     <LinePart from="da li želiš" to="želiš li" />
     <LinePart from="da spasim" to="spasiti" />
@@ -4098,6 +4099,7 @@
     <LinePart from="moglo da bude" to="moglo biti" />
     <LinePart from="moje saučešće" to="moja sućut" />
     <LinePart from="mogla da bude" to="mogla biti" />
+    <LinePart from="mogla da dođeš" to="mogla doći" />
     <LinePart from="mora da bude" to="mora biti" />
     <LinePart from="Moram da budem" to="Moram biti" />
     <LinePart from="moram da budem" to="moram biti" />
@@ -4143,6 +4145,7 @@
     <LinePart from="Moraš da znaš" to="Moraš znati" />
     <LinePart from="moraš da znaš" to="moraš znati" />
     <LinePart from="Morate da nam date" to="Morate nam dati" />
+    <LinePart from="Može da bude" to="Može biti" />
     <LinePart from="može da bude" to="može biti" />
     <LinePart from="Možeš da budeš" to="Možeš biti" />
     <LinePart from="možeš da budeš" to="možeš biti" />
@@ -4210,6 +4213,7 @@
     <LinePart from="tamo natrag" to="tamo iza" />
     <LinePart from="tamo je natrag" to="tamo je iza" />
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
+    <LinePart from="Treba da bude" to="Treba biti" />
     <LinePart from="treba da bude" to="treba biti" />
     <LinePart from="trebalo da ima" to="trebalo imati" />
     <LinePart from="trebalo da znači" to="trebalo značiti" />
@@ -5587,6 +5591,7 @@
     <RegEx find="pulis" replaceWith="pulir" />
     <RegEx find="pva" replaceWith="ova" />
     <RegEx find="pzn" replaceWith="pozn" />
+    <RegEx find="refa" replaceWith="reda" />
     <RegEx find="rp([bd])" replaceWith="ro$1" />
     <RegEx find="rdk" replaceWith="rek" />
     <RegEx find="riaj" replaceWith="rija" />
@@ -5603,6 +5608,7 @@
     <RegEx find="roaj" replaceWith="rosj" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
+    <RegEx find="rpv" replaceWith="rov" />
     <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
     <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
