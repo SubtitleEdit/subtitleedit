@@ -26,6 +26,7 @@
    * Fix crash in "Fix common errors" - thx Hardstylest
    * Fix for visual sync start/end time validation - thx improck
    * Fix display resolution in "Burn-in subs" batch - thx David
+   * Fix combo boxes popup in "Measurement converter" - thx Dehrimon
 
 
 4.0.7 (8th July 2024) 
