@@ -88,6 +88,7 @@
             this.comboBoxFrom.SelectedText = "";
             this.comboBoxFrom.Size = new System.Drawing.Size(132, 21);
             this.comboBoxFrom.TabIndex = 2;
+            this.comboBoxFrom.UsePopupWindow = true;
             this.comboBoxFrom.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrom_SelectedIndexChanged);
             // 
             // textBoxInput
@@ -149,6 +150,7 @@
             this.comboBoxTo.SelectedText = "";
             this.comboBoxTo.Size = new System.Drawing.Size(132, 21);
             this.comboBoxTo.TabIndex = 5;
+            this.comboBoxTo.UsePopupWindow = true;
             this.comboBoxTo.SelectedIndexChanged += new System.EventHandler(this.comboBoxTo_SelectedIndexChanged);
             // 
             // textBoxResult
