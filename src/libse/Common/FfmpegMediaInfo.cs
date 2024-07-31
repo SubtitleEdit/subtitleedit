@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             int.TryParse(parts[0], out var w) &&
                             int.TryParse(parts[1], out var h))
                         {
-                            info.Dimension = new Dimension(h, w); 
+                            info.Dimension = new Dimension(w, h); 
                         }
                     }
 
