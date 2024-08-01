@@ -35591,12 +35591,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetFastSubtitleHash()
         {
-            return _subtitle.GetFastHashCode(_fileName + GetCurrentEncoding().BodyName);
+            return _subtitle.GetFastHashCode(_fileName + UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).DisplayName);
         }
 
         private int GetFastSubtitleOriginalHash()
         {
-            return _subtitleOriginal.GetFastHashCode(_subtitleOriginalFileName + GetCurrentEncoding().BodyName);
+            return _subtitleOriginal.GetFastHashCode(_subtitleOriginalFileName + UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).DisplayName);
         }
 
         private void MergeSentencesToolStripMenuItemClick(object sender, EventArgs e)
