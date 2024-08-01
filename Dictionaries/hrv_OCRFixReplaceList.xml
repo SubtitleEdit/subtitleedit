@@ -1074,6 +1074,8 @@
     <Word from="lestvicama" to="ljestvicama" />
     <Word from="lestvicu" to="ljestvicu" />
     <Word from="letujem" to="ljetujem" />
+    <Word from="leža" to="leđa" />
+    <Word from="ležima" to="leđima" />
     <Word from="lijepše" to="ljepše" />
     <Word from="ljep" to="lijep" />
     <Word from="ljepa" to="lijepa" />
@@ -1102,6 +1104,7 @@
     <Word from="ljetnje" to="ljetne" />
     <Word from="litijum" to="litij" />   
     <Word from="litijumu" to="litiju" />
+    <Word from="lngo" to="nego" />
     <Word from="luđaču" to="luđakinju" />
     <!-- m -->
     <Word from="mada" to="iako" />
@@ -1178,6 +1181,8 @@
     <Word from="Mislo" to="Mislio" />
     <Word from="misiliš" to="misliš" />
     <Word from="mje" to="moje" />
+    <Word from="mlaže" to="mlađe" />
+    <Word from="mlažeg" to="mlađeg" />
     <Word from="mleo" to="mljeo" />
     <Word from="Mođe" to="Može" />
     <Word from="mođe" to="može" />
@@ -1415,6 +1420,7 @@
     <Word from="obezbediću" to="osigurat ću" />
     <Word from="Obezbeđuju" to="Osiguravaju" />
     <Word from="obezbeđuju" to="osiguravaju" />
+    <Word from="obićno" to="obično" />
     <Word from="objekat" to="objekt" />
     <!-- oblasnog ||okružnog ali i područnog... hmmm (?) -->
     <Word from="oblasnog" to="okružnog" />
@@ -1629,6 +1635,7 @@
     <Word from="Patiće" to="Patit će" />
     <Word from="patiću" to="patit ću" />
     <Word from="pd" to="od" />
+    <Word from="pdau" to="padu" />
     <Word from="pečurke" to="gljive" />
     <Word from="pečurki" to="gljiva" />
     <Word from="pečurku" to="gljivu" />
@@ -2137,6 +2144,7 @@
     <Word from="ređe" to="rjeđe" />
     <Word from="ređi" to="rjeđi" />
     <Word from="rei" to="reći" />
+    <Word from="rele" to="reče" />
     <Word from="rejv" to="rave" />
     <Word from="rejvu" to="raveu" />
     <Word from="reko" to="rekao" />
@@ -2275,6 +2283,7 @@
     <Word from="sirće" to="ocat" />
     <Word from="sirćeta" to="octa" />
     <Word from="sirćetu" to="octu" />
+    <Word from="sitgli" to="stigli" />
     <Word from="sječaš" to="sjećaš" />
     <Word from="Sječaš" to="Sjećaš" />
     <Word from="sješću" to="sjest ću" />
@@ -2494,6 +2503,7 @@
     <Word from="stim" to="s tim" />
     <Word from="stojati" to="stajati" />
     <Word from="stovri" to="stvori" />
+    <Word from="stracu" to="starcu" />
     <Word from="streljamo" to="strijeljamo" />
     <Word from="streljati" to="strijeljati" />
     <Word from="strpaću" to="strpat ću" />
@@ -2574,6 +2584,7 @@
     <Word from="svežu" to="svježu" />
     <Word from="svida" to="sviđa" />
     <Word from="svidja" to="sviđa" />
+    <Word from="sviejt" to="svijet" />
     <Word from="sviji" to="svoji" />
     <Word from="sviša" to="sviđa" />
     <Word from="svjest" to="svijest" />
@@ -3138,6 +3149,7 @@
     <Word from="zvući" to="zvuči" />
 
     <!--z-->
+    <Word from="žeš" to="ćeš" />
     <Word from="žabcem" to="žapcem" />
     <Word from="žalis" to="žališ" />
     <Word from="ždrao" to="žderao" />
@@ -3152,6 +3164,7 @@
     <Word from="Živjećemo" to="Živjet ćemo" />
     <Word from="žmureo" to="žmirio" />
     <Word from="žvaće" to="žvače" />
+    <Word from="žviota" to="života" />
     <!-- imena -->
     <Word from="Abi" to="Abby" />
     <Word from="Alis" to="Alice" />
@@ -4340,6 +4353,7 @@
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find="(?&lt;!\A|[.!?][&quot;”’]?\s+)\bBoži[čć]n([aeiou]|om|im)\b" replaceWith="božićn$1" />
     <RegEx find="branb" replaceWith="bramb" />
+    <RegEx find="bsn" replaceWith="ban" />
     <RegEx find="bsor" replaceWith="psor" />
     <RegEx find="[bB]ubašvab" replaceWith="žohar" />
     <RegEx find="bukval" replaceWith="doslov" />
@@ -5561,6 +5575,7 @@
     <RegEx find="pišačk" replaceWith="pišalin" />
     <RegEx find="plst" replaceWith="plat" />
     <RegEx find="pnd" replaceWith="ond" />
+    <RegEx find="pnov" replaceWith="ponov" />
     <RegEx find="ponzoriše" replaceWith="ponzorira" />
     <RegEx find="ponzorišu" replaceWith="ponzoriraju" />
     <RegEx find="pord" replaceWith="prod" />
