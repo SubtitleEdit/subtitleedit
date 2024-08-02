@@ -16805,6 +16805,8 @@ namespace Nikse.SubtitleEdit.Forms
             timerWaveform.Stop();
 
             _showEarlierOrLater = new ShowEarlierLater();
+            _showEarlierOrLater.AllowSelection += ShowEarlierOrLaterAllowSelection;
+
             if (!_showEarlierOrLater.IsPositionAndSizeSaved)
             {
                 _showEarlierOrLater.Top = Top + 100;
@@ -16818,6 +16820,11 @@ namespace Nikse.SubtitleEdit.Forms
             timerWaveform.Enabled = waveformEnabled;
 
             RefreshSelectedParagraph();
+        }
+
+        private void ShowEarlierOrLaterAllowSelection(object sender, ShowEarlierLater.ViewStatus viewStatus)
+        {
+            viewStatus.AllowSelection = InListView;
         }
 
         internal void MainKeyDown(object sender, KeyEventArgs e)
@@ -25491,6 +25498,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _showEarlierOrLater = new ShowEarlierLater();
+            _showEarlierOrLater.AllowSelection += ShowEarlierOrLaterAllowSelection;
+
             if (!_showEarlierOrLater.IsPositionAndSizeSaved)
             {
                 _showEarlierOrLater.Top = Top + 100;
