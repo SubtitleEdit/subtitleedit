@@ -167,12 +167,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
                     if (!string.IsNullOrEmpty(location))
                     {
-                        if (location.EndsWith(GetExecutableFileName(whisperChoice), StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                        if (location.EndsWith(GetExecutableFileNameNoPath(whisperChoice), StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
                         {
                             return Path.GetDirectoryName(location);
                         }
 
-                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, GetExecutableFileName(whisperChoice))))
+                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, GetExecutableFileNameNoPath(whisperChoice))))
                         {
                             return location;
                         }
@@ -347,6 +347,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return "whisper";
             }
 
+            return GetExecutableFileNameNoPath(whisperChoice);
+        }
+
+        private static string GetExecutableFileNameNoPath(string whisperChoice)
+        {
             if (Configuration.IsRunningOnWindows)
             {
                 if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
