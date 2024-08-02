@@ -8,8 +8,14 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ShowEarlierLater : PositionAndSizeForm
     {
-        public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
+        public class ViewStatus
+        {
+            public bool AllowSelection { get; set; }
+        }
 
+        public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
+        public delegate void AllowSelectionHandler(object sender, ViewStatus viewStatus);
+        public event AllowSelectionHandler AllowSelection;
         private TimeSpan _totalAdjustment;
         private AdjustEventHandler _adjustCallback;
 
@@ -42,6 +48,8 @@ namespace Nikse.SubtitleEdit.Forms
                     });
                 }
             };
+
+            timerRefreshAllowSelection.Start();
         }
 
         public void ResetTotalAdjustment()
@@ -147,7 +155,30 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timerRefreshAllowSelection.Stop();
             Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
+        }
+
+        private void timerRefreshAllowSelection_Tick(object sender, EventArgs e)
+        {
+            if (AllowSelection != null)
+            {
+                var viewStatus = new ViewStatus { AllowSelection = radioButtonAllLines.Enabled };
+                AllowSelection.Invoke(this, viewStatus);
+                if (viewStatus.AllowSelection)
+                {
+                    radioButtonSelectedLinesOnly.Enabled = true;
+                    radioButtonSelectedLineAndForward.Enabled = true;
+                    radioButtonAllLines.Enabled = true;
+                }
+                else
+                {
+                    radioButtonSelectedLinesOnly.Enabled = false;
+                    radioButtonSelectedLineAndForward.Enabled = false;
+                    radioButtonAllLines.Enabled = false;
+                    radioButtonAllLines.Checked = true;
+                }
+            }
         }
     }
 }
