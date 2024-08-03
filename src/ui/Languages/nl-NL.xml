@@ -208,7 +208,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <OpenModelsFolder>Map met modellen openen</OpenModelsFolder>
     <LoadingVoskModel>Vosk-spraakherkenningsmodel laden...</LoadingVoskModel>
     <Transcribing>Audio omzetten naar tekst...</Transcribing>
-    <TranscribingXOfY>Audio omzetten naar tekst – bestand {0} van {1]...</TranscribingXOfY>
+    <TranscribingXOfY>Audio omzetten naar tekst – bestand {0} van {1}...</TranscribingXOfY>
     <PostProcessing>Nabewerking uitvoeren...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} bestanden opgeslagen in videobronmap</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Nabewerking inschakelen (samenvoegen, hoofdlettergebruik corrigeren, interpunctie en meer)</UsePostProcessing>
