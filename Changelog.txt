@@ -29,6 +29,7 @@
    * Fix display resolution in "Burn-in subs" batch - thx David
    * Fix combo boxes popup in "Measurement converter" - thx Dehrimon
    * Detect change switching between UTF-8-no-bom/UTF-8-with-bom - thx Minherre
+   * Fix crash in Whisper UI (bug in Dutch translation) - thx hpcs444/tsg040
 
 
 4.0.7 (8th July 2024) 
