@@ -88,7 +88,7 @@
             this.comboBoxModels.SelectedIndex = -1;
             this.comboBoxModels.SelectedItem = null;
             this.comboBoxModels.SelectedText = "";
-            this.comboBoxModels.Size = new System.Drawing.Size(237, 21);
+            this.comboBoxModels.Size = new System.Drawing.Size(237, 23);
             this.comboBoxModels.TabIndex = 0;
             this.comboBoxModels.UsePopupWindow = false;
             // 
