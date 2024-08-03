@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -248,8 +249,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private bool TryAdd(string name)
         {
-            var collection = name.Contains(" ") ? _namesMultiList : _namesList;
-            return collection.Add(name);
+            return GetCollectionFromName(name).Add(name);
         }
 
         private static XmlDocument CreateDocument(string fileName)
@@ -274,6 +274,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
+            // todo:
             var text = input.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
 
@@ -303,24 +304,30 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public bool ContainsCaseInsensitive(string name, out string newName)
+        public bool Contains(string name) => Contains(name, StringComparison.Ordinal);
+        
+        public bool Contains(string name, StringComparison comparison)
         {
-            newName = null;
+            return GetCollectionFromName(name).Any(n => name.Equals(n, comparison));
+        }
+
+        /// <summary>
+        /// Returns the dictionary name of a given name (case-insensitive).
+        /// </summary>
+        public string GetDictionaryName(string name)
+        {
+            return GetCollectionFromName(name).FirstOrDefault(n => n.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private readonly ISet<string> _emptySet = new HashSet<string>();
+        private ISet<string> GetCollectionFromName(string name)
+        {
             if (string.IsNullOrEmpty(name))
             {
-                return false;
+                return _emptySet;
             }
 
-            foreach (var n in name.IndexOf(' ') >= 0 ? _namesMultiList : _namesList)
-            {
-                if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
-                {
-                    newName = n;
-                    return true;
-                }
-            }
-
-            return false;
+            return name.IndexOf(' ') >= 0 ? _namesMultiList : _namesList;
         }
 
         public static async Task<NameList> CreateAsync(string dictionaryFolder, string languageName, bool useOnlineNameList, string namesUrl)

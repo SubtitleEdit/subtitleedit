@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var s = line.Substring(lastIndexOfPeriod, indexOfColon - lastIndexOfPeriod);
                 s = s.Trim('.', '-', ' ', '!', '?', '"', '\'');
-                if (IsHIDescription(s) || Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(s, out var _))
+                if (IsHIDescription(s) || Settings.NameList != null && Settings.NameList.Contains(s, StringComparison.OrdinalIgnoreCase))
                 {
                     var partialRemove = false;
                     if (Settings.RemoveTextBeforeColonOnlyUppercase)
