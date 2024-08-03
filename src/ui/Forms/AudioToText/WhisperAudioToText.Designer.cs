@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonDownload
             // 
             this.buttonDownload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownload.Location = new System.Drawing.Point(526, 42);
+            this.buttonDownload.Location = new System.Drawing.Point(526, 44);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(28, 23);
             this.buttonDownload.TabIndex = 2;
