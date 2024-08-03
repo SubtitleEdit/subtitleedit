@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // labelChooseLanguage
             // 
             this.labelChooseLanguage.AutoSize = true;
-            this.labelChooseLanguage.Location = new System.Drawing.Point(3, 28);
+            this.labelChooseLanguage.Location = new System.Drawing.Point(3, 27);
             this.labelChooseLanguage.Name = "labelChooseLanguage";
             this.labelChooseLanguage.Size = new System.Drawing.Size(90, 13);
             this.labelChooseLanguage.TabIndex = 4;
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // labelModel
             // 
             this.labelModel.AutoSize = true;
-            this.labelModel.Location = new System.Drawing.Point(277, 28);
+            this.labelModel.Location = new System.Drawing.Point(277, 27);
             this.labelModel.Name = "labelModel";
             this.labelModel.Size = new System.Drawing.Size(167, 13);
             this.labelModel.TabIndex = 0;
