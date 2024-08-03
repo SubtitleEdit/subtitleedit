@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedIndex = -1;
             this.comboBoxWhisperExtra.SelectedItem = null;
             this.comboBoxWhisperExtra.SelectedText = "";
-            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
+            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 23);
             this.comboBoxWhisperExtra.TabIndex = 0;
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;

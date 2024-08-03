@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxLanguages.SelectedIndex = -1;
             this.comboBoxLanguages.SelectedItem = null;
             this.comboBoxLanguages.SelectedText = "";
-            this.comboBoxLanguages.Size = new System.Drawing.Size(194, 21);
+            this.comboBoxLanguages.Size = new System.Drawing.Size(194, 23);
             this.comboBoxLanguages.TabIndex = 7;
             this.comboBoxLanguages.UsePopupWindow = false;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxModels.SelectedIndex = -1;
             this.comboBoxModels.SelectedItem = null;
             this.comboBoxModels.SelectedText = "";
-            this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
+            this.comboBoxModels.Size = new System.Drawing.Size(240, 23);
             this.comboBoxModels.TabIndex = 0;
             this.comboBoxModels.UsePopupWindow = false;
             // 
@@ -352,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             this.labelEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelEngine.AutoSize = true;
-            this.labelEngine.Location = new System.Drawing.Point(497, 9);
+            this.labelEngine.Location = new System.Drawing.Point(478, 11);
             this.labelEngine.Name = "labelEngine";
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 29;
@@ -370,15 +370,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxWhisperEngine.DropDownHeight = 400;
             this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxWhisperEngine.DropDownWidth = 154;
+            this.comboBoxWhisperEngine.DropDownWidth = 0;
             this.comboBoxWhisperEngine.FormattingEnabled = false;
-            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(543, 6);
+            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(524, 6);
             this.comboBoxWhisperEngine.MaxLength = 32767;
             this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
             this.comboBoxWhisperEngine.SelectedIndex = -1;
             this.comboBoxWhisperEngine.SelectedItem = null;
             this.comboBoxWhisperEngine.SelectedText = "";
-            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(173, 23);
             this.comboBoxWhisperEngine.TabIndex = 28;
             this.comboBoxWhisperEngine.UsePopupWindow = false;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
