@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return ReadFirstMultiTag(s, new[]
             {
                 "duration",
+                "durationMs",
                 "dur",
             });
         }
