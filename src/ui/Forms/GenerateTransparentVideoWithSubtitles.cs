@@ -1657,7 +1657,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var findSubtitle = new FindSubtitleLine())
             {
-                var title = labelCutFrom.Text;
+                var title = $" \"{labelCutFrom.Text}\"";
                 findSubtitle.Initialize(subtitle.Paragraphs, title);
                 findSubtitle.ShowDialog();
                 if (findSubtitle.SelectedIndex >= 0)
@@ -1665,9 +1665,9 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = subtitle.GetParagraphOrDefault(findSubtitle.SelectedIndex);
                     if (p != null)
                     {
-                        numericUpDownCutFromHours.Value = (decimal)p.StartTime.Hours;
-                        numericUpDownCutFromMinutes.Value = (decimal)p.StartTime.Minutes;
-                        numericUpDownCutFromSeconds.Value = (decimal)p.StartTime.Seconds;
+                        numericUpDownCutFromHours.Value = p.StartTime.Hours;
+                        numericUpDownCutFromMinutes.Value = p.StartTime.Minutes;
+                        numericUpDownCutFromSeconds.Value = p.StartTime.Seconds;
                     }
                 }
             }
@@ -1677,7 +1677,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var findSubtitle = new FindSubtitleLine())
             {
-                var title = labelCutTo.Text;
+                var title = $" \"{labelCutTo.Text}\"";
                 findSubtitle.Initialize(subtitle.Paragraphs, title);
                 findSubtitle.ShowDialog();
                 if (findSubtitle.SelectedIndex >= 0)
@@ -1687,9 +1687,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var endP = new Paragraph(p);
                         endP.EndTime.TotalMilliseconds += 1000;
-                        numericUpDownCutToHours.Value = (decimal)endP.EndTime.Hours;
-                        numericUpDownCutToMinutes.Value = (decimal)endP.EndTime.Minutes;
-                        numericUpDownCutToSeconds.Value = (decimal)endP.EndTime.Seconds;
+                        numericUpDownCutToHours.Value = endP.EndTime.Hours;
+                        numericUpDownCutToMinutes.Value = endP.EndTime.Minutes;
+                        numericUpDownCutToSeconds.Value = endP.EndTime.Seconds;
                     }
                 }
             }
