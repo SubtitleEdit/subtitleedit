@@ -381,6 +381,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // comboBoxWhisperExtra
             // 
+            this.comboBoxWhisperExtra.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxWhisperExtra.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxWhisperExtra.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.comboBoxWhisperExtra.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
@@ -398,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedIndex = -1;
             this.comboBoxWhisperExtra.SelectedItem = null;
             this.comboBoxWhisperExtra.SelectedText = "";
-            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 23);
+            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(838, 23);
             this.comboBoxWhisperExtra.TabIndex = 0;
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;
