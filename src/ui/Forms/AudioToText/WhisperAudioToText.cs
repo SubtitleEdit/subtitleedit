@@ -1706,7 +1706,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_batchMode)
             {
                 groupBoxInputFiles.Enabled = true;
-                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 450;
+                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 470;
                 listViewInputFiles.Visible = true;
                 buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
                 MinimumSize = new Size(MinimumSize.Width, Height - 75);
@@ -1717,7 +1717,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 groupBoxInputFiles.Enabled = false;
-                var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 70;
+                var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 110;
                 MinimumSize = new Size(MinimumSize.Width, h - 10);
                 Height = h;
                 Width = _initialWidth;
@@ -2450,12 +2450,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void SetAdvancedLabel()
         {
-            labelAdvanced.Left = buttonAdvanced.Left;
             labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
-            if (labelAdvanced.Right > buttonAdvanced.Right + 5)
+            if (labelAdvanced.Right > Width && labelProgress.Font.Size == labelAdvanced.Font.Size)
             {
-                labelAdvanced.Left = buttonAdvanced.Right + 5 - labelAdvanced.Width;
+                labelAdvanced.Font = new Font(labelAdvanced.Font.FontFamily, labelAdvanced.Font.Size - 1);
             }
         }
 
