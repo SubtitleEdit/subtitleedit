@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var displayTime = p.DurationTotalMilliseconds;
+                var displayTime = p.Duration.Milliseconds;
                 if (displayTime < _minDurationMs)
                 {
                     var next = subtitle.GetParagraphOrDefault(i + 1);
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var displayTime = p.DurationTotalMilliseconds;
+                var displayTime = p.Duration.Milliseconds;
                 if (displayTime > _maxDurationMs)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _maxDurationMs;

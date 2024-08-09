@@ -16,16 +16,16 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
                 if (controller.Language == "ja")
                 {
-                    if (p.DurationTotalMilliseconds < 500)
+                    if (p.Duration.Milliseconds < 500)
                     {
                         string comment = "Minimum duration: 0.5 second";
-                        controller.AddRecord(p, p.StartTime.ToHHMMSSFF(),  p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture), comment);
+                        controller.AddRecord(p, p.StartTime.ToHHMMSSFF(),  p.Duration.Seconds.ToString(CultureInfo.InvariantCulture), comment);
                     }
                     continue;
                 }
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
-                if (p.DurationTotalMilliseconds < 833 && !p.StartTime.IsMaxTime)
+                if (p.Duration.Milliseconds < 833 && !p.StartTime.IsMaxTime)
                 {
                     Paragraph fixedParagraph = null;
                     if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + 834)

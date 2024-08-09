@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var msFound = 0;
             foreach (var p in subtitle.Paragraphs)
             {
-                totalDuration += p.DurationTotalMilliseconds;
+                totalDuration += p.Duration.Milliseconds;
                 if (p.Style.Contains("\"start\"") ||
                     p.Style.Contains("\"startMs\"") ||
                     p.Style.Contains("\"start_ms\"") ||

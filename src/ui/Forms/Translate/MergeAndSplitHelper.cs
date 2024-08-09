@@ -536,9 +536,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var pctCharArr = GetTwoPartsByPct(text, pctCharLength1, pctCharLength2);
 
                     // test using duration for percentage
-                    var totalDurationLength = item.Paragraphs[0].DurationTotalMilliseconds + item.Paragraphs[1].DurationTotalMilliseconds + 1;
-                    var pctDurationLength1 = item.Paragraphs[0].DurationTotalMilliseconds * 100.0 / totalDurationLength;
-                    var pctDurationLength2 = item.Paragraphs[1].DurationTotalMilliseconds * 100.0 / totalDurationLength;
+                    var totalDurationLength = item.Paragraphs[0].Duration.Milliseconds + item.Paragraphs[1].Duration.Milliseconds + 1;
+                    var pctDurationLength1 = item.Paragraphs[0].Duration.Milliseconds * 100.0 / totalDurationLength;
+                    var pctDurationLength2 = item.Paragraphs[1].Duration.Milliseconds * 100.0 / totalDurationLength;
                     var pctDurationArr = GetTwoPartsByPct(text, pctDurationLength1, pctDurationLength2);
 
 

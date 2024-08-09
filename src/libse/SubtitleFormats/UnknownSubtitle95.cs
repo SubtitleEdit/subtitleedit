@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                sb.AppendLine(string.Format(writeFormat, index + 1, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF(), p.Duration.ToHHMMSSPeriodFF(), Environment.NewLine, p.Text));
+                sb.AppendLine(string.Format(writeFormat, index + 1, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF(), p.Duration.ToTimeCode().ToHHMMSSPeriodFF(), Environment.NewLine, p.Text));
             }
 
             return sb.ToString().Trim();

@@ -22,11 +22,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\r");
+                var dur = p.Duration.ToTimeCode();
                 sb.AppendLine(string.Format(writeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds,
-                                            p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds,
-                                            p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, p.Duration.Milliseconds,
-                                            text));
+                    p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds,
+                    dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds,
+                    text));
             }
+
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
         }
 

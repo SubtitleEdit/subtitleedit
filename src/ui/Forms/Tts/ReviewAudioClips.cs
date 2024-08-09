@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             var idx = listViewAudioClips.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
-            labelParagraphInfo.Text = p.StartTime.ToDisplayString() + " --> " + p.EndTime.ToDisplayString() + " : " + p.Duration.ToShortDisplayString();
+            labelParagraphInfo.Text = p.StartTime.ToDisplayString() + " --> " + p.EndTime.ToDisplayString() + " : " + p.Duration.ToTimeCode().ToShortDisplayString();
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)

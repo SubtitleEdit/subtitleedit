@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class TextDraw
     {
-
         public static double GetFontSize(double fontSize)
         {
             return fontSize * 0.895d; // font rendered in video players like vlc/mpv are a little smaller than .net, so we adjust font size a bit down

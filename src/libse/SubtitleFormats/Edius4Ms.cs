@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 marker.AppendChild(position);
 
                 XmlNode duration = xml.CreateElement("edius", "duration", "http://www.grassvalley.com/ns/edius/markerListInfo");
-                duration.InnerText = EncodeTimeCode(p.Duration);
+                duration.InnerText = EncodeTimeCode(p.Duration.ToTimeCode());
                 marker.AppendChild(duration);
 
                 XmlNode comment = xml.CreateElement("edius", "comment", "http://www.grassvalley.com/ns/edius/markerListInfo");

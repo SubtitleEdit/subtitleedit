@@ -13,9 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public TimeCode EndTime { get; set; }
 
-        public TimeCode Duration => new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
-        public double DurationTotalMilliseconds => EndTime.TotalMilliseconds - StartTime.TotalMilliseconds;
-        public double DurationTotalSeconds => (EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
+        public Duration Duration => new Duration(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
 
         public bool Forced { get; set; }
 
@@ -121,38 +119,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 0;
                 }
 
-                return 60.0 / DurationTotalSeconds * Text.CountWords();
+                return 60.0 / Duration.Seconds * Text.CountWords();
             }
         }
 
         public double GetCharactersPerSecond()
         {
-            if (DurationTotalMilliseconds < 1)
+            if (Duration.Milliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)Text.CountCharacters(true) / DurationTotalSeconds;
+            return (double)Text.CountCharacters(true) / Duration.Seconds;
         }
 
         public double GetCharactersPerSecond(double numberOfCharacters)
         {
-            if (DurationTotalMilliseconds < 1)
+            if (Duration.Milliseconds < 1)
             {
                 return 999;
             }
 
-            return numberOfCharacters / DurationTotalSeconds;
+            return numberOfCharacters / Duration.Seconds;
         }
 
         public double GetCharactersPerSecond(ICalcLength calc)
         {
-            if (DurationTotalMilliseconds < 1)
+            if (Duration.Milliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)calc.CountCharacters(Text, true) / DurationTotalSeconds;
+            return (double)calc.CountCharacters(Text, true) / Duration.Seconds;
         }
     }
 }
