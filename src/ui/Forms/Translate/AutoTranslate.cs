@@ -866,7 +866,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         }
 
                         var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode, _cancellationTokenSource.Token);
-                        Application.DoEvents();
 
                         if (_breakTranslation)
                         {

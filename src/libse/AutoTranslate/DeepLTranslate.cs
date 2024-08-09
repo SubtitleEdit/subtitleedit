@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new TranslationPair(name, code, hasFormality);
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var postContent = new FormUrlEncodedContent(new[]
             {
@@ -137,8 +137,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
                 new KeyValuePair<string, string>("formality", _formality),
             });
-            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-            var resultContent = result.Content.ReadAsStringAsync().Result;
+            var result = await _client.PostAsync("/v2/translate", postContent, cancellationToken).ConfigureAwait(false);
+            var resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 }
             }
 
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+            return string.Join(Environment.NewLine, resultList);
         }
     }
 }

@@ -53,8 +53,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             SeLogger.Error("GeminiTranslate calling with: " + input);
 
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
+            var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {

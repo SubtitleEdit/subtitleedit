@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             string jsonResultString;
 
@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
-                var result = _httpClient.GetAsync(url).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                var result = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+                var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                 jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
 
                 if (!result.IsSuccessStatusCode)
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             var resultList = ConvertJsonObjectToStringLines(jsonResultString);
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+            return string.Join(Environment.NewLine, resultList);
         }
 
         public static List<TranslationPair> GetTranslationPairs()

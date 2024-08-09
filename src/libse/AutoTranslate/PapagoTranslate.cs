@@ -48,8 +48,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{\"text\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await _httpClient.PostAsync("translation", content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var result = await _httpClient.PostAsync("translation", content, cancellationToken).ConfigureAwait(false);
+            var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {

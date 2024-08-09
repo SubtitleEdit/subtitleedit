@@ -39,21 +39,21 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new NoLanguageLeftBehindServe().GetSupportedTargetLanguages();
         }
-
+        
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            var result = _httpClient.PostAsync("translate", content).Result;
+            var result = await _httpClient.PostAsync("translate", content).ConfigureAwait(false);
             result.EnsureSuccessStatusCode();
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             var resultText = Encoding.UTF8.GetString(bytes).Trim();
-
+            
             // error messages are returned as json, translated text are just returned as normal utf-8 text
             var validator = new SeJsonValidator();
             var isValidJson = validator.ValidateJson(resultText);
             if (isValidJson)
             {
-                SeLogger.Error($"{this.GetType().Name} got json back which is probably an error: {resultText}");
+                SeLogger.Error($"{GetType().Name} got json back which is probably an error: {resultText}");
             }
 
             return resultText;
