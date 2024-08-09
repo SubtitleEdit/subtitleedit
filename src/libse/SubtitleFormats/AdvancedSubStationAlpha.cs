@@ -495,7 +495,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             break;
                     }
 
-                    ttStyles.Append("Style: ").Append(ssaStyle.Name).Append(',').Append(ssaStyle.FontName).Append(',').Append(ssaStyle.FontSize).Append(',').Append(GetSsaColorString(ssaStyle.Primary)).Append(',').Append(GetSsaColorString(ssaStyle.Secondary)).Append(',').Append(GetSsaColorString(ssaStyle.Outline)).Append(',').Append(GetSsaColorString(ssaStyle.Background)).Append(',').Append(bold).Append(',').Append(italic).Append(',').Append(underline).Append(",0,").Append(scaleX).Append(',').Append(scaleY).Append(',').Append(spacing).Append(',').Append(angle).Append(',').Append(ssaStyle.BorderStyle).Append(',').Append(ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(newAlignment).Append(',').Append(ssaStyle.MarginLeft).Append(',').Append(ssaStyle.MarginRight).Append(',').Append(ssaStyle.MarginVertical).AppendLine(",1");
+                    ttStyles.Append("Style: ").Append(ssaStyle.Name).Append(',').Append(ssaStyle.FontName).Append(',').Append(ssaStyle.FontSize.ToString("0.#", CultureInfo.InvariantCulture)).Append(',').Append(GetSsaColorString(ssaStyle.Primary)).Append(',').Append(GetSsaColorString(ssaStyle.Secondary)).Append(',').Append(GetSsaColorString(ssaStyle.Outline)).Append(',').Append(GetSsaColorString(ssaStyle.Background)).Append(',').Append(bold).Append(',').Append(italic).Append(',').Append(underline).Append(",0,").Append(scaleX).Append(',').Append(scaleY).Append(',').Append(spacing).Append(',').Append(angle).Append(',').Append(ssaStyle.BorderStyle).Append(',').Append(ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(newAlignment).Append(',').Append(ssaStyle.MarginLeft).Append(',').Append(ssaStyle.MarginRight).Append(',').Append(ssaStyle.MarginVertical).AppendLine(",1");
                 }
                 catch
                 {
@@ -598,7 +598,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
 
                         const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,{4},{5},0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-                        ttStyles.AppendFormat(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic).AppendLine();
+                        ttStyles.AppendFormat(styleFormat, name, fontFamily, fSize.ToString("0.#", CultureInfo.InvariantCulture) , GetSsaColorString(c), bold, italic).AppendLine();
                         styleNames.Add(name);
                     }
                 }
@@ -729,7 +729,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
 
                         const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,{4},{5},0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-                        ttStyles.AppendFormat(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic).AppendLine();
+                        ttStyles.AppendFormat(styleFormat, name, fontFamily, fSize.ToString("0.#", CultureInfo.InvariantCulture), GetSsaColorString(c), bold, italic).AppendLine();
                         styleNames.Add(name);
                     }
                 }
@@ -1136,7 +1136,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + ">" + unknownTags);
                             }
 
-                            int indexOfEndTag = text.IndexOf("{\\fn}", start, StringComparison.Ordinal);
+                            var indexOfEndTag = text.IndexOf("{\\fn}", start, StringComparison.Ordinal);
                             if (indexOfEndTag > 0)
                             {
                                 text = text.Remove(indexOfEndTag, "{\\fn}".Length).Insert(indexOfEndTag, "</font>");
@@ -1182,15 +1182,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                     text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + ">" + unknownTags);
                                 }
 
-                                int indexOfEndTag = text.IndexOf("{\\fs}", start, StringComparison.Ordinal);
+                                var indexOfEndTag = text.IndexOf("{\\fs}", start, StringComparison.Ordinal);
                                 if (indexOfEndTag > 0)
                                 {
                                     text = text.Remove(indexOfEndTag, "{\\fs}".Length).Insert(indexOfEndTag, "</font>");
                                 }
                                 else
                                 {
-                                    int indexOfNextTag1 = text.IndexOf("{\\fs", start, StringComparison.Ordinal);
-                                    int indexOfNextTag2 = text.IndexOf("{\\c}", start, StringComparison.Ordinal);
+                                    var indexOfNextTag1 = text.IndexOf("{\\fs", start, StringComparison.Ordinal);
+                                    var indexOfNextTag2 = text.IndexOf("{\\c}", start, StringComparison.Ordinal);
                                     if (indexOfNextTag1 > 0)
                                     {
                                         text = text.Insert(indexOfNextTag1, "</font>");
@@ -2436,11 +2436,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
 
             var sb = new StringBuilder();
-            bool stylesStarted = false;
-            bool styleAdded = false;
-            bool styleLinesStarted = false;
-            string styleFormat = SsaStyle.DefaultAssStyleFormat;
-            foreach (string line in header.SplitToLines())
+            var stylesStarted = false;
+            var styleAdded = false;
+            var styleLinesStarted = false;
+            var styleFormat = SsaStyle.DefaultAssStyleFormat;
+            foreach (var line in header.SplitToLines())
             {
                 if (line.Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) || line.Equals("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                 {

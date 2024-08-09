@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "fontsize")
                 {
-                    sb.Append(FontSize.ToString(CultureInfo.InvariantCulture));
+                    sb.Append(FontSize.ToString("0.#", CultureInfo.InvariantCulture));
                 }
                 else if (f == "primarycolour")
                 {
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "fontsize")
                 {
-                    sb.Append(FontSize.ToString(CultureInfo.InvariantCulture));
+                    sb.Append(FontSize.ToString("0.#",CultureInfo.InvariantCulture));
                 }
                 else if (f == "primarycolour")
                 {
