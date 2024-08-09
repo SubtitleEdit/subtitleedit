@@ -1029,8 +1029,11 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                var cachedCount = _listView.Items.Count;
-                for (var i = 0; i < cachedCount; i++)
+                var topItem = _listView.TopItem;
+                // calculate visible range
+                var count = Math.Min(topItem.Index + _listView.Bounds.Height / topItem.Bounds.Height, _listView.Items.Count);
+                
+                for (var i = topItem.Index; i < count; i++)
                 {
                     var rectangle = _listView.GetItemRect(i);
                     if (rectangle.Contains(mouseArgs.Location))
