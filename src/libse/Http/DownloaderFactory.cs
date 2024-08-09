@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 
@@ -8,9 +9,12 @@ namespace Nikse.SubtitleEdit.Core.Http
 {
     public static class DownloaderFactory
     {
-        public static IDownloader MakeHttpClient()
+        public static IDownloader CreateProxiedHttpClient() => CreateProxiedHttpClient(Timeout.InfiniteTimeSpan);
+
+        public static IDownloader CreateProxiedHttpClient(TimeSpan timeout)
         {
             var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
+            httpClient.Timeout = timeout;
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
                 return new LegacyDownloader(httpClient);
