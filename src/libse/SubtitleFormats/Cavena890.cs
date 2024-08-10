@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -11,8 +12,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Cavena890 : SubtitleFormat, IBinaryPersistableSubtitle
     {
         public const int LanguageIdDanish = 0x07;
+        public const int LanguageIdSwedish = 0x28;
+        public const int LanguageIdNorwegian = 0x1e;
         public const int LanguageIdEnglish = 0x09;
         public const int LanguageIdRussian = 0x56;
+        public const int LanguageIdGreek = 0x70;
         public const int LanguageIdArabic = 0x80;
         public const int LanguageIdHebrew = 0x8f;
         public const int LanguageIdChineseTraditional = 0x90;
@@ -333,6 +337,155 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "х",
         };
 
+        private static readonly List<Tuple<int, string>> Greek = new List<Tuple<int, string>>
+        {
+            new Tuple<int, string>(0x20, " "),
+            new Tuple<int, string>(0x21, "!"),
+            new Tuple<int, string>(0x22, "\""),
+            new Tuple<int, string>(0x23, "£"),
+            new Tuple<int, string>(0x24, "$"),
+            new Tuple<int, string>(0x25, "%"),
+            new Tuple<int, string>(0x26, "&"),
+            new Tuple<int, string>(0x27, "'"),
+            new Tuple<int, string>(0x28, "("),
+            new Tuple<int, string>(0x29, ")"),
+            new Tuple<int, string>(0x2A, "*"),
+            new Tuple<int, string>(0x2B, "+"),
+            new Tuple<int, string>(0x2C, ","),
+            new Tuple<int, string>(0x2D, "-"),
+            new Tuple<int, string>(0x2E, "."),
+            new Tuple<int, string>(0x2F, "/"),
+            new Tuple<int, string>(0x30, "0"),
+            new Tuple<int, string>(0x31, "1"),
+            new Tuple<int, string>(0x32, "2"),
+            new Tuple<int, string>(0x33, "3"),
+            new Tuple<int, string>(0x34, "4"),
+            new Tuple<int, string>(0x35, "5"),
+            new Tuple<int, string>(0x36, "6"),
+            new Tuple<int, string>(0x37, "7"),
+            new Tuple<int, string>(0x38, "8"),
+            new Tuple<int, string>(0x39, "9"),
+            new Tuple<int, string>(0x3A, ":"),
+            new Tuple<int, string>(0x3B, ";"),
+            new Tuple<int, string>(0x3C, "<"),
+            new Tuple<int, string>(0x3D, "="),
+            new Tuple<int, string>(0x3E, ">"),
+            new Tuple<int, string>(0x3F, "?"),
+            new Tuple<int, string>(0x40, "@"),
+            new Tuple<int, string>(0x41, "Α"),
+            new Tuple<int, string>(0x42, "Β"),
+            new Tuple<int, string>(0x43, "Γ"),
+            new Tuple<int, string>(0x44, "Δ"),
+            new Tuple<int, string>(0x45, "Ε"),
+            new Tuple<int, string>(0x46, "Ζ"),
+            new Tuple<int, string>(0x47, "Η"),
+            new Tuple<int, string>(0x48, "Θ"),
+            new Tuple<int, string>(0x49, "Ι"),
+            new Tuple<int, string>(0x4A, "Κ"),
+            new Tuple<int, string>(0x4B, "Λ"),
+            new Tuple<int, string>(0x4C, "Μ"),
+            new Tuple<int, string>(0x4D, "Ν"),
+            new Tuple<int, string>(0x4E, "Ξ"),
+            new Tuple<int, string>(0x4F, "Ο"),
+            new Tuple<int, string>(0x50, "Π"),
+            new Tuple<int, string>(0x51, "Ρ"),
+            new Tuple<int, string>(0x52, "Σ"),
+            new Tuple<int, string>(0x53, "Τ"),
+            new Tuple<int, string>(0x54, "Υ"),
+            new Tuple<int, string>(0x55, "Φ"),
+            new Tuple<int, string>(0x56, "Χ"),
+            new Tuple<int, string>(0x57, "ψ"),
+            new Tuple<int, string>(0x58, "Ω"),
+            new Tuple<int, string>(0x59, "ά"),
+            new Tuple<int, string>(0x5A, "έ"),
+            new Tuple<int, string>(0x5B, "ή"),
+            new Tuple<int, string>(0x5C, "ί"),
+            new Tuple<int, string>(0x5D, "ό"),
+            new Tuple<int, string>(0x5F, "—"),
+            new Tuple<int, string>(0x61, "α"),
+            new Tuple<int, string>(0x62, "β"),
+            new Tuple<int, string>(0x63, "γ"),
+            new Tuple<int, string>(0x64, "δ"),
+            new Tuple<int, string>(0x65, "ε"),
+            new Tuple<int, string>(0x66, "ζ"),
+            new Tuple<int, string>(0x67, "η"),
+            new Tuple<int, string>(0x68, "θ"),
+            new Tuple<int, string>(0x69, "ι"),
+            new Tuple<int, string>(0x6A, "κ"),
+            new Tuple<int, string>(0x6B, "λ"),
+            new Tuple<int, string>(0x6C, "μ"),
+            new Tuple<int, string>(0x6D, "ν"),
+            new Tuple<int, string>(0x6E, "ξ"),
+            new Tuple<int, string>(0x6F, "ο"),
+            new Tuple<int, string>(0x70, "π"),
+            new Tuple<int, string>(0x71, "ρ"),
+            new Tuple<int, string>(0x72, "σ"),
+            new Tuple<int, string>(0x73, "τ"),
+            new Tuple<int, string>(0x74, "υ"),
+            new Tuple<int, string>(0x75, "φ"),
+            new Tuple<int, string>(0x76, "χ"),
+            new Tuple<int, string>(0x77, "ψ"),
+            new Tuple<int, string>(0x78, "ω"),
+            new Tuple<int, string>(0x79, "ς"),
+            new Tuple<int, string>(0x7A, "ϊ"),
+            new Tuple<int, string>(0x7c, "ύ"),
+            new Tuple<int, string>(0x7D, "ώ"),
+            new Tuple<int, string>(0x7E, "§"),
+            new Tuple<int, string>(0x91, "A"),
+            new Tuple<int, string>(0x92, "B"),
+            new Tuple<int, string>(0x93, "C"),
+            new Tuple<int, string>(0x94, "D"),
+            new Tuple<int, string>(0x95, "E"),
+            new Tuple<int, string>(0x96, "F"),
+            new Tuple<int, string>(0x97, "G"),
+            new Tuple<int, string>(0x98, "H"),
+            new Tuple<int, string>(0x99, "I"),
+            new Tuple<int, string>(0x9A, "J"),
+            new Tuple<int, string>(0x9B, "K"),
+            new Tuple<int, string>(0x9C, "L"),
+            new Tuple<int, string>(0x9D, "M"),
+            new Tuple<int, string>(0x9E, "N"),
+            new Tuple<int, string>(0x9F, "O"),
+            new Tuple<int, string>(0xA0, "P"),
+            new Tuple<int, string>(0xA1, "V"),
+            new Tuple<int, string>(0xA2, "W"),
+            new Tuple<int, string>(0xA3, "X"),
+            new Tuple<int, string>(0xA4, "Y"),
+            new Tuple<int, string>(0xA5, "Z"),
+            new Tuple<int, string>(0xA6, "V"),
+            new Tuple<int, string>(0xA7, "W"),
+            new Tuple<int, string>(0xA8, "X"),
+            new Tuple<int, string>(0xA9, "Y"),
+            new Tuple<int, string>(0xAB, "Z"),
+            new Tuple<int, string>(0xB1, "a"),
+            new Tuple<int, string>(0xB2, "b"),
+            new Tuple<int, string>(0xB3, "c"),
+            new Tuple<int, string>(0xB4, "d"),
+            new Tuple<int, string>(0xB5, "e"),
+            new Tuple<int, string>(0xB6, "f"),
+            new Tuple<int, string>(0xB7, "g"),
+            new Tuple<int, string>(0xB8, "h"),
+            new Tuple<int, string>(0xB9, "i"),
+            new Tuple<int, string>(0xBA, "j"),
+            new Tuple<int, string>(0xBB, "k"),
+            new Tuple<int, string>(0xBC, "l"),
+            new Tuple<int, string>(0xBD, "m"),
+            new Tuple<int, string>(0xBE, "n"),
+            new Tuple<int, string>(0xBF, "o"),
+            new Tuple<int, string>(0xC0, "p"),
+            new Tuple<int, string>(0xC1, "q"),
+            new Tuple<int, string>(0xC2, "r"),
+            new Tuple<int, string>(0xC3, "s"),
+            new Tuple<int, string>(0xC4, "t"),
+            new Tuple<int, string>(0xC5, "u"),
+            new Tuple<int, string>(0xC6, "v"),
+            new Tuple<int, string>(0xC7, "w"),
+            new Tuple<int, string>(0xC8, "x"),
+            new Tuple<int, string>(0xC9, "y"),
+            new Tuple<int, string>(0xCA, "z"),
+            new Tuple<int, string>(0xD9, "δι")
+        };
+
         public override string Extension => ".890";
 
         public const string NameOfFormat = "Cavena 890";
@@ -646,6 +799,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (languageId == LanguageIdDanish)
             {
                 buffer = Encoding.ASCII.GetBytes("VFONTL.V");
+            }
+            else if (languageId == LanguageIdGreek)
+            {
+                buffer = Encoding.ASCII.GetBytes("GREEK4.V");
             }
 
             return buffer;
@@ -1429,6 +1586,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _languageIdLine2 = LanguageIdHebrew;
             }
 
+            // Greek
+            if (_languageIdLine1 == LanguageIdGreek || fontNameLine1.StartsWith("GREEK", StringComparison.Ordinal) || fontNameLine2.StartsWith("GREEK", StringComparison.Ordinal))
+            {
+                _languageIdLine1 = LanguageIdGreek;
+                _languageIdLine2 = LanguageIdGreek;
+            }
+
             // Arabic
             if (_languageIdLine2 == LanguageIdArabic || fontNameLine1 == "ARABIC")
             {
@@ -1455,38 +1619,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _languageIdLine2 = LanguageIdChineseTraditional;
             }
 
-            int i = 455;
-            int lastNumber = -1;
+            var i = 455;
+            var lastNumber = -1;
             while (i < buffer.Length - 20)
             {
-                int start = i - textLength;
+                var start = i - textLength;
 
-                int number = buffer[start - 16] * 256 + buffer[start - 15];
+                var number = buffer[start - 16] * 256 + buffer[start - 15];
 
                 var p = new Paragraph();
-                double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
-                double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
+                var startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
+                var endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
-                byte boxType = buffer[start + textLength + 3];
+                var boxType = buffer[start + textLength + 3];
 
-                string line1 = FixText(buffer, start, textLength, _languageIdLine1);
-                string line2 = FixText(buffer, start + textLength + 6, textLength, _languageIdLine2);
+                var line1 = FixText(buffer, start, textLength, _languageIdLine1);
+                var line2 = FixText(buffer, start + textLength + 6, textLength, _languageIdLine2);
 
                 if (lastNumber == number)
                 {
                     p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    string temp = (line1.TrimEnd() + Environment.NewLine + line2).TrimEnd();
-                    if (temp.Length > 0)
-                    {
-                        p.Text = temp;
-                    }
+                    p.Text = string.Join(Environment.NewLine, new[] { p.Text, line1, line2 }.Select(l => l.TrimEnd()).Where(l => !string.IsNullOrWhiteSpace(l)));
                 }
                 else
                 {
                     subtitle.Paragraphs.Add(p);
                     p.StartTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * startFrame;
                     p.EndTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * endFrame;
-                    p.Text = (line1.TrimEnd() + Environment.NewLine + line2).TrimEnd();
+                    p.Text = string.Join(Environment.NewLine, new[] { line1, line2 }.Select(l => l.TrimEnd()).Where(l => !string.IsNullOrWhiteSpace(l)));
                 }
                 if (boxType >= 0xa0 && boxType <= 0xa9 && !string.IsNullOrEmpty(p.Text)) // box
                 {
@@ -1533,7 +1693,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = sb.ToString();
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text);
 
                 if (text.Contains("<i></i>"))
@@ -1546,14 +1706,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text += "</i>";
                 }
             }
+            else if (languageId == LanguageIdGreek)
+            {
+                var encoding = Encoding.GetEncoding(1252);
+                var sb = new StringBuilder();
+                for (var i = 0; i < textLength; i++)
+                {
+                    var b = buffer[start + i];
+                    var entry = Greek.FirstOrDefault(e => e.Item1 == b);
+                    if (entry != null)
+                    {
+                        sb.Append(entry.Item2);
+                    }
+                    else if (buffer[start + i] != 0x7F)
+                    {
+                        throw new InvalidOperationException($"{buffer[start + i]}");
+                    }
+                }
+
+                text = sb.ToString();
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = FixColors(text);
+
+                if (text.Contains("<i></i>"))
+                {
+                    text = text.Replace("<i></i>", "<i>");
+                }
+
+                if (text.Contains("<i>") && !text.Contains("</i>"))
+                {
+                    text += "</i>";
+                }
+
+                if (text.Contains("<i></i>"))
+                {
+                    text = text.Replace("<i></i>", "<i>");
+                }
+            }
             else if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
             {
                 var encoding = Encoding.GetEncoding(1252);
                 var sb = new StringBuilder();
-                for (int i = 0; i < textLength; i++)
+                for (var i = 0; i < textLength; i++)
                 {
-                    int b = buffer[start + i];
-                    int idx = HebrewCodes.IndexOf(b);
+                    var b = buffer[start + i];
+                    var idx = HebrewCodes.IndexOf(b);
                     if (idx >= 0)
                     {
                         sb.Append(HebrewLetters[idx]);
@@ -1567,7 +1766,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = sb.ToString();
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text);
 
                 text = ReverseAnsi(text);
@@ -1577,9 +1776,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var encoding = Encoding.GetEncoding(1252);
                 var sb = new StringBuilder();
-                for (int i = 0; i < textLength; i++)
+                for (var i = 0; i < textLength; i++)
                 {
-                    int b = buffer[start + i];
+                    var b = buffer[start + i];
                     if (ArabicDictionary.TryGetValue(b, out var v))
                     {
                         sb.Append(v);
@@ -1591,16 +1790,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 text = sb.ToString();
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text).Trim();
             }
             else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
             {
-                int index = start;
+                var index = start;
 
-                while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength - 1] == 0))
+                while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength - 1] == 0 || buffer[index + textLength - 1] == 0x7F))
                 {
                     textLength--;
+                }
+
+                if (textLength % 2 == 1)
+                {
+                    textLength += (index + textLength < buffer.Length) ? 1 : -1;
                 }
 
                 if (textLength > 0)
@@ -1614,7 +1818,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text);
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
@@ -1635,9 +1839,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = encoding.GetString(buffer, start, textLength).Replace("\0", string.Empty);
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text);
 
+                text = text.Replace(encoding.GetString(new byte[] { 0x02 }), "Đ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
@@ -1647,8 +1852,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x5B }), "Æ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
+                text = text.Replace(encoding.GetString(new byte[] { 0x7C }), "ł");
+                text = text.Replace(encoding.GetString(new byte[] { 0x7D }), "đ");
+                text = text.Replace(encoding.GetString(new byte[] { 0xE2 }), "@");
+
+                if (languageId != LanguageIdSwedish &&
+                    languageId != LanguageIdNorwegian &&
+                    languageId != LanguageIdDanish)
+                {
+                    text = text.Replace(encoding.GetString(new byte[] { 0xE5 }), "[");
+                    text = text.Replace(encoding.GetString(new byte[] { 0xE6 }), "]");
+                }
+
+                text = text.Replace(encoding.GetString(new byte[] { 0xEB }), "♪");
 
                 // capitals with accent grave
+                text = text.Replace(encoding.GetString(new byte[] { 0x80, 0x43 }), "C");
                 text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x41 }), "À");
                 text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x45 }), "È");
                 text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x49 }), "Ì");
@@ -1792,6 +2011,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x53 }), "Ş");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x74 }), "ţ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x54 }), "Ţ");
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x8e, 0x5a }), "Ż");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8e, 0x7a }), "ż");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x41 }), "Ą");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x61 }), "ą");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x65 }), "ę");
 
                 if (text.Contains("<i></i>"))
                 {
