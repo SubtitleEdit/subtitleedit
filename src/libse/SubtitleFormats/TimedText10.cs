@@ -528,8 +528,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             try
             {
                 text = string.Join("<br/>", text.SplitToLines());
-                XmlDocument paragraphContent = new XmlDocument();
-                paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
+                var paragraphContent = new XmlDocument();
+
+                try
+                {
+                    paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
+                }
+                catch 
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    var tempText = text.Replace("&amp;", guid);
+                    tempText = tempText.Replace("&", "&amp;");
+                    tempText = tempText.Replace(guid, "&amp;");
+                    paragraphContent.LoadXml($"<root>{tempText}</root>");
+                }
+
                 ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
             }
             catch  // Wrong markup, clear it
