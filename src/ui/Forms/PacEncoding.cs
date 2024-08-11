@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -117,7 +118,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (CodePageIndex == Pac.CodePageGreek)
                         {
-                            sb.Append(Pac.GetGreekString(_previewBuffer, ref index));
+                            sb.Append(Pac.GetGreekString(_previewBuffer, ref index, false));
+                        }
+                        else if (CodePageIndex == Pac.CodePageLatinPortuguese)
+                        {
+                            sb.Append(Pac.GetPortugueseString(_previewBuffer, ref index)); 
                         }
                         else
                         {
