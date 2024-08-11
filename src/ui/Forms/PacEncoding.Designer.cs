@@ -38,9 +38,18 @@
             // 
             // comboBoxCodePage
             // 
+            this.comboBoxCodePage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCodePage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCodePage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCodePage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCodePage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCodePage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCodePage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCodePage.DropDownHeight = 400;
             this.comboBoxCodePage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCodePage.DropDownWidth = 203;
             this.comboBoxCodePage.FormattingEnabled = true;
-            this.comboBoxCodePage.Items.AddRange(new object[] {
+            this.comboBoxCodePage.Items.AddRange(new string[] {
             "Latin",
             "Greek",
             "Latin Czech",
@@ -51,11 +60,17 @@
             "Chinese Traditional (Big5)",
             "Chinese Simplified (gb2312)",
             "Korean",
-            "Japanese"});
+            "Japanese",
+            "Portuguese"});
             this.comboBoxCodePage.Location = new System.Drawing.Point(12, 37);
+            this.comboBoxCodePage.MaxLength = 32767;
             this.comboBoxCodePage.Name = "comboBoxCodePage";
+            this.comboBoxCodePage.SelectedIndex = -1;
+            this.comboBoxCodePage.SelectedItem = null;
+            this.comboBoxCodePage.SelectedText = "";
             this.comboBoxCodePage.Size = new System.Drawing.Size(203, 21);
             this.comboBoxCodePage.TabIndex = 0;
+            this.comboBoxCodePage.UsePopupWindow = false;
             this.comboBoxCodePage.SelectedIndexChanged += new System.EventHandler(this.comboBoxCodePage_SelectedIndexChanged);
             // 
             // labelCodePage
@@ -81,6 +96,7 @@
             this.textBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPreview.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxPreview.Location = new System.Drawing.Point(12, 89);
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
