@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 var p = _working.Paragraphs[i];
-                var displayTime = p.DurationTotalMilliseconds;
+                var displayTime = p.Duration.Milliseconds;
                 if (displayTime < minDisplayTime)
                 {
                     var next = _working.GetParagraphOrDefault(i + 1);
@@ -215,9 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            var before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToTimeCode().ToShortString();
             p.EndTime.TotalMilliseconds = endMs;
-            var after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            var after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToTimeCode().ToShortString();
             _totalFixes++;
             AddFixToListView(p, before, after, backgroundColor);
         }
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 var p = _working.Paragraphs[i];
-                var displayTime = p.DurationTotalMilliseconds;
+                var displayTime = p.Duration.Milliseconds;
                 if (displayTime > maxDisplayTime)
                 {
                     AddFix(p, p.StartTime.TotalMilliseconds + maxDisplayTime, DefaultBackColor);

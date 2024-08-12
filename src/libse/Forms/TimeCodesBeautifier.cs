@@ -1077,7 +1077,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             // Duration cannot be negative
-            if (paragraph.DurationTotalMilliseconds < 0)
+            if (paragraph.Duration.Milliseconds < 0)
             {
                 paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
             }

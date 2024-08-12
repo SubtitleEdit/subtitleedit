@@ -78,14 +78,14 @@ namespace Nikse.SubtitleEdit.Forms
                     errors.Add($"CPS: {charactersPerSecond:#,###.00} > {Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds}");
                 }
 
-                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (paragraph.Duration.Milliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    errors.Add($"Min duration: {paragraph.DurationTotalMilliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
+                    errors.Add($"Min duration: {paragraph.Duration.Milliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
                 }
 
-                if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (paragraph.Duration.Milliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    errors.Add($"Max duration: {paragraph.DurationTotalMilliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
+                    errors.Add($"Max duration: {paragraph.Duration.Milliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
                 }
 
                 if (i > 0 && i < paragraphs.Count)
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             sb.Append(paragraph.Number + separator);
             sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.EndTime.ToDisplayString()) + separator);
-            sb.Append(ToCsvText(paragraph.Duration.ToShortDisplayString()) + separator);
+            sb.Append(ToCsvText(paragraph.Duration.ToTimeCode().ToShortDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.Text.Replace(Environment.NewLine, "<br />")) + separator);
             sb.Append(ToCsvText(paragraph.Bookmark) + separator);
             return sb.ToString();

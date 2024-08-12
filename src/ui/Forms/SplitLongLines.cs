@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var newParagraph2 = new Paragraph(p);
                             newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
-                            var middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds / 2;
+                            var middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds / 2;
                             if (!string.IsNullOrWhiteSpace(oldText))
                             {
                                 var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     startFactor = 0.75;
                                 }
 
-                                middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds * startFactor;
+                                middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds * startFactor;
                             }
 
                             newParagraph1.EndTime.TotalMilliseconds = middle - spacing1;
@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            var durationMs = p.DurationTotalMilliseconds / arr.Count;
+                            var durationMs = p.Duration.Milliseconds / arr.Count;
                             for (var index = 0; index < arr.Count; index++)
                             {
                                 var line = arr[index];
@@ -321,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     var minGap = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                                     if (minGap > 0 &&
-                                        newParagraph.DurationTotalMilliseconds - minGap > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                        newParagraph.Duration.Milliseconds - minGap > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                     {
                                         newParagraph.EndTime.TotalMilliseconds -= minGap;
                                     }
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     var newParagraph2 = new Paragraph(p);
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
-                                    var middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds / 2;
+                                    var middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds / 2;
                                     if (!string.IsNullOrWhiteSpace(oldText))
                                     {
                                         var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
@@ -438,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             startFactor = 0.75;
                                         }
 
-                                        middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds * startFactor;
+                                        middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds * startFactor;
                                     }
 
                                     newParagraph1.EndTime.TotalMilliseconds = middle - spacing1;
@@ -545,7 +545,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 newParagraph1.Text = Utilities.AutoBreakLine(p.Text.Substring(0, splitPos + 1), language);
 
-                                var middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds / 2;
+                                var middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds / 2;
                                 if (!string.IsNullOrWhiteSpace(oldText))
                                 {
                                     var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         startFactor = 0.75;
                                     }
 
-                                    middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds * startFactor;
+                                    middle = p.StartTime.TotalMilliseconds + p.Duration.Milliseconds * startFactor;
                                 }
 
                                 newParagraph1.EndTime.TotalMilliseconds = middle - spacing1;

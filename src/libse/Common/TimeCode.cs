@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Globalization;
+// ReSharper disable InconsistentNaming
 
 namespace Nikse.SubtitleEdit.Core.Common
 {

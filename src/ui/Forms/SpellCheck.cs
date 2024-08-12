@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (imageSub == null)
                 {
-                    var mean = _currentParagraph.StartTime.TotalMilliseconds + _currentParagraph.DurationTotalMilliseconds / 2;
+                    var mean = _currentParagraph.StartTime.TotalMilliseconds + _currentParagraph.Duration.Milliseconds / 2;
                     imageSub = _binSubtitles.FirstOrDefault(p => mean >= p.StartTimeCode.TotalMilliseconds && mean <= _currentParagraph.EndTime.TotalMilliseconds);
                 }
 

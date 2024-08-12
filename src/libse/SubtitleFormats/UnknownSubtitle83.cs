@@ -32,8 +32,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int index = 0; index < subtitle.Paragraphs.Count;)
             {
                 var p = subtitle.Paragraphs[index++];
-                var lis = (int)Math.Round(MillisecondsToFrames(p.DurationTotalMilliseconds) / 2.0);
-                sb.AppendLine(string.Format(format, index, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), p.Duration.ToSSFF(), lis, p.Text.Length, p.Text));
+                var lis = (int)Math.Round(MillisecondsToFrames(p.Duration.Milliseconds) / 2.0);
+                sb.AppendLine(string.Format(format, index, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), p.Duration.ToTimeCode().ToSSFF(), lis, p.Text.Length, p.Text));
             }
             return sb.ToString().ToRtf();
         }

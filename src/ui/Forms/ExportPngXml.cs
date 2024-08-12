@@ -1949,7 +1949,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
 
-                        string line = $"{i:000}  {fileName1}  V     C        {new TimeCode().ToHHMMSSFF()} {param.P.Duration.ToHHMMSSFF()} {param.P.StartTime.ToHHMMSSFF()} {param.P.EndTime.ToHHMMSSFF()}";
+                        string line = $"{i:000}  {fileName1}  V     C        {new TimeCode().ToHHMMSSFF()} {param.P.Duration.ToTimeCode().ToHHMMSSFF()} {param.P.StartTime.ToHHMMSSFF()} {param.P.EndTime.ToHHMMSSFF()}";
                         sb.AppendLine(line);
                         if (_exportType == ExportFormats.EdlClipName)
                         {
@@ -2141,7 +2141,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            var duration = SubtitleFormat.MillisecondsToFrames(param.P.DurationTotalMilliseconds, param.FramesPerSeconds);
+            var duration = SubtitleFormat.MillisecondsToFrames(param.P.Duration.Milliseconds, param.FramesPerSeconds);
             var start = SubtitleFormat.MillisecondsToFrames(param.P.StartTime.TotalMilliseconds, param.FramesPerSeconds);
             var end = SubtitleFormat.MillisecondsToFrames(param.P.EndTime.TotalMilliseconds, param.FramesPerSeconds);
 
@@ -5771,7 +5771,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToTimeCode().ToShortDisplayString());
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, UiUtil.GetListViewTextFromString(paragraph.Text));
@@ -6270,7 +6270,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             subtitleListView1.Items[index].SubItems[startIndex].Text = _subtitle.Paragraphs[index].StartTime.ToDisplayString();
             subtitleListView1.Items[index].SubItems[startIndex + 1].Text = _subtitle.Paragraphs[index].EndTime.ToDisplayString();
-            subtitleListView1.Items[index].SubItems[startIndex + 2].Text = _subtitle.Paragraphs[index].Duration.ToShortDisplayString();
+            subtitleListView1.Items[index].SubItems[startIndex + 2].Text = _subtitle.Paragraphs[index].Duration.ToTimeCode().ToShortDisplayString();
         }
 
         private void contextMenuStripListView_Opening(object sender, System.ComponentModel.CancelEventArgs e)

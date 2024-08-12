@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
             double millisecondsIndex = millisecondsInterval;
             foreach (Paragraph p in FixedSubtitle.Paragraphs)
             {
-                p.EndTime.TotalMilliseconds = millisecondsIndex + p.DurationTotalMilliseconds;
+                p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.Milliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
                 millisecondsIndex += (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) + millisecondsInterval;
             }

@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                         originalText = originalParagraph.Text;
                     }
                 }
-                var paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, originalText, i, p.Actor, p.Duration, gap, arr[3], p, videoFileName);
+                var paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, originalText, i, p.Actor, p.Duration.ToTimeCode(), gap, arr[3], p, videoFileName);
                 sb.Append(paragraph);
             }
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, videoFileName, subtitle, arr[5]));
