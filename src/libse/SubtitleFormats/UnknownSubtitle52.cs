@@ -27,10 +27,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string paragraphWriteFormat = "#{0:00000}\t{1}\t{2}\t{3}\t#F\tCC00000D0\t#C " + Environment.NewLine + "{4}";
+            var paragraphWriteFormat = "#{0:00000}\t{1}\t{2}\t{3}\t#F\tCC00000D0\t#C " + Environment.NewLine + "{4}";
             const string timeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";
             var sb = new StringBuilder();
-            string header = @"FILE_INFO_BEGIN
+            var header = @"FILE_INFO_BEGIN
 VIDEOFILE:
 ORIG_TITLE: [TITLE]
 PGM_TITLE:
@@ -59,21 +59,21 @@ FILE_INFO_END";
             }
 
             sb.AppendLine(header);
-            int number = 1;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var number = 1;
+            foreach (var p in subtitle.Paragraphs)
             {
                 var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
-                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, startFrame);
+                var startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, startFrame);
 
                 var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
-                string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, endFrame);
+                var endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, endFrame);
 
                 // to avoid rounding errors in duration
                 var durationCalc = new Paragraph(
                         new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
                         new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
                         string.Empty);
-                string duration = string.Format(timeFormat, durationCalc.Duration.Hours, durationCalc.Duration.Minutes, durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds));
+                var duration = string.Format(timeFormat, durationCalc.Duration.Hours, durationCalc.Duration.Minutes, durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds));
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, HtmlUtil.RemoveHtmlTags(p.Text)));
                 number++;
@@ -85,11 +85,11 @@ FILE_INFO_END";
         {
             _errorCount = 0;
             Paragraph p = null;
-            bool started = false;
+            var started = false;
             var header = new StringBuilder();
             var text = new StringBuilder();
             char[] splitChar = { ':', ',', '.' };
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 try
                 {
@@ -102,8 +102,8 @@ FILE_INFO_END";
                         }
 
                         text.Clear();
-                        string start = line.Substring(7, 11);
-                        string end = line.Substring(19, 11);
+                        var start = line.Substring(7, 11);
+                        var end = line.Substring(19, 11);
                         p = new Paragraph(DecodeTimeCodeFrames(start, splitChar), DecodeTimeCodeFrames(end, splitChar), string.Empty);
                         subtitle.Paragraphs.Add(p);
                     }
@@ -125,6 +125,7 @@ FILE_INFO_END";
                     _errorCount++;
                 }
             }
+
             if (p != null)
             {
                 p.Text = text.ToString().Trim();
@@ -134,6 +135,5 @@ FILE_INFO_END";
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }
