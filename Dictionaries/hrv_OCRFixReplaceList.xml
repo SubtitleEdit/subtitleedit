@@ -642,6 +642,7 @@
     <Word from="ikda" to="ikad" />
     <Word from="iko" to="itko" />
     <Word from="imo" to="ima" />
+    <Word from="Imo" to="Ima" />
     <Word from="imq" to="ima" />
     <Word from="imap" to="imao" />
     <Word from="imamp" to="imamo" />
@@ -1230,6 +1231,7 @@
     <Word from="Najpre" to="Najprije" />
     <Word from="največi" to="najveći" />
     <Word from="nakog" to="nakon" />
+    <Word from="najsvetliji" to="najsvjetliji" />
     <Word from="najzad" to="napokon" />
     <Word from="nakim" to="nekim" />
     <Word from="nalevo" to="nalijevo" />
@@ -5359,6 +5361,7 @@
     <RegEx find="(?&lt;!o)formiš" replaceWith="formiraj" />
     <RegEx find="fi(sa|še)" replaceWith="fira" />
     <RegEx find="fiskov" replaceWith="fiscir" />
+    <RegEx find="fnor" replaceWith="nfor" />
     <RegEx find="formuje" replaceWith="formira" />
     <RegEx find="frm" replaceWith="form" />
     <RegEx find="frov" replaceWith="frir" />
