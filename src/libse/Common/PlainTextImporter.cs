@@ -46,14 +46,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     sb.AppendLine(s);
                 }
             }
-            string text = sb.ToString().Replace(Environment.NewLine, " ");
+            var text = sb.ToString().Replace(Environment.NewLine, " ");
 
 
             var list = new List<string>();
             var untilLastSpace = new StringBuilder();
             var fromLastSpace = new StringBuilder();
             var maxLength = _singleLineMaxLength * _numberOfLines;
-            bool oneLineOnly = _numberOfLines == 1;
+            var oneLineOnly = _numberOfLines == 1;
             var hardSplitIndices = new List<int>();
             for (var index = 0; index < text.Length; index++)
             {
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     fromLastSpace.Clear();
                 }
                 else if (_endChars.Contains(ch) && index < text.Length - 2 &&
-                         (text[index + 1] == ' ' || _language == "zh") &&
+                         (text[index + 1] == ' ' || _language == "zh" || "。、·？".Contains(ch)) &&
                          !CurrentWordInDoNotBreakList(text, index + 1))
                 {
                     fromLastSpace.Append(ch);
