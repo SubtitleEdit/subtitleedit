@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public static string StaticName { get; set; } = "MyMemory Translate";
         public string Name => StaticName;
+        public override string ToString() => StaticName;
         public string Url => "https://mymemory.translated.net/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;

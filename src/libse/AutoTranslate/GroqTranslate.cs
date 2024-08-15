@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Groq";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://groq.com/";
         public string Error { get; set; }

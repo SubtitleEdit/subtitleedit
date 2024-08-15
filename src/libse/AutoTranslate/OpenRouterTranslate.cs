@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "OpenRouter";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://openrouter.ai/";
         public string Error { get; set; }
