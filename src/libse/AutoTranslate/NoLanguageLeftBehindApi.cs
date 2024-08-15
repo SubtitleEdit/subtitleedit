@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private IDownloader _httpClient;
 
         public static string StaticName { get; set; } = "winstxnhdw-nllb-api";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/winstxnhdw/nllb-api";
         public string Error { get; set; }

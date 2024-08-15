@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private IDownloader _httpClient;
         
         public static string StaticName { get; set; } = "thammegowda-nllb-serve";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/thammegowda/nllb-serve";
         public string Error { get; set; }

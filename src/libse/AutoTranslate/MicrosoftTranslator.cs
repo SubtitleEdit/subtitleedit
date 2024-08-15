@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private IDownloader _httpClient;
 
         public static string StaticName { get; set; } = "Bing Microsoft Translator";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.bing.com/translator";
         public string Error { get; set; }

@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "SeamlessM4T";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://replicate.com/cjwbw/seamless_communication/api";
         public string Error { get; set; }

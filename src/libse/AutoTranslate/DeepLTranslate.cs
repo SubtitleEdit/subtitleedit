@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _client;
 
         public static string StaticName { get; set; } = "DeepL V2 translate";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.deepl.com";
         public string Error { get; set; }
