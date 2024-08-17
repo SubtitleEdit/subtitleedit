@@ -13218,8 +13218,17 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        currentParagraph.Text = (currentParagraph.Text.Trim() + Environment.NewLine +
-                                                 RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
+                        var text = (currentParagraph.Text.Trim() + Environment.NewLine +
+                                    RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
+                        var oneLine = Utilities.UnbreakLine(text);
+                        if (oneLine.Length <= Configuration.Settings.General.SubtitleLineMaximumLength)
+                        {
+                            currentParagraph.Text = oneLine;
+                        }
+                        else
+                        {
+                            currentParagraph.Text = text;
+                        }
                     }
 
                     currentParagraph.Text = FixAssaTagsAfterMerge(currentParagraph.Text);
