@@ -9,6 +9,8 @@
    * Add translation via OpenRouter - thx Nikodim
    * Add custom shortcuts for custom export text templates - thx Oliver
    * Add WebVTT setting for split of style tags - thx Oliver 
+   * PAC: Support Portuguese codepage + more - thx Ingo
+   * Cavena 890 Greek support etc - thx Ingo
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
@@ -30,6 +32,8 @@
    * Fix combo boxes popup in "Measurement converter" - thx Dehrimon
    * Detect change switching between UTF-8-no-bom/UTF-8-with-bom - thx Minherre
    * Fix crash in Whisper UI (bug in Dutch translation) - thx hpcs444/tsg040
+   * Fix bad xml replace in "TTML 1.0" - thx Info
+   * Fix undo after "merge selected" for 3+ lines - thx Llorx
 
 
 4.0.7 (8th July 2024) 
