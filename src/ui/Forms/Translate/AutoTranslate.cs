@@ -14,7 +14,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Vosk;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 
@@ -988,7 +987,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseTextBoxApiKey.Focus();
             }
 
-            int count = 0;
+            var count = 0;
             while (count < 10 && exception.InnerException != null)
             {
                 exception = exception.InnerException;
