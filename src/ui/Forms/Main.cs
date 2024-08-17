@@ -12820,194 +12820,196 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeSelectedLines(BreakMode breakMode = BreakMode.Normal)
         {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
+            if (_subtitle.Paragraphs.Count <= 0 || SubtitleListview1.SelectedItems.Count <= 1)
             {
-                var sb = new StringBuilder();
-                var deleteIndices = new List<int>();
-                bool first = true;
-                int firstIndex = 0;
-                double endMilliseconds = 0;
-                int next = 0;
-                foreach (int index in SubtitleListview1.SelectedIndices)
+                return;
+            }
+
+            var sb = new StringBuilder();
+            var deleteIndices = new List<int>();
+            bool first = true;
+            int firstIndex = 0;
+            double endMilliseconds = 0;
+            int next = 0;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                if (first)
                 {
-                    if (first)
-                    {
-                        firstIndex = index;
-                        next = index + 1;
-                        first = !first;
-                    }
-                    else
-                    {
-                        deleteIndices.Add(index);
-                        if (next != index)
-                        {
-                            return;
-                        }
-
-                        next++;
-                    }
-
-                    var continuationStyle = Configuration.Settings.General.ContinuationStyle;
-                    if (continuationStyle != ContinuationStyle.None)
-                    {
-                        var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                        if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
-                        {
-                            var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                            _subtitle.Paragraphs[index].Text = mergeResult.Item1;
-                            _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
-                        }
-                    }
-
-                    var addText = _subtitle.Paragraphs[index].Text;
-
-                    if (firstIndex != index)
-                    {
-                        addText = RemoveAssStartAlignmentTag(addText);
-                    }
-
-                    if (breakMode == BreakMode.UnbreakNoSpace)
-                    {
-                        sb.Append(addText);
-                    }
-                    else
-                    {
-                        sb.AppendLine(addText);
-                    }
-
-                    endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
-                }
-
-                if (HtmlUtil.RemoveHtmlTags(sb.ToString(), true).Length > 200)
-                {
-                    return;
-                }
-
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(_language.BeforeMergeLines);
-
-                var currentParagraph = _subtitle.Paragraphs[firstIndex];
-                string text = sb.ToString();
-                text = HtmlUtil.FixInvalidItalicTags(text);
-                text = FixAssaTagsAfterMerge(text);
-                text = ChangeAllLinesTagsToSingleTag(text, "i");
-                text = ChangeAllLinesTagsToSingleTag(text, "b");
-                text = ChangeAllLinesTagsToSingleTag(text, "u");
-                if (breakMode == BreakMode.Unbreak)
-                {
-                    text = Utilities.UnbreakLine(text);
-                }
-                else if (breakMode == BreakMode.UnbreakNoSpace)
-                {
-                    text = text.Replace(" " + Environment.NewLine + " ", string.Empty)
-                        .Replace(Environment.NewLine + " ", string.Empty)
-                        .Replace(" " + Environment.NewLine, string.Empty)
-                        .Replace(Environment.NewLine, string.Empty);
+                    firstIndex = index;
+                    next = index + 1;
+                    first = !first;
                 }
                 else
                 {
-                    text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                }
-
-                currentParagraph.Text = text;
-
-                //display time
-                currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
-
-                var nextParagraph = _subtitle.GetParagraphOrDefault(next);
-                if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
-                {
-                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
-                }
-
-                // original subtitle
-                if (IsOriginalEditable)
-                {
-                    var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
-                    if (original != null)
+                    deleteIndices.Add(index);
+                    if (next != index)
                     {
-                        var originalTexts = new StringBuilder();
-                        originalTexts.Append(original.Text.TrimEnd());
-                        if (breakMode != BreakMode.UnbreakNoSpace)
-                        {
-                            originalTexts.Append(" ");
-                        }
+                        return;
+                    }
 
-                        for (int i = 0; i < deleteIndices.Count; i++)
-                        {
-                            var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
-                            if (originalNext != null)
-                            {
-                                if (breakMode == BreakMode.UnbreakNoSpace)
-                                {
-                                    originalTexts.Append(originalNext.Text.Trim());
-                                }
-                                else
-                                {
-                                    originalTexts.Append(originalNext.Text).Append(' ');
-                                }
-                            }
+                    next++;
+                }
 
-                        }
-
-                        for (int i = deleteIndices.Count - 1; i >= 0; i--)
-                        {
-                            var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
-                            if (originalNext != null)
-                            {
-                                _subtitleOriginal.Paragraphs.Remove(originalNext);
-                            }
-                        }
-
-                        original.Text = originalTexts.ToString().Replace("  ", " ");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
-
-                        if (breakMode == BreakMode.Unbreak)
-                        {
-                            original.Text = Utilities.UnbreakLine(original.Text);
-                        }
-                        else if (breakMode == BreakMode.UnbreakNoSpace)
-                        {
-                            original.Text = original.Text.Replace(" " + Environment.NewLine + " ", string.Empty)
-                                .Replace(Environment.NewLine + " ", string.Empty)
-                                .Replace(" " + Environment.NewLine, string.Empty)
-                                .Replace(Environment.NewLine, string.Empty);
-                        }
-                        else
-                        {
-                            original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
-                        }
-
-                        original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                        _subtitleOriginal.Renumber();
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                    if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
+                    {
+                        var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                        _subtitle.Paragraphs[index].Text = mergeResult.Item1;
+                        _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
                     }
                 }
 
-                if (_networkSession != null)
+                var addText = _subtitle.Paragraphs[index].Text;
+
+                if (firstIndex != index)
                 {
-                    _networkSession.TimerStop();
-                    _networkSession.UpdateLine(firstIndex, currentParagraph);
-                    NetworkGetSendUpdates(deleteIndices, 0, null);
+                    addText = RemoveAssStartAlignmentTag(addText);
+                }
+
+                if (breakMode == BreakMode.UnbreakNoSpace)
+                {
+                    sb.Append(addText);
                 }
                 else
                 {
+                    sb.AppendLine(addText);
+                }
+
+                endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+            }
+
+            if (HtmlUtil.RemoveHtmlTags(sb.ToString(), true).Length > 200)
+            {
+                return;
+            }
+
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            MakeHistoryForUndo(_language.BeforeMergeLines);
+
+            var currentParagraph = _subtitle.Paragraphs[firstIndex];
+            string text = sb.ToString().TrimEnd();
+            text = HtmlUtil.FixInvalidItalicTags(text);
+            text = FixAssaTagsAfterMerge(text);
+            text = ChangeAllLinesTagsToSingleTag(text, "i");
+            text = ChangeAllLinesTagsToSingleTag(text, "b");
+            text = ChangeAllLinesTagsToSingleTag(text, "u");
+            if (breakMode == BreakMode.Unbreak)
+            {
+                text = Utilities.UnbreakLine(text);
+            }
+            else if (breakMode == BreakMode.UnbreakNoSpace)
+            {
+                text = text.Replace(" " + Environment.NewLine + " ", string.Empty)
+                    .Replace(Environment.NewLine + " ", string.Empty)
+                    .Replace(" " + Environment.NewLine, string.Empty)
+                    .Replace(Environment.NewLine, string.Empty);
+            }
+            else
+            {
+                text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+            }
+
+            currentParagraph.Text = text;
+
+            //display time
+            currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
+
+            var nextParagraph = _subtitle.GetParagraphOrDefault(next);
+            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            {
+                currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+            }
+
+            // original subtitle
+            if (IsOriginalEditable)
+            {
+                var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
+                if (original != null)
+                {
+                    var originalTexts = new StringBuilder();
+                    originalTexts.Append(original.Text.TrimEnd());
+                    if (breakMode != BreakMode.UnbreakNoSpace)
+                    {
+                        originalTexts.Append(" ");
+                    }
+
+                    for (int i = 0; i < deleteIndices.Count; i++)
+                    {
+                        var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
+                        if (originalNext != null)
+                        {
+                            if (breakMode == BreakMode.UnbreakNoSpace)
+                            {
+                                originalTexts.Append(originalNext.Text.Trim());
+                            }
+                            else
+                            {
+                                originalTexts.Append(originalNext.Text).Append(' ');
+                            }
+                        }
+
+                    }
+
                     for (int i = deleteIndices.Count - 1; i >= 0; i--)
                     {
-                        _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
+                        var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
+                        if (originalNext != null)
+                        {
+                            _subtitleOriginal.Paragraphs.Remove(originalNext);
+                        }
                     }
 
-                    _subtitle.Renumber();
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    original.Text = originalTexts.ToString().Replace("  ", " ");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
+
+                    if (breakMode == BreakMode.Unbreak)
+                    {
+                        original.Text = Utilities.UnbreakLine(original.Text);
+                    }
+                    else if (breakMode == BreakMode.UnbreakNoSpace)
+                    {
+                        original.Text = original.Text.Replace(" " + Environment.NewLine + " ", string.Empty)
+                            .Replace(Environment.NewLine + " ", string.Empty)
+                            .Replace(" " + Environment.NewLine, string.Empty)
+                            .Replace(Environment.NewLine, string.Empty);
+                    }
+                    else
+                    {
+                        original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
+                    }
+
+                    original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                    _subtitleOriginal.Renumber();
+                }
+            }
+
+            if (_networkSession != null)
+            {
+                _networkSession.TimerStop();
+                _networkSession.UpdateLine(firstIndex, currentParagraph);
+                NetworkGetSendUpdates(deleteIndices, 0, null);
+            }
+            else
+            {
+                for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                {
+                    _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
                 }
 
-                UpdateSourceView();
-                ShowStatus(_language.LinesMerged);
-                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                RefreshSelectedParagraph();
+                _subtitle.Renumber();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             }
+
+            UpdateSourceView();
+            ShowStatus(_language.LinesMerged);
+            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            RefreshSelectedParagraph();
         }
 
         private void ExtendBeforeToolStripMenuItemClick(object sender, EventArgs e)
@@ -16333,7 +16335,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenSubtitle(fileName, null);
             }
-            else if (SubtitleFormat.AllSubtitleFormats.Any(p=>p.Extension == ext))
+            else if (SubtitleFormat.AllSubtitleFormats.Any(p => p.Extension == ext))
             {
                 OpenSubtitle(fileName, null);
             }
@@ -31472,7 +31474,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 string newText = p.Text.TrimEnd();
-                string oldText = _listViewTextUndoLast;
+                string oldText = _listViewTextUndoLast.TrimEnd();
                 if (oldText == null)
                 {
                     return;
