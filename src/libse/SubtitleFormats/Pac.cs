@@ -891,9 +891,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 130, new SpecialCharacter("โ")}, // 0x82
             { 131, new SpecialCharacter("ใ")}, // 0x83
             { 132, new SpecialCharacter("ไ")}, // 0x84
+            { 133, new SpecialCharacter("ๅ")}, // 0x85
+            { 134, new SpecialCharacter("ๆ")}, // 0x86
 
+            { 135, new SpecialCharacter("็")}, // 0x87
+            { 136, new SpecialCharacter("่")}, // 0x88
+            { 137, new SpecialCharacter("้")}, // 0x89
             { 138, new SpecialCharacter("๊")}, // 0x8A
             { 139, new SpecialCharacter("๋")}, // 0x8B
+            { 140, new SpecialCharacter("์")}, // 0x8C
             { 141, new SpecialCharacter("ํ")}, // 0x8D
             { 142, new SpecialCharacter("๎")}, // 0x8E
 
@@ -910,7 +916,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 153, new SpecialCharacter("๙")}, // 0x99
             { 154, new SpecialCharacter("๚")}, // 0x9a
             { 155, new SpecialCharacter("๛")}, // 0x9b
-          
+            { 160, new SpecialCharacter(" ")}, // 0xa0
             { 161, new SpecialCharacter("ก")}, // 0xa1
             { 162, new SpecialCharacter("ข")}, // 0xa2
             { 163, new SpecialCharacter("ฃ")}, // 0xa3
@@ -965,29 +971,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 212, new SpecialCharacter("ิ")}, // 0xd4
             { 213, new SpecialCharacter("ี")}, // 0xd5
             { 214, new SpecialCharacter("ึ")}, // 0xd6
+            { 215, new SpecialCharacter("ื")}, // 0xd7
+            { 216, new SpecialCharacter("ุ")}, // 0xd8
+            { 217, new SpecialCharacter("ู")}, // 0xd9
             { 218, new SpecialCharacter("ฺ")}, // 0xda
             { 223, new SpecialCharacter("฿")}, // 0xdb
-
-            { 0xA688, new SpecialCharacter("ฆ่")},
-            { 0xAA89, new SpecialCharacter("ช้")},
-            { 0xB487, new SpecialCharacter("ด็")},
-            { 0xB589, new SpecialCharacter("ต้")},
-            { 0xB6D9, new SpecialCharacter("ถู")},
-            { 0xB88C, new SpecialCharacter("ธ์")},
-            { 0xB9D1, new SpecialCharacter("นั")},
-            { 0xC188, new SpecialCharacter("ม่")},
-            { 0xC288, new SpecialCharacter("ย่")},
-            { 0xC2D8, new SpecialCharacter("ยุ")},
-            { 0xC38C, new SpecialCharacter("ร์")},
-            { 0xC3D9, new SpecialCharacter("รู")},
-            { 0xC588, new SpecialCharacter("ล่")},
-            { 0xC788, new SpecialCharacter("ว่")},
-            { 0xC78C, new SpecialCharacter("ว์")},
-            { 0xCAD8, new SpecialCharacter("สุ")},
-            { 0xCB89, new SpecialCharacter("ห้")},
-
-            { 0xBED788, new SpecialCharacter("พื่")},
-            { 0xC2D988, new SpecialCharacter("ยู่")},
+            { 0xe3, new SpecialCharacter("ใ")},
         };
 
 
@@ -1402,7 +1391,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (CodePage == CodePageThai)
             {
                 textBuffer = GetThaiBytes(text, alignment);
-                // textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
             }
             else
             {
@@ -1522,46 +1510,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
-                var fi = new FileInfo(fileName);
-                if (fi.Length > 65 && fi.Length < 1024000) // not too small or too big
-                {
-                    byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+				var fi = new FileInfo(fileName);
+				if (fi.Length > 65 && fi.Length < 1024000) // not too small or too big
+				{
+					byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
-                    if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
-                        buffer[01] == 0 &&
-                        buffer[02] == 0 &&
-                        buffer[03] == 0 &&
-                        buffer[04] == 0 &&
-                        buffer[05] == 0 &&
-                        buffer[06] == 0 &&
-                        buffer[07] == 0 &&
-                        buffer[08] == 0 &&
-                        buffer[09] == 0 &&
-                        buffer[10] == 0 &&
-                        buffer[11] == 0 &&
-                        buffer[12] == 0 &&
-                        buffer[13] == 0 &&
-                        buffer[14] == 0 &&
-                        buffer[15] == 0 &&
-                        buffer[16] == 0 &&
-                        buffer[17] == 0 &&
-                        buffer[18] == 0 &&
-                        buffer[19] == 0 &&
-                        buffer[20] == 0 &&
-                        //buffer[21] < 10 && // start from number
-                        //buffer[22] == 0 &&
-                        //(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
-                        fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
-                }
-            }
-            catch
-            {
-                return false;
-            }
-
+					if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
+						buffer[01] == 0 &&
+						buffer[02] == 0 &&
+						buffer[03] == 0 &&
+						buffer[04] == 0 &&
+						buffer[05] == 0 &&
+						buffer[06] == 0 &&
+						buffer[07] == 0 &&
+						buffer[08] == 0 &&
+						buffer[09] == 0 &&
+						buffer[10] == 0 &&
+						buffer[11] == 0 &&
+						buffer[12] == 0 &&
+						buffer[13] == 0 &&
+						buffer[14] == 0 &&
+						buffer[15] == 0 &&
+						buffer[16] == 0 &&
+						buffer[17] == 0 &&
+						buffer[18] == 0 &&
+						buffer[19] == 0 &&
+						buffer[20] == 0 &&
+						//buffer[21] < 10 && // start from number
+						//buffer[22] == 0 &&
+						//(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
+						fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+					{
+						return true;
+					}
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			
             return false;
         }
 
@@ -1616,10 +1604,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         firstIsSecondary = secondary;
                         for (var j = i + 2; j < buffer.Length - 6 && (buffer[j] != 0x00 || buffer[j - 1] == 0xFE || buffer[j - 2] == 0xFE); j++)
                         {
-                            if (buffer[j] == 0xFE)
-                            {
-                                secondary = (buffer[j + 1] & 0x08) != 0;
-                            }
+                            if (buffer[j] == 0xFE) 
+							{
+								secondary = (buffer[j + 1] & 0x08) != 0;
+							}
 
                             var lineEnd = Array.FindIndex(buffer, j, b => b == 0xfe || b == 0x00);
                             if (Encoding.ASCII.GetString(buffer, j, 6).ToUpperInvariant() == "STORY:")
@@ -1926,7 +1914,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (CodePage == CodePageThai)
                     {
                         sb.Append(GetThaiString(buffer, ref index));
-                        //sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
                     }
                     else
                     {
@@ -2023,10 +2010,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        /// <summary>
-        /// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
-        /// </summary>
-        private static string FixItalics(string input)
+/// <summary>
+/// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
+/// </summary>
+private static string FixItalics(string input)
         {
             var pre = string.Empty;
             var text = input;
