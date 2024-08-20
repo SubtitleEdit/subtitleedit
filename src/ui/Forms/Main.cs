@@ -31482,12 +31482,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                string newText = p.Text.TrimEnd();
-                string oldText = _listViewTextUndoLast.TrimEnd();
-                if (oldText == null)
+                var newText = p.Text.TrimEnd();
+                if (_listViewTextUndoLast == null)
                 {
                     return;
                 }
+                var oldText = _listViewTextUndoLast.TrimEnd();
 
                 if (_listViewTextUndoLast != newText)
                 {
