@@ -34,6 +34,9 @@
    * Fix crash in Whisper UI (bug in Dutch translation) - thx hpcs444/tsg040
    * Fix bad xml replace in "TTML 1.0" - thx Info
    * Fix undo after "merge selected" for 3+ lines - thx Llorx
+   * Fix crash with resolution 0x0 in "Generate transparent subs" - thx hellobigbean*
+   * Fix edge case when parsing ms - thx PoneyClairDeLune
+   * Fix crash with "Undo-text-timer" - thx JDTR75/ cvrle77
 
 
 4.0.7 (8th July 2024) 
