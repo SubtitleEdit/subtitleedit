@@ -17,49 +17,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new TimeCode(seconds * BaseUnit);
         }
 
+        /// <summary>
+        /// Parse time string to milliseconds, format: HH[:,.]MM[:,.]SS[:,.]MSec or MM[:,.]SS[:,.]MSec
+        /// </summary>
+        /// <param name="text">Time code as string.</param>
+        /// <returns>Total milliseconds.</returns>
         public static double ParseToMilliseconds(string text)
         {
             var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
-                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(parts[3], out var milliseconds))
+                var msString = parts[3].PadRight(3,'0');
+                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(msString, out var milliseconds))
                 {
-                	// Fixes edge cases where the millisecond portion doesn't have three digits
-                	if (parts[3].Length < 3)
-                	{
-                		for (int msLength = parts[3].Length; msLength < 3; msLength ++)
-                		{
-                			milliseconds *= 10;
-                		}
-                	} else if (parts[3].Length > 3)
-                	{
-                		for (int msLength = parts[3].Length; msLength > 3; msLength --)
-                		{
-                			milliseconds /= 10;
-                		}
-                	}
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
 
             if (parts.Length == 3)
             {
-                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(parts[2], out var milliseconds))
+                var msString = parts[3].PadRight(2, '0');
+                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(msString, out var milliseconds))
                 {
-                	// Fixes edge cases where the millisecond portion doesn't have three digits
-                	if (parts[3].Length < 3)
-                	{
-                		for (int msLength = parts[3].Length; msLength < 3; msLength ++)
-                		{
-                			milliseconds *= 10;
-                		}
-                	} else if (parts[3].Length > 3)
-                	{
-                		for (int msLength = parts[3].Length; msLength > 3; msLength --)
-                		{
-                			milliseconds /= 10;
-                		}
-                	}
                     return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
