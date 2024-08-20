@@ -24,6 +24,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(parts[3], out var milliseconds))
                 {
+                	// Fixes edge cases where the millisecond portion doesn't have three digits
+                	if (parts[3].Length < 3)
+                	{
+                		for (int msLength = parts[3].Length; msLength < 3; msLength ++)
+                		{
+                			milliseconds *= 10;
+                		}
+                	} else if (parts[3].Length > 3)
+                	{
+                		for (int msLength = parts[3].Length; msLength > 3; msLength --)
+                		{
+                			milliseconds /= 10;
+                		}
+                	}
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
@@ -32,6 +46,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(parts[2], out var milliseconds))
                 {
+                	// Fixes edge cases where the millisecond portion doesn't have three digits
+                	if (parts[3].Length < 3)
+                	{
+                		for (int msLength = parts[3].Length; msLength < 3; msLength ++)
+                		{
+                			milliseconds *= 10;
+                		}
+                	} else if (parts[3].Length > 3)
+                	{
+                		for (int msLength = parts[3].Length; msLength > 3; msLength --)
+                		{
+                			milliseconds /= 10;
+                		}
+                	}
                     return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
