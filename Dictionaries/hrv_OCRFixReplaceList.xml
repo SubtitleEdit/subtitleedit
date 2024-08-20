@@ -5233,6 +5233,7 @@
     <RegEx find="đt" replaceWith="št" />
     <RegEx find="gf" replaceWith="gd" />
     <RegEx find="nw" replaceWith="ne" />
+    <RegEx find="vb" replaceWith="vn" />
     <RegEx find="zž" replaceWith="ž" />
     <RegEx find="žz" replaceWith="žu" />
     <RegEx find="žž" replaceWith="ž" />
