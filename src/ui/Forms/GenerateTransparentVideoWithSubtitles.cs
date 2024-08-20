@@ -51,6 +51,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             _videoInfo = videoInfo;
+            if (_videoInfo != null && (_videoInfo.Width <= 0 || _videoInfo.Height <= 0))
+            {
+                _videoInfo.Width = 1920;
+                _videoInfo.Height = 1080;
+            }
+
             _inputVideoFileName = inputVideoFileName;
             _assaSubtitle = new Subtitle(subtitle);
             _selectedLines = selectedLines;
@@ -966,7 +972,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!numericUpDownWidth.Visible)
             {
                 var item = new ToolStripMenuItem();
-                item.Text = _videoInfo == null
+                item.Text = (_videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
                     ? "(1920x1080)"
                     : $"({_videoInfo.Width}x{_videoInfo.Height})";
 
