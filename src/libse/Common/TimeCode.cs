@@ -31,7 +31,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 		{
                 			milliseconds *= 10;
                 		}
-                	} else {
+                	} else if (parts[3].Length > 3)
+                	{
                 		for (int msLength = parts[3].Length; msLength > 3; msLength --)
                 		{
                 			milliseconds /= 10;
@@ -52,7 +53,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 		{
                 			milliseconds *= 10;
                 		}
-                	} else {
+                	} else if (parts[3].Length > 3)
+                	{
                 		for (int msLength = parts[3].Length; msLength > 3; msLength --)
                 		{
                 			milliseconds /= 10;
