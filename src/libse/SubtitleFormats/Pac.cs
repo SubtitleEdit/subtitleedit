@@ -1510,46 +1510,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
-				var fi = new FileInfo(fileName);
-				if (fi.Length > 65 && fi.Length < 1024000) // not too small or too big
-				{
-					byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                var fi = new FileInfo(fileName);
+                if (fi.Length > 65 && fi.Length < 1024000) // not too small or too big
+                {
+                    byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
-					if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
-						buffer[01] == 0 &&
-						buffer[02] == 0 &&
-						buffer[03] == 0 &&
-						buffer[04] == 0 &&
-						buffer[05] == 0 &&
-						buffer[06] == 0 &&
-						buffer[07] == 0 &&
-						buffer[08] == 0 &&
-						buffer[09] == 0 &&
-						buffer[10] == 0 &&
-						buffer[11] == 0 &&
-						buffer[12] == 0 &&
-						buffer[13] == 0 &&
-						buffer[14] == 0 &&
-						buffer[15] == 0 &&
-						buffer[16] == 0 &&
-						buffer[17] == 0 &&
-						buffer[18] == 0 &&
-						buffer[19] == 0 &&
-						buffer[20] == 0 &&
-						//buffer[21] < 10 && // start from number
-						//buffer[22] == 0 &&
-						//(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
-						fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-				}
-			}
-			catch
-			{
-				return false;
-			}
-			
+                    if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
+                        buffer[01] == 0 &&
+                        buffer[02] == 0 &&
+                        buffer[03] == 0 &&
+                        buffer[04] == 0 &&
+                        buffer[05] == 0 &&
+                        buffer[06] == 0 &&
+                        buffer[07] == 0 &&
+                        buffer[08] == 0 &&
+                        buffer[09] == 0 &&
+                        buffer[10] == 0 &&
+                        buffer[11] == 0 &&
+                        buffer[12] == 0 &&
+                        buffer[13] == 0 &&
+                        buffer[14] == 0 &&
+                        buffer[15] == 0 &&
+                        buffer[16] == 0 &&
+                        buffer[17] == 0 &&
+                        buffer[18] == 0 &&
+                        buffer[19] == 0 &&
+                        buffer[20] == 0 &&
+                        //buffer[21] < 10 && // start from number
+                        //buffer[22] == 0 &&
+                        //(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
+                        fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
             return false;
         }
 
@@ -1604,10 +1604,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         firstIsSecondary = secondary;
                         for (var j = i + 2; j < buffer.Length - 6 && (buffer[j] != 0x00 || buffer[j - 1] == 0xFE || buffer[j - 2] == 0xFE); j++)
                         {
-                            if (buffer[j] == 0xFE) 
-							{
-								secondary = (buffer[j + 1] & 0x08) != 0;
-							}
+                            if (buffer[j] == 0xFE)
+                            {
+                                secondary = (buffer[j + 1] & 0x08) != 0;
+                            }
 
                             var lineEnd = Array.FindIndex(buffer, j, b => b == 0xfe || b == 0x00);
                             if (Encoding.ASCII.GetString(buffer, j, 6).ToUpperInvariant() == "STORY:")
@@ -2010,10 +2010,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-/// <summary>
-/// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
-/// </summary>
-private static string FixItalics(string input)
+        /// <summary>
+        /// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
+        /// </summary>
+        private static string FixItalics(string input)
         {
             var pre = string.Empty;
             var text = input;
