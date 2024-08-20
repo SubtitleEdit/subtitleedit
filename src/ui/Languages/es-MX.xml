@@ -18,6 +18,7 @@
     <Preview>Vista Previa</Preview>
     <ShowPreview>Mostrar vista previa</ShowPreview>
     <HidePreview>Ocultar vista previa</HidePreview>
+    <SubtitleFile>Archivo de subtítulo</SubtitleFile>
     <SubtitleFiles>Archivos de subtítulos</SubtitleFiles>
     <AllFiles>Todos los archivos</AllFiles>
     <VideoFiles>Archivos de video</VideoFiles>
@@ -197,9 +198,6 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Sitio web de Vosk</VoskWebsite>
     <WhisperWebsite>Sitio web de Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper no encontrado.
-
-¿Más información (web)?</WhisperNotFound>
     <Model>Modelo</Model>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas y modelos</LanguagesAndModels>
@@ -216,12 +214,14 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <BatchMode>Modo por lotes</BatchMode>
     <KeepPartialTranscription>Conservar transcripción parcial</KeepPartialTranscription>
     <TranslateToEnglish>Traducir al inglés</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Máx. de caracteres por línea del subtítulo</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Eliminar archivos temporales</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Descargar cuBLAS y cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>¡Texto no encontrado!</NoTextFound>
+    <FixCasing>Corregir mayúsculas y minúsculas</FixCasing>
+    <AddPeriods>Agregar puntuación</AddPeriods>
+    <FixShortDuration>Corregir duración corta</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
@@ -733,6 +733,8 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <ChooseColor>Selecciona color:</ChooseColor>
     <TotalSeconds>Segundos totales:</TotalSeconds>
     <EndDelayInSeconds>Desfase final en segundos:</EndDelayInSeconds>
+    <WordEffect>Efecto de palabra</WordEffect>
+    <CharacterEffect>Efecto de caracteres</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efecto máquina de escribir</Title>
@@ -1014,11 +1016,15 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Preestablecido</Preset>
+    <PixelFormat>Formato de píxel</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Ajustar a</TuneFor>
     <AlignRight>Alinear a la derecha</AlignRight>
     <GetStartPosition>Obtener posición de inicio</GetStartPosition>
     <GetEndPosition>Obtener posición de fin</GetEndPosition>
+    <UseSource>Usar fuente</UseSource>
+    <UseSourceResolution>Usar resolución de fuente</UseSourceResolution>
+    <OutputSettings>Archivo/carpeta de salida...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generar video con subtítulos incrustados añadidos/eliminados</Title>
@@ -1058,15 +1064,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <To>A:</To>
     <Translate>Traducir</Translate>
     <PleaseWait>Por favor, espere... puede tardar unos momentos</PleaseWait>
-    <PoweredByGoogleTranslate>Generado por Google translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Generado por Microsoft translate</PoweredByMicrosoftTranslate>
     <PoweredByX>Generado por {0}</PoweredByX>
-    <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translatyor Text' de Microsoft para usar la última versión de Microsoft Translator.
-
-Ve a "Opciones -&gt; Ajustes -&gt; Autotraducir" para introducir tu clave.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Intentando traducir sin la clave API... (datos lentos y limitados).
-Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" para ingresar tu clave de API de Google Translate.</GoogleNoApiKeyWarning>
-    <Service>Servicio:</Service>
     <LineMergeHandling>Fusión de línea:</LineMergeHandling>
     <ProcessorMergeNext>Fusionar un máximo de dos líneas</ProcessorMergeNext>
     <ProcessorSentence>Fusionar oraciones</ProcessorSentence>
@@ -1087,6 +1085,13 @@ Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" p
     <XRequiresAnApiKey>"{0}" requiere una clave API.</XRequiresAnApiKey>
     <ReadMore>¿Leer más al respecto?</ReadMore>
     <Formality>Formalidad</Formality>
+    <TranslateCurrentLine>Traducir solo la línea actual</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Volver a traducir la línea actual</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Manejo de división/fusión</MergeSplitStrategy>
+    <Delay>Retraso entre llamadas al servidor</Delay>
+    <MaxBytes>Número máximo de bytes en cada llamada al servidor</MaxBytes>
+    <PromptX>Solicitar {0}</PromptX>
+    <TranslateLinesSeparately>Traducir cada línea por separado</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductor Google vs Microsoft</Title>
@@ -1445,12 +1450,14 @@ Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" p
         <GenerateBlankVideo>Generar video en blanco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generar video con subtítulos incrustados...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generar video con subtítulos incrustados añadidos/eliminados...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generar video transparente con subtítulos...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio a texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos del video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generar/importar cambios de escena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Eliminar/exportar cambios de escena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Generar formas de onda por lotes...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda y espectrograma</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Texto a voz y agregar a video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Desacoplar controles de video</UnDockVideoControls>
         <ReDockVideoControls>Acoplar controles de video</ReDockVideoControls>
       </Video>
@@ -1608,6 +1615,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" p
         <GoToSourceView>Ir a la vista de origen</GoToSourceView>
         <GoToListView>Ir a la vista de lista</GoToListView>
         <ExtractAudio>Extraer audio...</ExtractAudio>
+        <MediaInfo>Información del archivo multimedia</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2127,6 +2135,10 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <EvenLines>Líneas pares</EvenLines>
     <DurationLessThan>Duración menor a</DurationLessThan>
     <DurationGreaterThan>Duración mayor a</DurationGreaterThan>
+    <CpsLessThan>CPS menor que</CpsLessThan>
+    <CpsGreaterThan>CPS mayor que</CpsGreaterThan>
+    <LengthLessThan>Longitud menor que</LengthLessThan>
+    <LengthGreaterThan>Longitud mayor que</LengthGreaterThan>
     <ExactlyOneLine>Exactamente una línea</ExactlyOneLine>
     <ExactlyTwoLines>Exactamente dos lineas</ExactlyTwoLines>
     <MoreThanTwoLines>Más de dos líneas</MoreThanTwoLines>
@@ -2532,6 +2544,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <CpsLineLengthStyleCalcNoSpace>Contar todo excepto los espacios</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latín 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latín 0.5, espacios 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composición</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composición, no espacios</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sin espacios ni signos de puntuación ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sin espacios ni puntuación, solo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolos musicales</MusicSymbol>
@@ -3125,6 +3139,9 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <Angle>Ángulo</Angle>
     <BoxPerLine>Cuadro por línea (utiliza el color del contorno)</BoxPerLine>
     <BoxMultiLine>Un cuadro (utiliza el color de la sombra)</BoxMultiLine>
+    <BoxPerLineShort>Cuadro por línea</BoxPerLineShort>
+    <BoxMultiLineShort>Un cuadro</BoxMultiLineShort>
+    <BoxType>Tipo de cuadro</BoxType>
     <DuplicateStyleNames>Nombres de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3151,6 +3168,25 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <Info>Un punto de sincronización ajusta la posición, dos o más puntos ajustan posición y velocidad.</Info>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Texto a voz</Title>
+    <Voice>Voz</Voice>
+    <TestVoice>Prueba de voz</TestVoice>
+    <DefaultVoice>Voz predeterminada</DefaultVoice>
+    <AddAudioToVideo>Agregar audio a archivo de video (archivo nuevo)</AddAudioToVideo>
+    <GenerateSpeech>Generar voz a partir de texto</GenerateSpeech>
+    <ActorInfo>Haga clic con el botón derecho para asignar actor a voz</ActorInfo>
+    <AdjustingSpeedXOfY>Ajustando velocidad: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Fusionando pista de audio: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generando voz a partir de texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Revisar clips de audio</ReviewAudioClips>
+    <CustomAudioEncoding>Codificación de audio personalizada</CustomAudioEncoding>
+    <ReviewInfo>Revisar y editar/eliminar clips de audio</ReviewInfo>
+    <Play>Reproducir</Play>
+    <AutoContinue>Continuar automáticamente</AutoContinue>
+    <Regenerate>Regenerar</Regenerate>
+    <Velocidad>Velocidad</Velocidad>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Sincronización SMPTE</Title>
     <UseSmpteTiming>¿Utilizar la sincronización SMPTE para los subtítulos actuales?</UseSmpteTiming>
@@ -3320,6 +3356,13 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <InspectItems>Revisar elementos</InspectItems>
     <AddBetterMatch>Añadir la mejor coincidencia</AddBetterMatch>
     <Add>Añadir</Add>
+    <AddBetterMultiMatch>Añadir mejor coincidencia múltiple</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Añadir o actualizar coincidencia</AddOrUpdateMatch>
+    <SelectPrevousMatch>Seleccionar la coincidencia anterior</SelectPrevousMatch>
+    <SelectNextMatch>Seleccionar la siguiente coincidencia</SelectNextMatch>
+    <JumpPreviousMissingMatch>Ir a la coincidencia faltante anterior</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Ir a la siguiente coincidencia faltante</JumpNextMissingMatch>
+    <FocusTextbox>Enfocar la entrada de texto</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nueva carpeta</Title>
@@ -3372,6 +3415,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <SplitAtCursor>Dividir desde el cursor</SplitAtCursor>
     <MergeWithPrevious>Combinar con anterior</MergeWithPrevious>
     <MergeWithNext>Combinar con siguiente</MergeWithNext>
+    <RunWhisperSelectedParagraph>Ejecutar Whisper en el párrafo seleccionado...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Ampliar al anterior</ExtendToPrevious>
     <ExtendToNext>Ampliar al siguiente</ExtendToNext>
     <PlaySelection>Reproducir selección</PlaySelection>
@@ -3383,7 +3427,8 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <RemoveShotChangesFromSelection>Eliminar cambios de escena de la selección</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>
-    <InsertSubtitleHere>Insertar subtítulo aquí</InsertSubtitleHere>
+    <InsertSubtitleHere>Insertar texto aquí</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Insertar archivo de subtítulos aquí...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3411,6 +3456,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
   <WebVttProperties>
     <UseXTimeStamp>Usar el valor del encabezado X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Combinar líneas con el mismo texto al cargar</MergeLines>
+    <MergeStyleTags>Combinar etiquetas de estilo</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Estilos de WebVTT</Title>
@@ -3419,5 +3465,10 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <Title>Whisper Advanced - argumentos adicionales de la línea de comandos</Title>
     <CommandLineArguments>Parámetros adicionales para la línea de comandos de Whisper:</CommandLineArguments>
     <Info>Nota: ¡Diferentes implementaciones de Whisper tienen diferentes parámetros de línea de comandos!</Info>
+    <Standard>Estándar</Standard>
+    <StandardAsia>Estándar Asia</StandardAsia>
+    <HighlightCurrentWord>Resaltar palabra actual</HighlightCurrentWord>
+    <SingleWords>Palabras individuales</SingleWords>
+    <Sentence>Oración</Sentence>
   </WhisperAdvanced>
 </Language>
