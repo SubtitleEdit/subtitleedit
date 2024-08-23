@@ -7,12 +7,10 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -602,6 +600,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixUnneededSpaces.Language.UnneededSpace = LanguageSettings.Current.FixCommonErrors.UnneededSpace;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWords;
+            RemoveSpaceBetweenNumbers.Language.RemoveSpaceBetweenNumber = LanguageSettings.Current.FixCommonErrors.RemoveSpaceBetweenNumber;
             NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
 
             FixLargeFonts();
