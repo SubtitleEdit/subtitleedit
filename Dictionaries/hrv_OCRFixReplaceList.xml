@@ -5408,6 +5408,7 @@
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jho" replaceWith="jno" />
     <RegEx find="jr([dgklnpst])" replaceWith="je$1" />
+    <RegEx find="jq" replaceWith="ja" />
     <RegEx find="jw" replaceWith="je" />
     <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
