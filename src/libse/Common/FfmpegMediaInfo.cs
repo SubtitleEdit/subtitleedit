@@ -11,10 +11,12 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class FfmpegMediaInfo
     {
         public List<FfmpegTrackInfo> Tracks { get; set; }
-        
+
         public Dimension Dimension { get; set; }
+        public TimeCode Duration { get; set; }
 
         private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
+        private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
 
         private FfmpegMediaInfo()
         {
@@ -96,6 +98,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                             info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo });
                         }
                     }
+                }
+
+                var match = DurationRegex.Match(line);
+                if (match.Success)
+                {
+                    var timeCodeString = match.Value.Split(' ')[1];
+                    info.Duration = new TimeCode(TimeCode.ParseToMilliseconds(timeCodeString));
                 }
             }
 
