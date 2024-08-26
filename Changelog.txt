@@ -11,6 +11,7 @@
    * Add WebVTT setting for split of style tags - thx Oliver 
    * PAC: Support Portuguese codepage + more - thx Ingo
    * Cavena 890 Greek support etc - thx Ingo
+   * Add more "do-not-break-after" lists - thx oep42
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
