@@ -605,6 +605,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
             listView1.Select();
+
+            AcceptButton = buttonNextFinish;
         }
 
         private void FixLargeFonts()
