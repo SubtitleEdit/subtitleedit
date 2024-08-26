@@ -828,6 +828,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var mkvVobSub = new List<string>();
                 var mkvSrt = new List<string>();
                 var mkvSsa = new List<string>();
+                var mkvDvbSub = new List<string>();
                 var mkvAss = new List<string>();
                 var mkvTextST = new List<string>();
                 var mkvCount = 0;
@@ -916,7 +917,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvAss.Add(MakeMkvTrackInfoString(track));
+                                        mkvDvbSub.Add(MakeMkvTrackInfoString(track));
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -926,7 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count + mkvTextST.Count <= 0)
+                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count + mkvDvbSub.Count + mkvTextST.Count <= 0)
                         {
                             item.SubItems.Add(LanguageSettings.Current.UnknownSubtitle.Title);
                         }
@@ -986,6 +987,7 @@ namespace Nikse.SubtitleEdit.Forms
                         { "SSA", mkvSsa },
                         { "ASS", mkvAss },
                         { "TextST", mkvTextST },
+                        { "DvdSub", mkvDvbSub },
                     };
 
                     foreach (var mkvSubFormat in mkvSubFormats)
@@ -1528,7 +1530,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 }
                                                 else
                                                 {
-                                                    if (bluRaySubtitles.Count > 0)
+                                                    if (binaryParagraphs.Count > 0)
                                                     {
                                                         item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                                                         using (var vobSubOcr = new VobSubOcr())
