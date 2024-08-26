@@ -124,6 +124,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FixEnabled();
+
+            AcceptButton = buttonOK;
         }
 
         private void FixLargeFonts()
