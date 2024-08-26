@@ -1,7 +1,15 @@
 ﻿<NoBreakAfterList>
   <Item>Dr</Item>
   <Item>Dr.</Item>
-  <Item>Mr.</Item>
-  <Item>Mrs.</Item>
-  <Item>Ms.</Item>
+  <Item>M.</Item>
+  <Item>Mme</Item>
+  <Item>Mme.</Item>
+  <Item>Mlle</Item>
+  <Item>Mlle.</Item>
+  <Item>dr</Item>
+  <Item>dr.</Item>
+  <Item>mme</Item>
+  <Item>mme.</Item>
+  <Item>mlle</Item>
+  <Item>mlle.</Item>  
 </NoBreakAfterList>
