@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("TAMIL", "ta"),
                 new TranslationPair("TATAR", "tt"),
                 new TranslationPair("TELUGU", "te"),
-//                new TranslationPair("TETUM", "tet"), -- not yet implemented...
+                new TranslationPair("TETUM", "tet"), 
                 new TranslationPair("THAI", "th"),
                 new TranslationPair("TIGRINYA", "ti"),
                 new TranslationPair("TSONGA", "ts"),
