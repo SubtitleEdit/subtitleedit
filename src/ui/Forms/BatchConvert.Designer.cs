@@ -200,6 +200,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelError = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.nikseComboBoxTranslateModel = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.nikseLabelModel = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxAutoTranslate.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
@@ -284,6 +286,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxAutoTranslate
             // 
+            this.groupBoxAutoTranslate.Controls.Add(this.nikseLabelModel);
+            this.groupBoxAutoTranslate.Controls.Add(this.nikseComboBoxTranslateModel);
             this.groupBoxAutoTranslate.Controls.Add(this.labelTarget);
             this.groupBoxAutoTranslate.Controls.Add(this.comboBoxTarget);
             this.groupBoxAutoTranslate.Controls.Add(this.labelSource);
@@ -2361,7 +2365,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFilter.DropDownWidth = 335;
             this.comboBoxFilter.FormattingEnabled = true;
-            this.comboBoxFilter.Items.AddRange(new object[] {
+            this.comboBoxFilter.Items.AddRange(new string[] {
             "All files",
             "SubRip .srt files without BOM header",
             "Files with subtitle with more than two lines",
@@ -2575,6 +2579,39 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.Size = new System.Drawing.Size(51, 13);
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
+            // 
+            // nikseComboBoxTranslateModel
+            // 
+            this.nikseComboBoxTranslateModel.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxTranslateModel.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxTranslateModel.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxTranslateModel.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxTranslateModel.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxTranslateModel.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxTranslateModel.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxTranslateModel.DropDownHeight = 400;
+            this.nikseComboBoxTranslateModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.nikseComboBoxTranslateModel.DropDownWidth = 221;
+            this.nikseComboBoxTranslateModel.FormattingEnabled = true;
+            this.nikseComboBoxTranslateModel.Location = new System.Drawing.Point(11, 169);
+            this.nikseComboBoxTranslateModel.MaxLength = 32767;
+            this.nikseComboBoxTranslateModel.Name = "nikseComboBoxTranslateModel";
+            this.nikseComboBoxTranslateModel.SelectedIndex = -1;
+            this.nikseComboBoxTranslateModel.SelectedItem = null;
+            this.nikseComboBoxTranslateModel.SelectedText = "";
+            this.nikseComboBoxTranslateModel.Size = new System.Drawing.Size(221, 21);
+            this.nikseComboBoxTranslateModel.TabIndex = 116;
+            this.nikseComboBoxTranslateModel.TabStop = false;
+            this.nikseComboBoxTranslateModel.UsePopupWindow = false;
+            // 
+            // nikseLabelModel
+            // 
+            this.nikseLabelModel.AutoSize = true;
+            this.nikseLabelModel.Location = new System.Drawing.Point(11, 153);
+            this.nikseLabelModel.Name = "nikseLabelModel";
+            this.nikseLabelModel.Size = new System.Drawing.Size(39, 13);
+            this.nikseLabelModel.TabIndex = 117;
+            this.nikseLabelModel.Text = "Model:";
             // 
             // BatchConvert
             // 
@@ -2821,5 +2858,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Controls.NikseComboBox comboBoxTarget;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelSource;
         private Controls.NikseComboBox comboBoxSource;
+        private Controls.NikseLabel nikseLabelModel;
+        private Controls.NikseComboBox nikseComboBoxTranslateModel;
     }
 }

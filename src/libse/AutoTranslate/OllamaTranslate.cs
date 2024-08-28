@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)

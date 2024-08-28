@@ -2942,6 +2942,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.BatchConvertOcrLanguage = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BatchConvertTranslateEngine");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTranslateEngine = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformBatchLastFolder");
             if (subNode != null)
             {
@@ -9096,6 +9102,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
                 textWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
                 textWriter.WriteElementString("BatchConvertOcrLanguage", settings.Tools.BatchConvertOcrLanguage);
+                textWriter.WriteElementString("BatchConvertTranslateEngine", settings.Tools.BatchConvertTranslateEngine);
                 textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
