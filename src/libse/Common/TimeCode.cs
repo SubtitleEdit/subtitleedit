@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (parts.Length == 3)
             {
-                var msString = parts[2].PadRight(2, '0');
+                var msString = parts[2].PadRight(3, '0');
                 if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(msString, out var milliseconds))
                 {
                     return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
