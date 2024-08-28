@@ -87,7 +87,7 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
 
             var inputText = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)).Replace(Environment.NewLine, " ");
-            var splitResultText = string.Join(" ", splitResult);
+            var splitResultText = string.Join(" ", splitResult).Replace(Environment.NewLine, " ");
             Assert.AreEqual(inputText, splitResultText);
         }
 
