@@ -36333,9 +36333,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
             {
-                if (!RequireWhisperCpp())
+                if (!RequireWhisperCpp() && Configuration.IsRunningOnWindows)
                 {
-                    return;
+                    Configuration.Settings.Tools.WhisperChoice = WhisperChoice.PurfviewFasterWhisper;
                 }
             }
 
