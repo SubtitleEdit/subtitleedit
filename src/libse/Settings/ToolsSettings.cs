@@ -198,6 +198,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string BatchConvertMkvLanguageCodeStyle { get; set; }
         public string BatchConvertOcrEngine { get; set; }
         public string BatchConvertOcrLanguage { get; set; }
+        public string BatchConvertTranslateEngine { get; set; }
         public string WaveformBatchLastFolder { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -526,6 +527,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             BatchConvertTsScreenHeight = 1080;
             BatchConvertOcrEngine = "Tesseract";
             BatchConvertOcrLanguage = "en";
+            BatchConvertTranslateEngine = LibreTranslate.StaticName;
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
