@@ -78,6 +78,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void TimeCodeParseToMilliseconds4()
+        {
+            var ms = TimeCode.ParseToMilliseconds("02:03:99");
+
+            Assert.AreEqual(ms, new TimeSpan(0, 0, 2, 3, 990).TotalMilliseconds);
+        }
+
+        [TestMethod]
         public void TimeCodeGetTotalMilliseconds()
         {
             var tc = new TimeCode(1, 2, 3, 4);
