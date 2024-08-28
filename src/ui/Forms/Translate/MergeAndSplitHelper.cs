@@ -479,7 +479,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 {
                     var part = GetPartFromItem(text, item);
                     text = text.Remove(0, part.Length).Trim();
-                    lines.Add(Utilities.AutoBreakLine(part));
+                    if (text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    {
+                        lines.Add(Utilities.AutoBreakLine(part));
+                    }
                 }
             }
 
