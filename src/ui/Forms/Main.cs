@@ -825,9 +825,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var text = Clipboard.GetText();
                 var tmp = new Subtitle();
-                var format = new SubRip();
+                SubtitleFormat format = new SubRip();
                 var list = new List<string>(text.SplitToLines());
+
+                if (new AdvancedSubStationAlpha().IsMine(list, string.Empty))
+                {
+                    format = new AdvancedSubStationAlpha();
+                }
+
                 format.LoadSubtitle(tmp, list, null);
+
                 if (videoPositionInMilliseconds >= 0 && tmp.Paragraphs.Count > 0)
                 {
                     if (tmp.Paragraphs[0].StartTime.TotalMilliseconds > videoPositionInMilliseconds)
