@@ -14,8 +14,9 @@
    * Add more "do-not-break-after" lists - thx oep42
    * Handle dvb_sub in mkv in "Batch convert" - thx Gerben
    * Add "Tetum" language to Google Translate
-   * Add "pt-PT" language to Google Translate + rename pt to "Portuguse (Brazil)" - thx Marco
+   * Add "pt-PT" language to Google Translate + rename pt to "Portuguese (Brazil)" - thx Marco
 * IMPROVED:
+   * Update Portuguese translation - thx hugok79
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
    * Update Polish translation - thx admas
