@@ -135,6 +135,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
                 }
 
+                if (settings.Shortcuts.MainFileSaveAs == "Control+S" && settings.Shortcuts.MainSpellCheck == "Control+S")
+                {
+                    settings.Shortcuts.MainSpellCheck = "Alt+F7";
+                }
+
                 if (settings.General.UseFFmpegForWaveExtraction && string.IsNullOrEmpty(settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
                 {
                     var guessPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
