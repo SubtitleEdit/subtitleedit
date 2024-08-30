@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
                 }
 
-                if (settings.Shortcuts.MainFileSaveAs == "Control+S" && settings.Shortcuts.MainSpellCheck == "Control+S")
+                if (settings.Shortcuts.MainFileSaveAs == "Control+Shift+S" && settings.Shortcuts.MainSpellCheck == "Control+Shift+S")
                 {
                     settings.Shortcuts.MainSpellCheck = "Alt+F7";
                 }
