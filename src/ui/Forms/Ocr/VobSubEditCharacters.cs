@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             contextMenu.Items.Clear();
             var l = LanguageSettings.Current.VobSubOcrCharacter;
             MakeToolStripLetterItem(contextMenu, "Catalan", "àÀéÉèÈíÍïÏóÓòÒúÚüÜçÇ");
-            MakeToolStripLetterItem(contextMenu, "French", "àÀâÂæÆçÇéèÈêÊËëîÎïÏôÔœŒùÙûÛüÜÿŸ");
+            MakeToolStripLetterItem(contextMenu, "French", "àÀâÂæÆçÇéèÉÈêÊËëîÎïÏôÔœŒùÙûÛüÜÿŸ");
             MakeToolStripLetterItem(contextMenu, l.German, "äÄöÖüÜß");
             MakeToolStripLetterItem(contextMenu, "Italian", "àÀèÈéÉìÌòÒùÙ");
             MakeToolStripLetterItem(contextMenu, l.Nordic, "æÆøØåÅäÄöÖ");
