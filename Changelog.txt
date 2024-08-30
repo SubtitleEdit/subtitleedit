@@ -38,7 +38,7 @@
    * Fix combo boxes popup in "Measurement converter" - thx Dehrimon
    * Detect change switching between UTF-8-no-bom/UTF-8-with-bom - thx Minherre
    * Fix crash in Whisper UI (bug in Dutch translation) - thx hpcs444/tsg040
-   * Fix bad xml replace in "TTML 1.0" - thx Info
+   * Fix bad XML replace in "TTML 1.0" - thx Info
    * Fix undo after "merge selected" for 3+ lines - thx Llorx
    * Fix crash with resolution 0x0 in "Generate transparent subs" - thx hellobigbean*
    * Fix edge case when parsing ms - thx PoneyClairDeLune
@@ -46,6 +46,7 @@
    * Fix undesired line-break in auto-translate - thx Dyo-Anima
    * Fix for batch translate via Ollama - thx Anon1337Elite
    * Fix spell check shortcut (was the same as save-as, now Alt+F7) - thx Javier
+   * Fix for pasting ASSA in the waveform - thx MitchSirco
 
 
 4.0.7 (8th July 2024) 
