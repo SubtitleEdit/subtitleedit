@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             MainVideo500MsRight = "Alt+Right";
             MainVideoFullscreen = "Alt+Return";
             MainVideoReset = "Control+D0";
-            MainSpellCheck = "Control+Shift+S";
+            MainSpellCheck = "Alt+F7";
             MainSpellCheckFindDoubleWords = "Control+Shift+D";
             MainSpellCheckAddWordToNames = "Control+Shift+L";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
