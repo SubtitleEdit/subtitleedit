@@ -1003,6 +1003,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Audio>Ήχος</Audio>
     <Stereo>Στερεοφωνικά</Stereo>
     <Preset>Προεπιλογή</Preset>
+    <PixelFormat>Μορφή εικονοστοιχείων</PixelFormat>
     <Crf>Σταθερός συντελεστής ρυθμού</Crf>
     <TuneFor>Συντονισμός για</TuneFor>
     <AlignRight>Στοίχιση δεξιά</AlignRight>
@@ -3120,6 +3121,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Angle>Κλίση</Angle>
     <BoxPerLine>Πλαίσιο ανά γραμμή (χρήση χρώματος περιγράμματος)</BoxPerLine>
     <BoxMultiLine>Ένα πλαίσιο (χρήση χρώματος σκιάς)</BoxMultiLine>
+    <BoxPerLineShort>Πλαίσιο ανά γραμμή</BoxPerLineShort>
+    <BoxMultiLineShort>Ένα πλαίσιο</BoxMultiLineShort>
+    <BoxType>Τύπος πλαισίου</BoxType>
     <DuplicateStyleNames>Αντιγραφή στυλ ονομάτων: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3434,6 +3438,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <WebVttProperties>
     <UseXTimeStamp>Χρήση των τιμών επικεφαλίδας X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Συγχώνευση γραμμών με ίδιο κείμενο κατά τη φόρτωση</MergeLines>
+    <MergeStyleTags>Συγχώνευση στυλ ετικετών</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Στυλ WebVTT</Title>
