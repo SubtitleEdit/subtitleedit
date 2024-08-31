@@ -724,7 +724,7 @@
             0});
             this.numericUpDownMarginVertical.Location = new System.Drawing.Point(61, 68);
             this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
-            1000,
+            9999,
             0,
             0,
             0});
@@ -762,7 +762,7 @@
             0});
             this.numericUpDownMarginRight.Location = new System.Drawing.Point(61, 41);
             this.numericUpDownMarginRight.Maximum = new decimal(new int[] {
-            1000,
+            9999,
             0,
             0,
             0});
@@ -800,7 +800,7 @@
             0});
             this.numericUpDownMarginLeft.Location = new System.Drawing.Point(61, 14);
             this.numericUpDownMarginLeft.Maximum = new decimal(new int[] {
-            1000,
+            9999,
             0,
             0,
             0});
