@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         /// </summary>
         /// <param name="fileName">File name of xml settings file to load</param>
         /// <returns>Newly loaded settings</returns>
-        private static Settings CustomDeserialize(string fileName)
+        public static Settings CustomDeserialize(string fileName)
         {
             var doc = new XmlDocument { PreserveWhitespace = true };
             using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
