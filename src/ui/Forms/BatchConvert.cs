@@ -379,13 +379,13 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxAdjustDurationVia.SelectedIndex = 0;
                     break;
             }
-            decimal adjustSeconds = Configuration.Settings.Tools.AdjustDurationSeconds;
+            var adjustSeconds = Configuration.Settings.Tools.AdjustDurationSeconds;
             if (adjustSeconds >= numericUpDownSeconds.Minimum && adjustSeconds <= numericUpDownSeconds.Maximum)
             {
                 numericUpDownSeconds.Value = adjustSeconds;
             }
 
-            int adjustPercent = Configuration.Settings.Tools.AdjustDurationPercent;
+            var adjustPercent = Configuration.Settings.Tools.AdjustDurationPercent;
             if (adjustPercent >= numericUpDownAdjustViaPercent.Minimum && adjustPercent <= numericUpDownAdjustViaPercent.Maximum)
             {
                 numericUpDownAdjustViaPercent.Value = adjustPercent;
@@ -3528,6 +3528,24 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
             Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
             Configuration.Settings.Tools.BatchConvertUseStyleFromSource = checkBoxUseStyleFromSource.Checked;
+
+            if (comboBoxAdjustDurationVia.SelectedIndex == 0)
+            {
+                Configuration.Settings.Tools.AdjustDurationLast = AdjustDisplayDuration.Sec;
+            }
+            else if (comboBoxAdjustDurationVia.SelectedIndex == 1)
+            {
+                Configuration.Settings.Tools.AdjustDurationLast = AdjustDisplayDuration.Per;
+            }
+            else if (comboBoxAdjustDurationVia.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.AdjustDurationLast = AdjustDisplayDuration.Recal;
+            }
+            else if (comboBoxAdjustDurationVia.SelectedIndex == 3)
+            {
+                Configuration.Settings.Tools.AdjustDurationLast = AdjustDisplayDuration.Fixed;
+            }
+
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
             Configuration.Settings.Tools.BatchConvertSaveInSourceFolder = radioButtonSaveInSourceFolder.Checked;
             Configuration.Settings.Tools.BatchConvertMergeShortLines = IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines);
@@ -3535,6 +3553,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertMergeSameText = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts);
             Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes);
             Configuration.Settings.Tools.BatchConvertChangeSpeed = IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed);
+            Configuration.Settings.Tools.BatchConvertAdjustDisplayDuration = IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration);
             Configuration.Settings.Tools.BatchConvertChangeFrameRate = IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate);
             Configuration.Settings.Tools.BatchConvertOffsetTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes);
             Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
