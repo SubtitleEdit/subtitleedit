@@ -23,9 +23,11 @@
    * Update French translation - thx Pierre
    * Update Greek translation - thx PMitsakis
    * Update Spanish translations - thx jmaraujouy
+   * Update Romanian translation - thx Mircea
    * Allow for larger files via drop to list view - thx Jim
    * Improve "Generate transparent video with subs" box settings - thx JeditPro
    * Disable line selection options in "Adjust all times" when in "source view"
+   * Remember "Adjust durations" in "Batch convert" - thx oep42
 * FIXED:
    * Fix crash in TTML IMSC 1.1 - thx Louie
    * Fix Romanian translation version number - thx MediaExpres
