@@ -12,8 +12,8 @@
    * PAC: Support Portuguese codepage + more - thx Ingo
    * Cavena 890 Greek support etc - thx Ingo
    * Add more "do-not-break-after" lists - thx oep42
-   * Handle dvb_sub in mkv in "Batch convert" - thx Gerben
-   * Add "Tetum" language to Google Translate
+   * Handle "dvb_sub" in MKV in "Batch convert" - thx Gerben
+   * Add "Tetum" language to Google Translate - thx Asau
    * Add "pt-PT" language to Google Translate + rename pt to "Portuguese (Brazil)" - thx Marco
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
