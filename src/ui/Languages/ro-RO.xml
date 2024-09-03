@@ -12,7 +12,7 @@
 		<No>Nu</No>
 		<Close>Închide</Close>
 		<Apply>Aplică</Apply>
-		<ApplyTo>Aplica pentru</ApplyTo>
+		<ApplyTo>Aplică pentru</ApplyTo>
 		<None>Niciuna</None>
 		<All>Toate</All>
 		<Preview>Previzualizare</Preview>
@@ -67,7 +67,7 @@
 		<OverlapPreviousLineX>Suprapune linia precedentă ({0:#,##0.###})</OverlapPreviousLineX>
 		<OverlapX>Suprapunere ({0:#,##0.###})</OverlapX>
 		<OverlapNextX>Suprapune următoarea ({0:#,##0.###})</OverlapNextX>
-		<OverlapStartAndEnd>Suprapune începutul și sfârșitul</OverlapStartAndEnd>
+		<OverlapStartAndEnd>Peste început și sfârșit</OverlapStartAndEnd>
 		<Negative>Negativ</Negative>
 		<RegularExpressionIsNotValid>Expresie uzuală invalidă!</RegularExpressionIsNotValid>
 		<CurrentSubtitle>Subtitrarea actuală</CurrentSubtitle>
@@ -861,7 +861,7 @@ După conectare, subtitrările sunt fie legate între ele (adică o subtitrare d
 		<FindNext>&amp;Găsește următorul</FindNext>
 		<FindPrevious>Găsește &amp;precedentul</FindPrevious>
 		<Normal>&amp;Normal</Normal>
-		<CaseSensitive>&amp;Exactitate</CaseSensitive>
+		<CaseSensitive>&amp;Exact</CaseSensitive>
 		<RegularExpression>E&amp;presie uzuală</RegularExpression>
 		<WholeWord>Cuvânt întreg</WholeWord>
 		<Count>Con&amp;torizează</Count>
@@ -1382,7 +1382,7 @@ După conectare, subtitrările sunt fie legate între ele (adică o subtitrare d
 				<InsertUnicodeControlCharactersLRO>Start suprapunere stânga-dreapta (LRO)</InsertUnicodeControlCharactersLRO>
 				<InsertUnicodeControlCharactersRLO>Start suprapunere dreapta-stânga (RLO)</InsertUnicodeControlCharactersRLO>
 				<Find>&amp;Caută</Find>
-				<FindNext>Mai &amp;caută</FindNext>
+				<FindNext>Caută &amp;următoarea</FindNext>
 				<Replace>&amp;Înlocuiește</Replace>
 				<MultipleReplace>&amp;Înlocuiește multiplu...</MultipleReplace>
 				<GoToSubtitleNumber>&amp;Du-te la linia subtitrării...</GoToSubtitleNumber>
@@ -1570,13 +1570,13 @@ După conectare, subtitrările sunt fie legate între ele (adică o subtitrare d
 				<ExtendToLineBefore>Extinde până la linia precedentă</ExtendToLineBefore>
 				<ExtendToLineAfter>Extinde până la linia următoare</ExtendToLineAfter>
 				<RemoveFormatting>Elimină formatările</RemoveFormatting>
-				<RemoveFormattingAll>Toate</RemoveFormattingAll>
-				<RemoveFormattingBold>Aldinele</RemoveFormattingBold>
-				<RemoveFormattingItalic>Cursivele</RemoveFormattingItalic>
-				<RemoveFormattingUnderline>Sublinierile</RemoveFormattingUnderline>
-				<RemoveFormattingColor>Culoarea</RemoveFormattingColor>
-				<RemoveFormattingFontName>Numele fontului</RemoveFormattingFontName>
-				<RemoveFormattingAlignment>Alinierea</RemoveFormattingAlignment>
+				<RemoveFormattingAll>Elimină toate formatările</RemoveFormattingAll>
+				<RemoveFormattingBold>Elimină aldinele</RemoveFormattingBold>
+				<RemoveFormattingItalic>Elimină cursivele</RemoveFormattingItalic>
+				<RemoveFormattingUnderline>Elimină sublinierile</RemoveFormattingUnderline>
+				<RemoveFormattingColor>Elimină culoarea</RemoveFormattingColor>
+				<RemoveFormattingFontName>Eimină numele fontului</RemoveFormattingFontName>
+				<RemoveFormattingAlignment>Elimină alinierea</RemoveFormattingAlignment>
 				<Underline>Subliniat</Underline>
 				<Box>Casetă</Box>
 				<Color>Culoare...</Color>
@@ -1635,9 +1635,9 @@ După conectare, subtitrările sunt fie legate între ele (adică o subtitrare d
 			<SelectCurrentElementWhilePlaying>Selectează subtitrarea actuală în redare</SelectCurrentElementWhilePlaying>
 			<AutoRepeat>Repetare automată</AutoRepeat>
 			<AutoRepeatOn>Repetare automată activată</AutoRepeatOn>
-			<AutoRepeatCount>Numărătoare repetată (ori)</AutoRepeatCount>
+			<AutoRepeatCount>Repetare numărată (ori)</AutoRepeatCount>
 			<AutoContinue>Continuare automată</AutoContinue>
-			<AutoContinueOn>Continuare automată activată</AutoContinueOn>
+			<AutoContinueOn>Auto-continuare activată</AutoContinueOn>
 			<DelayInSeconds>Amânare (secunde)</DelayInSeconds>
 			<OriginalText>Text original</OriginalText>
 			<Previous>&lt; Îna&amp;poi</Previous>
@@ -1650,9 +1650,9 @@ După conectare, subtitrările sunt fie legate între ele (adică o subtitrare d
 			<AutoContinueInOneSecond>Continuare automată după 1 sec.</AutoContinueInOneSecond>
 			<AutoContinueInXSeconds>Continuare automată după {0} sec.</AutoContinueInXSeconds>
 			<StillTypingAutoContinueStopped>Încă tastează... auto-continuare oprită</StillTypingAutoContinueStopped>
-			<InsertNewSubtitleAtVideoPosition>&amp;Introdu subtitrare la poziția video</InsertNewSubtitleAtVideoPosition>
-			<InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Introdu subtitrare nouă la poziția video (niciun text casetat)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
-			<InsertNewSubtitleAtVideoPositionMax>Introdu subtitrare nouă la poziția video (pe cât posibil)</InsertNewSubtitleAtVideoPositionMax>
+			<InsertNewSubtitleAtVideoPosition>&amp;Introdu subt. la poz. video</InsertNewSubtitleAtVideoPosition>
+			<InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Introdu subt. nouă la poz. video (niciun text casetat)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+			<InsertNewSubtitleAtVideoPositionMax>Introdu subt. nouă la poz. video (pe cât posibil)</InsertNewSubtitleAtVideoPositionMax>
 			<Auto>Auto</Auto>
 			<PlayFromJustBeforeText>Redă exact înaintea &amp;textului</PlayFromJustBeforeText>
 			<PlayFromBeginning>Redă video de la început</PlayFromBeginning>
