@@ -3546,6 +3546,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.AdjustDurationLast = AdjustDisplayDuration.Fixed;
             }
 
+            Configuration.Settings.Tools.AdjustDurationSeconds = numericUpDownSeconds.Value;
+            Configuration.Settings.Tools.AdjustDurationPercent = (int)numericUpDownAdjustViaPercent.Value;
+            Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)numericUpDownOptimalCharsSec.Value;
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
+            Configuration.Settings.Tools.AdjustDurationExtendOnly = checkBoxExtendOnly.Checked;
+            Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits = checkBoxEnforceDurationLimits.Checked;
+            Configuration.Settings.Tools.AdjustDurationExtendCheckShotChanges = checkBoxAdjustDurationCheckShotChanges.Checked;
+
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
             Configuration.Settings.Tools.BatchConvertSaveInSourceFolder = radioButtonSaveInSourceFolder.Checked;
             Configuration.Settings.Tools.BatchConvertMergeShortLines = IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines);
