@@ -426,7 +426,7 @@
     <Word from="doveka" to="dovijeka" />
     <Word from="dovežen" to="dovezen" />
     <Word from="drajv" to="drive" />
-    <Word from="drufa to="druga" />
+    <Word from="drufa" to="druga" />
     <Word from="drug" to="prijatelj" />
     <Word from="drugari" to="prijatelji" />
     <Word from="drugare" to="prijatelje" />
@@ -5462,6 +5462,7 @@
     <RegEx find="lp([rg])" replaceWith="lo$1" />
     <RegEx find="lr([dgh])" replaceWith="le$1" />
     <RegEx find="lsč" replaceWith="lač" />
+    <RegEx find="lsn" replaceWith="lan" />
     <RegEx find="lša" replaceWith="iša" />
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="ltovan" replaceWith="ltiran" />
