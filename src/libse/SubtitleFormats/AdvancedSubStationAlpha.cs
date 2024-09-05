@@ -173,7 +173,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 if (isValidAssHeader)
                 {
                     styles = GetStylesFromHeader(subtitle.Header);
+                    header = subtitle.Header;
                 }
+
+                sb.AppendFormat(header, title).AppendLine();
             }
             else
             {
