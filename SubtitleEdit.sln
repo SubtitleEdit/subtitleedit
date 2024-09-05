@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 15.2.26430.04
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "src\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateAssemblyInfo", "src\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "src\UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateLanguageFiles", "src\UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "src\UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateResourceScript", "src\UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,10 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build_beta.bat = build_beta.bat
 		build_helpers.bat = build_helpers.bat
 		Changelog.txt = Changelog.txt
+		Directory.Packages.props = Directory.Packages.props
 		LanguageBaseEnglish.xml = LanguageBaseEnglish.xml
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
-		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.csproj", "{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}"
