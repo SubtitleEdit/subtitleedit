@@ -17,7 +17,6 @@
         <PackageVersion Include="System.Security.AccessControl" Version="6.0.1"/>
         <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0"/>
         <PackageVersion Include="Vosk" Version="0.3.38"/>
-        <PackageVersion Include="NHunspell" Version="1.2.5554.16953"/>
         <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0"/>
         <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4"/>
     </ItemGroup>
