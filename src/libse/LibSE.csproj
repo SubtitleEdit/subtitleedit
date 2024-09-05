@@ -50,21 +50,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-		<PackageReference Include="System.Drawing.Common" Version="8.0.8" />
-		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-		<PackageReference Include="UTF.Unknown" Version="2.5.1" />
-		<PackageReference Include="zlib.net-mutliplatform" Version="1.0.6" />
+		<PackageReference Include="Microsoft.Win32.Registry"/>
+		<PackageReference Include="System.Drawing.Common"/>
+		<PackageReference Include="System.Net.Http"/>
+		<PackageReference Include="UTF.Unknown"/>
+		<PackageReference Include="zlib.net-mutliplatform"/>
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\LICENSE.txt">
 			<Pack>True</Pack>
-			<PackagePath></PackagePath>
 		</None>
 		<None Include="Icon.png">
 			<Pack>True</Pack>
-			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
 
