@@ -1977,8 +1977,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private TranslateResult RunAutoTranslate(Subtitle subtitle)
         {
-            var engine = GetCurrentEngine();
-            engine.Initialize();
             var translatedSubtitle = new Subtitle(subtitle);
             foreach (var paragraph in translatedSubtitle.Paragraphs)
             {
@@ -1995,7 +1993,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxSource.SelectedIndex == 0) // detect language
             {
                 var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull2(subtitle);
-                var tp = engine.GetSupportedSourceLanguages().FirstOrDefault(p => p.TwoLetterIsoLanguageName == language || p.Code == language);
+                var tp = _autoTranslator.GetSupportedSourceLanguages().FirstOrDefault(p => p.TwoLetterIsoLanguageName == language || p.Code == language);
                 if (tp != null)
                 {
                     source = tp;
@@ -2008,8 +2006,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var forceSingleLineMode =
-              engine.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
-              engine.Name == NoLanguageLeftBehindServe.StaticName;
+                _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
+                _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName ||  // NLLB seems to miss some text...
+                _autoTranslator.Name == OllamaTranslate.StaticName;
 
             if (_autoTranslator.Name == OllamaTranslate.StaticName && !string.IsNullOrEmpty(nikseComboBoxTranslateModel.Text))
             {
@@ -2023,7 +2022,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Application.DoEvents();
 
-                var task = Task.Run(async () => await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, forceSingleLineMode, CancellationToken.None).ConfigureAwait(false));
+                var task = Task.Run(async () => await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode, CancellationToken.None).ConfigureAwait(false));
                 task.Wait();
 
                 var linesMergedAndTranslated = task.Result;
