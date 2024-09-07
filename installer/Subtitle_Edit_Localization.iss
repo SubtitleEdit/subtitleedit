@@ -488,19 +488,19 @@ ro.SetupAppTitle=Setup - Subtitle Edit
 ro.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 ro.comp_translations=Traduceri
-ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.8. Te rog să descarci şi să instalezi .NET Framework şi apoi să reiei instalarea.%n%nVrei să descarci acum .NET Framework 4.8?
-ro.msg_DeleteSettings=Vrei să ştergi de asemenea setările şi personalizările făcute în dicţionare?%n%nDacă ai de gând să reinstalezi Subtitle Edit, nu este nevoie să le ştergi.
-ro.msg_OptimizingPerformance=Optimizare în desfășurare...
-ro.run_VisitWebsite=Vizitează pagina Web a programului Subtitle Edit
-ro.sm_com_Changelog=Jurnalul modificărilor în programul Subtitle Edit
-ro.tsk_AllUsers=Pentru toţi utilizatorii
+ro.msg_AskToDownNET=Subtitle Edit necesita .NET Framework 4.8. Te rog să descarci si sa instalezi .NET Framework si apoi sa reiei instalarea.%n%nVrei sa descarci acum .NET Framework 4.8?
+ro.msg_DeleteSettings=Vrei sa elimini de asemenea setarile si personalizarile facute in dictionare?%n%nDaca ai de gand sa reinstalezi Subtitle Edit, nu este nevoie sa le elimini.
+ro.msg_OptimizingPerformance=Optimizare in desfasurare...
+ro.run_VisitWebsite=Viziteaza pagina Web a programului Subtitle Edit
+ro.sm_com_Changelog=Jurnalul modificarilor in programul Subtitle Edit
+ro.tsk_AllUsers=Pentru toti utilizatorii
 ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
-ro.tsk_ResetDictionaries=Resetează Dicționarele și șterge toate numele personalizate
-ro.tsk_ResetSettings=Resetează configurarea programului Subtitle Edit
-ro.tsk_SetFileTypes=Asociați fișierele de subtitrare comune cu Subtitle Edit
-ro.types_custom=Instalare personalizată
-ro.types_default=Instalare predefinită
+ro.tsk_ResetDictionaries=Reseteaza Dictionarele si elimina toate denumirile personalizate
+ro.tsk_ResetSettings=Reseteaza configurarea programului Subtitle Edit
+ro.tsk_SetFileTypes=Asocierea fisierelor de subtitrare comune cu Subtitle Edit
+ro.types_custom=Instalare personalizata
+ro.types_default=Instalare predefinita
 
 ; Russian
 [Messages]
