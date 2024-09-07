@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         private static readonly Lazy<Configuration> Instance = new Lazy<Configuration>(() => new Configuration());
 
-        private readonly Lazy<Settings> _settings;
+        private Lazy<Settings.Settings> _settings;
         private readonly IEnumerable<Encoding> _encodings;
 
         public static readonly string BaseDirectory = GetBaseDirectory();
@@ -22,9 +22,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string DictionariesDirectory = DataDirectory + "Dictionaries" + Path.DirectorySeparatorChar;
         public static readonly string SpectrogramsDirectory = DataDirectory + "Spectrograms" + Path.DirectorySeparatorChar;
         public static readonly string ShotChangesDirectory = DataDirectory + "ShotChanges" + Path.DirectorySeparatorChar;
+        public static readonly string TimeCodesDirectory = DataDirectory + "TimeCodes" + Path.DirectorySeparatorChar;
         public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
         public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
-        public static readonly string TesseractDirectory = DataDirectory + "Tesseract520" + Path.DirectorySeparatorChar;
+        public static readonly string TesseractDirectory = DataDirectory + "Tesseract533" + Path.DirectorySeparatorChar;
         public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
         public static readonly string PluginsDirectory = DataDirectory + "Plugins";
@@ -58,7 +59,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         private Configuration()
         {
             _encodings = GetAvailableEncodings();
-            _settings = new Lazy<Settings>(Settings.GetSettings);
+            _settings = new Lazy<Settings.Settings>(Core.Settings.Settings.GetSettings);
+        }
+
+        public void SetSettings(Settings.Settings settings)
+        {
+            _settings = new Lazy<Settings.Settings>(() => settings);
         }
 
         private const int PlatformWindows = 1;
@@ -112,23 +118,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                  : PlatformWindows;
         }
 
-        public static Settings Settings => Instance.Value._settings.Value;
+        public static Settings.Settings Settings => Instance.Value._settings.Value;
 
         public static IEnumerable<Encoding> AvailableEncodings => Instance.Value._encodings;
 
         private static string GetInstallerPath()
         {
             const string valueName = "InstallLocation";
-            var value = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", valueName);
-            if (value != null && Directory.Exists(value))
-            {
-                return value;
-            }
+            string[] paths = {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1",
+                @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1"
+            };
 
-            value = RegistryUtil.GetValue(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", valueName);
-            if (value != null && Directory.Exists(value))
+            foreach (var path in paths)
             {
-                return value;
+                var value = RegistryUtil.GetValue(path, valueName);
+                if (Directory.Exists(value))
+                {
+                    return value;
+                }
             }
 
             return null;
@@ -171,9 +179,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         // ignored
                     }
                 }
-                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
 
+                try
+                {
+                    Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
             }
 
             var installerPath = GetInstallerPath();
@@ -227,6 +243,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return "/usr/share/tessdata";
                 }
             }
+
             return Path.Combine(TesseractDirectory, "tessdata");
         }
 
@@ -266,8 +283,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // though advertised, this code page is not supported
                 }
             }
+
+            try
+            {
+                var enc = Encoding.GetEncoding(28606);
+                if (!encodings.Contains(enc))
+                {
+                    encodings.Add(enc);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
             return encodings.AsEnumerable();
         }
-
     }
 }

@@ -1,7 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using System;
+﻿using System;
 using System.Globalization;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -12,105 +12,113 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string StartWithUppercaseLetterAfterColon { get; set; } = "Start with uppercase letter after colon/semicolon";
         }
 
-        private static readonly char[] ExpectedChars = { ':', ';' };
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.StartWithUppercaseLetterAfterColon;
-            int noOfFixes = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.StartWithUppercaseLetterAfterColon;
+            var noOfFixes = 0;
+
+            var count = subtitle.Paragraphs.Count;
+            var isTurkish = IsTurkish(callbacks.Language);
+            // paragraph
+            for (var i = 0; i < count; i++)
             {
-                var p = new Paragraph(subtitle.Paragraphs[i]);
-                Paragraph last = subtitle.GetParagraphOrDefault(i - 1);
-                string oldText = p.Text;
-                int skipCount = 0;
-
-                if (last != null)
+                var p = subtitle.Paragraphs[i];
+                if (!callbacks.AllowFix(p, fixAction))
                 {
-                    string lastText = HtmlUtil.RemoveHtmlTags(last.Text);
-                    if (lastText.EndsWith(':') || lastText.EndsWith(';'))
-                    {
-                        var st = new StrippableText(p.Text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
-                        {
-                            p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
-                        }
-                    }
+                    continue;
                 }
-
-                if (oldText.Contains(ExpectedChars))
+                
+                var text = p.Text;
+                var len = text.Length;
+                
+                // text
+                for (var j = 0; j < len; j++)
                 {
-                    bool lastWasColon = false;
-                    for (int j = 0; j < p.Text.Length; j++)
+                    var ch = text[j];
+                    if (ch == ':' || ch == ';')
                     {
-                        var s = p.Text[j];
-                        if (s == ':' || s == ';')
+                        var k = j + 1;
+                        
+                        // skip white space before formatting
+                        while (k < len && text[k] == ' ') k++;
+                        // skip formatting e.g: <i>, <b>,<font..>...
+                        while (k < len && (text[k] == '<' || text[k] == '{'))
                         {
-                            lastWasColon = true;
+                            var closingPair = GetClosingPair(text[k]);
+                            var closeIdx = text.IndexOf(closingPair, k + 1);
+                            if (closeIdx < 0)
+                            {
+                                k++;
+                                break;
+                            }
+                            k = closeIdx + 1;
                         }
-                        else if (lastWasColon)
+                        // skip whitespace after formatting
+                        while (k < len && text[k] == ' ') k++;
+
+                        if (k < len)
                         {
-                            // skip whitespace index
-                            if (j + 2 < p.Text.Length && p.Text[j] == ' ')
+                            // slice from k index
+                            var textFromK = text.Substring(k);
+                            
+                            if (CanCapitalize(textFromK, callbacks) && !isTurkish)
                             {
-                                s = p.Text[++j];
+                                text = text.Substring(0, k) + textFromK.CapitalizeFirstLetter();
                             }
-
-                            var startFromJ = p.Text.Substring(j);
-                            if (startFromJ.Length > 3 && startFromJ[0] == '<' && startFromJ[2] == '>' && (startFromJ[1] == 'i' || startFromJ[1] == 'b' || startFromJ[1] == 'u'))
+                            else if (Helper.IsTurkishLittleI(text[k], callbacks.Encoding, callbacks.Language))
                             {
-                                skipCount = 2;
-                            }
-                            else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && p.Text.Substring(j).Contains('>'))
-                            {
-                                skipCount = (j + startFromJ.IndexOf('>', 6)) - j;
-                            }
-                            else if (Helper.IsTurkishLittleI(s, callbacks.Encoding, callbacks.Language))
-                            {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(s, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
-                                lastWasColon = false;
-                            }
-                            else if (char.IsLower(s))
-                            {
-                                // iPhone
-                                bool change = true;
-                                if (s == 'i' && p.Text.Length > j + 1)
-                                {
-                                    if (p.Text[j + 1] == char.ToUpper(p.Text[j + 1]))
-                                    {
-                                        change = false;
-                                    }
-                                }
-                                if (change)
-                                {
-                                    p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
-                                }
-
-                                lastWasColon = false;
-                            }
-                            else if (!(" " + Environment.NewLine).Contains(s))
-                            {
-                                lastWasColon = false;
-                            }
-
-                            // move the: 'j' pointer and reset skipCount to 0
-                            if (skipCount > 0)
-                            {
-                                j += skipCount;
-                                skipCount = 0;
+                                text = text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(text[k], callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
                             }
                         }
                     }
                 }
 
-                if (oldText != p.Text && callbacks.AllowFix(p, fixAction))
+                if (text != p.Text)
                 {
                     noOfFixes++;
-                    subtitle.Paragraphs[i].Text = p.Text;
+                    var oldText = subtitle.Paragraphs[i].Text;
+                    subtitle.Paragraphs[i].Text = text;
                     callbacks.AddFixToListView(subtitle.Paragraphs[i], fixAction, oldText, p.Text);
                 }
             }
+
             callbacks.UpdateFixStatus(noOfFixes, Language.StartWithUppercaseLetterAfterColon);
+
+            char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
         }
 
+        private static bool IsTurkish(string lang) => lang.Equals("tr", StringComparison.OrdinalIgnoreCase);
+
+        private static bool CanCapitalize(string input, IFixCallbacks callbacks)
+        {
+            return !IsAppleNaming(input) && IsFirstLetterConvertibleToUppercase(input);
+        }
+
+        /// <summary>
+        /// Returns true if first character is convertible to uppercase otherwise false
+        /// </summary>
+        private static bool IsFirstLetterConvertibleToUppercase(string input)
+        {
+            return input.Length > 0 && char.IsLower(input[0]);
+        }
+
+        /// <summary>
+        /// Check if word is one of the apple product name e.g; iPhone, iPad, iMac...
+        /// </summary>
+        private static bool IsAppleNaming(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            var len = input.Length;
+            if (len < 3)
+            {
+                return false;
+            }
+
+            return input[0] == 'i' && char.IsUpper(input[1]) && char.IsLower(input[2]);
+        }
     }
 }

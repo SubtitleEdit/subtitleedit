@@ -21,18 +21,24 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             using (var form = new ExportPngXml())
             {
-                form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
+                var sub = tsParser.GetDvbSubtitles(pid);
 
+                var tempSubtitle = new Subtitle();
+                foreach (var x in sub)
+                {
+                    tempSubtitle.Paragraphs.Add(new Paragraph(string.Empty, x.StartMilliseconds, x.EndMilliseconds));
+                }
+
+                form.Initialize(tempSubtitle, new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
 
                 var language = GetFileNameEnding(programMapTableParser, pid);
                 var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
                 stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> PID {pid} to {outputFileName}...");
-                var sub = tsParser.GetDvbSubtitles(pid);
                 progressCallback?.Invoke($"Save PID {pid}");
                 var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
                 using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                 {
-                    for (int index = 0; index < sub.Count; index++)
+                    for (var index = 0; index < sub.Count; index++)
                     {
                         var p = sub[index];
                         var pos = p.GetPosition();
@@ -40,8 +46,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         var tsWidth = bmp.Width;
                         var tsHeight = bmp.Height;
                         var nBmp = new NikseBitmap(bmp);
-                        pos.Top += nBmp.CropTopTransparent(0);
-                        pos.Left += nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                        nBmp.CropTopTransparent(0);
+                        nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
                         bmp.Dispose();
                         bmp = nBmp.GetBitmap();
                         var mp = form.MakeMakeBitmapParameter(index, subtitleScreenSize.X, subtitleScreenSize.Y);

@@ -17,7 +17,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".vtt";
 
-        public override string Name => "WebVTT File with#";
+        public const string NameOfFormat = "WebVTT File with#";
+        public override string Name => NameOfFormat;
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -52,6 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, WebVTT.FormatText(p), style, Environment.NewLine));
                 count++;
             }
+
             return sb.ToString().Trim();
         }
 
@@ -111,6 +113,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             EndTime = WebVTT.GetTimeCodeFromString(parts[1])
                         };
                         positionInfo = WebVTT.GetPositionInfo(s);
+                        p.Extra = WebVTT.GetPositionInfoRaw(s);
+                        p.Region = WebVTT.GetRegion(s);
                     }
                     catch (Exception exception)
                     {

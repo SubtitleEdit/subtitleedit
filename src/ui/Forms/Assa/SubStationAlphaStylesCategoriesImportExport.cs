@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -39,31 +40,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
-        private void Import()
+        private void ReloadChosenCategories()
         {
-            ChosenCategories = new List<string>();
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                if (item.Checked)
-                {
-                    ChosenCategories.Add(item.Text);
-                }
-            }
-
-            DialogResult = DialogResult.OK;
+            ChosenCategories = listViewCategories.Items.OfType<ListViewItem>()
+                .Where(item => item.Checked)
+                .Select(item => item.Text).ToList();
         }
 
         private void Export()
         {
-            ChosenCategories = new List<string>();
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                if (item.Checked)
-                {
-                    ChosenCategories.Add(item.Text);
-                }
-            }
-
             if (ChosenCategories.Count == 0)
             {
                 return;
@@ -121,13 +106,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
+            ReloadChosenCategories();
+            
             if (_export)
             {
                 Export();
             }
             else
             {
-                Import();
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -139,20 +126,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewCategories.CheckAll();
 
-        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewCategories.InvertCheck();
     }
 }

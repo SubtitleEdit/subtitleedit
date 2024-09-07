@@ -4894,7 +4894,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MeasurementConverter_Deactivate(object sender, EventArgs e)
         {
-            if (DialogResult != DialogResult.Cancel)
+            if (DialogResult != DialogResult.Cancel && !comboBoxFrom.DroppedDown && !comboBoxTo.DroppedDown)
             {
                 Opacity = 0.5;
             }

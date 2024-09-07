@@ -30,7 +30,7 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.textBoxRubyText = new System.Windows.Forms.TextBox();
+            this.textBoxRubyText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -142,7 +142,7 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.TextBox textBoxRubyText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxRubyText;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

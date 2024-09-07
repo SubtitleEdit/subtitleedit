@@ -35,21 +35,21 @@
             this.checkBoxSuffixAddForComma = new System.Windows.Forms.CheckBox();
             this.checkBoxGapPrefixAddSpace = new System.Windows.Forms.CheckBox();
             this.labelGapPrefix = new System.Windows.Forms.Label();
-            this.comboBoxGapPrefix = new System.Windows.Forms.ComboBox();
+            this.comboBoxGapPrefix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxGapSuffixRemoveComma = new System.Windows.Forms.CheckBox();
             this.checkBoxGapSuffixAddSpace = new System.Windows.Forms.CheckBox();
             this.labelGapSuffix = new System.Windows.Forms.Label();
-            this.comboBoxGapSuffix = new System.Windows.Forms.ComboBox();
+            this.comboBoxGapSuffix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMs = new System.Windows.Forms.Label();
-            this.numericUpDownDifferentStyleGapMs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDifferentStyleGapMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxDifferentStyleGap = new System.Windows.Forms.CheckBox();
             this.checkBoxPrefixAddSpace = new System.Windows.Forms.CheckBox();
             this.labelPrefix = new System.Windows.Forms.Label();
-            this.comboBoxPrefix = new System.Windows.Forms.ComboBox();
+            this.comboBoxPrefix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxSuffixRemoveComma = new System.Windows.Forms.CheckBox();
             this.checkBoxSuffixAddSpace = new System.Windows.Forms.CheckBox();
             this.labelSuffix = new System.Windows.Forms.Label();
-            this.comboBoxSuffix = new System.Windows.Forms.ComboBox();
+            this.comboBoxSuffix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.labelPreviewPause = new System.Windows.Forms.Label();
             this.labelPreviewLine4 = new System.Windows.Forms.Label();
@@ -60,7 +60,6 @@
             this.toolStripMenuItemLoadStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNote = new System.Windows.Forms.Label();
             this.groupBoxContinuationStyle.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferentStyleGapMs)).BeginInit();
             this.groupBoxPreview.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -126,7 +125,7 @@
             this.checkBoxGapSuffixAddForComma.Location = new System.Drawing.Point(53, 243);
             this.checkBoxGapSuffixAddForComma.Name = "checkBoxGapSuffixAddForComma";
             this.checkBoxGapSuffixAddForComma.Size = new System.Drawing.Size(186, 17);
-            this.checkBoxGapSuffixAddForComma.TabIndex = 11;
+            this.checkBoxGapSuffixAddForComma.TabIndex = 14;
             this.checkBoxGapSuffixAddForComma.Text = "Add suffix when ends with comma";
             this.checkBoxGapSuffixAddForComma.UseVisualStyleBackColor = true;
             this.checkBoxGapSuffixAddForComma.CheckedChanged += new System.EventHandler(this.RefreshControls);
@@ -148,7 +147,7 @@
             this.checkBoxGapPrefixAddSpace.Location = new System.Drawing.Point(53, 345);
             this.checkBoxGapPrefixAddSpace.Name = "checkBoxGapPrefixAddSpace";
             this.checkBoxGapPrefixAddSpace.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxGapPrefixAddSpace.TabIndex = 15;
+            this.checkBoxGapPrefixAddSpace.TabIndex = 19;
             this.checkBoxGapPrefixAddSpace.Text = "Add space";
             this.checkBoxGapPrefixAddSpace.UseVisualStyleBackColor = true;
             this.checkBoxGapPrefixAddSpace.CheckedChanged += new System.EventHandler(this.RefreshControls);
@@ -159,7 +158,7 @@
             this.labelGapPrefix.Location = new System.Drawing.Point(11, 319);
             this.labelGapPrefix.Name = "labelGapPrefix";
             this.labelGapPrefix.Size = new System.Drawing.Size(36, 13);
-            this.labelGapPrefix.TabIndex = 53;
+            this.labelGapPrefix.TabIndex = 17;
             this.labelGapPrefix.Text = "Prefix:";
             // 
             // comboBoxGapPrefix
@@ -176,7 +175,7 @@
             this.comboBoxGapPrefix.Location = new System.Drawing.Point(53, 316);
             this.comboBoxGapPrefix.Name = "comboBoxGapPrefix";
             this.comboBoxGapPrefix.Size = new System.Drawing.Size(93, 22);
-            this.comboBoxGapPrefix.TabIndex = 14;
+            this.comboBoxGapPrefix.TabIndex = 18;
             this.comboBoxGapPrefix.SelectedIndexChanged += new System.EventHandler(this.RefreshControls);
             this.comboBoxGapPrefix.TextChanged += new System.EventHandler(this.RefreshControls);
             // 
@@ -186,7 +185,7 @@
             this.checkBoxGapSuffixRemoveComma.Location = new System.Drawing.Point(53, 289);
             this.checkBoxGapSuffixRemoveComma.Name = "checkBoxGapSuffixRemoveComma";
             this.checkBoxGapSuffixRemoveComma.Size = new System.Drawing.Size(103, 17);
-            this.checkBoxGapSuffixRemoveComma.TabIndex = 13;
+            this.checkBoxGapSuffixRemoveComma.TabIndex = 16;
             this.checkBoxGapSuffixRemoveComma.Text = "Remove comma";
             this.checkBoxGapSuffixRemoveComma.UseVisualStyleBackColor = true;
             this.checkBoxGapSuffixRemoveComma.CheckedChanged += new System.EventHandler(this.RefreshControls);
@@ -197,7 +196,7 @@
             this.checkBoxGapSuffixAddSpace.Location = new System.Drawing.Point(53, 266);
             this.checkBoxGapSuffixAddSpace.Name = "checkBoxGapSuffixAddSpace";
             this.checkBoxGapSuffixAddSpace.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxGapSuffixAddSpace.TabIndex = 12;
+            this.checkBoxGapSuffixAddSpace.TabIndex = 15;
             this.checkBoxGapSuffixAddSpace.Text = "Add space";
             this.checkBoxGapSuffixAddSpace.UseVisualStyleBackColor = true;
             this.checkBoxGapSuffixAddSpace.CheckedChanged += new System.EventHandler(this.RefreshControls);
@@ -208,7 +207,7 @@
             this.labelGapSuffix.Location = new System.Drawing.Point(11, 218);
             this.labelGapSuffix.Name = "labelGapSuffix";
             this.labelGapSuffix.Size = new System.Drawing.Size(36, 13);
-            this.labelGapSuffix.TabIndex = 49;
+            this.labelGapSuffix.TabIndex = 12;
             this.labelGapSuffix.Text = "Suffix:";
             // 
             // comboBoxGapSuffix
@@ -225,7 +224,7 @@
             this.comboBoxGapSuffix.Location = new System.Drawing.Point(53, 215);
             this.comboBoxGapSuffix.Name = "comboBoxGapSuffix";
             this.comboBoxGapSuffix.Size = new System.Drawing.Size(93, 22);
-            this.comboBoxGapSuffix.TabIndex = 10;
+            this.comboBoxGapSuffix.TabIndex = 13;
             this.comboBoxGapSuffix.SelectedIndexChanged += new System.EventHandler(this.RefreshControls);
             this.comboBoxGapSuffix.TextChanged += new System.EventHandler(this.RefreshControls);
             // 
@@ -235,7 +234,7 @@
             this.labelMs.Location = new System.Drawing.Point(289, 186);
             this.labelMs.Name = "labelMs";
             this.labelMs.Size = new System.Drawing.Size(20, 13);
-            this.labelMs.TabIndex = 47;
+            this.labelMs.TabIndex = 11;
             this.labelMs.Text = "ms";
             // 
             // numericUpDownDifferentStyleGapMs
@@ -248,7 +247,7 @@
             0});
             this.numericUpDownDifferentStyleGapMs.Name = "numericUpDownDifferentStyleGapMs";
             this.numericUpDownDifferentStyleGapMs.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDifferentStyleGapMs.TabIndex = 9;
+            this.numericUpDownDifferentStyleGapMs.TabIndex = 10;
             this.numericUpDownDifferentStyleGapMs.Value = new decimal(new int[] {
             300,
             0,
@@ -261,7 +260,7 @@
             this.checkBoxDifferentStyleGap.Location = new System.Drawing.Point(14, 185);
             this.checkBoxDifferentStyleGap.Name = "checkBoxDifferentStyleGap";
             this.checkBoxDifferentStyleGap.Size = new System.Drawing.Size(207, 17);
-            this.checkBoxDifferentStyleGap.TabIndex = 8;
+            this.checkBoxDifferentStyleGap.TabIndex = 9;
             this.checkBoxDifferentStyleGap.Text = "Use different style for gaps longer than";
             this.checkBoxDifferentStyleGap.UseVisualStyleBackColor = true;
             this.checkBoxDifferentStyleGap.CheckedChanged += new System.EventHandler(this.checkBoxDifferentStyleGap_CheckedChanged);
@@ -272,7 +271,7 @@
             this.checkBoxPrefixAddSpace.Location = new System.Drawing.Point(53, 150);
             this.checkBoxPrefixAddSpace.Name = "checkBoxPrefixAddSpace";
             this.checkBoxPrefixAddSpace.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxPrefixAddSpace.TabIndex = 7;
+            this.checkBoxPrefixAddSpace.TabIndex = 8;
             this.checkBoxPrefixAddSpace.Text = "Add space";
             this.checkBoxPrefixAddSpace.UseVisualStyleBackColor = true;
             this.checkBoxPrefixAddSpace.CheckedChanged += new System.EventHandler(this.RefreshControls);
@@ -283,7 +282,7 @@
             this.labelPrefix.Location = new System.Drawing.Point(11, 124);
             this.labelPrefix.Name = "labelPrefix";
             this.labelPrefix.Size = new System.Drawing.Size(36, 13);
-            this.labelPrefix.TabIndex = 24;
+            this.labelPrefix.TabIndex = 6;
             this.labelPrefix.Text = "Prefix:";
             // 
             // comboBoxPrefix
@@ -300,7 +299,7 @@
             this.comboBoxPrefix.Location = new System.Drawing.Point(53, 121);
             this.comboBoxPrefix.Name = "comboBoxPrefix";
             this.comboBoxPrefix.Size = new System.Drawing.Size(93, 22);
-            this.comboBoxPrefix.TabIndex = 6;
+            this.comboBoxPrefix.TabIndex = 7;
             this.comboBoxPrefix.SelectedIndexChanged += new System.EventHandler(this.RefreshControls);
             this.comboBoxPrefix.TextChanged += new System.EventHandler(this.RefreshControls);
             // 
@@ -332,7 +331,7 @@
             this.labelSuffix.Location = new System.Drawing.Point(11, 22);
             this.labelSuffix.Name = "labelSuffix";
             this.labelSuffix.Size = new System.Drawing.Size(36, 13);
-            this.labelSuffix.TabIndex = 20;
+            this.labelSuffix.TabIndex = 1;
             this.labelSuffix.Text = "Suffix:";
             // 
             // comboBoxSuffix
@@ -376,7 +375,7 @@
             this.labelPreviewPause.Location = new System.Drawing.Point(23, 209);
             this.labelPreviewPause.Name = "labelPreviewPause";
             this.labelPreviewPause.Size = new System.Drawing.Size(65, 13);
-            this.labelPreviewPause.TabIndex = 54;
+            this.labelPreviewPause.TabIndex = 27;
             this.labelPreviewPause.Text = "(long pause)";
             // 
             // labelPreviewLine4
@@ -386,7 +385,7 @@
             this.labelPreviewLine4.Location = new System.Drawing.Point(23, 249);
             this.labelPreviewLine4.Name = "labelPreviewLine4";
             this.labelPreviewLine4.Size = new System.Drawing.Size(256, 34);
-            this.labelPreviewLine4.TabIndex = 27;
+            this.labelPreviewLine4.TabIndex = 28;
             this.labelPreviewLine4.Text = "mauris mollis consectetur nibh,\r\nnec congue est viverra quis.";
             // 
             // labelPreviewLine3
@@ -468,7 +467,6 @@
             this.Text = "SettingsCustomContinuationStyle";
             this.groupBoxContinuationStyle.ResumeLayout(false);
             this.groupBoxContinuationStyle.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferentStyleGapMs)).EndInit();
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             this.menuStrip.ResumeLayout(false);
@@ -486,20 +484,20 @@
         private System.Windows.Forms.CheckBox checkBoxDifferentStyleGap;
         private System.Windows.Forms.CheckBox checkBoxPrefixAddSpace;
         private System.Windows.Forms.Label labelPrefix;
-        private System.Windows.Forms.ComboBox comboBoxPrefix;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxPrefix;
         private System.Windows.Forms.CheckBox checkBoxSuffixRemoveComma;
         private System.Windows.Forms.CheckBox checkBoxSuffixAddSpace;
         private System.Windows.Forms.Label labelSuffix;
-        private System.Windows.Forms.ComboBox comboBoxSuffix;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSuffix;
         private System.Windows.Forms.CheckBox checkBoxGapPrefixAddSpace;
         private System.Windows.Forms.Label labelGapPrefix;
-        private System.Windows.Forms.ComboBox comboBoxGapPrefix;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxGapPrefix;
         private System.Windows.Forms.CheckBox checkBoxGapSuffixRemoveComma;
         private System.Windows.Forms.CheckBox checkBoxGapSuffixAddSpace;
         private System.Windows.Forms.Label labelGapSuffix;
-        private System.Windows.Forms.ComboBox comboBoxGapSuffix;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxGapSuffix;
         private System.Windows.Forms.Label labelMs;
-        private System.Windows.Forms.NumericUpDown numericUpDownDifferentStyleGapMs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDifferentStyleGapMs;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelPreviewLine3;
         private System.Windows.Forms.Label labelPreviewLine2;

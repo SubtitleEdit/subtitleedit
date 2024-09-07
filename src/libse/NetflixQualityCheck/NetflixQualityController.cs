@@ -116,6 +116,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     case "ko": // Korean
                     case "zh": // Chinese
                         return 16;
+                    case "ru": // Russian
+                        return 39;
                     default:
                         return 42;
                 }
@@ -319,7 +321,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 checker.Check(subtitle, this);
             }
-            Records = Records.OrderBy(p => p.OriginalParagraph?.Number ?? 0).ToList();
+
+            Records = Records
+                .Where(p=>p != null)
+                .OrderBy(p => p.OriginalParagraph?.Number ?? 0)
+                .ToList();
         }
     }
 }

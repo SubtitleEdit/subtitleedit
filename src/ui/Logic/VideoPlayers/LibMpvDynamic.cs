@@ -180,6 +180,25 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public double VideoBitrate
+        {
+            get
+            {
+                lock (_lockObj)
+                {
+                    if (_mpvHandle == IntPtr.Zero)
+                    {
+                        return 0;
+                    }
+
+                    var mpvFormatDouble = 5;
+                    double d = 0;
+                    _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("video-bitrate"), mpvFormatDouble, ref d);
+                    return d;
+                }
+            }
+        }
+
         public override double CurrentPosition
         {
             get
@@ -554,7 +573,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return LoadLib();
                     }
 
-                    var dllFile = GetMpvPath("mpv-2.dll");
+                    var dllFile = GetMpvPath("libmpv-2.dll");
+                    if (File.Exists(dllFile))
+                    {
+                        return File.Exists(dllFile);
+                    }
+
+                    dllFile = GetMpvPath("mpv-2.dll");
                     if (File.Exists(dllFile))
                     {
                         return File.Exists(dllFile);
@@ -591,7 +616,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (Configuration.IsRunningOnWindows)
                 {
-                    var mpvPath = GetMpvPath("mpv-2.dll");
+                    var mpvPath = GetMpvPath("libmpv-2.dll");
+                    if (!File.Exists(mpvPath))
+                    {
+                        mpvPath = GetMpvPath("mpv-2.dll");
+                    }
+
                     if (!File.Exists(mpvPath))
                     {
                         mpvPath = GetMpvPath("mpv-1.dll");
@@ -660,6 +690,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
                     _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
+                }
+
+                
+                if (_mpvSetOptionString(_mpvHandle, GetUtf8Bytes("input-cursor-passthrough"), GetUtf8Bytes("yes")) != 0)
+                {
+                    // if --input-cursor-passthrough=yes is not avaliable, use --input-cursor=no
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("input-cursor"), GetUtf8Bytes("no"));
                 }
             }
             else if (!Directory.Exists(videoFileName))
@@ -740,6 +777,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _videoLoadedTimer.Start();
 
                 SetVideoOwner(ownerControl);
+
+                VideoFileName = videoFileName;
             }
         }
 
@@ -812,9 +851,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
             Application.DoEvents();
-            OnVideoLoaded?.Invoke(this, null);
-            Application.DoEvents();
             Pause();
+            Application.DoEvents();
+            OnVideoLoaded?.Invoke(this, null);
         }
 
         public override void DisposeVideoPlayer()

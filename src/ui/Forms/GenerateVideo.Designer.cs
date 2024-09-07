@@ -33,11 +33,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
             this.buttonGenerate = new System.Windows.Forms.Button();
+            this.contextMenuStripGenerate = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.promptParameterBeforeGenerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelResolution = new System.Windows.Forms.Label();
             this.labelX = new System.Windows.Forms.Label();
             this.groupBoxBackground = new System.Windows.Forms.GroupBox();
@@ -46,10 +48,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonImage = new System.Windows.Forms.RadioButton();
             this.radioButtonColor = new System.Windows.Forms.RadioButton();
             this.radioButtonCheckeredImage = new System.Windows.Forms.RadioButton();
-            this.numericUpDownDurationMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -70,10 +72,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemResBrowse = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             this.buttonChooseDuration = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
+            this.checkBoxAddTimeCode = new System.Windows.Forms.CheckBox();
+            this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxBackground.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).BeginInit();
             this.contextMenuStripRes.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,27 +97,42 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // buttonOK
+            // buttonGenerate
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(549, 217);
+            this.buttonGenerate.Location = new System.Drawing.Point(549, 249);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
-            this.buttonGenerate.TabIndex = 20;
+            this.buttonGenerate.TabIndex = 91;
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
-            this.buttonGenerate.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
+            // 
+            // contextMenuStripGenerate
+            // 
+            this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.promptParameterBeforeGenerateToolStripMenuItem});
+            this.contextMenuStripGenerate.Name = "contextMenuStripGenerate";
+            this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 26);
+            // 
+            // promptParameterBeforeGenerateToolStripMenuItem
+            // 
+            this.promptParameterBeforeGenerateToolStripMenuItem.Name = "promptParameterBeforeGenerateToolStripMenuItem";
+            this.promptParameterBeforeGenerateToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.promptParameterBeforeGenerateToolStripMenuItem.Text = "Prompt FFmpeg parameter and generate";
+            this.promptParameterBeforeGenerateToolStripMenuItem.Click += new System.EventHandler(this.promptParameterBeforeGenerateToolStripMenuItem_Click);
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(676, 217);
+            this.buttonCancel.Location = new System.Drawing.Point(676, 249);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 21;
+            this.buttonCancel.TabIndex = 92;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -125,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 217);
+            this.progressBar1.Location = new System.Drawing.Point(12, 249);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(531, 10);
             this.progressBar1.TabIndex = 8;
@@ -142,6 +158,14 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownWidth
             // 
+            this.numericUpDownWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownWidth.DecimalPlaces = 0;
             this.numericUpDownWidth.Increment = new decimal(new int[] {
             2,
             0,
@@ -159,8 +183,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownWidth.TabIndex = 2;
+            this.numericUpDownWidth.TabStop = false;
+            this.numericUpDownWidth.ThousandsSeparator = false;
             this.numericUpDownWidth.Value = new decimal(new int[] {
             1280,
             0,
@@ -170,6 +196,14 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownHeight
             // 
+            this.numericUpDownHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownHeight.DecimalPlaces = 0;
             this.numericUpDownHeight.Increment = new decimal(new int[] {
             2,
             0,
@@ -187,8 +221,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownHeight.TabIndex = 4;
+            this.numericUpDownHeight.TabStop = false;
+            this.numericUpDownHeight.ThousandsSeparator = false;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             720,
             0,
@@ -227,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.Controls.Add(this.panelColor);
             this.groupBoxBackground.Location = new System.Drawing.Point(387, 12);
             this.groupBoxBackground.Name = "groupBoxBackground";
-            this.groupBoxBackground.Size = new System.Drawing.Size(366, 186);
+            this.groupBoxBackground.Size = new System.Drawing.Size(366, 162);
             this.groupBoxBackground.TabIndex = 7;
             this.groupBoxBackground.TabStop = false;
             this.groupBoxBackground.Text = "Background";
@@ -286,6 +322,19 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownDurationMinutes
             // 
+            this.numericUpDownDurationMinutes.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMinutes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMinutes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMinutes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMinutes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMinutes.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMinutes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMinutes.DecimalPlaces = 0;
+            this.numericUpDownDurationMinutes.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownDurationMinutes.Location = new System.Drawing.Point(165, 30);
             this.numericUpDownDurationMinutes.Maximum = new decimal(new int[] {
             1000,
@@ -298,8 +347,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownDurationMinutes.Name = "numericUpDownDurationMinutes";
-            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownDurationMinutes.TabIndex = 0;
+            this.numericUpDownDurationMinutes.TabStop = false;
+            this.numericUpDownDurationMinutes.ThousandsSeparator = false;
             this.numericUpDownDurationMinutes.Value = new decimal(new int[] {
             10,
             0,
@@ -310,7 +361,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 197);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 229);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 7;
@@ -327,12 +378,26 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxFrameRate
             // 
+            this.comboBoxFrameRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrameRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrameRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrameRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrameRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrameRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrameRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrameRate.DropDownHeight = 400;
             this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFrameRate.DropDownWidth = 121;
             this.comboBoxFrameRate.FormattingEnabled = true;
             this.comboBoxFrameRate.Location = new System.Drawing.Point(165, 89);
+            this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.SelectedIndex = -1;
+            this.comboBoxFrameRate.SelectedItem = null;
+            this.comboBoxFrameRate.SelectedText = "";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 6;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // timer1
             // 
@@ -343,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 230);
+            this.labelProgress.Location = new System.Drawing.Point(12, 262);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 30;
@@ -495,12 +560,23 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonChooseDuration.UseVisualStyleBackColor = true;
             this.buttonChooseDuration.Click += new System.EventHandler(this.buttonChooseDuration_Click);
             // 
+            // checkBoxAddTimeCode
+            // 
+            this.checkBoxAddTimeCode.AutoSize = true;
+            this.checkBoxAddTimeCode.Location = new System.Drawing.Point(387, 181);
+            this.checkBoxAddTimeCode.Name = "checkBoxAddTimeCode";
+            this.checkBoxAddTimeCode.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxAddTimeCode.TabIndex = 9;
+            this.checkBoxAddTimeCode.Text = "Add time code";
+            this.checkBoxAddTimeCode.UseVisualStyleBackColor = true;
+            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(763, 252);
+            this.ClientSize = new System.Drawing.Size(763, 284);
+            this.Controls.Add(this.checkBoxAddTimeCode);
             this.Controls.Add(this.buttonChooseDuration);
             this.Controls.Add(this.buttonVideoChooseStandardRes);
             this.Controls.Add(this.labelProgress);
@@ -527,11 +603,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.Text = "GenerateVideo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideo_FormClosing);
             this.Shown += new System.EventHandler(this.GenerateVideo_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
+            this.contextMenuStripGenerate.ResumeLayout(false);
             this.groupBoxBackground.ResumeLayout(false);
             this.groupBoxBackground.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).EndInit();
             this.contextMenuStripRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -545,17 +619,17 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelDuration;
-        private System.Windows.Forms.NumericUpDown numericUpDownWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownHeight;
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.GroupBox groupBoxBackground;
         private System.Windows.Forms.RadioButton radioButtonColor;
         private System.Windows.Forms.RadioButton radioButtonCheckeredImage;
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMinutes;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMinutes;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripRes;
@@ -579,5 +653,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonImage;
         private System.Windows.Forms.Button buttonChooseDuration;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemResBrowse;
+        private System.Windows.Forms.CheckBox checkBoxAddTimeCode;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGenerate;
+        private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
     }
 }

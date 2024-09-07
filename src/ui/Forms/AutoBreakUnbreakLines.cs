@@ -13,11 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _modeAutoBalance;
         private HashSet<string> _notAllowedFixes = new HashSet<string>();
 
-        private Dictionary<string, string> _fixedText = new Dictionary<string, string>();
-
         private string _language;
 
-        public Dictionary<string, string> FixedText => _fixedText;
+        public Dictionary<string, string> FixedText { get; private set; } = new Dictionary<string, string>();
 
         public AutoBreakUnbreakLines()
         {
@@ -50,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _paragraphs.Add(p);
             }
 
-            if (autoBalance)
+            if (_modeAutoBalance)
             {
                 labelCondition.Text = LanguageSettings.Current.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
                 const int start = 10;
@@ -67,6 +65,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBoxConditions.SelectedIndex < 0)
                 {
                     comboBoxConditions.SelectedIndex = 30;
+                }
+
+
+                if (Configuration.Settings.Tools.BreakLinesLongerThan >= 10 &&
+                    Configuration.Settings.Tools.BreakLinesLongerThan < 200)
+                {
+                    comboBoxConditions.Text = Configuration.Settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture);
                 }
 
                 AutoBalance();
@@ -86,6 +91,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxConditions.SelectedIndex = 5;
                 }
+
+                if (Configuration.Settings.Tools.BreakLinesLongerThan >= 10 &&
+                    Configuration.Settings.Tools.BreakLinesLongerThan < 200)
+                {
+                    comboBoxConditions.Text = Configuration.Settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture);
+                }
+
                 Unbreak();
             }
 
@@ -111,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             _notAllowedFixes = new HashSet<string>();
-            _fixedText = new Dictionary<string, string>();
+            FixedText = new Dictionary<string, string>();
             var minLength = MinimumLength;
             Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleAutoBreak;
 
@@ -126,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
-                        _fixedText.Add(p.Id, text);
+                        FixedText.Add(p.Id, text);
                     }
                 }
             }
@@ -140,8 +152,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             _notAllowedFixes = new HashSet<string>();
-            _fixedText = new Dictionary<string, string>();
-            int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
+            FixedText = new Dictionary<string, string>();
+            var minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
             Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleUnbreak;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -153,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
-                        _fixedText.Add(p.Id, text);
+                        FixedText.Add(p.Id, text);
                     }
                 }
             }
@@ -196,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _paragraphs[i];
                 if (_notAllowedFixes.Contains(p.Id))
                 {
-                    _fixedText.Remove(p.Id);
+                    FixedText.Remove(p.Id);
                 }
             }
             DialogResult = DialogResult.OK;
@@ -239,17 +251,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
+            listViewFixes.InvertCheck();
+        }
+
+        private void AutoBreakUnbreakLines_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_modeAutoBalance)
             {
-                item.Checked = !item.Checked;
+                if (int.TryParse(comboBoxConditions.Text, out var number))
+                {
+                    Configuration.Settings.Tools.BreakLinesLongerThan = number;
+                }
+            }
+            else
+            {
+                if (int.TryParse(comboBoxConditions.Text, out var number))
+                {
+                    Configuration.Settings.Tools.UnbreakLinesLongerThan = number;
+                }
             }
         }
     }

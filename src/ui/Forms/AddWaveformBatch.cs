@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -48,6 +49,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxGenerateShotChanges.Visible)
             {
                 checkBoxGenerateShotChanges.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
+            }
+
+            checkBoxExtractTimeCodes.Text = LanguageSettings.Current.AddWaveformBatch.ExtractTimeCodes;
+            checkBoxExtractTimeCodes.Left = checkBoxGenerateShotChanges.Left - checkBoxExtractTimeCodes.Width - 20;
+            checkBoxExtractTimeCodes.Visible = BeautifyTimeCodes.BeautifyTimeCodes.IsFfProbeAvailable(this);
+
+            if (checkBoxExtractTimeCodes.Visible)
+            {
+                checkBoxExtractTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes;
             }
 
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
@@ -298,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return;
                             }
 
-                            using (var form = new DownloadFfmpeg())
+                            using (var form = new DownloadFfmpeg("FFmpeg"))
                             {
                                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                                 {
@@ -366,8 +376,15 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
+                    if (checkBoxExtractTimeCodes.Visible && checkBoxExtractTimeCodes.Checked)
+                    {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingTimeCodes);
+                        ExtractTimeCodes(fileName);
+                    }
+
                     if (checkBoxGenerateShotChanges.Visible && checkBoxGenerateShotChanges.Checked)
                     {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.DetectingShotChanges);
                         GenerateShotChanges(fileName);
                     }
 
@@ -401,6 +418,32 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRipWave.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
+        }
+
+        private void ExtractTimeCodes(string videoFileName)
+        {
+            var timeCodesGenerator = new TimeCodesGenerator();
+
+            using (var process = timeCodesGenerator.GetProcess(videoFileName))
+            {
+                while (!process.HasExited)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(100);
+                    if (_abort)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        process.Kill();
+                        return;
+                    }
+                }
+            }
+
+            var timeCodes = timeCodesGenerator.GetTimeCodes();
+            if (timeCodes.Count > 0)
+            {
+                TimeCodesFileHelper.SaveTimeCodes(videoFileName, timeCodes);
+            }
         }
 
         private void GenerateShotChanges(string videoFileName)
@@ -459,7 +502,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                _abort = true;
+                if (_converting)
+                {
+                    _abort = true;
+                }
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 

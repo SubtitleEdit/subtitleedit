@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonFind = new System.Windows.Forms.Button();
-            this.textBoxFindText = new System.Windows.Forms.TextBox();
+            this.textBoxFindText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonFindNext = new System.Windows.Forms.Button();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.SuspendLayout();
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonFind;
-        private System.Windows.Forms.TextBox textBoxFindText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFindText;
         private System.Windows.Forms.Button buttonFindNext;
     }
 }

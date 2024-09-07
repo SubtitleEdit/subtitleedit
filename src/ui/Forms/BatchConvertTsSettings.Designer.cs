@@ -33,23 +33,23 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelBottomMargin = new System.Windows.Forms.Label();
             this.checkBoxOverrideOriginalYPosition = new System.Windows.Forms.CheckBox();
-            this.numericUpDownBottomMargin = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBottomMargin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelWidth = new System.Windows.Forms.Label();
             this.checkBoxOverrideVideoSize = new System.Windows.Forms.CheckBox();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelHeight = new System.Windows.Forms.Label();
-            this.numericUpDownXMargin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownXMargin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxOverrideOriginalXPosition = new System.Windows.Forms.CheckBox();
             this.labelXMargin = new System.Windows.Forms.Label();
             this.labelXAlignment = new System.Windows.Forms.Label();
-            this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
+            this.comboBoxHAlign = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelXMarginPercent = new System.Windows.Forms.Label();
             this.labelBottomMarginPercent = new System.Windows.Forms.Label();
             this.buttonChooseResolution = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelFileNameEnding = new System.Windows.Forms.Label();
-            this.textBoxFileNameAppend = new System.Windows.Forms.TextBox();
+            this.textBoxFileNameAppend = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripFileNameAppend = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.twolettercountrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.threelettercontrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,10 +57,6 @@
             this.threelettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelFileEndingSample = new System.Windows.Forms.Label();
             this.checkBoxOnlyTeletext = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXMargin)).BeginInit();
             this.contextMenuStripFileNameAppend.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,18 +106,56 @@
             // 
             // numericUpDownBottomMargin
             // 
+            this.numericUpDownBottomMargin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownBottomMargin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownBottomMargin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownBottomMargin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownBottomMargin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownBottomMargin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownBottomMargin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownBottomMargin.DecimalPlaces = 0;
+            this.numericUpDownBottomMargin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownBottomMargin.Location = new System.Drawing.Point(95, 135);
             this.numericUpDownBottomMargin.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
+            this.numericUpDownBottomMargin.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownBottomMargin.Name = "numericUpDownBottomMargin";
-            this.numericUpDownBottomMargin.Size = new System.Drawing.Size(62, 20);
+            this.numericUpDownBottomMargin.Size = new System.Drawing.Size(62, 23);
             this.numericUpDownBottomMargin.TabIndex = 50;
+            this.numericUpDownBottomMargin.TabStop = false;
+            this.numericUpDownBottomMargin.ThousandsSeparator = false;
+            this.numericUpDownBottomMargin.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // numericUpDownWidth
             // 
+            this.numericUpDownWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownWidth.DecimalPlaces = 0;
+            this.numericUpDownWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownWidth.Location = new System.Drawing.Point(65, 218);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             50000,
@@ -134,8 +168,10 @@
             0,
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(62, 20);
+            this.numericUpDownWidth.Size = new System.Drawing.Size(62, 23);
             this.numericUpDownWidth.TabIndex = 70;
+            this.numericUpDownWidth.TabStop = false;
+            this.numericUpDownWidth.ThousandsSeparator = false;
             this.numericUpDownWidth.Value = new decimal(new int[] {
             1920,
             0,
@@ -164,6 +200,19 @@
             // 
             // numericUpDownHeight
             // 
+            this.numericUpDownHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownHeight.DecimalPlaces = 0;
+            this.numericUpDownHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownHeight.Location = new System.Drawing.Point(65, 244);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             50000,
@@ -176,8 +225,10 @@
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(62, 20);
+            this.numericUpDownHeight.Size = new System.Drawing.Size(62, 23);
             this.numericUpDownHeight.TabIndex = 80;
+            this.numericUpDownHeight.TabStop = false;
+            this.numericUpDownHeight.ThousandsSeparator = false;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             1080,
             0,
@@ -195,15 +246,40 @@
             // 
             // numericUpDownXMargin
             // 
+            this.numericUpDownXMargin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownXMargin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownXMargin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownXMargin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownXMargin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownXMargin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownXMargin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownXMargin.DecimalPlaces = 0;
+            this.numericUpDownXMargin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownXMargin.Location = new System.Drawing.Point(95, 45);
             this.numericUpDownXMargin.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
+            this.numericUpDownXMargin.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownXMargin.Name = "numericUpDownXMargin";
-            this.numericUpDownXMargin.Size = new System.Drawing.Size(62, 20);
+            this.numericUpDownXMargin.Size = new System.Drawing.Size(62, 23);
             this.numericUpDownXMargin.TabIndex = 20;
+            this.numericUpDownXMargin.TabStop = false;
+            this.numericUpDownXMargin.ThousandsSeparator = false;
+            this.numericUpDownXMargin.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // checkBoxOverrideOriginalXPosition
             // 
@@ -236,7 +312,16 @@
             // 
             // comboBoxHAlign
             // 
+            this.comboBoxHAlign.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxHAlign.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxHAlign.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxHAlign.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxHAlign.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxHAlign.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxHAlign.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxHAlign.DropDownHeight = 400;
             this.comboBoxHAlign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHAlign.DropDownWidth = 123;
             this.comboBoxHAlign.FormattingEnabled = true;
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",
@@ -244,9 +329,14 @@
             "Right",
             "Center - Left justify"});
             this.comboBoxHAlign.Location = new System.Drawing.Point(95, 73);
+            this.comboBoxHAlign.MaxLength = 32767;
             this.comboBoxHAlign.Name = "comboBoxHAlign";
-            this.comboBoxHAlign.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxHAlign.SelectedIndex = -1;
+            this.comboBoxHAlign.SelectedItem = null;
+            this.comboBoxHAlign.SelectedText = "";
+            this.comboBoxHAlign.Size = new System.Drawing.Size(123, 23);
             this.comboBoxHAlign.TabIndex = 30;
+            this.comboBoxHAlign.UsePopupWindow = false;
             // 
             // labelXMarginPercent
             // 
@@ -292,6 +382,7 @@
             // textBoxFileNameAppend
             // 
             this.textBoxFileNameAppend.ContextMenuStrip = this.contextMenuStripFileNameAppend;
+            this.textBoxFileNameAppend.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFileNameAppend.Location = new System.Drawing.Point(270, 40);
             this.textBoxFileNameAppend.Name = "textBoxFileNameAppend";
             this.textBoxFileNameAppend.Size = new System.Drawing.Size(289, 20);
@@ -394,10 +485,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BatchConvertTsSettings";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvertTsSettings_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXMargin)).EndInit();
             this.contextMenuStripFileNameAppend.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -410,23 +497,23 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelBottomMargin;
         private System.Windows.Forms.CheckBox checkBoxOverrideOriginalYPosition;
-        private System.Windows.Forms.NumericUpDown numericUpDownBottomMargin;
-        private System.Windows.Forms.NumericUpDown numericUpDownWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownBottomMargin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownWidth;
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.CheckBox checkBoxOverrideVideoSize;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownHeight;
         private System.Windows.Forms.Label labelHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownXMargin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownXMargin;
         private System.Windows.Forms.CheckBox checkBoxOverrideOriginalXPosition;
         private System.Windows.Forms.Label labelXMargin;
         private System.Windows.Forms.Label labelXAlignment;
-        private System.Windows.Forms.ComboBox comboBoxHAlign;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelXMarginPercent;
         private System.Windows.Forms.Label labelBottomMarginPercent;
         private System.Windows.Forms.Button buttonChooseResolution;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelFileNameEnding;
-        private System.Windows.Forms.TextBox textBoxFileNameAppend;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileNameAppend;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFileNameAppend;
         private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem threelettercontrycodeToolStripMenuItem;

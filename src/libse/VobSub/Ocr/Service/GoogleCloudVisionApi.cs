@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
     public class GoogleCloudVisionApi : IOcrStrategy
     {
         private readonly string _apiKey;
-        private readonly HttpClient _httpClient;
+        private readonly IDownloader _httpClient;
 
         public string GetName()
         {
@@ -152,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public GoogleCloudVisionApi(string apiKey)
         {
             _apiKey = apiKey;
-            _httpClient = HttpClientHelper.MakeHttpClient();
+            _httpClient = DownloaderFactory.MakeHttpClient();
             _httpClient.BaseAddress = new Uri("https://vision.googleapis.com/v1/images:annotate");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -195,12 +196,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 var result = _httpClient.PostAsync(uri, new StringContent(requestBodyString)).Result;
                 if ((int)result.StatusCode == 400)
                 {
-                    throw new OcrException("API key invalid (or perhaps billing is not enabled)?");
+                    throw new OcrException("API key invalid (or perhaps billing/API is not enabled)?");
                 }
 
                 if ((int)result.StatusCode == 403)
                 {
-                    throw new OcrException("\"Perhaps billing is not enabled (or API key is invalid)?\"");
+                    throw new OcrException("\"Perhaps billing is not enabled (or API not enabled or API key is invalid)?\"");
                 }
 
                 if (!result.IsSuccessStatusCode)
@@ -227,87 +228,90 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return JsonToStringList(language, content);
         }
 
-        internal static List<string> JsonToStringList(string language, string content)
+        public static List<string> JsonToStringList(string language, string content)
         {
             if (Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge)
             {
                 var annotations = GetAnnotations(content).ToList();
-                var lines = new List<List<Annotation>>();
-                Annotation last = null;
-                var lineThreshold = Math.Max(9, annotations.Average(p => p.Height) / 4.0);
-                var lineIndex = 0;
-
-                // Split to lines
-                foreach (var a in annotations.OrderBy(p => p.GetMediumY()))
+                if (annotations.Count > 0)
                 {
-                    if (last != null)
-                    {
-                        var diff = Math.Abs(last.GetMediumY() - a.GetMediumY());
-                        if (diff > lineThreshold && last.Vertices.Max(p => p.Y) <= a.Vertices.Min(p => p.Y))
-                        {
-                            lineIndex++;
-                            lines.Add(new List<Annotation>());
-                            lines[lineIndex].Add(a);
-                        }
-                        else
-                        {
-                            lines[lineIndex].Add(a);
-                        }
-                    }
-                    else
-                    {
-                        lines.Add(new List<Annotation>());
-                        lines[lineIndex].Add(a);
-                    }
+                    var lines = new List<List<Annotation>>();
+                    Annotation last = null;
+                    var lineThreshold = Math.Max(9, annotations.Average(p => p.Height) / 4.0);
+                    var lineIndex = 0;
 
-                    last = a;
-                }
-
-                // Merge lines ordered by X
-                var sb = new StringBuilder();
-                var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width) / 2.7);
-                foreach (var line in lines)
-                {
-                    var sbLine = new StringBuilder();
-                    last = null;
-                    foreach (var l in line.OrderBy(p => p.Vertices.Min(p2 => p2.X)))
+                    // Split to lines
+                    foreach (var a in annotations.OrderBy(p => p.GetMediumY()))
                     {
                         if (last != null)
                         {
-                            var diff = l.Vertices.Min(p => p.X) - last.Vertices.Max(p => p.X);
-                            if (diff > spaceThreshold || last.DetectedBreak == "SPACE" || last.DetectedBreak == "EOL_SURE_SPACE" || last.DetectedBreak == "LINE_BREAK")
+                            var diff = Math.Abs(last.GetMediumY() - a.GetMediumY());
+                            if (diff > lineThreshold && last.Vertices.Max(p => p.Y) <= a.Vertices.Min(p => p.Y))
                             {
-                                sbLine.Append(" ");
+                                lineIndex++;
+                                lines.Add(new List<Annotation>());
+                                lines[lineIndex].Add(a);
                             }
-
-                            sbLine.Append(l.Text);
+                            else
+                            {
+                                lines[lineIndex].Add(a);
+                            }
                         }
                         else
                         {
-                            sbLine.Append(l.Text);
+                            lines.Add(new List<Annotation>());
+                            lines[lineIndex].Add(a);
                         }
 
-                        last = l;
+                        last = a;
                     }
 
-                    if (language == "fr")
+                    // Merge lines ordered by X
+                    var sb = new StringBuilder();
+                    var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width) / 2.7);
+                    foreach (var line in lines)
                     {
-                        sb.AppendLine(sbLine.ToString().Trim());
-                    }
-                    else
-                    {
-                        sb.AppendLine(sbLine.ToString().Trim()
-                            .Replace(" .", ".")
-                            .Replace(" ,", ",")
-                            .Replace(" ?", "?")
-                            .Replace(" !", "!"));
-                    }
-                }
+                        var sbLine = new StringBuilder();
+                        last = null;
+                        foreach (var l in line.OrderBy(p => p.Vertices.Min(p2 => p2.X)))
+                        {
+                            if (last != null)
+                            {
+                                var diff = l.Vertices.Min(p => p.X) - last.Vertices.Max(p => p.X);
+                                if (diff > spaceThreshold || last.DetectedBreak == "SPACE" || last.DetectedBreak == "EOL_SURE_SPACE" || last.DetectedBreak == "LINE_BREAK")
+                                {
+                                    sbLine.Append(" ");
+                                }
 
-                var ocrResult = sb.ToString().Trim();
-                if (ocrResult.Length > 0)
-                {
-                    return new List<string> { ocrResult };
+                                sbLine.Append(l.Text);
+                            }
+                            else
+                            {
+                                sbLine.Append(l.Text);
+                            }
+
+                            last = l;
+                        }
+
+                        if (language == "fr")
+                        {
+                            sb.AppendLine(sbLine.ToString().Trim());
+                        }
+                        else
+                        {
+                            sb.AppendLine(sbLine.ToString().Trim()
+                                .Replace(" .", ".")
+                                .Replace(" ,", ",")
+                                .Replace(" ?", "?")
+                                .Replace(" !", "!"));
+                        }
+                    }
+
+                    var ocrResult = sb.ToString().Trim();
+                    if (ocrResult.Length > 0)
+                    {
+                        return new List<string> { ocrResult };
+                    }
                 }
             }
 

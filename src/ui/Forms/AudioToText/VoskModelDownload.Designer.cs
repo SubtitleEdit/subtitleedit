@@ -31,15 +31,15 @@
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.comboBoxModels = new System.Windows.Forms.ComboBox();
-            this.textBoxError = new System.Windows.Forms.TextBox();
+            this.comboBoxModels = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.textBoxError = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // labelPleaseWait
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 92);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 122);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 3;
@@ -48,7 +48,7 @@
             // buttonDownload
             // 
             this.buttonDownload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownload.Location = new System.Drawing.Point(258, 29);
+            this.buttonDownload.Location = new System.Drawing.Point(258, 14);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(145, 23);
             this.buttonDownload.TabIndex = 1;
@@ -61,7 +61,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(328, 87);
+            this.buttonCancel.Location = new System.Drawing.Point(328, 117);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -71,30 +71,45 @@
             // 
             // comboBoxModels
             // 
+            this.comboBoxModels.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxModels.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxModels.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxModels.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxModels.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxModels.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxModels.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxModels.DropDownHeight = 400;
             this.comboBoxModels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModels.DropDownWidth = 237;
             this.comboBoxModels.FormattingEnabled = true;
-            this.comboBoxModels.Location = new System.Drawing.Point(15, 31);
+            this.comboBoxModels.Location = new System.Drawing.Point(15, 16);
+            this.comboBoxModels.MaxLength = 32767;
             this.comboBoxModels.Name = "comboBoxModels";
-            this.comboBoxModels.Size = new System.Drawing.Size(237, 21);
+            this.comboBoxModels.SelectedIndex = -1;
+            this.comboBoxModels.SelectedItem = null;
+            this.comboBoxModels.SelectedText = "";
+            this.comboBoxModels.Size = new System.Drawing.Size(237, 23);
             this.comboBoxModels.TabIndex = 0;
+            this.comboBoxModels.UsePopupWindow = false;
             // 
             // textBoxError
             // 
             this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxError.Location = new System.Drawing.Point(15, 69);
+            this.textBoxError.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxError.Location = new System.Drawing.Point(15, 98);
             this.textBoxError.Multiline = true;
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ReadOnly = true;
-            this.textBoxError.Size = new System.Drawing.Size(388, 12);
+            this.textBoxError.Size = new System.Drawing.Size(388, 13);
             this.textBoxError.TabIndex = 2;
             // 
-            // AudioToTextModelDownload
+            // VoskModelDownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 120);
+            this.ClientSize = new System.Drawing.Size(415, 150);
             this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.comboBoxModels);
             this.Controls.Add(this.labelPleaseWait);
@@ -104,7 +119,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AudioToTextModelDownload";
+            this.Name = "VoskModelDownload";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -120,7 +135,7 @@
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ComboBox comboBoxModels;
-        private System.Windows.Forms.TextBox textBoxError;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxModels;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxError;
     }
 }

@@ -42,16 +42,19 @@
             this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.groupBoxRemoveTextConditions = new System.Windows.Forms.GroupBox();
+            this.checkBoxRemoveIfOnlyMusicSymbols = new System.Windows.Forms.CheckBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelLanguage = new System.Windows.Forms.Label();
             this.checkBoxInterjectionOnlySeparateLine = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
             this.checkBoxColonSeparateLine = new System.Windows.Forms.CheckBox();
             this.buttonEditInterjections = new System.Windows.Forms.Button();
             this.checkBoxRemoveInterjections = new System.Windows.Forms.CheckBox();
             this.labelRemoveTextBetween = new System.Windows.Forms.Label();
-            this.comboBoxRemoveIfTextContains = new System.Windows.Forms.ComboBox();
+            this.comboBoxRemoveIfTextContains = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxRemoveWhereContains = new System.Windows.Forms.CheckBox();
-            this.comboBoxCustomEnd = new System.Windows.Forms.ComboBox();
-            this.comboBoxCustomStart = new System.Windows.Forms.ComboBox();
+            this.comboBoxCustomEnd = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxCustomStart = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxRemoveTextBeforeColonOnlyUppercase = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyIfInSeparateLine = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextBetweenCustomTags = new System.Windows.Forms.CheckBox();
@@ -61,7 +64,7 @@
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
-            this.textBoxAfterText = new System.Windows.Forms.TextBox();
+            this.textBoxAfterText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelText = new System.Windows.Forms.Label();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -185,6 +188,9 @@
             // 
             this.groupBoxRemoveTextConditions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxRemoveIfOnlyMusicSymbols);
+            this.groupBoxRemoveTextConditions.Controls.Add(this.comboBoxLanguage);
+            this.groupBoxRemoveTextConditions.Controls.Add(this.labelLanguage);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxInterjectionOnlySeparateLine);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxRemoveIfAllUppercase);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxColonSeparateLine);
@@ -211,13 +217,59 @@
             this.groupBoxRemoveTextConditions.TabStop = false;
             this.groupBoxRemoveTextConditions.Text = "Remove text conditions";
             // 
+            // checkBoxRemoveIfOnlyMusicSymbols
+            // 
+            this.checkBoxRemoveIfOnlyMusicSymbols.AutoSize = true;
+            this.checkBoxRemoveIfOnlyMusicSymbols.Location = new System.Drawing.Point(241, 172);
+            this.checkBoxRemoveIfOnlyMusicSymbols.Name = "checkBoxRemoveIfOnlyMusicSymbols";
+            this.checkBoxRemoveIfOnlyMusicSymbols.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxRemoveIfOnlyMusicSymbols.TabIndex = 15;
+            this.checkBoxRemoveIfOnlyMusicSymbols.Text = "Remove if only music symbols";
+            this.checkBoxRemoveIfOnlyMusicSymbols.UseVisualStyleBackColor = true;
+            this.checkBoxRemoveIfOnlyMusicSymbols.CheckedChanged += new System.EventHandler(this.checkBoxRemoveIfOnlyMusicSymbols_CheckedChanged);
+            // 
+            // comboBoxLanguage
+            // 
+            this.comboBoxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguage.DropDownHeight = 400;
+            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguage.DropDownWidth = 196;
+            this.comboBoxLanguage.FormattingEnabled = true;
+            this.comboBoxLanguage.Location = new System.Drawing.Point(718, 18);
+            this.comboBoxLanguage.MaxLength = 32767;
+            this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.SelectedIndex = -1;
+            this.comboBoxLanguage.SelectedItem = null;
+            this.comboBoxLanguage.SelectedText = "";
+            this.comboBoxLanguage.Size = new System.Drawing.Size(196, 21);
+            this.comboBoxLanguage.TabIndex = 16;
+            this.comboBoxLanguage.UsePopupWindow = false;
+            this.comboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguage_SelectedIndexChanged);
+            // 
+            // labelLanguage
+            // 
+            this.labelLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelLanguage.Location = new System.Drawing.Point(475, 21);
+            this.labelLanguage.Name = "labelLanguage";
+            this.labelLanguage.Size = new System.Drawing.Size(237, 25);
+            this.labelLanguage.TabIndex = 20;
+            this.labelLanguage.Text = "Language";
+            this.labelLanguage.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // checkBoxInterjectionOnlySeparateLine
             // 
             this.checkBoxInterjectionOnlySeparateLine.AutoSize = true;
-            this.checkBoxInterjectionOnlySeparateLine.Location = new System.Drawing.Point(600, 53);
+            this.checkBoxInterjectionOnlySeparateLine.Location = new System.Drawing.Point(600, 76);
             this.checkBoxInterjectionOnlySeparateLine.Name = "checkBoxInterjectionOnlySeparateLine";
             this.checkBoxInterjectionOnlySeparateLine.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxInterjectionOnlySeparateLine.TabIndex = 18;
+            this.checkBoxInterjectionOnlySeparateLine.TabIndex = 19;
             this.checkBoxInterjectionOnlySeparateLine.Text = "Only if on separate line";
             this.checkBoxInterjectionOnlySeparateLine.UseVisualStyleBackColor = true;
             this.checkBoxInterjectionOnlySeparateLine.CheckedChanged += new System.EventHandler(this.checkBoxInterjectionOnlySeparateLine_CheckedChanged);
@@ -248,10 +300,10 @@
             // 
             // buttonEditInterjections
             // 
-            this.buttonEditInterjections.Location = new System.Drawing.Point(718, 26);
+            this.buttonEditInterjections.Location = new System.Drawing.Point(718, 49);
             this.buttonEditInterjections.Name = "buttonEditInterjections";
             this.buttonEditInterjections.Size = new System.Drawing.Size(103, 23);
-            this.buttonEditInterjections.TabIndex = 17;
+            this.buttonEditInterjections.TabIndex = 18;
             this.buttonEditInterjections.Text = "Edit...";
             this.buttonEditInterjections.UseVisualStyleBackColor = true;
             this.buttonEditInterjections.Click += new System.EventHandler(this.buttonEditInterjections_Click);
@@ -259,10 +311,10 @@
             // checkBoxRemoveInterjections
             // 
             this.checkBoxRemoveInterjections.AutoSize = true;
-            this.checkBoxRemoveInterjections.Location = new System.Drawing.Point(582, 30);
+            this.checkBoxRemoveInterjections.Location = new System.Drawing.Point(582, 53);
             this.checkBoxRemoveInterjections.Name = "checkBoxRemoveInterjections";
             this.checkBoxRemoveInterjections.Size = new System.Drawing.Size(130, 17);
-            this.checkBoxRemoveInterjections.TabIndex = 16;
+            this.checkBoxRemoveInterjections.TabIndex = 17;
             this.checkBoxRemoveInterjections.Text = "Remove interjections ";
             this.checkBoxRemoveInterjections.UseVisualStyleBackColor = true;
             this.checkBoxRemoveInterjections.CheckedChanged += new System.EventHandler(this.checkBoxRemoveInterjections_CheckedChanged);
@@ -278,6 +330,16 @@
             // 
             // comboBoxRemoveIfTextContains
             // 
+            this.comboBoxRemoveIfTextContains.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxRemoveIfTextContains.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxRemoveIfTextContains.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxRemoveIfTextContains.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxRemoveIfTextContains.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxRemoveIfTextContains.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxRemoveIfTextContains.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxRemoveIfTextContains.DropDownHeight = 400;
+            this.comboBoxRemoveIfTextContains.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxRemoveIfTextContains.DropDownWidth = 122;
             this.comboBoxRemoveIfTextContains.FormattingEnabled = true;
             this.comboBoxRemoveIfTextContains.Items.AddRange(new object[] {
             "¶",
@@ -287,9 +349,14 @@
             this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(427, 131);
             this.comboBoxRemoveIfTextContains.MaxLength = 25;
             this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
+            this.comboBoxRemoveIfTextContains.SelectedIndex = -1;
+            this.comboBoxRemoveIfTextContains.SelectedItem = null;
+            this.comboBoxRemoveIfTextContains.SelectedText = "¶";
             this.comboBoxRemoveIfTextContains.Size = new System.Drawing.Size(122, 21);
             this.comboBoxRemoveIfTextContains.TabIndex = 15;
+            this.comboBoxRemoveIfTextContains.TabStop = false;
             this.comboBoxRemoveIfTextContains.Text = "¶";
+            this.comboBoxRemoveIfTextContains.UsePopupWindow = false;
             this.comboBoxRemoveIfTextContains.TextChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
             // 
             // checkBoxRemoveWhereContains
@@ -305,6 +372,16 @@
             // 
             // comboBoxCustomEnd
             // 
+            this.comboBoxCustomEnd.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCustomEnd.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCustomEnd.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCustomEnd.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCustomEnd.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCustomEnd.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCustomEnd.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCustomEnd.DropDownHeight = 400;
+            this.comboBoxCustomEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxCustomEnd.DropDownWidth = 38;
             this.comboBoxCustomEnd.FormattingEnabled = true;
             this.comboBoxCustomEnd.Items.AddRange(new object[] {
             "¶",
@@ -313,13 +390,28 @@
             this.comboBoxCustomEnd.Location = new System.Drawing.Point(116, 135);
             this.comboBoxCustomEnd.MaxLength = 2;
             this.comboBoxCustomEnd.Name = "comboBoxCustomEnd";
+            this.comboBoxCustomEnd.SelectedIndex = -1;
+            this.comboBoxCustomEnd.SelectedItem = null;
+            this.comboBoxCustomEnd.SelectedText = "¶";
             this.comboBoxCustomEnd.Size = new System.Drawing.Size(38, 21);
             this.comboBoxCustomEnd.TabIndex = 8;
+            this.comboBoxCustomEnd.TabStop = false;
             this.comboBoxCustomEnd.Text = "¶";
+            this.comboBoxCustomEnd.UsePopupWindow = false;
             this.comboBoxCustomEnd.TextChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
             // 
             // comboBoxCustomStart
             // 
+            this.comboBoxCustomStart.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCustomStart.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCustomStart.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCustomStart.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCustomStart.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCustomStart.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCustomStart.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCustomStart.DropDownHeight = 400;
+            this.comboBoxCustomStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxCustomStart.DropDownWidth = 38;
             this.comboBoxCustomStart.FormattingEnabled = true;
             this.comboBoxCustomStart.Items.AddRange(new object[] {
             "¶",
@@ -328,9 +420,14 @@
             this.comboBoxCustomStart.Location = new System.Drawing.Point(41, 135);
             this.comboBoxCustomStart.MaxLength = 2;
             this.comboBoxCustomStart.Name = "comboBoxCustomStart";
+            this.comboBoxCustomStart.SelectedIndex = -1;
+            this.comboBoxCustomStart.SelectedItem = null;
+            this.comboBoxCustomStart.SelectedText = "¶";
             this.comboBoxCustomStart.Size = new System.Drawing.Size(38, 21);
             this.comboBoxCustomStart.TabIndex = 6;
+            this.comboBoxCustomStart.TabStop = false;
             this.comboBoxCustomStart.Text = "¶";
+            this.comboBoxCustomStart.UsePopupWindow = false;
             this.comboBoxCustomStart.TextChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
             // 
             // checkBoxRemoveTextBeforeColonOnlyUppercase
@@ -442,6 +539,7 @@
             // textBoxAfterText
             // 
             this.textBoxAfterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxAfterText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAfterText.Location = new System.Drawing.Point(12, 543);
             this.textBoxAfterText.Multiline = true;
             this.textBoxAfterText.Name = "textBoxAfterText";
@@ -513,9 +611,9 @@
         private System.Windows.Forms.Label labelAnd;
         private System.Windows.Forms.CheckBox checkBoxRemoveTextBeforeColonOnlyUppercase;
         private System.Windows.Forms.CheckBox checkBoxOnlyIfInSeparateLine;
-        private System.Windows.Forms.ComboBox comboBoxCustomStart;
-        private System.Windows.Forms.ComboBox comboBoxCustomEnd;
-        private System.Windows.Forms.ComboBox comboBoxRemoveIfTextContains;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomStart;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomEnd;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxRemoveIfTextContains;
         private System.Windows.Forms.CheckBox checkBoxRemoveWhereContains;
         private System.Windows.Forms.Label labelRemoveTextBetween;
         private System.Windows.Forms.CheckBox checkBoxRemoveInterjections;
@@ -527,7 +625,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.CheckBox checkBoxInterjectionOnlySeparateLine;
-        private System.Windows.Forms.TextBox textBoxAfterText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxAfterText;
         private System.Windows.Forms.Label labelText;
+        private Controls.NikseComboBox comboBoxLanguage;
+        private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.CheckBox checkBoxRemoveIfOnlyMusicSymbols;
     }
 }

@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();
-            this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
-            this.textBoxOcrFixKey = new System.Windows.Forms.TextBox();
+            this.textBoxOcrFixValue = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxOcrFixKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // comboBoxDictionaries
@@ -133,12 +133,12 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelDescription;
-        private System.Windows.Forms.TextBox textBoxOcrFixValue;
-        private System.Windows.Forms.TextBox textBoxOcrFixKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixValue;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixKey;
     }
 }

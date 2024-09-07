@@ -123,19 +123,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
-                        for (var j = 0; j < dataUnitLen; j++)
+                        for (var j = 0; j < dataUnitLen && i + j < _dataBuffer.Length; j++)
                         {
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
-                        var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
-                        if (!pages.Contains(pageNumber) && pageNumber > 0)
+
+                        if (_dataBuffer.Length > i + 43)
                         {
-                            pages.Add(pageNumber);
+                            var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
+                            if (!pages.Contains(pageNumber) && pageNumber > 0)
+                            {
+                                pages.Add(pageNumber);
+                            }
                         }
                     }
                 }
+
                 i += dataUnitLen;
             }
+
             return pages;
         }
 
@@ -168,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var dataUnitLen = _dataBuffer[i++];
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
+                    if (dataUnitLen == 44 && _dataBuffer.Length > i + 43) // teletext payload has always size 44 bytes
                     {
                         Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), timestamp, teletextRunSettings, pageNumberBcd, pageNumber);
                     }
@@ -472,6 +478,41 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return bmp;
         }
 
+        public Position GetPosition()
+        {
+            if (SubtitleSegments == null)
+            {
+                ParseSegments();
+            }
+
+            var minX = int.MaxValue;
+            var minY = int.MaxValue;
+            foreach (var ods in ObjectDataList)
+            {
+                var cds = GetClutDefinitionSegment(ods);
+                var pos = ods.FindPosition(_dataBuffer, ods.BufferIndex, cds);
+                if (pos != null)
+                {
+                    var odsPoint = GetImagePosition(ods);
+
+                    var x = pos.Left + odsPoint.X;
+                    if (x < minX)
+                    {
+                        minX = x;
+                    }
+
+                    var y = pos.Top + odsPoint.Y;
+                    if (y < minY)
+                    {
+                        minY = y;
+                    }
+                }
+            }
+
+            return new Position(minX == int.MaxValue ? 0 : minX, minY == int.MaxValue ? 0 : minY);
+        }
+
+
         public Size GetScreenSize()
         {
             if (SubtitleSegments == null)
@@ -545,6 +586,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public void WriteToStream(Stream stream)
         {
+            if (_dataBuffer == null)
+            {
+                return;
+            }
+
             stream.Write(_dataBuffer, 0, _dataBuffer.Length);
         }
     }

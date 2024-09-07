@@ -65,11 +65,11 @@ namespace Test.Logic
             Assert.AreEqual("and laugh it off to realise that\r\nlife isn’t so bad after all.", procSubtitle.Paragraphs[6].Text);
 
             // timing test
-            if (procSubtitle.Paragraphs[5].Duration.TotalMilliseconds > procSubtitle.Paragraphs[6].Duration.TotalMilliseconds)
+            if (procSubtitle.Paragraphs[5].DurationTotalMilliseconds > procSubtitle.Paragraphs[6].DurationTotalMilliseconds)
             {
                 Assert.IsTrue(procSubtitle.Paragraphs[5].Text.Length > procSubtitle.Paragraphs[6].Text.Length);
             }
-            if (procSubtitle.Paragraphs[5].Duration.TotalMilliseconds < procSubtitle.Paragraphs[6].Duration.TotalMilliseconds)
+            if (procSubtitle.Paragraphs[5].DurationTotalMilliseconds < procSubtitle.Paragraphs[6].DurationTotalMilliseconds)
             {
                 Assert.IsTrue(procSubtitle.Paragraphs[5].Text.Length < procSubtitle.Paragraphs[6].Text.Length);
             }

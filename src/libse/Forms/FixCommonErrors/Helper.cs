@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     text = tag + text.Substring(tagPlusPeriod.Length);
                     while (text.StartsWith(tag + ".", StringComparison.Ordinal) || text.StartsWith(tag + " ", StringComparison.Ordinal))
                     {
-                        text = tag + text.Substring(tagPlusPeriod.Length + 1);
+                        text = text.Remove(tag.Length, 1);
                     }
                 }
             }
@@ -184,6 +184,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = FixEllipsesStartHelper(text);
                 pre += " ";
             }
+
             return pre + text;
         }
 
@@ -199,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
-                    if (part0.Length > 1 && "-—!?.\")]♫♪".Contains(part0[part0.Length - 1]) &&
+                    if (part0.Length > 1 && "-—!?.…\")]♫♪".Contains(part0[part0.Length - 1]) &&
                         part1.Length > 1 && (char.IsUpper(part1[0]) || "\"'♫♪{[(".Contains(part1[0])))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
@@ -607,10 +608,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public static string FixDoubleGreaterThanHelper(string text)
         {
-            var post = string.Empty;
+            var pre = string.Empty;
             if (text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'b' || text[1] == 'u'))
             {
-                post += "<" + text[1] + ">";
+                pre += "<" + text[1] + ">";
                 text = text.Remove(0, 3).TrimStart();
             }
 
@@ -619,7 +620,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var endIdx = text.IndexOf('>', 5);
                 if (endIdx >= 5 && endIdx < text.Length - 7)
                 {
-                    post += text.Substring(0, endIdx + 1);
+                    pre += text.Substring(0, endIdx + 1);
                     text = text.Substring(endIdx + 1).TrimStart();
                 }
             }
@@ -629,7 +630,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = text.TrimStart('>', ' ').TrimStart();
             }
 
-            return post + text;
+            return pre + text;
         }
 
         private static readonly char[] NoShortLineList = { '.', '?', '!', ':', ';', '…', '♪', '♫' };

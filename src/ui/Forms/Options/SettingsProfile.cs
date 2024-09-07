@@ -3,10 +3,13 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -63,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
-            for (int i = 1; i < 100; i++)
+            for (var i = 1; i < 100; i++)
             {
                 comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
@@ -135,6 +138,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.OemMinus)
+            {
+                if (Font.Size > 4)
+                {
+                    Font = new Font(Font.FontFamily, Font.Size - 1);
+                }
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Oemplus)
+            {
+                if (Font.Size < 40)
+                {
+                    Font = new Font(Font.FontFamily, Font.Size + 1);
+                }
             }
         }
 
@@ -346,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);
             }
             catch
-            { 
+            {
                 // ignore
             }
 

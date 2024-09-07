@@ -33,13 +33,11 @@
             this.groupBoxSearchDirection = new System.Windows.Forms.GroupBox();
             this.radioButtonBack = new System.Windows.Forms.RadioButton();
             this.radioButtonForward = new System.Windows.Forms.RadioButton();
-            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownVolume = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownVolume = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelVolumeBelow = new System.Windows.Forms.Label();
             this.groupBoxSearchDirection.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolume)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -103,6 +101,13 @@
             // 
             // numericUpDownSeconds
             // 
+            this.numericUpDownSeconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSeconds.DecimalPlaces = 1;
             this.numericUpDownSeconds.Increment = new decimal(new int[] {
             1,
@@ -121,8 +126,10 @@
             0,
             65536});
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
-            this.numericUpDownSeconds.Size = new System.Drawing.Size(75, 20);
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(75, 23);
             this.numericUpDownSeconds.TabIndex = 6;
+            this.numericUpDownSeconds.TabStop = false;
+            this.numericUpDownSeconds.ThousandsSeparator = false;
             this.numericUpDownSeconds.Value = new decimal(new int[] {
             3,
             0,
@@ -131,6 +138,13 @@
             // 
             // numericUpDownVolume
             // 
+            this.numericUpDownVolume.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownVolume.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownVolume.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownVolume.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownVolume.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownVolume.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownVolume.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownVolume.DecimalPlaces = 2;
             this.numericUpDownVolume.Increment = new decimal(new int[] {
             1,
@@ -138,9 +152,21 @@
             0,
             65536});
             this.numericUpDownVolume.Location = new System.Drawing.Point(247, 117);
+            this.numericUpDownVolume.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownVolume.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownVolume.Name = "numericUpDownVolume";
-            this.numericUpDownVolume.Size = new System.Drawing.Size(75, 20);
+            this.numericUpDownVolume.Size = new System.Drawing.Size(75, 23);
             this.numericUpDownVolume.TabIndex = 7;
+            this.numericUpDownVolume.TabStop = false;
+            this.numericUpDownVolume.ThousandsSeparator = false;
             this.numericUpDownVolume.Value = new decimal(new int[] {
             3,
             0,
@@ -189,8 +215,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SeekSilence_KeyDown);
             this.groupBoxSearchDirection.ResumeLayout(false);
             this.groupBoxSearchDirection.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolume)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,8 +227,8 @@
         private System.Windows.Forms.GroupBox groupBoxSearchDirection;
         private System.Windows.Forms.RadioButton radioButtonBack;
         private System.Windows.Forms.RadioButton radioButtonForward;
-        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
-        private System.Windows.Forms.NumericUpDown numericUpDownVolume;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSeconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVolume;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelVolumeBelow;
     }

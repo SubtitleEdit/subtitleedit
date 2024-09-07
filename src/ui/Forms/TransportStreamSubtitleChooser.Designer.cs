@@ -43,7 +43,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxSubtitles = new System.Windows.Forms.ListBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.textBoxTeletext = new System.Windows.Forms.TextBox();
+            this.textBoxTeletext = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripListview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -197,13 +197,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(613, 483);
-            this.Controls.Add(this.textBoxTeletext);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.listBoxSubtitles);
             this.Controls.Add(this.labelChoose);
             this.Controls.Add(this.listBoxTracks);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.listBoxSubtitles);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.textBoxTeletext);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -237,7 +237,7 @@
         private System.Windows.Forms.ToolStripMenuItem vobSubToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAllImagesWithHtmlIndexViewToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBoxTeletext;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTeletext;
         private System.Windows.Forms.ToolStripMenuItem saveSubtitleAsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }

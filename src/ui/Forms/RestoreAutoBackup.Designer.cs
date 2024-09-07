@@ -45,7 +45,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(552, 383);
+            this.buttonCancel.Location = new System.Drawing.Point(616, 383);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -56,7 +56,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(471, 383);
+            this.buttonOK.Location = new System.Drawing.Point(535, 383);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -79,7 +79,7 @@
             this.listViewBackups.Location = new System.Drawing.Point(12, 37);
             this.listViewBackups.MultiSelect = false;
             this.listViewBackups.Name = "listViewBackups";
-            this.listViewBackups.Size = new System.Drawing.Size(615, 333);
+            this.listViewBackups.Size = new System.Drawing.Size(679, 333);
             this.listViewBackups.TabIndex = 1;
             this.listViewBackups.UseCompatibleStateImageBehavior = false;
             this.listViewBackups.View = System.Windows.Forms.View.Details;
@@ -141,7 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 414);
+            this.ClientSize = new System.Drawing.Size(703, 414);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.linkLabelOpenContainingFolder);
             this.Controls.Add(this.labelInfo);
@@ -155,9 +155,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Restore auto-backup";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestoreAutoBackup_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.RestoreAutoBackup_ResizeEnd);
             this.Shown += new System.EventHandler(this.RestoreAutoBackup_Shown);
+            this.ResizeEnd += new System.EventHandler(this.RestoreAutoBackup_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestoreAutoBackup_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,21 +1,27 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Threading;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class RestoreAutoBackup : PositionAndSizeForm
     {
-        private static readonly object _locker = new object();
+        private static readonly object Locker = new object();
 
         //2011-12-13_20-19-18_title
         private static readonly Regex RegexFileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
         private string[] _files;
         public string AutoBackupFileName { get; set; }
+        private static bool ShowAutoBackupError { get; set; }
 
         public RestoreAutoBackup()
         {
@@ -37,6 +43,146 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            if (Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
+                listViewBackups.BeginUpdate();
+                foreach (var fileName in _files)
+                {
+                    var path = Path.GetFileName(fileName);
+                    if (RegexFileNamePattern.IsMatch(path))
+                    {
+                        AddBackupToListView(fileName);
+                    }
+                }
+                listViewBackups.Sorting = SortOrder.Descending;
+                listViewBackups.Sort();
+                listViewBackups.EndUpdate();
+            }
+        }
+
+        public static bool SaveAutoBackup(Subtitle subtitle, SubtitleFormat saveFormat, string currentText)
+        {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Configuration.AutoBackupDirectory);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(string.Format(LanguageSettings.Current.Main.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
+                    return false;
+                }
+            }
+
+            var title = string.Empty;
+            if (!string.IsNullOrEmpty(subtitle.FileName))
+            {
+                title = "_" + Path.GetFileNameWithoutExtension(subtitle.FileName);
+            }
+
+            var fileName = $"{Configuration.AutoBackupDirectory}{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}{title}{saveFormat.Extension}";
+            try
+            {
+                File.WriteAllText(fileName, currentText);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                if (ShowAutoBackupError)
+                {
+                    MessageBox.Show("Unable to save auto-backup to file: " + fileName + Environment.NewLine +
+                                    Environment.NewLine +
+                                    exception.Message + Environment.NewLine + exception.StackTrace);
+                    ShowAutoBackupError = false;
+                }
+
+                return false;
+            }
+        }
+
+        public static DateTime GetLatestSettingsTime()
+        {
+            var path = Path.Combine(Configuration.AutoBackupDirectory, "Settings");
+            if (!Directory.Exists(path))
+            {
+                return DateTime.MinValue;
+            }
+
+            var files = Directory.GetFiles(path, "*.*");
+            var fileNameList = new List<string>();
+            foreach (var fileName in files)
+            {
+                var fileNameNoPath = Path.GetFileName(fileName);
+                if (RegexFileNamePattern.IsMatch(fileNameNoPath))
+                {
+                    fileNameList.Add(fileNameNoPath);
+                }
+            }
+
+            fileNameList.Sort();
+            if (fileNameList.Count == 0)
+            {
+                return DateTime.MinValue;
+            }
+
+            if (DateTime.TryParse(fileNameList[0].Substring(0, 10), out var date))
+            {
+                return date;
+            }
+
+            return DateTime.MinValue;
+        }
+
+        public static bool SaveAutoBackupSettings(Settings settings)
+        {
+            if (settings == null)
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Configuration.AutoBackupDirectory);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            var path = Path.Combine(Configuration.AutoBackupDirectory, "Settings");
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            var fileName = $"{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}Settings.xml";
+            try
+            {
+                Settings.CustomSerialize(Path.Combine(path, fileName), settings);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void RestoreAutoBackup_KeyDown(object sender, KeyEventArgs e)
@@ -49,25 +195,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
-            RestoreAutoBackup_ResizeEnd(sender, e);
-            if (Directory.Exists(Configuration.AutoBackupDirectory))
+            listViewBackups.AutoSizeLastColumn();
+
+            if (listViewBackups.Items.Count > 0)
             {
-                _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
-                foreach (string fileName in _files)
-                {
-                    var path = Path.GetFileName(fileName);
-                    if (path != null && RegexFileNamePattern.IsMatch(path))
-                    {
-                        AddBackupToListView(fileName);
-                    }
-                }
-                listViewBackups.Sorting = SortOrder.Descending;
-                listViewBackups.Sort();
-                if (_files.Length > 0)
-                {
-                    return;
-                }
+                return;
             }
+
             linkLabelOpenContainingFolder.Visible = false;
             labelStatus.Left = linkLabelOpenContainingFolder.Left;
             labelStatus.Text = LanguageSettings.Current.RestoreAutoBackup.NoBackedUpFilesFound;
@@ -81,11 +215,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string displayDate = path.Substring(0, 19).Replace('_', ' ');
+            var displayDate = path.Substring(0, 19).Replace('_', ' ');
             displayDate = displayDate.Remove(13, 1).Insert(13, ":");
             displayDate = displayDate.Remove(16, 1).Insert(16, ":");
 
-            string displayName = path.Remove(0, 20);
+            var displayName = path.Remove(0, 20);
             if (displayName == "srt")
             {
                 displayName = "Untitled.srt";
@@ -142,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenContainingFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string folderName = Configuration.AutoBackupDirectory;
+            var folderName = Configuration.AutoBackupDirectory;
             if (Utilities.IsRunningOnMono())
             {
                 UiUtil.OpenFolder(folderName);
@@ -151,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (listViewBackups.SelectedItems.Count == 1)
                 {
-                    string argument = @"/select, " + listViewBackups.SelectedItems[0].Tag;
+                    var argument = @"/select, " + listViewBackups.SelectedItems[0].Tag;
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
                 else
@@ -163,13 +297,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static void CleanAutoBackupFolder(string autoBackupFolder, int autoBackupDeleteAfterMonths)
         {
-            lock (_locker) // only allow one thread
+            lock (Locker) // only allow one thread
             {
                 if (Directory.Exists(autoBackupFolder))
                 {
                     var targetDate = DateTime.Now.AddMonths(-autoBackupDeleteAfterMonths);
                     var files = Directory.GetFiles(autoBackupFolder, "*.*");
-                    foreach (string fileName in files)
+                    foreach (var fileName in files)
                     {
                         try
                         {
@@ -187,6 +321,5 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
     }
 }

@@ -9,7 +9,28 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
         public static readonly List<string> LanguagesAllowingLineMerging = new List<string>
         {
-            "en", "da", "nl", "de", "sv", "nb", "fr", "it", "tr", "es", "pt", "sr", "ru", "lv", "lt", "et", "ro", "pl", "ar", "he", "no"
+            "en", "eng_Latn",
+            "da", "dan_Latn",
+            "nl", "nld_Latn",
+            "de", "deu_Latn",
+            "sv", "swe_Latn",
+            "nb", "nob_Latn",
+            "fr", "fra_Latn",
+            "it", "ita_Latn",
+            "tr", "tur_Latn",
+            "es", "spa_Latn",
+            "pt", "por_Latn",
+            "sr", "srp_Cyrl",
+            "ru", "rus_Cyrl",
+            "lv", "lvs_Latn",
+            "lt", "lit_Latn",
+            "et", "est_Latn",
+            "ro", "ron_Latn",
+            "pl", "pol_Latn",
+            "ar", "arb_Arab",
+            "he", "heb_Hebr",
+            "no", "nno_Latn",
+            "eu", "eus_Latn"
         };
 
         private bool Italic { get; set; }
@@ -19,15 +40,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
+        private bool SquareBracketsStartWithLowercase { get; set; }
+        private bool RemovePeriod { get; set; }
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
+        private bool HasReset { get; set; }
+        private string ReplaceAllText { get; set; }
 
         public string SetTagsAndReturnTrimmed(string input, string sourceLanguage)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(input, true).Replace("♪", string.Empty).Replace("♫", string.Empty)))
             {
-                return string.Empty;
+                ReplaceAllText = input;
+                return "...";
             }
 
             var text = input.Trim();
@@ -41,6 +67,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     StartTags = text.Substring(0, endIndex + 1);
                     text = text.Remove(0, endIndex + 1).Trim();
                 }
+            }
+
+            // ASSA reset tag
+            if (text.Contains("\\r}", StringComparison.Ordinal) ||
+                text.Contains("\\r\\", StringComparison.Ordinal))
+            {
+                text = text.Replace("\\r}", "\\RESET}");
+                text = text.Replace("\\r\\", "\\RESET\\");
+
+                HasReset = true;
             }
 
             // Italic tags
@@ -74,12 +110,27 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     SquareBracketsUppercase = true;
                 }
-                else
+                else if (text.Length > 0 && char.IsLower(text[0]))
+                {
+                    SquareBracketsStartWithLowercase = true;
+                }
+                else 
                 {
                     SquareBrackets = true;
                 }
 
                 text = text.Replace("[", string.Empty).Replace("]", string.Empty);
+
+                if (SquareBracketsStartWithLowercase)
+                {
+                    text = text.CapitalizeFirstLetter();
+                }
+
+                if (!text.HasSentenceEnding() && text.Length > 0)
+                {
+                    text += ".";
+                    RemovePeriod = true;
+                }
             }
 
             // Un-break line
@@ -102,16 +153,35 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             var text = input.Trim();
 
+            if (ReplaceAllText != null)
+            {
+                return ReplaceAllText;
+            }
+
             // Auto-break line
             if (AutoBreak)
             {
                 text = Utilities.AutoBreakLine(text);
             }
 
+            if (RemovePeriod && text.EndsWith('.'))
+            {
+                text = text.Remove(text.Length - 1, 1);
+            }
+
             // Square brackets
             if (SquareBracketsUppercase)
             {
                 text = "[" + text.ToUpperInvariant().Trim() + "]";
+            }
+            else if (SquareBracketsStartWithLowercase)
+            {
+                if (text.Length > 0)
+                {
+                    text = char.ToLower(text[0]) + text.Remove(0, 1);
+                }
+
+                text = "[" + text.Trim() + "]";
             }
             else if (SquareBrackets)
             {
@@ -137,6 +207,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
             if (!string.IsNullOrEmpty(Font))
             {
                 text = Font + text + "</font>";
+            }
+
+            // ASSA reset tag
+            if (HasReset)
+            {
+                text = text.Replace("\\RESET}", "\\r}");
+                text = text.Replace("\\RESET\\", "\\r\\");
             }
 
             // SSA/ASS tags

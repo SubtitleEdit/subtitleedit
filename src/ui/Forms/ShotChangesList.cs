@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -119,7 +120,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ExportShotChanges(List<double> shotChanges, Form form)
         {
-            using (var saveDialog = new SaveFileDialog { FileName = GetFileName(), Filter = "Seconds|*.txt|Milliseconds|*.txt|Frames|*.txt" })
+            using (var saveDialog = new SaveFileDialog
+            {
+               FileName = GetFileName(),
+               Filter = "Seconds|*.txt|Milliseconds|*.txt|Frames|*.txt|HH:MM:SS,MS|*.txt|HH:MM:SS:FF|*.txt|HH:MM:SS.FF|*.txt",
+            })
             {
                 if (saveDialog.ShowDialog(form) != DialogResult.OK)
                 {
@@ -140,6 +145,18 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (saveDialog.FilterIndex == 3)
                     {
                         sb.AppendLine(SubtitleFormat.MillisecondsToFrames(sc * 1000.0).ToString(CultureInfo.InvariantCulture));
+                    }
+                    else if (saveDialog.FilterIndex == 4)
+                    {
+                        sb.AppendLine(TimeCode.FromSeconds(sc).ToDisplayString());
+                    }
+                    else if (saveDialog.FilterIndex == 5)
+                    {
+                        sb.AppendLine(TimeCode.FromSeconds(sc).ToHHMMSSFF());
+                    }
+                    else if (saveDialog.FilterIndex == 6)
+                    {
+                        sb.AppendLine(TimeCode.FromSeconds(sc).ToHHMMSSPeriodFF());
                     }
                 }
 

@@ -14,27 +14,43 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.MergeShortLineAll;
-            int noOfShortLines = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.MergeShortLineAll;
+            var noOfShortLines = 0;
+
+            // see: https://github.com/SubtitleEdit/subtitleedit/issues/7356
+            var autoBreakDashEarly = Configuration.Settings.Tools.AutoBreakDashEarly;
+            Configuration.Settings.Tools.AutoBreakDashEarly = true;
+            try
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                foreach (var p in subtitle.Paragraphs)
                 {
-                    string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                    if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) < Configuration.Settings.General.MergeLinesShorterThan)
+                    if (!callbacks.AllowFix(p, fixAction))
                     {
-                        s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
-                        if (s != p.Text)
-                        {
-                            string oldCurrent = p.Text;
-                            p.Text = s;
-                            noOfShortLines++;
-                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.Text);
-                        }
+                        continue;
+                    }
+
+                    var s = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                    if (!s.Contains(Environment.NewLine) || s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) >= Configuration.Settings.General.MergeLinesShorterThan)
+                    {
+                        continue;
+                    }
+
+                    s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
+                    if (s != p.Text)
+                    {
+                        var oldCurrent = p.Text;
+                        p.Text = s;
+                        noOfShortLines++;
+                        callbacks.AddFixToListView(p, fixAction, oldCurrent, p.Text);
                     }
                 }
             }
+            finally
+            {
+                // restore the state
+                Configuration.Settings.Tools.AutoBreakDashEarly = autoBreakDashEarly;
+            }
+
             callbacks.UpdateFixStatus(noOfShortLines, Language.RemoveLineBreaks);
         }
     }

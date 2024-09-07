@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 var skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
-                double displayTime = p.Duration.TotalMilliseconds;
+                double displayTime = p.DurationTotalMilliseconds;
                 if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
                     {
                         var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
-                        if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        if (temp.GetCharactersPerSecond() <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
                             if (callbacks.AllowFix(p, fixAction))
                             {
@@ -66,19 +66,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
+                double charactersPerSecond = p.GetCharactersPerSecond();
                 if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     var temp = new Paragraph(p);
                     var numberOfCharacters = (double)temp.Text.CountCharacters(true);
-                    while (Utilities.GetCharactersPerSecond(temp, numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    while (temp.GetCharactersPerSecond(numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         temp.EndTime.TotalMilliseconds++;
                     }
                     Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                     Paragraph nextNext = subtitle.GetParagraphOrDefault(i + 2);
                     Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
-                    double diffMs = temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds;
+                    double diffMs = temp.DurationTotalMilliseconds - p.DurationTotalMilliseconds;
 
                     // Normal - just make current subtitle duration longer
                     if (next == null || temp.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     // Start current subtitle earlier (max 50 ms)
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
+                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.DurationTotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
                     {
                         noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
                     }
@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (callbacks.AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds;
-                            var nextDurationMs = next.Duration.TotalMilliseconds;
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.DurationTotalMilliseconds;
+                            var nextDurationMs = next.DurationTotalMilliseconds;
                             next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + nextDurationMs;
                             noOfShortDisplayTimes++;
@@ -116,12 +116,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     // Make next subtitle duration shorter + make current subtitle duration longer
                     else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.DurationTotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds).GetCharactersPerSecond() < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.DurationTotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             noOfShortDisplayTimes++;
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
                     else if (diffMs < 500 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
-                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs)).GetCharactersPerSecond() < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     // Start current subtitle earlier (max 200 ms)
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
+                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.DurationTotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
                     {
                         noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
                     }
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
 
-                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
+                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.DurationTotalMilliseconds;
                 noOfShortDisplayTimes++;
                 _callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
             }

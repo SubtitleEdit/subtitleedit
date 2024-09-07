@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         }
 
                         Resize(_initialWidth, _initialHeight);
-                        OnVideoLoaded?.Invoke(this, new EventArgs());
+                        OnVideoLoaded?.Invoke(this, EventArgs.Empty);
 
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
 
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:
-                    OnVideoEnded?.Invoke(this, new EventArgs());
+                    OnVideoEnded?.Invoke(this, EventArgs.Empty);
 
                     break;
                 case MpcHcCommand.CurrentPosition:
@@ -379,6 +379,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     return path;
                 }
 
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}64\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
                 path = $@"C:\Program Files (x86)\{prefix.ToUpperInvariant()}\{fileName}";
                 if (File.Exists(path))
                 {
@@ -441,6 +453,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite Codec Pack\{prefix.ToUpperInvariant()}\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}\{fileName}");
                 if (File.Exists(path))
                 {
                     return path;

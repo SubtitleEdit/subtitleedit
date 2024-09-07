@@ -2,9 +2,8 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
@@ -22,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelInfo.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockInfo;
             buttonGetTargetGet.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockGetFromClipboard;
             buttonCopySourceTextToClipboard.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockCopySourceText;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             _sourceBlock = source;
             Text = title;

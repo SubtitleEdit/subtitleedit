@@ -38,22 +38,19 @@
             this.labelAddSeconds = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownPercent = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOptimalCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
-            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFixedMilliseconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
+            this.checkBoxCheckShotChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustVia.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonPercent
@@ -119,8 +116,10 @@
             // 
             // labelNote
             // 
+            this.labelNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNote.AutoSize = true;
-            this.labelNote.Location = new System.Drawing.Point(10, 211);
+            this.labelNote.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelNote.Location = new System.Drawing.Point(10, 275);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 7;
@@ -149,7 +148,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(537, 231);
+            this.buttonCancel.Location = new System.Drawing.Point(537, 270);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 21;
@@ -160,7 +159,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(456, 231);
+            this.buttonOK.Location = new System.Drawing.Point(456, 270);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 20;
@@ -170,6 +169,13 @@
             // 
             // numericUpDownMaxCharsSec
             // 
+            this.numericUpDownMaxCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
             this.numericUpDownMaxCharsSec.Enabled = false;
             this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
@@ -178,14 +184,21 @@
             0,
             65536});
             this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(357, 89);
+            this.numericUpDownMaxCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
             0,
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownMaxCharsSec.TabIndex = 6;
+            this.numericUpDownMaxCharsSec.TabStop = false;
+            this.numericUpDownMaxCharsSec.ThousandsSeparator = false;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -203,6 +216,13 @@
             // 
             // numericUpDownSeconds
             // 
+            this.numericUpDownSeconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSeconds.DecimalPlaces = 3;
             this.numericUpDownSeconds.Increment = new decimal(new int[] {
             1,
@@ -221,8 +241,10 @@
             0,
             -2147483648});
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
-            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownSeconds.TabIndex = 3;
+            this.numericUpDownSeconds.TabStop = false;
+            this.numericUpDownSeconds.ThousandsSeparator = false;
             this.numericUpDownSeconds.Value = new decimal(new int[] {
             1,
             0,
@@ -231,6 +253,19 @@
             // 
             // numericUpDownPercent
             // 
+            this.numericUpDownPercent.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPercent.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPercent.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPercent.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPercent.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPercent.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPercent.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPercent.DecimalPlaces = 0;
+            this.numericUpDownPercent.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPercent.Location = new System.Drawing.Point(182, 89);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
             999,
@@ -243,8 +278,10 @@
             0,
             0});
             this.numericUpDownPercent.Name = "numericUpDownPercent";
-            this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownPercent.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownPercent.TabIndex = 4;
+            this.numericUpDownPercent.TabStop = false;
+            this.numericUpDownPercent.ThousandsSeparator = false;
             this.numericUpDownPercent.Value = new decimal(new int[] {
             110,
             0,
@@ -253,6 +290,13 @@
             // 
             // numericUpDownOptimalCharsSec
             // 
+            this.numericUpDownOptimalCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOptimalCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOptimalCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOptimalCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOptimalCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
             this.numericUpDownOptimalCharsSec.Enabled = false;
             this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
@@ -261,14 +305,21 @@
             0,
             65536});
             this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(357, 147);
+            this.numericUpDownOptimalCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
             0,
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownOptimalCharsSec.TabIndex = 7;
+            this.numericUpDownOptimalCharsSec.TabStop = false;
+            this.numericUpDownOptimalCharsSec.ThousandsSeparator = false;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             17,
             0,
@@ -286,16 +337,36 @@
             // 
             // numericUpDownFixedMilliseconds
             // 
+            this.numericUpDownFixedMilliseconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFixedMilliseconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFixedMilliseconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFixedMilliseconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFixedMilliseconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFixedMilliseconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFixedMilliseconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFixedMilliseconds.DecimalPlaces = 0;
             this.numericUpDownFixedMilliseconds.Enabled = false;
+            this.numericUpDownFixedMilliseconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(501, 89);
             this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
             20000,
             0,
             0,
             0});
+            this.numericUpDownFixedMilliseconds.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
-            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownFixedMilliseconds.TabIndex = 9;
+            this.numericUpDownFixedMilliseconds.TabStop = false;
+            this.numericUpDownFixedMilliseconds.ThousandsSeparator = false;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -330,11 +401,35 @@
             this.checkBoxExtendOnly.Text = "Extend only";
             this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
             // 
+            // checkBoxCheckShotChanges
+            // 
+            this.checkBoxCheckShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxCheckShotChanges.AutoSize = true;
+            this.checkBoxCheckShotChanges.Location = new System.Drawing.Point(12, 247);
+            this.checkBoxCheckShotChanges.Name = "checkBoxCheckShotChanges";
+            this.checkBoxCheckShotChanges.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxCheckShotChanges.TabIndex = 19;
+            this.checkBoxCheckShotChanges.Text = "Check shot changes";
+            this.checkBoxCheckShotChanges.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxEnforceDurationLimits
+            // 
+            this.checkBoxEnforceDurationLimits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxEnforceDurationLimits.AutoSize = true;
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(12, 224);
+            this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
+            this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(217, 17);
+            this.checkBoxEnforceDurationLimits.TabIndex = 18;
+            this.checkBoxEnforceDurationLimits.Text = "Enforce minimum and maximum duration";
+            this.checkBoxEnforceDurationLimits.UseVisualStyleBackColor = true;
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 268);
+            this.ClientSize = new System.Drawing.Size(624, 307);
+            this.Controls.Add(this.checkBoxEnforceDurationLimits);
+            this.Controls.Add(this.checkBoxCheckShotChanges);
             this.Controls.Add(this.checkBoxExtendOnly);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDownFixedMilliseconds);
@@ -357,17 +452,13 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AdjustDisplayDuration";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adjust display time";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormAdjustDisplayTime_KeyDown);
             this.groupBoxAdjustVia.ResumeLayout(false);
             this.groupBoxAdjustVia.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -384,16 +475,18 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.RadioButton radioButtonAutoRecalculate;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
-        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
-        private System.Windows.Forms.NumericUpDown numericUpDownPercent;
-        private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSeconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPercent;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOptimalCharsSec;
         private System.Windows.Forms.Label labelOptimalCharsSec;
         private System.Windows.Forms.RadioButton radioButtonFixed;
-        private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFixedMilliseconds;
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxExtendOnly;
+        private System.Windows.Forms.CheckBox checkBoxCheckShotChanges;
+        private System.Windows.Forms.CheckBox checkBoxEnforceDurationLimits;
     }
 }

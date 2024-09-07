@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -639,7 +639,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Kenduta goiko lerro hutsa</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Kenduta beheko lerro hutsa</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Kendu erdiko lerro hutsa</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Zuzendu erakus denbora gainjartzea</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Zuzendu erakus denbora laburrak</FixShortDisplayTimes>
     <FixLongDisplayTimes>Zuzendu erakus denbora luzeak</FixLongDisplayTimes>
@@ -662,7 +662,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixCommonOcrErrors>Zuzendu OCR akats arruntak (OCR ordezpen zerrenda erabiliz)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>OCR akats arruntak zuzenduta (OcrOrdezpen Zerrenda erabiliz): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Kendu zenbaki arteko tarteak</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</BreakDialogsOnOneLine>
     <NormalizeStrings>Normalizatu Kateak</NormalizeStrings>
     <FixTurkishAnsi>Zuzendu Turkiera ANSI (Islandiarra) hizkiak Unicodera</FixTurkishAnsi>
     <FixDanishLetterI>Zuzendu 'i' Daniar hizkia</FixDanishLetterI>
@@ -1396,7 +1396,7 @@ Nahi duzu agiriaren hasieratik hastea eta bilaketa eta ordezpenarekin jarraitzea
     <BeforeDisplayTimeAdjustment>Erakus denbora zehaztu aurretik</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Erakus denbora zehaztuta: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Erakus denborak zehaztuta: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Akats arruntak zuzendu aurretik</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Akats arruntak zuzenduta hautaturiko lerroetan</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Akats arruntak zuzenduta</CommonErrorsFixed>
@@ -2145,7 +2145,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <DarkThemeEnabled>Erabili azalgai iluna</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Erakutsi zerrenda ikuspegiko saretxo lerroak</DarkThemeShowGridViewLines>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
-    <FoucsSetVideoPosition>Ezarri bideo kokap. fokutzen du</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Ezarri bideo kokap. fokutzen du</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Zehaztu amaiera kokapenaren bidez</AdjustViaEndAutoStart>
@@ -2252,7 +2252,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoForwardXSSeconds>Txikitu hautaturiko denbora aurrerantz</GoForwardXSSeconds>
     <GoBackXLSeconds>Handitu hautaturiko denbora atzerantz</GoBackXLSeconds>
     <GoForwardXLSeconds>Handitu hautaturiko denbora aurrerantz</GoForwardXLSeconds>
-    <GoBack3Second>Hiru segundu atzera</GoBack3Second>
+    <GoBack3Seconds>Hiru segundu atzera</GoBack3Seconds>
     <GoToStartCurrent>Ezarri bideo kokap azpidatziaren hasieran</GoToStartCurrent>
     <ToggleStartEndCurrent>Aldatu bide kokap azpidatziaren has/amai artean</ToggleStartEndCurrent>
     <PlayCurrent>Irakurri uneko azpidatzia</PlayCurrent>
@@ -2506,14 +2506,14 @@ bezala hizkiaren argibideak barnebiltzen dituen azpidatzi heuskarri bat erabiliz
     <NumberOfAlignmentTags>Lerrokapen etiketa zenbatekoa: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Azpidatzi luzera - gutxiena: {0}</LineLengthMinimum>
     <LineLengthMaximum>Azpidatzi luzera - gehiena: {0}</LineLengthMaximum>
-    <LineLengthAverage>Azpidatzi luzera - bataz-bestekoa: {0}</LineLengthAverage>
+    <LineLengthAverage>Azpidatzi luzera - bataz-bestekoa: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Azpidatzia, lerro zenbatekoa - bataz-bestekoa: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lerro bakarraren luzera - gutxiena: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lerro bakarraren luzera - gehiena: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lerroa bakarraren luzera - bataz-bestekoa: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lerroa bakarraren luzera - bataz-bestekoa: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Lerro bakarraren zabalera - gutxienez: {0} pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Lerro bakarraren zabalera - gehienez: {0} pixel</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Lerro bakarraren zabalera - bataz-bestekoa: {0} pixel</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Lerro bakarraren zabalera - bataz-bestekoa: {0:#.###} pixel</SingleLineWidthAverage>
     <DurationMinimum>Iraupena - gutxiena: {0:0.000} segundu</DurationMinimum>
     <DurationMaximum>Iraupena - gehiena: {0:0.000} segundu</DurationMaximum>
     <DurationAverage>Iraupena - bataz-bestekoa: {0:0.000} segundu</DurationAverage>
@@ -2703,7 +2703,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <TransportStreamGrayscale>Urdinabar-neurria</TransportStreamGrayscale>
     <TransportStreamGetColor>Erabili margoa (lerro banaketa batzuk barneratuko ditu)</TransportStreamGetColor>
     <PromptForUnknownWords>Galdetu hitz ezezagunak</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Berez hautsi esaldia bi lerro baino gehiagokoa bada</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Zuzenketa denak</AllFixes>
     <GuessesUsed>Erabilitako adiera asmatuak</GuessesUsed>
@@ -2827,7 +2827,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <RemoveShotChange>Kendu agerraldi aldaketa</RemoveShotChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
-    <InsertSubtitleHere>Txertatu azpidatzia hemen...</InsertSubtitleHere>
+    <InsertSubtitleHere>Txertatu azpidatzia hemen</InsertSubtitleHere>
     <CharsSecX>HKSG-ko: {0:0.00}</CharsSecX>
     <WordsMinX>HZMN-ko: {0:0.00}</WordsMinX>
   </Waveform>

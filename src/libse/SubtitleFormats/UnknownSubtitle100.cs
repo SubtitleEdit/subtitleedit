@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetTimeCodeString(Paragraph paragraph)
         {
-            return $"#{paragraph.StartTime.TotalMilliseconds:00000000}{paragraph.Duration.TotalMilliseconds:000000}";
+            return $"#{paragraph.StartTime.TotalMilliseconds:00000000}{paragraph.DurationTotalMilliseconds:000000}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

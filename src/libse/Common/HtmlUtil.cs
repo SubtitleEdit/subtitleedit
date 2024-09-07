@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -409,6 +411,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // v tag from WebVTT
+            var indexOfCTag = s.IndexOf("<c.", StringComparison.Ordinal);
+            if (indexOfCTag >= 0)
+            {
+                var indexOfEndVTag = s.IndexOf('>', indexOfCTag);
+                if (indexOfEndVTag >= 0)
+                {
+                    s = s.Remove(indexOfCTag, indexOfEndVTag - indexOfCTag + 1);
+                    s = s.Replace("</c>", string.Empty);
+                }
+            }
+
             return RemoveCommonHtmlTags(s);
         }
 
@@ -574,6 +588,60 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        public static bool IsTextFormattable(in string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            var len = text.Length;
+            var index = 0;
+            while (index < len && text[index] == '<')
+            {
+                index = text.IndexOf('>', index + 1);
+                if (index < 0) break;
+                index += 1;
+            }
+
+            // buggy text of no closing present
+            index = Math.Max(0, index);
+
+            var fromLenIdx = len - 1;
+            while (fromLenIdx >= 0 && text[fromLenIdx] == '>')
+            {
+                fromLenIdx = text.LastIndexOf('<', fromLenIdx);
+                if (fromLenIdx < 0) break;
+                fromLenIdx--;
+            }
+
+            fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len - 1;
+            
+            // no formattable text in between
+            if (fromLenIdx < index)
+            {
+                return false;
+            }
+
+            for (var i = index; i <= fromLenIdx; i++)
+            {
+                if (char.IsLetterOrDigit(text[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly string[] BeginTagVariations = { "< i >", "< i>", "<i >", "< I >", "< I>", "<I >", "<i<", "<I<", "<I>" };
+
+        private static readonly string[] EndTagVariations =
+        {
+            "< / i >", "< /i>", "</ i>", "< /i >", "</i >", "</ i >",
+            "< / i>", "</I>", "< / I >", "< /I>", "</ I>", "< /I >", "</I >", "</ I >", "< / I>", "</i<", "</I<", "</I>"
+        };
+        
         public static string FixInvalidItalicTags(string input)
         {
             var text = input;
@@ -591,36 +659,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             const string beginTag = "<i>";
             const string endTag = "</i>";
+            foreach (var beginTagVariation in BeginTagVariations)
+            {
+                text = text.Replace(beginTagVariation, beginTag);
+            }
 
-            text = text.Replace("< i >", beginTag);
-            text = text.Replace("< i>", beginTag);
-            text = text.Replace("<i >", beginTag);
-            text = text.Replace("< I >", beginTag);
-            text = text.Replace("< I>", beginTag);
-            text = text.Replace("<I >", beginTag);
-            text = text.Replace("<i<", beginTag);
-            text = text.Replace("<I<", beginTag);
-
-            text = text.Replace("< / i >", endTag);
-            text = text.Replace("< /i>", endTag);
-            text = text.Replace("</ i>", endTag);
-            text = text.Replace("< /i >", endTag);
-            text = text.Replace("</i >", endTag);
-            text = text.Replace("</ i >", endTag);
-            text = text.Replace("< / i>", endTag);
-            text = text.Replace("</I>", endTag);
-            text = text.Replace("< / I >", endTag);
-            text = text.Replace("< /I>", endTag);
-            text = text.Replace("</ I>", endTag);
-            text = text.Replace("< /I >", endTag);
-            text = text.Replace("</I >", endTag);
-            text = text.Replace("</ I >", endTag);
-            text = text.Replace("< / I>", endTag);
-            text = text.Replace("</i<", endTag);
-            text = text.Replace("</I<", endTag);
-
-            text = text.Replace("<I>", beginTag);
-            text = text.Replace("</I>", endTag);
+            foreach (var endTagVariation in EndTagVariations)
+            {
+                text = text.Replace(endTagVariation, endTag);
+            }
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
@@ -637,6 +684,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace("<i/>", string.Empty);
                 text = text.Replace("<I/>", string.Empty);
             }
+
+            text = text.Replace("]<i> ", "] <i>");
+            text = text.Replace(")<i> ", ") <i>");
+            text = text.Replace("] </i>", "] </i>");
+            text = text.Replace(") </i>", ") </i>");
 
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
@@ -720,21 +772,44 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 1 && italicEndTagCount == 0)
             {
-                var lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                var lines = text.SplitToLines();
+                var sc = StringComparison.Ordinal;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    var line = lines[i];
+                    var italicIndex = line.LastIndexOf(beginTag, StringComparison.Ordinal);
+                    
+                    // no italic in current 'i' line, try next
+                    if (italicIndex < 0)
+                    {
+                        continue;
+                    }
 
-                if (text.StartsWith(beginTag, StringComparison.Ordinal) || text.Contains(": <i>"))
-                {
-                    text += endTag;
+                    // try earlier insert if possible e.g: <b><i>foobar</b> => <b><i>foobar</i></b>
+                    lines[i] = IsTextFormattable(line.Substring(italicIndex + 3))
+                        ? line.Insert(CalculateEarlyInsertIndex(line), endTag)
+                        : line.Replace(beginTag, string.Empty);
+
+                    break; // break as soon as we reach here since italicBeginTagCount == 1
+
+                    int CalculateEarlyInsertIndex(string s)
+                    {
+                        var len = s.Length;
+                        var lastClosingTagIndex = s.LastIndexOf("</", len - 1, len - italicIndex - 3, sc);
+                        while (lastClosingTagIndex > italicIndex + 3)
+                        {
+                            var tempClosingIdx = s.LastIndexOf("</", lastClosingTagIndex, lastClosingTagIndex - italicIndex - 3, sc);
+                            if (tempClosingIdx < 0) break;
+                            lastClosingTagIndex = tempClosingIdx;
+                        }
+                        // try finding first closing tag index and insert the new closing there
+                        // to avoid having text with closed tags like <b><i>foo</b></i>
+                        return lastClosingTagIndex > italicIndex ? lastClosingTagIndex : len;
+                    }
                 }
-                else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
-                {
-                    text += endTag;
-                }
-                else
-                {
-                    text = text.Replace(beginTag, string.Empty);
-                }
+                
+                // reconstruct the text from lines
+                text = string.Join(Environment.NewLine, lines);
             }
 
             if (italicBeginTagCount == 0 && italicEndTagCount == 1)
@@ -839,14 +914,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (idx > 1)
                         {
                             var pre = text.Substring(0, idx + 1).TrimStart();
-                            text = text.Remove(0, idx + 1);
-                            text = FixInvalidItalicTags(text).Trim();
-                            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                            var tempText = text.Remove(0, idx + 1); 
+                            
+                            if (!tempText.StartsWith(']') && !tempText.StartsWith(')'))
                             {
-                                text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
-                            }
+                                text = tempText;
+                                text = FixInvalidItalicTags(text).Trim();
+                                if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
+                                }
 
-                            text = pre + " " + text;
+                                text = pre + " " + text;
+                            }
                         }
                     }
                 }
@@ -980,27 +1060,173 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        public static Color GetColorFromString(string color)
+        public static bool IsTagOn(string input, string tag, bool wholeLine, bool assa)
         {
-            Color c = Color.White;
-            try
+            var text = input;
+
+            if (assa)
             {
-                if (color.StartsWith("rgb(", StringComparison.Ordinal))
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
                 {
-                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return text.Contains($"\\{tag}1");
+                }
+
+                return text.Contains($"\\{tag}");
+            }
+
+            return text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public static string TagOn(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                    text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                    text = text.Replace($"\\{tag}1", string.Empty);
+                    text = text.Replace($"\\{tag}0", string.Empty);
+
+                    text = wholeLine ? $"{{\\{tag}1}}{text}" : $"{{\\{tag}1}}{text}{{\\{tag}0}}";
                 }
                 else
                 {
-                    c = ColorTranslator.FromHtml(color);
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                    text = $"{{\\{tag}}}{text}";
                 }
+
+                return text;
+            }
+
+            text = text.Replace("<" + tag + ">", string.Empty);
+            text = text.Replace("</" + tag + ">", string.Empty);
+            text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+            text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            var indexOfEndBracket = text.IndexOf('}');
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+            {
+                text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+            }
+            else
+            {
+                text = $"<{tag}>{text}</{tag}>";
+            }
+
+            return text;
+        }
+
+        public static string TagOff(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    if (text.Contains($"\\{tag}1"))
+                    {
+                        text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                        text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                        text = text.Replace($"\\{tag}1", string.Empty);
+                        text = text.Replace($"\\{tag}0", string.Empty);
+                    }
+                }
+                else
+                {
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                }
+
+                return text;
+            }
+
+            if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                text = text.Replace("<" + tag + ">", string.Empty);
+                text = text.Replace("</" + tag + ">", string.Empty);
+                text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+                text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            }
+            else
+            {
+                var indexOfEndBracket = text.IndexOf('}');
+                if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                {
+                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+                }
+            }
+
+            return text;
+        }
+
+        public static Color GetColorFromString(string s)
+        {
+            try
+            {
+                if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
+                {
+                    var arr = s
+                        .RemoveChar(' ')
+                        .Remove(0, 4)
+                        .TrimEnd(')')
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                }
+
+                if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
+                {
+                    var arr = s
+                        .RemoveChar(' ')
+                        .Remove(0, 5)
+                        .TrimEnd(')')
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    var alpha = byte.MaxValue;
+                    if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
+                    {
+                        if (f >= 0 && f < 1)
+                        {
+                            alpha = (byte)(f * byte.MaxValue);
+                        }
+                    }
+
+                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                }
+
+                if (s.Length == 9 && s.StartsWith("#"))
+                {
+                    if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
+
+                    s = s.Substring(1, 6);
+                    var c = ColorTranslator.FromHtml("#" + s);
+                    return Color.FromArgb(alpha, c);
+                }
+
+                return ColorTranslator.FromHtml(s);
             }
             catch
             {
-                // ignored
+                return Color.White;
             }
-
-            return c;
         }
 
         public static string RemoveColorTags(string input)
@@ -1050,5 +1276,134 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return s.Trim();
         }
+
+        /// <summary>
+        /// Remove font tag from HTML or ASSA.
+        /// </summary>
+        public static string RemoveFontName(string input)
+        {
+            if (!input.Contains("<font", StringComparison.OrdinalIgnoreCase))
+            {
+                var x = input;
+                if (x.Contains("\\fn"))
+                {
+                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]+}", string.Empty);
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+}", "}");
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+\\\\", "\\");
+                }
+
+                return x;
+            }
+
+            var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
+            var s = input;
+            var match = r.Match(s);
+            while (match.Success)
+            {
+                s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                if (match.Index > 4)
+                {
+                    var font = s.Substring(match.Index - 5);
+                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    {
+                        s = s.Remove(match.Index - 5, 7);
+                        var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            s = s.Remove(endIndex, 7);
+                        }
+                    }
+                    else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                    {
+                        s = s.Remove(match.Index, 1);
+                    }
+                }
+
+                match = r.Match(s);
+            }
+
+            return s;
+        }
+
+        public static string RemoveAssAlignmentTags(string s)
+        {
+            return s.Replace("{\\an1}", string.Empty) // ASS tags alone
+                .Replace("{\\an2}", string.Empty)
+                .Replace("{\\an3}", string.Empty)
+                .Replace("{\\an4}", string.Empty)
+                .Replace("{\\an5}", string.Empty)
+                .Replace("{\\an6}", string.Empty)
+                .Replace("{\\an7}", string.Empty)
+                .Replace("{\\an8}", string.Empty)
+                .Replace("{\\an9}", string.Empty)
+
+                .Replace("{an1\\", "{") // ASS multi tags (start)
+                .Replace("{an2\\", "{")
+                .Replace("{an3\\", "{")
+                .Replace("{an4\\", "{")
+                .Replace("{an5\\", "{")
+                .Replace("{an6\\", "{")
+                .Replace("{an7\\", "{")
+                .Replace("{an8\\", "{")
+                .Replace("{an9\\", "{")
+
+                .Replace("\\an1\\", "\\") // ASS multi tags (middle)
+                .Replace("\\an2\\", "\\")
+                .Replace("\\an3\\", "\\")
+                .Replace("\\an4\\", "\\")
+                .Replace("\\an5\\", "\\")
+                .Replace("\\an6\\", "\\")
+                .Replace("\\an7\\", "\\")
+                .Replace("\\an8\\", "\\")
+                .Replace("\\an9\\", "\\")
+
+                .Replace("\\an1}", "}") // ASS multi tags (end)
+                .Replace("\\an2}", "}")
+                .Replace("\\an3}", "}")
+                .Replace("\\an4}", "}")
+                .Replace("\\an5}", "}")
+                .Replace("\\an6}", "}")
+                .Replace("\\an7}", "}")
+                .Replace("\\an8}", "}")
+                .Replace("\\an9}", "}")
+
+                .Replace("{\\a1}", string.Empty) // SSA tags
+                .Replace("{\\a2}", string.Empty)
+                .Replace("{\\a3}", string.Empty)
+                .Replace("{\\a4}", string.Empty)
+                .Replace("{\\a5}", string.Empty)
+                .Replace("{\\a6}", string.Empty)
+                .Replace("{\\a7}", string.Empty)
+                .Replace("{\\a8}", string.Empty)
+                .Replace("{\\a9}", string.Empty);
+        }
+
+        public static string RemoveAssaColor(string input)
+        {
+            var text = input;
+            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
+            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            return text;
+        }
+        
+        public static string GetClosingPair(string tag)
+        {
+            switch (tag)
+            {
+                case "<i>" : return "</i>";
+                case "<b>" : return "</b>";
+                case "<u>" : return "</u>";
+            }
+            return tag.StartsWith("<font ", StringComparison.Ordinal) ? "</font>" : string.Empty;
+        }
+        
+        public static char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
+
+        public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
+
+        public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
     }
 }

@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixFonts(this);
 
             var nikseBitmap = new NikseBitmap(bitmap);
-            nikseBitmap.CropTransparentSidesAndBottom(99999, true);
+            nikseBitmap.CropTransparentSidesAndBottom(2, true);
             nikseBitmap.CropTopTransparent(2);
             _bitmap = nikseBitmap.GetBitmap();
 

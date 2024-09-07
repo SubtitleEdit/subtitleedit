@@ -226,7 +226,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 case MouseState.DragInBrightness:
                     // Calculate new color information
                     // based on the brightness, which may have changed.
-                    Point newPoint = mousePoint;
+                    var newPoint = mousePoint;
                     if (newPoint.Y < _brightnessMin)
                     {
                         newPoint.Y = _brightnessMin;
@@ -252,13 +252,13 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                     // Calculate x and y distance from the center,
                     // and then calculate the angle corresponding to the
                     // new location.
-                    Point delta = new Point(mousePoint.X - _centerPoint.X, mousePoint.Y - _centerPoint.Y);
-                    int degrees = CalcDegrees(delta);
+                    var delta = new Point(mousePoint.X - _centerPoint.X, mousePoint.Y - _centerPoint.Y);
+                    var degrees = CalcDegrees(delta);
 
                     // Calculate distance from the center to the new point
                     // as a fraction of the radius. Use your old friend,
                     // the Pythagorean theorem, to calculate this value.
-                    double distance = Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / _radius;
+                    var distance = Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / _radius;
 
                     if (_currentState == MouseState.DragInColor)
                     {
@@ -345,15 +345,17 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 _g.DrawImage(_colorImage, _colorRectangle);
 
                 // Draw the "selected color" rectangle.
-                using (TextureBrush textureBrush = new TextureBrush(Resources.TransparentBackground))
+                using (var textureBrush = new TextureBrush(Resources.TransparentBackground))
                 {
                     _g.FillRectangle(textureBrush, _selectedColorRectangle);
                 }
 
                 _g.FillRectangle(selectedBrush, _selectedColorRectangle);
                 _g.DrawRectangle(Pens.Black, _selectedColorRectangle);
+
                 // Draw the "brightness" rectangle.
                 DrawLinearGradient(_fullColor);
+
                 // Draw the two pointers.
                 DrawColorPointer(_colorPoint);
                 DrawBrightnessPointer(_brightnessPoint);
@@ -531,7 +533,11 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             points[0] = pt;
             points[1] = new Point(pt.X + width, pt.Y + height / 2);
             points[2] = new Point(pt.X + width, pt.Y - height / 2);
-            _g.FillPolygon(Brushes.Black, points);
+            var color = Color.FromArgb(0, 120, 215);
+            using (var brush = new SolidBrush(color))
+            {
+                _g.FillPolygon(brush, points);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -551,6 +557,5 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }

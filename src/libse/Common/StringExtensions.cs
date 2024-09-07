@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -115,36 +116,43 @@ namespace Nikse.SubtitleEdit.Core.Common
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static List<string> SplitToLines(this string s)
+        public static List<string> SplitToLines(this string s) => SplitToLines(s, s.Length);
+        
+        public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
 
             var lines = new List<string>();
-            int start = 0;
-            int max = s.Length;
-            int i = 0;
+            var start = 0;
+            var i = 0;
+
+            if (s.Length < max)
+            {
+                max = s.Length;
+            }
+
             while (i < max)
             {
                 var ch = s[i];
                 if (ch == '\r')
                 {
-                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 3;
                         start = i;
                         continue;
                     }
 
-                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 2;
                         start = i;
                         continue;
                     }
 
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -152,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -161,55 +169,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 i++;
             }
 
-            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
-            return lines;
-        }
-
-        public static List<string> SplitToLines(this string s, int maxCount)
-        {
-            var lines = new List<string>();
-            int start = 0;
-            int max = Math.Min(maxCount, s.Length);
-            int i = 0;
-            while (i < max)
-            {
-                var ch = s[i];
-                if (ch == '\r')
-                {
-                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
-                    {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
-                        i += 3;
-                        start = i;
-                        continue;
-                    }
-
-                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
-                    {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
-                        i += 2;
-                        start = i;
-                        continue;
-                    }
-
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                if (ch == '\n' || ch == '\u2028')
-                {
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                i++;
-            }
-
-            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            lines.Add(s.Substring(start, i - start));
             return lines;
         }
 
@@ -226,22 +186,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            char c0 = pattern[0];
+            var c0 = pattern[0];
             if (pattern.Length == 1)
             {
                 return source.IndexOf(c0);
             }
 
-            int limit = source.Length - pattern.Length + 1;
+            var limit = source.Length - pattern.Length + 1;
             if (limit < 1)
             {
                 return -1;
             }
 
-            char c1 = pattern[1];
+            var c1 = pattern[1];
 
             // Find the first occurrence of the first character
-            int first = source.IndexOf(c0, 0, limit);
+            var first = source.IndexOf(c0, 0, limit);
             while (first != -1)
             {
                 // Check if the following character is the same like
@@ -254,7 +214,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 // Check the rest of "pattern" (starting with the 3rd character)
                 var found = true;
-                for (int j = 2; j < pattern.Length; j++)
+                for (var j = 2; j < pattern.Length; j++)
                 {
                     if (source[first + j] != pattern[j])
                     {
@@ -282,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            for (int i = 0; i < words.Length; i++)
+            for (var i = 0; i < words.Length; i++)
             {
                 var idx = s.IndexOf(words[i], comparisonType);
                 if (idx >= 0)
@@ -302,10 +262,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             const char whiteSpace = ' ';
-            int k = -1;
-            for (int i = s.Length - 1; i >= 0; i--)
+            var k = -1;
+            for (var i = s.Length - 1; i >= 0; i--)
             {
-                char ch = s[i];
+                var ch = s[i];
                 if (k < 2)
                 {
                     if (ch == whiteSpace)
@@ -316,7 +276,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (ch != whiteSpace)
                 {
                     // only keep white space if it doesn't succeed/precede CRLF
-                    int skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
+                    var skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
 
                     // extra space found
                     if (k - (i + skipCount) >= 1)
@@ -332,6 +292,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        // note: replace both input and output variable type with ReadOnlySpan<char> when in more modern .NET
+        // that will make it allocation free
+        public static string RemoveRecursiveLineBreaks(this string input)
+        {
+            var len = input.Length;
+            var writeIndex = len - 1;
+            var isLineBreakAdjacent = false;
+            var buffer = new char[len];
+        
+            // windows line break style
+            var hasCarriageReturn = input.Contains('\r');
+
+            for (int i = len - 1; i >= 0; i--)
+            {
+                var charAtIndex = input[i];
+                // carriage return line feed
+                if ((hasCarriageReturn && charAtIndex == '\r') || charAtIndex == '\n')
+                {
+                    // line break is adjacent but we found another line break - ignore it
+                    if (isLineBreakAdjacent)
+                    {
+                        continue;
+                    }
+
+                    // write into buffer and update the flag
+                    buffer[writeIndex--] = charAtIndex;
+                    isLineBreakAdjacent = charAtIndex == '\r' || (!hasCarriageReturn && charAtIndex == '\n');
+                }
+                else
+                {
+                    // write current character to the buffer and decrement the write-index
+                    buffer[writeIndex--] = charAtIndex;
+                    // update adjacent line break flag
+                    isLineBreakAdjacent = false;
+                }
+            }
+        
+            return new string(buffer, writeIndex + 1, len - (writeIndex + 1));
+        }
+        
         public static bool ContainsLetter(this string s)
         {
             if (s != null)
@@ -356,11 +356,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            int max = s.Length;
-            for (int index = 0; index < max; index++)
+            var len = s.Length;
+            for (var i = 0; i < len; i++)
             {
-                var ch = s[index];
-                if (char.IsNumber(ch))
+                if (CharUtils.IsDigit(s[i]))
                 {
                     return true;
                 }
@@ -374,11 +373,48 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Contains(UnicodeControlChars);
         }
 
+        public static bool ContainsNonStandardNewLines(this string s)
+        {
+            if (Environment.NewLine == "\r\n")
+            {
+                var i = 0;
+                while (i < s.Length)
+                {
+                    var ch = s[i];
+                    if (ch == '\r')
+                    {
+                        if (i >= s.Length - 1 || s[i + 1] != '\n')
+                        {
+                            return true;
+                        }
+
+                        i++;
+                    }
+                    else if (ch == '\n')
+                    {
+                        return true;
+                    }
+
+                    i++;
+                }
+
+                return false;
+            }
+
+            if (Environment.NewLine == "\n")
+            {
+                return s.IndexOf('\r') >= 0;
+            }
+
+            s = s.Replace(Environment.NewLine, string.Empty);
+            return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
+        }
+
         public static string RemoveControlCharacters(this string s)
         {
-            int max = s.Length;
+            var max = s.Length;
             var newStr = new char[max];
-            int newIdx = 0;
+            var newIdx = 0;
             for (int index = 0; index < max; index++)
             {
                 var ch = s[index];
@@ -393,13 +429,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool IsOnlyControlCharactersOrWhiteSpace(this string s)
         {
-            if (string.IsNullOrEmpty(s))
+            if (s == null)
             {
                 return true;
             }
 
-            int max = s.Length;
-            for (int index = 0; index < max; index++)
+            var max = s.Length;
+            for (var index = 0; index < max; index++)
             {
                 var ch = s[index];
                 if (!char.IsControl(ch) && !char.IsWhiteSpace(ch) && !UnicodeControlChars.Contains(ch))
@@ -411,12 +447,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
-            int max = s.Length;
+            var max = s.Length;
             var newStr = new char[max];
-            int newIdx = 0;
+            var newIdx = 0;
             for (int index = 0; index < max; index++)
             {
                 var ch = s[index];
@@ -448,6 +483,173 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return s;
+        }
+
+        public static string ToProperCase(this string input, SubtitleFormat format)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder();
+            var tags = RemoveAndSaveTags(input, sb, format);
+            var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString().ToLowerInvariant());
+            return RestoreSavedTags(properCaseText, tags);
+        }
+
+        public static string ToggleCasing(this string input, SubtitleFormat format, string overrideFromStringInit = null)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder();
+            var tags = RemoveAndSaveTags(input, sb, format);
+            var text = sb.ToString();
+
+            var containsLowercase = false;
+            var containsUppercase = false;
+            var stringInit = overrideFromStringInit != null ? HtmlUtil.RemoveHtmlTags(overrideFromStringInit, true) : text;
+            for (var i = 0; i < stringInit.Length; i++)
+            {
+                var ch = stringInit[i];
+                if (char.IsNumber(ch))
+                {
+                    continue;
+                }
+
+                if (!containsLowercase && char.IsLower(ch))
+                {
+                    containsLowercase = true;
+                }
+                else if (!containsUppercase && char.IsUpper(ch))
+                {
+                    containsUppercase = true;
+                }
+            }
+
+            if (containsUppercase && containsLowercase)
+            {
+                return RestoreSavedTags(text.ToUpperInvariant(), tags);
+            }
+
+            if (containsUppercase)
+            {
+                return RestoreSavedTags(text.ToLowerInvariant(), tags);
+            }
+
+            return RestoreSavedTags(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text), tags);
+        }
+
+        private static string RestoreSavedTags(string input, List<KeyValuePair<int, string>> tags)
+        {
+            var s = input;
+            for (var index = tags.Count - 1; index >= 0; index--)
+            {
+                var keyValuePair = tags[index];
+                if (keyValuePair.Key >= s.Length)
+                {
+                    s += keyValuePair.Value;
+                }
+                else
+                {
+                    s = s.Insert(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+
+            return s;
+        }
+
+        private static List<KeyValuePair<int, string>> RemoveAndSaveTags(string input, StringBuilder sb, SubtitleFormat format)
+        {
+            var sbTag = new StringBuilder();
+            var tags = new List<KeyValuePair<int, string>>();
+            var tagOn = false;
+            var tagIndex = 0;
+            var skipNext = false;
+            var isAssa = format != null
+                         && (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha));
+            for (var index = 0; index < input.Length; index++)
+            {
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
+                var ch = input[index];
+
+                if (!tagOn && isAssa && ch == '\\' 
+                           && (input.Substring(index).StartsWith("\\N") 
+                               || input.Substring(index).StartsWith("\\n")
+                               || input.Substring(index).StartsWith("\\h")))
+                {
+                    tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
+                    skipNext = true;
+                    continue;
+                }
+
+                if (tagOn && (ch == '>' || ch == '}'))
+                {
+                    sbTag.Append(ch);
+                    tagOn = false;
+                    tags.Add(new KeyValuePair<int, string>(tagIndex, sbTag.ToString()));
+                    sbTag.Clear();
+                    continue;
+                }
+
+                if (!tagOn && ch == '<')
+                {
+                    var s = input.Substring(index);
+                    if (
+                        s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<span", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</span>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<rt", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</rt", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<ruby", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</ruby>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<c", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</c", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<v", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</v>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        tagOn = true;
+                        tagIndex = sb.Length;
+                    }
+                }
+                else if (!tagOn && ch == '{')
+                {
+                    var s = input.Substring(index);
+                    if (s.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        tagOn = true;
+                        tagIndex = index;
+                    }
+                }
+
+                if (tagOn)
+                {
+                    sbTag.Append(ch);
+                }
+                else
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return tags;
         }
 
         public static string ToRtf(this string value)
@@ -554,6 +756,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
+        private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
+        {
+            '.', '!', '?', ']', ')', '…', '♪', '؟', '。', '？'
+        };
+
+        private static readonly HashSet<char> GreekSentenceEndingChars = new HashSet<char>
+        {
+            '\u037E', ';'
+        };
+
         public static bool HasSentenceEnding(this string value, string twoLetterLanguageCode)
         {
             if (string.IsNullOrEmpty(value))
@@ -561,17 +773,126 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            var s = HtmlUtil.RemoveHtmlTags(value, true).TrimEnd('"').TrimEnd('”');
-            if (s == string.Empty)
+            var len = value.Length;
+            var checkIndex = len - 1;
+
+            // skip quotes
+            while (checkIndex >= 0 && (value[checkIndex] == '"' || value[checkIndex] == '”'))
+            {
+                checkIndex--;
+            }
+
+            // value contains only quotes
+            if (checkIndex < 0)
             {
                 return false;
             }
 
-            var last = s[s.Length - 1];
-            return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟' ||
-                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' ||
-                   last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length - 3]) ||
-                   last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
+
+            var charAtIndex = value[checkIndex];
+            // handles when sentence ending char is adjacent with html/assa closing tags e.g: </i>, </font>, {\\i0}...
+            while (charAtIndex == '>' || charAtIndex == '}')
+            {
+                if (charAtIndex == '>')
+                {
+                    checkIndex = value.LastIndexOf('<', checkIndex) - 1;
+                }
+                else if (charAtIndex == '}')
+                {
+                    checkIndex = value.LastIndexOf('{', checkIndex) - 1;
+                }
+
+                // in this case '>' or '}' is the last char
+                if (checkIndex < 0)
+                {
+                    return false;
+                }
+
+                charAtIndex = value[checkIndex];
+            }
+
+            // ending with dash/hyphen
+            if (charAtIndex == '-')
+            {
+                // foobar--
+                return checkIndex > 1 && char.IsLetter(value[checkIndex - 2]) && value[checkIndex - 1] == '-';
+            }
+
+            // em dash: used in written English to indicate an interruption or break in thought
+            if (charAtIndex == '—') // U+2014
+            {
+                // foobar—
+                return checkIndex > 0 && char.IsLetter(value[checkIndex - 1]);
+            }
+
+            // evaluate culture type
+            var isCultureNeutral = twoLetterLanguageCode == null || twoLetterLanguageCode.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
+            return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
+        }
+
+        public static string NormalizeUnicode(this string input, Encoding encoding)
+        {
+            const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
+            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+
+            var text = input;
+
+            bool hasSingleMusicNode = true;
+            if (encoding.GetString(encoding.GetBytes("♪")) != "♪")
+            {
+                text = text.Replace('♪', '#');
+                hasSingleMusicNode = false;
+            }
+
+            if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
+            {
+                text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
+            }
+
+            if (encoding.GetString(encoding.GetBytes("©")) != "©")
+            {
+                text = text.Replace("©", "(Copyright)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("®")) != "®")
+            {
+                text = text.Replace("®", "(Registered Trademark)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("…")) != "…")
+            {
+                text = text.Replace("…", "...");
+            }
+
+            // Hyphens
+            return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
+                .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
+                .Replace('\u2012', defHyphen) // ‒ Figure dash (\u2012)
+                .Replace('\u2013', defHyphen) // – En dash (\u2013)
+                .Replace('\u2014', defHyphen) // — Em dash (\u2014)
+                .Replace('\u2015', defHyphen) // ― Horizontal bar (\u2015)
+
+                // Colons:
+                .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
+                .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
+                .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
+
+                // Others
+                .Replace("⇒", "=>")
+
+                // Spaces
+                .Replace('\u00A0', ' ') // No-Break Space
+                .Replace("\u200B", string.Empty) // Zero Width Space
+                .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
+
+                // Intellectual property
+                .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
+                .Replace("\u2120", "(Service Mark)") // ℠ service mark
+                .Replace("\u2122", "(Trademark)") // ™ trademark
+
+                // RTL/LTR markers
+                .Replace("\u202B", string.Empty) // &rlm;
+                .Replace("\u202A", string.Empty); // &lmr;
         }
     }
 }

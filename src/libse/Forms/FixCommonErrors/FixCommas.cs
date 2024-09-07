@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -19,9 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var commaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s]),\s+,([\p{L}\d\s])");
             var commaFollowedByLetter = new Regex(@",(\p{L})");
 
-            string fixAction = Language.FixCommas;
-            int fixCount = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.FixCommas;
+            var fixCount = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 if (callbacks.AllowFix(p, fixAction))
@@ -35,7 +36,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = commaTriple.Replace(s, "$1...$2");
                         s = commaTripleEndOfLine.Replace(s, "$1...");
                         s = commaWhiteSpaceBetween.Replace(s, "$1,$2");
-                        s = commaFollowedByLetter.Replace(s, ", $1");
+
+                        var match = commaFollowedByLetter.Match(s);
+                        if (match.Success && (!(match.Index > 0 && s[match.Index-1] == 'ό' && s.Substring(match.Index).StartsWith(",τι", StringComparison.OrdinalIgnoreCase)) || callbacks.Language != "el"))
+                        {
+                            s = commaFollowedByLetter.Replace(s, ", $1");
+                        }
 
                         s = RemoveCommaBeforeSentenceEndingChar(s, ',');
                     }
@@ -70,12 +76,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static string RemoveCommaBeforeSentenceEndingChar(string input, char comma)
         {
             var s = input;
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (var i = s.Length - 1; i >= 0; i--)
             {
-                char ch = s[i];
+                var ch = s[i];
                 if (i - 1 >= 0 && s[i - 1] == comma && IsSentenceEndingChar(ch))
                 {
-                    int k = i;
+                    var k = i;
 
                     do
                     {

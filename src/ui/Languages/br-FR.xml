@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -508,7 +508,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemovedEmptyLine>Dilemel al linenn c'houllo</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Dilemel al linenn c'houllo e krec'h</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Dilemel al linenn c'houllo er fin</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Diverkañ al linennoù goullo/lamm linennoù diezhomm</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Diverkañ al linennoù goullo/lamm linennoù diezhomm</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Linennoù goullo lemmet kuit: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Reizhañ an amzer ziskouez a zo o varc'hañ</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Reizhañ an amzer ziskouez re verr</FixShortDisplayTimes>
@@ -529,7 +529,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <FixCommonOcrErrors>Reizhañ ar fazioù OCR reoliek (diwar al listenn reizhañ OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Fazioù OCR reoliek reizhet (diwar ar restr OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Diverkañ ar spasoù etre an niveroù</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Reizhañ diviz ul linenn</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Reizhañ diviz ul linenn</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Lemmel kuit ar spasoù etre an niveroù: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Reizhañ an Turkeg ANSI gant an unikod</FixTurkishAnsi>
     <FixDanishLetterI>Reizhañ an 'i' Daneg</FixDanishLetterI>
@@ -1206,7 +1206,7 @@ Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr ha kenderc'hel gant an e
     <BeforeDisplayTimeAdjustment>A-raok an arventennoù amzer diskouez</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Diskouez an amzer keidet : {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Amzer diskouez keidet : {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Amzer loc'hañ keidet : {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Amzer loc'hañ keidet : {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>A-raok ar reizhadennoù fazioù reoliek</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Fazioù reoliek reizhet e-barzh al linennoù diuzet</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Fazioù reoliek reizhet</CommonErrorsFixed>
@@ -1975,10 +1975,10 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <NumberOfFontTags>Niver a valizennoù nodrezh : {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Niver a valizennoù steudet : {0}</NumberOfAlignmentTags>
     <LineLengthMaximum>Hirder an istitloù - an hini hirañ : {0} a arouezioù</LineLengthMaximum>
-    <LineLengthAverage>Hirder an istitloù - keidenn : {0} a arouezioù</LineLengthAverage>
+    <LineLengthAverage>Hirder an istitloù - keidenn : {0:#.###} a arouezioù</LineLengthAverage>
     <LinesPerSubtitleAverage>Linennoù dre istitloù - keidenn : {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMaximum>Hirder al linenn unanel - maksimom : {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Hirder al linenn unanel - keidenn : {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Hirder al linenn unanel - keidenn : {0:#.###}</SingleLineLengthAverage>
     <DurationMaximum>Padelezh - maksimom : {0:0.000} eilennoù</DurationMaximum>
     <DurationAverage>Padelezh - keidenn : {0:0.000} eilennoù</DurationAverage>
     <CharactersPerSecondMaximum>Arouezioù/eil - maksimom : {0:0.000}</CharactersPerSecondMaximum>
@@ -2133,7 +2133,7 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <TransportStreamGrayscale>Live ar gris</TransportStreamGrayscale>
     <TransportStreamGetColor>Implijout al liv (war linennoù da zispatartiañ 'zo)</TransportStreamGetColor>
     <PromptForUnknownWords>Goulenn evit ar gerioù dianv</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Klask divinout ar gerioù dianv</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Klask divinout ar gerioù dianv</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Rannañ ar rannbennad a zibas div linenn</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Holl ar reizhadennoù</AllFixes>
     <GuessesUsed>Martezeadennoù implijet</GuessesUsed>

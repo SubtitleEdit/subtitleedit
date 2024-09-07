@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxDifferenceMS = new System.Windows.Forms.Label();
             this.checkBoxAutoBreakOn = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
@@ -44,22 +44,41 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxMakeDialog = new System.Windows.Forms.CheckBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // numericUpDownMaxMillisecondsBetweenLines
             // 
+            this.numericUpDownMaxMillisecondsBetweenLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxMillisecondsBetweenLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.DecimalPlaces = 0;
+            this.numericUpDownMaxMillisecondsBetweenLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(189, 12);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
+            this.numericUpDownMaxMillisecondsBetweenLines.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
+            this.numericUpDownMaxMillisecondsBetweenLines.TabStop = false;
+            this.numericUpDownMaxMillisecondsBetweenLines.ThousandsSeparator = false;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
             0,
@@ -240,7 +259,6 @@
             this.Shown += new System.EventHandler(this.MergeTextWithSameTimeCodes_Shown);
             this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeTextWithSameTimeCodes_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -250,7 +268,7 @@
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxDifferenceMS;
         private System.Windows.Forms.CheckBox checkBoxAutoBreakOn;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;

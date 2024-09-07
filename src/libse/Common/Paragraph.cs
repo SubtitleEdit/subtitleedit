@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Translate.Processor;
-using System;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class Paragraph : ITranslationBaseUnit
+    public class Paragraph 
     {
         public int Number { get; set; }
 
@@ -14,9 +14,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TimeCode EndTime { get; set; }
 
         public TimeCode Duration => new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
+        public double DurationTotalMilliseconds => EndTime.TotalMilliseconds - StartTime.TotalMilliseconds;
+        public double DurationTotalSeconds => (EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
 
         public bool Forced { get; set; }
 
+        /// <summary>
+        /// Extra info (style name for ASSA).
+        /// </summary>
         public string Extra { get; set; }
 
         public bool IsComment { get; set; }
@@ -116,8 +121,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 0;
                 }
 
-                return 60.0 / Duration.TotalSeconds * Text.CountWords();
+                return 60.0 / DurationTotalSeconds * Text.CountWords();
             }
+        }
+
+        public double GetCharactersPerSecond()
+        {
+            if (DurationTotalMilliseconds < 1)
+            {
+                return 999;
+            }
+
+            return (double)Text.CountCharacters(true) / DurationTotalSeconds;
+        }
+
+        public double GetCharactersPerSecond(double numberOfCharacters)
+        {
+            if (DurationTotalMilliseconds < 1)
+            {
+                return 999;
+            }
+
+            return numberOfCharacters / DurationTotalSeconds;
+        }
+
+        public double GetCharactersPerSecond(ICalcLength calc)
+        {
+            if (DurationTotalMilliseconds < 1)
+            {
+                return 999;
+            }
+
+            return (double)calc.CountCharacters(Text, true) / DurationTotalSeconds;
         }
     }
 }

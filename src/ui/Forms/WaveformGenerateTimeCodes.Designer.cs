@@ -34,7 +34,7 @@
             this.radioButtonStartFromPos = new System.Windows.Forms.RadioButton();
             this.radioButtonStartFromStart = new System.Windows.Forms.RadioButton();
             this.labelAbove1 = new System.Windows.Forms.Label();
-            this.numericUpDownMinVol = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMinVol = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
             this.radioButtonDeleteNone = new System.Windows.Forms.RadioButton();
             this.radioButtonForward = new System.Windows.Forms.RadioButton();
@@ -42,22 +42,18 @@
             this.groupBoxDetectOptions = new System.Windows.Forms.GroupBox();
             this.labelBelow2 = new System.Windows.Forms.Label();
             this.labelAbove2 = new System.Windows.Forms.Label();
-            this.numericUpDownBlockSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBlockSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelScanBlocksMs = new System.Windows.Forms.Label();
             this.labelBelow1 = new System.Windows.Forms.Label();
-            this.numericUpDownMaxVol = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxVol = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
             this.labelSplit2 = new System.Windows.Forms.Label();
             this.labelSplit1 = new System.Windows.Forms.Label();
-            this.numericUpDownDefaultMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDefaultMilliseconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxStartFrom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinVol)).BeginInit();
             this.groupBoxDeleteLines.SuspendLayout();
             this.groupBoxDetectOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlockSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxVol)).BeginInit();
             this.groupBoxOther.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefaultMilliseconds)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -130,15 +126,35 @@
             // 
             // numericUpDownMinVol
             // 
+            this.numericUpDownMinVol.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMinVol.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMinVol.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMinVol.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMinVol.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMinVol.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMinVol.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMinVol.DecimalPlaces = 0;
+            this.numericUpDownMinVol.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMinVol.Location = new System.Drawing.Point(208, 60);
+            this.numericUpDownMinVol.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownMinVol.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.numericUpDownMinVol.Name = "numericUpDownMinVol";
-            this.numericUpDownMinVol.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownMinVol.Size = new System.Drawing.Size(51, 23);
             this.numericUpDownMinVol.TabIndex = 7;
+            this.numericUpDownMinVol.TabStop = false;
+            this.numericUpDownMinVol.ThousandsSeparator = false;
             this.numericUpDownMinVol.Value = new decimal(new int[] {
             35,
             0,
@@ -230,6 +246,19 @@
             // 
             // numericUpDownBlockSize
             // 
+            this.numericUpDownBlockSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownBlockSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownBlockSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownBlockSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownBlockSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownBlockSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownBlockSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownBlockSize.DecimalPlaces = 0;
+            this.numericUpDownBlockSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownBlockSize.Location = new System.Drawing.Point(149, 24);
             this.numericUpDownBlockSize.Maximum = new decimal(new int[] {
             300,
@@ -242,8 +271,10 @@
             0,
             0});
             this.numericUpDownBlockSize.Name = "numericUpDownBlockSize";
-            this.numericUpDownBlockSize.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownBlockSize.Size = new System.Drawing.Size(51, 23);
             this.numericUpDownBlockSize.TabIndex = 13;
+            this.numericUpDownBlockSize.TabStop = false;
+            this.numericUpDownBlockSize.ThousandsSeparator = false;
             this.numericUpDownBlockSize.Value = new decimal(new int[] {
             100,
             0,
@@ -270,15 +301,35 @@
             // 
             // numericUpDownMaxVol
             // 
+            this.numericUpDownMaxVol.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxVol.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxVol.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxVol.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxVol.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxVol.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxVol.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxVol.DecimalPlaces = 0;
+            this.numericUpDownMaxVol.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMaxVol.Location = new System.Drawing.Point(208, 89);
+            this.numericUpDownMaxVol.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownMaxVol.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.numericUpDownMaxVol.Name = "numericUpDownMaxVol";
-            this.numericUpDownMaxVol.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownMaxVol.Size = new System.Drawing.Size(51, 23);
             this.numericUpDownMaxVol.TabIndex = 10;
+            this.numericUpDownMaxVol.TabStop = false;
+            this.numericUpDownMaxVol.ThousandsSeparator = false;
             this.numericUpDownMaxVol.Value = new decimal(new int[] {
             70,
             0,
@@ -319,6 +370,19 @@
             // 
             // numericUpDownDefaultMilliseconds
             // 
+            this.numericUpDownDefaultMilliseconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDefaultMilliseconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDefaultMilliseconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDefaultMilliseconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDefaultMilliseconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDefaultMilliseconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDefaultMilliseconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDefaultMilliseconds.DecimalPlaces = 0;
+            this.numericUpDownDefaultMilliseconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownDefaultMilliseconds.Location = new System.Drawing.Point(111, 26);
             this.numericUpDownDefaultMilliseconds.Maximum = new decimal(new int[] {
             99999,
@@ -333,6 +397,8 @@
             this.numericUpDownDefaultMilliseconds.Name = "numericUpDownDefaultMilliseconds";
             this.numericUpDownDefaultMilliseconds.Size = new System.Drawing.Size(51, 20);
             this.numericUpDownDefaultMilliseconds.TabIndex = 11;
+            this.numericUpDownDefaultMilliseconds.TabStop = false;
+            this.numericUpDownDefaultMilliseconds.ThousandsSeparator = false;
             this.numericUpDownDefaultMilliseconds.Value = new decimal(new int[] {
             3500,
             0,
@@ -358,16 +424,12 @@
             this.Text = "Guess time codes";
             this.groupBoxStartFrom.ResumeLayout(false);
             this.groupBoxStartFrom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinVol)).EndInit();
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();
             this.groupBoxDetectOptions.ResumeLayout(false);
             this.groupBoxDetectOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlockSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxVol)).EndInit();
             this.groupBoxOther.ResumeLayout(false);
             this.groupBoxOther.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefaultMilliseconds)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -379,7 +441,7 @@
         private System.Windows.Forms.GroupBox groupBoxStartFrom;
         private System.Windows.Forms.RadioButton radioButtonStartFromStart;
         private System.Windows.Forms.Label labelAbove1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinVol;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMinVol;
         private System.Windows.Forms.RadioButton radioButtonStartFromPos;
         private System.Windows.Forms.GroupBox groupBoxDeleteLines;
         private System.Windows.Forms.RadioButton radioButtonDeleteNone;
@@ -387,14 +449,14 @@
         private System.Windows.Forms.RadioButton radioButtonDeleteAll;
         private System.Windows.Forms.GroupBox groupBoxDetectOptions;
         private System.Windows.Forms.Label labelBelow1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxVol;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlockSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxVol;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownBlockSize;
         private System.Windows.Forms.Label labelScanBlocksMs;
         private System.Windows.Forms.Label labelBelow2;
         private System.Windows.Forms.Label labelAbove2;
         private System.Windows.Forms.GroupBox groupBoxOther;
         private System.Windows.Forms.Label labelSplit1;
-        private System.Windows.Forms.NumericUpDown numericUpDownDefaultMilliseconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDefaultMilliseconds;
         private System.Windows.Forms.Label labelSplit2;
     }
 }

@@ -2,7 +2,7 @@
 <Language Name="Norsk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Oversatt av Dandelion Sprout</TranslatedBy>
     <CultureName>nb-NO</CultureName>
     <HelpFile />
@@ -509,7 +509,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <RemovedEmptyLine>Remove empty line</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
@@ -531,7 +531,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <FixCommonOcrErrors>Fix common OCR errors (using OCR replace list)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Common OCR errors fixed (OcrReplaceList file used): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Fix dialogs on one line</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Remove space between numbers fixed: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
@@ -1214,7 +1214,7 @@ Vil du starte fra toppen av dokumentet og lete en gang til?</ReplaceXContinue>
     <BeforeDisplayTimeAdjustment>Før visning av tidsjusteringer</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visningstid justert: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visningstider justert: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Starttid justert: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Starttid justert: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Før korrigering av vanlige feil</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Vanlige feil korrigert i valgte linjer</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Vanlige feil er korrigert</CommonErrorsFixed>
@@ -1973,11 +1973,11 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <NumberOfAlignmentTags>Antall plasseringsmarkeringer: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Undertekstlengde - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Undertekstlengde - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Undertekstlengde - average: {0}</LineLengthAverage>
+    <LineLengthAverage>Undertekstlengde - average: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Undertekst, antall linjer - gjennomsnitt: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lengde på enkeltlinje - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lengde på enkeltlinje - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lengde på enkeltlinje - gjennomsnitt: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lengde på enkeltlinje - gjennomsnitt: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Varighet - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varighet - maksimum: {0:0.000} sekunder</DurationMaximum>
     <DurationAverage>Varighet - gjennomsnitt: {0:0.000} sekunder</DurationAverage>
@@ -2136,7 +2136,7 @@ Vil du beholde endringene?</KeepChangesMessage>
     <TransportStreamGrayscale>Monokrom</TransportStreamGrayscale>
     <TransportStreamGetColor>Bruk farger (vil inkludere litt oppdeling av linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Versel ved ukjente ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Prøv å gjette på ukjente ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Prøv å gjette på ukjente ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autobryt paragrafer hvis de er mer enn to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle korrigeringer</AllFixes>
     <GuessesUsed>Gjetninger brukt</GuessesUsed>

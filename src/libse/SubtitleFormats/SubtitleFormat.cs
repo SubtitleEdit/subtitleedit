@@ -109,6 +109,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml17(),
                     new FinalCutProXml18(),
                     new FinalCutProXml19(),
+                    new FinalCutProXml110(),
+                    new FinalCutProXml111(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),
@@ -146,9 +148,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType18(),
                     new JsonType19(),
                     new JsonType20(),
+                    new JsonType21(),
+                    new JsonType22(),
+                    new JsonType23(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
+                    new Lrc3DigitsMs(),
                     new LrcNoEndTime(),
                     new MacSub(),
                     new MagicVideoTitler(),
@@ -161,6 +167,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new NetflixImsc11Japanese(),
                     new NetflixTimedText(),
                     new NinsightXml(),
+                    new NVivoTranscript(),
                     new OgmChapters(),
                     new OpenDvt(),
                     new Oresme(),
@@ -170,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new PhoenixSubtitle(),
                     new PinnacleImpression(),
                     new PListCaption(),
+                    new PodcastIndexer(),
                     new ProjectionSubtitleList(),
                     new QubeMasterImport(),
                     new QuickTimeText(),
@@ -186,6 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new ScenaristClosedCaptions(),
                     new ScenaristClosedCaptionsDropFrame(),
                     new SmartTitler(),
+//                    new Smil30(),
                     new SmilTimesheetData(),
                     new SmpteTt2052(),
                     new SoftNiSub(),
@@ -216,6 +225,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TimedText200604CData(),
                     new TimedText200604Ooyala(),
                     new TimedText(),
+                    new TimedTextImsc11(),
+                    new TimedTextNoNs(),
                     new TitleExchangePro(),
                     new Titra(),
                     new TmpegEncText(),
@@ -224,6 +235,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TMPlayer(),
                     new TranscriberXml(),
                     new Tmx14(),
+                    new Tsv1(),
+                    new Tsv2(),
                     new TurboTitler(),
                     new TwentyThreeJson(),
                     new TwentyThreeJsonEmbed(),
@@ -233,9 +246,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Utx(),
                     new UtxFrames(),
                     new UleadSubtitleFormat(),
+                    new VideoIndexerJson(),
                     new VocapiaSplit(),
                     new WebVTT(),
                     new WebVTTFileWithLineNumber(),
+                    new WhisperRaw(),
+                    new WhisperRaw2(),
                     new Xif(),
                     new Xmp(),
                     new YouTubeAnnotations(),
@@ -350,6 +366,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle104(),
                     new UnknownSubtitle105(),
                     new UnknownSubtitle106(),
+                    new UnknownSubtitle107(),
                 };
 
                 foreach (var pluginFileName in Configuration.GetPlugins())
@@ -468,7 +485,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            return FramesToMilliseconds(frames, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static int FramesToMilliseconds(double frames, double frameRate)
+        {
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(frameRate)), MidpointRounding.AwayFromZero);
         }
 
         public static int FramesToMillisecondsMax999(double frames)
@@ -526,6 +548,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (tokens.Length != 4)
             {
                 throw new InvalidOperationException();
+            }
+
+            if (tokens[0] == "--" && tokens[1] == "--" && tokens[2] == "--" && tokens[3] == "--")
+            {
+                return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
+            }
+
+            if (tokens[0] == "-" && tokens[1] == "-" && tokens[2] == "-" && tokens[3] == "-")
+            {
+                return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
             }
 
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));
@@ -623,7 +655,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new AvidStl(),
                 new WinCaps32(),
                 new IsmtDfxp(),
-                new Cavena890(),
                 new Spt(),
                 new Sptx(),
                 new IaiSub(),
@@ -633,6 +664,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Cmaft(),
                 new Pns(),
                 new PlayCaptionsFreeEditor(),
+                new VideoCdDat(),
             };
         }
 

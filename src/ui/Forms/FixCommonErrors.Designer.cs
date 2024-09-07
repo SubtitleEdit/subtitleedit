@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -32,14 +33,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
-            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonBack = new System.Windows.Forms.Button();
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
             this.buttonResetDefault = new System.Windows.Forms.Button();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
@@ -83,15 +84,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
-            this.textBoxListViewText = new System.Windows.Forms.TextBox();
+            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
-            this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
+            this.textBoxFixedIssues = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
             this.groupBoxStep1.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
@@ -105,7 +106,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripFixes.SuspendLayout();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxEditPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -189,12 +189,26 @@ namespace Nikse.SubtitleEdit.Forms
             // comboBoxLanguage
             // 
             this.comboBoxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguage.DropDownHeight = 400;
             this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguage.DropDownWidth = 196;
             this.comboBoxLanguage.FormattingEnabled = true;
             this.comboBoxLanguage.Location = new System.Drawing.Point(619, 17);
+            this.comboBoxLanguage.MaxLength = 32767;
             this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.SelectedIndex = -1;
+            this.comboBoxLanguage.SelectedItem = null;
+            this.comboBoxLanguage.SelectedText = "";
             this.comboBoxLanguage.Size = new System.Drawing.Size(196, 21);
             this.comboBoxLanguage.TabIndex = 0;
+            this.comboBoxLanguage.UsePopupWindow = false;
             this.comboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguage_SelectedIndexChanged);
             this.comboBoxLanguage.Enter += new System.EventHandler(this.comboBoxLanguage_Enter);
             // 
@@ -252,6 +266,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
             // 
             // columnHeader1
             // 
@@ -407,6 +422,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewFixesColumnClick);
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.ListViewFixesSelectedIndexChanged);
+            this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
             // 
             // columnHeader4
             // 
@@ -648,14 +664,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownStartTime.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownStartTime.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownStartTime.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(88, 22);
             this.timeUpDownStartTime.TabIndex = 112;
+            this.timeUpDownStartTime.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -668,13 +695,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownDuration
             // 
+            this.numericUpDownDuration.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDuration.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDuration.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDuration.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDuration.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDuration.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDuration.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDuration.DecimalPlaces = 3;
             this.numericUpDownDuration.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(99, 28);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(113, 27);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -686,14 +720,21 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 22);
             this.numericUpDownDuration.TabIndex = 114;
+            this.numericUpDownDuration.TabStop = false;
+            this.numericUpDownDuration.ThousandsSeparator = false;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 
             // labelDuration
             // 
             this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(97, 12);
+            this.labelDuration.Location = new System.Drawing.Point(111, 12);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(48, 13);
             this.labelDuration.TabIndex = 28;
@@ -731,11 +772,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewText.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxListViewText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxListViewText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxListViewText.HideSelection = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(194, 12);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxListViewText.Size = new System.Drawing.Size(427, 64);
             this.textBoxListViewText.TabIndex = 118;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
@@ -756,6 +799,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxFixedIssues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxFixedIssues.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFixedIssues.Location = new System.Drawing.Point(3, 3);
             this.textBoxFixedIssues.MaxLength = 65767;
             this.textBoxFixedIssues.Multiline = true;
@@ -816,7 +860,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxEditPanel.ResumeLayout(false);
             this.groupBoxEditPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.tabPageLog.PerformLayout();
             this.ResumeLayout(false);
@@ -828,7 +871,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonNextFinish;
-        private System.Windows.Forms.Label labelStatus;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStatus;
         private System.Windows.Forms.Button buttonBack;
         private System.Windows.Forms.GroupBox groupBoxStep1;
         private System.Windows.Forms.ListView listView1;
@@ -845,21 +888,21 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.TabPage tabPageLog;
-        private System.Windows.Forms.TextBox textBoxFixedIssues;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFixedIssues;
         private System.Windows.Forms.Button buttonInverseSelection;
         private System.Windows.Forms.Button buttonSelectAll;
         private System.Windows.Forms.GroupBox groupBoxEditPanel;
         private SubtitleListView subtitleListView1;
         private System.Windows.Forms.Label labelTextLineTotal;
         private System.Windows.Forms.Label labelTextLineLengths;
-        private System.Windows.Forms.TextBox textBoxListViewText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxListViewText;
         private System.Windows.Forms.Button buttonFixesApply;
         private System.Windows.Forms.Button buttonFixesInverse;
         private System.Windows.Forms.Button buttonFixesSelectAll;
         private System.Windows.Forms.Label labelStartTimeWarning;
         private System.Windows.Forms.Label labelDurationWarning;
-        private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
-        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelStartTime;
         private System.Windows.Forms.Button buttonRefreshFixes;
@@ -873,7 +916,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.SplitContainer splitContainerStep2;
         private System.Windows.Forms.Label labelSingleLine;
         private System.Windows.Forms.Button buttonSplitLine;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.Button buttonResetDefault;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFixes;

@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -502,7 +502,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLine>Видалити порожній рядок</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Видалити порожній рядок на початку</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Видалити порожній рядок в кінці</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Видалити порожні рядки/невикористовувані розбиття рядків</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Видалити порожні рядки/невикористовувані розбиття рядків</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Порожніх рядків видалено: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Виправити накладки тривалостей</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Виправити короткі тривалості</FixShortDisplayTimes>
@@ -524,7 +524,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Виправити типові помилки розпізнавання тексту (за допомогою списку замін)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Виправлено типові помилки розпізнавання тексту (використано файл OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Видалити пробіли між числами</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Виправити діалоги на одному рядку</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Виправити діалоги на одному рядку</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Видалено пробіли між числами: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Виправити турецькі (ісландські) ANSI-символи на Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Виправити данську літеру 'i'</FixDanishLetterI>
@@ -1207,7 +1207,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Перед зміною тривалостей</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Тривалість змінено: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Тривалості змінено: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Змінено початок: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Змінено початок: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Перед виправленням типових проблем</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Типові проблеми виправлено у вибраних рядках</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Типові проблеми виправлено</CommonErrorsFixed>
@@ -1965,11 +1965,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Кількість тегів розташування: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Довжина субтитру - мінімальна: {0}</LineLengthMinimum>
     <LineLengthMaximum>Довжина субтитру - максимальна: {0}</LineLengthMaximum>
-    <LineLengthAverage>Довжина субтитру - середня: {0}</LineLengthAverage>
+    <LineLengthAverage>Довжина субтитру - середня: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Кількість рядків у субтитрі - середня: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Довжина одного рядка - мінімальна: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Довжина одного рядка - максимальна: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Довжина одного рядка - середня: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Довжина одного рядка - середня: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Тривалість - мінімум: {0:0.000} секунд</DurationMinimum>
     <DurationMaximum>Тривалість - максимум: {0:0.000} секунд</DurationMaximum>
     <DurationAverage>Тривалість - середня: {0:0.000} секунд</DurationAverage>
@@ -2128,7 +2128,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Відтінки сірого</TransportStreamGrayscale>
     <TransportStreamGetColor>Використовувати колір (включатиме розбиття деяких рядків)</TransportStreamGetColor>
     <PromptForUnknownWords>Запитувати про невідомі слова</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Намагатися вгадати невідомі слова</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Намагатися вгадати невідомі слова</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматично розбивати субтитр, якщо більше двох рядків</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Всі виправлення</AllFixes>
     <GuessesUsed>Використані здогадки</GuessesUsed>

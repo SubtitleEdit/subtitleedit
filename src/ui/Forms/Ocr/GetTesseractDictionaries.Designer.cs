@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
             this.buttonDownload = new System.Windows.Forms.Button();
@@ -39,12 +39,27 @@
             // 
             // comboBoxDictionaries
             // 
+            this.comboBoxDictionaries.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDictionaries.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDictionaries.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDictionaries.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDictionaries.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDictionaries.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDictionaries.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDictionaries.DropDownHeight = 400;
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDictionaries.DropDownWidth = 256;
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(22, 71);
+            this.comboBoxDictionaries.MaxLength = 32767;
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
+            this.comboBoxDictionaries.SelectedIndex = -1;
+            this.comboBoxDictionaries.SelectedItem = null;
+            this.comboBoxDictionaries.SelectedText = "";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(256, 21);
             this.comboBoxDictionaries.TabIndex = 21;
+            this.comboBoxDictionaries.UsePopupWindow = false;
+            this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
             // labelPleaseWait
             // 
@@ -133,7 +148,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
         private System.Windows.Forms.Button buttonDownload;

@@ -60,6 +60,31 @@ namespace Test.Logic
             Assert.AreEqual(ms, new TimeSpan(0, 1, 2, 3, 999).TotalMilliseconds);
         }
 
+
+        [TestMethod]
+        public void TimeCodeParseToMilliseconds2()
+        {
+            var ms = TimeCode.ParseToMilliseconds("01:02:03:9");
+
+            Assert.AreEqual(ms, new TimeSpan(0, 1, 2, 3, 900).TotalMilliseconds);
+        }
+
+        [TestMethod]
+        public void TimeCodeParseToMilliseconds3()
+        {
+            var ms = TimeCode.ParseToMilliseconds("01:02:03:99");
+
+            Assert.AreEqual(ms, new TimeSpan(0, 1, 2, 3, 990).TotalMilliseconds);
+        }
+
+        [TestMethod]
+        public void TimeCodeParseToMilliseconds4()
+        {
+            var ms = TimeCode.ParseToMilliseconds("02:03:99");
+
+            Assert.AreEqual(ms, new TimeSpan(0, 0, 2, 3, 990).TotalMilliseconds);
+        }
+
         [TestMethod]
         public void TimeCodeGetTotalMilliseconds()
         {

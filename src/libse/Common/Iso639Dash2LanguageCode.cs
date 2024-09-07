@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -231,7 +232,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetTwoLetterCodeFromEnglishName(string englishName)
         {
-            var lookupResult = List.FirstOrDefault(p => p.EnglishName.ToLowerInvariant() == englishName.ToLowerInvariant());
+            var lookupResult = List.FirstOrDefault(p => string.Equals(p.EnglishName, englishName, StringComparison.InvariantCultureIgnoreCase));
             return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
         }
     }

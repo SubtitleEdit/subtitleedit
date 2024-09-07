@@ -31,27 +31,27 @@
             this.groupBoxWordLists = new System.Windows.Forms.GroupBox();
             this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxOcrFixList = new System.Windows.Forms.GroupBox();
-            this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
+            this.textBoxOcrFixValue = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonRemoveOcrFix = new System.Windows.Forms.Button();
-            this.listBoxOcrFixList = new System.Windows.Forms.ListBox();
-            this.textBoxOcrFixKey = new System.Windows.Forms.TextBox();
+            this.listBoxOcrFixList = new Nikse.SubtitleEdit.Controls.NikseListBox();
+            this.textBoxOcrFixKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAddOcrFix = new System.Windows.Forms.Button();
             this.groupBoxUserWordList = new System.Windows.Forms.GroupBox();
             this.buttonRemoveUserWord = new System.Windows.Forms.Button();
-            this.listBoxUserWordLists = new System.Windows.Forms.ListBox();
-            this.textBoxUserWord = new System.Windows.Forms.TextBox();
+            this.listBoxUserWordLists = new Nikse.SubtitleEdit.Controls.NikseListBox();
+            this.textBoxUserWord = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAddUserWord = new System.Windows.Forms.Button();
             this.groupBoxWordListLocation = new System.Windows.Forms.GroupBox();
             this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
-            this.textBoxNamesOnline = new System.Windows.Forms.TextBox();
+            this.textBoxNamesOnline = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
             this.listViewNames = new System.Windows.Forms.ListView();
             this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonRemoveNameEtc = new System.Windows.Forms.Button();
-            this.textBoxNameEtc = new System.Windows.Forms.TextBox();
+            this.textBoxNameEtc = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
-            this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxWordListLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -76,7 +76,7 @@
             this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
             this.groupBoxWordLists.Location = new System.Drawing.Point(12, 12);
             this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(828, 501);
+            this.groupBoxWordLists.Size = new System.Drawing.Size(836, 520);
             this.groupBoxWordLists.TabIndex = 3;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
@@ -85,7 +85,7 @@
             // 
             this.linkLabelOpenDictionaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 476);
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 495);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
             this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 29;
@@ -95,6 +95,9 @@
             // 
             // groupBoxOcrFixList
             // 
+            this.groupBoxOcrFixList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOcrFixList.Controls.Add(this.textBoxOcrFixValue);
             this.groupBoxOcrFixList.Controls.Add(this.buttonRemoveOcrFix);
             this.groupBoxOcrFixList.Controls.Add(this.listBoxOcrFixList);
@@ -102,24 +105,27 @@
             this.groupBoxOcrFixList.Controls.Add(this.buttonAddOcrFix);
             this.groupBoxOcrFixList.Location = new System.Drawing.Point(510, 43);
             this.groupBoxOcrFixList.Name = "groupBoxOcrFixList";
-            this.groupBoxOcrFixList.Size = new System.Drawing.Size(293, 334);
+            this.groupBoxOcrFixList.Size = new System.Drawing.Size(301, 345);
             this.groupBoxOcrFixList.TabIndex = 6;
             this.groupBoxOcrFixList.TabStop = false;
             this.groupBoxOcrFixList.Text = "OCR fix list";
             // 
             // textBoxOcrFixValue
             // 
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 298);
+            this.textBoxOcrFixValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixValue.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxOcrFixValue.Location = new System.Drawing.Point(103, 309);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(85, 20);
+            this.textBoxOcrFixValue.Size = new System.Drawing.Size(90, 20);
             this.textBoxOcrFixValue.TabIndex = 45;
             this.textBoxOcrFixValue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxOcrFixValueKeyDown);
             // 
             // buttonRemoveOcrFix
             // 
-            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(191, 16);
+            this.buttonRemoveOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(199, 21);
             this.buttonRemoveOcrFix.Name = "buttonRemoveOcrFix";
-            this.buttonRemoveOcrFix.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveOcrFix.Size = new System.Drawing.Size(83, 24);
             this.buttonRemoveOcrFix.TabIndex = 42;
             this.buttonRemoveOcrFix.Text = "Remove";
             this.buttonRemoveOcrFix.UseVisualStyleBackColor = true;
@@ -127,29 +133,41 @@
             // 
             // listBoxOcrFixList
             // 
+            this.listBoxOcrFixList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxOcrFixList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxOcrFixList.FormattingEnabled = true;
-            this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
+            this.listBoxOcrFixList.ItemHeight = 13;
+            this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 21);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
+            this.listBoxOcrFixList.SelectedIndex = -1;
+            this.listBoxOcrFixList.SelectedItem = null;
             this.listBoxOcrFixList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxOcrFixList.Size = new System.Drawing.Size(179, 277);
+            this.listBoxOcrFixList.Size = new System.Drawing.Size(187, 277);
+            this.listBoxOcrFixList.Sorted = false;
             this.listBoxOcrFixList.TabIndex = 40;
+            this.listBoxOcrFixList.TopIndex = 0;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
+            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxOcrFixList_KeyDown);
             this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
             this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
             // textBoxOcrFixKey
             // 
-            this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 298);
+            this.textBoxOcrFixKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 309);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(88, 20);
+            this.textBoxOcrFixKey.Size = new System.Drawing.Size(90, 20);
             this.textBoxOcrFixKey.TabIndex = 44;
             // 
             // buttonAddOcrFix
             // 
-            this.buttonAddOcrFix.Location = new System.Drawing.Point(190, 296);
+            this.buttonAddOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddOcrFix.Location = new System.Drawing.Point(199, 308);
             this.buttonAddOcrFix.Name = "buttonAddOcrFix";
-            this.buttonAddOcrFix.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddOcrFix.Size = new System.Drawing.Size(83, 24);
             this.buttonAddOcrFix.TabIndex = 46;
             this.buttonAddOcrFix.Text = "Add pair";
             this.buttonAddOcrFix.UseVisualStyleBackColor = true;
@@ -157,22 +175,25 @@
             // 
             // groupBoxUserWordList
             // 
+            this.groupBoxUserWordList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxUserWordList.Controls.Add(this.buttonRemoveUserWord);
             this.groupBoxUserWordList.Controls.Add(this.listBoxUserWordLists);
             this.groupBoxUserWordList.Controls.Add(this.textBoxUserWord);
             this.groupBoxUserWordList.Controls.Add(this.buttonAddUserWord);
             this.groupBoxUserWordList.Location = new System.Drawing.Point(259, 43);
             this.groupBoxUserWordList.Name = "groupBoxUserWordList";
-            this.groupBoxUserWordList.Size = new System.Drawing.Size(241, 334);
+            this.groupBoxUserWordList.Size = new System.Drawing.Size(249, 345);
             this.groupBoxUserWordList.TabIndex = 4;
             this.groupBoxUserWordList.TabStop = false;
             this.groupBoxUserWordList.Text = "User word list";
             // 
             // buttonRemoveUserWord
             // 
-            this.buttonRemoveUserWord.Location = new System.Drawing.Point(159, 16);
+            this.buttonRemoveUserWord.Location = new System.Drawing.Point(159, 21);
             this.buttonRemoveUserWord.Name = "buttonRemoveUserWord";
-            this.buttonRemoveUserWord.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveUserWord.Size = new System.Drawing.Size(83, 24);
             this.buttonRemoveUserWord.TabIndex = 32;
             this.buttonRemoveUserWord.Text = "Remove";
             this.buttonRemoveUserWord.UseVisualStyleBackColor = true;
@@ -180,30 +201,41 @@
             // 
             // listBoxUserWordLists
             // 
+            this.listBoxUserWordLists.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBoxUserWordLists.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxUserWordLists.FormattingEnabled = true;
-            this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
+            this.listBoxUserWordLists.ItemHeight = 13;
+            this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 21);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
+            this.listBoxUserWordLists.SelectedIndex = -1;
+            this.listBoxUserWordLists.SelectedItem = null;
             this.listBoxUserWordLists.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 277);
+            this.listBoxUserWordLists.Sorted = false;
             this.listBoxUserWordLists.TabIndex = 30;
+            this.listBoxUserWordLists.TopIndex = 0;
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
+            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxUserWordLists_KeyDown);
             this.listBoxUserWordLists.DoubleClick += new System.EventHandler(this.listBoxUserWordLists_DoubleClick);
             this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
             // textBoxUserWord
             // 
-            this.textBoxUserWord.Location = new System.Drawing.Point(2, 298);
+            this.textBoxUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxUserWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxUserWord.Location = new System.Drawing.Point(2, 309);
             this.textBoxUserWord.Name = "textBoxUserWord";
-            this.textBoxUserWord.Size = new System.Drawing.Size(150, 20);
+            this.textBoxUserWord.Size = new System.Drawing.Size(151, 20);
             this.textBoxUserWord.TabIndex = 34;
             this.textBoxUserWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxUserWordKeyDown);
             // 
             // buttonAddUserWord
             // 
-            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 296);
+            this.buttonAddUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 308);
             this.buttonAddUserWord.Name = "buttonAddUserWord";
-            this.buttonAddUserWord.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddUserWord.Size = new System.Drawing.Size(83, 24);
             this.buttonAddUserWord.TabIndex = 36;
             this.buttonAddUserWord.Text = "Add word";
             this.buttonAddUserWord.UseVisualStyleBackColor = true;
@@ -215,9 +247,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesOnline);
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesOnline);
-            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 386);
+            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 405);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 92);
+            this.groupBoxWordListLocation.Size = new System.Drawing.Size(805, 76);
             this.groupBoxWordListLocation.TabIndex = 8;
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
@@ -234,6 +266,7 @@
             // 
             // textBoxNamesOnline
             // 
+            this.textBoxNamesOnline.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxNamesOnline.Location = new System.Drawing.Point(6, 45);
             this.textBoxNamesOnline.Name = "textBoxNamesOnline";
             this.textBoxNamesOnline.Size = new System.Drawing.Size(764, 20);
@@ -243,19 +276,24 @@
             // 
             // groupBoxNamesIgonoreLists
             // 
+            this.groupBoxNamesIgonoreLists.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxNamesIgonoreLists.Controls.Add(this.listViewNames);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonRemoveNameEtc);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.textBoxNameEtc);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNames);
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
             this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
-            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 334);
+            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(249, 345);
             this.groupBoxNamesIgonoreLists.TabIndex = 2;
             this.groupBoxNamesIgonoreLists.TabStop = false;
             this.groupBoxNamesIgonoreLists.Text = "Names/ignore lists";
             // 
             // listViewNames
             // 
+            this.listViewNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderNames});
             this.listViewNames.FullRowSelect = true;
@@ -263,8 +301,8 @@
             this.listViewNames.HideSelection = false;
             this.listViewNames.Location = new System.Drawing.Point(3, 21);
             this.listViewNames.Name = "listViewNames";
-            this.listViewNames.Size = new System.Drawing.Size(148, 270);
-            this.listViewNames.TabIndex = 27;
+            this.listViewNames.Size = new System.Drawing.Size(148, 281);
+            this.listViewNames.TabIndex = 0;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
             this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListViewNamesSelectedIndexChanged);
@@ -277,28 +315,31 @@
             // 
             // buttonRemoveNameEtc
             // 
-            this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 16);
+            this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 21);
             this.buttonRemoveNameEtc.Name = "buttonRemoveNameEtc";
-            this.buttonRemoveNameEtc.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveNameEtc.TabIndex = 22;
+            this.buttonRemoveNameEtc.Size = new System.Drawing.Size(83, 24);
+            this.buttonRemoveNameEtc.TabIndex = 2;
             this.buttonRemoveNameEtc.Text = "Remove";
             this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
             this.buttonRemoveNameEtc.Click += new System.EventHandler(this.ButtonRemoveNameEtcClick);
             // 
             // textBoxNameEtc
             // 
-            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 298);
+            this.textBoxNameEtc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxNameEtc.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 309);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
-            this.textBoxNameEtc.Size = new System.Drawing.Size(151, 20);
-            this.textBoxNameEtc.TabIndex = 24;
+            this.textBoxNameEtc.Size = new System.Drawing.Size(148, 20);
+            this.textBoxNameEtc.TabIndex = 3;
             this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
             // 
             // buttonAddNames
             // 
-            this.buttonAddNames.Location = new System.Drawing.Point(157, 296);
+            this.buttonAddNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddNames.Location = new System.Drawing.Point(157, 308);
             this.buttonAddNames.Name = "buttonAddNames";
-            this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddNames.TabIndex = 26;
+            this.buttonAddNames.Size = new System.Drawing.Size(83, 24);
+            this.buttonAddNames.TabIndex = 4;
             this.buttonAddNames.Text = "Add name";
             this.buttonAddNames.UseVisualStyleBackColor = true;
             this.buttonAddNames.Click += new System.EventHandler(this.ButtonAddNamesClick);
@@ -314,19 +355,33 @@
             // 
             // comboBoxWordListLanguage
             // 
+            this.comboBoxWordListLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWordListLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWordListLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWordListLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWordListLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWordListLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWordListLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWordListLanguage.DropDownHeight = 400;
             this.comboBoxWordListLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWordListLanguage.DropDownWidth = 155;
             this.comboBoxWordListLanguage.FormattingEnabled = true;
             this.comboBoxWordListLanguage.Location = new System.Drawing.Point(67, 16);
+            this.comboBoxWordListLanguage.MaxLength = 32767;
             this.comboBoxWordListLanguage.Name = "comboBoxWordListLanguage";
+            this.comboBoxWordListLanguage.SelectedIndex = -1;
+            this.comboBoxWordListLanguage.SelectedItem = null;
+            this.comboBoxWordListLanguage.SelectedText = "";
             this.comboBoxWordListLanguage.Size = new System.Drawing.Size(155, 21);
             this.comboBoxWordListLanguage.TabIndex = 0;
+            this.comboBoxWordListLanguage.UsePopupWindow = false;
             this.comboBoxWordListLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxWordListLanguageSelectedIndexChanged);
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(765, 529);
+            this.buttonCancel.Location = new System.Drawing.Point(765, 537);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -338,7 +393,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(684, 529);
+            this.buttonOK.Location = new System.Drawing.Point(684, 537);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -350,7 +405,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(22, 534);
+            this.labelStatus.Location = new System.Drawing.Point(22, 553);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 17;
@@ -360,15 +415,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(852, 564);
+            this.ClientSize = new System.Drawing.Size(852, 572);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxWordLists);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(860, 600);
             this.Name = "WordLists";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -395,27 +449,27 @@
         private System.Windows.Forms.GroupBox groupBoxWordLists;
         private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
         private System.Windows.Forms.GroupBox groupBoxOcrFixList;
-        private System.Windows.Forms.TextBox textBoxOcrFixValue;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixValue;
         private System.Windows.Forms.Button buttonRemoveOcrFix;
-        private System.Windows.Forms.ListBox listBoxOcrFixList;
-        private System.Windows.Forms.TextBox textBoxOcrFixKey;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxOcrFixList;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixKey;
         private System.Windows.Forms.Button buttonAddOcrFix;
         private System.Windows.Forms.GroupBox groupBoxUserWordList;
         private System.Windows.Forms.Button buttonRemoveUserWord;
-        private System.Windows.Forms.ListBox listBoxUserWordLists;
-        private System.Windows.Forms.TextBox textBoxUserWord;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxUserWordLists;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxUserWord;
         private System.Windows.Forms.Button buttonAddUserWord;
         private System.Windows.Forms.GroupBox groupBoxWordListLocation;
         private System.Windows.Forms.CheckBox checkBoxNamesOnline;
-        private System.Windows.Forms.TextBox textBoxNamesOnline;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxNamesOnline;
         private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
         private System.Windows.Forms.ListView listViewNames;
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
         private System.Windows.Forms.Button buttonRemoveNameEtc;
-        private System.Windows.Forms.TextBox textBoxNameEtc;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxNameEtc;
         private System.Windows.Forms.Button buttonAddNames;
         private System.Windows.Forms.Label labelWordListLanguage;
-        private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWordListLanguage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelStatus;

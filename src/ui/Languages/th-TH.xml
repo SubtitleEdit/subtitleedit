@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -460,7 +460,7 @@
     <RemovedEmptyLine>บรรทัดว่างที่ถูกลบ</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>บรรทัดว่างด้านบนที่ถูกลบ</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>บรรทัดว่างด้านล่างที่ถูกลบ</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>จำนวนบรรทัดว่างที่ถูกลบ/ตัวแบ่งบรรทัดที่ไม่ได้ใช้</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>จำนวนบรรทัดว่างที่ถูกลบ/ตัวแบ่งบรรทัดที่ไม่ได้ใช้</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>บรรทัดว่างที่ถูกลบ: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>แก้เวลาแสดงที่ซ้อนกัน</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>แก้เวลาแสดงที่สั้น</FixShortDisplayTimes>
@@ -482,7 +482,7 @@
     <FixCommonOcrErrors>แก้ข้อผิดพลาด OCR ทั่วไป (ใช้รายการแทนที่คำ OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>ข้อผิดพลาด OCR ทั่วไปที่แก้ (ไฟล์แทนที่คำ Ocr ที่ใช้): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>ลบช่องว่างระหว่างตัวเลข</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>แก้ไดอะล็อกในหนึ่งบรรทัด</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>แก้ไดอะล็อกในหนึ่งบรรทัด</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>ลบช่องว่างระหว่างตัวเลขไปแล้ว: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>แก้อักษร ANSI ตุรกี (Icelandic) เป็นยูนิโค้ด</FixTurkishAnsi>
     <FixDanishLetterI>แก้อักษรเดนมาร์ก 'i'</FixDanishLetterI>
@@ -1147,7 +1147,7 @@
     <BeforeDisplayTimeAdjustment>ก่อนการปรับเวลาแสดงผล</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ก่อนแก้ไขข้อผิดพลาดทั่วไป</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>ข้อผิดพลาดทั่วไปที่แก้แล้วบนบรรทัดที่เลือก</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ข้อผิดพลาดทั่วไปที่แก้แล้ว</CommonErrorsFixed>
@@ -1873,11 +1873,11 @@
     <NumberOfAlignmentTags>จำนวนแท็กการวางแนว: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>ความยาวซับไตเติ้ล - ต่ำสุด: {0}</LineLengthMinimum>
     <LineLengthMaximum>ความยาวซับไตเติ้ล - สูงสุด: {0}</LineLengthMaximum>
-    <LineLengthAverage>ความยาวซับไตเติ้ล - เฉลี่ย: {0}</LineLengthAverage>
+    <LineLengthAverage>ความยาวซับไตเติ้ล - เฉลี่ย: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>จำนวนบรรทัดต่อซับไตเติ้ล - เฉลี่ย: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>ความยาวบรรทัดเดี่ยว - ต่ำสุด: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>ความยาวบรรทัดเดี่ยว - สูงสุด: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>ระยะเวลา- ต่ำสุด: {0:0.000} วินาที</DurationMinimum>
     <DurationMaximum>ระยะเวลา- สูงสุด: {0:0.000} วินาที</DurationMaximum>
     <DurationAverage>ระยะเวลา- เฉลี่ย: {0:0.000} วินาที</DurationAverage>
@@ -2033,7 +2033,7 @@
     <TransportStreamGrayscale>ขาวดำ</TransportStreamGrayscale>
     <TransportStreamGetColor>ใช้สี (อาจเกิดการแบ่งบรรทัด)</TransportStreamGetColor>
     <PromptForUnknownWords>ยืนยันคำที่ไม่รู้จัก</PromptForUnknownWords>
-    <TryToGuessUnkownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>แบ่งย่อหน้าอัตโนมัติถ้ายาวเกินสองบรรทัด</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>ส่วนที่แก้ทั้งหมด</AllFixes>
     <GuessesUsed>สิ่งที่เดาไปทั้งหมด</GuessesUsed>

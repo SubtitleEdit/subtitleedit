@@ -150,7 +150,7 @@ version=1.1
             }
 
             var last = subtitle.Paragraphs.Last();
-            last.Duration.TotalMilliseconds = Utilities.GetOptimalDisplayMilliseconds(last.Text);
+            last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }

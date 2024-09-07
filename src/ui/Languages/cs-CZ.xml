@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -687,7 +687,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Odebrat prázdný řádek na začátku</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Odebrat prázdný řádek na konci</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Odebrat prázdný řádek uprostřed</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Opravit krátké časy zobrazení</FixShortDisplayTimes>
     <FixLongDisplayTimes>Opravit dlouhé časy zobrazení</FixLongDisplayTimes>
@@ -710,7 +710,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Opravit běžné chyby OCR (používá seznam náhrad OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Opraveny běžné chyby OCR (použit soubor OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Odebrat mezeru mezi čísly</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Opravit dialogy na jednom řádku</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Opravit dialogy na jednom řádku</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Odebrat pomlčku na začátku prvního řádku, pokud se nejedná o dialogy</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizovat řetězce</NormalizeStrings>
     <FixTurkishAnsi>Opravit znaky v tureckém ANSI (islandština) na Unicode</FixTurkishAnsi>
@@ -1466,7 +1466,7 @@ Chcete začít od začátku dokumentu a pokračovat v hledání a nahrazování?
     <BeforeDisplayTimeAdjustment>Před úpravou času zobrazení</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Upraven čas zobrazení: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Upraveny časy zobrazení: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Upraven čas začátku: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Upraven čas začátku: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Před opravou běžných chyb</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Opraveny běžné chyby ve vybraných řádcích</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Opraveny běžné chyby</CommonErrorsFixed>
@@ -2230,7 +2230,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <DarkThemeEnabled>Použít tmavý motiv</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Zobrazit čáry mřížky v zobrazení seznamu</DarkThemeShowGridViewLines>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
-    <FoucsSetVideoPosition>Zaměřit nastavenou pozici videa</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Zaměřit nastavenou pozici videa</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Ukotvit nebo zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavit konec, přidat nový a přejít na nový</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Nastavit podle pozice konce</AdjustViaEndAutoStart>
@@ -2343,7 +2343,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <GoForwardXSSeconds>O malý vybraný čas vpřed</GoForwardXSSeconds>
     <GoBackXLSeconds>O velký vybraný čas zpět</GoBackXLSeconds>
     <GoForwardXLSeconds>O velký vybraný čas vpřed</GoForwardXLSeconds>
-    <GoBack3Second>O tři sekundy zpět</GoBack3Second>
+    <GoBack3Seconds>O tři sekundy zpět</GoBack3Seconds>
     <GoToStartCurrent>Nastavit pozici videa na začátek aktuálního titulku</GoToStartCurrent>
     <ToggleStartEndCurrent>Přepnout pozici videa mezi začátkem a koncem aktuálního titulku</ToggleStartEndCurrent>
     <PlaySelectedLines>Přehrát vybrané řádky</PlaySelectedLines>
@@ -2604,14 +2604,14 @@ Pokračovat?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Počet značek zarovnání: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Minimální délka titulku: {0}</LineLengthMinimum>
     <LineLengthMaximum>Maximální délka titulku: {0}</LineLengthMaximum>
-    <LineLengthAverage>Průměrná délka titulku: {0}</LineLengthAverage>
+    <LineLengthAverage>Průměrná délka titulku: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Průměrný počet řádků titulku: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Minimální délka jednotlivého řádku: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Maximální délka jednotlivého řádku: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Šířka jednoho řádku - minimálně: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Šířka jednoho řádku - maximálně: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Šířka jednoho řádku - průměrně: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Šířka jednoho řádku - průměrně: {0:#.###} pixels</SingleLineWidthAverage>
     <DurationMinimum>Minimální trvání: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Maximální trvání: {0:0.000} sekund</DurationMaximum>
     <DurationAverage>Průměrné trvání: {0:0.000} sekund</DurationAverage>
@@ -2808,7 +2808,7 @@ Zachovat změny?</KeepChangesMessage>
     <TransportStreamGrayscale>Stupně šedé</TransportStreamGrayscale>
     <TransportStreamGetColor>Použít barvu (může dojít k rozdělení řádků)</TransportStreamGetColor>
     <PromptForUnknownWords>Dotázat se na neznámá slova</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automaticky zalamovat odstavce při více než dvou řádcích</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>
@@ -2933,7 +2933,7 @@ Zachovat změny?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Odebrat změnu scén z výběru</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odhadnout časové kódy...</GuessTimeCodes>
     <SeekSilence>Hledat ticho...</SeekSilence>
-    <InsertSubtitleHere>Vložit titulek sem...</InsertSubtitleHere>
+    <InsertSubtitleHere>Vložit titulek sem</InsertSubtitleHere>
     <CharsSecX>ZZS: {0:0.00}</CharsSecX>
     <WordsMinX>SZM: {0:0.00}</WordsMinX>
   </Waveform>

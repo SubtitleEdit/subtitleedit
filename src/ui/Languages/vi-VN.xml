@@ -2,7 +2,7 @@
 <Language Name="Vietnamese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Ghé thăm www.nikse.dk của chủ phần mềm - Nikse
 thường xuyên để biết thêm thông tin và tải về phiên bản mới nhất.
 Rất hân hạnh chào đón các bạn :))
@@ -711,7 +711,7 @@ Các video hướng dẫn Subtitle Edit
     <RemovedEmptyLineAtTop>Xóa dòng trống ở đầu phụ đề</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Xóa dòng trống ở cuối phụ đề</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Xóa dòng trống ở giữa phụ đề</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi time trùng lặp</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi CPS quá cao</FixShortDisplayTimes>
     <FixLongDisplayTimes>Sửa lỗi CPS quá thấp</FixLongDisplayTimes>
@@ -734,7 +734,7 @@ Các video hướng dẫn Subtitle Edit
     <FixCommonOcrErrors>(TIẾNG VIỆT KHÔNG CHỌN) Sữa lỗi OCR thông thường (OCR sử dụng thay thế danh sách)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>(TIẾNG VIỆT KHÔNG CHỌN) Lỗi cố định thường gặp trong OCR (Danh sách tập tin Ocr được sử dụng): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>(KHÔNG CHỌN) Xóa khoảng cách giữa các số</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Xóa dấu gạch ngang đầu dòng khi chỉ có một câu thoại trong "-"</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>(KHÔNG CHỌN) Normalize strings (dành cho tiếng HY LẠP)</NormalizeStrings>
     <FixTurkishAnsi>(KHÔNG CHỌN) Sữa lỗi tiếng Thổ Nhĩ Kỳ ANSI (Iceland) trong Unicode</FixTurkishAnsi>
@@ -1506,7 +1506,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <BeforeDisplayTimeAdjustment>Trước khi điều chỉnh thời gian hiển thị</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Chỉnh Start time: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Chỉnh Start time: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Trước khi sửa các lỗi phổ biến</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Các lỗi thường gặp được sửa trong các dòng hiện tại</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Các lỗi thường gặp</CommonErrorsFixed>
@@ -2257,8 +2257,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <CpsLineLengthStyleCalcNoSpace>Đếm tất cả ngoại trừ dấu cách</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, dấu cách 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Bỏ qua các dấu phụ tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Bỏ qua dấu/dấu cách tiếng Ả Rập</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Kí hiệu Âm nhạc</MusicSymbol>
     <MusicSymbolsReplace>Các ký hiệu âm nhạc cần thay thế (phân tách bằng dấu phẩy)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Sửa lỗi OCR phổ biến - cũng sử dụng quy tắc hardcoded</FixCommonOcrErrorsUseHardcodedRules>
@@ -2286,7 +2284,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <DarkThemeEnabled>Sử dụng chế độ tối</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Hiện đường kẻ hàng</DarkThemeShowGridViewLines>
     <UpdateShortcut>Cập nhật phím tắt</UpdateShortcut>
-    <FoucsSetVideoPosition>Tiêu điểm đặt vị trí video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Tiêu điểm đặt vị trí video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Bật/tắt bảng điều khiển video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Đặt end time, thêm và đi tới dòng mới</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Chỉnh time thông qua end time</AdjustViaEndAutoStart>
@@ -2405,7 +2403,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <GoForwardXSSeconds>Các dòng đã chọn tới time ngắn</GoForwardXSSeconds>
     <GoBackXLSeconds>Các dòng đã chọn lùi time dài</GoBackXLSeconds>
     <GoForwardXLSeconds>Các dòng đã chọn tới time dài</GoForwardXLSeconds>
-    <GoBack3Second>Lùi 3 giây</GoBack3Second>
+    <GoBack3Seconds>Lùi 3 giây</GoBack3Seconds>
     <GoToStartCurrent>Đặt vị trí video bắt đầu từ dòng hiện tại</GoToStartCurrent>
     <ToggleStartEndCurrent>Chuyển đổi vị trí video giữa đầu/cuối phụ đề hiện tại</ToggleStartEndCurrent>
     <PlaySelectedLines>Phát các dòng đã chọn</PlaySelectedLines>
@@ -2675,11 +2673,11 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <NumberOfAlignmentTags>Số thẻ liên kết: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Chiều dài phụ đề - tối thiểu: {0}</LineLengthMinimum>
     <LineLengthMaximum>Chiều dài phụ đề - tối đa: {0}</LineLengthMaximum>
-    <LineLengthAverage>Phụ đề dài - trung bình: {0}</LineLengthAverage>
+    <LineLengthAverage>Phụ đề dài - trung bình: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Phụ đề, số dòng- trung bình: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Chiều dài dòng đơn - tối thiểu: {0} chiều dài</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Dòng đơn - tối đa: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Chiều dài dòng đơn - trung bình: {0}Thời gian</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Chiều dài dòng đơn - trung bình: {0:#.###}Thời gian</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Chiều rộng dòng đơn - tối thiểu: {0} pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Chiều rộng dòng đơn - tối đa: {0} pixel</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Chiều rộng dòng đơn - trung bình: {0} pixel</SingleLineWidthAverage>
@@ -2888,7 +2886,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <TransportStreamGrayscale>Thang độ xám</TransportStreamGrayscale>
     <TransportStreamGetColor>Sử dụng màu sắc (có thể xảy ra hiện tượng tách dòng)</TransportStreamGetColor>
     <PromptForUnknownWords>Nhắc nhở từ ngữ chưa biết</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Tự động ngắt đoạn nếu có nhiều hơn 2 dòng</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tất cả các bản sửa lỗi</AllFixes>
     <GuessesUsed>Phỏng đoán sử dụng</GuessesUsed>
@@ -3013,7 +3011,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <RemoveShotChangesFromSelection>Xóa các scene change khỏi lựa chọn</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Tự tạo time...</GuessTimeCodes>
     <SeekSilence>Tìm vùng im lặng...</SeekSilence>
-    <InsertSubtitleHere>Chèn phụ đề ở đây...</InsertSubtitleHere>
+    <InsertSubtitleHere>Chèn phụ đề ở đây</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.labelTotalMilliseconds = new System.Windows.Forms.Label();
             this.labelTM = new System.Windows.Forms.Label();
-            this.numericUpDownDelay = new System.Windows.Forms.NumericUpDown();
             this.labelColor = new System.Windows.Forms.Label();
             this.labelEndDelay = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -40,10 +39,11 @@
             this.panelColor = new System.Windows.Forms.Panel();
             this.labelChooseColor = new System.Windows.Forms.Label();
             this.buttonPreview = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
+            this.radioButtonByWordEffect = new System.Windows.Forms.RadioButton();
+            this.radioButtonByCharEffect = new System.Windows.Forms.RadioButton();
+            this.numericUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.SuspendLayout();
             // 
             // labelTotalMilliseconds
@@ -52,7 +52,7 @@
             this.labelTotalMilliseconds.Location = new System.Drawing.Point(169, 52);
             this.labelTotalMilliseconds.Name = "labelTotalMilliseconds";
             this.labelTotalMilliseconds.Size = new System.Drawing.Size(108, 13);
-            this.labelTotalMilliseconds.TabIndex = 49;
+            this.labelTotalMilliseconds.TabIndex = 5;
             this.labelTotalMilliseconds.Text = "labelTotalMilliseconds";
             // 
             // labelTM
@@ -60,32 +60,9 @@
             this.labelTM.Location = new System.Drawing.Point(3, 52);
             this.labelTM.Name = "labelTM";
             this.labelTM.Size = new System.Drawing.Size(163, 13);
-            this.labelTM.TabIndex = 48;
+            this.labelTM.TabIndex = 4;
             this.labelTM.Text = "Total milliseconds:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // numericUpDownDelay
-            // 
-            this.numericUpDownDelay.DecimalPlaces = 3;
-            this.numericUpDownDelay.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 72);
-            this.numericUpDownDelay.Maximum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            0});
-            this.numericUpDownDelay.Minimum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
-            this.numericUpDownDelay.TabIndex = 47;
             // 
             // labelColor
             // 
@@ -93,7 +70,7 @@
             this.labelColor.Location = new System.Drawing.Point(228, 22);
             this.labelColor.Name = "labelColor";
             this.labelColor.Size = new System.Drawing.Size(32, 13);
-            this.labelColor.TabIndex = 46;
+            this.labelColor.TabIndex = 3;
             this.labelColor.Text = "Color";
             // 
             // labelEndDelay
@@ -101,7 +78,7 @@
             this.labelEndDelay.Location = new System.Drawing.Point(3, 76);
             this.labelEndDelay.Name = "labelEndDelay";
             this.labelEndDelay.Size = new System.Drawing.Size(163, 17);
-            this.labelEndDelay.TabIndex = 45;
+            this.labelEndDelay.TabIndex = 6;
             this.labelEndDelay.Text = "End delay in milliseconds:";
             this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -113,7 +90,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(421, 252);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 44;
+            this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
             // 
@@ -123,7 +100,7 @@
             this.buttonOK.Location = new System.Drawing.Point(340, 252);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 43;
+            this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -133,7 +110,7 @@
             this.buttonChooseColor.Location = new System.Drawing.Point(169, 17);
             this.buttonChooseColor.Name = "buttonChooseColor";
             this.buttonChooseColor.Size = new System.Drawing.Size(27, 23);
-            this.buttonChooseColor.TabIndex = 42;
+            this.buttonChooseColor.TabIndex = 1;
             this.buttonChooseColor.Text = "...";
             this.buttonChooseColor.UseVisualStyleBackColor = true;
             this.buttonChooseColor.Click += new System.EventHandler(this.ButtonChooseColorClick);
@@ -143,14 +120,16 @@
             this.panelColor.Location = new System.Drawing.Point(202, 19);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(20, 20);
-            this.panelColor.TabIndex = 41;
+            this.panelColor.TabIndex = 2;
+            this.panelColor.TabStop = true;
+            this.panelColor.Click += new System.EventHandler(this.ButtonChooseColorClick);
             // 
             // labelChooseColor
             // 
             this.labelChooseColor.Location = new System.Drawing.Point(0, 22);
             this.labelChooseColor.Name = "labelChooseColor";
             this.labelChooseColor.Size = new System.Drawing.Size(166, 13);
-            this.labelChooseColor.TabIndex = 40;
+            this.labelChooseColor.TabIndex = 0;
             this.labelChooseColor.Text = "Choose color:";
             this.labelChooseColor.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -160,7 +139,7 @@
             this.buttonPreview.Location = new System.Drawing.Point(12, 233);
             this.buttonPreview.Name = "buttonPreview";
             this.buttonPreview.Size = new System.Drawing.Size(100, 23);
-            this.buttonPreview.TabIndex = 39;
+            this.buttonPreview.TabIndex = 11;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
             this.buttonPreview.Click += new System.EventHandler(this.ButtonPreviewClick);
@@ -183,15 +162,79 @@
             this.richTextBoxPreview.Name = "richTextBoxPreview";
             this.richTextBoxPreview.ReadOnly = true;
             this.richTextBoxPreview.Size = new System.Drawing.Size(483, 128);
-            this.richTextBoxPreview.TabIndex = 50;
+            this.richTextBoxPreview.TabIndex = 10;
             this.richTextBoxPreview.TabStop = false;
             this.richTextBoxPreview.Text = "";
+            // 
+            // radioButtonByWordEffect
+            // 
+            this.radioButtonByWordEffect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonByWordEffect.AutoSize = true;
+            this.radioButtonByWordEffect.Checked = true;
+            this.radioButtonByWordEffect.Location = new System.Drawing.Point(375, 52);
+            this.radioButtonByWordEffect.Name = "radioButtonByWordEffect";
+            this.radioButtonByWordEffect.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonByWordEffect.TabIndex = 8;
+            this.radioButtonByWordEffect.TabStop = true;
+            this.radioButtonByWordEffect.Text = "Word effect";
+            this.radioButtonByWordEffect.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonByCharEffect
+            // 
+            this.radioButtonByCharEffect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonByCharEffect.AutoSize = true;
+            this.radioButtonByCharEffect.Location = new System.Drawing.Point(375, 72);
+            this.radioButtonByCharEffect.Name = "radioButtonByCharEffect";
+            this.radioButtonByCharEffect.Size = new System.Drawing.Size(105, 17);
+            this.radioButtonByCharEffect.TabIndex = 9;
+            this.radioButtonByCharEffect.TabStop = true;
+            this.radioButtonByCharEffect.Text = "Character effect";
+            this.radioButtonByCharEffect.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownDelay
+            // 
+            this.numericUpDownDelay.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDelay.DecimalPlaces = 3;
+            this.numericUpDownDelay.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 72);
+            this.numericUpDownDelay.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.numericUpDownDelay.Minimum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDelay.Name = "numericUpDownDelay";
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 23);
+            this.numericUpDownDelay.TabIndex = 7;
+            this.numericUpDownDelay.TabStop = false;
+            this.numericUpDownDelay.ThousandsSeparator = false;
+            this.numericUpDownDelay.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // EffectKaraoke
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(508, 287);
+            this.Controls.Add(this.radioButtonByCharEffect);
+            this.Controls.Add(this.radioButtonByWordEffect);
             this.Controls.Add(this.richTextBoxPreview);
             this.Controls.Add(this.labelTotalMilliseconds);
             this.Controls.Add(this.labelTM);
@@ -214,7 +257,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Karaoke effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectKaraoke_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,7 +266,7 @@
 
         private System.Windows.Forms.Label labelTotalMilliseconds;
         private System.Windows.Forms.Label labelTM;
-        private System.Windows.Forms.NumericUpDown numericUpDownDelay;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDelay;
         private System.Windows.Forms.Label labelColor;
         private System.Windows.Forms.Label labelEndDelay;
         private System.Windows.Forms.Button buttonCancel;
@@ -233,8 +275,9 @@
         private System.Windows.Forms.Panel panelColor;
         private System.Windows.Forms.Label labelChooseColor;
         private System.Windows.Forms.Button buttonPreview;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.RichTextBox richTextBoxPreview;
+        private System.Windows.Forms.RadioButton radioButtonByWordEffect;
+        private System.Windows.Forms.RadioButton radioButtonByCharEffect;
     }
 }

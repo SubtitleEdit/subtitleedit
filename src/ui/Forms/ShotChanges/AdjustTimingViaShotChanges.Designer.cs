@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Forms.ShotChanges
@@ -38,18 +39,18 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             this.listView1 = new System.Windows.Forms.ListView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
-            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFixedMilliseconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.groupBoxStartTime = new System.Windows.Forms.GroupBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown1 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxEndTime = new System.Windows.Forms.GroupBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
@@ -58,12 +59,8 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
             this.groupBoxStartTime.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBoxEndTime.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -112,7 +109,6 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             | System.Windows.Forms.AnchorStyles.Right)));
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
-            this.audioVisualizer.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("audioVisualizer.Chapters")));
             this.audioVisualizer.ChaptersColor = System.Drawing.Color.Empty;
             this.audioVisualizer.ClosenessForBorderSelection = 15;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
@@ -375,7 +371,6 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             // 
             this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
             this.videoPlayerContainer1.CurrentPosition = 0D;
             this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.LastParagraph = null;
@@ -421,14 +416,10 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             this.ResizeEnd += new System.EventHandler(this.AdjustTimingViaShotChanges_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AdjustTimingViaShotChanges_KeyDown);
             this.Resize += new System.EventHandler(this.AdjustTimingViaShotChanges_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
             this.groupBoxStartTime.ResumeLayout(false);
             this.groupBoxStartTime.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.groupBoxEndTime.ResumeLayout(false);
             this.groupBoxEndTime.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -440,18 +431,18 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFixedMilliseconds;
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.GroupBox groupBoxStartTime;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDown1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBoxEndTime;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDown2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDown3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button3;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -83,6 +84,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (listViewProfiles.SelectedIndices.Count == 0 || RulesProfiles.Count == 0)
+            {
+                return;
+            }
+
             var idx = listViewProfiles.SelectedIndices[0];
             Configuration.Settings.General.CurrentProfile = RulesProfiles[idx].Name;
             Configuration.Settings.General.SubtitleLineMaximumLength = RulesProfiles[idx].SubtitleLineMaximumLength;

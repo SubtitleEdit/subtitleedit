@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
+         <Word from="tñere" to="there" />
+         <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
 		<Word from="$ergei" to="Sergei" />
 		<Word from="$lighnly" to="Slightly" />
@@ -1393,7 +1395,6 @@
 		<Word from="lsolation" to="Isolation" />
 		<Word from="Lst's" to="Let's" />
 		<Word from="lsuppose" to="I suppose" />
-		<Word from="Lt" to="It" />
 		<Word from="ltake" to="I take" />
 		<Word from="ltalian" to="Italian" />
 		<Word from="ltell" to="I tell" />
@@ -2879,6 +2880,7 @@
 		<LinePart from=" lf " to=" if " />
 		<LinePart from=". lf " to=". If " />
 		<LinePart from=" . " to=". " />
+		<LinePart from=". Lt " to=". It " />
 	</PartialLinesAlways>
 	<PartialLines>
 		<LinePart from=" /be " to=" I be " />
@@ -3377,7 +3379,8 @@
 		<RegEx find="\bI KEA\b" replaceWith="IKEA" />
 		<RegEx find="\b(A|a)m (l|1)\b" replaceWith="$1m I" />
 		<RegEx find="\b1 00K\b" replaceWith="100K" />
-		<RegEx find="\bl\b" replaceWith="I" />
+		<RegEx find="(\bl\b)(?!-)" replaceWith="I" />
+		<RegEx find="\bl-l-I\b" replaceWith="I-I-I" />
 		<RegEx find="\. lt\b" replaceWith=". It" />
 		<RegEx find="\. lf\b" replaceWith=". If" />
 		<RegEx find="(\p{Ll})('II)([ \r\n])" replaceWith="$1'll$3" />

@@ -43,26 +43,21 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStyleAlignment = new System.Windows.Forms.Label();
             this.labelVideoResolution = new System.Windows.Forms.Label();
             this.labelCurrentTextPosition = new System.Windows.Forms.Label();
-            this.numericUpDownRotateX = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateX = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateX = new System.Windows.Forms.Label();
-            this.numericUpDownRotateY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateY = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateY = new System.Windows.Forms.Label();
-            this.numericUpDownRotateZ = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateZ = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateZ = new System.Windows.Forms.Label();
             this.panelAdvanced = new System.Windows.Forms.Panel();
             this.labelDistortX = new System.Windows.Forms.Label();
-            this.numericUpDownDistortX = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDistortX = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDistortY = new System.Windows.Forms.Label();
-            this.numericUpDownDistortY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDistortY = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).BeginInit();
             this.panelAdvanced.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxApplyTo
@@ -121,7 +116,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
-            this.pictureBoxPreview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxPreview_MouseMove);
             // 
             // buttonOK
             // 
@@ -150,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // timer1
             // 
+            this.timer1.Interval = 25;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // labelInfo
@@ -200,7 +195,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownRotateX
             // 
+            this.numericUpDownRotateX.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRotateX.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRotateX.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRotateX.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRotateX.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRotateX.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRotateX.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownRotateX.DecimalPlaces = 1;
+            this.numericUpDownRotateX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRotateX.Location = new System.Drawing.Point(91, 9);
             this.numericUpDownRotateX.Maximum = new decimal(new int[] {
             360,
@@ -215,6 +222,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownRotateX.Name = "numericUpDownRotateX";
             this.numericUpDownRotateX.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownRotateX.TabIndex = 18;
+            this.numericUpDownRotateX.TabStop = false;
+            this.numericUpDownRotateX.ThousandsSeparator = false;
+            this.numericUpDownRotateX.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRotateX.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
             // 
             // labelRotateX
@@ -228,7 +242,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownRotateY
             // 
+            this.numericUpDownRotateY.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRotateY.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRotateY.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRotateY.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRotateY.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRotateY.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRotateY.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownRotateY.DecimalPlaces = 1;
+            this.numericUpDownRotateY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRotateY.Location = new System.Drawing.Point(91, 34);
             this.numericUpDownRotateY.Maximum = new decimal(new int[] {
             360,
@@ -243,6 +269,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownRotateY.Name = "numericUpDownRotateY";
             this.numericUpDownRotateY.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownRotateY.TabIndex = 20;
+            this.numericUpDownRotateY.TabStop = false;
+            this.numericUpDownRotateY.ThousandsSeparator = false;
+            this.numericUpDownRotateY.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRotateY.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
             // 
             // labelRotateY
@@ -256,7 +289,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownRotateZ
             // 
+            this.numericUpDownRotateZ.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRotateZ.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRotateZ.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRotateZ.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRotateZ.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRotateZ.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRotateZ.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownRotateZ.DecimalPlaces = 1;
+            this.numericUpDownRotateZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRotateZ.Location = new System.Drawing.Point(91, 60);
             this.numericUpDownRotateZ.Maximum = new decimal(new int[] {
             360,
@@ -271,6 +316,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownRotateZ.Name = "numericUpDownRotateZ";
             this.numericUpDownRotateZ.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownRotateZ.TabIndex = 22;
+            this.numericUpDownRotateZ.TabStop = false;
+            this.numericUpDownRotateZ.ThousandsSeparator = false;
+            this.numericUpDownRotateZ.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRotateZ.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
             // 
             // labelRotateZ
@@ -311,6 +363,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownDistortX
             // 
+            this.numericUpDownDistortX.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDistortX.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDistortX.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDistortX.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDistortX.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDistortX.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDistortX.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDistortX.DecimalPlaces = 2;
             this.numericUpDownDistortX.Increment = new decimal(new int[] {
             5,
@@ -331,6 +390,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownDistortX.Name = "numericUpDownDistortX";
             this.numericUpDownDistortX.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownDistortX.TabIndex = 24;
+            this.numericUpDownDistortX.TabStop = false;
+            this.numericUpDownDistortX.ThousandsSeparator = false;
+            this.numericUpDownDistortX.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDistortX.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
             // 
             // labelDistortY
@@ -344,6 +410,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownDistortY
             // 
+            this.numericUpDownDistortY.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDistortY.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDistortY.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDistortY.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDistortY.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDistortY.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDistortY.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDistortY.DecimalPlaces = 2;
             this.numericUpDownDistortY.Increment = new decimal(new int[] {
             1,
@@ -364,6 +437,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownDistortY.Name = "numericUpDownDistortY";
             this.numericUpDownDistortY.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownDistortY.TabIndex = 26;
+            this.numericUpDownDistortY.TabStop = false;
+            this.numericUpDownDistortY.ThousandsSeparator = false;
+            this.numericUpDownDistortY.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDistortY.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
             // 
             // SetPosition
@@ -398,13 +478,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxApplyTo.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).EndInit();
             this.panelAdvanced.ResumeLayout(false);
             this.panelAdvanced.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -424,16 +499,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelStyleAlignment;
         private System.Windows.Forms.Label labelVideoResolution;
         private System.Windows.Forms.Label labelCurrentTextPosition;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateX;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateX;
         private System.Windows.Forms.Label labelRotateX;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateY;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateY;
         private System.Windows.Forms.Label labelRotateY;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateZ;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateZ;
         private System.Windows.Forms.Label labelRotateZ;
         private System.Windows.Forms.Panel panelAdvanced;
         private System.Windows.Forms.Label labelDistortX;
-        private System.Windows.Forms.NumericUpDown numericUpDownDistortX;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDistortX;
         private System.Windows.Forms.Label labelDistortY;
-        private System.Windows.Forms.NumericUpDown numericUpDownDistortY;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDistortY;
     }
 }

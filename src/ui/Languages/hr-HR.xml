@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -531,7 +531,7 @@ Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <RemovedEmptyLine>Prazna linija je uklonjena.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Prazna linija na vrhu je uklonjena.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Prazna linija na dnu je uklonjena.</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Ukloni prazne linije i nepotrebne razmake</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Ukloni prazne linije i nepotrebne razmake</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Uklonjeno praznih linija: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Ispravi preklapanje vremena</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ispravi kratko vrijeme prikaza</FixShortDisplayTimes>
@@ -553,7 +553,7 @@ Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Ispravi česte greške u prepoznavanju znakova</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ispravljeno grešaka u prepoznavanju znakova: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ukloni razmak između brojeva</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Ispravljeno grešaka u uklanjanju razmaka između brojeva: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Popraviti Turski ANSI (Islandski) slova u Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ispravi Dansko slovo I</FixDanishLetterI>
@@ -1249,7 +1249,7 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <BeforeDisplayTimeAdjustment>Izmijenjeno vrijeme</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Postavljeno je vrijeme prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Postavljena su vremena prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Postavljeno početno vrijeme: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Postavljeno početno vrijeme: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Ispravljene česte pogreške</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ispravljene su česte pogreške u izabranim linijama.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Česte pogreške su ispravljene.</CommonErrorsFixed>
@@ -2073,11 +2073,11 @@ određeni podnaslov s drugim ljudima.</Information>
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Podnaslov duljina - minimalno: {0}</LineLengthMinimum>
     <LineLengthMaximum>Podnaslov duljina - maksimalno: {0}</LineLengthMaximum>
-    <LineLengthAverage>Duljina Podnaslova - prosjek: {0}</LineLengthAverage>
+    <LineLengthAverage>Duljina Podnaslova - prosjek: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Podnaslov, broj linija - prosječno: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Jedan redak duljina - minimalno: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Jedan redak duljina - maksimalno: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Jedan duljina linije - prosjek: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Jedan duljina linije - prosjek: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - minimum: {0:0.000} sekundi</DurationMinimum>
     <DurationMaximum>Trajanje - maksimalno: {0:0.000} sekundi</DurationMaximum>
     <DurationAverage>Trajanje - prosječno: {0:0.000} sekundi</DurationAverage>
@@ -2236,7 +2236,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <TransportStreamGrayscale>Sivim tonovima</TransportStreamGrayscale>
     <TransportStreamGetColor>Koristiti boje (sa uključenim razdvajanjem linija)</TransportStreamGetColor>
     <PromptForUnknownWords>&amp;Pitaj me za nepoznate riječi</PromptForUnknownWords>
-    <TryToGuessUnkownWords>&amp;Nagađaj nepoznate riječi</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>&amp;Nagađaj nepoznate riječi</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Razmakni red ako ima više od dvije linije</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Sve ispravke</AllFixes>
     <GuessesUsed>Korištena nagađanja</GuessesUsed>
@@ -2324,7 +2324,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Traži tišinu...</SeekSilence>
-    <InsertSubtitleHere>Umetni titl ovdje...</InsertSubtitleHere>
+    <InsertSubtitleHere>Umetni titl ovdje</InsertSubtitleHere>
     <CharsSecX />
     <WordsMinX />
   </Waveform>

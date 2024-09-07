@@ -18,20 +18,24 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            buttonMpvSettings.Text = LanguageSettings.Current.Main.DownloadAndUseMpv;
+            checkBoxDoNotAutoLoadVideo.Text = LanguageSettings.Current.Main.DoNotAutoLoadVideo;
+            checkBoxDoNotAutoLoadVideo.Visible = Configuration.Settings.General.DisableVideoAutoLoading == false;
         }
 
         public void Initialize(string fileName)
         {
             Text += fileName;
             var sb = new StringBuilder();
-            sb.Append("SE was unable to play the video/audio file (or file is not a valid video/audio file).");
+            sb.Append(LanguageSettings.Current.Main.UnableToPlayMediaFile);
 
             var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
             if (string.IsNullOrEmpty(currentVideoPlayer))
             {
-                Text = "Please install video player";
+                Text = LanguageSettings.Current.Main.PleaseInstallVideoPlayer;
                 sb.Clear();
-                sb.Append("Subtitle Edit needs a video player.");
+                sb.Append(LanguageSettings.Current.Main.SubtitleEditNeedsVideoPlayer);
                 currentVideoPlayer = "DirectShow";
             }
 
@@ -49,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux)
             {
                 sb.AppendLine();
-                sb.AppendLine("Try installing latest version of libmpv and libvlc!");
+                sb.AppendLine("Try installing latest version of libmpv or libvlc!");
                 sb.Append("Read more about Subtitle Edit on Linux here: https://nikse.dk/SubtitleEdit/Help#linux");
             }
             else if (currentVideoPlayer == "MPV" && Configuration.IsRunningOnWindows)
@@ -69,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (currentVideoPlayer != "MPV")
             {
-                labelMpvInfo.Text = "To use the recommended video player \"mpv\" click on the button below.";
+                labelMpvInfo.Text = LanguageSettings.Current.Main.UseRecommendMpv;
                 if (isLibMpvInstalled)
                 {
                     buttonMpvSettings.Text = "Use \"mpv\" as video player";
@@ -98,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new SettingsMpv(true))
+            using (var form = new SettingsMpv())
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -106,6 +110,14 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.VideoPlayer = "MPV";
                     DialogResult = DialogResult.OK;
                 }
+            }
+        }
+
+        private void VideoError_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (checkBoxDoNotAutoLoadVideo.Checked)
+            {
+                Configuration.Settings.General.DisableVideoAutoLoading = true;
             }
         }
     }

@@ -4,12 +4,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
     public class FfmpegMediaInfo
     {
         public List<FfmpegTrackInfo> Tracks { get; set; }
+
+        public Dimension Dimension { get; set; }
+        public TimeCode Duration { get; set; }
+
+        private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
+        private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
 
         private FfmpegMediaInfo()
         {
@@ -19,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static FfmpegMediaInfo Parse(string videoFileName)
         {
             if (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) ||
-                 !File.Exists(Configuration.Settings.General.FFmpegLocation))
+                !File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
                 return new FfmpegMediaInfo();
             }
@@ -56,6 +63,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var s = line.Trim();
                 if (s.StartsWith("Stream #", StringComparison.Ordinal))
                 {
+                    var resolutionMatch = ResolutionRegex.Match(s);
+                    if (resolutionMatch.Success)
+                    {
+                        var parts = resolutionMatch.Value.Split('x');
+                        if (info.Dimension.Width == 0 &&
+                            parts.Length == 2 &&
+                            int.TryParse(parts[0], out var w) &&
+                            int.TryParse(parts[1], out var h))
+                        {
+                            info.Dimension = new Dimension(w, h); 
+                        }
+                    }
+
                     var arr = s.Replace(": ", "¤").Split('¤');
                     if (arr.Length == 3)
                     {
@@ -78,6 +98,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                             info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo });
                         }
                     }
+                }
+
+                var match = DurationRegex.Match(line);
+                if (match.Success)
+                {
+                    var timeCodeString = match.Value.Split(' ')[1];
+                    info.Duration = new TimeCode(TimeCode.ParseToMilliseconds(timeCodeString));
                 }
             }
 
@@ -123,7 +150,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputFileName}\" - hide_banner",
+                    Arguments = $"-i \"{inputFileName}\" -hide_banner",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }

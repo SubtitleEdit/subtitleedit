@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             _namespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
             _namespaceManager.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
+            var node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
             if (node != null)
             {
                 textBoxTitle.Text = node.InnerText;
@@ -56,11 +56,11 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxDescription.Text = node.InnerText;
             }
 
-            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            foreach (var ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
                 comboBoxLanguage.Items.Add(ci.Name);
             }
-            XmlAttribute attr = _xml.DocumentElement.Attributes["xml:lang"];
+            var attr = _xml.DocumentElement.Attributes["xml:lang"];
             if (attr != null)
             {
                 comboBoxLanguage.Text = attr.InnerText;
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDefaultStyle.SelectedIndex = comboBoxDefaultStyle.Items.Count - 1;
                 }
             }
-            foreach (string region in TimedText10.GetRegionsFromHeader(_subtitle.Header))
+            foreach (var region in TimedText10.GetRegionsFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultRegion.Items.Add(region);
                 node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
@@ -114,9 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat.Trim().ToLowerInvariant();
             comboBoxTimeCodeFormat.SelectedIndex = 0;
-            for (int index = 0; index < comboBoxTimeCodeFormat.Items.Count; index++)
+            for (var index = 0; index < comboBoxTimeCodeFormat.Items.Count; index++)
             {
                 var item = comboBoxTimeCodeFormat.Items[index];
                 if (item.ToString().ToLowerInvariant() == timeCodeFormat)
@@ -138,6 +138,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            comboBoxStyleAttribute.SelectedIndex = 0;
+            if (Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute == "style")
+            {
+                comboBoxStyleAttribute.SelectedIndex = 1;
+            }
+
             textBoxTopOrigin.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
             textBoxTopExtent.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
             textBoxBottomOrigin.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
@@ -151,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
+            var node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
             if (node != null)
             {
                 if (string.IsNullOrWhiteSpace(textBoxTitle.Text) && string.IsNullOrWhiteSpace(textBoxDescription.Text))
@@ -210,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                 metadata.AppendChild(desc);
             }
 
-            XmlAttribute attr = _xml.DocumentElement.Attributes["xml:lang"];
+            var attr = _xml.DocumentElement.Attributes["xml:lang"];
             if (attr != null)
             {
                 attr.Value = comboBoxLanguage.Text;
@@ -316,13 +322,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             _subtitle.Header = _xml.OuterXml;
 
-            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
+            Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
             Configuration.Settings.SubtitleSettings.TimedText10FileExtension = comboBoxFileExtensions.SelectedItem.ToString();
 
             Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin = textBoxTopOrigin.Text;
             Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent = textBoxTopExtent.Text;
             Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin = textBoxBottomOrigin.Text;
             Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent = textBoxBottomExtent.Text;
+            Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute = comboBoxStyleAttribute.Text;
 
             DialogResult = DialogResult.OK;
         }

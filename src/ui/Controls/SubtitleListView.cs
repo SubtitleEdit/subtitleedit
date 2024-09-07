@@ -3,8 +3,10 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -34,6 +36,9 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
+        public const int InvalidIndex = -1;
+        public int SelectedIndex => SelectedIndices.Count == 1 ? SelectedIndices[0] : InvalidIndex;
+
         public int ColumnIndexNumber { get; private set; }
         public int ColumnIndexStart { get; private set; }
         public int ColumnIndexEnd { get; private set; }
@@ -51,43 +56,9 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsOriginalTextColumnVisible => ColumnIndexTextOriginal >= 0;
         private string _lineSeparatorString = " || ";
 
-        private Font _subtitleFont = new Font("Tahoma", 8.25F);
-
-        private string _subtitleFontName = "Tahoma";
-
-        public string SubtitleFontName
-        {
-            get => _subtitleFontName;
-            set
-            {
-                _subtitleFontName = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private bool _subtitleFontBold;
-
-        public bool SubtitleFontBold
-        {
-            get { return _subtitleFontBold; }
-            set
-            {
-                _subtitleFontBold = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private int _subtitleFontSize = 8;
-
-        public int SubtitleFontSize
-        {
-            get => _subtitleFontSize;
-            set
-            {
-                _subtitleFontSize = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
+        public string SubtitleFontName { get; set; } = "Tahoma";
+        public bool SubtitleFontBold { get; set; }
+        public int SubtitleFontSize { get; set; } = 8;
 
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
@@ -187,7 +158,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (!string.IsNullOrEmpty(settings.General.SubtitleFontName))
             {
-                _subtitleFontName = settings.General.SubtitleFontName;
+                SubtitleFontName = settings.General.SubtitleFontName;
             }
 
             SubtitleFontBold = settings.General.SubtitleListViewFontBold;
@@ -424,8 +395,8 @@ namespace Nikse.SubtitleEdit.Controls
             _setLastColumnWidthTimer.Stop();
             if (Columns.Count > 0)
             {
-                int width = 0;
-                for (int i = 0; i < Columns.Count - 1; i++)
+                var width = 0;
+                for (var i = 0; i < Columns.Count - 1; i++)
                 {
                     width += Columns[i].Width;
                 }
@@ -450,55 +421,95 @@ namespace Nikse.SubtitleEdit.Controls
             ColumnIndexNetwork = GetColumnIndex(SubtitleColumn.Network);
         }
 
-        private void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        private static void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             e.DrawDefault = true;
         }
 
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
-            if (Focused && backgroundColor == BackColor || RightToLeftLayout)
+            var rtl = Configuration.Settings?.General.RightToLeftMode == true;
+            if (rtl)
             {
                 e.DrawDefault = true;
                 return;
             }
 
-            if (e.Item.Selected)
+            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            var hasCustomColor = backgroundColor != BackColor;
+            var foreColor = UiUtil.ForeColor;
+            if (e.Item.Selected && !(Focused && e.ColumnIndex > 0) || Focused && hasCustomColor)
             {
-
-                Rectangle rect = e.Bounds;
+                var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
-                    backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
-                    var sb = new SolidBrush(backgroundColor);
-                    e.Graphics.FillRectangle(sb, rect);
+                    if (hasCustomColor)
+                    {
+                        if (e.Item.Selected)
+                        {
+                            backgroundColor = GetCustomColor(backgroundColor);
+                        }
+                    }
+                    else if (Configuration.Settings.General.UseDarkTheme)
+                    {
+                        backgroundColor = Color.FromArgb(24, 52, 75);
+                    }
+                    else if (Focused)
+                    {
+                        backgroundColor = Color.FromArgb(0, 120, 215);
+                        foreColor = Color.White;
+                    }
+                    else
+                    {
+                        backgroundColor = Color.FromArgb(204, 232, 255);
+                    }
+
+                    using (var sb = new SolidBrush(backgroundColor))
+                    {
+                        e.Graphics.FillRectangle(sb, rect);
+                    }
                 }
                 else
                 {
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                int addX = 0;
-
+                var addX = 0;
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
-                    addX = 18;
+                    addX = 20;
                 }
 
                 if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
                 {
-                    e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
+                    var r = rtl 
+                        ? new Rectangle( rect.Width - 21, rect.Y + 3, 16, 16) 
+                        : new Rectangle(rect.X + 4, rect.Y + 3, 16, 16);
+
+                    e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], r);
                 }
 
-                if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.4f, e.Item.SubItems[e.ColumnIndex].Font.Style))
                 {
-                    var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                }
-                else
-                {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                    var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPrefix;
+                    if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                    {
+                        flags |= TextFormatFlags.Right;
+                    }
+                    else
+                    {
+                        flags |= TextFormatFlags.Left;
+                    }
+
+                    if (RightToLeftLayout)
+                    {
+                        flags |= TextFormatFlags.RightToLeft;
+                    }
+
+                    var r = new Rectangle(rect.Left + 2 + addX, rect.Top + 2, rect.Width - 7 - addX, rect.Height - 2);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, r, foreColor, flags);
                 }
             }
             else
@@ -507,11 +518,37 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        internal static StringFormat CreateStringFormat(Control control)
+        {
+            var stringFormat = new StringFormat
+            {
+                FormatFlags = 0,
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near,
+                HotkeyPrefix = HotkeyPrefix.None,
+                Trimming = StringTrimming.None
+            };
+            stringFormat.Alignment = StringAlignment.Near;
+            stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+            stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
+            if (control.RightToLeft == RightToLeft.Yes)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
+            }
+
+            if (control.AutoSize)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+            }
+
+            return stringFormat;
+        }
+
         private static Color GetCustomColor(Color color)
         {
-            int r = Math.Max(color.R - 39, 0);
-            int g = Math.Max(color.G - 39, 0);
-            int b = Math.Max(color.B - 39, 0);
+            var r = Math.Max(color.R - 39, 0);
+            var g = Math.Max(color.G - 39, 0);
+            var b = Math.Max(color.B - 39, 0);
             return Color.FromArgb(color.A, r, g, b);
         }
 
@@ -523,6 +560,9 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     e.DrawFocusRectangle();
                 }
+            }
+            else if (Focused)
+            {
             }
             else
             {
@@ -1261,7 +1301,7 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             var items = new ListViewItem[paragraphs.Count];
             for (var index = 0; index < paragraphs.Count; index++)
             {
@@ -1303,7 +1343,7 @@ namespace Nikse.SubtitleEdit.Controls
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
             var items = new ListViewItem[paragraphs.Count];
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var paragraph = paragraphs[index];
@@ -1460,7 +1500,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_settings.Tools.ListViewSyntaxColorDurationSmall && !paragraph.StartTime.IsMaxTime)
             {
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                double charactersPerSecond = paragraph.GetCharactersPerSecond();
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     if (ColumnIndexCps >= 0)
@@ -1472,13 +1512,13 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
+                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
                 {
                     item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }
             if (_settings.Tools.ListViewSyntaxColorDurationBig &&
-                paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
+                paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                 ColumnIndexDuration >= 0)
             {
                 item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -1580,7 +1620,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetDisplayTime(TimeCode timeCode)
+        private static string GetDisplayTime(TimeCode timeCode)
         {
             if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
@@ -1592,7 +1632,14 @@ namespace Nikse.SubtitleEdit.Controls
 
         private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphOriginal, Font font)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture))
+            {
+                Tag = paragraph,
+                UseItemStyleForSubItems = false,
+                StateImageIndex = paragraph.Bookmark != null ? 0 : -1,
+                Font = font,
+                ForeColor = ForeColor,
+            };
             foreach (var column in SubtitleColumns)
             {
                 switch (column)
@@ -1607,7 +1654,7 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems.Add(GetDisplayDuration(paragraph));
                         break;
                     case SubtitleColumn.CharactersPerSeconds:
-                        item.SubItems.Add($"{Utilities.GetCharactersPerSecond(paragraph):0.00}");
+                        item.SubItems.Add($"{paragraph.GetCharactersPerSecond():0.00}");
                         break;
                     case SubtitleColumn.WordsPerMinute:
                         item.SubItems.Add($"{paragraph.WordsPerMinute:0.00}");
@@ -1637,8 +1684,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
-            item.Font = font;
             return item;
         }
 
@@ -1813,7 +1858,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                if (ColumnIndexText >= 0)
+                if (ColumnIndexText == 0)
+                {
+                    item.Text = text;
+                }
+                else if (ColumnIndexText > 0 && ColumnIndexText < item.SubItems.Count)
                 {
                     item.SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
@@ -1878,7 +1927,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (ColumnIndexCps >= 0)
             {
-                item.SubItems[ColumnIndexCps].Text = $"{Utilities.GetCharactersPerSecond(paragraph):0.00}";
+                item.SubItems[ColumnIndexCps].Text = $"{paragraph.GetCharactersPerSecond():0.00}";
             }
             if (ColumnIndexWpm >= 0)
             {
@@ -2105,7 +2154,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetGap(Paragraph paragraph, Paragraph next)
+        private static string GetGap(Paragraph paragraph, Paragraph next)
         {
             if (next == null || paragraph == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
             {
@@ -2134,49 +2183,67 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetBackgroundColor(int index, Color color)
         {
-            if (IsValidIndex(index))
+            UpdateItem(index, i => i.BackColor = color, si => si.BackColor = color);
+        }
+
+        public void SetForegroundColor(int index, Color color)
+        {
+            UpdateItem(index, i => i.ForeColor = color, si => si.ForeColor = color);
+        }
+
+        private void UpdateItem(int index, Action<ListViewItem> itemUpdater, Action<ListViewItem.ListViewSubItem> subItemUpdater)
+        {
+            if (!IsValidIndex(index))
             {
-                ListViewItem item = Items[index];
-                item.BackColor = color;
-                if (ColumnIndexStart >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexStart].BackColor = color;
-                }
+                return;
+            }
 
-                if (ColumnIndexEnd >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexEnd].BackColor = color;
-                }
+            var item = Items[index];
+            itemUpdater(item);
 
-                if (ColumnIndexDuration >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexDuration].BackColor = color;
-                }
+            if (ColumnIndexNumber >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexNumber]);
+            }
 
-                if (ColumnIndexCps >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexCps].BackColor = color;
-                }
+            if (ColumnIndexStart >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexStart]);
+            }
 
-                if (ColumnIndexWpm >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexWpm].BackColor = color;
-                }
+            if (ColumnIndexEnd >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexEnd]);
+            }
 
-                if (ColumnIndexGap >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexGap].BackColor = color;
-                }
+            if (ColumnIndexDuration >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexDuration]);
+            }
 
-                if (ColumnIndexText >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexText].BackColor = color;
-                }
+            if (ColumnIndexCps >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexCps]);
+            }
 
-                if (ColumnIndexTextOriginal >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexTextOriginal].BackColor = color;
-                }
+            if (ColumnIndexWpm >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexWpm]);
+            }
+
+            if (ColumnIndexGap >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexGap]);
+            }
+
+            if (ColumnIndexText >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexText]);
+            }
+
+            if (ColumnIndexTextOriginal >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexTextOriginal]);
             }
         }
 
@@ -2187,6 +2254,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 return item.BackColor;
             }
+
             return DefaultBackColor;
         }
 
@@ -2316,6 +2384,18 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             EndUpdate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                _setLastColumnWidthTimer?.Dispose();
+                _syntaxColorLineTimer?.Dispose();
+                _setStartAndDurationTimer?.Dispose();
+            }
         }
     }
 }

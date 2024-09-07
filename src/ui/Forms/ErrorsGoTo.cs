@@ -72,20 +72,20 @@ namespace Nikse.SubtitleEdit.Forms
                     errors.Add($"WPM: {paragraph.WordsPerMinute:#,###.00} > {Configuration.Settings.General.SubtitleMaximumWordsPerMinute}");
                 }
 
-                var charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                var charactersPerSecond = paragraph.GetCharactersPerSecond();
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     errors.Add($"CPS: {charactersPerSecond:#,###.00} > {Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds}");
                 }
 
-                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    errors.Add($"Min duration: {paragraph.Duration.TotalMilliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
+                    errors.Add($"Min duration: {paragraph.DurationTotalMilliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
                 }
 
-                if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    errors.Add($"Max duration: {paragraph.Duration.TotalMilliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
+                    errors.Add($"Max duration: {paragraph.DurationTotalMilliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
                 }
 
                 if (i > 0 && i < paragraphs.Count)
@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.EndTime.ToDisplayString()) + separator);
             sb.Append(ToCsvText(paragraph.Duration.ToShortDisplayString()) + separator);
-            sb.Append(ToCsvText(paragraph.Text) + separator);
+            sb.Append(ToCsvText(paragraph.Text.Replace(Environment.NewLine, "<br />")) + separator);
             sb.Append(ToCsvText(paragraph.Bookmark) + separator);
             return sb.ToString();
         }

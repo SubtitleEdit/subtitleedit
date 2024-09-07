@@ -18,7 +18,7 @@
             this.components = new System.ComponentModel.Container();
             this.buttonAddToDictionary = new System.Windows.Forms.Button();
             this.buttonSkipOnce = new System.Windows.Forms.Button();
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -30,9 +30,9 @@
             this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listBoxSuggestions = new System.Windows.Forms.ListBox();
+            this.listBoxSuggestions = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.labelFullText = new System.Windows.Forms.Label();
-            this.textBoxWord = new System.Windows.Forms.TextBox();
+            this.textBoxWord = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAbort = new System.Windows.Forms.Button();
             this.buttonSkipAll = new System.Windows.Forms.Button();
             this.buttonChange = new System.Windows.Forms.Button();
@@ -49,15 +49,16 @@
             this.groupBoxEditWholeText = new System.Windows.Forms.GroupBox();
             this.buttonSkipText = new System.Windows.Forms.Button();
             this.buttonChangeWholeText = new System.Windows.Forms.Button();
-            this.textBoxWholeText = new System.Windows.Forms.TextBox();
+            this.textBoxWholeText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.pictureBoxBdSup = new System.Windows.Forms.PictureBox();
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripSearchEngine = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -65,7 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
             this.panelBookmark.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
+            this.contextMenuStripWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAddToDictionary
@@ -322,6 +323,7 @@
             // 
             // buttonGoogleIt
             // 
+            this.buttonGoogleIt.ContextMenuStrip = this.contextMenuStripSearchEngine;
             this.buttonGoogleIt.Location = new System.Drawing.Point(6, 163);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(374, 23);
@@ -451,7 +453,7 @@
             // 
             // pictureBoxBookmark
             // 
-            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22;
+            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22transparent;
             this.pictureBoxBookmark.Location = new System.Drawing.Point(11, 131);
             this.pictureBoxBookmark.Name = "pictureBoxBookmark";
             this.pictureBoxBookmark.Size = new System.Drawing.Size(22, 22);
@@ -480,12 +482,12 @@
             this.labelBookmark.TabIndex = 0;
             this.labelBookmark.Text = "labelBookmark";
             // 
-            // contextMenuStrip2
+            // contextMenuStripWindow
             // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStripWindow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.useLargerFontForThisWindowToolStripMenuItem1});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 26);
+            this.contextMenuStripWindow.Name = "contextMenuStrip2";
+            this.contextMenuStripWindow.Size = new System.Drawing.Size(237, 26);
             // 
             // useLargerFontForThisWindowToolStripMenuItem1
             // 
@@ -494,12 +496,17 @@
             this.useLargerFontForThisWindowToolStripMenuItem1.Text = "Use larger font for this window";
             this.useLargerFontForThisWindowToolStripMenuItem1.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
+            // contextMenuStripSearchEngine
+            // 
+            this.contextMenuStripSearchEngine.Name = "contextMenuStripSearchEngine";
+            this.contextMenuStripSearchEngine.Size = new System.Drawing.Size(181, 26);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 427);
-            this.ContextMenuStrip = this.contextMenuStrip2;
+            this.ContextMenuStrip = this.contextMenuStripWindow;
             this.Controls.Add(this.panelBookmark);
             this.Controls.Add(this.pictureBoxBookmark);
             this.Controls.Add(this.buttonSpellCheckDownload);
@@ -536,7 +543,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
             this.panelBookmark.ResumeLayout(false);
             this.panelBookmark.PerformLayout();
-            this.contextMenuStrip2.ResumeLayout(false);
+            this.contextMenuStripWindow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -546,12 +553,12 @@
 
         private System.Windows.Forms.Button buttonAddToDictionary;
         private System.Windows.Forms.Button buttonSkipOnce;
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.RichTextBox richTextBoxParagraph;
-        private System.Windows.Forms.ListBox listBoxSuggestions;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSuggestions;
         private System.Windows.Forms.Label labelFullText;
-        private System.Windows.Forms.TextBox textBoxWord;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxWord;
         private System.Windows.Forms.Button buttonAbort;
         private System.Windows.Forms.Button buttonSkipAll;
         private System.Windows.Forms.Button buttonChange;
@@ -565,7 +572,7 @@
         private System.Windows.Forms.GroupBox groupBoxEditWholeText;
         private System.Windows.Forms.Button buttonSkipText;
         private System.Windows.Forms.Button buttonChangeWholeText;
-        private System.Windows.Forms.TextBox textBoxWholeText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxWholeText;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addXToNamesnoiseListToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoChangeNames;
@@ -584,7 +591,8 @@
         private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripWindow;
         private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripSearchEngine;
     }
 }

@@ -652,7 +652,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 newVlc._mouseTimer = new Timer { Interval = 25 };
                 newVlc._mouseTimer.Tick += newVlc.MouseTimerTick;
                 newVlc._mouseTimer.Start();
+                VideoFileName = videoFileName;
             }
+
             return newVlc;
         }
 
@@ -666,8 +668,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 i++;
             }
             Pause();
-            _libvlc_video_set_spu?.Invoke(_mediaPlayer, -1); // turn of embedded subtitles
-            OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
+            try
+            {
+                _libvlc_video_set_spu?.Invoke(_mediaPlayer, -1); // turn of embedded subtitles
+            }
+            catch 
+            {
+                // ignore
+            }
+            OnVideoLoaded?.Invoke(_mediaPlayer, EventArgs.Empty);
         }
 
         public static string GetVlcPath(string fileName)
@@ -960,6 +969,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mouseTimer = new Timer { Interval = 25 };
                 _mouseTimer.Tick += MouseTimerTick;
                 _mouseTimer.Start();
+
+                VideoFileName = videoFileName;
             }
         }
 
@@ -1054,7 +1065,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 Stop();
                 Play();
                 Pause();
-                OnVideoEnded?.Invoke(_mediaPlayer, new EventArgs());
+                OnVideoEnded?.Invoke(_mediaPlayer, EventArgs.Empty);
             }
         }
 

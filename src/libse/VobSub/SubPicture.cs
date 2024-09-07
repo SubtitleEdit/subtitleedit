@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
 {
@@ -77,14 +78,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             ImageDisplayArea = new Rectangle();
             Bitmap bmp = null;
             var displayControlSequenceTableAddresses = new List<int>();
-            int imageTopFieldDataAddress = 0;
-            int imageBottomFieldDataAddress = 0;
-            bool bitmapGenerated = false;
+            var imageTopFieldDataAddress = 0;
+            var imageBottomFieldDataAddress = 0;
+            var bitmapGenerated = false;
             double largestDelay = -999999;
-            int displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
-            int lastDisplayControlSequenceTableAddress = 0;
+            var displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
+            var lastDisplayControlSequenceTableAddress = 0;
             displayControlSequenceTableAddresses.Add(displayControlSequenceTableAddress);
-            int commandIndex = 0;
+            var commandIndex = 0;
             while (displayControlSequenceTableAddress > lastDisplayControlSequenceTableAddress && displayControlSequenceTableAddress + 1 < _data.Length && commandIndex < _data.Length)
             {
                 int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
@@ -150,10 +151,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         case (int)DisplayControlCommand.SetDisplayArea: // 5
                             if (_data.Length > commandIndex + 6 && ImageDisplayArea.Width == 0 && ImageDisplayArea.Height == 0)
                             {
-                                int startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
-                                int endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
-                                int startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
-                                int endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
+                                var startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
+                                var endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
+                                var startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
+                                var endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
                                 ImageDisplayArea = new Rectangle(startingX, startingY, endingX - startingX, endingY - startingY);
                             }
                             commandIndex += 7;
@@ -210,6 +211,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return bmp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SetColor(List<Color> fourColors, int fourColorIndex, int clutIndex, List<Color> colorLookUpTable)
         {
             if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
@@ -253,34 +255,33 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         private static Bitmap CropBitmapAndUnlock(FastBitmap bmp, Color backgroundColor, bool crop)
         {
-            int y = 0;
-            Color c = backgroundColor;
-            int backgroundArgb = backgroundColor.ToArgb();
-            int minX = 0;
-            int maxX = 0;
-            int minY = 0;
-            int maxY = 0;
+            var y = 0;
+            var c = backgroundColor;
+            var minX = 0;
+            var maxX = 0;
+            var minY = 0;
+            var maxY = 0;
 
             if (crop)
             {
 
                 // Crop top
                 int x;
-                while (y < bmp.Height && IsBackgroundColor(c, backgroundArgb))
+                while (y < bmp.Height && IsBackgroundColor(c))
                 {
                     c = bmp.GetPixel(0, y);
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         for (x = 1; x < bmp.Width; x++)
                         {
                             c = bmp.GetPixelNext();
-                            if (c.A != 0 && c.ToArgb() != backgroundArgb)
+                            if (c.A > 1)
                             {
                                 break;
                             }
                         }
                     }
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         y++;
                     }
@@ -298,17 +299,17 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 // Crop left
                 x = 0;
                 c = backgroundColor;
-                while (x < bmp.Width && IsBackgroundColor(c, backgroundArgb))
+                while (x < bmp.Width && IsBackgroundColor(c))
                 {
                     for (y = minY; y < bmp.Height; y++)
                     {
                         c = bmp.GetPixel(x, y);
-                        if (!IsBackgroundColor(c, backgroundArgb))
+                        if (!IsBackgroundColor(c))
                         {
                             break;
                         }
                     }
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         x++;
                     }
@@ -326,21 +327,21 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 // Crop bottom
                 y = bmp.Height - 1;
                 c = backgroundColor;
-                while (y > minY && IsBackgroundColor(c, backgroundArgb))
+                while (y > minY && IsBackgroundColor(c))
                 {
                     c = bmp.GetPixel(0, y);
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         for (x = 1; x < bmp.Width; x++)
                         {
                             c = bmp.GetPixelNext();
-                            if (!IsBackgroundColor(c, backgroundArgb))
+                            if (!IsBackgroundColor(c))
                             {
                                 break;
                             }
                         }
                     }
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         y--;
                     }
@@ -354,17 +355,17 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 // Crop right
                 x = bmp.Width - 1;
                 c = backgroundColor;
-                while (x > minX && IsBackgroundColor(c, backgroundArgb))
+                while (x > minX && IsBackgroundColor(c))
                 {
                     for (y = minY; y < bmp.Height; y++)
                     {
                         c = bmp.GetPixel(x, y);
-                        if (!IsBackgroundColor(c, backgroundArgb))
+                        if (!IsBackgroundColor(c))
                         {
                             break;
                         }
                     }
-                    if (IsBackgroundColor(c, backgroundArgb))
+                    if (IsBackgroundColor(c))
                     {
                         x--;
                     }
@@ -377,40 +378,39 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             }
 
             bmp.UnlockImage();
-            Bitmap bmpImage = bmp.GetBitmap();
+            var bmpImage = bmp.GetBitmap();
             if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
             {
-                Bitmap bmpCrop = bmpImage.Clone(new Rectangle(minX, minY, maxX - minX, maxY - minY), bmpImage.PixelFormat);
+                var bmpCrop = bmpImage.Clone(new Rectangle(minX, minY, maxX - minX, maxY - minY), bmpImage.PixelFormat);
                 return bmpCrop;
             }
+
             return (Bitmap)bmpImage.Clone();
         }
 
-        private static bool IsBackgroundColor(Color c, int backgroundArgb)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsBackgroundColor(Color c)
         {
-            return c.A == 0 || c.ToArgb() == backgroundArgb;
+            return c.A < 2;
         }
 
         public static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<Color> fourColors, int addY)
         {
-            int index = 0;
-            bool onlyHalf = false;
-            int y = startY;
-            int x = 0;
-            int colorZeroValue = fourColors[0].ToArgb();
+            var index = 0;
+            var onlyHalf = false;
+            var y = startY;
+            var x = 0;
+            var colorZeroValue = fourColors[0].ToArgb();
             while (y < bmp.Height && dataAddress + index + 2 < data.Length)
             {
-                int runLength;
-                int color;
-                bool restOfLine;
-                index += DecodeRle(dataAddress + index, data, out color, out runLength, ref onlyHalf, out restOfLine);
+                index += DecodeRle(dataAddress + index, data, out var color, out var runLength, ref onlyHalf, out var restOfLine);
                 if (restOfLine)
                 {
                     runLength = bmp.Width - x;
                 }
 
-                Color c = fourColors[color]; // set color via the four colors
-                for (int i = 0; i < runLength; i++, x++)
+                var c = fourColors[color]; // set color via the four colors
+                for (var i = 0; i < runLength; i++, x++)
                 {
                     if (x >= bmp.Width - 1)
                     {
@@ -428,6 +428,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         y += addY;
                         break;
                     }
+
                     if (y < bmp.Height && c.ToArgb() != colorZeroValue)
                     {
                         bmp.SetPixel(x, y, c);
@@ -501,69 +502,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return 1;
             }
             onlyHalf = true;
+
             return 0;
         }
-
-        //private static int DecodeRleNonOptimized(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
-        //{
-        //    //Value      Bits   n=length, c=color
-        //    //1-3        4      n n c c                           (half a byte)
-        //    //4-15       8      0 0 n n n n c c                   (one byte)
-        //    //16-63     12      0 0 0 0 n n n n n n c c           (one and a half byte)
-        //    //64-255    16      0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
-        //    // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
-        //    restOfLine = false;
-        //    string binary2 = Helper.GetBinaryString(data, index, 3);
-        //    if (onlyHalf)
-        //        binary2 = binary2.Substring(4);
-
-        //    if (binary2.StartsWith("000000"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
-        //        if (runLength == 0)
-        //        {
-        //            // rest of line + skip 4 bits if Only half
-        //            restOfLine = true;
-        //            if (onlyHalf)
-        //            {
-        //                onlyHalf = false;
-        //                return 3;
-        //            }
-        //        }
-        //        return 2;
-        //    }
-
-        //    if (binary2.StartsWith("0000"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
-        //        if (onlyHalf)
-        //        {
-        //            onlyHalf = false;
-        //            return 2;
-        //        }
-        //        onlyHalf = true;
-        //        return 1;
-        //    }
-
-        //    if (binary2.StartsWith("00"))
-        //    {
-        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
-        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
-        //        return 1;
-        //    }
-
-        //    runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
-        //    color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
-        //    if (onlyHalf)
-        //    {
-        //        onlyHalf = false;
-        //        return 1;
-        //    }
-        //    onlyHalf = true;
-        //    return 0;
-        //}
-
     }
 }

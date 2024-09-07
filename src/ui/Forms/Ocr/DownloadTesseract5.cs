@@ -1,16 +1,17 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Threading;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadTesseract5 : Form
     {
-        public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract520.tar.gz";
+        public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/Tesseract533-2023-10-05/Tesseract533.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadTesseract5(string version)
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             try
             {
                 Utilities.SetSecurityProtocol();
-                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(TesseractDownloadUrl, downloadStream, new Progress<float>((progress) =>
@@ -77,35 +78,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            downloadStream.Position = 0;
-            var tempFileName = FileUtil.GetTempFileName(".tar");
-            using (var fs = new FileStream(tempFileName, FileMode.Create))
-            using (var zip = new GZipStream(downloadStream, CompressionMode.Decompress))
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
-                byte[] buffer = new byte[1024];
-                int nRead;
-                while ((nRead = zip.Read(buffer, 0, buffer.Length)) > 0)
+                var dir = zip.ReadCentralDir();
+                foreach (var entry in dir)
                 {
-                    fs.Write(buffer, 0, nRead);
+                    var path = Path.Combine(dictionaryFolder, entry.FilenameInZip);
+                    zip.ExtractFile(entry, path);
                 }
             }
 
-            using (var tr = new TarReader(tempFileName))
-            {
-                foreach (var th in tr.Files)
-                {
-                    var fn = Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar));
-                    if (th.IsFolder)
-                    {
-                        Directory.CreateDirectory(Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar)));
-                    }
-                    else if (th.FileSizeInBytes > 0)
-                    {
-                        th.WriteData(fn);
-                    }
-                }
-            }
-            File.Delete(tempFileName);
+            Cursor = Cursors.Default;
+            labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
             DialogResult = DialogResult.OK;
         }

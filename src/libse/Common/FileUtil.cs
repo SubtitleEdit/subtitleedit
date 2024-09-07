@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -81,12 +82,34 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3).SplitToLines();
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xfe && bytes[1] == 0xff)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2).SplitToLines();
+            }
+
+            return encoding.GetString(bytes).SplitToLines();
         }
 
         public static string ReadAllTextShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path));
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3);
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xff && bytes[1] == 0xfe)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2);
+            }
+
+            return encoding.GetString(bytes);
         }
 
         public static bool IsZip(string fileName)
@@ -124,6 +147,48 @@ namespace Nikse.SubtitleEdit.Core.Common
                        && buffer[3] == 0xaf
                        && buffer[4] == 0x27
                        && buffer[5] == 0x1c;
+            }
+        }
+
+        public static bool IsMp3(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                // 0x49 + 0x44 + 0x33 = ID3
+                return buffer[0] == 0x49 && buffer[1] == 0x44 && buffer[2] == 0x33 && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                       buffer[0] == 0xff && buffer[1] == 0xfb && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        public static bool IsWav(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[12];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                return buffer[0] == 0x52 && 
+                       buffer[1] == 0x49 &&
+                       buffer[2] == 0x46 &&
+                       buffer[2] == 0x46 &&
+
+                       buffer[8] == 0x57 &&
+                       buffer[9] == 0x41 &&
+                       buffer[10] == 0x56 &&
+                       buffer[11] == 0x45 &&
+
+                       fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -235,7 +300,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // allow for some random bytes in the beginning
-                for (int i = 0; i < 255; i++)
+                for (var i = 0; i < 255; i++)
                 {
                     if (buffer[i] == Packet.SynchronizationByte && buffer[i + 188] == Packet.SynchronizationByte && buffer[i + 188 * 2] == Packet.SynchronizationByte)
                     {
@@ -602,10 +667,94 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static void WriteAllTextWithDefaultUtf8(string fileName, string contents)
+        {
+            if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+            {
+                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                using (var file = new StreamWriter(fileName, false, outputEnc)) // open file with encoding
+                {
+                    file.Write(contents);
+                }
+            }
+            else
+            {
+                File.WriteAllText(fileName, contents, Encoding.UTF8);
+            }
+        }
+
         public static bool IsMatroskaFile(string fileName)
         {
-            var validator = new MatroskaFile(fileName);
-            return validator.IsValid;
+            using (var validator = new MatroskaFile(fileName))
+            {
+                return validator.IsValid;
+            }
+        }
+
+        public static bool IsFileLocked(string fileName)
+        {
+            try
+            {
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException exception)
+            {
+                SeLogger.Error(exception);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static string TryLocateSubtitleFile(string path, string videoFileName)
+        {
+            // search in these subdirectories: \Subs;\Sub;\Subtitles;
+            var knownSubtitleDirectories = new[]
+            {
+                path, Path.Combine(path, "Subs"), Path.Combine(path, "Sub"), Path.Combine(path, "Subtitles")
+            };
+
+            // handles if video file was sent with full path
+            if (Path.IsPathRooted(videoFileName))
+            {
+                videoFileName = Path.GetFileName(videoFileName);
+            }
+            
+            foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
+            {
+                if (!Directory.Exists(knownSubtitleDirectory))
+                {
+                    continue;
+                }
+
+                // try to locate subtitle file that has the same name as the video file
+                var defaultSubtitles = new[]
+                {
+                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".ass")),
+                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".srt"))
+                };
+                foreach (var defaultSubtitle in defaultSubtitles)
+                {
+                    if (File.Exists(defaultSubtitle))
+                    {
+                        return defaultSubtitle;
+                    }
+                }
+
+                // get first subtitle in path with extension .ass or .srt
+                var assEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.ass", SearchOption.TopDirectoryOnly);
+                var subRipEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.srt", SearchOption.TopDirectoryOnly);
+                var subtitleFile = assEnumerable.Concat(subRipEnumerable).FirstOrDefault();
+                if (!string.IsNullOrEmpty(subtitleFile))
+                {
+                    return subtitleFile;
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

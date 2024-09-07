@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -446,7 +446,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <RemovedEmptyLineAtTop>先頭の空行を削除しました</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>末尾の空行を削除しました</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>途中の空行を削除しました</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>空行/未使用の改行を削除しました</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>空行/未使用の改行を削除しました</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>削除された空行: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>重複する表示時間を修正する</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>短い表示時間を修正する</FixShortDisplayTimes>
@@ -468,7 +468,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FixCommonOcrErrors>ありがちな OCR エラーを修正する (OCR の置換の一覧を使用します)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>修正されたありがちな OCR エラー (OcrReplaceList ファイルが使用されました): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>数字の間のスペースを削除する</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>1 行中の複数の会話を修正する</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>1 行中の複数の会話を修正する</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>修正された数字の間のスペース: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>トルコ語 ANSI (アイスランド語) 文字を Unicode へ修正する</FixTurkishAnsi>
     <FixDanishLetterI>デンマーク語の文字 'i' を修正する</FixDanishLetterI>
@@ -1149,7 +1149,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeDisplayTimeAdjustment>表示時間の調整前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>調整された表示時間: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>調整された表示時間: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>調整された開始時間: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>調整された開始時間: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ありがちなエラーの修正前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>選択した行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ありがちなエラーが修正されました</CommonErrorsFixed>
@@ -1902,11 +1902,11 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NumberOfAlignmentTags>配置タグの数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕の長さ - 最小: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕の長さ - 最大: {0}</LineLengthMaximum>
-    <LineLengthAverage>字幕の長さ - 平均: {0}</LineLengthAverage>
+    <LineLengthAverage>字幕の長さ - 平均: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>1 行の長さ - 最小: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>1 行の長さ - 最大: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>1 行の長さ - 平均: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>1 行の長さ - 平均: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>表示時間 - 最小: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>表示時間 - 最大: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>表示時間 - 平均: {0:0.000} 秒</DurationAverage>
@@ -2054,7 +2054,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <UseCustomColors>カスタム色を使用する</UseCustomColors>
     <Transparent>透明</Transparent>
     <PromptForUnknownWords>不明な単語を確認する</PromptForUnknownWords>
-    <TryToGuessUnkownWords>不明な単語の推測を試行する</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>不明な単語の推測を試行する</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>3 行以上の段落を自動改行する</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>すべての修正</AllFixes>
     <GuessesUsed>使用された推測</GuessesUsed>
@@ -2123,7 +2123,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <RemoveShotChange>シーンの変更を削除</RemoveShotChange>
     <GuessTimeCodes>タイム コードの推測...</GuessTimeCodes>
     <SeekSilence>無音の検索...</SeekSilence>
-    <InsertSubtitleHere>ここに字幕を挿入...</InsertSubtitleHere>
+    <InsertSubtitleHere>ここに字幕を挿入</InsertSubtitleHere>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>タイム コードの推測</Title>

@@ -225,7 +225,9 @@ namespace UpdateAssemblyInfo
 
         private static void SaveWithRetry(string fileName, string content)
         {
-            for (int i = 0; i < 10; i++)
+            const int maxRetries = 10;
+            var delayBetweenRetries = TimeSpan.FromMilliseconds(10);
+            for (var i = 0; i <= maxRetries; i++)
             {
                 try
                 {
@@ -234,10 +236,14 @@ namespace UpdateAssemblyInfo
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(10);
+                    if (i == maxRetries)
+                    {
+                        throw;
+                    }
+
+                    System.Threading.Thread.Sleep(delayBetweenRetries);
                 }
             }
-            File.WriteAllText(fileName, content, Encoding.UTF8);
         }
 
         private static void GetRepositoryVersions(out VersionInfo currentRepositoryVersion, out VersionInfo latestRepositoryVersion)
@@ -313,13 +319,31 @@ namespace UpdateAssemblyInfo
             Console.Write(WorkInProgress);
         }
 
+        private static bool IsRCVersion()
+        {
+            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            var clrTags = new CommandLineRunner();
+            var gitPath = GetGitPath();
+            if (clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags", workingDirectory))
+            {
+                if (clrTags.Result != null && clrTags.Result.Contains("RC"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         //debug: "..\..\ui\Properties\AssemblyInfo.cs.template" "..\..\src\libse\Properties\AssemblyInfo.cs.template"
         private static int Main(string[] args)
         {
+            var isRC = IsRCVersion();
+
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
 
-            if (args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
+            if (!isRC && args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
             {
                 GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 UpdateWinGet(latestRepositoryVersion);
@@ -338,8 +362,14 @@ namespace UpdateAssemblyInfo
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
-                GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 var currentVersion = GetCurrentVersion(seTemplateFileName);
+                var latestRepositoryVersion = GetCurrentVersion(seTemplateFileName);
+                var currentRepositoryVersion = GetCurrentVersion(seTemplateFileName);
+                if (!isRC)
+                {
+                    GetRepositoryVersions(out currentRepositoryVersion, out latestRepositoryVersion);
+                }
+
                 var updateTemplateFile = false;
                 VersionInfo newVersion;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)

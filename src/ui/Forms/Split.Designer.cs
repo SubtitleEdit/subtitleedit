@@ -29,24 +29,25 @@
         private void InitializeComponent()
         {
             this.groupBoxSplitOptions = new System.Windows.Forms.GroupBox();
+            this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSubtitleInfo = new System.Windows.Forms.GroupBox();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.labelLines = new System.Windows.Forms.Label();
             this.labelNumberOfParts = new System.Windows.Forms.Label();
-            this.numericUpDownParts = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownParts = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonCharacters = new System.Windows.Forms.RadioButton();
             this.RadioButtonLines = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.labelFileName = new System.Windows.Forms.Label();
-            this.textBoxFileName = new System.Windows.Forms.TextBox();
-            this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
+            this.textBoxFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.labelChooseOutputFolder = new System.Windows.Forms.Label();
             this.buttonChooseFolder = new System.Windows.Forms.Button();
-            this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
+            this.textBoxOutputFolder = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.listViewParts = new System.Windows.Forms.ListView();
@@ -56,10 +57,8 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
-            this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSplitOptions.SuspendLayout();
             this.groupBoxSubtitleInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
@@ -80,6 +79,16 @@
             this.groupBoxSplitOptions.TabIndex = 0;
             this.groupBoxSplitOptions.TabStop = false;
             this.groupBoxSplitOptions.Text = "Split options";
+            // 
+            // radioButtonTime
+            // 
+            this.radioButtonTime.AutoSize = true;
+            this.radioButtonTime.Location = new System.Drawing.Point(15, 66);
+            this.radioButtonTime.Name = "radioButtonTime";
+            this.radioButtonTime.Size = new System.Drawing.Size(48, 17);
+            this.radioButtonTime.TabIndex = 0;
+            this.radioButtonTime.Text = "Time";
+            this.radioButtonTime.UseVisualStyleBackColor = true;
             // 
             // groupBoxSubtitleInfo
             // 
@@ -123,15 +132,35 @@
             // 
             // numericUpDownParts
             // 
+            this.numericUpDownParts.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownParts.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownParts.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownParts.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownParts.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownParts.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownParts.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownParts.DecimalPlaces = 0;
+            this.numericUpDownParts.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownParts.Location = new System.Drawing.Point(151, 38);
+            this.numericUpDownParts.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownParts.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
             this.numericUpDownParts.Name = "numericUpDownParts";
-            this.numericUpDownParts.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownParts.Size = new System.Drawing.Size(50, 23);
             this.numericUpDownParts.TabIndex = 1;
+            this.numericUpDownParts.TabStop = false;
+            this.numericUpDownParts.ThousandsSeparator = false;
             this.numericUpDownParts.Value = new decimal(new int[] {
             2,
             0,
@@ -205,6 +234,7 @@
             // 
             // textBoxFileName
             // 
+            this.textBoxFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFileName.Location = new System.Drawing.Point(7, 32);
             this.textBoxFileName.Name = "textBoxFileName";
             this.textBoxFileName.Size = new System.Drawing.Size(529, 20);
@@ -213,12 +243,26 @@
             // 
             // comboBoxSubtitleFormats
             // 
+            this.comboBoxSubtitleFormats.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxSubtitleFormats.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxSubtitleFormats.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSubtitleFormats.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxSubtitleFormats.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxSubtitleFormats.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxSubtitleFormats.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxSubtitleFormats.DropDownHeight = 400;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFormats.DropDownWidth = 225;
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(51, 107);
+            this.comboBoxSubtitleFormats.MaxLength = 32767;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
+            this.comboBoxSubtitleFormats.SelectedIndex = -1;
+            this.comboBoxSubtitleFormats.SelectedItem = null;
+            this.comboBoxSubtitleFormats.SelectedText = "";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
             this.comboBoxSubtitleFormats.TabIndex = 7;
+            this.comboBoxSubtitleFormats.UsePopupWindow = false;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFormats_SelectedIndexChanged);
             // 
             // labelEncoding
@@ -232,12 +276,26 @@
             // 
             // comboBoxEncoding
             // 
+            this.comboBoxEncoding.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxEncoding.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxEncoding.DropDownHeight = 400;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEncoding.DropDownWidth = 221;
             this.comboBoxEncoding.FormattingEnabled = true;
             this.comboBoxEncoding.Location = new System.Drawing.Point(394, 107);
+            this.comboBoxEncoding.MaxLength = 32767;
             this.comboBoxEncoding.Name = "comboBoxEncoding";
+            this.comboBoxEncoding.SelectedIndex = -1;
+            this.comboBoxEncoding.SelectedItem = null;
+            this.comboBoxEncoding.SelectedText = "";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
             this.comboBoxEncoding.TabIndex = 9;
+            this.comboBoxEncoding.UsePopupWindow = false;
             // 
             // labelOutputFormat
             // 
@@ -269,6 +327,7 @@
             // 
             // textBoxOutputFolder
             // 
+            this.textBoxOutputFolder.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOutputFolder.Location = new System.Drawing.Point(7, 77);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(529, 20);
@@ -355,16 +414,6 @@
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
             // 
-            // radioButtonTime
-            // 
-            this.radioButtonTime.AutoSize = true;
-            this.radioButtonTime.Location = new System.Drawing.Point(15, 66);
-            this.radioButtonTime.Name = "radioButtonTime";
-            this.radioButtonTime.Size = new System.Drawing.Size(48, 17);
-            this.radioButtonTime.TabIndex = 0;
-            this.radioButtonTime.Text = "Time";
-            this.radioButtonTime.UseVisualStyleBackColor = true;
-            // 
             // Split
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -392,7 +441,6 @@
             this.groupBoxSplitOptions.PerformLayout();
             this.groupBoxSubtitleInfo.ResumeLayout(false);
             this.groupBoxSubtitleInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
@@ -404,15 +452,15 @@
 
         private System.Windows.Forms.GroupBox groupBoxSplitOptions;
         private System.Windows.Forms.Label labelNumberOfParts;
-        private System.Windows.Forms.NumericUpDown numericUpDownParts;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownParts;
         private System.Windows.Forms.RadioButton radioButtonCharacters;
         private System.Windows.Forms.RadioButton RadioButtonLines;
         private System.Windows.Forms.GroupBox groupBoxOutput;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
         private System.Windows.Forms.Label labelOutputFormat;
         private System.Windows.Forms.Label labelChooseOutputFolder;
         private System.Windows.Forms.Button buttonChooseFolder;
-        private System.Windows.Forms.TextBox textBoxOutputFolder;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOutputFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Button buttonCancel;
@@ -425,10 +473,10 @@
         private System.Windows.Forms.GroupBox groupBoxSubtitleInfo;
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.Label labelLines;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.Label labelFileName;
-        private System.Windows.Forms.TextBox textBoxFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileName;
         private System.Windows.Forms.Button buttonOpenOutputFolder;
         private System.Windows.Forms.RadioButton radioButtonTime;
     }

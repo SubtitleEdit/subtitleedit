@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             UiUtil.SetNumericUpDownValue(numericUpDownMaxMs, Configuration.Settings.Tools.BridgeGapMilliseconds);
-            UiUtil.SetNumericUpDownValue(numericUpDownMinMsBetweenLines, Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+            UiUtil.SetNumericUpDownValue(numericUpDownMinMsBetweenLines, Configuration.Settings.Tools.BridgeGapMillisecondsMinGap);
 
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.BridgeGapMilliseconds = (int)numericUpDownMaxMs.Value;
+            Configuration.Settings.Tools.BridgeGapMillisecondsMinGap = (int)numericUpDownMinMsBetweenLines.Value;
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 Configuration.Settings.Tools.BridgeGapMilliseconds = SubtitleFormat.FramesToMilliseconds((double)numericUpDownMaxMs.Value);

@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(tAttribute);
 
                 XmlAttribute dAttribute = xml.CreateAttribute("d");
-                dAttribute.InnerText = Convert.ToInt64(p.Duration.TotalMilliseconds).ToString();
+                dAttribute.InnerText = Convert.ToInt64(p.DurationTotalMilliseconds).ToString();
                 paragraph.Attributes.Append(dAttribute);
 
                 paragraphInsertNode.AppendChild(paragraph);

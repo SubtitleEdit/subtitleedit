@@ -2,7 +2,7 @@
 <Language Name="Bahasa Indonesia">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Diterjemahkan oleh Nicedward (04/2018)</TranslatedBy>
     <CultureName>id-ID</CultureName>
     <HelpFile />
@@ -541,7 +541,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <RemovedEmptyLine>Buang baris kosong</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Buang baris kosong di teratas</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Buang baris kosong di ter bawah</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Baris kosong dibuang: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Perbaiki waktu tampilan tumpang tindih</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Perbaiki waktu tampilan singkat</FixShortDisplayTimes>
@@ -563,7 +563,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <FixCommonOcrErrors>Perbaiki eror OCR umum (menggunakan daftar ganti OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Eror OCR umum diperbaiki (file OcrReplaceList digunakan): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Buang spasi di antara angka</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Perbaiki dialog pada satu baris</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Perbaiki dialog pada satu baris</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Buang spasi di antara nomor diperbaiki: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Perbaiki huruf ANSI Turki (Islandia) ke Unikode</FixTurkishAnsi>
     <FixDanishLetterI>Perbaiki huruf 'i" Denmark</FixDanishLetterI>
@@ -1264,7 +1264,7 @@ Apakah Anda ingin memulai dari bagian atas dokumen dan melanjutkan pencarian dan
     <BeforeDisplayTimeAdjustment>Sebelum penyesuaian waktu tampilan</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Waktu tampilan disesuaikan: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Waktu tampilan disesuaikan: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Waktu mulai disesuaikan: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Waktu mulai disesuaikan: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Sebelum perbaikan eror umum</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Eror umum diperbaiki pada baris terpilih</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Eror umum diperbaiki</CommonErrorsFixed>
@@ -2126,11 +2126,11 @@ Mengatur huruf untuk subjudul biasanya dilakukan di pemutar video, tetapi juga b
     <NumberOfAlignmentTags>Jumlah tag perataan: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Panjang subjudul - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Panjang subjudul - maksimum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Panjang subjudul - rata-rata: {0}</LineLengthAverage>
+    <LineLengthAverage>Panjang subjudul - rata-rata: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subjudul, jumlah baris - rata-rata: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Panjang baris tunggal - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Panjang baris tunggal - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Panjang baris tunggal - rata-rata: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Panjang baris tunggal - rata-rata: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Durasi - minimum: {0:0.000} detik</DurationMinimum>
     <DurationMaximum>Durasi - maksimum: {0:0.000} detik</DurationMaximum>
     <DurationAverage>Durasi - rata-rata: {0:0.000} detik</DurationAverage>
@@ -2289,7 +2289,7 @@ Jaga perubahan?</KeepChangesMessage>
     <TransportStreamGrayscale>Skala abu</TransportStreamGrayscale>
     <TransportStreamGetColor>Gunakan warna (pemisahan baris bisa terjadi)</TransportStreamGetColor>
     <PromptForUnknownWords>Beritahukan untuk kata yg tidak diketahui</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Coba menebak kata yg tidak dikenal</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Coba menebak kata yg tidak dikenal</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Oto. jeda paragraf bila lebih dari dua baris</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Semua perbaikan</AllFixes>
     <GuessesUsed>Penebakan digunakan</GuessesUsed>
@@ -2378,7 +2378,7 @@ Jaga perubahan?</KeepChangesMessage>
     <RemoveShotChange>Buang perubahan adegan</RemoveShotChange>
     <GuessTimeCodes>Tebak kode waktu...</GuessTimeCodes>
     <SeekSilence>Cari (durasi) hening...</SeekSilence>
-    <InsertSubtitleHere>Sisipkan subjudul di sini...</InsertSubtitleHere>
+    <InsertSubtitleHere>Sisipkan subjudul di sini</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var size = regionStyle.Length + 5;
                 stream.WriteWord(size);
                 stream.WriteByte(SegmentTypeDialogStyle); // 0x81
-                stream.WriteWord(size - 3);
+                stream.WriteWord(size - 5); // DialogStyleSegment length
                 stream.Write(regionStyle, 0, regionStyle.Length);
                 stream.WriteWord(numberOfSubtitles);
             }

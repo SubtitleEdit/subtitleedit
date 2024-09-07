@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -93,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             comboBoxFontName.Items.Clear();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(x.Name);
             }
@@ -328,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private List<string> GetFontNames(byte[] fontBytes)
+        private static List<string> GetFontNames(byte[] fontBytes)
         {
             var privateFontCollection = new PrivateFontCollection();
             var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
@@ -572,25 +573,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private static string FixDuplicateStyleName(string newStyleName, List<SsaStyle> existingStyles)
-        {
-            if (existingStyles.All(p => p.Name != newStyleName))
-            {
-                return newStyleName;
-            }
-
-            for (int i = 1; i < int.MaxValue; i++)
-            {
-                var name = $"{newStyleName}_{i}";
-                if (existingStyles.All(p => p.Name != name))
-                {
-                    return name;
-                }
-            }
-
-            return Guid.NewGuid().ToString();
-        }
-
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
         {
             AddStyle(lv, ssaStyle, subtitle, isSubstationAlpha, lv.Items.Count);
@@ -607,7 +589,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontName);
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
+            subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontSize.ToString("0.#", CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
 
             int count = 0;
@@ -848,7 +830,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return sb.ToString();
         }
 
-        private void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
+        private static void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
         {
             if (numberOfSelectedItems == 0)
             {
@@ -866,7 +848,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             listview.SelectedItems.Clear();
-            for (int i = 0; i < numberOfSelectedItems; i++)
+            for (var i = 0; i < numberOfSelectedItems; i++)
             {
                 listview.Items[startingIndex - i].Selected = true;
                 listview.Items[startingIndex - i].EnsureVisible();
@@ -880,11 +862,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1)
             {
-                string styleName = listViewStyles.SelectedItems[0].Text;
+                var styleName = listViewStyles.SelectedItems[0].Text;
                 _startName = styleName;
                 _editedName = null;
                 _oldSsaName = styleName;
-                SsaStyle style = GetSsaStyleFile(styleName);
+                var style = GetSsaStyleFile(styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
@@ -1064,57 +1046,69 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void buttonPrimaryColor_Click(object sender, EventArgs e)
         {
             var name = listViewStyles.SelectedItems[0].Text;
-            colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+
+            using (var colorChooser = new ColorChooser { Color = panelPrimaryColor.BackColor, ShowAlpha = false })
             {
-                listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
-                listViewStyles.SelectedItems[0].SubItems[5].ForeColor = colorDialogSSAStyle.Color;
-                panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
-                SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorChooser.Color;
+                    listViewStyles.SelectedItems[0].SubItems[5].ForeColor = colorChooser.Color;
+                    panelPrimaryColor.BackColor = colorChooser.Color;
+                    SetSsaStyle(name, "primarycolour", GetSsaColorString(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 
         private void buttonSecondaryColor_Click(object sender, EventArgs e)
         {
             var name = listViewStyles.SelectedItems[0].Text;
-            colorDialogSSAStyle.Color = panelSecondaryColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+
+            using (var colorChooser = new ColorChooser { Color = panelSecondaryColor.BackColor, ShowAlpha = false })
             {
-                panelSecondaryColor.BackColor = colorDialogSSAStyle.Color;
-                SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelSecondaryColor.BackColor = colorChooser.Color;
+                    SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 
         private void buttonOutlineColor_Click(object sender, EventArgs e)
         {
             var name = listViewStyles.SelectedItems[0].Text;
-            colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+
+            using (var colorChooser = new ColorChooser { Color = panelOutlineColor.BackColor, ShowAlpha = false })
             {
-                panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
-                SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelOutlineColor.BackColor = colorChooser.Color;
+                    SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
             var name = listViewStyles.SelectedItems[0].Text;
-            colorDialogSSAStyle.Color = panelBackColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+
+            using (var colorChooser = new ColorChooser { Color = panelBackColor.BackColor, ShowAlpha = false })
             {
-                listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
-                panelBackColor.BackColor = colorDialogSSAStyle.Color;
-                SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorChooser.Color;
+                    panelBackColor.BackColor = colorChooser.Color;
+                    SetSsaStyle(name, "backcolour", GetSsaColorString(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 
         private static string GetSsaColorString(Color c)
         {
-            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString(); ;
+            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
@@ -1160,19 +1154,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void RemoveStyleFromHeader(string name)
         {
             _currentFileStyles.Remove(_currentFileStyles.Find(p => p.Name == name));
-        }
-
-        private void ReplaceStyleInHeader(SsaStyle style)
-        {
-            var hit = _currentFileStyles.Find(p => p.Name == style.Name);
-            if (hit == null)
-            {
-                return;
-            }
-
-            var index = _currentFileStyles.IndexOf(hit);
-            _currentFileStyles.RemoveAt(index);
-            _currentFileStyles.Insert(index, style);
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -1256,6 +1237,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (ListViewItem selectedItem in listViewStyles.SelectedItems)
             {
                 var name = selectedItem.Text;
+
+                var currentStyle = _currentFileStyles.FirstOrDefault(p => p.Name == name);
+                if (currentStyle != null)
+                {
+                    _currentFileStyles.Remove(currentStyle);
+                }
+
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
                 RemoveStyleFromHeader(name);
                 CheckDuplicateStyles();
@@ -1534,11 +1522,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             SetLastColumnWidth();
         }
 
-        private void listViewStorage_ClientSizeChanged(object sender, EventArgs e)
-        {
-            SetLastColumnWidth();
-        }
-
         private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
         {
             _backgroundImage?.Dispose();
@@ -1557,7 +1540,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
                 {
                     SubStationAlphaStyles_ResizeEnd(sender, e);
                 });
@@ -1648,17 +1631,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
 
+                                listViewStyles.BeginUpdate();
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
                                     if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name) != null)
                                     {
-                                        int count = 2;
-                                        bool doRepeat = GetSsaStyleFile(style.Name + count) != null;
+                                        var count = 2;
+                                        var doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         while (doRepeat)
                                         {
-                                            doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                             count++;
+                                            doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
                                         style.Name += count;
@@ -1666,6 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                                     _doUpdate = false;
                                     AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
+                                    AddStyleToHeader(style);
                                     _header = _header.Trim();
                                     if (_header.EndsWith("[Events]", StringComparison.Ordinal))
                                     {
@@ -1678,14 +1663,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                         _header = _header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                                     }
 
-                                    UpdateSelectedIndices(listViewStyles);
-                                    textBoxStyleName.Text = style.Name;
-                                    textBoxStyleName.Focus();
-                                    _doUpdate = true;
-                                    SetControlsFromStyle(style);
-                                    listViewStyles_SelectedIndexChanged(null, null);
+                                    if (styleName == cs.SelectedStyleNames.Last())
+                                    {
+                                        UpdateSelectedIndices(listViewStyles);
+                                        _doUpdate = true;
+                                        textBoxStyleName.Text = style.Name;
+                                        textBoxStyleName.Focus();
+                                        SetControlsFromStyle(style);
+                                        listViewStyles_SelectedIndexChanged(null, null);
+                                    }
                                 }
 
+                                listViewStyles.EndUpdate();
                                 labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
                                 timerClearStatus.Start();
                             }

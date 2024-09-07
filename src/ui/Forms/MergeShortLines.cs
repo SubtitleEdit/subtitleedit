@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -100,11 +99,11 @@ namespace Nikse.SubtitleEdit.Forms
             MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out var count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
             NumberOfMerges = count;
 
+            var greenColor = UiUtil.GreenBackgroundColor;
             SubtitleListview1.Fill(_subtitle);
-
             foreach (var index in mergedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, ColorTranslator.FromHtml("#6ebe6e"));
+                SubtitleListview1.SetBackgroundColor(index, greenColor);
             }
 
             SubtitleListview1.EndUpdate();
@@ -115,8 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ListViewItem item in listViewFixes.Items)
             {
-                string numbers = item.SubItems[1].Text;
-                foreach (string number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                var numbers = item.SubItems[1].Text;
+                foreach (var number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (number == p.Number.ToString(CultureInfo.InvariantCulture))
                     {
@@ -124,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
             return true;
         }
 
@@ -135,21 +135,27 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Items.Clear();
             }
 
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var dialogHelper = new DialogSplitMerge
+            {
+                DialogStyle = Configuration.Settings.General.DialogStyle, 
+                TwoLetterLanguageCode = language,
+            };
             numberOfMerges = 0;
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var mergedSubtitle = new Subtitle();
-            bool lastMerged = false;
+            var lastMerged = false;
             Paragraph p = null;
             var lineNumbers = new StringBuilder();
-            bool onlyContinuousLines = checkBoxOnlyContinuationLines.Checked;
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            var onlyContinuousLines = checkBoxOnlyContinuationLines.Checked;
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
                 {
                     p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                     mergedSubtitle.Paragraphs.Add(p);
                 }
-                Paragraph next = subtitle.GetParagraphOrDefault(i);
+
+                var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
                     if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines) && IsFixAllowed(p))
@@ -157,11 +163,33 @@ namespace Nikse.SubtitleEdit.Forms
                         if (MergeShortLinesUtils.GetStartTag(p.Text) == MergeShortLinesUtils.GetStartTag(next.Text) &&
                             MergeShortLinesUtils.GetEndTag(p.Text) == MergeShortLinesUtils.GetEndTag(next.Text))
                         {
-                            string s1 = p.Text.Trim();
-                            s1 = s1.Substring(0, s1.Length - MergeShortLinesUtils.GetEndTag(s1).Length);
-                            string s2 = next.Text.Trim();
-                            s2 = s2.Substring(MergeShortLinesUtils.GetStartTag(s2).Length);
-                            p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
+                            var nextArr = next.Text.SplitToLines();
+                            if (!p.Text.HasSentenceEnding(language) && p.Text.SplitToLines().Count == 1 && 
+                                nextArr.Count == 2 && dialogHelper.IsDialog(nextArr))
+                            {
+                                if (nextArr[0].Contains('-'))
+                                {
+                                    nextArr[0] = nextArr[0].Remove(nextArr[0].IndexOf('-'), 1);
+                                }
+
+                                var s1 = ("- " + p.Text.Trim() + nextArr[0]).Replace("  ", " ");
+                                var s2 = nextArr[1];
+
+                                if (HtmlUtil.RemoveHtmlTags(s1, true).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                                {
+                                    continue;
+                                }
+
+                                p.Text = dialogHelper.FixDashesAndSpaces(s1 + Environment.NewLine + s2);
+                            }
+                            else
+                            {
+                                var s1 = p.Text.Trim();
+                                s1 = s1.Substring(0, s1.Length - MergeShortLinesUtils.GetEndTag(s1).Length);
+                                var s2 = next.Text.Trim();
+                                s2 = s2.Substring(MergeShortLinesUtils.GetStartTag(s2).Length);
+                                p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
+                            }
                         }
                         else
                         {
@@ -203,18 +231,21 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     lastMerged = false;
                 }
+
                 if (!lastMerged && lineNumbers.Length > 0 && clearFixes)
                 {
                     AddToListView(p, lineNumbers.ToString(), p.Text);
                     lineNumbers.Clear();
                 }
             }
+
             if (!lastMerged)
             {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
             }
 
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+
             return mergedSubtitle;
         }
 
@@ -248,12 +279,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewFixes.SelectedIndices.Count > 0)
             {
-                int index = listViewFixes.SelectedIndices[0];
-                ListViewItem item = listViewFixes.Items[index];
-                string[] numbers = item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string number in numbers)
+                var index = listViewFixes.SelectedIndices[0];
+                var item = listViewFixes.Items[index];
+                var numbers = item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var number in numbers)
                 {
-                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    foreach (var p in _subtitle.Paragraphs)
                     {
                         if (p.Number.ToString(CultureInfo.InvariantCulture) == number)
                         {
@@ -275,9 +306,10 @@ namespace Nikse.SubtitleEdit.Forms
             MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out int count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
+            var greenColor = UiUtil.GreenBackgroundColor;
             foreach (var index in mergedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, ColorTranslator.FromHtml("#6ebe6e"));
+                SubtitleListview1.SetBackgroundColor(index, greenColor);
             }
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MergedShortLines.NumberOfMergesX, NumberOfMerges);
@@ -314,18 +346,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
     }
 }

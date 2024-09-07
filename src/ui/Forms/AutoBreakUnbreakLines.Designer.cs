@@ -34,16 +34,16 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.comboBoxConditions = new System.Windows.Forms.ComboBox();
-            this.labelCondition = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBoxLinesFound.SuspendLayout();
+            this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.comboBoxConditions = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelCondition = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
+            this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
             // 
             // listViewFixes
@@ -88,6 +88,28 @@
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 292;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // groupBoxLinesFound
             // 
             this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -125,12 +147,26 @@
             // 
             // comboBoxConditions
             // 
+            this.comboBoxConditions.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxConditions.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxConditions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxConditions.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxConditions.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxConditions.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxConditions.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxConditions.DropDownHeight = 400;
             this.comboBoxConditions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxConditions.DropDownWidth = 150;
             this.comboBoxConditions.FormattingEnabled = true;
             this.comboBoxConditions.Location = new System.Drawing.Point(12, 30);
+            this.comboBoxConditions.MaxLength = 32767;
             this.comboBoxConditions.Name = "comboBoxConditions";
+            this.comboBoxConditions.SelectedIndex = -1;
+            this.comboBoxConditions.SelectedItem = null;
+            this.comboBoxConditions.SelectedText = "";
             this.comboBoxConditions.Size = new System.Drawing.Size(150, 21);
             this.comboBoxConditions.TabIndex = 8;
+            this.comboBoxConditions.UsePopupWindow = false;
             // 
             // labelCondition
             // 
@@ -140,28 +176,6 @@
             this.labelCondition.Size = new System.Drawing.Size(141, 13);
             this.labelCondition.TabIndex = 9;
             this.labelCondition.Text = "Only break lines longer than";
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // toolStripMenuItemInverseSelection
-            // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
             // 
             // AutoBreakUnbreakLines
             // 
@@ -183,11 +197,12 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoBreakUnbreakLines";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoBreakUnbreakLinesKeyDown);
-            this.ResizeEnd += new System.EventHandler(this.AutoBreakUnbreakLines_ResizeEnd);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoBreakUnbreakLines_FormClosing);
             this.Shown += new System.EventHandler(this.AutoBreakUnbreakLines_Shown);
-            this.groupBoxLinesFound.ResumeLayout(false);
+            this.ResizeEnd += new System.EventHandler(this.AutoBreakUnbreakLines_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoBreakUnbreakLinesKeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.groupBoxLinesFound.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,7 +218,7 @@
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ComboBox comboBoxConditions;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxConditions;
         private System.Windows.Forms.Label labelCondition;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;

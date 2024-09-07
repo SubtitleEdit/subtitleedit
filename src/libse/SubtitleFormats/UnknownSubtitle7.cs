@@ -11,6 +11,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class UnknownSubtitle7 : SubtitleFormat
     {
+        private readonly Regex _regexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
+        private readonly Regex _regexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t$", RegexOptions.Compiled);
+
         private enum ExpectingLine
         {
             TimeStart,
@@ -42,9 +45,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
-            var regexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t$", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
             var expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 count++;
-                if (regexTimeCode.IsMatch(line))
+                if (_regexTimeCode.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (regexTimeCodeEnd.IsMatch(line) || (count == lines.Count && regexTimeCodeEnd.IsMatch(line + "\t")))
+                else if (_regexTimeCodeEnd.IsMatch(line) || (count == lines.Count && _regexTimeCodeEnd.IsMatch(line + "\t")))
                 {
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)

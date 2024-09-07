@@ -30,7 +30,7 @@
         {
             this.labelWatermark = new System.Windows.Forms.Label();
             this.groupBoxGenerate = new System.Windows.Forms.GroupBox();
-            this.textBoxWatermark = new System.Windows.Forms.TextBox();
+            this.textBoxWatermark = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.radioButtonSpread = new System.Windows.Forms.RadioButton();
             this.radioButtonCurrentLine = new System.Windows.Forms.RadioButton();
             this.buttonGenerate = new System.Windows.Forms.Button();
@@ -155,6 +155,6 @@
         private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.Button buttonRemove;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.TextBox textBoxWatermark;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxWatermark;
     }
 }

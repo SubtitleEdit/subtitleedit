@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             contextMenu.Items.Clear();
             var l = LanguageSettings.Current.VobSubOcrCharacter;
             MakeToolStripLetterItem(contextMenu, "Catalan", "àÀéÉèÈíÍïÏóÓòÒúÚüÜçÇ");
-            MakeToolStripLetterItem(contextMenu, "French", "àâèéêëîïôœŒùûçÇ");
+            MakeToolStripLetterItem(contextMenu, "French", "àÀâÂæÆçÇéèÉÈêÊËëîÎïÏôÔœŒùÙûÛüÜÿŸ");
             MakeToolStripLetterItem(contextMenu, l.German, "äÄöÖüÜß");
             MakeToolStripLetterItem(contextMenu, "Italian", "àÀèÈéÉìÌòÒùÙ");
             MakeToolStripLetterItem(contextMenu, l.Nordic, "æÆøØåÅäÄöÖ");

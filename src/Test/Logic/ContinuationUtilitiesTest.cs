@@ -1623,6 +1623,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void IsItalic14()
+        {
+            var line1 = "liebe</i> ♫ ♫ <i>Bevor es zu spät ist</i> ♫ ♫ <i>Das, was";
+            var line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
         public void HasPrefix1()
         {
             string line1 = "...this is a prefix.";

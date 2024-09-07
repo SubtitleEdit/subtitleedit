@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -509,12 +510,13 @@ namespace Nikse.SubtitleEdit.Forms
                 t2 = HtmlUtil.RemoveHtmlTags(t2, true);
             }
 
-            else if (checkBoxIgnoreWhitespace.Checked)
+            if (checkBoxIgnoreWhitespace.Checked)
             {
                 t1 = RemoveWhitespace(t1);
                 t2 = RemoveWhitespace(t2);
             }
-            else if (checkBoxIgnoreLineBreaks.Checked)
+            
+            if (checkBoxIgnoreLineBreaks.Checked)
             {
                 t1 = t1.Replace(Environment.NewLine, " ");
                 t2 = t2.Replace(Environment.NewLine, " ");

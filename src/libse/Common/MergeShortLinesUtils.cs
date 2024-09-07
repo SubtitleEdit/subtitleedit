@@ -6,11 +6,11 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static Subtitle MergeShortLinesInSubtitle(Subtitle subtitle, double maxMillisecondsBetweenLines, int maxCharacters, bool onlyContinuousLines)
         {
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var mergedSubtitle = new Subtitle();
-            bool lastMerged = false;
+            var lastMerged = false;
             Paragraph p = null;
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
                 {
@@ -22,12 +22,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines))
                     {
-                        if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
-                            GetEndTag(p.Text) == GetEndTag(next.Text))
+                        if (GetStartTag(p.Text) == GetStartTag(next.Text) && GetEndTag(p.Text) == GetEndTag(next.Text))
                         {
-                            string s1 = p.Text.Trim();
+                            var s1 = p.Text.Trim();
                             s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
-                            string s2 = next.Text.Trim();
+                            var s2 = next.Text.Trim();
                             s2 = s2.Substring(GetStartTag(s2).Length);
                             p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
                         }
@@ -71,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var endTag = string.Empty;
-            int start = text.LastIndexOf("</", StringComparison.Ordinal);
+            var start = text.LastIndexOf("</", StringComparison.Ordinal);
             if (start > 0 && start >= text.Length - 8)
             {
                 endTag = text.Substring(start);
@@ -93,11 +92,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var startTag = string.Empty;
-            int end = text.IndexOf('>');
+            var end = text.IndexOf('>');
             if (end > 0 && end < 25)
             {
                 startTag = text.Substring(0, end + 1);
             }
+
             return startTag;
         }
     }

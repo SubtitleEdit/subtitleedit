@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var fixAction = Language.FixDialogsOnOneLine;
             var noOfFixes = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 var oldText = p.Text;

@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -44,6 +45,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLineMode.Items.Add(LanguageSettings.Current.ImportText.OneLineIsOneSubtitle);
             comboBoxLineMode.Items.Add(LanguageSettings.Current.ImportText.TwoLinesAreOneSubtitle);
             comboBoxLineMode.SelectedIndex = 0;
+            if (Configuration.Settings.Tools.ImportTextSplittingLineMode == "TwoLinesAreOneSubtitle")
+            {
+                comboBoxLineMode.SelectedIndex = 1;
+            }
+
             labelLineBreak.Text = LanguageSettings.Current.ImportText.LineBreak;
             columnHeaderFName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             columnHeaderSize.Text = LanguageSettings.Current.General.Size;
@@ -555,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
             double millisecondsIndex = millisecondsInterval;
             foreach (Paragraph p in FixedSubtitle.Paragraphs)
             {
-                p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.TotalMilliseconds;
+                p.EndTime.TotalMilliseconds = millisecondsIndex + p.DurationTotalMilliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
                 millisecondsIndex += (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) + millisecondsInterval;
             }
@@ -1198,6 +1204,15 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ImportTextRemoveEmptyLines = checkBoxRemoveEmptyLines.Checked;
             Configuration.Settings.Tools.ImportTextAutoSplitNumberOfLines = numericUpDownAutoSplitMaxLines.Value;
             Configuration.Settings.Tools.ImportTextAutoSplitAtBlank = checkBoxAutoSplitAtBlankLines.Checked;
+
+            if (comboBoxLineMode.SelectedIndex == 0)
+            {
+                Configuration.Settings.Tools.ImportTextSplittingLineMode = "OneLineIsOneSubtitle";
+            }
+            else
+            {
+                Configuration.Settings.Tools.ImportTextSplittingLineMode = "TwoLinesAreOneSubtitle";
+            }
 
             if (radioButtonAutoSplit.Checked)
             {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -263,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
-            string s = textBoxWord.Text.Trim();
+            var s = textBoxWord.Text.Trim();
             Word = s;
             if (s.Length == 0 || s.Contains(' '))
             {

@@ -154,7 +154,7 @@ EXIT /B
 TITLE Creating ZIP archive with 7-Zip...
 ECHO.
 ECHO Creating ZIP archive with 7-Zip...
-PUSHD "src\ui\bin\Release"
+PUSHD "src\ui\bin\Release\net48"
 IF EXIST "temp_zip"                  RD /S /Q "temp_zip"
 IF NOT EXIST "temp_zip"              MD "temp_zip"
 IF NOT EXIST "temp_zip\Languages"    MD "temp_zip\Languages"
@@ -162,11 +162,19 @@ IF NOT EXIST "temp_zip\Dictionaries" MD "temp_zip\Dictionaries"
 IF NOT EXIST "temp_zip\Ocr"          MD "temp_zip\Ocr"
 IF NOT EXIST "temp_zip\Tesseract302" MD "temp_zip\Tesseract302"
 IF NOT EXIST "temp_zip\Icons"        MD "temp_zip\Icons"
+IF NOT EXIST "temp_zip\Icons\DefaultTheme"        MD "temp_zip\Icons\DefaultTheme"
+IF NOT EXIST "temp_zip\Icons\DefaultTheme\VideoPlayer"        MD "temp_zip\Icons\DefaultTheme\VideoPlayer"
+IF NOT EXIST "temp_zip\Icons\DarkTheme"        MD "temp_zip\Icons\DarkTheme"
+IF NOT EXIST "temp_zip\Icons\DarkTheme\VideoPlayer"        MD "temp_zip\Icons\DarkTheme\VideoPlayer"
+IF NOT EXIST "temp_zip\Icons\Legacy"        MD "temp_zip\Icons\Legacy"
+IF NOT EXIST "temp_zip\Icons\Legacy\VideoPlayer"        MD "temp_zip\Icons\Legacy\VideoPlayer"
+IF NOT EXIST "temp_zip\Icons\Black"        MD "temp_zip\Icons\Black"
+IF NOT EXIST "temp_zip\Icons\Black\VideoPlayer"        MD "temp_zip\Icons\Black\VideoPlayer"
 
 ECHO.
-COPY /Y /V "..\..\..\..\LICENSE.txt"               "temp_zip\"
-COPY /Y /V "..\..\..\..\Changelog.txt"             "temp_zip\"
-COPY /Y /V "..\..\..\..\preview.mkv"               "temp_zip\"
+COPY /Y /V "..\..\..\..\..\LICENSE.txt"               "temp_zip\"
+COPY /Y /V "..\..\..\..\..\Changelog.txt"             "temp_zip\"
+COPY /Y /V "..\..\..\..\..\preview.mkv"               "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"                       "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"                       "temp_zip\"
 COPY /Y /V "libse.dll"                             "temp_zip\"
@@ -175,27 +183,27 @@ COPY /Y /V "NHunspell.dll"                         "temp_zip\"
 COPY /Y /V "UtfUnknown.dll"                        "temp_zip\"
 COPY /Y /V "Vosk.dll"                              "temp_zip\"
 COPY /Y /V "NCalc.dll"                             "temp_zip\"
-COPY /Y /V "..\..\DLLs\Interop.QuartzTypeLib.dll"  "temp_zip\"
+COPY /Y /V "..\..\..\DLLs\Interop.QuartzTypeLib.dll"  "temp_zip\"
 COPY /Y /V "System.Net.Http.Extensions.dll"        "temp_zip\"
 COPY /Y /V "Newtonsoft.Json.dll"                   "temp_zip\"
 COPY /Y /V "System.Net.Http.Primitives.dll"        "temp_zip\"
 COPY /Y /V "NAudio.Core.dll"                       "temp_zip\"
 COPY /Y /V "NAudio.WinMM.dll"                      "temp_zip\"
-COPY /Y /V "cpuid.dll"                             "temp_zip\"
-COPY /Y /V "iTin.Core.dll"                         "temp_zip\"
-COPY /Y /V "iTin.Core.Hardware.Common.dll"         "temp_zip\"
-COPY /Y /V "iTin.Core.Hardware.CrossPlatform.Cpuid.dll" "temp_zip\"
-COPY /Y /V "iTin.Core.Interop.CrossPlatform.Cpuid.dll" "temp_zip\"
-COPY /Y /V "iTin.Core.Interop.Shared.dll"          "temp_zip\"
-COPY /Y /V "iTin.Hardware.Specification.Cpuid.dll" "temp_zip\"
-COPY /Y /V "iTin.Logging.dll"                      "temp_zip\"
 COPY /Y /V "Microsoft.Win32.Registry.dll"          "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                      "temp_zip\"
 COPY /Y /V "Languages\*.xml"                       "temp_zip\Languages\"
-COPY /Y /V "..\..\..\..\Dictionaries\*.*"          "temp_zip\Dictionaries\"
-COPY /Y /V "..\..\..\..\Ocr\*.*"                   "temp_zip\Ocr\"
-XCOPY /Y /V "..\..\..\..\Tesseract302\*.*"         "temp_zip\Tesseract302\" /S
-COPY /Y /V "..\..\..\..\Icons\*.ico"               "temp_zip\Icons\"
+COPY /Y /V "..\..\..\..\..\Dictionaries\*.*"          "temp_zip\Dictionaries\"
+COPY /Y /V "..\..\..\..\..\Ocr\*.*"                   "temp_zip\Ocr\"
+XCOPY /Y /V "..\..\..\..\..\Tesseract302\*.*"         "temp_zip\Tesseract302\" /S
+COPY /Y /V "..\..\..\..\..\Icons\*.ico"               "temp_zip\Icons\"
+COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\*.png"               "temp_zip\Icons\DefaultTheme"
+COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\VideoPlayer\*.png"               "temp_zip\Icons\DefaultTheme\VideoPlayer"
+COPY /Y /V "..\..\..\..\..\Icons\DarkTheme\*.png"               "temp_zip\Icons\DarkTheme"
+COPY /Y /V "..\..\..\..\..\Icons\DarkTheme\VideoPlayer\*.png"               "temp_zip\Icons\DarkTheme\VideoPlayer"
+COPY /Y /V "..\..\..\..\..\Icons\Legacy\*.png"               "temp_zip\Icons\Legacy"
+COPY /Y /V "..\..\..\..\..\Icons\Legacy\VideoPlayer\*.png"               "temp_zip\Icons\Legacy\VideoPlayer"
+COPY /Y /V "..\..\..\..\..\Icons\Black\*.png"               "temp_zip\Icons\Black"
+COPY /Y /V "..\..\..\..\..\Icons\Black\VideoPlayer\*.png"               "temp_zip\Icons\Black\VideoPlayer"
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SubtitleEditBeta.zip" * >NUL
@@ -203,7 +211,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 ECHO.
 ECHO ZIP archive created successfully!
-MOVE /Y "SubtitleEditBeta.zip" "..\..\..\..\..\SubtitleEditBeta" >NUL
+MOVE /Y "SubtitleEditBeta.zip" "..\..\..\..\..\..\SubtitleEditBeta" >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD

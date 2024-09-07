@@ -135,20 +135,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static void makect(int nc, int[] ip, double[] c, int nw)
         {
-            int j, nch;
-            double delta;
-
             ip[1] = nc;
             if (nc > 1)
             {
-                nch = nc >> 1;
-                delta = Math.Atan(1.0) / nch;
+                var nch = nc >> 1;
+                var delta = Math.Atan(1.0) / nch;
                 c[nw] = Math.Cos(delta * nch);
                 c[nw + nch] = 0.5 * c[nw];
-                for (j = 1; j < nch; j++)
+
+                for (var j = 1; j < nch; j++)
                 {
-                    c[nw + j] = 0.5 * Math.Cos(delta * j);
-                    c[nw + nc - j] = 0.5 * Math.Sin(delta * j);
+                    var dj = delta * j;
+                    c[nw + j] = 0.5 * Math.Cos(dj);
+                    c[nw + nc - j] = 0.5 * Math.Sin(dj);
                 }
             }
         }

@@ -1,6 +1,6 @@
-; *** Inno Setup version 6.1.0+ Chinese (Traditional) messages ***
-; Name: Enfong Tsao, nelson22768384@gmail.com
-; Base on 5.5.3+ translations by Samuel Lee, Email: 751555749@qq.com
+﻿; *** Inno Setup version 6.1.0+ Chinese (Traditional) messages ***
+; Name: Enfeng Tsao, nelson22768384@gmail.com
+; Based on 5.5.3+ translations by Samuel Lee, Email: 751555749@qq.com
 ; Translation based on network resource
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
@@ -16,14 +16,14 @@ LanguageID=$0404
 LanguageCodepage=950
 ; If the language you are translating to requires special font faces or
 ; sizes, uncomment any of the following entries and change them accordingly.
-DialogFontName=
-DialogFontSize=8
-TitleFontName=Arial
-TitleFontSize=29
-WelcomeFontName=Verdana
-WelcomeFontSize=12
-CopyrightFontName=Arial
-CopyrightFontSize=8
+;DialogFontName=
+;DialogFontSize=8
+;TitleFontName=Arial
+;TitleFontSize=29
+;WelcomeFontName=Verdana
+;WelcomeFontSize=12
+;CopyrightFontName=Arial
+;CopyrightFontSize=8
 
 [Messages]
 

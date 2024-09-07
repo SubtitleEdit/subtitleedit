@@ -29,14 +29,13 @@
         private void InitializeComponent()
         {
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
-            this.textBoxFontName = new System.Windows.Forms.TextBox();
+            this.textBoxFontName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFontName = new System.Windows.Forms.Label();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxFont
@@ -57,6 +56,7 @@
             // 
             // textBoxFontName
             // 
+            this.textBoxFontName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFontName.Location = new System.Drawing.Point(133, 28);
             this.textBoxFontName.Name = "textBoxFontName";
             this.textBoxFontName.Size = new System.Drawing.Size(197, 20);
@@ -73,15 +73,40 @@
             // 
             // numericUpDownFontSize
             // 
+            this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFontSize.DecimalPlaces = 0;
+            this.numericUpDownFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Location = new System.Drawing.Point(133, 54);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
+            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(112, 23);
             this.numericUpDownFontSize.TabIndex = 3;
+            this.numericUpDownFontSize.TabStop = false;
+            this.numericUpDownFontSize.ThousandsSeparator = false;
+            this.numericUpDownFontSize.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelFontSize
             // 
@@ -136,7 +161,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FcpProperties_KeyDown);
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -144,9 +168,9 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxFont;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
-        private System.Windows.Forms.TextBox textBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontName;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

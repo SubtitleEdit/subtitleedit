@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             li.AppendChild(comment);
 
             var duration = xml.CreateElement("xmpDM", "duration", NamespaceDescription);
-            duration.InnerText = MillisecondsToFrames(paragraph.Duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
+            duration.InnerText = MillisecondsToFrames(paragraph.DurationTotalMilliseconds).ToString(CultureInfo.InvariantCulture);
             li.AppendChild(duration);
 
             var startTime = xml.CreateElement("xmpDM", "startTime", NamespaceDescription);

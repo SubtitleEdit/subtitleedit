@@ -1,75 +1,74 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.1</TargetFrameworks>
-    <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
-    <AssemblyName>libse</AssemblyName>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
-    <Authors>Nikolaj Olsson</Authors>
-    <PackageIcon>Icon.png</PackageIcon>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>
-SE 3.6.7
-- Keep paltte when re-saving bd sup
-- Minor bug fixes
-- New subtitle formats
-    </PackageReleaseNotes>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net48;netstandard2.1</TargetFrameworks>
+		<RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
+		<AssemblyName>libse</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
+		<Authors>Nikolaj Olsson</Authors>
+		<PackageIcon>Icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<PackageReleaseNotes>SE 4.0.8</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageReadmeFile>Readme.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Forms\FixCommonErrors\HelperContinuation.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Forms\FixCommonErrors\HelperContinuation.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DesignTime>True</DesignTime>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
-  <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
-    <Exec Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
-  </Target>
+	<Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
+		<Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+		<Exec Condition="'$(OS)' == 'Unix'" Command="bash $(ProjectDir)../../build_helpers.sh rev $(ConfigurationName)" />
+	</Target>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="UTF.Unknown" Version="2.5.1" />
-    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.6" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Win32.Registry" />
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="System.Net.Http" />
+		<PackageReference Include="UTF.Unknown" />
+		<PackageReference Include="zlib.net-mutliplatform" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="Icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Icon.png">
+			<Pack>True</Pack>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)LICENSE.txt" Pack="true" PackagePath="" />
+		<None Include="$(MSBuildThisFileDirectory)Readme.md" Pack="true" PackagePath="" />
+		<None Include="$(MSBuildThisFileDirectory)Icon.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>

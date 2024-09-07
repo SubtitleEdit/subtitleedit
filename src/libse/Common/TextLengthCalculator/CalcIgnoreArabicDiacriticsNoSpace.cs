@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
+﻿using System.Globalization;
+
+namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
     public class CalcIgnoreArabicDiacriticsNoSpace : ICalcLength
     {
@@ -7,50 +9,49 @@
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
+            var s = HtmlUtil.RemoveHtmlTags(text, true);
+
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             var length = 0;
-            var ssaTagOn = false;
-            var htmlTagOn = false;
-            var max = text.Length;
-            for (var i = 0; i < max; i++)
+            for (var en = StringInfo.GetTextElementEnumerator(s); en.MoveNext();)
             {
-                var ch = text[i];
-                if (ssaTagOn)
+                var element = en.GetTextElement();
+                if (element.Length == 1)
                 {
-                    if (ch == '}')
+                    var ch = element[0];
+                    if (!char.IsControl(ch) &&
+                        ch != ' ' &&
+                        ch != zeroWidthSpace &&
+                        ch != zeroWidthNoBreakSpace &&
+                        ch != '\u200E' &&
+                        ch != '\u200F' &&
+                        ch != '\u202A' &&
+                        ch != '\u202B' &&
+                        ch != '\u202C' &&
+                        ch != '\u202D' &&
+                        ch != '\u202E' &&
+                        !(ch >= '\u064B' && ch <= '\u0653'))
                     {
-                        ssaTagOn = false;
+                        length++;
                     }
                 }
-                else if (htmlTagOn)
-                {
-                    if (ch == '>')
-                    {
-                        htmlTagOn = false;
-                    }
-                }
-                else if (ch == '{' && i < text.Length - 1 && text[i + 1] == '\\')
-                {
-                    ssaTagOn = true;
-                }
-                else if (ch == '<' && i < text.Length - 1 && (text[i + 1] == '/' || char.IsLetter(text[i + 1])) &&
-                         text.IndexOf('>', i) > 0 && TextLengthHelper.IsKnownHtmlTag(text, i))
-                {
-                    htmlTagOn = true;
-                }
-                else if (!char.IsControl(ch) &&
-                         ch != ' ' &&
-                         ch != zeroWidthSpace &&
-                         ch != zeroWidthNoBreakSpace &&
-                         ch != '\u200E' &&
-                         ch != '\u200F' &&
-                         ch != '\u202A' &&
-                         ch != '\u202B' &&
-                         ch != '\u202C' &&
-                         ch != '\u202D' &&
-                         ch != '\u202E' &&
-                         !(ch >= '\u064B' && ch <= '\u0653'))
+                else if (element != "\u200E" &&
+                         element != "\u200F" &&
+                         element != "\u202A" &&
+                         element != "\u202B" &&
+                         element != "\u202C" &&
+                         element != "\u202D" &&
+                         element != "\u202E" &&
+                         element != "\u064B" &&
+                         element != "\u064C" &&
+                         element != "\u064D" &&
+                         element != "\u064E" &&
+                         element != "\u064F" &&
+                         element != "\u0650" &&
+                         element != "\u0651" &&
+                         element != "\u0652" &&
+                         element != "\u0653")
                 {
                     length++;
                 }

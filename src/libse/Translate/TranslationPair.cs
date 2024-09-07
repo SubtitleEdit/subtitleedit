@@ -1,46 +1,42 @@
 ﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
     public class TranslationPair : IEquatable<TranslationPair>
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
+        public string Name { get; }
 
-        public TranslationPair()
-        {
-
-        }
+        public string Code { get; }
+        public string TwoLetterIsoLanguageName { get; }
+        public bool? HasFormality { get; set; }
 
         public TranslationPair(string name, string code)
         {
-            Name = name;
+            Name = name ?? string.Empty;
             Code = code;
+            TwoLetterIsoLanguageName = code;
         }
 
-        public override string ToString()
+        public TranslationPair(string name, string code, string twoLetterIsoLanguageName)
         {
-            return UpcaseFirstLetter(Name);
+            Name = name ?? string.Empty;
+            Code = code;
+            TwoLetterIsoLanguageName = twoLetterIsoLanguageName;
         }
 
-        private static string UpcaseFirstLetter(string text)
+        public TranslationPair(string name, string code, bool hasFormality)
         {
-            if (text.Length > 1)
-            {
-                text = char.ToUpper(text[0]) + text.Substring(1).ToLowerInvariant();
-            }
-
-            return text;
+            Name = name ?? string.Empty;
+            Code = code;
+            TwoLetterIsoLanguageName = code;
+            HasFormality = hasFormality;
         }
 
-        public bool Equals(TranslationPair other)
-        {
-            return Code.Equals(other.Code);
-        }
+        public override string ToString() => Name.ToLowerInvariant().Replace('_', ' ').CapitalizeFirstLetter();
 
-        public override int GetHashCode()
-        {
-            return Code != null ? Code.GetHashCode() : 0;
-        }
+        public bool Equals(TranslationPair other) => other != null && Code.Equals(other.Code);
+
+        public override int GetHashCode() => Code != null ? Code.GetHashCode() : 0;
     }
 }

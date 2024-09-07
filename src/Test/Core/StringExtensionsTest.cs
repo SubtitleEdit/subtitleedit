@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Test.Core
 {
@@ -180,9 +181,25 @@ namespace Test.Core
         [TestMethod]
         public void FixExtraSpaces6()
         {
-            string input = "a" + Environment.NewLine + "   b";
+            var input = "a" + Environment.NewLine + "   b";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("a" + Environment.NewLine + "b", res);
+        }
+        
+        [TestMethod]
+        public void RemoveRecursiveLineBreakTest()
+        {
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+        }
+
+        [TestMethod]
+        public void RemoveRecursiveLineBreakNonWindowsStyleTest()
+        {
+            Assert.AreEqual("foo\nfoo", "foo\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\nfoo", "foo\n\n\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\n.\nfoo", "foo\n.\n\n\nfoo".RemoveRecursiveLineBreaks());
         }
 
         [TestMethod]
@@ -272,5 +289,153 @@ namespace Test.Core
             var res = CalcFactory.MakeCalculator(nameof(CalcNoSpace)).CountCharacters(input, false);
             Assert.AreEqual("HalloBye!".Length, res);
         }
+
+        [TestMethod]
+        public void ToggleCasing1()
+        {
+            var input = "how are you";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("How Are You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalic()
+        {
+            var input = "how <i>are</i> you";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("How <i>Are</i> You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicStart()
+        {
+            var input = "<i>how</i> are you";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("<i>How</i> Are You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicEnd()
+        {
+            var input = "how are <i>you</i>";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("How Are <i>You</i>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicEndAndBold()
+        {
+            var input = "how are <i><b>you</b></i>";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("How Are <i><b>You</b></i>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing2()
+        {
+            var input = "How Are You";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("HOW ARE YOU", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing3()
+        {
+            var input = "HOW ARE YOU";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("how are you", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasingWithFont()
+        {
+            var input = "<font color=\"Red\">HOW ARE YOU</font>";
+            var res = input.ToggleCasing(new SubRip());
+            Assert.AreEqual("<font color=\"Red\">how are you</font>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasingAssa()
+        {
+            var input = "{\\i1}This is an example…{\\i0}";
+            var res = input.ToggleCasing(new AdvancedSubStationAlpha());
+            Assert.AreEqual("{\\i1}THIS IS AN EXAMPLE…{\\i0}", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasingAssaSoftLineBreak()
+        {
+            var input = "HOW ARE\\nYOU?";
+            var res = input.ToggleCasing(new AdvancedSubStationAlpha());
+            Assert.AreEqual("how are\\nyou?", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasingVoiceTag()
+        {
+            var input = "<v Johnny>How are you?";
+            var res = input.ToggleCasing(null);
+            Assert.AreEqual("<v Johnny>HOW ARE YOU?", res);
+        }
+
+        [TestMethod]
+        public void ToProperCaseFromUpper()
+        {
+            var input = "HOW ARE YOU?";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("How Are You?", res);
+        }
+
+        [TestMethod]
+        public void ToProperCaseFromLower()
+        {
+            var input = "how are you?";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("How Are You?", res);
+        }
+
+        [TestMethod]
+        public void ToProperCaseItalic()
+        {
+            var input = "<i>HOW ARE YOU?</i>";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("<i>How Are You?</i>", res);
+        }
+
+        [TestMethod]
+        public void HasSentenceEndingCultureNeutralTest()
+        {
+            // language two letter language set to null
+            Assert.IsTrue("foobar.".HasSentenceEnding(null)); // this is supposed to use the culture neutral chars
+            
+            Assert.IsTrue("foobar.".HasSentenceEnding());
+            Assert.IsTrue("foobar?</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar!</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar.</font>\"".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?{\\i0}".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?{\\i0}</font>".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?</font>{\\i0}".HasSentenceEnding());
+            Assert.IsTrue("foobar.\"".HasSentenceEnding());
+            Assert.IsTrue("foobar--".HasSentenceEnding());
+            Assert.IsTrue("foobar--</i>".HasSentenceEnding());
+            Assert.IsTrue("foobar—".HasSentenceEnding()); // em dash
+            Assert.IsTrue("foobar—</i>".HasSentenceEnding()); // em dash
+            
+            Assert.IsFalse("\"".HasSentenceEnding());
+            Assert.IsFalse("foobar>".HasSentenceEnding());
+            Assert.IsFalse("How are you{\\i0}".HasSentenceEnding());
+            Assert.IsFalse("".HasSentenceEnding());
+        }
+
+        [TestMethod]
+        public void HasSentenceEndingGreekTest()
+        {
+            const string greekCultureTwoLetter = "el";
+            Assert.IsTrue("foobar)".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar\u037E</font>\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar؟\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar;".HasSentenceEnding(greekCultureTwoLetter));
+        }
+        
     }
 }

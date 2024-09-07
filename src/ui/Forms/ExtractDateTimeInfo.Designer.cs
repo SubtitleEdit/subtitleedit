@@ -30,23 +30,23 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
-            TimeCode timeCode2 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonOpenVideo = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelChooseVideoFile = new System.Windows.Forms.Label();
-            this.comboBoxDateTimeFormats = new System.Windows.Forms.ComboBox();
+            this.comboBoxDateTimeFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWriteFormat = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.labelExample = new System.Windows.Forms.Label();
-            this.textBoxExample = new System.Windows.Forms.TextBox();
+            this.textBoxExample = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -98,6 +98,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxDateTimeFormats
             // 
+            this.comboBoxDateTimeFormats.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDateTimeFormats.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDateTimeFormats.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDateTimeFormats.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDateTimeFormats.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDateTimeFormats.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDateTimeFormats.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDateTimeFormats.DropDownHeight = 400;
+            this.comboBoxDateTimeFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxDateTimeFormats.DropDownWidth = 366;
             this.comboBoxDateTimeFormats.FormattingEnabled = true;
             this.comboBoxDateTimeFormats.Items.AddRange(new object[] {
             "M/d/yyyy hh:mm:ss ",
@@ -108,9 +118,15 @@ namespace Nikse.SubtitleEdit.Forms
             "hh:mm:ss",
             "HH:mm:ss"});
             this.comboBoxDateTimeFormats.Location = new System.Drawing.Point(12, 153);
+            this.comboBoxDateTimeFormats.MaxLength = 32767;
             this.comboBoxDateTimeFormats.Name = "comboBoxDateTimeFormats";
+            this.comboBoxDateTimeFormats.SelectedIndex = -1;
+            this.comboBoxDateTimeFormats.SelectedItem = null;
+            this.comboBoxDateTimeFormats.SelectedText = "";
             this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(366, 21);
             this.comboBoxDateTimeFormats.TabIndex = 9;
+            this.comboBoxDateTimeFormats.TabStop = false;
+            this.comboBoxDateTimeFormats.UsePopupWindow = false;
             this.comboBoxDateTimeFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxDateTimeFormats_SelectedIndexChanged);
             this.comboBoxDateTimeFormats.TextChanged += new System.EventHandler(this.comboBoxDateTimeFormats_TextChanged);
             // 
@@ -162,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxExample
             // 
             this.textBoxExample.BackColor = System.Drawing.SystemColors.MenuText;
+            this.textBoxExample.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxExample.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxExample.ForeColor = System.Drawing.Color.White;
             this.textBoxExample.Location = new System.Drawing.Point(12, 204);
@@ -181,14 +198,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownDuration
             // 
-            this.timeUpDownDuration.AutoSize = true;
-            this.timeUpDownDuration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownDuration.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownDuration.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownDuration.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownDuration.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownDuration.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownDuration.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownDuration.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownDuration.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownDuration.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownDuration.Location = new System.Drawing.Point(252, 87);
             this.timeUpDownDuration.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownDuration.Name = "timeUpDownDuration";
-            this.timeUpDownDuration.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownDuration.Size = new System.Drawing.Size(96, 23);
             this.timeUpDownDuration.TabIndex = 7;
+            this.timeUpDownDuration.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -201,14 +229,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownStartTime.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownStartTime.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownStartTime.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(118, 86);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 23);
             this.timeUpDownStartTime.TabIndex = 5;
+            this.timeUpDownStartTime.TabStop = false;
             timeCode2.Hours = 0;
             timeCode2.Milliseconds = 0;
             timeCode2.Minutes = 0;
@@ -260,15 +299,15 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelChooseVideoFile;
-        private System.Windows.Forms.ComboBox comboBoxDateTimeFormats;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDateTimeFormats;
         private System.Windows.Forms.Label labelWriteFormat;
         private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.Label labelExample;
-        private System.Windows.Forms.TextBox textBoxExample;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxExample;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelDuration;
-        private Controls.TimeUpDown timeUpDownDuration;
+        private Controls.NikseTimeUpDown timeUpDownDuration;
     }
 }

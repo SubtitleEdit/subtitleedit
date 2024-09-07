@@ -7,11 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Vosk;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -31,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private bool _useCenterChannelOnly;
         private Model _model;
         private int _initialWidth = 725;
+        private readonly List<string> _outputBatchFileNames = new List<string>();
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -86,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelFC.Text = string.Empty;
         }
 
-        public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
+        public static void FillModels(NikseComboBox comboBoxModels, string lastDownloadedModel)
         {
             var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.VoskModel : lastDownloadedModel;
@@ -156,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+            TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
             DialogResult = DialogResult.OK;
         }
 
@@ -218,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -231,10 +234,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (errors.Length > 0)
             {
-                MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
+                MessageBox.Show(this, $"{errorCount} error(s)!{Environment.NewLine}{errors}");
             }
 
-            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount));
+            var fileList = Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, _outputBatchFileNames);
+            MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList);
 
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
@@ -251,11 +255,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
             if (File.Exists(fileName))
             {
-                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToByteArray()}.{format.Extension}";
+                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}.{format.Extension}";
             }
 
-            File.WriteAllText(fileName, text, Encoding.UTF8);
-            textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
+            try
+            {
+                File.WriteAllText(fileName, text, Encoding.UTF8);
+                textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
+                _outputBatchFileNames.Add(fileName);
+            }
+            catch
+            {
+                var dir = Path.GetDirectoryName(fileName);
+                if (!WhisperAudioToText.IsDirectoryWritable(dir))
+                {
+                    MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
+                }
+
+                throw;
+            }
         }
 
         internal static string GetLanguage(string text)
@@ -570,7 +588,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                UiUtil.ShowHelp("#audio_to_text");
+                UiUtil.ShowHelp("#audio_to_text_vosk");
                 e.SuppressKeyPress = true;
             }
         }
@@ -590,24 +608,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _bytesWavRead;
             var estimatedTotalMs = msPerFrame * _bytesWavTotal;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
             labelTime.Text = estimatedLeft;
-        }
-
-        public static string ToProgressTime(float estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
@@ -721,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
             {
                 listViewInputFiles.BeginUpdate();
                 foreach (var fileName in fileNames.OrderBy(Path.GetFileName))

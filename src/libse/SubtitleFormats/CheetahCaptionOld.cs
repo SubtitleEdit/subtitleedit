@@ -76,17 +76,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var paragraph = subtitle.Paragraphs[index];
                 var next = subtitle.GetParagraphOrDefault(index + 1);
-                if (paragraph.Duration.TotalSeconds > 100)
+                if (paragraph.DurationTotalSeconds > 100)
                 {
                     _errorCount++;
                 }
-                if (Math.Abs(paragraph.EndTime.TotalMilliseconds) < 0.1 || paragraph.Duration.TotalMilliseconds < 0.1)
+                if (Math.Abs(paragraph.EndTime.TotalMilliseconds) < 0.1 || paragraph.DurationTotalMilliseconds < 0.1)
                 {
                     if (next != null)
                     {
                         paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
-                    if (next == null || paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    if (next == null || paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
                         paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                     }

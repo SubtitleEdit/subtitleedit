@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static readonly string Utf8WithBom = "UTF-8 with BOM";
         public static readonly string Utf8WithoutBom = "UTF-8 without BOM";
+        public static readonly string Source = "Source";
         public static readonly int Utf8WithBomIndex = 0;
         public static readonly int Utf8WithoutBomIndex = 1;
 
@@ -29,6 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         public bool IsUtf8 => DisplayName == Utf8WithBom || DisplayName == Utf8WithoutBom;
+        public bool UseSourceEncoding => DisplayName == Source;
 
         public override string ToString()
         {

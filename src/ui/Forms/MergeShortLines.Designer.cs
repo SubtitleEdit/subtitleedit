@@ -33,22 +33,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxCharacters = new System.Windows.Forms.Label();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.listViewFixes = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
+            this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -80,7 +78,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxCharacters
             // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 27);
+            this.numericUpDownMaxCharacters.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharacters.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharacters.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharacters.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharacters.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharacters.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharacters.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxCharacters.DecimalPlaces = 0;
+            this.numericUpDownMaxCharacters.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 26);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             999,
             0,
@@ -92,8 +103,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMaxCharacters.TabIndex = 0;
+            this.numericUpDownMaxCharacters.TabStop = false;
+            this.numericUpDownMaxCharacters.ThousandsSeparator = false;
             this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
             65,
             0,
@@ -104,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxCharacters
             // 
             this.labelMaxCharacters.AutoSize = true;
-            this.labelMaxCharacters.Location = new System.Drawing.Point(187, 9);
+            this.labelMaxCharacters.Location = new System.Drawing.Point(187, 8);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
             this.labelMaxCharacters.Size = new System.Drawing.Size(190, 13);
             this.labelMaxCharacters.TabIndex = 32;
@@ -113,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxMillisecondsBetweenLines
             // 
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
-            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 9);
+            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 8);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 33;
@@ -121,7 +134,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxMillisecondsBetweenLines
             // 
-            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 26);
+            this.numericUpDownMaxMillisecondsBetweenLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxMillisecondsBetweenLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxMillisecondsBetweenLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxMillisecondsBetweenLines.DecimalPlaces = 0;
+            this.numericUpDownMaxMillisecondsBetweenLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 25);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -133,8 +159,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
+            this.numericUpDownMaxMillisecondsBetweenLines.TabStop = false;
+            this.numericUpDownMaxMillisecondsBetweenLines.ThousandsSeparator = false;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
             0,
@@ -150,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxLinesFound.Location = new System.Drawing.Point(13, 68);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
             this.groupBoxLinesFound.Size = new System.Drawing.Size(752, 200);
-            this.groupBoxLinesFound.TabIndex = 36;
+            this.groupBoxLinesFound.TabIndex = 3;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
             // 
@@ -189,6 +217,28 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader7.Text = "New text";
             this.columnHeader7.Width = 500;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // checkBoxOnlyContinuationLines
             // 
             this.checkBoxOnlyContinuationLines.AutoSize = true;
@@ -197,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxOnlyContinuationLines.Location = new System.Drawing.Point(190, 54);
             this.checkBoxOnlyContinuationLines.Name = "checkBoxOnlyContinuationLines";
             this.checkBoxOnlyContinuationLines.Size = new System.Drawing.Size(167, 17);
-            this.checkBoxOnlyContinuationLines.TabIndex = 37;
+            this.checkBoxOnlyContinuationLines.TabIndex = 1;
             this.checkBoxOnlyContinuationLines.Text = "Only merge continuation lines";
             this.checkBoxOnlyContinuationLines.UseVisualStyleBackColor = true;
             this.checkBoxOnlyContinuationLines.CheckedChanged += new System.EventHandler(this.checkBoxOnlyContinuationLines_CheckedChanged);
@@ -227,28 +277,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // toolStripMenuItemInverseSelection
-            // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
-            // 
             // MergeShortLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,11 +300,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeShortLines";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergeShortLines_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.MergeShortLines_ResizeEnd);
             this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
+            this.ResizeEnd += new System.EventHandler(this.MergeShortLines_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -289,10 +315,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private SubtitleListView SubtitleListview1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxCharacters;
         private System.Windows.Forms.Label labelMaxCharacters;
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.ListView listViewFixes;
         private System.Windows.Forms.ColumnHeader columnHeader4;

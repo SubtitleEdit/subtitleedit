@@ -30,14 +30,12 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelVideoResolution = new System.Windows.Forms.Label();
-            this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownVideoWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -55,15 +53,35 @@
             // 
             // numericUpDownVideoHeight
             // 
+            this.numericUpDownVideoHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownVideoHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownVideoHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownVideoHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownVideoHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownVideoHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownVideoHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownVideoHeight.DecimalPlaces = 0;
+            this.numericUpDownVideoHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownVideoHeight.Location = new System.Drawing.Point(205, 29);
             this.numericUpDownVideoHeight.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownVideoHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownVideoHeight.Name = "numericUpDownVideoHeight";
-            this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 23);
             this.numericUpDownVideoHeight.TabIndex = 3;
+            this.numericUpDownVideoHeight.TabStop = false;
+            this.numericUpDownVideoHeight.ThousandsSeparator = false;
             this.numericUpDownVideoHeight.Value = new decimal(new int[] {
             1080,
             0,
@@ -91,15 +109,35 @@
             // 
             // numericUpDownVideoWidth
             // 
+            this.numericUpDownVideoWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownVideoWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownVideoWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownVideoWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownVideoWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownVideoWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownVideoWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownVideoWidth.DecimalPlaces = 0;
+            this.numericUpDownVideoWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownVideoWidth.Location = new System.Drawing.Point(132, 29);
             this.numericUpDownVideoWidth.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownVideoWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownVideoWidth.Name = "numericUpDownVideoWidth";
-            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 23);
             this.numericUpDownVideoWidth.TabIndex = 1;
+            this.numericUpDownVideoWidth.TabStop = false;
+            this.numericUpDownVideoWidth.ThousandsSeparator = false;
             this.numericUpDownVideoWidth.Value = new decimal(new int[] {
             1920,
             0,
@@ -152,8 +190,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose video resolution";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChooseResolution_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,10 +199,10 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelVideoResolution;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoHeight;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
     }

@@ -5,7 +5,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -47,6 +49,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#audio_to_text_vosk");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -64,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -136,8 +143,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
-
-            
 
             if (AutoClose)
             {

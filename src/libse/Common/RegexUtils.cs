@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     RegexFactory(@"\b[Hh]vad (?:laver|lavede|mener|siger|skal|snakker|sløver|synes|vil) i\b"),
                     RegexFactory(@"\b[Hh]vem (?:er|fanden tror|tror) i\b"),
                     RegexFactory(@"\b[Hh]vilken slags (?:mennesker|folk) er i\?"),
-                    RegexFactory(@"\b[Hh]vis i (?:altså|bare|forstår|får|går|ikke|lovede|lover|overholder|overtræder|slipper|taber|vandt|vinder)\b"),
+                    RegexFactory(@"\b[Hh]vis i (?:altså|bare|forstår|får|går|ikke|lovede|lover|overholder|overtræder|slipper|taber|vandt|vinder|\n)\b"),
                     RegexFactory(@"\b[Hh]vor (?:er|får|gamle er) i\b"),
                     RegexFactory(@"\b[Hh]vor i (?:begyndte|startede)\b"),
                     RegexFactory(@"\b[Hh]vor (?:skal|var) i\b"),
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     RegexFactory(@"\b[Ss]amlede i ham\b"),
                     RegexFactory(@"\bS(?:er|iger) i\b"),
                     RegexFactory(@"\b[Ss]ik(?:ker|re) på i ikke\b"), // Sikker or Sikre...
-                    RegexFactory(@"\b[Ss]kal i (?:alle|allesammen|begge dø|bare|dele|dø|hilse|se|gøre|lave|høre|kaste|fordele|fordeles|fortælle|gøre|have|ikke|klare|klatre|larme|lave|løfte|med|på|til|ud)\b"),
+                    RegexFactory(@"\b[Ss]kal i (?:alle|ikke|allesammen|begge dø|bare|dele|dø|hilse|se|gøre|lave|høre|kaste|fordele|fordeles|fortælle|gøre|have|ikke|klare|klatre|larme|lave|løfte|med|på|til|ud)\b"),
                     RegexFactory(@"\b[Ss]lap i (?:ud|væk)\b"),
                     RegexFactory(@"\b[Ss]nart er i\b"),
                     RegexFactory(@"\b[Ss]om i (?:måske|nok|ved)\b"),
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     RegexFactory(@"\b[Ss]ynes i (?:at|det)\b"),
                     RegexFactory(@"\b[Ss]ynes i\b"), // Remove line above if this one should be kept.
                     RegexFactory(@"\b[Ss]ætter i en\b"),
-                    RegexFactory(@"\bSå i (?:at|det|noget)\b"),
+                    RegexFactory(@"\bSå i (?:at|det|noget|sad)\b"),
                     RegexFactory(@"\b[Ss]å tager i\b"),
                     RegexFactory(@"\b[Tt]ænder i på\b"),
                     RegexFactory(@"\b[Tt]og i (?:bilen|liften|toget)\b"),
@@ -185,15 +185,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = s.Replace(".", "\\.");
             s = s.Replace("?", "\\?");
             return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
-        }
-
-        public static Regex MakeWordSearchRegexWithNumbers(string word)
-        {
-            string s = word.Replace("\\", "\\\\");
-            s = s.Replace("*", "\\*");
-            s = s.Replace(".", "\\.");
-            s = s.Replace("?", "\\?");
-            return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
         }
 
         public static string GetRegExGroup(string pattern)

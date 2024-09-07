@@ -50,10 +50,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
-            this.textBoxTag = new System.Windows.Forms.TextBox();
+            this.textBoxTag = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTag = new System.Windows.Forms.Label();
             this.groupBoxTemplateItem = new System.Windows.Forms.GroupBox();
-            this.textBoxHint = new System.Windows.Forms.TextBox();
+            this.textBoxHint = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelHint = new System.Windows.Forms.Label();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxTemplateItem.SuspendLayout();
@@ -346,10 +346,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonRemoveAll;
         private System.Windows.Forms.Button buttonCopy;
-        private System.Windows.Forms.TextBox textBoxTag;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTag;
         private System.Windows.Forms.Label labelTag;
         private System.Windows.Forms.GroupBox groupBoxTemplateItem;
-        private System.Windows.Forms.TextBox textBoxHint;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxHint;
         private System.Windows.Forms.Label labelHint;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveAll;

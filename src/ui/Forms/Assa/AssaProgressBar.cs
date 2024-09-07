@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -80,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxFontName.Items.Clear();
-            foreach (var font in FontFamily.Families)
+            foreach (var font in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(font.Name);
                 if (font.Name == "Arial")
@@ -101,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoPlayerContainer.Location = new Point(401, 12);
             _videoPlayerContainer.Name = "_videoPlayerContainer";
             _videoPlayerContainer.Size = new Size(923, buttonOK.Top - 18);
+            _videoPlayerContainer.TryLoadGfx();
 
             _fontAttachments = new List<AssaAttachmentFont>();
             if (subtitle.Footer != null)
@@ -138,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonTakePosFromVideo.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
 
             LoadExistingProgressBarSettings();
+            listViewChapters.AutoSizeLastColumn();
 
             _timerRender = new Timer { Interval = 100 };
             _timerRender.Tick += TimerRenderTick;
@@ -772,6 +775,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             }
 
             listViewChapters.EndUpdate();
+            listViewChapters.AutoSizeLastColumn();
         }
 
         private void AssaProgressBar_KeyDown(object sender, KeyEventArgs e)

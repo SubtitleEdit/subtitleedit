@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
+using System.Drawing;
 
 namespace Test.Logic
 {
@@ -339,7 +340,7 @@ namespace Test.Logic
         {
             const string s1 = "Gledaj prema kameri i rici <i>zdravo!";
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
-            Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
+            Assert.AreEqual(s2, "Gledaj prema kameri i rici <i>zdravo!</i>");
         }
 
         [TestMethod]
@@ -437,6 +438,41 @@ namespace Test.Logic
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>Hallo!" + Environment.NewLine + "Hallo!" + Environment.NewLine + "Hallo!</i>");
         }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags15()
+        {
+            var s1 = "Foo<b><i>bar</b>"; 
+            Assert.AreEqual("Foo<b><i>bar</i></b>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags16()
+        {
+            var s1 = "Foo <i>bar"; 
+            Assert.AreEqual( "Foo <i>bar</i>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags17()
+        {
+            var s1 = "Foobar<i>";
+            Assert.AreEqual("Foobar", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags18()
+        {
+            var s1 = "<u><b><i>Foobar</b></u>";
+            Assert.AreEqual("<u><b><i>Foobar</i></b></u>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags19()
+        {
+            var s1 = "<i>Foobar";
+            Assert.AreEqual("<i>Foobar</i>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
 
         [TestMethod]
         public void FixInvalidItalicTagsWithAssTag()
@@ -460,6 +496,14 @@ namespace Test.Logic
             var s1 = "ADULT MARK: <i>New friends";
             var s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual("ADULT MARK: <i>New friends</i>", s2);
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicColonBracketItalic()
+        {
+            var s1 = "[König:]<i> Ich weiß, dass du dagegen</i>" + Environment.NewLine + "<i>bist.</i>";
+            var s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual("[König:] <i>Ich weiß, dass du dagegen</i>" + Environment.NewLine + "<i>bist.</i>", s2);
         }
 
         [TestMethod]
@@ -917,6 +961,63 @@ namespace Test.Logic
         {
             var result = Utilities.RemoveSsaTags("{\\p2}m 0 0 l 1 1{\\p0}Hallo world!", true);
             Assert.AreEqual("Hallo world!", result);
+        }
+
+        [TestMethod]
+        public void UrlEncode()
+        {
+            var result = Utilities.UrlEncode("{\\fs50}Yo{\\Reset}Yo");
+            Assert.AreEqual("%7B%5Cfs50%7DYo%7B%5CReset%7DYo", result);
+        }
+
+        [TestMethod]
+        public void UrlEncodeLength()
+        {
+            var text = @"{\rSubtitle-_2}Blaf,{\RESET}.!? ";
+            var result = Utilities.UrlEncode(text);
+            var resultLength = Utilities.UrlEncodeLength(text);
+            Assert.AreEqual(resultLength, result.Length);
+        }
+
+        [TestMethod]
+        public void GetColorFromString1()
+        {
+            var c = HtmlUtil.GetColorFromString("#010203ff");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void GetColorFromString2()
+        {
+            var c = HtmlUtil.GetColorFromString("rgb(1,2,3)");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void GetColorFromString3()
+        {
+            var c = HtmlUtil.GetColorFromString("rgba(1,2,3, 1)");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void UrlDecode1()
+        {
+            var s = Utilities.UrlDecode("В о\u0442е\u043bе");
+
+            Assert.AreEqual("В отеле", s);
         }
     }
 }

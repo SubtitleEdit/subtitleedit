@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -645,7 +645,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Üstteki boş satırı kaldır</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Alttaki boş satırı kaldır</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Aradaki boş satırı kaldır</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Üst üste gelen görüntülenme sürelerini düzelt</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kısa görüntülenme sürelerini düzelt</FixShortDisplayTimes>
     <FixLongDisplayTimes>Uzun görüntülenme sürelerini düzelt</FixLongDisplayTimes>
@@ -668,7 +668,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixCommonOcrErrors>Yaygın OCR hatalarını düzelt (OCR liste değiştirmeyi kullanarak)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Yaygın OCR hataları düzeltildi (OCR değiştirme dosyası kullanıldı): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Sayılar arasındaki boşluğu kaldır</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</BreakDialogsOnOneLine>
     <NormalizeStrings>Dizeleri normalleştir</NormalizeStrings>
     <FixTurkishAnsi>Türk ANSI (İzlanda) harfleri Unicode için düzelt</FixTurkishAnsi>
     <FixDanishLetterI>Danimarka 'i' harfini düzelt</FixDanishLetterI>
@@ -1407,7 +1407,7 @@ Belgenin üstünden başlamak ve aramaya devam etmek veya değiştirmek ister mi
     <BeforeDisplayTimeAdjustment>Ekran zaman ayarlamadan önce</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Görüntü zamanı ayarlandı: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Görüntü zamanları ayarlandı: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Yaygın hata düzeltmelerinden önce</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Seçilen satırdaki yaygın hatalar düzeltildi</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Yaygın hatalar düzeltildi</CommonErrorsFixed>
@@ -2164,7 +2164,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <DarkThemeEnabled>Koyu tema kullan</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Liste görünümü kılavuz çizgilerini göster</DarkThemeShowGridViewLines>
     <UpdateShortcut>Güncelle</UpdateShortcut>
-    <FoucsSetVideoPosition>Odak video konumunu ayarla</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Odak video konumunu ayarla</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Video kontrol geçişlerini azalt/azaltma</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sonunu ayarla, yeni ekle ve yeniye git</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Son konuma göre ayarla</AdjustViaEndAutoStart>
@@ -2275,7 +2275,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoForwardXSSeconds>Küçük seçilmiş zaman kadar ileri</GoForwardXSSeconds>
     <GoBackXLSeconds>Büyük seçilmiş zaman kadar geri</GoBackXLSeconds>
     <GoForwardXLSeconds>Büyük seçili zaman kadar ileri</GoForwardXLSeconds>
-    <GoBack3Second>Üç saniye geri</GoBack3Second>
+    <GoBack3Seconds>Üç saniye geri</GoBack3Seconds>
     <GoToStartCurrent>Video konumunu mevcut altyazının başlangıcına ayarla</GoToStartCurrent>
     <ToggleStartEndCurrent>Mevcut altyazının başlangıcı/bitişi arasında video konumunu değiştir</ToggleStartEndCurrent>
     <PlayCurrent>Mevcut altyazıyı oynat</PlayCurrent>
@@ -2532,11 +2532,11 @@ Devam et?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Altı çizili etiket sayısı: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Altyazı uzunluğu - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Altyazı uzunluğu - maksimum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Altyazı uzunluğu - ortalama: {0}</LineLengthAverage>
+    <LineLengthAverage>Altyazı uzunluğu - ortalama: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Altyazı, satır sayısı - ortalama: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tek satır uzunluğu - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tek satır uzunluğu - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Tek satır uzunluğu - ortalama: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Tek satır uzunluğu - ortalama: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Tek satır genişliği - minimum: {0} piksel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Tek satır genişliği - maksimum: {0} piksel</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Tek satır genişliği - ortalama: {0} piksel</SingleLineWidthAverage>
@@ -2730,7 +2730,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <TransportStreamGrayscale>Gri tonlama</TransportStreamGrayscale>
     <TransportStreamGetColor>Renk kullan (satırlarda bölme oluşabilir)</TransportStreamGetColor>
     <PromptForUnknownWords>Bilinmeyen kelimeler için sor</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>İki satırdan fazla ise otomatik olarak böl</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tüm düzeltmeler</AllFixes>
     <GuessesUsed>Tahminler-Kullanılmış</GuessesUsed>
@@ -2854,7 +2854,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <RemoveShotChange>Bölüm değişikliğini kaldır...</RemoveShotChange>
     <GuessTimeCodes>Zaman kodlarını tahmin et...</GuessTimeCodes>
     <SeekSilence>Sessizlik arama...</SeekSilence>
-    <InsertSubtitleHere>Altyazıyı buraya ekleyin...</InsertSubtitleHere>
+    <InsertSubtitleHere>Altyazıyı buraya ekleyin</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

@@ -839,7 +839,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (input.IndexOf("<i>", StringComparison.Ordinal) >= 0)
             {
                 var startIndex = input.IndexOf("<i>", StringComparison.Ordinal);
-                var endIndex = input.IndexOf("</i>", StringComparison.Ordinal);
+                var endIndex = input.IndexOf("</i>", startIndex, StringComparison.Ordinal);
                 var textToRemove = endIndex >= 0 ? input.Substring(startIndex, (endIndex + 4) - startIndex) : input.Substring(startIndex);
                 input = input.Replace(textToRemove, string.Empty);
             }
@@ -909,6 +909,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             input = input.Substring(lineStartIndex, lineEndIndex - lineStartIndex);
 
             var startIndex = input.IndexOf("<", StringComparison.Ordinal);
+            if (startIndex < 0)
+            {
+                return false;
+            }
+
             var endIndex = input.LastIndexOf("</", StringComparison.Ordinal);
             if (endIndex >= 0)
             {

@@ -12,9 +12,7 @@
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Test</RootNamespace>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -43,19 +41,9 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -64,11 +52,24 @@
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
     <Compile Include="Assa\AssaTimeCodes.cs" />
+    <Compile Include="Core\AudioToTextTest.cs" />
+    <Compile Include="Core\JsonTest.cs" />
+    <Compile Include="Core\MergeShortLinesUtilsTest.cs" />
+    <Compile Include="Core\CsvUtilTest.cs" />
+    <Compile Include="Core\WebVttHelperTest.cs" />
+    <Compile Include="Core\WebVttToAssaTest.cs" />
     <Compile Include="Dictionaries\StringWithoutSpaceSplitToWordsTest.cs" />
     <Compile Include="GoogleCloudVision\GoogleCloudVisionJsonToLinesTest.cs" />
     <Compile Include="LanguageFiles\LanguageFileTest.cs" />
+    <Compile Include="Logic\AutoTranslate\MergeAndSplitHelperTest.cs" />
+    <Compile Include="Logic\BeautifyTimeCodesTest.cs" />
     <Compile Include="Logic\ConvertColorsToDialogTest.cs" />
+    <Compile Include="Core\LanguageAutoDetectLanguagesTest.cs" />
+    <Compile Include="Logic\DimensionTest.cs" />
     <Compile Include="Logic\NetflixHelperTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\EbuStlTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\NetflixTimedTextTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\LrcTest.cs" />
     <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
     <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
@@ -99,12 +100,14 @@
     <Compile Include="Logic\SubtitleFormats\Cea708Test.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatFunctionsTest.cs" />
     <Compile Include="Logic\TarFileTest.cs" />
+    <Compile Include="Logic\ProgressHelperTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
     <Compile Include="Logic\StrippableTextTest.cs" />
     <Compile Include="Logic\TimeCodeTest.cs" />
     <Compile Include="Logic\UknownFormatImporterJsonTest.cs" />
     <Compile Include="Logic\ContinuationUtilitiesTest.cs" />
+    <Compile Include="Logic\HtmlUtilTest.cs" />
     <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
     <Compile Include="Logic\Ocr\NOcrTest.cs" />
@@ -113,7 +116,8 @@
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
     <Compile Include="Logic\UtilitiesTest.cs" />
     <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
-    <Compile Include="SETextBoxControl\SeTextBoxTests.cs" />
+    <Compile Include="UserControls\NikseComboBoxTests.cs" />
+    <Compile Include="UserControls\SeTextBoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />
@@ -178,10 +182,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj">
       <Project>{d6f64cd3-c3ea-4b36-b575-9b3b8a3ca13f}</Project>
       <Name>LibSE</Name>
@@ -191,20 +191,21 @@
       <Name>SubtitleEdit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="NHunspell" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
 </Project>

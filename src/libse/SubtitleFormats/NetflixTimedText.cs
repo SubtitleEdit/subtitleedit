@@ -151,12 +151,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     id = node.Attributes["id"].Value;
                 }
 
-                if (id != null && id == "bottomCenter")
+                if (id is "bottomCenter")
                 {
                     hasBottomCenterRegion = true;
                 }
 
-                if (id != null && id == "topCenter")
+                if (id is "topCenter")
                 {
                     hasTopCenterRegion = true;
                 }
@@ -168,19 +168,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 var text = p.Text;
 
-                XmlAttribute pid = xml.CreateAttribute("xml:id");
+                var pid = xml.CreateAttribute("xml:id");
                 pid.InnerText = "p" + ++no;
                 paragraph.Attributes.Append(pid);
 
-                XmlAttribute start = xml.CreateAttribute("begin");
+                var start = xml.CreateAttribute("begin");
                 start.InnerText = string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 paragraph.Attributes.Append(start);
 
-                XmlAttribute end = xml.CreateAttribute("end");
+                var end = xml.CreateAttribute("end");
                 end.InnerText = string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
                 paragraph.Attributes.Append(end);
 
-                XmlAttribute regionP = xml.CreateAttribute("region");
+                var regionP = xml.CreateAttribute("region");
                 if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     if (hasTopCenterRegion)
@@ -231,9 +231,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                         {
-                            styles.Push(currentStyle);
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
+                            if (currentStyle.Name == "span")
+                            {
+                                var parent = currentStyle;
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                parent.AppendChild(currentStyle);
+                            }
+                            else
+                            {
+                                styles.Push(currentStyle);
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                paragraph.AppendChild(currentStyle);
+                            }
+
                             XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
                             attr.InnerText = "italic";
                             currentStyle.Attributes.Append(attr);
@@ -242,8 +252,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                         {
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
+                            if (currentStyle.Name == "span")
+                            {
+                                var parent = currentStyle;
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                parent.AppendChild(currentStyle);
+                            }
+                            else
+                            {
+                                styles.Push(currentStyle);
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                paragraph.AppendChild(currentStyle);
+                            }
+
                             XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
                             attr.InnerText = "bold";
                             currentStyle.Attributes.Append(attr);
@@ -263,10 +284,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
                                     {
+                                        if (currentStyle.Name == "span")
+                                        {
+                                            var parent = currentStyle;
+                                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                            parent.AppendChild(currentStyle);
+                                        }
+                                        else
+                                        {
+                                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                            paragraph.AppendChild(currentStyle);
+                                        }
+
+                                        var attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
                                         var fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                        currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                                        paragraph.AppendChild(currentStyle);
-                                        XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
                                         attr.InnerText = fontColor;
                                         currentStyle.Attributes.Append(attr);
                                         fontColors.Push(fontColor);
@@ -312,9 +343,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             paragraph.AppendChild(currentStyle);
-                            if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                            if (line.Substring(i).StartsWith("</i></font>", StringComparison.OrdinalIgnoreCase))
                             {
-                                skipCount = 6;
+                                skipCount = 10;
                                 fontColors.Pop();
                             }
                             else

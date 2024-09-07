@@ -116,19 +116,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Play()
         {
-            _quartzFilgraphManager.Run();
+            _quartzFilgraphManager?.Run();
             _isPaused = false;
         }
 
         public override void Pause()
         {
-            _quartzFilgraphManager.Pause();
+            _quartzFilgraphManager?.Pause();
             _isPaused = true;
         }
 
         public override void Stop()
         {
-            _quartzFilgraphManager.Stop();
+            _quartzFilgraphManager?.Stop();
             _isPaused = true;
         }
 
@@ -140,8 +140,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             const int wsChild = 0x40000000;
 
-            string ext = System.IO.Path.GetExtension(videoFileName)?.ToLowerInvariant();
-            bool isAudio = Utilities.AudioFileExtensions.Contains(ext);
+            var ext = System.IO.Path.GetExtension(videoFileName)?.ToLowerInvariant();
+            var isAudio = Utilities.AudioFileExtensions.Contains(ext);
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
-                    OnVideoLoaded.Invoke(_quartzFilgraphManager, new EventArgs());
+                    OnVideoLoaded.Invoke(_quartzFilgraphManager, EventArgs.Empty);
                 }
                 catch
                 {
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _isPaused = true;
                 if (OnVideoEnded != null && _quartzFilgraphManager != null)
                 {
-                    OnVideoEnded.Invoke(_quartzFilgraphManager, new EventArgs());
+                    OnVideoEnded.Invoke(_quartzFilgraphManager, EventArgs.Empty);
                 }
             }
         }

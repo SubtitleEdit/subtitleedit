@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class EmptyFixCallback : IFixCallbacks
     {
-
         public bool AllowFix(Paragraph p, string action)
         {
             return true;
@@ -49,10 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // Empty callback
         }
 
-        public SubtitleFormat Format
-        {
-            get { return new SubRip(); }
-        }
+        public SubtitleFormat Format => new SubRip();
 
         public string Language { get; set; } = "en";
 

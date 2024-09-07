@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private void ReplaceNames2Fix(List<string> replaceIds, List<string> replaceNames)
         {
-            for (int i = 0; i < replaceIds.Count; i++)
+            for (var i = 0; i < replaceIds.Count; i++)
             {
                 StrippedText = StrippedText.Replace(replaceIds[i], replaceNames[i]);
             }
@@ -189,9 +189,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (StrippedText.StartsWith("_@", StringComparison.Ordinal))
                 {
-                    for (int i = 0; i < replaceIds.Count; i++)
+                    for (var i = 0; i < replaceIds.Count; i++)
                     {
-                        string id = $"_@{i}_";
+                        var id = $"_@{i}_";
                         if (StrippedText.StartsWith(id, StringComparison.Ordinal))
                         {
                             if (!string.IsNullOrEmpty(originalNames[i]))
@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 const string expectedChars = "\"“`´'()<>!?.- \r\n";
                 var sb = new StringBuilder(StrippedText.Length);
                 bool lastWasBreak = false;
-                for (int i = 0; i < StrippedText.Length; i++)
+                for (var i = 0; i < StrippedText.Length; i++)
                 {
                     var s = StrippedText[i];
                     if (lastWasBreak)
@@ -251,9 +251,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 if (StrippedText.Substring(i).StartsWith("_@", StringComparison.Ordinal))
                                 {
                                     var ks = StrippedText.Substring(i);
-                                    for (int k = 0; k < replaceIds.Count; k++)
+                                    for (var k = 0; k < replaceIds.Count; k++)
                                     {
-                                        string id = $"_@{k}_";
+                                        var id = $"_@{k}_";
                                         if (ks.StartsWith(id, StringComparison.Ordinal))
                                         {
                                             if (!string.IsNullOrEmpty(originalNames[k]))
@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             var idx = sb.ToString().IndexOf('[');
                             if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString(0, idx - 1).Trim();
+                                var temp = sb.ToString(0, idx - 1).Trim();
                                 if (temp.Length > 0 && !char.IsLetterOrDigit(temp[temp.Length - 1]))
                                 {
                                     lastWasBreak = true;

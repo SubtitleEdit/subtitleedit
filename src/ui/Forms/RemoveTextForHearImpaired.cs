@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,34 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FormRemoveTextForHearImpaired : PositionAndSizeForm
     {
-        public Subtitle Subtitle;
+        public class LanguageItem
+        {
+            public CultureInfo Code { get; }
+            public string Name { get; }
+
+            public LanguageItem(CultureInfo code, string name)
+            {
+                Code = code;
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        public Subtitle Subtitle { get; set; }
         public int TotalFixes { get; private set; }
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
         private readonly Main _mainForm;
+        private string _interjectionsLanguage;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
         private readonly List<Paragraph> _edited = new List<Paragraph>();
         private readonly List<Paragraph> _editedOld = new List<Paragraph>();
-        private static readonly Color _listBackMarkColor = Configuration.Settings.General.UseDarkTheme? Color.PaleVioletRed : Color.PeachPuff;
+        private static readonly Color ListBackMarkColor = Configuration.Settings.General.UseDarkTheme ? Color.PaleVioletRed : Color.PeachPuff;
 
         public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
@@ -44,12 +63,16 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             checkBoxInterjectionOnlySeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
+            checkBoxRemoveIfOnlyMusicSymbols.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols;
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
             checkBoxInterjectionOnlySeparateLine.Enabled = checkBoxRemoveInterjections.Checked;
 
             contextMenuStrip1.Items[0].Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             contextMenuStrip1.Items[1].Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
+            toolStripMenuItemSelAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemInvertSel.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            
             _language = LanguageSettings.Current.RemoveTextFromHearImpaired;
             Text = _language.Title;
             groupBoxRemoveTextConditions.Text = _language.RemoveTextConditions;
@@ -65,8 +88,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBetweenSquares.Text = _language.SquareBrackets;
             checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;
             checkBoxRemoveIfAllUppercase.Text = _language.RemoveTextIfAllUppercase;
+            checkBoxRemoveIfOnlyMusicSymbols.Text = _language.RemoveIfOnlyMusicSymbols;
             checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
             checkBoxInterjectionOnlySeparateLine.Text = _language.OnlyIfInSeparateLine;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             buttonEditInterjections.Text = _language.EditInterjections;
             buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
             listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
@@ -85,14 +110,38 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             Subtitle = new Subtitle(subtitle);
+            InitializeLanguageNames(subtitle);
             GeneratePreview();
+        }
+
+        private void InitializeLanguageNames(Subtitle subtitle)
+        {
+            _interjectionsLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+
+            comboBoxLanguage.BeginUpdate();
+            comboBoxLanguage.Items.Clear();
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures(true).OrderBy(p=>p.EnglishName))
+            {
+                comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
+                if (ci.TwoLetterISOLanguageName == _interjectionsLanguage)
+                {
+                    comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
+                }
+            }
+            comboBoxLanguage.EndUpdate();
+            comboBoxLanguage.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+
+            if (comboBoxLanguage.SelectedIndex < 0 && comboBoxLanguage.Items.Count > 0)
+            {
+                comboBoxLanguage.SelectedIndex = 0;
+            }
         }
 
         public void InitializeSettingsOnly()
         {
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             groupBoxLinesFound.Visible = false;
-            int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
+            var h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
             MinimumSize = new Size(MinimumSize.Width, h);
             Height = h;
         }
@@ -107,13 +156,16 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor.Current = Cursors.WaitCursor;
             _removeTextForHiLib.Settings = GetSettings(Subtitle);
             _removeTextForHiLib.Warnings = new List<int>();
+
+            _removeTextForHiLib.ReloadInterjection(_interjectionsLanguage);
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            int count = 0;
+            var count = 0;
             _fixes = new Dictionary<Paragraph, string>();
-            for (int index = 0; index < Subtitle.Paragraphs.Count; index++)
+            for (var index = 0; index < Subtitle.Paragraphs.Count; index++)
             {
-                Paragraph p = Subtitle.Paragraphs[index];
+                var p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
                 if (_edited.Contains(p))
                 {
@@ -124,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
+                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index, _interjectionsLanguage);
                     if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                     {
                         count++;
@@ -134,6 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
+
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
             Cursor.Current = Cursors.Default;
@@ -145,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_removeTextForHiLib.Warnings != null && _removeTextForHiLib.Warnings.Contains(_removeTextForHiLib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
-                item.BackColor = _listBackMarkColor;
+                item.BackColor = ListBackMarkColor;
             }
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
@@ -183,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols = checkBoxRemoveIfOnlyMusicSymbols.Checked;
 
             ApplyChanges();
             DialogResult = DialogResult.OK;
@@ -201,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int fixes = RemoveTextFromHearImpaired();
+            var fixes = RemoveTextFromHearImpaired();
             Subtitle.Renumber();
             if (_mainForm != null && fixes > 0)
             {
@@ -213,15 +267,15 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             _unchecked.Clear();
-            int fixes = 0;
+            var fixes = 0;
 
-            for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
+            for (var i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
                 var p = (Paragraph)item.Tag;
                 if (item.Checked)
                 {
-                    string newText = _fixes[p];
+                    var newText = _fixes[p];
                     if (string.IsNullOrWhiteSpace(newText))
                     {
                         Subtitle.Paragraphs.Remove(p);
@@ -237,6 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _unchecked.Add(p);
                 }
             }
+
             return fixes;
         }
 
@@ -253,13 +308,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonEditInterjections_Click(object sender, EventArgs e)
         {
-            using (var editInterjections = new Interjections())
+            var lang = "en";
+            if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
             {
-                editInterjections.Initialize(Configuration.Settings.Tools.Interjections);
+                lang = l.Code.TwoLetterISOLanguageName;
+            }
+
+            var interjections = InterjectionsRepository.LoadInterjections(lang);
+            using (var editInterjections = new InterjectionsEditList(interjections.Interjections, interjections.SkipIfStartsWith))
+            {
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeparatedString();
-                    _removeTextForHiLib.ReloadInterjection();
+                    SaveInterjections(editInterjections.Interjections, editInterjections.SkipList);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
@@ -268,9 +328,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void SaveInterjections(List<string> interjections, List<string> skipList)
+        {
+            var lang = "en";
+            if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
+            {
+                lang = l.Code.TwoLetterISOLanguageName;
+            }
+
+            InterjectionsRepository.SaveInterjections(lang, interjections, skipList);
+        }
+
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
         {
-            int availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
+            var availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
             columnHeaderBefore.Width = availableWidth;
             columnHeaderAfter.Width = -2;
         }
@@ -310,13 +381,16 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
                 RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked,
+                RemoveIfOnlyMusicSymbols = checkBoxRemoveIfOnlyMusicSymbols.Checked,
                 CustomStart = comboBoxCustomStart.Text,
                 CustomEnd = comboBoxCustomEnd.Text
             };
-            foreach (string item in comboBoxRemoveIfTextContains.Text.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+
+            foreach (var item in comboBoxRemoveIfTextContains.Text.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 settings.RemoveIfTextContains.Add(item.Trim());
             }
+
             return settings;
         }
 
@@ -411,6 +485,29 @@ namespace Nikse.SubtitleEdit.Forms
             var o = Subtitle.GetParagraphOrDefaultById(p.Id);
             o.Text = text;
             _edited.Add(p);
+        }
+
+        private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxLanguage.SelectedIndex > 0 && comboBoxLanguage.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitializeLanguageNames(Subtitle);
+            }
+
+            GeneratePreview();
+        }
+
+        private void checkBoxRemoveIfOnlyMusicSymbols_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
     }
 }

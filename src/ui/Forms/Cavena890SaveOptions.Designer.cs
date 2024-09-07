@@ -30,22 +30,22 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.textBoxComment = new System.Windows.Forms.TextBox();
+            this.textBoxComment = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelComment = new System.Windows.Forms.Label();
-            this.textBoxTranslatedTitle = new System.Windows.Forms.TextBox();
+            this.textBoxTranslatedTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslatedTitle = new System.Windows.Forms.Label();
-            this.textBoxOriginalTitle = new System.Windows.Forms.TextBox();
+            this.textBoxOriginalTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelOriginalTitle = new System.Windows.Forms.Label();
-            this.textBoxTranslator = new System.Windows.Forms.TextBox();
+            this.textBoxTranslator = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslator = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxComment
             // 
+            this.textBoxComment.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxComment.Location = new System.Drawing.Point(185, 119);
             this.textBoxComment.MaxLength = 24;
             this.textBoxComment.Name = "textBoxComment";
@@ -118,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxTranslatedTitle
             // 
+            this.textBoxTranslatedTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxTranslatedTitle.Location = new System.Drawing.Point(185, 41);
             this.textBoxTranslatedTitle.MaxLength = 28;
             this.textBoxTranslatedTitle.Name = "textBoxTranslatedTitle";
@@ -135,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxOriginalTitle
             // 
+            this.textBoxOriginalTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOriginalTitle.Location = new System.Drawing.Point(185, 67);
             this.textBoxOriginalTitle.MaxLength = 24;
             this.textBoxOriginalTitle.Name = "textBoxOriginalTitle";
@@ -152,6 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxTranslator
             // 
+            this.textBoxTranslator.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxTranslator.Location = new System.Drawing.Point(185, 93);
             this.textBoxTranslator.MaxLength = 24;
             this.textBoxTranslator.Name = "textBoxTranslator";
@@ -169,14 +173,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownStartTime.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownStartTime.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownStartTime.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(183, 177);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 23);
             this.timeUpDownStartTime.TabIndex = 11;
+            this.timeUpDownStartTime.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -189,7 +204,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxLanguage
             // 
+            this.comboBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguage.DropDownHeight = 400;
             this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguage.DropDownWidth = 219;
             this.comboBoxLanguage.FormattingEnabled = true;
             this.comboBoxLanguage.Items.AddRange(new object[] {
             "Arabic",
@@ -201,9 +225,14 @@ namespace Nikse.SubtitleEdit.Forms
             "Russian",
             "Romanian"});
             this.comboBoxLanguage.Location = new System.Drawing.Point(185, 149);
+            this.comboBoxLanguage.MaxLength = 32767;
             this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.SelectedIndex = -1;
+            this.comboBoxLanguage.SelectedItem = null;
+            this.comboBoxLanguage.SelectedText = "";
             this.comboBoxLanguage.Size = new System.Drawing.Size(219, 21);
             this.comboBoxLanguage.TabIndex = 9;
+            this.comboBoxLanguage.UsePopupWindow = false;
             // 
             // labelLanguage
             // 
@@ -251,20 +280,20 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
 
         private System.Windows.Forms.Label labelTimeCodeStartOfProgramme;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.TextBox textBoxComment;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxComment;
         private System.Windows.Forms.Label labelComment;
-        private System.Windows.Forms.TextBox textBoxTranslatedTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslatedTitle;
         private System.Windows.Forms.Label labelTranslatedTitle;
-        private System.Windows.Forms.TextBox textBoxOriginalTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOriginalTitle;
         private System.Windows.Forms.Label labelOriginalTitle;
-        private System.Windows.Forms.TextBox textBoxTranslator;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslator;
         private System.Windows.Forms.Label labelTranslator;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
     }
 }

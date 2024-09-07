@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -583,7 +583,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Отстрани празни линија на врв</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Отстрани празна линија на дно</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Отстрани празна линија во средина</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Отстрани празни линии/неупотребени редови во линија</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Отстрани празни линии/неупотребени редови во линија</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Отстранети празни линии: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Поправи преклопи</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправи кратки траења</FixShortDisplayTimes>
@@ -607,7 +607,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Поправи чести OCR грешки (користејќи OCR листа за замена)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Поправени чести OCR грешки (Користена OcrЛиста за замена): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Отстрани празни места меѓу броеви</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Поправи дијалози кои се во еден ред</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Поправи дијалози кои се во еден ред</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Отстранети празни места меѓу броеви: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Поправи Турски ANSI (Исландски) букви во Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Поправи ја данската буква 'i'</FixDanishLetterI>
@@ -1350,7 +1350,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Пред прилагодба на временскиот приказ</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Временскиот приказ е прилагоден: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Временските прикази се прилагодени{0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Почетното време е прилагодено: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Почетното време е прилагодено: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Пред поправките на чести грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени се честите грешки во избраните линии</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени чести грешки</CommonErrorsFixed>
@@ -2077,7 +2077,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForward1Second>Една секунда напред</GoForward1Second>
     <GoBack5Seconds>Пет секунди назад</GoBack5Seconds>
     <GoForward5Seconds>Пет секунди напред</GoForward5Seconds>
-    <GoBack3Second>Три секунди назад</GoBack3Second>
+    <GoBack3Seconds>Три секунди назад</GoBack3Seconds>
     <GoToStartCurrent>Постави видео позиција на почеток на тековен титл</GoToStartCurrent>
     <ToggleStartEndCurrent>Преклопи видео позиција меѓу почеток/крај на тековен титл</ToggleStartEndCurrent>
     <PlayCurrent>Пушти го тековниот титл</PlayCurrent>
@@ -2324,14 +2324,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Тагови за порамнување: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Должина на титл - минимум: {0} знаци</LineLengthMinimum>
     <LineLengthMaximum>Должина на титл - максимум: {0} знаци</LineLengthMaximum>
-    <LineLengthAverage>Должина на титл - просек: {0} знаци</LineLengthAverage>
+    <LineLengthAverage>Должина на титл - просек: {0:#.###} знаци</LineLengthAverage>
     <LinesPerSubtitleAverage>Број на линии во титлот - просек: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Должина на линија - минимум: {0} знаци</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Должина на линија - максимум: {0} знаци</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Должина на линија - просек: {0} (знаци)</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Должина на линија - просек: {0:#.###} (знаци)</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Ширина на линија - минимум: {0} пиксели</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ширина на линија - максимум: {0} пиксели</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ширина на линија - просек: {0} пиксели</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Ширина на линија - просек: {0:#.###} пиксели</SingleLineWidthAverage>
     <DurationMinimum>Траење - минимум: {0:0.000} секунди</DurationMinimum>
     <DurationMaximum>Траење - максимум: {0:0.000} секунди</DurationMaximum>
     <DurationAverage>Траење - просечно: {0:0.000} секунди</DurationAverage>
@@ -2496,7 +2496,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Скала на сивило</TransportStreamGrayscale>
     <TransportStreamGetColor>Употреби боја (може да настане разделба на линии)</TransportStreamGetColor>
     <PromptForUnknownWords>Извести за непознати зборови</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Можност за претпоставка на непознати зборови</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Можност за претпоставка на непознати зборови</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматски прекрши го параграфот ако има повеќе од два реда</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Сите поправки</AllFixes>
     <GuessesUsed>Употребени претпоставки</GuessesUsed>
@@ -2611,7 +2611,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveShotChange>Отстрани промена на сцена</RemoveShotChange>
     <GuessTimeCodes>Претпостави временски кодови...</GuessTimeCodes>
     <SeekSilence>Откриј тишина...</SeekSilence>
-    <InsertSubtitleHere>Тука внеси титл...</InsertSubtitleHere>
+    <InsertSubtitleHere>Тука внеси титл</InsertSubtitleHere>
     <CharsSecX>ЗВС: {0:0.00}</CharsSecX>
     <WordsMinX>ЗПМ: {0:0.00}</WordsMinX>
   </Waveform>

@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -119,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (ss.CurrentDCinemaFontSize == 0 || string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
             {
-                Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
+                Configuration.Settings.SubtitleSettings.InitializeDCinemaSettings(true);
             }
 
             xml.DocumentElement.SelectSingleNode("dcst:ContentTitleText", nsmgr).InnerText = ss.CurrentDCinemaMovieTitle;
@@ -172,10 +173,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).Attributes["ID"].Value = loadedFontId;
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Size"].Value = fontSize.ToString();
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["ID"].Value = loadedFontId;
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Effect"].Value = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
 
             XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
             var no = 0;
@@ -575,26 +576,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         internal static string FixDcsTextSameLine(string xml)
         {
-            var index = xml.IndexOf("<dcst:Text", StringComparison.Ordinal);
-            var endIndex = 1;
-            while (index > 0 && endIndex > 0)
+            var regex = new Regex("<Text [^<]*>\\s+");
+            var match = regex.Match(xml);
+            while (match.Success)
             {
-                endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
-                if (endIndex > 0)
-                {
-                    var part = xml.Substring(index, endIndex - index);
-                    if (part.Contains(Environment.NewLine))
-                    {
-                        part = part.Replace(Environment.NewLine, " ");
-                        while (part.Contains("  "))
-                        {
-                            part = part.Replace("  ", " ");
-                        }
-                        part = part.Replace("> <", "><");
-                    }
-                    xml = xml.Remove(index, endIndex - index).Insert(index, part);
-                    index = xml.IndexOf("<dcst:Text", endIndex, StringComparison.Ordinal);
-                }
+                xml = xml
+                    .Remove(match.Index, match.Value.Length)
+                    .Insert(match.Index, match.Value.Trim());
+                match = regex.Match(xml, match.Index);
+            }
+
+            regex = new Regex("\\s+</Text>");
+            match = regex.Match(xml);
+            while (match.Success)
+            {
+                xml = xml
+                    .Remove(match.Index, match.Value.Length)
+                    .Insert(match.Index, match.Value.Trim());
+                match = regex.Match(xml, match.Index);
             }
 
             return xml;
@@ -616,7 +615,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var ss = Configuration.Settings.SubtitleSettings;
             try
             {
-                ss.InitializeDCinameSettings(true);
+                ss.InitializeDCinemaSettings(true);
                 var node = xml.DocumentElement.SelectSingleNode("Id");
                 if (node != null)
                 {
@@ -699,7 +698,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (node.Attributes["Color"] != null)
                     {
-                        ss.CurrentDCinemaFontColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["Color"].InnerText);
+                        ss.CurrentDCinemaFontColor = DCinemaInterop.GetColorFromString("#" + node.Attributes["Color"].InnerText);
                     }
 
                     if (node.Attributes["Effect"] != null)
@@ -709,7 +708,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (node.Attributes["EffectColor"] != null)
                     {
-                        ss.CurrentDCinemaFontEffectColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["EffectColor"].InnerText);
+                        ss.CurrentDCinemaFontEffectColor = DCinemaInterop.GetColorFromString("#" + node.Attributes["EffectColor"].InnerText);
                     }
                 }
             }

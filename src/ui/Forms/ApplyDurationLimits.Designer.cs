@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.numericUpDownDurationMax = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownDurationMin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationMax = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownDurationMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelNote = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -40,27 +40,39 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxUnfixable = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
+            this.checkBoxCheckShotChanges = new System.Windows.Forms.CheckBox();
             this.groupBoxFixesAvailable.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.groupBoxUnfixable.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // numericUpDownDurationMax
             // 
+            this.numericUpDownDurationMax.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMax.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMax.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMax.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMax.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMax.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMax.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMax.DecimalPlaces = 0;
+            this.numericUpDownDurationMax.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownDurationMax.Location = new System.Drawing.Point(191, 38);
             this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
             50000,
@@ -73,8 +85,10 @@
             0,
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
-            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 4;
+            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 23);
+            this.numericUpDownDurationMax.TabIndex = 5;
+            this.numericUpDownDurationMax.TabStop = false;
+            this.numericUpDownDurationMax.ThousandsSeparator = false;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -86,6 +100,19 @@
             // 
             // numericUpDownDurationMin
             // 
+            this.numericUpDownDurationMin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMin.DecimalPlaces = 0;
+            this.numericUpDownDurationMin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownDurationMin.Location = new System.Drawing.Point(191, 12);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
             3000,
@@ -98,8 +125,10 @@
             0,
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
-            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownDurationMin.TabIndex = 2;
+            this.numericUpDownDurationMin.TabStop = false;
+            this.numericUpDownDurationMin.ThousandsSeparator = false;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -149,8 +178,8 @@
             this.groupBoxFixesAvailable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxFixesAvailable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFixesAvailable.Name = "groupBoxFixesAvailable";
-            this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 302);
-            this.groupBoxFixesAvailable.TabIndex = 5;
+            this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 292);
+            this.groupBoxFixesAvailable.TabIndex = 6;
             this.groupBoxFixesAvailable.TabStop = false;
             this.groupBoxFixesAvailable.Text = "Fixes available: {0}";
             // 
@@ -170,7 +199,7 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(919, 273);
+            this.listViewFixes.Size = new System.Drawing.Size(919, 262);
             this.listViewFixes.TabIndex = 6;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -196,13 +225,35 @@
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 390;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // groupBoxUnfixable
             // 
             this.groupBoxUnfixable.Controls.Add(this.subtitleListView1);
             this.groupBoxUnfixable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxUnfixable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxUnfixable.Name = "groupBoxUnfixable";
-            this.groupBoxUnfixable.Size = new System.Drawing.Size(931, 154);
+            this.groupBoxUnfixable.Size = new System.Drawing.Size(931, 164);
             this.groupBoxUnfixable.TabIndex = 51;
             this.groupBoxUnfixable.TabStop = false;
             this.groupBoxUnfixable.Text = "Unable to fix min duration: {0}";
@@ -222,7 +273,7 @@
             this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(919, 129);
+            this.subtitleListView1.Size = new System.Drawing.Size(919, 124);
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
@@ -250,7 +301,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBoxUnfixable);
             this.splitContainer1.Panel2MinSize = 100;
             this.splitContainer1.Size = new System.Drawing.Size(931, 460);
-            this.splitContainer1.SplitterDistance = 302;
+            this.splitContainer1.SplitterDistance = 292;
             this.splitContainer1.TabIndex = 54;
             this.splitContainer1.TabStop = false;
             // 
@@ -271,38 +322,28 @@
             this.checkBoxMaxDuration.Location = new System.Drawing.Point(16, 39);
             this.checkBoxMaxDuration.Name = "checkBoxMaxDuration";
             this.checkBoxMaxDuration.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxMaxDuration.TabIndex = 3;
+            this.checkBoxMaxDuration.TabIndex = 4;
             this.checkBoxMaxDuration.Text = "Max. duration, milliseconds";
             this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
             this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.checkBoxMaxDuration_CheckedChanged);
             // 
-            // contextMenuStrip1
+            // checkBoxCheckShotChanges
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // toolStripMenuItemInverseSelection
-            // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            this.checkBoxCheckShotChanges.AutoSize = true;
+            this.checkBoxCheckShotChanges.Location = new System.Drawing.Point(269, 13);
+            this.checkBoxCheckShotChanges.Name = "checkBoxCheckShotChanges";
+            this.checkBoxCheckShotChanges.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxCheckShotChanges.TabIndex = 3;
+            this.checkBoxCheckShotChanges.Text = "Check shot changes";
+            this.checkBoxCheckShotChanges.UseVisualStyleBackColor = true;
+            this.checkBoxCheckShotChanges.CheckedChanged += new System.EventHandler(this.checkBoxCheckShotChanges_CheckedChanged);
             // 
             // ApplyDurationLimits
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(961, 571);
+            this.Controls.Add(this.checkBoxCheckShotChanges);
             this.Controls.Add(this.checkBoxMaxDuration);
             this.Controls.Add(this.checkBoxMinDuration);
             this.Controls.Add(this.splitContainer1);
@@ -320,26 +361,24 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply duration limits";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.ApplyDurationLimits_ResizeEnd);
             this.Shown += new System.EventHandler(this.ApplyDurationLimits_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
+            this.ResizeEnd += new System.EventHandler(this.ApplyDurationLimits_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
             this.groupBoxFixesAvailable.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxUnfixable.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMax;
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMax;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMin;
         private System.Windows.Forms.Label labelNote;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
@@ -357,5 +396,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
+        private System.Windows.Forms.CheckBox checkBoxCheckShotChanges;
     }
 }

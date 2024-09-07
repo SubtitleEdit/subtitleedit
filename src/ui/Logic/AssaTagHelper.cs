@@ -148,6 +148,57 @@ namespace Nikse.SubtitleEdit.Logic
             LastAddedTags.Add(tag);
         }
 
+        public static void CompleteItem(NikseTextBox tb, IntellisenseItem item)
+        {
+            if (item == IntellisenseItem.IntellisenseItemEdit)
+            {
+                using (var form = new AssaTagTemplate())
+                {
+                    form.ShowDialog();
+                }
+
+                return;
+            }
+
+
+            tb.SuspendLayout();
+
+            // remove old tag if any
+            if (!string.IsNullOrEmpty(item.ActiveTagAtCursor) && tb.SelectionLength == 0)
+            {
+                RemoveTagAtCursor(tb);
+                item.TypedWord = string.Empty;
+            }
+
+            // insert new tag
+            var oldStart = tb.SelectionStart;
+            if (item.TypedWord.Length > 0)
+            {
+                tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+            }
+            else
+            {
+                if (tb.SelectionStart > 0 && tb.Text[tb.SelectionStart - 1] == '}' && item.Value.StartsWith('\\'))
+                {
+                    tb.SelectedText = "{" + item.Value;
+                }
+                else
+                {
+                    tb.SelectedText = item.Value;
+                }
+            }
+            var newStart = oldStart + item.Value.Length;
+
+            // merge tags before/after
+            var subtract = MergeTagAtCursor(tb, oldStart, true);
+            subtract += MergeTagAtCursor(tb, newStart, false);
+            tb.SelectionStart = newStart - subtract - item.TypedWord.Length;
+
+            tb.ResumeLayout();
+
+            AddUsedTag(item.Value);
+        }
+
         public static void CompleteItem(SETextBox tb, IntellisenseItem item)
         {
             if (item == IntellisenseItem.IntellisenseItemEdit)
@@ -197,6 +248,86 @@ namespace Nikse.SubtitleEdit.Logic
             tb.ResumeLayout();
 
             AddUsedTag(item.Value);
+        }
+
+        public static void RemoveTagAtCursor(NikseTextBox tb)
+        {
+            if (tb.SelectionStart == 0 || tb.SelectedText.Length > 0)
+            {
+                return;
+            }
+
+            var before = tb.Text.Substring(0, tb.SelectionStart);
+            var after = tb.Text.Remove(0, tb.SelectionStart);
+
+            // no tag?
+            var lastIndexOfEndBracket = before.LastIndexOf('}');
+            var lastIndexOfBackslash = before.LastIndexOf('\\');
+            if (lastIndexOfEndBracket > lastIndexOfBackslash ||
+                lastIndexOfBackslash == -1 && lastIndexOfEndBracket == -1 && !before.EndsWith('{') && after.StartsWith('\\'))
+            {
+                return;
+            }
+
+
+            var start = lastIndexOfBackslash;
+            var extra = 0;
+            if (start == -1) // cursor right after "{"
+            {
+                if (tb.Text.Length > 2)
+                {
+                    var nextEndTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, 2);
+                    if (nextEndTagIndex <= 0 || tb.Text[nextEndTagIndex] != '\\')
+                    {
+                        start = 0;
+                        extra = 1;
+                    }
+                    else
+                    {
+                        start = 1;
+                    }
+                }
+                else
+                {
+                    start = 0;
+                    extra = 1;
+                }
+            }
+            else if (start > 0 && tb.Text[start - 1] == '{')
+            {
+                var nextEndTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, start + 1);
+                if (nextEndTagIndex <= 0 || tb.Text[nextEndTagIndex] != '\\')
+                {
+                    start--;
+                    extra = 1;
+                }
+            }
+
+            var startLetter = tb.Text[start];
+            if (start + 1 > tb.Text.Length)
+            {
+                return;
+            }
+
+            var endTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, start + 1 + extra);
+            if (endTagIndex > 0)
+            {
+                if (startLetter == '\\')
+                {
+                    tb.Text = tb.Text.Remove(start, endTagIndex - start);
+                }
+                else
+                {
+                    tb.Text = tb.Text.Remove(start, endTagIndex - start + 1);
+                }
+
+                if (tb.Text.Length > start && tb.Text[start] == '}')
+                {
+                    start++;
+                }
+
+                tb.SelectionStart = start; // position cursor
+            }
         }
 
         public static void RemoveTagAtCursor(SETextBox tb)
@@ -279,6 +410,34 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static int MergeTagAtCursor(NikseTextBox tb, int cursorPosition, bool before)
+        {
+            if (cursorPosition >= tb.Text.Length)
+            {
+                return 0;
+            }
+
+            if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '}' && tb.Text[cursorPosition] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 1, 2);
+                return before ? 2 : 0;
+            }
+
+            if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '\\' && tb.Text[cursorPosition] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 1, 2);
+                return 2;
+            }
+
+            if (cursorPosition > 1 && tb.Text[cursorPosition - 2] == '}' && tb.Text[cursorPosition - 1] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 2, 2);
+                return 2;
+            }
+
+            return 0;
+        }
+
         public static int MergeTagAtCursor(SETextBox tb, int cursorPosition, bool before)
         {
             if (cursorPosition >= tb.Text.Length)
@@ -305,6 +464,90 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             return 0;
+        }
+
+        public static bool AutoCompleteTextBox(NikseTextBox textBox, ListBox listBox)
+        {
+            var textBeforeCursor = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
+            var activeTagAtCursor = GetInsideTag(textBox, textBeforeCursor);
+            var activeTagToCursor = GetLastString(textBeforeCursor) ?? string.Empty;
+
+            var keywords = Configuration.Settings.Tools.AssaTagTemplates.Select(p => new IntellisenseItem(p.Tag, p.Hint, false)).ToList();
+            keywords.AddRange(Keywords);
+            keywords = (activeTagToCursor.StartsWith('\\') ? keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations, p.HelpLink)) : keywords.Select(p => p)).ToList();
+
+            if (textBeforeCursor.EndsWith("\\t(", StringComparison.Ordinal))
+            {
+                // use smaller list inside transformation
+                keywords = Keywords.Where(p => p.AllowInTransformations).Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations, p.HelpLink)).ToList();
+                activeTagToCursor = string.Empty;
+            }
+
+            var filteredList = keywords
+                .Where(n => string.IsNullOrEmpty(activeTagToCursor) || n.Value.StartsWith(GetLastString(activeTagToCursor), StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (filteredList.Count == 0 && activeTagToCursor.EndsWith("\\"))
+            {
+                // continuing ass tag, remove "{\" + "}"
+                activeTagToCursor = string.Empty;
+                filteredList = keywords
+                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint, p.AllowInTransformations, p.HelpLink))
+                    .ToList();
+            }
+
+            listBox.Items.Clear();
+
+            foreach (var item in filteredList)
+            {
+                item.TypedWord = activeTagToCursor;
+                item.ActiveTagAtCursor = activeTagAtCursor;
+                item.Font = listBox.Font;
+                listBox.Items.Add(item);
+            }
+
+            if (listBox.Items.Count == 0)
+            {
+                return false;
+            }
+
+            listBox.SelectedIndex = 0;
+            var endTag = GetEndTagFromLastTagInText(textBeforeCursor);
+            if (!string.IsNullOrEmpty(endTag))
+            {
+                var item = filteredList.Find(p => p.Value == endTag);
+                if (item != null)
+                {
+                    listBox.SelectedIndex = filteredList.IndexOf(item);
+                }
+            }
+            else if (IsLastTwoTagsEqual())
+            {
+                var item = filteredList.Find(p => p.Value == LastAddedTags.Last());
+                if (item != null)
+                {
+                    listBox.SelectedIndex = filteredList.IndexOf(item);
+                }
+            }
+
+            IntellisenseItem.IntellisenseItemEdit.Font = textBox.Font;
+            listBox.Items.Add(IntellisenseItem.IntellisenseItemEdit);
+
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(listBox);
+            }
+
+            listBox.Width = 500;
+            listBox.Height = 200;
+            var height = listBox.Items.Count * listBox.ItemHeight + listBox.Items.Count + listBox.ItemHeight;
+            if (height < listBox.Height)
+            {
+                listBox.Height = height;
+            }
+
+            listBox.Visible = true;
+            return true;
         }
 
         public static bool AutoCompleteTextBox(SETextBox textBox, ListBox listBox)
@@ -371,7 +614,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            IntellisenseItem.IntellisenseItemEdit.Font = textBox.TextBoxFont;
+            IntellisenseItem.IntellisenseItemEdit.Font = textBox.Font;
             listBox.Items.Add(IntellisenseItem.IntellisenseItemEdit);
 
             if (Configuration.Settings.General.UseDarkTheme)
@@ -389,6 +632,32 @@ namespace Nikse.SubtitleEdit.Logic
 
             listBox.Visible = true;
             return true;
+        }
+
+
+        private static string GetInsideTag(NikseTextBox textBox, string before)
+        {
+            var lastIndexOfStartBracket = before.LastIndexOf("{", StringComparison.Ordinal);
+            var lastStart = Math.Max(before.LastIndexOf("\\", StringComparison.Ordinal), lastIndexOfStartBracket);
+            if (lastStart < 0)
+            {
+                return string.Empty;
+            }
+
+            var extra = lastIndexOfStartBracket == lastStart ? 1 : 0;
+            if (textBox.SelectionStart + extra > textBox.Text.Length)
+            {
+                return string.Empty;
+            }
+
+            var endTagIndex = textBox.Text.IndexOfAny(new[] { '\\', '}' }, textBox.SelectionStart + extra);
+            if (endTagIndex > 0)
+            {
+                var s = textBox.Text.Substring(lastStart, endTagIndex - lastStart + extra);
+                return s;
+            }
+
+            return string.Empty;
         }
 
         private static string GetInsideTag(SETextBox textBox, string before)

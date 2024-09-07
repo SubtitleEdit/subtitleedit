@@ -8,6 +8,7 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
-            foreach (var ff in FontFamily.Families)
+            foreach (var ff in FontHelper.GetAllSupportedFontFamilies())
             {
                 if (ff.Name.Length > 0)
                 {
@@ -228,24 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
             subItem.Text = color;
-            Color c = Color.White;
-            try
-            {
-                if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                {
-                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                }
-                else
-                {
-                    c = ColorTranslator.FromHtml(color);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
+            var c = HtmlUtil.GetColorFromString(color);
             subItem.BackColor = c;
             item.SubItems.Add(subItem);
 
@@ -353,23 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         comboBoxFontWeight.SelectedIndex = 1;
                     }
 
-                    Color color = Color.White;
-                    try
-                    {
-                        if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
-                        {
-                            string[] arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            color = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                        }
-                        else
-                        {
-                            color = ColorTranslator.FromHtml(fontColor);
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show("Unable to read color: " + fontColor + " - " + exception.Message);
-                    }
+                    var color = HtmlUtil.GetColorFromString(fontColor);
                     panelFontColor.BackColor = color;
                 }
             }
@@ -377,14 +345,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonFontColor_Click(object sender, EventArgs e)
         {
-            colorDialogStyle.Color = panelFontColor.BackColor;
-            if (colorDialogStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelFontColor.BackColor, ShowAlpha = false })
             {
-                listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorDialogStyle.Color;
-                listViewStyles.SelectedItems[0].SubItems[3].Text = Utilities.ColorToHex(colorDialogStyle.Color);
-                panelFontColor.BackColor = colorDialogStyle.Color;
-                UpdateHeaderXml(listViewStyles.SelectedItems[0].Text, "tts:color", Utilities.ColorToHex(colorDialogStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorChooser.Color;
+                    listViewStyles.SelectedItems[0].SubItems[3].Text = Utilities.ColorToHex(colorChooser.Color);
+                    panelFontColor.BackColor = colorChooser.Color;
+                    UpdateHeaderXml(listViewStyles.SelectedItems[0].Text, "tts:color", Utilities.ColorToHex(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 

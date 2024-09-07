@@ -18,6 +18,7 @@ bin/
 obj/
 SubtitleEdit-*-setup.exe
 SubtitleEdit-*.zip
+.vscode/
 
 # Visual Studio cache/options directory
 .vs/
@@ -41,3 +42,4 @@ SubtitleEditBeta
 /TestResults
 /packages
 /src/ui/Languages/XmlContentTranslator.exe
+/SubtitleEditBetaSetup.zip

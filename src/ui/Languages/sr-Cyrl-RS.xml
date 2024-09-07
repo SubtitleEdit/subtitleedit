@@ -252,7 +252,7 @@
     <RemovedEmptyLine>Празна линија је уклоњена.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Празна линија на врху је уклоњена.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Празна линија на дну је уклоњена.</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Уклони празне линије и непотребне размаке</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Уклони празне линије и непотребне размаке</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Уклоњено празних линија: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Исправи преклапање времена</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Исправи кратко време приказа</FixShortDisplayTimes>
@@ -273,7 +273,7 @@
     <FixCommonOcrErrors>Исправи честе грешке у препознавању знакова</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Исправљено грешака у препознавању знакова: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Уклони размак између бројева</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Исправи дијалоге на једној линији</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Исправи дијалоге на једној линији</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Исправљено грешака у уклањању размака између бројева: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Исправи данско слово И</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Исправи обрнути упитник и узвичник у шпанском језику.</FixSpanishInvertedQuestionAndExclamationMarks>
@@ -814,7 +814,7 @@
     <BeforeDisplayTimeAdjustment>Измењено време</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Постављено је време приказа: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Постављена су времена приказа: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Постављено почетно време: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Постављено почетно време: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Исправљене честе грешке</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Исправљене су честе грешке у изабраним линијама.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Честе грешке су исправљене.</CommonErrorsFixed>
@@ -1301,7 +1301,7 @@
     <UseCustomColors>Прилагођене &amp;боје</UseCustomColors>
     <Transparent>Провидност</Transparent>
     <PromptForUnknownWords>&amp;Питај ме за непознате речи</PromptForUnknownWords>
-    <TryToGuessUnkownWords>&amp;Нагађај непознате речи</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>&amp;Нагађај непознате речи</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Размакни ред ако има више од две линије</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Све исправке</AllFixes>
     <GuessesUsed>Коришћена нагађања</GuessesUsed>

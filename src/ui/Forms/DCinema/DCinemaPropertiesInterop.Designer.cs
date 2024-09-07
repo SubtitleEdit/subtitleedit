@@ -32,53 +32,46 @@
             this.panelFontEffectColor = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
-            this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownReelNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonGenerateID = new System.Windows.Forms.Button();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
-            this.numericUpDownFadeDown = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFadeDown = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFadeDownTime = new System.Windows.Forms.Label();
-            this.numericUpDownFadeUp = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFadeUp = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFadeUpTime = new System.Windows.Forms.Label();
             this.labelZPositionHelp = new System.Windows.Forms.Label();
-            this.numericUpDownZPosition = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownZPosition = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelZPosition = new System.Windows.Forms.Label();
-            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTopBottomMargin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelTopBottomMargin = new System.Windows.Forms.Label();
             this.buttonFontEffectColor = new System.Windows.Forms.Button();
             this.panelFontColor = new System.Windows.Forms.Panel();
             this.buttonFontColor = new System.Windows.Forms.Button();
             this.labelEffectColor = new System.Windows.Forms.Label();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
-            this.comboBoxFontEffect = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontEffect = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEffect = new System.Windows.Forms.Label();
             this.labelFontColor = new System.Windows.Forms.Label();
-            this.textBoxFontID = new System.Windows.Forms.TextBox();
+            this.textBoxFontID = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFontId = new System.Windows.Forms.Label();
-            this.textBoxFontUri = new System.Windows.Forms.TextBox();
+            this.textBoxFontUri = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFontUri = new System.Windows.Forms.Label();
             this.labelReelNumber = new System.Windows.Forms.Label();
-            this.textBoxMovieTitle = new System.Windows.Forms.TextBox();
+            this.textBoxMovieTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelMovieTitle = new System.Windows.Forms.Label();
-            this.textBoxSubtitleID = new System.Windows.Forms.TextBox();
+            this.textBoxSubtitleID = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSubtitleID = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.contextMenuStripProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -125,11 +118,27 @@
             // 
             // comboBoxLanguage
             // 
+            this.comboBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguage.DropDownHeight = 400;
+            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxLanguage.DropDownWidth = 233;
             this.comboBoxLanguage.FormattingEnabled = true;
             this.comboBoxLanguage.Location = new System.Drawing.Point(139, 149);
+            this.comboBoxLanguage.MaxLength = 32767;
             this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.SelectedIndex = -1;
+            this.comboBoxLanguage.SelectedItem = null;
+            this.comboBoxLanguage.SelectedText = "";
             this.comboBoxLanguage.Size = new System.Drawing.Size(233, 21);
             this.comboBoxLanguage.TabIndex = 4;
+            this.comboBoxLanguage.TabStop = false;
+            this.comboBoxLanguage.UsePopupWindow = false;
             // 
             // labelLanguage
             // 
@@ -142,6 +151,19 @@
             // 
             // numericUpDownReelNumber
             // 
+            this.numericUpDownReelNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownReelNumber.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownReelNumber.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownReelNumber.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownReelNumber.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownReelNumber.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownReelNumber.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownReelNumber.DecimalPlaces = 0;
+            this.numericUpDownReelNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownReelNumber.Location = new System.Drawing.Point(139, 123);
             this.numericUpDownReelNumber.Maximum = new decimal(new int[] {
             250,
@@ -156,6 +178,8 @@
             this.numericUpDownReelNumber.Name = "numericUpDownReelNumber";
             this.numericUpDownReelNumber.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownReelNumber.TabIndex = 3;
+            this.numericUpDownReelNumber.TabStop = false;
+            this.numericUpDownReelNumber.ThousandsSeparator = false;
             this.numericUpDownReelNumber.Value = new decimal(new int[] {
             1,
             0,
@@ -210,15 +234,40 @@
             // 
             // numericUpDownFadeDown
             // 
+            this.numericUpDownFadeDown.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFadeDown.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFadeDown.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFadeDown.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFadeDown.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFadeDown.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFadeDown.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFadeDown.DecimalPlaces = 0;
+            this.numericUpDownFadeDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFadeDown.Location = new System.Drawing.Point(133, 233);
             this.numericUpDownFadeDown.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownFadeDown.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFadeDown.Name = "numericUpDownFadeDown";
             this.numericUpDownFadeDown.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownFadeDown.TabIndex = 33;
+            this.numericUpDownFadeDown.TabStop = false;
+            this.numericUpDownFadeDown.ThousandsSeparator = false;
+            this.numericUpDownFadeDown.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelFadeDownTime
             // 
@@ -231,15 +280,40 @@
             // 
             // numericUpDownFadeUp
             // 
+            this.numericUpDownFadeUp.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFadeUp.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFadeUp.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFadeUp.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFadeUp.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFadeUp.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFadeUp.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFadeUp.DecimalPlaces = 0;
+            this.numericUpDownFadeUp.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFadeUp.Location = new System.Drawing.Point(133, 207);
             this.numericUpDownFadeUp.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownFadeUp.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFadeUp.Name = "numericUpDownFadeUp";
             this.numericUpDownFadeUp.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownFadeUp.TabIndex = 32;
+            this.numericUpDownFadeUp.TabStop = false;
+            this.numericUpDownFadeUp.ThousandsSeparator = false;
+            this.numericUpDownFadeUp.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelFadeUpTime
             // 
@@ -263,6 +337,13 @@
             // 
             // numericUpDownZPosition
             // 
+            this.numericUpDownZPosition.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownZPosition.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownZPosition.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownZPosition.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownZPosition.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownZPosition.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownZPosition.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownZPosition.DecimalPlaces = 2;
             this.numericUpDownZPosition.Increment = new decimal(new int[] {
             5,
@@ -283,6 +364,13 @@
             this.numericUpDownZPosition.Name = "numericUpDownZPosition";
             this.numericUpDownZPosition.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownZPosition.TabIndex = 34;
+            this.numericUpDownZPosition.TabStop = false;
+            this.numericUpDownZPosition.ThousandsSeparator = false;
+            this.numericUpDownZPosition.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelZPosition
             // 
@@ -295,6 +383,19 @@
             // 
             // numericUpDownTopBottomMargin
             // 
+            this.numericUpDownTopBottomMargin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownTopBottomMargin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownTopBottomMargin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownTopBottomMargin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownTopBottomMargin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownTopBottomMargin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownTopBottomMargin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownTopBottomMargin.DecimalPlaces = 0;
+            this.numericUpDownTopBottomMargin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownTopBottomMargin.Location = new System.Drawing.Point(133, 181);
             this.numericUpDownTopBottomMargin.Maximum = new decimal(new int[] {
             50,
@@ -309,6 +410,8 @@
             this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
             this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownTopBottomMargin.TabIndex = 31;
+            this.numericUpDownTopBottomMargin.TabStop = false;
+            this.numericUpDownTopBottomMargin.ThousandsSeparator = false;
             this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
             1,
             0,
@@ -364,15 +467,40 @@
             // 
             // numericUpDownFontSize
             // 
+            this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFontSize.DecimalPlaces = 0;
+            this.numericUpDownFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Location = new System.Drawing.Point(133, 155);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             250,
             0,
             0,
             0});
+            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownFontSize.TabIndex = 7;
+            this.numericUpDownFontSize.TabStop = false;
+            this.numericUpDownFontSize.ThousandsSeparator = false;
+            this.numericUpDownFontSize.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelFontSize
             // 
@@ -385,16 +513,30 @@
             // 
             // comboBoxFontEffect
             // 
+            this.comboBoxFontEffect.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFontEffect.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFontEffect.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFontEffect.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFontEffect.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFontEffect.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFontEffect.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFontEffect.DropDownHeight = 400;
             this.comboBoxFontEffect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFontEffect.DropDownWidth = 112;
             this.comboBoxFontEffect.FormattingEnabled = true;
-            this.comboBoxFontEffect.Items.AddRange(new object[] {
+            this.comboBoxFontEffect.Items.AddRange(new string[] {
             "None",
             "Border",
             "Shadow"});
             this.comboBoxFontEffect.Location = new System.Drawing.Point(133, 102);
+            this.comboBoxFontEffect.MaxLength = 32767;
             this.comboBoxFontEffect.Name = "comboBoxFontEffect";
+            this.comboBoxFontEffect.SelectedIndex = -1;
+            this.comboBoxFontEffect.SelectedItem = null;
+            this.comboBoxFontEffect.SelectedText = "";
             this.comboBoxFontEffect.Size = new System.Drawing.Size(112, 21);
             this.comboBoxFontEffect.TabIndex = 4;
+            this.comboBoxFontEffect.UsePopupWindow = false;
             // 
             // labelEffect
             // 
@@ -416,6 +558,7 @@
             // 
             // textBoxFontID
             // 
+            this.textBoxFontID.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFontID.Location = new System.Drawing.Point(133, 24);
             this.textBoxFontID.Name = "textBoxFontID";
             this.textBoxFontID.Size = new System.Drawing.Size(224, 20);
@@ -433,6 +576,7 @@
             // 
             // textBoxFontUri
             // 
+            this.textBoxFontUri.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFontUri.Location = new System.Drawing.Point(133, 50);
             this.textBoxFontUri.Name = "textBoxFontUri";
             this.textBoxFontUri.Size = new System.Drawing.Size(224, 20);
@@ -459,6 +603,7 @@
             // 
             // textBoxMovieTitle
             // 
+            this.textBoxMovieTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxMovieTitle.Location = new System.Drawing.Point(139, 96);
             this.textBoxMovieTitle.Name = "textBoxMovieTitle";
             this.textBoxMovieTitle.Size = new System.Drawing.Size(224, 20);
@@ -475,6 +620,7 @@
             // 
             // textBoxSubtitleID
             // 
+            this.textBoxSubtitleID.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSubtitleID.Location = new System.Drawing.Point(139, 30);
             this.textBoxSubtitleID.Name = "textBoxSubtitleID";
             this.textBoxSubtitleID.Size = new System.Drawing.Size(224, 20);
@@ -519,7 +665,7 @@
             this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.profilesToolStripMenuItem});
             this.contextMenuStripProfile.Name = "contextMenuStripProfile";
-            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(114, 26);
             // 
             // profilesToolStripMenuItem
             // 
@@ -527,20 +673,20 @@
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
-            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.profilesToolStripMenuItem.Text = "Profiles";
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.importToolStripMenuItem.Text = "Import...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
@@ -561,16 +707,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "D-Cinema properties (interop)";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DCinemaPropertiesInterop_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -585,33 +726,32 @@
         private System.Windows.Forms.Panel panelFontColor;
         private System.Windows.Forms.Button buttonFontColor;
         private System.Windows.Forms.Label labelEffectColor;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
-        private System.Windows.Forms.ComboBox comboBoxFontEffect;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontEffect;
         private System.Windows.Forms.Label labelEffect;
         private System.Windows.Forms.Label labelFontColor;
-        private System.Windows.Forms.TextBox textBoxFontID;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontID;
         private System.Windows.Forms.Label labelFontId;
-        private System.Windows.Forms.TextBox textBoxFontUri;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontUri;
         private System.Windows.Forms.Label labelFontUri;
         private System.Windows.Forms.Label labelReelNumber;
-        private System.Windows.Forms.TextBox textBoxMovieTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMovieTitle;
         private System.Windows.Forms.Label labelMovieTitle;
-        private System.Windows.Forms.TextBox textBoxSubtitleID;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSubtitleID;
         private System.Windows.Forms.Label labelSubtitleID;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button buttonGenerateID;
-        private System.Windows.Forms.NumericUpDown numericUpDownReelNumber;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownReelNumber;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
-        private System.Windows.Forms.NumericUpDown numericUpDownTopBottomMargin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTopBottomMargin;
         private System.Windows.Forms.Label labelTopBottomMargin;
-        private System.Windows.Forms.NumericUpDown numericUpDownZPosition;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownZPosition;
         private System.Windows.Forms.Label labelZPosition;
         private System.Windows.Forms.Label labelZPositionHelp;
-        private System.Windows.Forms.NumericUpDown numericUpDownFadeUp;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFadeUp;
         private System.Windows.Forms.Label labelFadeUpTime;
-        private System.Windows.Forms.NumericUpDown numericUpDownFadeDown;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFadeDown;
         private System.Windows.Forms.Label labelFadeDownTime;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;

@@ -31,27 +31,27 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
-            this.comboBoxFileExtensions = new System.Windows.Forms.ComboBox();
+            this.comboBoxFileExtensions = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFileExtension = new System.Windows.Forms.Label();
-            this.comboBoxTimeCodeFormat = new System.Windows.Forms.ComboBox();
+            this.comboBoxTimeCodeFormat = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTimeCode = new System.Windows.Forms.Label();
-            this.comboBoxFrameRateMultiplier = new System.Windows.Forms.ComboBox();
-            this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.comboBoxFrameRateMultiplier = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.textBoxDescription = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBoxTitle = new System.Windows.Forms.TextBox();
+            this.textBoxTitle = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBoxDefaultRegion = new System.Windows.Forms.ComboBox();
+            this.comboBoxDefaultRegion = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelDefaultRegion = new System.Windows.Forms.Label();
-            this.comboBoxDropMode = new System.Windows.Forms.ComboBox();
+            this.comboBoxDropMode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxTimeBase = new System.Windows.Forms.ComboBox();
+            this.comboBoxTimeBase = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCollision = new System.Windows.Forms.Label();
-            this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxDefaultStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +62,7 @@
             this.buttonOK.Location = new System.Drawing.Point(335, 401);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 1;
+            this.buttonOK.TabIndex = 98;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -74,7 +74,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(416, 401);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.TabIndex = 99;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -114,16 +114,30 @@
             // 
             // comboBoxFileExtensions
             // 
+            this.comboBoxFileExtensions.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFileExtensions.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFileExtensions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFileExtensions.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFileExtensions.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFileExtensions.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFileExtensions.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFileExtensions.DropDownHeight = 400;
             this.comboBoxFileExtensions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFileExtensions.DropDownWidth = 263;
             this.comboBoxFileExtensions.FormattingEnabled = true;
             this.comboBoxFileExtensions.Items.AddRange(new object[] {
             ".xml",
             ".ttml",
             ".dfxp"});
             this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 346);
+            this.comboBoxFileExtensions.MaxLength = 32767;
             this.comboBoxFileExtensions.Name = "comboBoxFileExtensions";
-            this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFileExtensions.SelectedIndex = -1;
+            this.comboBoxFileExtensions.SelectedItem = null;
+            this.comboBoxFileExtensions.SelectedText = "";
+            this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 23);
             this.comboBoxFileExtensions.TabIndex = 21;
+            this.comboBoxFileExtensions.UsePopupWindow = false;
             // 
             // labelFileExtension
             // 
@@ -136,7 +150,16 @@
             // 
             // comboBoxTimeCodeFormat
             // 
+            this.comboBoxTimeCodeFormat.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTimeCodeFormat.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTimeCodeFormat.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTimeCodeFormat.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTimeCodeFormat.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTimeCodeFormat.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTimeCodeFormat.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTimeCodeFormat.DropDownHeight = 400;
             this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeCodeFormat.DropDownWidth = 263;
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
             this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
             "Source",
@@ -146,11 +169,17 @@
             "hh:mm:ss:ff",
             "hh:mm:ss.ms",
             "hh:mm:ss.ms-two-digits",
-            "hh:mm:ss,ms"});
+            "hh:mm:ss,ms",
+            "Frames"});
             this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
+            this.comboBoxTimeCodeFormat.MaxLength = 32767;
             this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
-            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
-            this.comboBoxTimeCodeFormat.TabIndex = 19;
+            this.comboBoxTimeCodeFormat.SelectedIndex = -1;
+            this.comboBoxTimeCodeFormat.SelectedItem = null;
+            this.comboBoxTimeCodeFormat.SelectedText = "";
+            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 23);
+            this.comboBoxTimeCodeFormat.TabIndex = 9;
+            this.comboBoxTimeCodeFormat.UsePopupWindow = false;
             // 
             // labelTimeCode
             // 
@@ -163,22 +192,57 @@
             // 
             // comboBoxFrameRateMultiplier
             // 
+            this.comboBoxFrameRateMultiplier.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrameRateMultiplier.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrameRateMultiplier.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrameRateMultiplier.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrameRateMultiplier.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrameRateMultiplier.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrameRateMultiplier.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrameRateMultiplier.DropDownHeight = 400;
+            this.comboBoxFrameRateMultiplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFrameRateMultiplier.DropDownWidth = 263;
             this.comboBoxFrameRateMultiplier.FormattingEnabled = true;
             this.comboBoxFrameRateMultiplier.Items.AddRange(new object[] {
             "999 1000",
             "1 1",
             "1000 1001"});
             this.comboBoxFrameRateMultiplier.Location = new System.Drawing.Point(191, 176);
+            this.comboBoxFrameRateMultiplier.MaxLength = 32767;
             this.comboBoxFrameRateMultiplier.Name = "comboBoxFrameRateMultiplier";
-            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 21);
-            this.comboBoxFrameRateMultiplier.TabIndex = 18;
+            this.comboBoxFrameRateMultiplier.SelectedIndex = -1;
+            this.comboBoxFrameRateMultiplier.SelectedItem = null;
+            this.comboBoxFrameRateMultiplier.SelectedText = "";
+            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 23);
+            this.comboBoxFrameRateMultiplier.TabIndex = 5;
+            this.comboBoxFrameRateMultiplier.TabStop = false;
+            this.comboBoxFrameRateMultiplier.UsePopupWindow = false;
             // 
             // textBoxDescription
             // 
+            this.textBoxDescription.BackColor = System.Drawing.Color.DarkGray;
+            this.textBoxDescription.CurrentLanguage = "";
+            this.textBoxDescription.CurrentLineIndex = 0;
+            this.textBoxDescription.HideSelection = true;
+            this.textBoxDescription.IsDictionaryDownloaded = true;
+            this.textBoxDescription.IsSpellCheckerInitialized = false;
+            this.textBoxDescription.IsSpellCheckRequested = false;
+            this.textBoxDescription.IsWrongWord = false;
+            this.textBoxDescription.LanguageChanged = false;
             this.textBoxDescription.Location = new System.Drawing.Point(191, 56);
+            this.textBoxDescription.MaxLength = 32767;
+            this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxDescription.ReadOnly = false;
+            this.textBoxDescription.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxDescription.SelectedText = "";
+            this.textBoxDescription.SelectionLength = 0;
+            this.textBoxDescription.SelectionStart = 0;
             this.textBoxDescription.Size = new System.Drawing.Size(263, 20);
             this.textBoxDescription.TabIndex = 1;
+            this.textBoxDescription.TextBoxFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxDescription.UseSystemPasswordChar = false;
             // 
             // label7
             // 
@@ -191,10 +255,29 @@
             // 
             // textBoxTitle
             // 
+            this.textBoxTitle.BackColor = System.Drawing.Color.DarkGray;
+            this.textBoxTitle.CurrentLanguage = "";
+            this.textBoxTitle.CurrentLineIndex = 0;
+            this.textBoxTitle.HideSelection = true;
+            this.textBoxTitle.IsDictionaryDownloaded = true;
+            this.textBoxTitle.IsSpellCheckerInitialized = false;
+            this.textBoxTitle.IsSpellCheckRequested = false;
+            this.textBoxTitle.IsWrongWord = false;
+            this.textBoxTitle.LanguageChanged = false;
             this.textBoxTitle.Location = new System.Drawing.Point(191, 30);
+            this.textBoxTitle.MaxLength = 32767;
+            this.textBoxTitle.Multiline = true;
             this.textBoxTitle.Name = "textBoxTitle";
+            this.textBoxTitle.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxTitle.ReadOnly = false;
+            this.textBoxTitle.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxTitle.SelectedText = "";
+            this.textBoxTitle.SelectionLength = 0;
+            this.textBoxTitle.SelectionStart = 0;
             this.textBoxTitle.Size = new System.Drawing.Size(263, 20);
             this.textBoxTitle.TabIndex = 0;
+            this.textBoxTitle.TextBoxFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxTitle.UseSystemPasswordChar = false;
             // 
             // label6
             // 
@@ -207,12 +290,26 @@
             // 
             // comboBoxDefaultRegion
             // 
+            this.comboBoxDefaultRegion.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDefaultRegion.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDefaultRegion.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDefaultRegion.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDefaultRegion.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDefaultRegion.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDefaultRegion.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDefaultRegion.DropDownHeight = 400;
             this.comboBoxDefaultRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDefaultRegion.DropDownWidth = 263;
             this.comboBoxDefaultRegion.FormattingEnabled = true;
             this.comboBoxDefaultRegion.Location = new System.Drawing.Point(191, 270);
+            this.comboBoxDefaultRegion.MaxLength = 32767;
             this.comboBoxDefaultRegion.Name = "comboBoxDefaultRegion";
-            this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDefaultRegion.SelectedIndex = -1;
+            this.comboBoxDefaultRegion.SelectedItem = null;
+            this.comboBoxDefaultRegion.SelectedText = "";
+            this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDefaultRegion.TabIndex = 8;
+            this.comboBoxDefaultRegion.UsePopupWindow = false;
             // 
             // labelDefaultRegion
             // 
@@ -225,7 +322,16 @@
             // 
             // comboBoxDropMode
             // 
+            this.comboBoxDropMode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDropMode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDropMode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDropMode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDropMode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDropMode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDropMode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDropMode.DropDownHeight = 400;
             this.comboBoxDropMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDropMode.DropDownWidth = 263;
             this.comboBoxDropMode.FormattingEnabled = true;
             this.comboBoxDropMode.Items.AddRange(new object[] {
             "[N/A]",
@@ -233,9 +339,14 @@
             "dropPAL",
             "nonDrop"});
             this.comboBoxDropMode.Location = new System.Drawing.Point(191, 203);
+            this.comboBoxDropMode.MaxLength = 32767;
             this.comboBoxDropMode.Name = "comboBoxDropMode";
-            this.comboBoxDropMode.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDropMode.SelectedIndex = -1;
+            this.comboBoxDropMode.SelectedItem = null;
+            this.comboBoxDropMode.SelectedText = "";
+            this.comboBoxDropMode.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDropMode.TabIndex = 6;
+            this.comboBoxDropMode.UsePopupWindow = false;
             // 
             // label4
             // 
@@ -257,11 +368,27 @@
             // 
             // comboBoxFrameRate
             // 
+            this.comboBoxFrameRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrameRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrameRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrameRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrameRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrameRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrameRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrameRate.DropDownHeight = 400;
+            this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFrameRate.DropDownWidth = 263;
             this.comboBoxFrameRate.FormattingEnabled = true;
             this.comboBoxFrameRate.Location = new System.Drawing.Point(191, 149);
+            this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
-            this.comboBoxFrameRate.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFrameRate.SelectedIndex = -1;
+            this.comboBoxFrameRate.SelectedItem = null;
+            this.comboBoxFrameRate.SelectedText = "";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(263, 23);
             this.comboBoxFrameRate.TabIndex = 4;
+            this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // label2
             // 
@@ -274,7 +401,16 @@
             // 
             // comboBoxTimeBase
             // 
+            this.comboBoxTimeBase.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTimeBase.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTimeBase.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTimeBase.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTimeBase.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTimeBase.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTimeBase.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTimeBase.DropDownHeight = 400;
             this.comboBoxTimeBase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeBase.DropDownWidth = 263;
             this.comboBoxTimeBase.FormattingEnabled = true;
             this.comboBoxTimeBase.Items.AddRange(new object[] {
             "[N/A]",
@@ -282,9 +418,14 @@
             "smpte",
             "clock"});
             this.comboBoxTimeBase.Location = new System.Drawing.Point(191, 122);
+            this.comboBoxTimeBase.MaxLength = 32767;
             this.comboBoxTimeBase.Name = "comboBoxTimeBase";
-            this.comboBoxTimeBase.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxTimeBase.SelectedIndex = -1;
+            this.comboBoxTimeBase.SelectedItem = null;
+            this.comboBoxTimeBase.SelectedText = "";
+            this.comboBoxTimeBase.Size = new System.Drawing.Size(263, 23);
             this.comboBoxTimeBase.TabIndex = 3;
+            this.comboBoxTimeBase.UsePopupWindow = false;
             // 
             // label1
             // 
@@ -297,11 +438,27 @@
             // 
             // comboBoxLanguage
             // 
+            this.comboBoxLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguage.DropDownHeight = 400;
+            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxLanguage.DropDownWidth = 263;
             this.comboBoxLanguage.FormattingEnabled = true;
             this.comboBoxLanguage.Location = new System.Drawing.Point(191, 95);
+            this.comboBoxLanguage.MaxLength = 32767;
             this.comboBoxLanguage.Name = "comboBoxLanguage";
-            this.comboBoxLanguage.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxLanguage.SelectedIndex = -1;
+            this.comboBoxLanguage.SelectedItem = null;
+            this.comboBoxLanguage.SelectedText = "";
+            this.comboBoxLanguage.Size = new System.Drawing.Size(263, 23);
             this.comboBoxLanguage.TabIndex = 2;
+            this.comboBoxLanguage.TabStop = false;
+            this.comboBoxLanguage.UsePopupWindow = false;
             // 
             // labelCollision
             // 
@@ -314,12 +471,26 @@
             // 
             // comboBoxDefaultStyle
             // 
+            this.comboBoxDefaultStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDefaultStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDefaultStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDefaultStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDefaultStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDefaultStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDefaultStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDefaultStyle.DropDownHeight = 400;
             this.comboBoxDefaultStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDefaultStyle.DropDownWidth = 263;
             this.comboBoxDefaultStyle.FormattingEnabled = true;
             this.comboBoxDefaultStyle.Location = new System.Drawing.Point(191, 243);
+            this.comboBoxDefaultStyle.MaxLength = 32767;
             this.comboBoxDefaultStyle.Name = "comboBoxDefaultStyle";
-            this.comboBoxDefaultStyle.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDefaultStyle.SelectedIndex = -1;
+            this.comboBoxDefaultStyle.SelectedItem = null;
+            this.comboBoxDefaultStyle.SelectedText = "";
+            this.comboBoxDefaultStyle.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDefaultStyle.TabIndex = 7;
+            this.comboBoxDefaultStyle.UsePopupWindow = false;
             // 
             // labelWrapStyle
             // 
@@ -359,27 +530,27 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.GroupBox groupBoxOptions;
-        private System.Windows.Forms.ComboBox comboBoxDropMode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDropMode;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxTimeBase;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeBase;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelCollision;
-        private System.Windows.Forms.ComboBox comboBoxDefaultStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDefaultStyle;
         private System.Windows.Forms.Label labelWrapStyle;
-        private System.Windows.Forms.ComboBox comboBoxDefaultRegion;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDefaultRegion;
         private System.Windows.Forms.Label labelDefaultRegion;
-        private System.Windows.Forms.TextBox textBoxDescription;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxDescription;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBoxTitle;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxTitle;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBoxFrameRateMultiplier;
-        private System.Windows.Forms.ComboBox comboBoxTimeCodeFormat;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRateMultiplier;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCodeFormat;
         private System.Windows.Forms.Label labelTimeCode;
-        private System.Windows.Forms.ComboBox comboBoxFileExtensions;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFileExtensions;
         private System.Windows.Forms.Label labelFileExtension;
     }
 }

@@ -40,84 +40,76 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxCharsPerRow38ForTeletext = new System.Windows.Forms.Label();
             this.labelLanguageCodeFriendlyName = new System.Windows.Forms.Label();
             this.buttonChooseLanguageCode = new System.Windows.Forms.Button();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelDisplayStandardCodeWarning = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
             this.labelTimeCodeStatus = new System.Windows.Forms.Label();
-            this.comboBoxTimeCodeStatus = new System.Windows.Forms.ComboBox();
-            this.comboBoxDisplayStandardCode = new System.Windows.Forms.ComboBox();
+            this.comboBoxTimeCodeStatus = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxDisplayStandardCode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelDisplayStandardCode = new System.Windows.Forms.Label();
-            this.textBoxCountryOfOrigin = new System.Windows.Forms.TextBox();
+            this.textBoxCountryOfOrigin = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelCountryOfOrigin = new System.Windows.Forms.Label();
-            this.textBoxCodePageNumber = new System.Windows.Forms.TextBox();
+            this.textBoxCodePageNumber = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripCodeTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.unitedStatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multilingualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.portugalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.canadaFrenchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.numericUpDownMaxRows = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxRows = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxNumberOfDisplayableRows = new System.Windows.Forms.Label();
-            this.comboBoxDiscFormatCode = new System.Windows.Forms.ComboBox();
+            this.comboBoxDiscFormatCode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelDiskFormatCode = new System.Windows.Forms.Label();
             this.labelCodePageNumber = new System.Windows.Forms.Label();
-            this.textBoxLanguageCode = new System.Windows.Forms.TextBox();
+            this.textBoxLanguageCode = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelLanguageCode = new System.Windows.Forms.Label();
-            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxNoOfDisplayableChars = new System.Windows.Forms.Label();
-            this.numericUpDownDiskSequenceNumber = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownTotalNumberOfDiscs = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownRevisionNumber = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDiskSequenceNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownTotalNumberOfDiscs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownRevisionNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDiskSequenceNumber = new System.Windows.Forms.Label();
             this.labelTotalNumberOfDisks = new System.Windows.Forms.Label();
             this.labelRevisionNumber = new System.Windows.Forms.Label();
-            this.textBoxTranslatorsName = new System.Windows.Forms.TextBox();
+            this.textBoxTranslatorsName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslatorsName = new System.Windows.Forms.Label();
-            this.textBoxSubtitleListReferenceCode = new System.Windows.Forms.TextBox();
+            this.textBoxSubtitleListReferenceCode = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSubtitleListReferenceCode = new System.Windows.Forms.Label();
-            this.comboBoxCharacterCodeTable = new System.Windows.Forms.ComboBox();
+            this.comboBoxCharacterCodeTable = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonImport = new System.Windows.Forms.Button();
             this.labelCharacterCodeTable = new System.Windows.Forms.Label();
-            this.textBoxTranslatedProgramTitle = new System.Windows.Forms.TextBox();
-            this.textBoxTranslatedEpisodeTitle = new System.Windows.Forms.TextBox();
-            this.textBoxOriginalEpisodeTitle = new System.Windows.Forms.TextBox();
+            this.textBoxTranslatedProgramTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxTranslatedEpisodeTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxOriginalEpisodeTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslatedEpisodeTitle = new System.Windows.Forms.Label();
             this.labelTranslatedProgramTitle = new System.Windows.Forms.Label();
             this.labelOriginalEpisodeTitle = new System.Windows.Forms.Label();
-            this.textBoxOriginalProgramTitle = new System.Windows.Forms.TextBox();
+            this.textBoxOriginalProgramTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
             this.groupBoxVerticalPosition = new System.Windows.Forms.GroupBox();
             this.labelUseBox = new System.Windows.Forms.Label();
-            this.numericUpDownNewLineRows = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownNewLineRows = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelNewLineRows = new System.Windows.Forms.Label();
             this.labelMarginTop = new System.Windows.Forms.Label();
-            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMarginBottom = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMarginTop = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMarginBottom = new System.Windows.Forms.Label();
             this.groupBoxTeletext = new System.Windows.Forms.GroupBox();
             this.checkBoxTeletextDoubleHeight = new System.Windows.Forms.CheckBox();
             this.checkBoxTeletextBox = new System.Windows.Forms.CheckBox();
-            this.comboBoxJustificationCode = new System.Windows.Forms.ComboBox();
+            this.comboBoxJustificationCode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelJustificationCode = new System.Windows.Forms.Label();
             this.tabPageErrors = new System.Windows.Forms.TabPage();
-            this.textBoxErrors = new System.Windows.Forms.TextBox();
+            this.textBoxErrors = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelErrors = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
             this.contextMenuStripCodeTable.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxRows)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDiskSequenceNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).BeginInit();
             this.tabPageTextAndTiming.SuspendLayout();
             this.groupBoxVerticalPosition.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNewLineRows)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).BeginInit();
             this.groupBoxTeletext.SuspendLayout();
             this.tabPageErrors.SuspendLayout();
             this.SuspendLayout();
@@ -253,14 +245,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownStartTime.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownStartTime.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownStartTime.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(179, 411);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 23);
             this.timeUpDownStartTime.TabIndex = 14;
+            this.timeUpDownStartTime.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -292,11 +295,27 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxFrameRate
             // 
+            this.comboBoxFrameRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrameRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrameRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrameRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrameRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrameRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrameRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrameRate.DropDownHeight = 400;
+            this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFrameRate.DropDownWidth = 219;
             this.comboBoxFrameRate.FormattingEnabled = true;
             this.comboBoxFrameRate.Location = new System.Drawing.Point(181, 69);
+            this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.SelectedIndex = -1;
+            this.comboBoxFrameRate.SelectedItem = null;
+            this.comboBoxFrameRate.SelectedText = "";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(219, 21);
             this.comboBoxFrameRate.TabIndex = 2;
+            this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // labelTimeCodeStartOfProgramme
             // 
@@ -318,19 +337,42 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxTimeCodeStatus
             // 
+            this.comboBoxTimeCodeStatus.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTimeCodeStatus.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTimeCodeStatus.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTimeCodeStatus.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTimeCodeStatus.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTimeCodeStatus.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTimeCodeStatus.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTimeCodeStatus.DropDownHeight = 400;
             this.comboBoxTimeCodeStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeCodeStatus.DropDownWidth = 219;
             this.comboBoxTimeCodeStatus.FormattingEnabled = true;
             this.comboBoxTimeCodeStatus.Items.AddRange(new object[] {
             "Not intended for use",
             "Intended for use"});
             this.comboBoxTimeCodeStatus.Location = new System.Drawing.Point(181, 383);
+            this.comboBoxTimeCodeStatus.MaxLength = 32767;
             this.comboBoxTimeCodeStatus.Name = "comboBoxTimeCodeStatus";
+            this.comboBoxTimeCodeStatus.SelectedIndex = -1;
+            this.comboBoxTimeCodeStatus.SelectedItem = null;
+            this.comboBoxTimeCodeStatus.SelectedText = "";
             this.comboBoxTimeCodeStatus.Size = new System.Drawing.Size(219, 21);
             this.comboBoxTimeCodeStatus.TabIndex = 13;
+            this.comboBoxTimeCodeStatus.UsePopupWindow = false;
             // 
             // comboBoxDisplayStandardCode
             // 
+            this.comboBoxDisplayStandardCode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDisplayStandardCode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDisplayStandardCode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDisplayStandardCode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDisplayStandardCode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDisplayStandardCode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDisplayStandardCode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDisplayStandardCode.DropDownHeight = 400;
             this.comboBoxDisplayStandardCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDisplayStandardCode.DropDownWidth = 219;
             this.comboBoxDisplayStandardCode.FormattingEnabled = true;
             this.comboBoxDisplayStandardCode.Items.AddRange(new object[] {
             "0 Open subtitling",
@@ -338,9 +380,14 @@ namespace Nikse.SubtitleEdit.Forms
             "2 Level-2 teletext",
             "Undefined"});
             this.comboBoxDisplayStandardCode.Location = new System.Drawing.Point(181, 99);
+            this.comboBoxDisplayStandardCode.MaxLength = 32767;
             this.comboBoxDisplayStandardCode.Name = "comboBoxDisplayStandardCode";
+            this.comboBoxDisplayStandardCode.SelectedIndex = -1;
+            this.comboBoxDisplayStandardCode.SelectedItem = null;
+            this.comboBoxDisplayStandardCode.SelectedText = "";
             this.comboBoxDisplayStandardCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxDisplayStandardCode.TabIndex = 3;
+            this.comboBoxDisplayStandardCode.UsePopupWindow = false;
             this.comboBoxDisplayStandardCode.SelectedIndexChanged += new System.EventHandler(this.comboBoxDisplayStandardCode_SelectedIndexChanged);
             // 
             // labelDisplayStandardCode
@@ -354,6 +401,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxCountryOfOrigin
             // 
+            this.textBoxCountryOfOrigin.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(181, 340);
             this.textBoxCountryOfOrigin.MaxLength = 3;
             this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
@@ -372,6 +420,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxCodePageNumber
             // 
             this.textBoxCodePageNumber.ContextMenuStrip = this.contextMenuStripCodeTable;
+            this.textBoxCodePageNumber.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCodePageNumber.Location = new System.Drawing.Point(181, 12);
             this.textBoxCodePageNumber.MaxLength = 3;
             this.textBoxCodePageNumber.Name = "textBoxCodePageNumber";
@@ -426,20 +475,45 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxRows
             // 
-            this.numericUpDownMaxRows.Location = new System.Drawing.Point(613, 251);
+            this.numericUpDownMaxRows.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxRows.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxRows.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxRows.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxRows.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxRows.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxRows.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxRows.DecimalPlaces = 0;
+            this.numericUpDownMaxRows.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxRows.Location = new System.Drawing.Point(613, 253);
             this.numericUpDownMaxRows.Maximum = new decimal(new int[] {
             99,
             0,
             0,
             0});
+            this.numericUpDownMaxRows.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMaxRows.Name = "numericUpDownMaxRows";
-            this.numericUpDownMaxRows.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownMaxRows.Size = new System.Drawing.Size(120, 23);
             this.numericUpDownMaxRows.TabIndex = 17;
+            this.numericUpDownMaxRows.TabStop = false;
+            this.numericUpDownMaxRows.ThousandsSeparator = false;
+            this.numericUpDownMaxRows.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelMaxNumberOfDisplayableRows
             // 
             this.labelMaxNumberOfDisplayableRows.AutoSize = true;
-            this.labelMaxNumberOfDisplayableRows.Location = new System.Drawing.Point(473, 253);
+            this.labelMaxNumberOfDisplayableRows.Location = new System.Drawing.Point(473, 256);
             this.labelMaxNumberOfDisplayableRows.Name = "labelMaxNumberOfDisplayableRows";
             this.labelMaxNumberOfDisplayableRows.Size = new System.Drawing.Size(126, 13);
             this.labelMaxNumberOfDisplayableRows.TabIndex = 60;
@@ -447,7 +521,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxDiscFormatCode
             // 
+            this.comboBoxDiscFormatCode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDiscFormatCode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDiscFormatCode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDiscFormatCode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDiscFormatCode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDiscFormatCode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDiscFormatCode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDiscFormatCode.DropDownHeight = 400;
             this.comboBoxDiscFormatCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDiscFormatCode.DropDownWidth = 219;
             this.comboBoxDiscFormatCode.FormattingEnabled = true;
             this.comboBoxDiscFormatCode.Items.AddRange(new object[] {
             "STL23.01 (non-standard)",
@@ -456,9 +539,14 @@ namespace Nikse.SubtitleEdit.Forms
             "STL29.01 (non-standard)",
             "STL30.01"});
             this.comboBoxDiscFormatCode.Location = new System.Drawing.Point(181, 39);
+            this.comboBoxDiscFormatCode.MaxLength = 32767;
             this.comboBoxDiscFormatCode.Name = "comboBoxDiscFormatCode";
+            this.comboBoxDiscFormatCode.SelectedIndex = -1;
+            this.comboBoxDiscFormatCode.SelectedItem = null;
+            this.comboBoxDiscFormatCode.SelectedText = "";
             this.comboBoxDiscFormatCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxDiscFormatCode.TabIndex = 1;
+            this.comboBoxDiscFormatCode.UsePopupWindow = false;
             this.comboBoxDiscFormatCode.SelectedIndexChanged += new System.EventHandler(this.comboBoxDiscFormatCode_SelectedIndexChanged);
             // 
             // labelDiskFormatCode
@@ -481,6 +569,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxLanguageCode
             // 
+            this.textBoxLanguageCode.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxLanguageCode.Location = new System.Drawing.Point(181, 154);
             this.textBoxLanguageCode.MaxLength = 32;
             this.textBoxLanguageCode.Name = "textBoxLanguageCode";
@@ -499,21 +588,46 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxCharacters
             // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(613, 225);
+            this.numericUpDownMaxCharacters.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharacters.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharacters.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharacters.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharacters.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharacters.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharacters.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxCharacters.DecimalPlaces = 0;
+            this.numericUpDownMaxCharacters.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(613, 226);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             99,
             0,
             0,
             0});
+            this.numericUpDownMaxCharacters.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 23);
             this.numericUpDownMaxCharacters.TabIndex = 16;
+            this.numericUpDownMaxCharacters.TabStop = false;
+            this.numericUpDownMaxCharacters.ThousandsSeparator = false;
+            this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
             // 
             // labelMaxNoOfDisplayableChars
             // 
             this.labelMaxNoOfDisplayableChars.AutoSize = true;
-            this.labelMaxNoOfDisplayableChars.Location = new System.Drawing.Point(473, 227);
+            this.labelMaxNoOfDisplayableChars.Location = new System.Drawing.Point(473, 229);
             this.labelMaxNoOfDisplayableChars.Name = "labelMaxNoOfDisplayableChars";
             this.labelMaxNoOfDisplayableChars.Size = new System.Drawing.Size(133, 13);
             this.labelMaxNoOfDisplayableChars.TabIndex = 51;
@@ -521,44 +635,119 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownDiskSequenceNumber
             // 
-            this.numericUpDownDiskSequenceNumber.Location = new System.Drawing.Point(613, 277);
+            this.numericUpDownDiskSequenceNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDiskSequenceNumber.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDiskSequenceNumber.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDiskSequenceNumber.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDiskSequenceNumber.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDiskSequenceNumber.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDiskSequenceNumber.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDiskSequenceNumber.DecimalPlaces = 0;
+            this.numericUpDownDiskSequenceNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDiskSequenceNumber.Location = new System.Drawing.Point(613, 280);
             this.numericUpDownDiskSequenceNumber.Maximum = new decimal(new int[] {
             9,
             0,
             0,
             0});
+            this.numericUpDownDiskSequenceNumber.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDiskSequenceNumber.Name = "numericUpDownDiskSequenceNumber";
-            this.numericUpDownDiskSequenceNumber.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownDiskSequenceNumber.Size = new System.Drawing.Size(120, 23);
             this.numericUpDownDiskSequenceNumber.TabIndex = 18;
+            this.numericUpDownDiskSequenceNumber.TabStop = false;
+            this.numericUpDownDiskSequenceNumber.ThousandsSeparator = false;
+            this.numericUpDownDiskSequenceNumber.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // numericUpDownTotalNumberOfDiscs
             // 
-            this.numericUpDownTotalNumberOfDiscs.Location = new System.Drawing.Point(613, 303);
+            this.numericUpDownTotalNumberOfDiscs.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownTotalNumberOfDiscs.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownTotalNumberOfDiscs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownTotalNumberOfDiscs.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownTotalNumberOfDiscs.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownTotalNumberOfDiscs.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownTotalNumberOfDiscs.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownTotalNumberOfDiscs.DecimalPlaces = 0;
+            this.numericUpDownTotalNumberOfDiscs.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalNumberOfDiscs.Location = new System.Drawing.Point(613, 307);
             this.numericUpDownTotalNumberOfDiscs.Maximum = new decimal(new int[] {
             9,
             0,
             0,
             0});
+            this.numericUpDownTotalNumberOfDiscs.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownTotalNumberOfDiscs.Name = "numericUpDownTotalNumberOfDiscs";
-            this.numericUpDownTotalNumberOfDiscs.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownTotalNumberOfDiscs.Size = new System.Drawing.Size(120, 23);
             this.numericUpDownTotalNumberOfDiscs.TabIndex = 19;
+            this.numericUpDownTotalNumberOfDiscs.TabStop = false;
+            this.numericUpDownTotalNumberOfDiscs.ThousandsSeparator = false;
+            this.numericUpDownTotalNumberOfDiscs.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // numericUpDownRevisionNumber
             // 
+            this.numericUpDownRevisionNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRevisionNumber.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRevisionNumber.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRevisionNumber.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRevisionNumber.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRevisionNumber.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRevisionNumber.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRevisionNumber.DecimalPlaces = 0;
+            this.numericUpDownRevisionNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRevisionNumber.Location = new System.Drawing.Point(613, 199);
             this.numericUpDownRevisionNumber.Maximum = new decimal(new int[] {
             99,
             0,
             0,
             0});
+            this.numericUpDownRevisionNumber.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRevisionNumber.Name = "numericUpDownRevisionNumber";
-            this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 23);
             this.numericUpDownRevisionNumber.TabIndex = 15;
+            this.numericUpDownRevisionNumber.TabStop = false;
+            this.numericUpDownRevisionNumber.ThousandsSeparator = false;
+            this.numericUpDownRevisionNumber.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelDiskSequenceNumber
             // 
             this.labelDiskSequenceNumber.AutoSize = true;
-            this.labelDiskSequenceNumber.Location = new System.Drawing.Point(473, 279);
+            this.labelDiskSequenceNumber.Location = new System.Drawing.Point(473, 283);
             this.labelDiskSequenceNumber.Name = "labelDiskSequenceNumber";
             this.labelDiskSequenceNumber.Size = new System.Drawing.Size(116, 13);
             this.labelDiskSequenceNumber.TabIndex = 49;
@@ -567,7 +756,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelTotalNumberOfDisks
             // 
             this.labelTotalNumberOfDisks.AutoSize = true;
-            this.labelTotalNumberOfDisks.Location = new System.Drawing.Point(473, 305);
+            this.labelTotalNumberOfDisks.Location = new System.Drawing.Point(473, 310);
             this.labelTotalNumberOfDisks.Name = "labelTotalNumberOfDisks";
             this.labelTotalNumberOfDisks.Size = new System.Drawing.Size(108, 13);
             this.labelTotalNumberOfDisks.TabIndex = 48;
@@ -576,7 +765,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelRevisionNumber
             // 
             this.labelRevisionNumber.AutoSize = true;
-            this.labelRevisionNumber.Location = new System.Drawing.Point(473, 201);
+            this.labelRevisionNumber.Location = new System.Drawing.Point(473, 202);
             this.labelRevisionNumber.Name = "labelRevisionNumber";
             this.labelRevisionNumber.Size = new System.Drawing.Size(86, 13);
             this.labelRevisionNumber.TabIndex = 47;
@@ -584,6 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxTranslatorsName
             // 
+            this.textBoxTranslatorsName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxTranslatorsName.Location = new System.Drawing.Point(181, 284);
             this.textBoxTranslatorsName.MaxLength = 32;
             this.textBoxTranslatorsName.Name = "textBoxTranslatorsName";
@@ -601,6 +791,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxSubtitleListReferenceCode
             // 
+            this.textBoxSubtitleListReferenceCode.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(181, 314);
             this.textBoxSubtitleListReferenceCode.MaxLength = 16;
             this.textBoxSubtitleListReferenceCode.Name = "textBoxSubtitleListReferenceCode";
@@ -618,7 +809,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxCharacterCodeTable
             // 
+            this.comboBoxCharacterCodeTable.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCharacterCodeTable.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCharacterCodeTable.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCharacterCodeTable.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCharacterCodeTable.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCharacterCodeTable.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCharacterCodeTable.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCharacterCodeTable.DropDownHeight = 400;
             this.comboBoxCharacterCodeTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCharacterCodeTable.DropDownWidth = 219;
             this.comboBoxCharacterCodeTable.FormattingEnabled = true;
             this.comboBoxCharacterCodeTable.Items.AddRange(new object[] {
             "Latin",
@@ -627,9 +827,14 @@ namespace Nikse.SubtitleEdit.Forms
             "Latin/Greek",
             "Latin/Hebrew"});
             this.comboBoxCharacterCodeTable.Location = new System.Drawing.Point(181, 126);
+            this.comboBoxCharacterCodeTable.MaxLength = 32767;
             this.comboBoxCharacterCodeTable.Name = "comboBoxCharacterCodeTable";
+            this.comboBoxCharacterCodeTable.SelectedIndex = -1;
+            this.comboBoxCharacterCodeTable.SelectedItem = null;
+            this.comboBoxCharacterCodeTable.SelectedText = "";
             this.comboBoxCharacterCodeTable.Size = new System.Drawing.Size(219, 21);
             this.comboBoxCharacterCodeTable.TabIndex = 4;
+            this.comboBoxCharacterCodeTable.UsePopupWindow = false;
             // 
             // buttonImport
             // 
@@ -654,6 +859,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxTranslatedProgramTitle
             // 
+            this.textBoxTranslatedProgramTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(181, 232);
             this.textBoxTranslatedProgramTitle.MaxLength = 32;
             this.textBoxTranslatedProgramTitle.Name = "textBoxTranslatedProgramTitle";
@@ -662,6 +868,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxTranslatedEpisodeTitle
             // 
+            this.textBoxTranslatedEpisodeTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(181, 258);
             this.textBoxTranslatedEpisodeTitle.MaxLength = 32;
             this.textBoxTranslatedEpisodeTitle.Name = "textBoxTranslatedEpisodeTitle";
@@ -670,6 +877,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxOriginalEpisodeTitle
             // 
+            this.textBoxOriginalEpisodeTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(181, 206);
             this.textBoxOriginalEpisodeTitle.MaxLength = 32;
             this.textBoxOriginalEpisodeTitle.Name = "textBoxOriginalEpisodeTitle";
@@ -705,6 +913,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxOriginalProgramTitle
             // 
+            this.textBoxOriginalProgramTitle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(181, 180);
             this.textBoxOriginalProgramTitle.MaxLength = 32;
             this.textBoxOriginalProgramTitle.Name = "textBoxOriginalProgramTitle";
@@ -764,15 +973,35 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownNewLineRows
             // 
+            this.numericUpDownNewLineRows.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownNewLineRows.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownNewLineRows.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownNewLineRows.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownNewLineRows.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownNewLineRows.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownNewLineRows.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownNewLineRows.DecimalPlaces = 0;
+            this.numericUpDownNewLineRows.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownNewLineRows.Location = new System.Drawing.Point(256, 78);
             this.numericUpDownNewLineRows.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownNewLineRows.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownNewLineRows.Name = "numericUpDownNewLineRows";
             this.numericUpDownNewLineRows.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownNewLineRows.TabIndex = 54;
+            this.numericUpDownNewLineRows.TabStop = false;
+            this.numericUpDownNewLineRows.ThousandsSeparator = false;
             this.numericUpDownNewLineRows.Value = new decimal(new int[] {
             2,
             0,
@@ -800,27 +1029,77 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMarginBottom
             // 
+            this.numericUpDownMarginBottom.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMarginBottom.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMarginBottom.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMarginBottom.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMarginBottom.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMarginBottom.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMarginBottom.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMarginBottom.DecimalPlaces = 0;
+            this.numericUpDownMarginBottom.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMarginBottom.Location = new System.Drawing.Point(256, 52);
             this.numericUpDownMarginBottom.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownMarginBottom.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMarginBottom.Name = "numericUpDownMarginBottom";
             this.numericUpDownMarginBottom.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownMarginBottom.TabIndex = 52;
+            this.numericUpDownMarginBottom.TabStop = false;
+            this.numericUpDownMarginBottom.ThousandsSeparator = false;
+            this.numericUpDownMarginBottom.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // numericUpDownMarginTop
             // 
+            this.numericUpDownMarginTop.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMarginTop.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMarginTop.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMarginTop.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMarginTop.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMarginTop.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMarginTop.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMarginTop.DecimalPlaces = 0;
+            this.numericUpDownMarginTop.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMarginTop.Location = new System.Drawing.Point(256, 26);
             this.numericUpDownMarginTop.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownMarginTop.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMarginTop.Name = "numericUpDownMarginTop";
             this.numericUpDownMarginTop.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownMarginTop.TabIndex = 48;
+            this.numericUpDownMarginTop.TabStop = false;
+            this.numericUpDownMarginTop.ThousandsSeparator = false;
+            this.numericUpDownMarginTop.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelMarginBottom
             // 
@@ -868,7 +1147,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // comboBoxJustificationCode
             // 
+            this.comboBoxJustificationCode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxJustificationCode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxJustificationCode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxJustificationCode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxJustificationCode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxJustificationCode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxJustificationCode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxJustificationCode.DropDownHeight = 400;
             this.comboBoxJustificationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxJustificationCode.DropDownWidth = 219;
             this.comboBoxJustificationCode.FormattingEnabled = true;
             this.comboBoxJustificationCode.Items.AddRange(new object[] {
             "unchanged presentation",
@@ -876,9 +1164,14 @@ namespace Nikse.SubtitleEdit.Forms
             "centred text",
             "right-justified text"});
             this.comboBoxJustificationCode.Location = new System.Drawing.Point(145, 11);
+            this.comboBoxJustificationCode.MaxLength = 32767;
             this.comboBoxJustificationCode.Name = "comboBoxJustificationCode";
+            this.comboBoxJustificationCode.SelectedIndex = -1;
+            this.comboBoxJustificationCode.SelectedItem = null;
+            this.comboBoxJustificationCode.SelectedText = "";
             this.comboBoxJustificationCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxJustificationCode.TabIndex = 43;
+            this.comboBoxJustificationCode.UsePopupWindow = false;
             // 
             // labelJustificationCode
             // 
@@ -906,6 +1199,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxErrors.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxErrors.Location = new System.Drawing.Point(6, 26);
             this.textBoxErrors.Multiline = true;
             this.textBoxErrors.Name = "textBoxErrors";
@@ -941,18 +1235,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageHeader.ResumeLayout(false);
             this.tabPageHeader.PerformLayout();
             this.contextMenuStripCodeTable.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxRows)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDiskSequenceNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).EndInit();
             this.tabPageTextAndTiming.ResumeLayout(false);
             this.tabPageTextAndTiming.PerformLayout();
             this.groupBoxVerticalPosition.ResumeLayout(false);
             this.groupBoxVerticalPosition.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNewLineRows)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).EndInit();
             this.groupBoxTeletext.ResumeLayout(false);
             this.groupBoxTeletext.PerformLayout();
             this.tabPageErrors.ResumeLayout(false);
@@ -968,69 +1254,69 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageHeader;
-        private System.Windows.Forms.NumericUpDown numericUpDownDiskSequenceNumber;
-        private System.Windows.Forms.NumericUpDown numericUpDownTotalNumberOfDiscs;
-        private System.Windows.Forms.NumericUpDown numericUpDownRevisionNumber;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDiskSequenceNumber;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTotalNumberOfDiscs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRevisionNumber;
         private System.Windows.Forms.Label labelDiskSequenceNumber;
         private System.Windows.Forms.Label labelTotalNumberOfDisks;
         private System.Windows.Forms.Label labelRevisionNumber;
-        private System.Windows.Forms.TextBox textBoxTranslatorsName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslatorsName;
         private System.Windows.Forms.Label labelTranslatorsName;
-        private System.Windows.Forms.TextBox textBoxSubtitleListReferenceCode;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSubtitleListReferenceCode;
         private System.Windows.Forms.Label labelSubtitleListReferenceCode;
-        private System.Windows.Forms.ComboBox comboBoxCharacterCodeTable;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCharacterCodeTable;
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.Label labelCharacterCodeTable;
-        private System.Windows.Forms.TextBox textBoxTranslatedProgramTitle;
-        private System.Windows.Forms.TextBox textBoxTranslatedEpisodeTitle;
-        private System.Windows.Forms.TextBox textBoxOriginalEpisodeTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslatedProgramTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslatedEpisodeTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOriginalEpisodeTitle;
         private System.Windows.Forms.Label labelTranslatedEpisodeTitle;
         private System.Windows.Forms.Label labelTranslatedProgramTitle;
         private System.Windows.Forms.Label labelOriginalEpisodeTitle;
-        private System.Windows.Forms.TextBox textBoxOriginalProgramTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOriginalProgramTitle;
         private System.Windows.Forms.Label labelOriginalProgramTitle;
         private System.Windows.Forms.TabPage tabPageTextAndTiming;
         private System.Windows.Forms.TabPage tabPageErrors;
-        private System.Windows.Forms.TextBox textBoxErrors;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxErrors;
         private System.Windows.Forms.Label labelErrors;
-        private System.Windows.Forms.ComboBox comboBoxJustificationCode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxJustificationCode;
         private System.Windows.Forms.Label labelJustificationCode;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxCharacters;
         private System.Windows.Forms.Label labelMaxNoOfDisplayableChars;
-        private System.Windows.Forms.TextBox textBoxLanguageCode;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLanguageCode;
         private System.Windows.Forms.Label labelLanguageCode;
         private System.Windows.Forms.Label labelCodePageNumber;
-        private System.Windows.Forms.ComboBox comboBoxDiscFormatCode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDiscFormatCode;
         private System.Windows.Forms.Label labelDiskFormatCode;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxRows;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxRows;
         private System.Windows.Forms.Label labelMaxNumberOfDisplayableRows;
-        private System.Windows.Forms.TextBox textBoxCodePageNumber;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCodePageNumber;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripCodeTable;
         private System.Windows.Forms.ToolStripMenuItem unitedStatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem multilingualToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem portugalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem canadaFrenchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nordicToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBoxCountryOfOrigin;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCountryOfOrigin;
         private System.Windows.Forms.Label labelCountryOfOrigin;
-        private System.Windows.Forms.ComboBox comboBoxDisplayStandardCode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDisplayStandardCode;
         private System.Windows.Forms.Label labelDisplayStandardCode;
         private System.Windows.Forms.Label labelTimeCodeStartOfProgramme;
         private System.Windows.Forms.Label labelTimeCodeStatus;
-        private System.Windows.Forms.ComboBox comboBoxTimeCodeStatus;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCodeStatus;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.GroupBox groupBoxTeletext;
         private System.Windows.Forms.CheckBox checkBoxTeletextDoubleHeight;
         private System.Windows.Forms.CheckBox checkBoxTeletextBox;
         private System.Windows.Forms.GroupBox groupBoxVerticalPosition;
         private System.Windows.Forms.Label labelMarginBottom;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginTop;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginTop;
         private System.Windows.Forms.Label labelMarginTop;
-        private System.Windows.Forms.NumericUpDown numericUpDownNewLineRows;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownNewLineRows;
         private System.Windows.Forms.Label labelNewLineRows;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginBottom;
         private System.Windows.Forms.Label labelDisplayStandardCodeWarning;
         private System.Windows.Forms.Button buttonChooseLanguageCode;
         private System.Windows.Forms.Label labelLanguageCodeFriendlyName;

@@ -31,40 +31,39 @@
             this.groupBoxScript = new System.Windows.Forms.GroupBox();
             this.labelUpdateDetails = new System.Windows.Forms.Label();
             this.labelUpdatedBy = new System.Windows.Forms.Label();
-            this.textBoxSyncPoint = new System.Windows.Forms.TextBox();
-            this.textBoxUpdatedBy = new System.Windows.Forms.TextBox();
-            this.textBoxUpdateDetails = new System.Windows.Forms.TextBox();
+            this.textBoxSyncPoint = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxUpdatedBy = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxUpdateDetails = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSyncPoint = new System.Windows.Forms.Label();
             this.labelTiming = new System.Windows.Forms.Label();
             this.labelEditing = new System.Windows.Forms.Label();
             this.labelTranslation = new System.Windows.Forms.Label();
-            this.textBoxTranslation = new System.Windows.Forms.TextBox();
-            this.textBoxEditing = new System.Windows.Forms.TextBox();
-            this.textBoxTiming = new System.Windows.Forms.TextBox();
-            this.textBoxOriginalScript = new System.Windows.Forms.TextBox();
+            this.textBoxTranslation = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxEditing = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxTiming = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxOriginalScript = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelOriginalScript = new System.Windows.Forms.Label();
-            this.textBoxTitle = new System.Windows.Forms.TextBox();
+            this.textBoxTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTitle = new System.Windows.Forms.Label();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
-            this.checkBoxScaleBorderAndShadow = new System.Windows.Forms.CheckBox();
-            this.comboBoxWrapStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxScaleBorderAndShadow = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelScaleBorderAndShadow = new System.Windows.Forms.Label();
+            this.comboBoxWrapStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxResolution = new System.Windows.Forms.GroupBox();
+            this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
             this.labelVideoResolution = new System.Windows.Forms.Label();
-            this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
             this.buttonGetResolutionFromCurrentVideo = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownVideoWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
             this.groupBoxScript.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxResolution.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxScript
@@ -227,7 +226,8 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxOptions.Controls.Add(this.checkBoxScaleBorderAndShadow);
+            this.groupBoxOptions.Controls.Add(this.comboBoxScaleBorderAndShadow);
+            this.groupBoxOptions.Controls.Add(this.labelScaleBorderAndShadow);
             this.groupBoxOptions.Controls.Add(this.comboBoxWrapStyle);
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 327);
@@ -237,15 +237,28 @@
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
             // 
-            // checkBoxScaleBorderAndShadow
+            // comboBoxScaleBorderAndShadow
             // 
-            this.checkBoxScaleBorderAndShadow.AutoSize = true;
-            this.checkBoxScaleBorderAndShadow.Location = new System.Drawing.Point(110, 45);
-            this.checkBoxScaleBorderAndShadow.Name = "checkBoxScaleBorderAndShadow";
-            this.checkBoxScaleBorderAndShadow.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxScaleBorderAndShadow.TabIndex = 2;
-            this.checkBoxScaleBorderAndShadow.Text = "Scale border and shadow";
-            this.checkBoxScaleBorderAndShadow.UseVisualStyleBackColor = true;
+            this.comboBoxScaleBorderAndShadow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxScaleBorderAndShadow.FormattingEnabled = true;
+            this.comboBoxScaleBorderAndShadow.Items.AddRange(new object[] {
+            "0: Smart wrapping, top line is wider",
+            "1: End-of-line word wrapping, only \\N breaks",
+            "2: No word wrapping, both \\n and \\N break",
+            "3: Smart wrapping, bottom line is wider"});
+            this.comboBoxScaleBorderAndShadow.Location = new System.Drawing.Point(110, 46);
+            this.comboBoxScaleBorderAndShadow.Name = "comboBoxScaleBorderAndShadow";
+            this.comboBoxScaleBorderAndShadow.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxScaleBorderAndShadow.TabIndex = 4;
+            // 
+            // labelScaleBorderAndShadow
+            // 
+            this.labelScaleBorderAndShadow.AutoSize = true;
+            this.labelScaleBorderAndShadow.Location = new System.Drawing.Point(7, 49);
+            this.labelScaleBorderAndShadow.Name = "labelScaleBorderAndShadow";
+            this.labelScaleBorderAndShadow.Size = new System.Drawing.Size(128, 13);
+            this.labelScaleBorderAndShadow.TabIndex = 3;
+            this.labelScaleBorderAndShadow.Text = "Scale border and shadow";
             // 
             // comboBoxWrapStyle
             // 
@@ -287,6 +300,16 @@
             this.groupBoxResolution.TabIndex = 1;
             this.groupBoxResolution.TabStop = false;
             this.groupBoxResolution.Text = "Resolution";
+            // 
+            // labelCurrentVideoResolution
+            // 
+            this.labelCurrentVideoResolution.ForeColor = System.Drawing.Color.Red;
+            this.labelCurrentVideoResolution.Location = new System.Drawing.Point(405, 45);
+            this.labelCurrentVideoResolution.Name = "labelCurrentVideoResolution";
+            this.labelCurrentVideoResolution.Size = new System.Drawing.Size(82, 13);
+            this.labelCurrentVideoResolution.TabIndex = 6;
+            this.labelCurrentVideoResolution.Text = "X*Y";
+            this.labelCurrentVideoResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelVideoResolution
             // 
@@ -377,16 +400,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // labelCurrentVideoResolution
-            // 
-            this.labelCurrentVideoResolution.ForeColor = System.Drawing.Color.Red;
-            this.labelCurrentVideoResolution.Location = new System.Drawing.Point(405, 45);
-            this.labelCurrentVideoResolution.Name = "labelCurrentVideoResolution";
-            this.labelCurrentVideoResolution.Size = new System.Drawing.Size(82, 13);
-            this.labelCurrentVideoResolution.TabIndex = 6;
-            this.labelCurrentVideoResolution.Text = "X*Y";
-            this.labelCurrentVideoResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // AssaProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,8 +425,6 @@
             this.groupBoxOptions.PerformLayout();
             this.groupBoxResolution.ResumeLayout(false);
             this.groupBoxResolution.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -424,33 +435,34 @@
         private System.Windows.Forms.GroupBox groupBoxOptions;
         private System.Windows.Forms.Label labelUpdateDetails;
         private System.Windows.Forms.Label labelUpdatedBy;
-        private System.Windows.Forms.TextBox textBoxSyncPoint;
-        private System.Windows.Forms.TextBox textBoxUpdatedBy;
-        private System.Windows.Forms.TextBox textBoxUpdateDetails;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSyncPoint;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxUpdatedBy;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxUpdateDetails;
         private System.Windows.Forms.Label labelSyncPoint;
         private System.Windows.Forms.Label labelTiming;
         private System.Windows.Forms.Label labelEditing;
         private System.Windows.Forms.Label labelTranslation;
-        private System.Windows.Forms.TextBox textBoxTranslation;
-        private System.Windows.Forms.TextBox textBoxEditing;
-        private System.Windows.Forms.TextBox textBoxTiming;
-        private System.Windows.Forms.TextBox textBoxOriginalScript;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslation;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxEditing;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTiming;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOriginalScript;
         private System.Windows.Forms.Label labelOriginalScript;
-        private System.Windows.Forms.TextBox textBoxTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTitle;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.CheckBox checkBoxScaleBorderAndShadow;
-        private System.Windows.Forms.ComboBox comboBoxWrapStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.GroupBox groupBoxResolution;
         private System.Windows.Forms.Label labelVideoResolution;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
         private System.Windows.Forms.Button buttonGetResolutionFromCurrentVideo;
         private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelCurrentVideoResolution;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxScaleBorderAndShadow;
+        private System.Windows.Forms.Label labelScaleBorderAndShadow;
     }
 }
