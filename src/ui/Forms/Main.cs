@@ -18568,6 +18568,28 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameForward)
+            {
+                var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
+                for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
+                {
+                    audioVisualizer.ShotChanges[i] += (frameMs / 1000.0);
+                }
+
+                ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameBack)
+            {
+                var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
+                for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
+                {
+                    audioVisualizer.ShotChanges[i] -= (frameMs / 1000.0);
+                }
+
+                ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformGuessStart)
             {
                 AutoGuessStartTime(_subtitleListViewIndex);

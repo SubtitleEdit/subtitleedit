@@ -1927,6 +1927,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(audioVisualizerNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             AddNode(audioVisualizerNode, language.WaveformGoToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousShotChange));
             AddNode(audioVisualizerNode, language.WaveformGoToNextShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextShotChange));
+            AddNode(audioVisualizerNode, language.WaveformAllShotChangesOneFrameBack, nameof(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameBack));
+            AddNode(audioVisualizerNode, language.WaveformAllShotChangesOneFrameForward, nameof(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameForward));
             AddNode(audioVisualizerNode, language.WaveformToggleShotChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleShotChange));
             AddNode(audioVisualizerNode, language.WaveformRemoveOrExportShotChanges, nameof(Configuration.Settings.Shortcuts.WaveformListShotChanges), true);
             AddNode(audioVisualizerNode, language.WaveformGuessStart, nameof(Configuration.Settings.Shortcuts.WaveformGuessStart));

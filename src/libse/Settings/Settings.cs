@@ -8466,6 +8466,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.WaveformToggleShotChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameForward");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameBack");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformListShotChanges");
                 if (subNode != null)
                 {
@@ -10222,6 +10234,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("WaveformGoToPreviousShotChange", shortcuts.WaveformGoToPreviousShotChange);
             textWriter.WriteElementString("WaveformGoToNextShotChange", shortcuts.WaveformGoToNextShotChange);
             textWriter.WriteElementString("WaveformToggleShotChange", shortcuts.WaveformToggleShotChange);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameForward", shortcuts.WaveformAllShotChangesOneFrameForward);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameBack", shortcuts.WaveformAllShotChangesOneFrameBack);
             textWriter.WriteElementString("WaveformListShotChanges", shortcuts.WaveformListShotChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);
