@@ -4007,6 +4007,7 @@
     <LinePart from="bez svesti" to="bez svijesti" />
     <LinePart from="Bez obzira što" to="Bez obzira na to što" />
     <LinePart from="bez obzira što" to="bez obzira na to što" />
+    <LinePart from="biću iskren" to="bit ću iskren" />
     <LinePart from="Biće mi" to="Bit će mi" />
     <LinePart from="Biće on" to="Bit će on" />
     <LinePart from="Biće oni" to="Bit će oni" />
@@ -4687,6 +4688,7 @@
     <RegEx find="(?&lt;![iI]|[kK]a)([mM])j?enja([jmnšo]|mo|njem?|ju|l[aeio]|t[ei])?\b" replaceWith="$1ijenja$2" />
     <RegEx find="([mM])lj?ek([aou])" replaceWith="$1lijek$2" />
     <RegEx find="([mM])lj?ečn" replaceWith="$1liječn" />
+    <RegEx find="lakać" replaceWith="lakat ć" />
     <RegEx find="leven" replaceWith="ljeven" />
     <RegEx find="mnaj" replaceWith="mnja" />
     <RegEx find="([mM])oč([iun])" replaceWith="$1oć$2" />
