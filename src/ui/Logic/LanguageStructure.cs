@@ -2870,6 +2870,8 @@
             public string WaveformGoToPreviousShotChange { get; set; }
             public string WaveformGoToNextShotChange { get; set; }
             public string WaveformToggleShotChange { get; set; }
+            public string WaveformAllShotChangesOneFrameForward { get; set; }
+            public string WaveformAllShotChangesOneFrameBack { get; set; }
             public string WaveformRemoveOrExportShotChanges { get; set; }
             public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }

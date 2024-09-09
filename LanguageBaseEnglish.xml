@@ -2692,6 +2692,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToPreviousShotChange>Go to previous shot change</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Go to next shot change</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Toggle shot change</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Move all shot changes one frame forward</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Move all shot changes one frame back</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Remove/export shot changes</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Auto adjust start via volume/shot change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>

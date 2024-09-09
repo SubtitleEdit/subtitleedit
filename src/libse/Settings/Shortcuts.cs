@@ -390,6 +390,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string WaveformGoToPreviousShotChange { get; set; }
         public string WaveformGoToNextShotChange { get; set; }
         public string WaveformToggleShotChange { get; set; }
+        public string WaveformAllShotChangesOneFrameForward { get; set; }
+        public string WaveformAllShotChangesOneFrameBack { get; set; }
         public string WaveformListShotChanges { get; set; }
         public string WaveformGuessStart { get; set; }
         public string Waveform100MsLeft { get; set; }

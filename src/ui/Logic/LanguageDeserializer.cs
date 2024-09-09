@@ -7372,6 +7372,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformToggleShotChange":
                     language.Settings.WaveformToggleShotChange = reader.Value;
                     break;
+                case "Settings/WaveformAllShotChangesOneFrameForward":
+                    language.Settings.WaveformAllShotChangesOneFrameForward = reader.Value;
+                    break;
+                case "Settings/WaveformAllShotChangesOneFrameBack":
+                    language.Settings.WaveformAllShotChangesOneFrameBack = reader.Value;
+                    break;
                 case "Settings/WaveformRemoveOrExportShotChanges":
                     language.Settings.WaveformRemoveOrExportShotChanges = reader.Value;
                     break;
