@@ -9693,7 +9693,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool noNetWorkSession = _networkSession == null;
 
-                toolStripMenuItemSaveSelectedLines.Visible = false;
+                toolStripMenuItemSaveSelectedLines.Visible = true;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = noNetWorkSession;
@@ -9735,7 +9735,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
-                    toolStripMenuItemSaveSelectedLines.Visible = true;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
