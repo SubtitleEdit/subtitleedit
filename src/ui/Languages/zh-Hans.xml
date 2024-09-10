@@ -2681,6 +2681,8 @@ Command line: {1} {2}
     <WaveformGoToPreviousShotChange>转到下一个场景切换点</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>转到下一处场景切换</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>切换场景切换</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>将所有场景切换向前移动一帧</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>将所有场景切换向后移动一帧</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>删除/导出场景切换</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>根据音量/场景切换点调节起始点</WaveformGuessStart>
     <GoBack1Frame>回退一帧</GoBack1Frame>
