@@ -454,7 +454,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Value = 0;
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
-            var ext = ".wav";
+            const string ext = ".wav";
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
@@ -524,7 +524,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     continue;
                 }
 
-                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
+                var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
+                if (divisor <= 0)
+                {
+                    SeLogger.Error($"TextToSpeech: Duration is zero (skipping): {pFileName}, {p}");
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
+
+                var factor = (decimal)waveInfo.TotalMilliseconds / divisor;
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
