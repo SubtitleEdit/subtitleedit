@@ -100,6 +100,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechElevenLabsApiKey { get; set; }
         public string TextToSpeechAzureApiKey { get; set; }
         public string TextToSpeechAzureRegion { get; set; }
+        public string TextToSpeechElevenLabsModel { get; set; }
+        public string TextToSpeechElevenLabsLanguage { get; set; }
         public bool TextToSpeechPreview { get; set; }
         public bool TextToSpeechCustomAudio { get; set; }
         public bool TextToSpeechCustomAudioStereo { get; set; }

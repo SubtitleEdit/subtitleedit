@@ -2347,6 +2347,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsModel");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
             if (subNode != null)
             {
@@ -9020,6 +9032,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
                 textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
+                textWriter.WriteElementString("TextToSpeechElevenLabsModel", settings.Tools.TextToSpeechElevenLabsModel);
+                textWriter.WriteElementString("TextToSpeechElevenLabsLanguage", settings.Tools.TextToSpeechElevenLabsLanguage);
                 textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
