@@ -1163,7 +1163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioCutTracks);
         }
 
-        private string GetPixelFormat(string text)
+        private static string GetPixelFormat(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -1516,6 +1516,13 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTune.Text = string.Empty;
             }
             else if (videoCodec == "prores_ks")
+            {
+                items = new List<string> { string.Empty };
+                labelTune.Visible = false;
+                comboBoxTune.Visible = false;
+                comboBoxTune.Text = string.Empty;
+            }
+            else if (videoCodec == "h264_qsv" || videoCodec == "hevc_qsv") // Intel
             {
                 items = new List<string> { string.Empty };
                 labelTune.Visible = false;
