@@ -18,7 +18,6 @@ using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    GetDialogStyle
     public sealed partial class FixCommonErrors : Form, IFixCallbacks
     {
         private const int IndexRemoveEmptyLines = 0;
