@@ -1246,7 +1246,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                FileUtil.WriteAllText(assaTempFileName, format.ToText(subtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+                try
+                {
+                    FileUtil.WriteAllText(assaTempFileName, format.ToText(subtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+                }
+                catch 
+                {
+                    // might be a write protected folder, so we try the temp folder
+                    assaTempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(assaTempFileName));
+                    FileUtil.WriteAllText(assaTempFileName, format.ToText(subtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+                }
 
                 var videoFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
                 var result = RunOnePassEncoding(assaTempFileName, subtitle, videoFileName);
