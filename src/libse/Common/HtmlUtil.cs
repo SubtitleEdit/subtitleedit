@@ -14,10 +14,29 @@ namespace Nikse.SubtitleEdit.Core.Common
     /// </summary>
     public static class HtmlUtil
     {
+        /// <summary>
+        /// Represents the HTML tag used for italic text formatting.
+        /// </summary>
         public static string TagItalic => "i";
+
+        /// <summary>
+        /// Represents the HTML tag used for bold text formatting.
+        /// </summary>
         public static string TagBold => "b";
+
+        /// <summary>
+        /// Represents the HTML tag used for underlined text formatting.
+        /// </summary>
         public static string TagUnderline => "u";
+
+        /// <summary>
+        /// Represents the HTML tag used for specifying font attributes.
+        /// </summary>
         public static string TagFont => "font";
+
+        /// <summary>
+        /// Represents the HTML tag used for the Cyrillic character 'і'.
+        /// </summary>
         public static string TagCyrillicI => "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
         private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
