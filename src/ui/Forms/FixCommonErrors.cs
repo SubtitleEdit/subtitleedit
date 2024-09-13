@@ -18,6 +18,7 @@ using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
+    GetDialogStyle
     public sealed partial class FixCommonErrors : Form, IFixCallbacks
     {
         private const int IndexRemoveEmptyLines = 0;
@@ -469,14 +470,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace;
             }
+
             if (dialogStyle == DialogType.DashSecondLineWithSpace)
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
             }
+
             if (dialogStyle == DialogType.DashBothLinesWithoutSpace)
             {
-                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithoutSpace;
             }
+
             return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithSpace;
         }
 
