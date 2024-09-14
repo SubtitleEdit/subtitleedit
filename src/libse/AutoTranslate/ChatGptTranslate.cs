@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public int MaxCharacters => 1500;
         public static string[] Models => new[]
         {
-            "gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "gpt-4"
+            "gpt-4o-mini", "o1-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "gpt-4"
         };
 
         public static string RemovePreamble(string original, string translation)
