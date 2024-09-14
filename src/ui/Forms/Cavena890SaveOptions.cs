@@ -106,6 +106,9 @@ namespace Nikse.SubtitleEdit.Forms
                 case 6:
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRussian;
                     break;
+                case 7:
+                    Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRomanian;
+                    break;
                 default:
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdEnglish;
                     break;
