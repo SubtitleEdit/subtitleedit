@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             var errorCount = 0;
             var i = 1;
-            var isTeletext = comboBoxDiscFormatCode.SelectedIndex == 1 || comboBoxDiscFormatCode.SelectedIndex == 2;
+            var isTeletext = comboBoxDisplayStandardCode.Text.Contains("teletext", StringComparison.OrdinalIgnoreCase);
             foreach (var p in subtitle.Paragraphs)
             {
                 var arr = p.Text.SplitToLines();
