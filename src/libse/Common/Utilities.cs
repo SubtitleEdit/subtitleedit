@@ -19,7 +19,10 @@ using Nikse.SubtitleEdit.Core.VobSub;
 namespace Nikse.SubtitleEdit.Core.Common
 {
     /// <summary>
-    /// Provides various utility methods and properties for common operations
+    /// Provides utility methods and properties for common operations such as
+    /// checking if strings are numbers or hexadecimal, formatting file sizes,
+    /// and breaking lines of text.
+    /// </summary>
     public static class Utilities
     {
         /// <summary>
