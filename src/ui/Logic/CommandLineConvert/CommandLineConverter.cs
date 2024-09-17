@@ -2092,11 +2092,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if (binaryParagraphs.Count > 0)
                         {
                             var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
-                            if (!Directory.Exists(path))
-                            {
-                                Directory.CreateDirectory(path);
-                            }
-
+                            FileUtil.TryCreateDirectory(path);
+                            
                             targetFormatFound = true;
                             for (var i = 0; i < binaryParagraphs.Count; i++)
                             {

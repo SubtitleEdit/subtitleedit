@@ -1339,20 +1339,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelSourceFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var path = linkLabelSourceFolder.Text;
-
-            if (!Directory.Exists(path))
-            {
-                try
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catch
-                {
-                    return;
-                }
-            }
-
+            FileUtil.TryCreateDirectory(linkLabelSourceFolder.Text);
             UiUtil.OpenFolder(linkLabelSourceFolder.Text);
         }
 

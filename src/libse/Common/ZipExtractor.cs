@@ -216,11 +216,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             // Make sure the parent directory exist
             string path = Path.GetDirectoryName(filename);
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
+            
+            FileUtil.TryCreateDirectory(path);
+            
             // Check it is directory. If so, do nothing
             if (Directory.Exists(filename))
             {

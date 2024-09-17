@@ -161,16 +161,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var path = Path.Combine(Configuration.AutoBackupDirectory, "Settings");
-            if (!Directory.Exists(path))
+            if (!FileUtil.TryCreateDirectory(path))
             {
-                try
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catch
-                {
-                    return false;
-                }
+                return false;
             }
 
             var fileName = $"{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}Settings.xml";

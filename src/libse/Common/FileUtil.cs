@@ -935,5 +935,27 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// Tries to create a directory at the specified path if it does not already exist.
+        /// </summary>
+        /// <param name="path">The path where the directory is to be created.</param>
+        /// <returns>True if the directory was successfully created or already exists; otherwise, false.</returns>
+        public static bool TryCreateDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    return Directory.CreateDirectory(path).Exists;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
