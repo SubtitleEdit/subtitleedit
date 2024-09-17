@@ -8,23 +8,72 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
+    /// <summary>
+    /// Represents a subtitle with associated paragraphs, header, footer, and metadata.
+    /// </summary>
     public class Subtitle
     {
+        /// <summary>
+        /// The maximum file size allowed for processing subtitles.
+        /// Value is set to 20 MB (20 * 1024 * 1024 bytes).
+        /// </summary>
         public const int MaxFileSize = 1024 * 1024 * 20; // 20 MB
 
+        /// <summary>
+        /// Represents a collection of subtitle paragraphs.
+        /// This property holds the list of paragraphs for a subtitle,
+        /// where each paragraph contains a piece of subtitle text and its associated timing information.
+        /// </summary>
         public List<Paragraph> Paragraphs { get; private set; }
 
+        /// <summary>
+        /// The header information of the subtitle.
+        /// This property might be used to store metadata or configuration details
+        /// that are specific to the subtitle format in use.
+        /// </summary>
         public string Header { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Represents the footer content of a subtitle file.
+        /// This field typically contains metadata or additional information
+        /// appended at the end of the subtitle.
+        /// </summary>
         public string Footer { get; set; } = string.Empty;
 
+        /// <summary>
+        /// The name of the file associated with the subtitle.
+        /// If not specified, defaults to "Untitled".
+        /// </summary>
         public string FileName { get; set; }
 
+        /// <summary>
+        /// Specifies the maximum number of history items that can be stored for undo operations.
+        /// Value is set to 100.
+        /// </summary>
         public static int MaximumHistoryItems => 100;
 
+        /// <summary>
+        /// Gets or sets the original format of the subtitle.
+        /// This property is typically used to preserve the format from which the subtitle was initially loaded.
+        /// </summary>
         public SubtitleFormat OriginalFormat { get; set; }
+
+        /// <summary>
+        /// Represents the original text encoding of the subtitle file.
+        /// This property is assigned when the subtitle is loaded from a file.
+        /// </summary>
         public Encoding OriginalEncoding { get; private set; }
 
+        /// <summary>
+        /// A collection that maintains the history of modifications made to the subtitle.
+        /// This list can be used for undo and redo functionality to revert or reapply changes.
+        /// </summary>
         public List<HistoryItem> HistoryItems { get; }
+
+        /// <summary>
+        /// Indicates whether there are any actions in the history that can be undone.
+        /// Returns true if there are items in the history; otherwise, false.
+        /// </summary>
         public bool CanUndo => HistoryItems.Count > 0;
 
         public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
@@ -75,12 +124,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             OriginalEncoding = subtitle.OriginalEncoding;
         }
 
-
         /// <summary>
-        /// Get the paragraph of index, null if out of bounds
+        /// Gets the paragraph at the specified index or returns null if the index is out of bounds.
         /// </summary>
-        /// <param name="index">Index of wanted paragraph</param>
-        /// <returns>Paragraph, null if index is index is out of bounds</returns>
+        /// <param name="index">Index of the desired paragraph.</param>
+        /// <returns>The paragraph at the specified index, or null if the index is out of bounds.</returns>
         public Paragraph GetParagraphOrDefault(int index)
         {
             if (Paragraphs == null || Paragraphs.Count <= index || index < 0)
@@ -91,11 +139,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs[index];
         }
 
+        /// <summary>
+        /// Retrieves a paragraph from the list by its ID, or returns null if no matching paragraph is found.
+        /// </summary>
+        /// <param name="id">The ID of the paragraph to retrieve.</param>
+        /// <returns>The paragraph with the specified ID, or null if not found.</returns>
         public Paragraph GetParagraphOrDefaultById(string id)
         {
             return Paragraphs.Find(p => p.Id == id);
         }
 
+        /// <summary>
+        /// Reloads and loads a subtitle based on a list of lines and a file name,
+        /// using specified subtitle formats to determine the correct format.
+        /// </summary>
+        /// <param name="lines">List of lines representing the subtitle content.</param>
+        /// <param name="fileName">Name of the file from which the subtitle is being loaded.</param>
+        /// <param name="format">Primary subtitle format to be checked and used.</param>
+        /// <param name="format2">Secondary subtitle format to be checked and used if the primary format does not match.</param>
+        /// <param name="format3">Tertiary subtitle format to be checked and used if neither the primary nor secondary formats match.</param>
+        /// <returns>The subtitle format that was used to load the subtitle, or null if no suitable format was found.</returns>
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format, SubtitleFormat format2 = null, SubtitleFormat format3 = null)
         {
             Paragraphs.Clear();
@@ -281,11 +344,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        /// <summary>
+        /// Loads a subtitle from a file.
+        /// </summary>
+        /// <param name="fileName">Path to the file containing the subtitle</param>
+        /// <param name="encoding">Output parameter for the detected or used encoding</param>
+        /// <param name="useThisEncoding">Optional encoding to use for reading the file</param>
+        /// <param name="batchMode">Indicates if the loading should be done in batch mode</param>
+        /// <param name="sourceFrameRate">Optional frame rate, used by formats that require it</param>
+        /// <param name="loadSubtitle">Indicates if the subtitle should be loaded</param>
+        /// <returns>The subtitle format used to load the subtitle</returns>
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding)
         {
             return LoadSubtitle(fileName, out encoding, useThisEncoding, false);
         }
 
+        /// <summary>
+        /// Loads a subtitle file and returns its format.
+        /// </summary>
+        /// <param name="fileName">The name of the subtitle file to load.</param>
+        /// <param name="encoding">The encoding of the subtitle file.</param>
+        /// <param name="useThisEncoding">The encoding to use if the file encoding is not detected.</param>
+        /// <param name="batchMode">Flag indicating whether the loading is done in batch mode.</param>
+        /// <param name="sourceFrameRate">The frame rate of the source, if available.</param>
+        /// <param name="loadSubtitle">Flag indicating whether to fully load the subtitle.</param>
+        /// <returns>The format of the loaded subtitle file.</returns>
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null, bool loadSubtitle = true)
         {
             FileName = fileName;
@@ -327,6 +410,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        /// <summary>
+        /// Reads lines from a file, attempting to automatically determine the file's encoding if none is provided.
+        /// </summary>
+        /// <param name="fileName">The path to the file to read from.</param>
+        /// <param name="useThisEncoding">The encoding to use when reading the file. If null, the encoding is automatically detected.</param>
+        /// <param name="encoding">Outputs the detected or used encoding for reading the file.</param>
+        /// <returns>A list of strings representing the lines read from the file.</returns>
         private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)
         {
             StreamReader sr;
@@ -354,6 +444,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lines;
         }
 
+        /// <summary>
+        /// Finalizes the subtitle format by setting various properties and loading the subtitle if needed.
+        /// </summary>
+        /// <param name="fileName">The name of the file.</param>
+        /// <param name="batchMode">Indicates if batch mode is enabled.</param>
+        /// <param name="sourceFrameRate">The source frame rate of the subtitle.</param>
+        /// <param name="lines">The lines of the subtitle file.</param>
+        /// <param name="subtitleFormat">The format of the subtitle.</param>
+        /// <param name="loadSubtitle">Specifies whether the subtitle should be loaded.</param>
+        /// <returns>The finalized subtitle format.</returns>
         private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle)
         {
             Header = null;
@@ -367,6 +467,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitleFormat;
         }
 
+        /// <summary>
+        /// Records the current state of the subtitle for undo functionality.
+        /// Limits the number of stored history items to prevent excessive memory usage.
+        /// </summary>
+        /// <param name="description">Description of the change being made</param>
+        /// <param name="subtitleFormatFriendlyName">Friendly name of the subtitle format</param>
+        /// <param name="fileModified">Date and time when the file was last modified</param>
+        /// <param name="original">Original subtitle before the change</param>
+        /// <param name="originalSubtitleFileName">File name of the original subtitle</param>
+        /// <param name="lineNumber">Index of the line being modified</param>
+        /// <param name="linePosition">Position in the line where the modification starts</param>
+        /// <param name="linePositionOriginal">Original position in the line before modification</param>
         public void MakeHistoryForUndo(string description, string subtitleFormatFriendlyName, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionOriginal)
         {
             // don't fill memory with history - use a max rollback points
@@ -378,6 +490,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormatFriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionOriginal));
         }
 
+        /// <summary>
+        /// Restores the subtitle to a previous state from the history at the specified index.
+        /// </summary>
+        /// <param name="index">Index of the history item to undo to.</param>
+        /// <param name="subtitleFormatFriendlyName">Outputs the friendly name of the subtitle format.</param>
+        /// <param name="fileModified">Outputs the date and time the file was last modified.</param>
+        /// <param name="originalSubtitle">Outputs the original subtitle before modifications.</param>
+        /// <param name="originalSubtitleFileName">Outputs the file name of the original subtitle before modifications.</param>
+        /// <returns>Returns the file name after the undo operation.</returns>
         public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
         {
             Paragraphs.Clear();
@@ -406,6 +527,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return format.ToText(this, Path.GetFileNameWithoutExtension(FileName));
         }
 
+        /// <summary>
+        /// Adds the specified time to the start and end times of all paragraphs in the subtitle.
+        /// </summary>
+        /// <param name="time">The time to add to each paragraph's start and end times</param>
         public void AddTimeToAllParagraphs(TimeSpan time)
         {
             double milliseconds = time.TotalMilliseconds;
@@ -416,6 +541,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Changes the frame rate of all paragraphs in the subtitle.
+        /// </summary>
+        /// <param name="oldFrameRate">The original frame rate of the subtitle</param>
+        /// <param name="newFrameRate">The new frame rate to be set for the subtitle</param>
         public void ChangeFrameRate(double oldFrameRate, double newFrameRate)
         {
             var factor = SubtitleFormat.GetFrameForCalculation(oldFrameRate) / SubtitleFormat.GetFrameForCalculation(newFrameRate);
@@ -426,6 +556,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Adjusts the display time of subtitle paragraphs by a specified percentage.
+        /// </summary>
+        /// <param name="percent">The percentage by which to adjust the display time.</param>
+        /// <param name="selectedIndexes">The list of indexes of the paragraphs to be adjusted. If null, all paragraphs are adjusted.</param>
+        /// <param name="shotChanges">Optional list of shot change times. If provided, shot changes are taken into account during adjustment.</param>
+        /// <param name="enforceDurationLimits">If true, enforces minimum and maximum duration limits for subtitle display times.</param>
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
@@ -485,6 +622,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Adjusts the display time of the subtitle paragraphs by a specified number of seconds.
+        /// </summary>
+        /// <param name="seconds">The amount of time in seconds to adjust the display time by.</param>
+        /// <param name="selectedIndexes">The list of indexes for the paragraphs to adjust. If null, all paragraphs will be adjusted.</param>
+        /// <param name="shotChanges">Optional list of shot change times, used to enforce shot change rules if provided.</param>
+        /// <param name="enforceDurationLimits">Specifies whether to enforce duration limits on the adjusted display time.</param>
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             if (Math.Abs(seconds) < 0.001)
@@ -509,6 +653,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Adjusts the display time of the paragraph at the specified index by a given number of milliseconds.
+        /// </summary>
+        /// <param name="idx">Index of the paragraph to adjust.</param>
+        /// <param name="ms">Milliseconds to adjust by. Positive values increase duration, negative values decrease.</param>
+        /// <param name="shotChanges">List of shot change times in milliseconds, if any. Used to ensure paragraph does not overlap with shot changes.</param>
+        /// <param name="enforceDurationLimits">Indicates whether to enforce minimum and maximum duration limits.</param>
         private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             var p = Paragraphs[idx];
@@ -559,6 +710,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             p.EndTime.TotalMilliseconds = newEndTimeInMs;
         }
 
+        /// <summary>
+        /// Recalculates the display times of each paragraph in the subtitle based on character per second settings.
+        /// </summary>
+        /// <param name="maxCharPerSec">The maximum number of characters per second.</param>
+        /// <param name="selectedIndexes">The list of selected paragraph indexes to recalculate. If null, all paragraphs are recalculated.</param>
+        /// <param name="optimalCharPerSec">The optimal number of characters per second.</param>
+        /// <param name="extendOnly">If true, only extend the display time of paragraphs.</param>
+        /// <param name="shotChanges">List of shot change times used to adjust display times for better synchronization. Can be null.</param>
+        /// <param name="enforceDurationLimits">If true, enforce minimum and maximum duration limits for the display times.</
         public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             if (selectedIndexes != null)
@@ -577,6 +737,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Recalculates the display time of a subtitle paragraph given its index.
+        /// Adjusts the end time based on maximum and optimal characters per second,
+        /// extending only if specified, and enforces duration limits.
+        /// </summary>
+        /// <param name="maxCharactersPerSecond">The maximum allowed characters per second for the paragraph.</param>
+        /// <param name="index">The index of the subtitle paragraph to recalculate.</param>
+        /// <param name="optimalCharactersPerSeconds">The optimal characters per second value for calculation.</param>
+        /// <param name="extendOnly">Flag indicating if the recalculation should only extend the duration.</param>
+        /// <param name="onlyOptimal">Flag indicating if only optimal display time should be calculated.</param>
+        /// <param name="shotChanges">List of shot changes to consider for end time adjustments.</param>
+        /// <param name="enforceDurationLimits">Flag indicating if duration limits should be enforced.</param>
         public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds, bool extendOnly = false, bool onlyOptimal = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             var p = GetParagraphOrDefault(index);
@@ -624,6 +796,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Sets a fixed duration for the selected paragraphs in the subtitle.
+        /// </summary>
+        /// <param name="selectedIndexes">Indexes of the paragraphs to adjust. If null, all paragraphs are adjusted.</param>
+        /// <param name="fixedDurationMilliseconds">Desired fixed duration in milliseconds for each paragraph.</param>
+        /// <param name="shotChanges">Optional list of shot change timestamps to consider for adjusting paragraph end times.</param>
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds, List<double> shotChanges = null)
         {
             for (var i = 0; i < Paragraphs.Count; i++)
@@ -662,6 +840,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Renumbers the paragraphs in the subtitle starting from a specified number.
+        /// </summary>
+        /// <param name="startNumber">The starting number for the first paragraph.</param>
         public void Renumber(int startNumber = 1)
         {
             var number = startNumber;
@@ -673,6 +855,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Returns the index of the specified paragraph in the subtitle.
+        /// </summary>
+        /// <param name="p">The paragraph to locate.</param>
+        /// <returns>The index of the paragraph if found; otherwise, -1.</returns>
         public int GetIndex(Paragraph p)
         {
             if (p == null)
@@ -738,6 +925,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return -1;
         }
 
+        /// <summary>
+        /// Finds the first paragraph in the list that is alike the given paragraph.
+        /// </summary>
+        /// <param name="p">The paragraph to compare.</param>
+        /// <returns>The first alike paragraph if found; otherwise, null.</returns>
         public Paragraph GetFirstAlike(Paragraph p)
         {
             foreach (var item in Paragraphs)
@@ -753,6 +945,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        /// <summary>
+        /// Finds the nearest similar Paragraph to the given Paragraph based on start time, end time, and text content.
+        /// </summary>
+        /// <param name="p">The Paragraph to compare with others in the Subtitle</param>
+        /// <returns>A Paragraph that is nearest in similarity to the given Paragraph</returns>
         public Paragraph GetNearestAlike(Paragraph p)
         {
             foreach (var item in Paragraphs)
@@ -777,6 +974,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs.OrderBy(s => Math.Abs(s.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds)).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Removes empty lines from the subtitle.
+        /// </summary>
+        /// <returns>The number of removed empty lines.</returns>
         public int RemoveEmptyLines()
         {
             var count = Paragraphs.Count;
@@ -901,6 +1102,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Inserts a new paragraph into the list of paragraphs, maintaining the correct chronological order based on start times.
+        /// </summary>
+        /// <param name="newParagraph">The new Paragraph to insert.</param>
+        /// <returns>The index at which the new paragraph was inserted.</returns>
         public int InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
@@ -916,6 +1122,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs.Count - 1;
         }
 
+        /// <summary>
+        /// Gets the first paragraph that overlaps with the specified time, or null if no such paragraph exists.
+        /// </summary>
+        /// <param name="milliseconds">The time in milliseconds to check against paragraph start and end times.</param>
+        /// <return>The first paragraph overlapping the specified time, or null if there is no match.</return>
         public Paragraph GetFirstParagraphOrDefaultByTime(double milliseconds)
         {
             foreach (var p in Paragraphs)
