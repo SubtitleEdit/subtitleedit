@@ -3,6 +3,9 @@ using System.Security;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
+    /// <summary>
+    /// Provides utility methods for interacting with the Windows Registry.
+    /// </summary>
     public static class RegistryUtil
     {
         /// <summary>
