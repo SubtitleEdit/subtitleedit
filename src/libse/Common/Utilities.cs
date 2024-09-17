@@ -18,6 +18,8 @@ using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
+    /// <summary>
+    /// Provides various utility methods and properties for common operations
     public static class Utilities
     {
         /// <summary>
@@ -25,19 +27,52 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static readonly char[] NewLineChars = { '\r', '\n' };
 
+        /// <summary>
+        /// Regular expression to match numerical sequences separated by specific punctuation characters.
+        /// </summary>
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Precompiled regular expression for matching strings that consist solely of digits.
+        /// </summary>
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Regex pattern that matches episode numbers in the format "seasonNumberxEpisodeNumber".
+        /// For example, "12x34".
+        /// </summary>
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Precompiled regular expression to match a number followed by a space and a period.
+        /// </summary>
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Supported video file extensions for the application.
+        /// </summary>
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
+
+        /// <summary>
+        /// List of common audio file extensions supported by the application.
+        /// </summary>
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka", ".opus", ".adts", ".m4b" };
 
+        /// <summary>
+        /// Determines whether the specified string represents a valid integer.
+        /// </summary>
+        /// <param name="s">The string to check.</param>
+        /// <returns>True if the string represents a valid integer, otherwise false.</returns>
         public static bool IsInteger(string s)
         {
             return int.TryParse(s, out _);
         }
 
+        /// <summary>
+        /// Determines whether the specified string consists solely of hexadecimal characters.
+        /// </summary>
+        /// <param name="s">The string to check.</param>
+        /// <returns>True if the string consists solely of hexadecimal characters; otherwise, false.</returns>
         public static bool IsHex(string s)
         {
             foreach (var ch in s)
@@ -51,6 +86,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        /// <summary>
+        /// Determines whether the specified string represents a number.
+        /// </summary>
+        /// <param name="s">The string to check.</param>
+        /// <returns>True if the string represents a number, otherwise false.</returns>
         public static bool IsNumber(string s)
         {
             s = s.Trim('$', '£', '¥', '%', '*');
@@ -67,6 +107,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Retrieves a subtitle format based on its friendly name.
+        /// </summary>
+        /// <param name="friendlyName">The friendly name of the subtitle format.</param>
+        /// <returns>The subtitle format that matches the friendly name, or null if no match is found.</returns
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
             if (friendlyName.IndexOf('(') > 0)
@@ -85,6 +130,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        /// <summary>
+        /// Converts a file size in bytes to a human-readable format.
+        /// </summary>
+        /// <param name="fileSize">The size of the file in bytes.</param>
+        /// <returns>A string representing the file size in a more readable format (e.g., bytes, kb, mb, gb).</returns
         public static string FormatBytesToDisplayFileSize(long fileSize)
         {
             if (fileSize <= 1024)
@@ -105,6 +155,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return $"{(float)fileSize / (1024 * 1024 * 1024):0.0} gb";
         }
 
+        /// <summary>
+        /// Converts a display file size string to its equivalent size in bytes.
+        /// </summary>
+        /// <param name="displayFileSize">The display file size string, which can contain units like "bytes", "kb", "mb", or "gb".</param>
+        /// <returns>The size in bytes as a long integer. Returns 0 if the input string is not in a recognized format.</returns>
         public static long DisplayFileSizeToBytes(string displayFileSize)
         {
             if (displayFileSize.Contains("bytes"))
@@ -142,12 +197,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 0;
         }
 
+        /// <summary>
+        /// Configures the security protocol for the application to use TLS, TLS 1.1, and TLS 1.2.
+        /// </summary
         public static void SetSecurityProtocol()
         {
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
+        /// <summary>
+        /// Determines whether the character at the specified position in the string is between two digits.
+        /// </summary>
+        /// <param name="s">The string to check.</param>
+        /// <param name="position">The position of the character to check.</param>
+        /// <returns>True if the character at the specified position is between two digits, otherwise false.</returns>
         public static bool IsBetweenNumbers(string s, int position)
         {
             if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)
@@ -158,16 +222,34 @@ namespace Nikse.SubtitleEdit.Core.Common
             return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
         }
 
+        /// <summary>
+        /// Automatically breaks a line of text to fit within the maximum length and merge lines shorter than the specified length.
+        /// </summary>
+        /// <param name="text">The text to be processed and broken into lines.</param>
+        /// <param name="language">The language code for language-specific handling.</param>
+        /// <returns>The processed text with lines broken according to the specified settings.</returns
         public static string AutoBreakLine(string text, string language)
         {
             return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
         }
 
+        /// <summary>
+        /// Inserts line breaks in the specified text to improve readability, using default language settings.
+        /// </summary>
+        /// <param name="text">The text to be processed.</param>
+        /// <returns>The text with inserted line breaks for improved readability.</returns>
         public static string AutoBreakLine(string text)
         {
             return AutoBreakLine(text, string.Empty); // no language
         }
 
+        /// <summary>
+        /// Determines whether a line break can occur at the specified position in a string based on specific language and contextual rules.
+        /// </summary>
+        /// <param name="s">The string to evaluate.</param>
+        /// <param name="index">The position in the string to check for a potential break.</param>
+        /// <param name="language">The language code used to apply language-specific rules.</returns>
+        /// <returns>True if a break can occur at the specified position, otherwise false.</returns>
         internal static bool CanBreak(string s, int index, string language)
         {
             char nextChar;
@@ -224,6 +306,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        /// <summary>
+        /// Resets the internal tracking of the last used language for the no-break-after list.
+        /// This method sets the language tracking variable to null, indicating no language
+        /// has been recently used for no-break-after operations.
+        /// </summary>
         public static void ResetNoBreakAfterList()
         {
             _lastNoBreakAfterListLanguage = null;
@@ -231,6 +318,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string _lastNoBreakAfterListLanguage;
         private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+
+        /// <summary>
+        /// Retrieves a list of items that should not break after the specified language name.
+        /// </summary>
+        /// <param name="languageName">The name of the language for which to retrieve the list.</param>
+        /// <returns>A collection of NoBreakAfterItem objects for the specified language.</returns>
         internal static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
             if (string.IsNullOrEmpty(languageName))
@@ -272,6 +365,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return _lastNoBreakAfterList;
         }
 
+        /// <summary>
+        /// Processes the input text to automatically break lines that are longer than the specified maximum length,
+        /// ensuring that each line adheres to the given length restrictions and language specifications.
+        /// </summary>
+        /// <param name="text">The text to be processed for line breaks.</param>
+        /// <param name="maximumLength">The maximum length any single line should have after processing.</param>
+        /// <param name="mergeLinesShorterThan">The threshold length under which lines are merged to reduce fragmentation.</param>
+        /// <param name="language">The language of the text, used to apply language-specific breaking rules.</param>
+        /// <returns>The processed text with lines automatically broken according to the specified parameters.</returns>
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
             if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
@@ -403,6 +505,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        /// <summary>
+        /// Re-inserts HTML tags into the specified string and cleans up trailing spaces and new line characters.
+        /// </summary>
+        /// <param name="input">The string where HTML tags need to be re-inserted.</param>
+        /// <param name="htmlTags">A dictionary containing the positions of the HTML tags and their respective tags.</param>
+        /// <returns>The cleaned up string with HTML tags re-inserted.</returns>
         private static string ReInsertHtmlTagsAndCleanUp(string input, Dictionary<int, string> htmlTags)
         {
             var s = ReInsertHtmlTags(input, htmlTags);
@@ -415,6 +523,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.TrimEnd();
         }
 
+        /// <summary>
+        /// Distributes the given words into groups based on specified count and average length.
+        /// </summary>
+        /// <param name="words">The array of words to be split into groups.</param>
+        /// <param name="count">The number of groups to split the words into.</param>
+        /// <param name="average">The average length of each group.</param>
+        /// <returns>A list of integers representing the length of each group.</returns>
         private static List<int> SplitToX(string[] words, int count, int average)
         {
             var list = new List<int>();
@@ -442,6 +557,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
+        /// <summary>
+        /// Automatically breaks a given subtitle text into lines based on specified constraints.
+        /// </summary>
+        /// <param name="text">The text to be processed and broken into lines.</param>
+        /// <param name="maximumLength">The maximum allowed length of each line.</param>
+        /// <param name="mergeLinesShorterThan">The maximum length below which lines will be merged.</param>
+        /// <param name="language">The language of the text, used to apply language-specific rules.</param>
+        /// <returns>The text with appropriate line breaks.</returns>
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
             if (Configuration.Settings.General.MaxNumberOfLines <= 2)
@@ -452,6 +575,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return AutoBreakLineMoreThanTwoLines(text, maximumLength, mergeLinesShorterThan, language);
         }
 
+        /// <summary>
+        /// Breaks the given text into lines appropriately according to the specified language and whether to auto-break line ending early.
+        /// </summary>
+        /// <param name="text">The text to be broken into lines.</param>
+        /// <param name="language">The language to be used for breaking lines.</param>
+        /// <param name="autoBreakLineEndingEarly">A flag to determine whether to auto-break line ending early.</param>
+        /// <returns>The text broken into appropriately formatted lines.</returns>
         public static string AutoBreakLine(string text, string language, bool autoBreakLineEndingEarly)
         {
             if (Configuration.Settings.General.MaxNumberOfLines <= 2)
@@ -462,6 +592,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
         }
 
+        /// <summary>
+        /// Automatically breaks a line of text into multiple lines based on the maximum length and other parameters.
+        /// </summary>
+        /// <param name="input">The input text to be processed.</param>
+        /// <param name="maximumLength">The maximum length allowed per line before breaking.</param>
+        /// <param name="mergeLinesShorterThan">The character length under which lines should be merged.</param>
+        /// <param name="language">Language code to consider for breaking lines appropriately.</param>
+        /// <param name="autoBreakLineEndingEarly">Indicates whether to end the line early based on additional conditions.</param>
+        /// <returns>The processed text with auto-broken lines.</returns>
         public static string AutoBreakLinePrivate(string input, int maximumLength, int mergeLinesShorterThan, string language, bool autoBreakLineEndingEarly)
         {
             if (string.IsNullOrEmpty(input) || input.Length < 3)
@@ -637,6 +776,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.TrimEnd();
         }
 
+        /// <summary>
+        /// Removes all line breaks from the specified input string.
+        /// </summary>
+        /// <param name="input">The string from which to remove line breaks.</param>
+        /// <returns>The modified string with all line breaks removed.</returns>
         public static string RemoveLineBreaks(string input)
         {
             var s = HtmlUtil.FixUpperTags(input);
@@ -713,6 +857,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        /// <summary>
+        /// Joins a multi-line string into a single line, fixing certain tag mismatches in the process.
+        /// </summary>
+        /// <param name="text">The multi-line string to be unbroken.</param>
+        /// <returns>A single-line string with fixed spaces and certain tag mismatches corrected.</returns>
         public static string UnbreakLine(string text)
         {
             var lines = text.SplitToLines();
@@ -739,6 +888,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return singleLine;
         }
 
+        /// <summary>
+        /// Removes SSA (SubStation Alpha) tags from the given input string.
+        /// </summary>
+        /// <param name="input">The input string containing SSA tags.</param>
+        /// <param name="removeDrawingTags">A boolean flag indicating whether to remove drawing tags.</param>
+        /// <returns>A string with SSA tags removed.</returns>
         public static string RemoveSsaTags(string input, bool removeDrawingTags = false)
         {
             var s = input;
@@ -787,8 +942,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        /// <summary>
+        /// Provides the directory path where dictionary files are stored.
+        /// </summary>
         public static string DictionaryFolder => Configuration.DictionariesDirectory;
 
+        /// <summary>
+        /// Retrieves a list of available dictionary languages from the dictionary folder.
+        /// </summary>
+        /// <returns>A list of strings representing the names of the dictionary languages.</returns>
         public static List<string> GetDictionaryLanguages()
         {
             var list = new List<string>();
@@ -816,6 +978,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
+        /// <summary>
+        /// Retrieves a list of available dictionary languages in a culture-neutral format.
+        /// </summary>
+        /// <returns>A list containing the names of available dictionary languages formatted as "DisplayName [ISO Code]".</returns>
         public static List<string> GetDictionaryLanguagesCultureNeutral()
         {
             var list = new List<string>();
@@ -852,6 +1018,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
+        /// <summary>
+        /// Retrieves a collection of <see cref="CultureInfo"/> objects representing subtitle languages.
+        /// </summary>
+        /// <param name="useFilter">A boolean value indicating whether to use a filter based on default languages.</param>
+        /// <returns>An enumerable collection of <see cref="CultureInfo"/> objects representing subtitle languages.</returns>
         public static IEnumerable<CultureInfo> GetSubtitleLanguageCultures(bool useFilter)
         {
             var prospects = new List<CultureInfo>();
@@ -875,11 +1046,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             return prospects.Where(ci => !excludes.Contains(ci.Name));
         }
 
+        /// <summary>
+        /// Calculates the optimal display time in milliseconds for a given text string based on the optimal characters per second.
+        /// </summary>
+        /// <param name="text">The text for which the optimal display time is calculated.</param>
+        /// <returns>The optimal display time in milliseconds.</returns>
         public static double GetOptimalDisplayMilliseconds(string text)
         {
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
+        /// <summary>
+        /// Calculates the optimal display duration for a given text based on the specified characters per second.
+        /// </summary>
+        /// <param name="text">The text for which to calculate the display duration.</param>
+        /// <param name="optimalCharactersPerSecond">The rate of characters per second used to determine the optimal display duration.</param>
+        /// <param name="onlyOptimal">If true, only the optimal display duration is considered without additional adjustments.</param>
+        /// <param name="enforceDurationLimits">If true, the calculated duration will be constrained within predefined minimum and maximum limits.</param>
+        /// <returns>The optimal display duration in milliseconds.</returns>
         public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false, bool enforceDurationLimits = true)
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
@@ -918,16 +1102,32 @@ namespace Nikse.SubtitleEdit.Core.Common
             return duration;
         }
 
+        /// <summary>
+        /// Converts a <see cref="Color"/> object to its hexadecimal color representation as a string.
+        /// </summary>
+        /// <param name="c">The <see cref="Color"/> object to convert.</param>
+        /// <returns>A string representing the hexadecimal color code.</returns>
         public static string ColorToHex(Color c)
         {
             return $"#{c.R:x2}{c.G:x2}{c.B:x2}";
         }
 
+        /// <summary>
+        /// Converts a Color object to a hexadecimal string representation including its transparency.
+        /// </summary>
+        /// <param name="c">The Color object to convert.</param>
+        /// <returns>A string representing the color in hexadecimal format including transparency.</returns>
         public static string ColorToHexWithTransparency(Color c)
         {
             return $"#{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}";
         }
 
+        /// <summary>
+        /// Determines the maximum line length within the given text after
+        /// removing any HTML tags.
+        /// </summary>
+        /// <param name="text">The text to be processed.</param>
+        /// <returns>The length of the longest line in the text.</returns>
         public static int GetMaxLineLength(string text)
         {
             var maxLength = 0;
@@ -942,13 +1142,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             return maxLength;
         }
 
+        /// <summary>
+        /// Determines whether the current runtime environment is Mono.
+        /// </summary>
+        /// <returns>True if running on Mono, otherwise false.</returns>
         public static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;
         }
 
+        /// <summary>
+        /// Gets the version of the entry assembly.
+        /// </summary>
         public static string AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version.ToString();
 
+        /// <summary>
+        /// Retrieves the description attribute of the current assembly.
+        /// </summary>
         public static string AssemblyDescription
         {
             get
@@ -966,6 +1176,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Removes a specified word from the user's custom dictionary for the given language.
+        /// </summary>
+        /// <param name="word">The word to remove from the user dictionary.</param>
+        /// <param name="languageName">The language of the user dictionary from which the word will be removed.</param
         public static void RemoveFromUserDictionary(string word, string languageName)
         {
             word = word.Trim();
@@ -1013,6 +1228,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Adds a specified word to the user dictionary for a given language.
+        /// </summary>
+        /// <param name="word">The word to be added to the user dictionary.</param>
+        /// <param name="languageName">The name of the language for which the word should be added.</param>
         public static void AddToUserDictionary(string word, string languageName)
         {
             word = word.Trim();
@@ -1074,6 +1294,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Loads the user-defined word list for the specified language.
+        /// </summary>
+        /// <param name="userWordList">The list to be populated with user-defined words.</param>
+        /// <param name="languageName">The name of the language for which the word list is to be loaded.</param>
+        /// <returns>The file name of the loaded user word
         public static string LoadUserWordList(List<string> userWordList, string languageName)
         {
             userWordList.Clear();
@@ -1107,12 +1333,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             return userWordListXmlFileName;
         }
 
+        /// <summary>
+        /// A combined string of uppercase letters from various alphabets for text processing.
+        /// </summary>
         public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpperInvariant() + "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
+
+        /// <summary>
+        /// Cached collection of lowercase letters including Greek lowercase characters
+        /// augmented by user-defined uppercase letters configured to be lowercase.
+        /// </summary>
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
+
+        /// <summary>
+        /// Collection of lowercase letters combined with numeric digits for use in various text operations.
+        /// </summary>
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
+
+        /// <summary>
+        /// Cached string containing all uppercase and lowercase letters for faster lookup.
+        /// </summary>
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
+
+        /// <summary>
+        /// Contains all uppercase and lowercase alphabet characters, along with numeric digits.
+        /// </summary>
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
+        /// <summary>
+        /// Retrieves a color based on the provided username.
+        /// </summary>
+        /// <param name="userName">The username to generate the color from.</param>
+        /// <returns>A Color object that corresponds to the provided username.</returns>
         public static Color GetColorFromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -1154,6 +1405,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Calculates a number between 0 and 7 based on the given username.
+        /// </summary>
+        /// <param name="userName">The username from which to derive the number.</param>
+        /// <returns>An integer between 0 and 7 derived from the username.</returns>
         public static int GetNumber0To7FromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -1171,8 +1427,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (int)(number % 8);
         }
 
+        /// <summary>
+        /// A collection of lowercase vowel characters used for text processing.
+        /// </summary>
         public static string LowercaseVowels => "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
 
+        /// <summary>
+        /// Counts the occurrences of a specific tag within a given text.
+        /// </summary>
+        /// <param name="text">The text to search within.</param>
+        /// <param name="tag">The tag to count.</param>
+        /// <returns>The number of times the tag appears in the text.</returns>
         public static int CountTagInText(string text, string tag)
         {
             int count = 0;
@@ -1191,6 +1456,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
+        /// <summary>
+        /// Counts the number of occurrences of a specific tag within the given text.
+        /// </summary>
+        /// <param name="text">The text to search within.</param>
+        /// <param name="tag">The character tag to count.</param>
+        /// <returns>The number of times the tag appears in the text.</returns>
         public static int CountTagInText(string text, char tag)
         {
             int count = 0;
@@ -1208,6 +1479,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
+        /// <summary>
+        /// Determines whether the specified string starts with a given start tag and ends with a given end tag.
+        /// </summary>
+        /// <param name="text">The string to check.</param>
+        /// <param name="startTag">The start tag to look for.</param>
+        /// <param name="endTag">The end tag to look for.</param>
+        /// <returns>True if the string starts with the start tag and ends with the end tag, otherwise false.</returns>
         public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -1251,6 +1529,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return isStart && isEnd;
         }
 
+        /// <summary>
+        /// Retrieves the original paragraph from a list based on the given index and current paragraph properties.
+        /// </summary>
+        /// <param name="index">The index of the paragraph in the original paragraph list.</param>
+        /// <param name="paragraph">The current paragraph to compare against the original paragraphs.</param>
+        /// <param name="originalParagraphs">The list of original paragraphs to search through.</param>
+        /// <returns>The matching original paragraph if found; otherwise, null.</returns>
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
         {
             if (index < 0)
@@ -1308,14 +1593,18 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// UrlEncodes a string without the requirement for System.Web.
         /// Will crash if text length > 2000.
         /// </summary>
+        /// <param name="text">The string to url encode.</param>
+        /// <returns>The url encoded string.</returns>
         public static string UrlEncode(string text)
         {
             return Uri.EscapeDataString(text);
         }
 
         /// <summary>
-        /// Calculates the length if the text url encoded.
+        /// Calculates the length of the text when URL encoded.
         /// </summary>
+        /// <param name="text">The text to measure the URL encoded length of.</param>
+        /// <returns>The length of the text when URL encoded.</returns>
         public static int UrlEncodeLength(string text)
         {
             var urlEncodeLength = 0;
@@ -1338,8 +1627,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// UrlDecodes a string without requiring System.Web
+        /// Decodes a URL-encoded string without requiring System.Web.
         /// </summary>
+        /// <param name="text">The URL-encoded string to decode.</param>
+        /// <returns>The decoded string.</returns>
         public static string UrlDecode(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -1353,9 +1644,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Uri.UnescapeDataString(text);
         }
 
+        /// <summary>
+        /// Regex for matching a number with two or more digits.
+        /// </summary>
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Specifies characters that should be reversed at the beginning and ending of strings
+        /// during right-to-left text processing.
+        /// </summary>
         private const string PrePostStringsToReverse = @"-— !?.…""،,():;[]+~*/<>&^%$#\\|'";
 
+        /// <summary>
+        /// Reverses the starting and ending sections of a string if the string is in a right-to-left language.
+        /// </summary>
+        /// <param name="s">The string to process.</param>
+        /// <returns>A new string with the starting and ending sections reversed for right-to-left languages.</returns>
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
             var newLines = new StringBuilder();
@@ -1459,11 +1763,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newLines.ToString().Trim();
         }
 
+        /// <summary>
+        /// Reverses any sequences of two or more digits found in the input string.
+        /// </summary>
+        /// <param name="s">The input string containing numerical sequences to reverse.</param>
+        /// <returns>A new string with all sequences of two or more digits reversed.</returns>
         public static string ReverseNumbers(string s)
         {
             return TwoOrMoreDigitsNumber.Replace(s, m => ReverseString(m.Value));
         }
 
+        /// <summary>
+        /// Reverses the characters in the specified string.
+        /// </summary>
+        /// <param name="s">The string to reverse.</param>
+        /// <returns>The string with its characters in reverse order.</returns>
         internal static string ReverseString(string s)
         {
             int len = s.Length;
@@ -1479,6 +1793,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new string(chars);
         }
 
+        /// <summary>
+        /// Reverses the parentheses and brackets in the given string.
+        /// </summary>
+        /// <param name="s">The string in which parentheses and brackets need to be reversed.</param>
+        /// <returns>A new string with the parentheses and brackets reversed.</returns>
         private static string ReverseParenthesis(string s)
         {
             if (string.IsNullOrEmpty(s))
@@ -1510,6 +1829,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new string(chars);
         }
 
+        /// <summary>
+        /// Adjusts English text within a string for better display in right-to-left languages.
+        /// </summary>
+        /// <param name="text">The text to be fixed.</param>
+        /// <param name="reverseChars">Characters to be reversed.</param>
+        /// <returns>A string with English text adjusted for right-to-left language display.</returns>
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
@@ -1548,6 +1873,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Trim();
         }
 
+        /// <summary>
+        /// Converts the specified text into its superscript equivalent if possible.
+        /// </summary>
+        /// <param name="text">The text to convert to superscript.</param>
+        /// <returns>A string containing the superscript representation of the input text.</returns
         public static string ToSuperscript(string text)
         {
             var sb = new StringBuilder();
@@ -1687,6 +2017,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Converts the specified text to subscript characters where possible.
+        /// </summary>
+        /// <param name="text">The input text to convert to subscript.</param>
+        /// <returns>A string where applicable characters are converted to their subscript equivalents.</returns>
         public static string ToSubscript(string text)
         {
             var sb = new StringBuilder();
@@ -1757,6 +2092,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Removes leading and trailing quotation marks from a string
+        /// and replaces double quotes within the string with single quotes.
+        /// </summary>
+        /// <param name="text">The string to process for quotes.</param>
+        /// <returns>The processed string with leading and trailing quotes removed,
+        /// and double quotes within the string replaced with single quotes.</returns>
         public static string FixQuotes(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -1777,6 +2119,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text.Replace("\"\"", "\"");
         }
 
+        /// <summary>
+        /// Extracts and returns a color value from an ASSA/SSA formatted string.
+        /// </summary>
+        /// <param name="text">The string containing the ASSA/SSA color tags.</param>
+        /// <param name="defaultColor">The color to return if no valid color tag is found.</param>
+        /// <returns>The extracted color if found; otherwise, the specified default color.</returns>
         public static Color GetColorFromAssa(string text, Color defaultColor)
         {
             var start = text.IndexOf(@"\c", StringComparison.Ordinal);
@@ -1844,6 +2192,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return defaultColor;
         }
 
+        /// <summary>
+        /// Extracts a color value from a font string.
+        /// </summary>
+        /// <param name="text">The font string to extract the color from.</param>
+        /// <param name="defaultColor">The default color to return if extraction fails.</param>
+        /// <returns>A Color object representing the extracted color, or the default color if unsuccessful.</returns>
         public static Color GetColorFromFontString(string text, Color defaultColor)
         {
             var s = text.TrimEnd();
@@ -1922,6 +2276,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Splits the given string into an array of substrings based on specified parameters for line breaks, formatting, and letter-based splitting.
+        /// </summary>
+        /// <param name="s">The string to be split.</param>
+        /// <param name="ignoreLineBreaks">Specifies whether line breaks should be ignored.</param>
+        /// <param name="ignoreFormatting">Specifies whether formatting such as HTML tags should be removed.</param>
+        /// <param name="breakToLetters">Specifies whether the string should be split into individual letters.</param>
+        /// <returns>An array of substrings resulting from the split operation, based on the provided parameters.</returns>
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
         {
             const string endChars = "!?.…:;,#%$£";
@@ -2000,6 +2362,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list.ToArray();
         }
 
+        /// <summary>
+        /// Analyzes two strings to determine the total number of words and the number of changed words.
+        /// </summary>
+        /// <param name="s1">The first string to compare.</param>
+        /// <param name="s2">The second string to compare.</param>
+        /// <param name="total">A reference to an integer that will store the total number of words in both strings.</param>
+        /// <param name="change">A reference to an integer that will store the number of words that have changed between the two strings.</param>
+        /// <param name="ignoreLineBreaks">A boolean indicating whether to ignore line breaks in the comparison.</param>
+        /// <param name="ignoreFormatting">A boolean indicating whether to ignore formatting in the comparison.</param>
+        /// <param name="breakToLetters">A boolean indicating whether to break the strings into individual letters for comparison.</param>
         public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
         {
             var parts1 = SplitForChangedCalc(s1, ignoreLineBreaks, ignoreFormatting, breakToLetters);
@@ -2008,6 +2380,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             change += GetChangesAdvanced(parts1, parts2);
         }
 
+        /// <summary>
+        /// Calculates the advanced changes required to transform one array of strings into another.
+        /// </summary>
+        /// <param name="parts1">The first array of strings to compare.</param>
+        /// <param name="parts2">The second array of strings to compare.</param>
+        /// <returns>The number of changes required to transform parts1 into parts2.</returns>
         private static int GetChangesAdvanced(string[] parts1, string[] parts2)
         {
             int i1 = 0;
@@ -2055,6 +2433,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return c + Math.Abs(parts1.Length - parts2.Length);
         }
 
+        /// <summary>
+        /// Finds the next occurrence of a specified string in an array of strings, starting from a given index.
+        /// </summary>
+        /// <param name="s">The string to find.</param>
+        /// <param name="parts">The array of strings to search through.</param>
+        /// <param name="startIndex">The index to start the search from.</param>
+        /// <returns>The index of the next occurrence of the specified string within the array, or int.MaxValue if the string is not found.</returns>
         private static int FindNext(string s, string[] parts, int startIndex)
         {
             for (; startIndex < parts.Length; startIndex++)
@@ -2067,6 +2452,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return int.MaxValue;
         }
 
+        /// <summary>
+        /// Removes all non-numeric characters from the given string.
+        /// </summary>
+        /// <param name="p">The string from which to remove non-numeric characters.</param>
+        /// <returns>A string containing only the numeric characters from the input string.</returns>
         public static string RemoveNonNumbers(string p)
         {
             if (string.IsNullOrEmpty(p))
@@ -2085,8 +2475,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Regex pattern to remove spaces between numbers within text, ensuring proper spacing for numerical sequences.
+        /// </summary>
         private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Removes spaces between numbers in a given text, except in cases where it represents a large number.
+        /// </summary>
+        /// <param name="text">The input string from which spaces between numbers should be removed.</param>
+        /// <returns>A string with spaces between numbers removed where applicable.</returns>
         public static string RemoveSpaceBetweenNumbers(string text)
         {
             if (!string.IsNullOrEmpty(text))
@@ -2122,11 +2520,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Remove unneeded spaces
+        /// Removes unneeded spaces from a given input string based on the specified language.
         /// </summary>
-        /// <param name="input">text string to remove unneeded spaces from</param>
-        /// <param name="language">two letter language id string</param>
-        /// <returns>text with unneeded spaces removed</returns>
+        /// <param name="input">The input string from which to remove unneeded spaces.</param>
+        /// <param name="language">The language context used to determine which spaces are unneeded.</param>
+        /// <returns>A string with unneeded spaces removed.</returns>
         public static string RemoveUnneededSpaces(string input, string language)
         {
             const char zeroWidthSpace = '\u200B';
@@ -2562,6 +2960,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        /// <summary>
+        /// Removes unnecessary spaces before and after specified HTML tags in a given text.
+        /// </summary>
+        /// <param name="input">The input string from which to remove spaces.</param>
+        /// <param name="openTag">The opening HTML tag to process.</param>
+        /// <returns>The processed string with unnecessary spaces removed around the specified tags.</returns>
         public static string RemoveSpaceBeforeAfterTag(string input, string openTag)
         {
             var text = HtmlUtil.FixUpperTags(input);
@@ -2669,6 +3073,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return tcs.Task;
         }
 
+        /// <summary>
+        /// Loads Matroska text subtitles and populates the given Subtitle object.
+        /// </summary>
+        /// <param name="matroskaSubtitleInfo">Information about the Matroska subtitle track.</param>
+        /// <param name="matroska">The Matroska file containing the subtitles.</param>
+        /// <param name="sub">A list of MatroskaSubtitle objects to be processed.</param>
+        /// <param name="subtitle">The Subtitle object to populate with parsed subtitle data.</param>
+        /// <returns>The detected subtitle format after loading and processing.</returns>
         public static SubtitleFormat LoadMatroskaTextSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, List<MatroskaSubtitle> sub, Subtitle subtitle)
         {
             if (subtitle == null)
@@ -2769,6 +3181,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return format;
         }
 
+        /// <summary>
+        /// Parses Matroska text subtitles from the given track information and subtitle lines,
+        /// and updates the provided Subtitle object with parsed text.
+        /// </summary>
+        /// <param name="trackInfo">The Matroska track information object.</param>
+        /// <param name="subtitleLines">A list of Matroska subtitle objects to be parsed.</param>
+        /// <param name="subtitle">The Subtitle object to be updated with the parsed text.</param>
         public static void ParseMatroskaTextSt(MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitleLines, Subtitle subtitle)
         {
             for (var indexTextSt = 0; indexTextSt < subtitleLines.Count; indexTextSt++)
@@ -2793,6 +3212,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Adjusts the duration of a subtitle paragraph to ensure it meets the minimum display time.
+        /// </summary>
+        /// <param name="s">The subtitle object containing the paragraphs to adjust.</param>
+        /// <param name="i">The index of the paragraph to adjust.</param>
         private static void FixShortDisplayTime(Subtitle s, int i)
         {
             Paragraph p = s.Paragraphs[i];
@@ -2818,6 +3242,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Loads a Matroska SSA (Sub Station Alpha) subtitle from the given information and file.
+        /// </summary>
+        /// <param name="matroskaSubtitleInfo">The Matroska track information containing subtitle metadata.</param>
+        /// <param name="fileName">The path to the Matroska file.</param>
+        /// <param name="format">The subtitle format to use for loading.</param>
+        /// <param name="sub">A list of Matroska subtitles to be processed.</param>
+        /// <returns>A <see cref="Subtitle"/> object containing the loaded subtitles.</returns>
         public static Subtitle LoadMatroskaSSA(MatroskaTrackInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<MatroskaSubtitle> sub)
         {
             var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
@@ -2941,6 +3373,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
+        /// <summary>
+        /// Returns the number of lines in the provided text.
+        /// </summary>
+        /// <param name="text">The text to evaluate.</param>
+        /// <returns>The number of lines in the text.</returns>
         public static int GetNumberOfLines(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -2958,6 +3395,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lines;
         }
 
+        /// <summary>
+        /// Determines whether two paragraphs qualify for merging based on specified criteria.
+        /// </summary>
+        /// <param name="p">The first paragraph.</param>
+        /// <param name="next">The next paragraph.</param>
+        /// <param name="maximumMillisecondsBetweenLines">The maximum allowed time difference between the end of the first paragraph and the start of the next in milliseconds.</param>
+        /// <param name="maximumTotalLength">The maximum allowed total length of the combined text of both paragraphs.</param>
+        /// <param name="onlyContinuationLines">Specifies whether only continuation lines (e.g., lines ending with ellipses) should qualify for merging.</param>
+        /// <returns>True if the paragraphs meet the criteria for merging, otherwise false.</returns>
         public static bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength, bool onlyContinuationLines)
         {
             if (p?.Text != null && next?.Text != null)
@@ -2996,6 +3442,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Gets the path and file name without its extension.
+        /// </summary>
+        /// <param name="fileName">The full path of the file.</param>
+        /// <returns>The path and file name without its extension.</returns>
         public static string GetPathAndFileNameWithoutExtension(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -3012,6 +3463,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return fileName;
         }
 
+        /// <summary>
+        /// Retrieves the file name from the specified path, excluding the file extension.
+        /// </summary>
+        /// <param name="fileName">The full path of the file.</param>
+        /// <returns>The file name without its extension.</returns>
         public static string GetFileNameWithoutExtension(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -3034,6 +3490,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return fileName;
         }
 
+        /// <summary>
+        /// Splits a string at the first space after a given position and returns the modified string.
+        /// </summary>
+        /// <param name="text">The input string to be processed.</param>
+        /// <param name="selectionStart">The position in the string where the split should be attempted.</param>
+        /// <returns>The modified string with a newline inserted at the appropriate position, or the original string if no changes are made.</returns>
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
@@ -3064,6 +3526,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
+        /// <summary>
+        /// Adjusts Right-to-Left (RTL) text in the input string by ensuring the presence of RTL Unicode characters.
+        /// </summary>
+        /// <param name="input">The string containing RTL text that needs adjustment.</param>
+        /// <returns>A modified string with appropriate RTL Unicode characters inserted.</returns>
         public static string FixRtlViaUnicodeChars(string input)
         {
             string rtl = "\u202B";
@@ -3072,6 +3539,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        /// <summary>
+        /// Removes Unicode control characters from the input string.
+        /// </summary>
+        /// <param name="input">The string from which to remove Unicode control characters.</param>
+        /// <returns>A new string with Unicode control characters removed.</returns>
         public static string RemoveUnicodeControlChars(string input)
         {
             return input.Replace("\u200E", string.Empty)
@@ -3084,6 +3556,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u00A0", " "); // no break space
         }
 
+        /// <summary>
+        /// Verifies if the elements in the specified array form a continuous sequence without any gaps.
+        /// </summary>
+        /// <param name="array">The array of integers to check.</param>
+        /// <returns>True if the array forms a continuous sequence, otherwise false.</returns
         public static bool HasNoGaps(int[] array)
         {
             if (array.Length == 0)
@@ -3106,6 +3583,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        /// <summary>
+        /// Computes the SHA-512 hash of the specified byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array to hash.</param>
+        /// <returns>A string representing the SHA-512 hash in hexadecimal format.</returns>
         public static string GetSha512Hash(byte[] buffer)
         {
             using (var ms = new MemoryStream(buffer))
@@ -3124,6 +3606,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Toggles specific symbols within the provided text by either adding or removing them depending on their current presence.
+        /// </summary>
+        /// <param name="tag">The symbol tag to be added or removed from the text.</param>
+        /// <param name="text">The text in which the symbols are to be toggled.</param>
+        /// <param name="endTag">The end symbol tag to be added or removed.</param>
+        /// <param name="added">Outputs a boolean indicating whether symbols were added (true) or removed (false).</param>
+        /// <returns>The modified text after toggling the symbols.</returns>
         public static string ToggleSymbols(string tag, string text, string endTag, out bool added)
         {
             var pre = string.Empty;
@@ -3172,6 +3662,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        /// <summary>
+        /// Removes specified start and end symbols from the input text.
+        /// </summary>
+        /// <param name="tag">The start symbol to remove.</param>
+        /// <param name="input">The input text from which the symbols will be removed.</param>
+        /// <param name="endTag">The end symbol to remove.</param>
+        /// <returns>The input text with specified symbols removed.</returns>
         public static string RemoveSymbols(string tag, string input, string endTag)
         {
             var pre = string.Empty;
@@ -3200,6 +3697,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return pre + text + post;
         }
 
+        /// <summary>
+        /// Adds specified symbols around text, including handling newline characters and tag styles.
+        /// </summary>
+        /// <param name="tag">The tag symbol to be added to the text.</param>
+        /// <param name="text">The input text to which symbols will be added.</param>
+        /// <param name="endTag">Optional end tag symbol. If not provided, the same tag symbol is used.</param>
+        /// <returns>The text with added symbols around it.</returns>
         public static string AddSymbols(string tag, string text, string endTag)
         {
             text = RemoveSymbols(tag, text, endTag);
@@ -3228,6 +3732,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        /// <summary>
+        /// Splits and extracts the start tags from a given subtitle line.
+        /// </summary>
+        /// <param name="line">The subtitle line from which to extract the start tags.</param>
+        /// <param name="pre">A reference to the string where the extracted start tags will be stored.</param>
+        /// <returns>The remaining part of the subtitle line after the start tags have been extracted.</returns>
         public static string SplitStartTags(string line, ref string pre)
         {
             var s = line;
@@ -3270,6 +3780,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        /// <summary>
+        /// Splits the end tags from the input string and assigns them to the provided reference variable.
+        /// </summary>
+        /// <param name="line">The input string containing potential end tags to be split.</param>
+        /// <param name="post">The reference variable where the end tags will be assigned.</param>
+        /// <returns>The modified string after the end tags have been removed.</returns>
         public static string SplitEndTags(string line, ref string post)
         {
             var s = line;
@@ -3309,6 +3825,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        /// <summary>
+        /// Retrieves the subtitle format that matches the specified friendly name.
+        /// </summary>
+        /// <param name="friendlyName">The friendly name of the subtitle format to retrieve.</param>
+        /// <returns>The <see cref="SubtitleFormat"/> that matches the specified friendly name, or null if no match is found.</returns
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(object value)
         {
             throw new NotImplementedException();
