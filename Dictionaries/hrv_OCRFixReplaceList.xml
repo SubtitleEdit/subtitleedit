@@ -5640,6 +5640,7 @@
     <RegEx find="resed" replaceWith="resjed" />
     <RegEx find="rgk" replaceWith="rgl" />
     <RegEx find="rgv" replaceWith="rgov" />
+    <RegEx find="rqv" replaceWith="rav" />
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
