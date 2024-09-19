@@ -17,7 +17,13 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
         public MessageBoxForm(string text, string caption, MessageBoxButtons buttons)
         {
             var icon = AutoGuessIcon(text, buttons);
-            Init(text, caption, buttons, icon);
+            Init(text, caption, buttons, icon, false);
+        }
+
+        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, bool noTextBox)
+        {
+            var icon = AutoGuessIcon(text, buttons);
+            Init(text, caption, buttons, icon, noTextBox);
         }
 
         private static MessageBoxIcon AutoGuessIcon(string text, MessageBoxButtons buttons)
@@ -37,10 +43,15 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            Init(text, caption, buttons, icon);
+            Init(text, caption, buttons, icon, false);
         }
 
-        private void Init(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, bool noTextBox)
+        {
+            Init(text, caption, buttons, icon, noTextBox);
+        }
+
+        private void Init(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, bool noTextBox)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -59,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             buttonAbort.Text = LanguageSettings.Current.DvdSubRip.Abort;
 
             InitializeIcon(icon);
-            InitializeText(text);
+            InitializeText(text, noTextBox);
             InitializeButtons(buttons);
 
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -121,14 +132,14 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             }
         }
 
-        private void InitializeText(string text)
+        private void InitializeText(string text, bool noTextBox)
         {
             if (text == null)
             {
                 text = string.Empty;
             }
 
-            if (ShouldSwitchToTextBox(text))
+            if (!noTextBox && ShouldSwitchToTextBox(text))
             {
                 seTextBox2.ReadOnly = true;
                 seTextBox2.Text = text;
@@ -151,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             labelText.Text = text;
         }
 
-        private bool ShouldSwitchToTextBox(string text)
+        private static bool ShouldSwitchToTextBox(string text)
         {
             if (text.Length > 500)
             {
