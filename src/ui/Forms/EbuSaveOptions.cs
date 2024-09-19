@@ -106,7 +106,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     System.Diagnostics.Debug.WriteLine("EbuOptions unable to read existing file: " + fileName + "  - " + ex.Message);
                 }
-                string title = Path.GetFileNameWithoutExtension(fileName);
+
+                var title = Path.GetFileNameWithoutExtension(fileName);
                 if (title.Length > 32)
                 {
                     title = title.Substring(0, 32).Trim();
