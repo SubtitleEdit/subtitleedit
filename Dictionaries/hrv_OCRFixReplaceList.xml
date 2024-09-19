@@ -4497,6 +4497,7 @@
     <RegEx find="ejsbu" replaceWith="aceboo" />
     <RegEx find="arant(uje|ova)" replaceWith="arantira" />
     <RegEx find="gelsk" replaceWith="glesk" />
+    <RegEx find="glef" replaceWith="gled" />
     <RegEx find="gld" replaceWith="gled" />
     <RegEx find="([gGsS])luv" replaceWith="$1luh" />
     <RegEx find="([gG])nev" replaceWith="$1njev" />
@@ -5320,6 +5321,8 @@
     <RegEx find="ćnot" replaceWith="ćnost" />
     <RegEx find="ćw" replaceWith="će" />
     <RegEx find="čmos" replaceWith="čnos" />
+    <RegEx find="ćpj" replaceWith="ćoj" />
+
     <RegEx find="dcz" replaceWith="doz" />
     <RegEx find="diba" replaceWith="dina" />
     <RegEx find="dišl" replaceWith="dišn" />
