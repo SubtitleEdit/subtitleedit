@@ -5466,8 +5466,7 @@
     <RegEx find="ljutić" replaceWith="ljutit ć" />
     <RegEx find="lp([rg])" replaceWith="lo$1" />
     <RegEx find="lr([dgh])" replaceWith="le$1" />
-    <RegEx find="lsč" replaceWith="lač" />
-    <RegEx find="lsn" replaceWith="lan" />
+    <RegEx find="ls([čnž])" replaceWith="la$1" />
     <RegEx find="lša" replaceWith="iša" />
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="ltovan" replaceWith="ltiran" />
