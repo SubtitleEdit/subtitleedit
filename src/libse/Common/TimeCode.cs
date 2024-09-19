@@ -347,5 +347,27 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return ToShortString(true);
         }
+
+        /// <summary>
+        /// Align time to frame rate.
+        /// </summary>
+        public TimeCode AlignToFrame()
+        {
+            var ts = TimeSpan.FromMilliseconds(Math.Round(TotalMilliseconds, MidpointRounding.AwayFromZero));
+            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            TimeSpan ts2;
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+            {
+                ts = ts.Add(new TimeSpan(0, 0, 1));
+                ts2 = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, 0);
+            }
+            else
+            {
+                var ms = SubtitleFormat.FramesToMillisecondsMax999(SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                ts2 = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ms);
+            }
+
+            return new TimeCode(ts2.TotalMilliseconds);
+        }
     }
 }

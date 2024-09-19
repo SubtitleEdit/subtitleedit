@@ -2023,14 +2023,20 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (VideoPlayer != null)
                 {
+                    var v = value;
+
                     if (SmpteMode)
                     {
-                        VideoPlayer.CurrentPosition = value * 1.001;
+                        v *= 1.001;
                     }
-                    else
+
+                    if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
-                        VideoPlayer.CurrentPosition = value;
+                        var tc = TimeCode.FromSeconds(v);
+                        v = tc.AlignToFrame().TotalSeconds; ;
                     }
+
+                    VideoPlayer.CurrentPosition = v;
                 }
                 else
                 {
