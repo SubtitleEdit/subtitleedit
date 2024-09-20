@@ -2,7 +2,7 @@
 <Language Name="Português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.7</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Traduzido para Português de Portugal, por Hugo Carvalho(hugok79)
 E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -2693,6 +2693,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformGoToPreviousShotChange>Ir para a mudança de cena anterior</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Ir para a próxima mudança de cena</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Alternar a mudança de cena</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Mover todas as mudanças de cena um fotograma para a frente</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Mover todas as mudanças de cena um fotograma para trás</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Remover/exportar mudanças de cena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Ajuste automático do início através da mudança de volume/cena</WaveformGuessStart>
     <GoBack1Frame>Atrasar 1 fotograma</GoBack1Frame>

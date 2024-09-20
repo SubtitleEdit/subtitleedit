@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.8 (xth September 2024) BETA
+4.0.8 (6th September 2024) 
 * NEW:
    * Add "Batch mode" for "Generate transparent video with subs" - thx David
    * Add "Pixel format" paramter to burn-in - thx Hafran420
@@ -49,6 +49,7 @@
    * Fix for batch translate via Ollama - thx Anon1337Elite
    * Fix spell check shortcut (was the same as save-as, now Alt+F7) - thx Javier
    * Fix for pasting ASSA in the waveform - thx MitchSirco
+   * Fix no header in Batch convert WebVTT to ASSA - thx SardanDev/aaron-meyers
 
 
 4.0.7 (8th July 2024) 

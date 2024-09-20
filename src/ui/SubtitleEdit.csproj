@@ -17,8 +17,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>4.0.7.0</FileVersion>
-    <AssemblyVersion>4.0.7.0</AssemblyVersion>
+    <FileVersion>4.0.8.0</FileVersion>
+    <AssemblyVersion>4.0.8.0</AssemblyVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -268,16 +269,16 @@
     </HunspellAssemblies>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Net.Http"/>
-    <PackageReference Include="Microsoft.Win32.Registry"/>
-    <PackageReference Include="NAudio.Core"/>
-    <PackageReference Include="NAudio.WinMM"/>
-    <PackageReference Include="ncalc"/>
-    <PackageReference Include="Newtonsoft.Json"/>
-    <PackageReference Include="NHunspell"/>
-    <PackageReference Include="System.Security.AccessControl"/>
-    <PackageReference Include="System.Security.Principal.Windows"/>
-    <PackageReference Include="Vosk"/>
+    <PackageReference Include="Microsoft.Net.Http" />
+    <PackageReference Include="Microsoft.Win32.Registry" />
+    <PackageReference Include="NAudio.Core" />
+    <PackageReference Include="NAudio.WinMM" />
+    <PackageReference Include="ncalc" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="NHunspell" />
+    <PackageReference Include="System.Security.AccessControl" />
+    <PackageReference Include="System.Security.Principal.Windows" />
+    <PackageReference Include="Vosk" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />

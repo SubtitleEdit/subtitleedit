@@ -835,10 +835,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Start();
             var linesTranslated = 0;
 
+            // Max merge attempts(always=-1,never=0), fallback to forceSingleLineMode after exceeding the number of attempts
+            int maxMergeErrorCount = Configuration.Settings.Tools.AutoTranslateMaxMerges;
+
             var forceSingleLineMode = Configuration.Settings.Tools.AutoTranslateStrategy == TranslateStrategy.TranslateEachLineSeparately.ToString() ||
                                       _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
                                       _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName ||
-                                      _singleLineMode;
+                                      _singleLineMode ||
+                                      maxMergeErrorCount == 0;
 
             var delaySeconds = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
 
@@ -880,10 +884,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             continue;
                         }
 
-                        mergeErrorCount++;
-                        if (mergeErrorCount > 20)
+                        if (!forceSingleLineMode)
                         {
-                            forceSingleLineMode = true;
+                            if (maxMergeErrorCount < 0)
+                            {
+                                continue;                        
+                            } 
+
+                            if (mergeErrorCount >= maxMergeErrorCount - 1)
+                            {
+                                forceSingleLineMode = true;                        
+                            }
+
+                            mergeErrorCount++;
                         }
 
                         var p = _subtitle.Paragraphs[index];
@@ -908,12 +921,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         }
 
                         TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
-                        linesTranslated++;
 
                         _translationProgressIndex = index;
                         _translationProgressDirty = true;
                         progressBar1.Value = index;
-                        index++;
+
+                        // Proceed to the next line only after successfully obtaining the translation to avoid intermittent translation results
+                        if (!string.IsNullOrWhiteSpace(translation))
+                        {   
+                            linesTranslated++;   
+                            index++;
+                        }
 
                         Application.DoEvents();
                         if (_breakTranslation || _singleLineMode)

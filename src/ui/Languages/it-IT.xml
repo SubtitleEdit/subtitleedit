@@ -2,8 +2,8 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 26.07.2024</TranslatedBy>
+    <Version>4.0.8</Version>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.09.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2692,6 +2692,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformGoToPreviousShotChange>Vai al cambiamento di scena precedente</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Vai alla modifica della scena successiva</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Attiva/disattiva modifica scena</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Sposta tutte le modifiche dell'inquadratura un fotogramma in avanti</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Sposta tutte le modifiche dell'inquadratura un fotogramma indietro</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Rimuovi/esporta modifiche alla scena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Avvio con regolazione automatica tramite cambio Volume / Scena</WaveformGuessStart>
     <GoBack1Frame>Un fotogramma indietro</GoBack1Frame>

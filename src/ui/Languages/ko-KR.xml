@@ -2,7 +2,7 @@
 <Language Name="Korean (한국어)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.7</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -2690,6 +2690,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformGoToPreviousShotChange>이전 장면전환으로 이동</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>다음 장면전환으로 이동</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>장면전환</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>모든 장면전환을 한 프레임 앞으로 이동</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>모든 장면전환을 한 프레임 뒤로 이동</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>장면전환 제거/내보내기</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>볼륨/장면전환을 통한 자동 조정</WaveformGuessStart>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
@@ -3137,6 +3139,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Angle>각도</Angle>
     <BoxPerLine>줄마다 별도로 (테두리 색 사용)</BoxPerLine>
     <BoxMultiLine>단일 상자로 (그림자 색 사용)</BoxMultiLine>
+    <BoxPerLineShort>줄마다 상자</BoxPerLineShort>
+    <BoxMultiLineShort>단일 상자</BoxMultiLineShort>
+    <BoxType>상자 유형
+</BoxType>
     <DuplicateStyleNames>중복 스타일 이름: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>

@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         _pausePosition = value;
                     }
 
-                    DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
+                    DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute", "exact");
                 }
             }
         }
@@ -740,6 +740,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes(string.Empty)); // don't load subtitles (does not seem to work anymore)
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sid"), GetUtf8Bytes("no")); // don't load subtitles
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("hr-seek"), GetUtf8Bytes("yes")); // don't load subtitles
 
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))

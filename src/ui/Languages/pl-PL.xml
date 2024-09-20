@@ -2,8 +2,8 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.7</Version>
-    <TranslatedBy>Tłumaczenie: Adam Malich (mailto:adam_malich@windowslive.com)</TranslatedBy>
+    <Version>4.0.8</Version>
+    <TranslatedBy>Tłumaczenie: Adam Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1014,6 +1014,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Format pikseli</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Dostrój do</TuneFor>
     <AlignRight>Wyrównaj do prawej</AlignRight>
@@ -2689,6 +2690,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <WaveformGoToPreviousShotChange>Przejdź do poprzedniej zmiany ujęcia</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Przejdź do następnej zmiany ujęcia</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Przełącz zmianę ujęcia</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Przesuń wszystkie zmiany ujęcia o jedną klatkę do przodu</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Przesuń wszystkie zmiany ujęcia o jedną klatkę do tyłu</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Usuń/Eksportuj zmiany ujęcia</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automatyczna regulacja startu za pomocą głośności/zmiany ujęcia</WaveformGuessStart>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
@@ -3136,6 +3139,9 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <Angle>Kąt</Angle>
     <BoxPerLine>Pole nieprzezroczyste na linię (użyj koloru konturu)</BoxPerLine>
     <BoxMultiLine>Jedno pole nieprzezroczyste (użyj koloru cienia)</BoxMultiLine>
+    <BoxPerLineShort>Pole nieprzezroczyste na linię</BoxPerLineShort>
+    <BoxMultiLineShort>Jedno pole nieprzezroczyste</BoxMultiLineShort>
+    <BoxType>Rodzaj pola nieprzezroczystego</BoxType>
     <DuplicateStyleNames>Zduplikowane nazwy stylów: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3450,6 +3456,7 @@ Zachować te zmiany?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Użyj wartości nagłówka X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Połącz linie z tym samym tekstem podczas wczytywania</MergeLines>
+    <MergeStyleTags>Scal tagi stylu</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Style WebVTT</Title>

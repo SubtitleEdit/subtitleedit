@@ -469,14 +469,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace;
             }
+
             if (dialogStyle == DialogType.DashSecondLineWithSpace)
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
             }
+
             if (dialogStyle == DialogType.DashBothLinesWithoutSpace)
             {
-                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithoutSpace;
             }
+
             return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithSpace;
         }
 

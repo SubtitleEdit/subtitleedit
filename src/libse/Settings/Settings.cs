@@ -2317,6 +2317,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.AutoTranslateMaxBytes = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AutoTranslateMaxMerges");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMaxMerges = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }            
+
             subNode = node.SelectSingleNode("AutoTranslateStrategy");
             if (subNode != null)
             {
@@ -2345,6 +2351,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsModel");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsLanguage = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
@@ -8466,6 +8484,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.WaveformToggleShotChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameForward");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameBack");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformListShotChanges");
                 if (subNode != null)
                 {
@@ -9003,11 +9033,14 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateMaxMerges", settings.Tools.AutoTranslateMaxMerges.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
                 textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
+                textWriter.WriteElementString("TextToSpeechElevenLabsModel", settings.Tools.TextToSpeechElevenLabsModel);
+                textWriter.WriteElementString("TextToSpeechElevenLabsLanguage", settings.Tools.TextToSpeechElevenLabsLanguage);
                 textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
@@ -10222,6 +10255,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("WaveformGoToPreviousShotChange", shortcuts.WaveformGoToPreviousShotChange);
             textWriter.WriteElementString("WaveformGoToNextShotChange", shortcuts.WaveformGoToNextShotChange);
             textWriter.WriteElementString("WaveformToggleShotChange", shortcuts.WaveformToggleShotChange);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameForward", shortcuts.WaveformAllShotChangesOneFrameForward);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameBack", shortcuts.WaveformAllShotChangesOneFrameBack);
             textWriter.WriteElementString("WaveformListShotChanges", shortcuts.WaveformListShotChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);

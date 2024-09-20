@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -120,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxAddToVideoFile.Text = LanguageSettings.Current.TextToSpeech.AddAudioToVideo;
             buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
             labelRegion.Text = LanguageSettings.Current.General.Region;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             checkBoxShowPreview.Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
             checkBoxAudioEncoding.Text = LanguageSettings.Current.TextToSpeech.CustomAudioEncoding;
             linkLabelCustomAudio.Text = LanguageSettings.Current.Settings.Title;
@@ -452,7 +454,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Value = 0;
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
-            var ext = ".wav";
+            const string ext = ".wav";
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
@@ -522,7 +524,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     continue;
                 }
 
-                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
+                var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
+                if (divisor <= 0)
+                {
+                    SeLogger.Error($"TextToSpeech: Duration is zero (skipping): {pFileName}, {p}");
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
+
+                var factor = (decimal)waveInfo.TotalMilliseconds / divisor;
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
@@ -1110,7 +1120,18 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
                     var text = Utilities.UnbreakLine(p.Text);
-                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
+                    var model = nikseComboBoxRegion.Text;
+
+                    var language = string.Empty;
+                    if (model == "eleven_turbo_v2_5")
+                    {
+                        if (nikseComboBoxLanguage.SelectedItem is TranslationPair tp)
+                        {
+                            language = $", \"language_code\": \"{tp.Code}\"";
+                        }
+                    }
+
+                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": 0.8, \"similarity_boost\": 1.0 }} }}";
                     var content = new StringContent(data, Encoding.UTF8);
                     content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
@@ -1335,6 +1356,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseTextBoxApiKey.Visible = false;
             labelRegion.Visible = false;
             nikseComboBoxRegion.Visible = false;
+            labelRegion.Text = LanguageSettings.Current.General.Region;
+            labelLanguage.Visible = false;
+            nikseComboBoxLanguage.Visible = false;
 
             labelRegion.Text = LanguageSettings.Current.General.Region;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
@@ -1447,6 +1471,20 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     nikseComboBoxVoice.Items.Add(voice.ToString());
                 }
+
+                labelRegion.Text = LanguageSettings.Current.AudioToText.Model;
+                labelRegion.Visible = true;
+                nikseComboBoxRegion.Items.Clear();
+                nikseComboBoxRegion.Items.Add("eleven_turbo_v2_5");
+                nikseComboBoxRegion.Items.Add("eleven_multilingual_v2");
+
+                nikseComboBoxRegion.Text = Configuration.Settings.Tools.TextToSpeechElevenLabsModel;
+                if (nikseComboBoxRegion.SelectedIndex < 0)
+                {
+                    nikseComboBoxRegion.SelectedIndex = 1;
+                }
+
+                nikseComboBoxRegion.Visible = true;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
@@ -1754,6 +1792,69 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     labelActors.Visible = true;
                     listViewActors.Visible = true;
                     _actorsOn = true;
+                }
+            }
+        }
+
+        private void FillElevenLabsLanguages(string model)
+        {
+            // see https://help.elevenlabs.io/hc/en-us/articles/17883183930129-What-models-do-you-offer-and-what-is-the-difference-between-them
+
+            if (model != "eleven_turbo_v2_5")
+            {
+                nikseComboBoxLanguage.Visible = false;
+                labelLanguage.Visible = false;
+                return;
+            }
+
+            nikseComboBoxLanguage.Items.Clear();
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Arabic", "ar"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Bulgarian", "bg"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Chinese", "zh"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Croatian", "hr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Czech", "cz"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Danish", "da"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Dutch", "nl"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("English", "en"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Filipino", "ph"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Finnish", "fi"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("French", "fr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("German", "de"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Greek", "el"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Hindi", "hi"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Hungarian", "hu"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Indonesian", "id"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Italian", "it"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Japanese", "ja"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Korean", "kr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Malay", "ms"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Norwegian", "no"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Polish", "pl"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Portuguese", "pt"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Romanian", "ro"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Russian", "ru"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Slovak", "sk"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Spanish", "es"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Swedish", "sv"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Tamil", "ta"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Turkish", "tr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Ukrainian", "uk"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Vietnamese", "vi"));
+
+            nikseComboBoxLanguage.Visible = true;
+            labelLanguage.Visible = true;
+
+            nikseComboBoxLanguage.SelectedIndex = 7; // english
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage))
+            {
+                for (var i = 0; i < nikseComboBoxLanguage.Items.Count; i++)
+                {
+                    var tp = (TranslationPair)nikseComboBoxLanguage.Items[i];
+                    if (tp.ToString() == Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage)
+                    {
+                        nikseComboBoxLanguage.SelectedIndex = i;
+                        break;
+                    }
                 }
             }
         }
@@ -2184,6 +2285,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             if (engine.Id == TextToSpeechEngineId.ElevenLabs)
             {
                 Configuration.Settings.Tools.TextToSpeechElevenLabsApiKey = nikseTextBoxApiKey.Text;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsModel = nikseComboBoxRegion.Text;
+                if (nikseComboBoxLanguage.Visible)
+                {
+                    Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage = nikseComboBoxLanguage.Text;
+                }
             }
             else if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
             {
@@ -2359,6 +2465,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             using (var form = new TtsAudioEncoding())
             {
                  form.ShowDialog(this);
+            }
+        }
+
+        private void nikseComboBoxRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            {
+                FillElevenLabsLanguages(nikseComboBoxRegion.Text);
             }
         }
     }

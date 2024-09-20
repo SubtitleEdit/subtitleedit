@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Forms
 {

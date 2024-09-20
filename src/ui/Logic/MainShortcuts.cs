@@ -270,6 +270,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformGoToPreviousShotChange { get; set; }
         public Keys WaveformGoToNextShotChange { get; set; }
         public Keys WaveformToggleShotChange { get; set; }
+        public Keys WaveformAllShotChangesOneFrameForward { get; set; }
+        public Keys WaveformAllShotChangesOneFrameBack { get; set; }
         public Keys WaveformListShotChanges { get; set; }
         public Keys WaveformGuessStart { get; set; }
         public Keys WaveformAudioToTextVosk { get; set; }
@@ -549,6 +551,8 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformSetParagraphAsNewSelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSetParagraphAsSelection);
             WaveformGoToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousShotChange);
             WaveformGoToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextShotChange);
+            WaveformAllShotChangesOneFrameForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameForward);
+            WaveformAllShotChangesOneFrameBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameBack);
             WaveformToggleShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleShotChange);
             WaveformListShotChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListShotChanges);
             WaveformGuessStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGuessStart);

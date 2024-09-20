@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             Text = LanguageSettings.Current.General.Advanced;
             labelDelay.Text = LanguageSettings.Current.GoogleTranslate.Delay;
             labelMaxBytes.Text = LanguageSettings.Current.GoogleTranslate.MaxBytes;
+            labelMaxMerges.Text = LanguageSettings.Current.GoogleTranslate.MaxMerges;
             labelParagraphHandling.Text = LanguageSettings.Current.GoogleTranslate.LineMergeHandling;
             labelPrompt.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PromptX, engineName);
             buttonOk.Text = LanguageSettings.Current.General.Ok;
@@ -35,9 +36,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             nikseUpDownMaxBytes.Value = Configuration.Settings.Tools.AutoTranslateMaxBytes;
 
+            nikseUpDownMaxMerges.Value = Configuration.Settings.Tools.AutoTranslateMaxMerges;
+
             comboBoxParagraphHandling.Left = labelParagraphHandling.Right + 4;
             nikseUpDownDelay.Left = labelDelay.Right + 4;
             nikseUpDownMaxBytes.Left = labelMaxBytes.Right + 4;
+            nikseUpDownMaxMerges.Left = labelMaxMerges.Right + 4;
 
             if (_engineType == typeof(ChatGptTranslate))
             {
@@ -126,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)nikseUpDownDelay.Value;
             Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)nikseUpDownMaxBytes.Value;
+            Configuration.Settings.Tools.AutoTranslateMaxMerges = (int)nikseUpDownMaxMerges.Value;
 
             if (_engineType == typeof(ChatGptTranslate))
             {
