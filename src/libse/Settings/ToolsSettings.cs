@@ -93,6 +93,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public int AutoTranslateMaxBytes { get; set; }
+        public int AutoTranslateMaxMerges { get; set; }
         public string AutoTranslateStrategy { get; set; }
         public string GeminiProApiKey { get; set; }
         public string TextToSpeechEngine { get; set; }
@@ -489,6 +490,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AnthropicApiModel = AnthropicTranslate.Models[0];
             TextToSpeechAzureRegion = "westeurope";
             AutoTranslateMaxBytes = 2000;
+            AutoTranslateMaxMerges = -1;
             TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;

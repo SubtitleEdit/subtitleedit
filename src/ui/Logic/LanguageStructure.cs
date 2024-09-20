@@ -1172,6 +1172,7 @@
             public string MergeSplitStrategy { get; set; }
             public string Delay { get; set; }
             public string MaxBytes { get; set; }
+            public string MaxMerges { get; set; }
             public string PromptX { get; set; }
             public string TranslateLinesSeparately { get; set; }
         }

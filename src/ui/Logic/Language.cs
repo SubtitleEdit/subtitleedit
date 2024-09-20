@@ -1351,6 +1351,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ReTranslateCurrentLine = "Re-translate current line",
                 Delay = "Delay between server calls",
                 MaxBytes = "Maximum bytes in each server call",
+                MaxMerges = "Max merge attempts(always=-1,never=0)",
                 MergeSplitStrategy = "Split/merge handling",
                 PromptX = "Prompt for {0}",
                 TranslateLinesSeparately = "Translate each line separately",

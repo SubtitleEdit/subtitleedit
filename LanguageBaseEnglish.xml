@@ -1090,6 +1090,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <MergeSplitStrategy>Split/merge handling</MergeSplitStrategy>
     <Delay>Delay between server calls</Delay>
     <MaxBytes>Maximum bytes in each server call</MaxBytes>
+    <MaxMerges>Max merge attempts(always=-1,never=0)</MaxMerges>
     <PromptX>Prompt for {0}</PromptX>
     <TranslateLinesSeparately>Translate each line separately</TranslateLinesSeparately>
   </GoogleTranslate>
