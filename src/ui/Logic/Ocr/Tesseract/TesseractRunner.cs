@@ -132,6 +132,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                     Tesseract5.SetImage(bitmap);
                     result = Tesseract5.GetHOCR();
                     result = ParseHocr(result);
+                    byte[] bytes = Encoding.Default.GetBytes(result);
+                    result = Encoding.UTF8.GetString(bytes);
                     Marshal.FreeHGlobal(Tesseract5.imageData); //free temp image global buffer (used to pass image data to external c++ dll)
                     Tesseract5.imageData = IntPtr.Zero; //remove handle so we don't try to free it again
                 }
