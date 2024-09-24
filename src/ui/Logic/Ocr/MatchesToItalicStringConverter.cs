@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (var i = 0; i < lineMatches.Count; i++)
             {
                 var m = lineMatches[i];
-                if (m.Text == " " || m.Text == "-" || m.Text == "'") // chars that allow change of italic
+                if (m.Text == " " || m.Text == "-" || m.Text == "'" || m.Text == ":" || m.Text == "[" || m.Text == "]") // chars that allow change of italic
                 {
                     if (sbWord.Length > 0)
                     {
@@ -139,6 +139,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static bool AddWord(StringBuilder sb, int italicCount, ref bool italicOn, StringBuilder sbWord, string prevSpace)
         {
             var w = sbWord.ToString();
+            if (prevSpace.Length == 1 && w.StartsWith(prevSpace))
+            {
+                w = prevSpace + w;
+                prevSpace = string.Empty;
+            }
+
             var wordIsItalic = italicCount > w.Length / 2.0;
             if (!wordIsItalic && Math.Abs(italicCount - w.Length / 2.0) < 0.3 && italicOn)
             {
@@ -147,21 +153,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (wordIsItalic && italicOn)
             {
-                sb.Append(prevSpace + sbWord);
+                sb.Append(prevSpace + w);
             }
             else if (wordIsItalic)
             {
-                sb.Append(prevSpace + "<i>" + sbWord);
+                sb.Append(prevSpace + "<i>" + w);
                 italicOn = true;
             }
             else if (italicOn)
             {
-                sb.Append("</i>" + prevSpace + sbWord);
+                sb.Append("</i>" + prevSpace + w);
                 italicOn = false;
             }
             else
             {
-                sb.Append(prevSpace + sbWord);
+                sb.Append(prevSpace + w);
             }
 
             return italicOn;

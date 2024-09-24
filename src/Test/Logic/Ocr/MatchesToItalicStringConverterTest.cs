@@ -71,8 +71,73 @@ namespace Test.Logic.Ocr
                 new VobSubOcr.CompareMatch("'", true, 0, Guid.NewGuid().ToString()),
             };
 
-            string result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            var result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
             Assert.AreEqual("He said: <i>''Go now!''</i>", result);
+        }
+
+        [TestMethod]
+        public void TestItalicAndColon()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("L", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("n", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("d", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(":", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("T", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("h", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("y", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("'", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("h", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(".", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            var result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("Leonard:<i>They're here.</i>", result);
+        }
+
+        [TestMethod]
+        public void TestItalicAndBrackets()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("[", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("L", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("n", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("d", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("]", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("T", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("h", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("y", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("'", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("h", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(".", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            var result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("[Leonard]<i>They're here.</i>", result);
         }
 
         [TestMethod]
