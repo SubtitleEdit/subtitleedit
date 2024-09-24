@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             }
 
             var job = (ImageJob)j;
-            job.Result = new TesseractRunner().Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
+            job.Result = new TesseractRunner().Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Bitmap, job.Run302);
             lock (QueueLock)
             {
                 job.Completed = DateTime.UtcNow;
@@ -55,9 +55,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
         public void AddImageJob(Bitmap bmp, int index, string language, string psmMode, string engineMode, bool run302, bool music302)
         {
+
+            var tempfilename = string.Empty;
+            if (run302) tempfilename = FileUtil.GetTempFileName(".png"); 
+
             var job = new ImageJob
             {
-                FileName = FileUtil.GetTempFileName(".png"),
+                FileName = tempfilename,
                 Index = index,
                 Completed = DateTime.MaxValue,
                 Bitmap = bmp,
@@ -76,7 +80,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             {
                 _jobQueue.Enqueue(job);
             }
-            bmp.Save(job.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            if (run302) bmp.Save(job.FileName, System.Drawing.Imaging.ImageFormat.Png); //save temp image only for 302 version
+
             ThreadPool.QueueUserWorkItem(DoOcr, job);
         }
 

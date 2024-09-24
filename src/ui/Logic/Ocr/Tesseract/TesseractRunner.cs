@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
@@ -19,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             _runningOnWindows = Configuration.IsRunningOnWindows;
         }
 
-        public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302 = false)
+        public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, Bitmap bitmap, bool run302 = false)
         {
             LastError = null;
             var tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
@@ -32,87 +34,110 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 tesseractDirectory = Configuration.TesseractDirectory;
             }
 
-            using (var process = new Process())
+            if (run302)
             {
-                process.StartInfo = new ProcessStartInfo(Path.Combine(tesseractDirectory, "tesseract.exe"))
-                {
-                    UseShellExecute = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}",
-                    CreateNoWindow = true,
-                };
 
-                if (!string.IsNullOrEmpty(psmMode))
-                {
-                    var prefix = run302 ? "-psm" : "--psm";
-                    process.StartInfo.Arguments += $" {prefix} {psmMode}";
-                }
 
-                if (!string.IsNullOrEmpty(engineMode) && !run302)
+                using (var process = new Process())
                 {
-                    process.StartInfo.Arguments += $" --oem {engineMode}";
-                }
-
-                process.StartInfo.Arguments += " hocr";
-
-                if (_runningOnWindows)
-                {
-                    process.StartInfo.WorkingDirectory = tesseractDirectory;
-                    if (!run302)
+                    process.StartInfo = new ProcessStartInfo(Path.Combine(tesseractDirectory, "tesseract.exe"))
                     {
-                        process.ErrorDataReceived += TesseractErrorReceived;
-                        process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments.Trim()}";
+                        UseShellExecute = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}",
+                        CreateNoWindow = true,
+                    };
+
+                    if (!string.IsNullOrEmpty(psmMode))
+                    {
+                        var prefix = run302 ? "-psm" : "--psm";
+                        process.StartInfo.Arguments += $" {prefix} {psmMode}";
+                    }
+
+                    if (!string.IsNullOrEmpty(engineMode) && !run302)
+                    {
+                        process.StartInfo.Arguments += $" --oem {engineMode}";
+                    }
+
+                    process.StartInfo.Arguments += " hocr";
+
+                    if (_runningOnWindows)
+                    {
+                        process.StartInfo.WorkingDirectory = tesseractDirectory;
+                        if (!run302)
+                        {
+                            process.ErrorDataReceived += TesseractErrorReceived;
+                            process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments.Trim()}";
+                        }
+                    }
+                    else
+                    {
+                        process.StartInfo.FileName = "tesseract";
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.RedirectStandardError = true;
+                    }
+
+                    try
+                    {
+                        process.Start();
+                    }
+                    catch (Exception exception)
+                    {
+                        LastError = exception.Message + Environment.NewLine + exception.StackTrace;
+                        TesseractErrors.Add(LastError);
+                        return "Error!";
+                    }
+                    process.WaitForExit(8000);
+
+                    if (process.HasExited && process.ExitCode != 0)
+                    {
+                        LastError = "Tesseract returned with code " + process.ExitCode;
+                        TesseractErrors.Add(LastError);
                     }
                 }
-                else
+
+                var outputFileName = tempTextFileName + ".html";
+                if (!File.Exists(outputFileName))
                 {
-                    process.StartInfo.FileName = "tesseract";
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.RedirectStandardError = true;
+                    outputFileName = tempTextFileName + ".hocr";
                 }
 
+                var result = string.Empty;
                 try
                 {
-                    process.Start();
+                    if (File.Exists(outputFileName))
+                    {
+                        result = File.ReadAllText(outputFileName, Encoding.UTF8);
+                        result = ParseHocr(result);
+                        File.Delete(outputFileName);
+                    }
+                    File.Delete(imageFileName);
                 }
-                catch (Exception exception)
+                catch
                 {
-                    LastError = exception.Message + Environment.NewLine + exception.StackTrace;
-                    TesseractErrors.Add(LastError);
-                    return "Error!";
+                    // ignored
                 }
-                process.WaitForExit(8000);
-
-                if (process.HasExited && process.ExitCode != 0)
-                {
-                    LastError = "Tesseract returned with code " + process.ExitCode;
-                    TesseractErrors.Add(LastError);
-                }
+                return result;
             }
-
-            var outputFileName = tempTextFileName + ".html";
-            if (!File.Exists(outputFileName))
+            else
             {
-                outputFileName = tempTextFileName + ".hocr";
-            }
-
-            var result = string.Empty;
-            try
-            {
-                if (File.Exists(outputFileName))
+                //use tesseract5 api
+                var result = string.Empty;
+                lock (Tesseract5.tlock)
                 {
-                    result = File.ReadAllText(outputFileName, Encoding.UTF8);
+                    if (!Tesseract5.createComplete)
+                        Tesseract5.Create();
+                    if (Tesseract5.initializedLanguage != languageCode)
+                        Tesseract5.Init(Path.Combine(tesseractDirectory, "tessdata"), languageCode);
+                    Tesseract5.SetImage(bitmap);
+                    result = Tesseract5.GetHOCR();
                     result = ParseHocr(result);
-                    File.Delete(outputFileName);
+                    Marshal.FreeHGlobal(Tesseract5.imageData); //free temp image global buffer (used to pass image data to external c++ dll)
+                    Tesseract5.imageData = IntPtr.Zero; //remove handle so we don't try to free it again
                 }
-                File.Delete(imageFileName);
-            }
-            catch
-            {
-                // ignored
-            }
 
-            return result;
+                return result;
+            }
         }
 
         private static string ParseHocr(string html)
