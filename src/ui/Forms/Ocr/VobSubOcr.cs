@@ -1080,7 +1080,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             for (int i = 0; i < 20; i++)
             {
-                System.Threading.Thread.Sleep(25);
+                Thread.Sleep(25);
                 Application.DoEvents();
             }
         }
