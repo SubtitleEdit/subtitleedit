@@ -136,13 +136,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var ch = s[i];
                 if (ch == '\r')
                 {
-                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 3;
-                        start = i;
-                        continue;
-                    }
+                    // See https://github.com/SubtitleEdit/subtitleedit/issues/8854
+                    // SE now tries to follow how VS code opens text file
+                    //if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    //{
+                    //    lines.Add(s.Substring(start, i - start));
+                    //    i += 3;
+                    //    start = i;
+                    //    continue;
+                    //}
 
                     if (i < max - 1 && s[i + 1] == '\n') // \r\n
                     {
