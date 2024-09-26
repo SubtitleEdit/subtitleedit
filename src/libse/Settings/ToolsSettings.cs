@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenRouterModel = OpenRouterTranslate.Models[0];
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
-            OllamaModels = "llama3.2,phi3,gemma2,qwen2,mistral";
+            OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
             OllamaModel = "llama3.2";
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
