@@ -6,9 +6,15 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
+    public class SplitItem
+    {
+        public List<VobSubOcr.CompareMatch> Matches { get; set; }
+        public string Separator { get; set; }
+    }
+
     public static class MatchesToItalicStringConverter
     {
-        private static readonly string[] Separators = { "-", "—", ".", "'", "\"", " ", "!", "\r", "\n", "\r\n" };
+        private static readonly string[] Separators = { "-", "—", ".", "'", "\"", " ", "\r", "\n", "\r\n" };
 
         public static string GetStringWithItalicTags(List<VobSubOcr.CompareMatch> matches)
         {
@@ -18,24 +24,34 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             var sb = new StringBuilder();
-            foreach (var lineMatches in SplitMatchesToLines(matches))
+            foreach (var lineMatches in SplitMatchesToLineParts(matches))
             {
-                var numberOfLetters = GetNumberOfLetters(lineMatches);
-                var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches);
+                var numberOfLetters = GetNumberOfLetters(lineMatches.Matches);
+                var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches.Matches);
                 if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches))
                 {
-                    sb.AppendLine("<i>" + GetRawString(lineMatches) + "</i>");
+                    sb.AppendLine("<i>" + GetRawString(lineMatches.Matches) + "</i>");
                 }
                 else if (numberOfItalicLetters == 0 || numberOfLetters > 2 && numberOfItalicLetters < 2)
                 {
-                    sb.AppendLine(GetRawString(lineMatches));
+                    sb.Append(GetRawString(lineMatches.Matches));
+                    sb.Append(lineMatches.Separator);
                 }
                 else
                 {
-                    sb.AppendLine(GetStringWithItalicTagsMixed(lineMatches));
+                    sb.Append(GetStringWithItalicTagsMixed(lineMatches.Matches));
+                    sb.Append(lineMatches.Separator);
                 }
             }
-            return sb.ToString().TrimEnd().Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+
+            var text = sb.ToString().TrimEnd().Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+
+            text = text.Replace("  ", " ");
+            text = text.Replace("<i> ", " <i>");
+            text = text.Replace(" </i>", "</i> ");
+            text = text.Replace("  ", " ");
+
+            return text.Trim();
         }
 
         private static bool ItalicIsInsideWord(List<VobSubOcr.CompareMatch> matches)
@@ -72,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (var i = 0; i < lineMatches.Count; i++)
             {
                 var m = lineMatches[i];
-                if (m.Text == " " || m.Text == "-" || m.Text == "'" || m.Text == ":" || m.Text == "[" || m.Text == "]") // chars that allow change of italic
+                if (m.Text == " " || m.Text == "-" || m.Text == "'") // chars that allow change of italic
                 {
                     if (sbWord.Length > 0)
                     {
@@ -133,6 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 .Replace("</i>.<i>", ".")
                 .Replace("<i>...</i>", "...")
                 .Replace("</i>...<i>", "...");
+
             return text;
         }
 
@@ -173,17 +190,28 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return italicOn;
         }
 
-        private static List<List<VobSubOcr.CompareMatch>> SplitMatchesToLines(List<VobSubOcr.CompareMatch> matches)
+        private static List<SplitItem> SplitMatchesToLineParts(List<VobSubOcr.CompareMatch> matches)
         {
-            var result = new List<List<VobSubOcr.CompareMatch>>();
+            var result = new List<SplitItem>();
             var line = new List<VobSubOcr.CompareMatch>();
+
             foreach (var t in matches)
             {
                 if (t.Text == Environment.NewLine)
                 {
                     if (line.Count > 0)
                     {
-                        result.Add(line);
+                        result.Add(new SplitItem { Matches = line, Separator = Environment.NewLine });
+                        line = new List<VobSubOcr.CompareMatch>();
+                    }
+                }
+                else if (t.Text == ":" || t.Text == ")" || t.Text == "]")
+                {
+                    if (line.Count > 0)
+                    {
+                        line.Add(t);
+
+                        result.Add(new SplitItem { Matches = line, Separator = string.Empty });
                         line = new List<VobSubOcr.CompareMatch>();
                     }
                 }
@@ -192,10 +220,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     line.Add(t);
                 }
             }
+
             if (line.Count > 0)
             {
-                result.Add(line);
+                result.Add(new SplitItem { Matches = line, Separator = string.Empty });
             }
+
             return result;
         }
 
@@ -211,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            return sb.ToString().Trim();
+            return sb.ToString().Replace("  ", " ").Replace("  ", " ");
         }
 
         private static int GetNumberOfLetters(List<VobSubOcr.CompareMatch> matches)
