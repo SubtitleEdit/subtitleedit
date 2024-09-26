@@ -28,10 +28,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "llama3-8b-8192", 
-            "llama3-70b-8192", 
-            "llama3-groq-8b-8192-tool-use-preview",
-            "llama3-groq-70b-8192-tool-use-preview",
+            "llama-3.2-1b-preview",
+            "llama-3.2-3b-preview", 
             "mixtral-8x7b-32768",
             "gemma-7b-it",
             "gemma2-9b-it",
