@@ -81,7 +81,14 @@
     <ProjectReference Include="..\ui\SubtitleEdit.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest.TestAdapter" />
+<!--    <PackageReference Include="MSTest.TestAdapter" />-->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest" />
+    <PackageReference Include="MSTest.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MSTest.Sdk" />
     <PackageReference Include="MSTest.TestFramework" />
     <PackageReference Include="NHunspell" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
