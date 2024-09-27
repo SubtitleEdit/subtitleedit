@@ -139,6 +139,38 @@ namespace Test.Logic.Ocr
         }
 
         [TestMethod]
+        public void TestNonItalicAndParentheses()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("-(", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("L", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("A", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("U", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("G", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("H", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("I", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("N", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("G", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(")", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(Environment.NewLine, false, 0, Guid.NewGuid().ToString()) { },
+                new VobSubOcr.CompareMatch("-", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("(", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("B", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("Y", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("E", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("B", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("Y", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("E", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(")", false, 0, Guid.NewGuid().ToString()),
+            };
+
+            var result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("-(LAUGHING)" + Environment.NewLine + "-(BYE BYE)", result);
+        }
+
+        [TestMethod]
         public void TestItalicAndBrackets()
         {
             var matches = new List<VobSubOcr.CompareMatch>
