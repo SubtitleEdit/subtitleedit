@@ -3,6 +3,10 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="MSTest" Version="3.6.0" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.6.0" />
+    <PackageVersion Include="MSTest.Sdk" Version="3.6.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.6.0" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.6.0" />
     <PackageVersion Include="System.Drawing.Common" Version="8.0.8" />
