@@ -194,9 +194,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             var result = new List<SplitItem>();
             var line = new List<VobSubOcr.CompareMatch>();
+            var skipNext = false;
 
-            foreach (var t in matches)
+            for (var index = 0; index < matches.Count; index++)
             {
+                var t = matches[index];
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
                 if (t.Text == Environment.NewLine)
                 {
                     if (line.Count > 0)
@@ -210,8 +218,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (line.Count > 0)
                     {
                         line.Add(t);
+                        if (index < matches.Count - 1 && matches[index + 1].Text == Environment.NewLine)
+                        {
+                            result.Add(new SplitItem { Matches = line, Separator = Environment.NewLine });
+                            skipNext = true;
+                        }
+                        else
+                        {
+                            result.Add(new SplitItem { Matches = line, Separator = string.Empty });
+                        }
 
-                        result.Add(new SplitItem { Matches = line, Separator = string.Empty });
                         line = new List<VobSubOcr.CompareMatch>();
                     }
                 }
