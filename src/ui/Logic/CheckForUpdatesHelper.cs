@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.CreateProxiedHttpClient())
                 {
                     _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
                 }
