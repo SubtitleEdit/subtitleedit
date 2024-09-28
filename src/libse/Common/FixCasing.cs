@@ -159,24 +159,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        private readonly string[] _titles = { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
+        private readonly string[] _notChangeWords = { "does", "has", "will", "is", "and", "for", "but", "or", "of" };
+
         private string FixCasingAfterTitles(string input)
         {
             var text = input;
-            var titles = new[] { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
-            var notChangeWords = new[] { "does", "has", "will", "is", "and", "for", "but", "or", "of" };
             for (int i = 0; i < text.Length - 4; i++)
             {
-                var start = text.Substring(i);
-                foreach (var title in titles)
+                var textFromIndex = text.Substring(i);
+                foreach (var title in _titles)
                 {
-                    if (start.StartsWith(title, StringComparison.OrdinalIgnoreCase))
+                    if (textFromIndex.StartsWith(title, StringComparison.OrdinalIgnoreCase))
                     {
                         var idx = i + title.Length;
                         if (idx < text.Length - 2 && text[idx] == ' ')
                         {
                             idx++;
                             var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');
-                            if (words.Length > 0 && !notChangeWords.Contains(words[0]))
+                            if (words.Length > 0 && !_notChangeWords.Contains(words[0]))
                             {
                                 var upper = text[idx].ToString().ToUpperInvariant();
                                 text = text.Remove(idx, 1).Insert(idx, upper);
