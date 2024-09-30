@@ -14,16 +14,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />
     <EmbeddedResource Include="Dictionaries\en_US.dic" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Dictionaries\names.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\sample.tar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\sample_MKV_delayed.mkv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -39,36 +35,24 @@
     <Content Include="Files\sample_TS_with_graphics.ts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\sample_MP4_SRT.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\sample_BDSUP_multi_image.sup">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\auto_detect_Danish.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\auto_detect_Russian.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\auto_detect_windows-1250.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Files\auto_detect_windows-1251.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Files\sample_TS_with_teletext.ts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
