@@ -87,6 +87,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            if (!Directory.Exists(Configuration.DictionariesDirectory))
+            {
+                Directory.CreateDirectory(Configuration.DictionariesDirectory);
+            }
+
             var fullFileName = Path.Combine(Configuration.DictionariesDirectory, userFileName);
             xmlDocument.Save(fullFileName);
         }
