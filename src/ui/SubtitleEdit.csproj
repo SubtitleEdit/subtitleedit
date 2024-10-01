@@ -285,9 +285,6 @@
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
   </ItemGroup>
   <Target Name="BeforeCompile">
-    <XmlPeek XmlInputPath="$(ProjectDir)packages.config" Query="//package[@id='NHunspell']/@version">
-      <Output TaskParameter="Result" PropertyName="HunspellVersion" />
-    </XmlPeek>
     <PropertyGroup>
       <HunspellDir>..\..\packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
     </PropertyGroup>
