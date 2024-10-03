@@ -163,6 +163,18 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "2.88 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-q5_0.bin" },
             },
+            new WhisperModel
+            {
+                Name = "large-v3-turbo",
+                Size = "1.5 GB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-turbo.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "large-v3-turbo-q5_0",
+                Size = "547 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-turbo-q5_0.bin" },
+            },
 
             new WhisperModel
             {
