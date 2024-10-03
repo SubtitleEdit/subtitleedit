@@ -2702,6 +2702,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению плана</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Перейти к следующему изменению плана</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Переключить смену плана</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Переместить все изменения плана на один кадр вперёд</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Переместить все изменения плана на один кадр назад</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения плана</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения плана</WaveformGuessStart>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
