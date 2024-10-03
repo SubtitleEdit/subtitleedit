@@ -97,11 +97,23 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static void DeleteFileAssociationViaRegistry(string ext, string appName)
         {
+            var appExtensionRegKey = $"{appName}{ext}";
             using (var registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Classes\", true))
             {
-                if (registryKey?.OpenSubKey($"{appName}{ext}") != null)
+                if (registryKey?.OpenSubKey(appExtensionRegKey) != null)
                 {
                     registryKey.DeleteSubKeyTree($"{appName}{ext}");
+                }
+            }
+
+            // (Default)
+            const string defaultRegValueName = "";
+            using (var registryKey = Registry.CurrentUser.OpenSubKey("Software\\Classes\\" + ext, true))
+            {
+                var registryValue = registryKey?.GetValue(defaultRegValueName);
+                if (appExtensionRegKey.Equals((string)registryValue, StringComparison.Ordinal))
+                {
+                    registryKey.DeleteValue(defaultRegValueName);
                 }
             }
         }
