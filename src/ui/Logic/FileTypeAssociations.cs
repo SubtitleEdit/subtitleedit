@@ -54,45 +54,45 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (ext.Equals(".srt", StringComparison.OrdinalIgnoreCase))
             {
-                return "SubRip subtitle file";
+                return "SubRip";
             }
 
             if (ext.Equals(".ass", StringComparison.OrdinalIgnoreCase))
             {
-                return "Advanced Sub Station Alpha subtitle file";
+                return "Advanced Sub Station Alpha";
             }
 
             if (ext.Equals(".dfxp", StringComparison.OrdinalIgnoreCase))
             {
-                return "Distribution Format Exchange Profile subtitle file";
+                return "Distribution Format Exchange Profile";
             }
 
             if (ext.Equals(".ssa", StringComparison.OrdinalIgnoreCase))
             {
-                return "Sub Station Alpha subtitle file";
+                return "Sub Station Alpha";
             }
 
             if (ext.Equals(".sup", StringComparison.OrdinalIgnoreCase))
             {
-                return "Blu-ray PGS subtitle file";
+                return "Blu-ray PGS";
             }
 
             if (ext.Equals(".vtt", StringComparison.OrdinalIgnoreCase))
             {
-                return "Web Video Text Tracks (WebVTT) subtitle file";
+                return "Web Video Text Tracks (WebVTT)";
             }
 
             if (ext.Equals(".smi", StringComparison.OrdinalIgnoreCase))
             {
-                return "SAMI subtitle file";
+                return "SAMI";
             }
 
             if (ext.Equals(".itt", StringComparison.OrdinalIgnoreCase))
             {
-                return "iTunes Timed Text subtitle file";
+                return "iTunes Timed Text";
             }
 
-            return $"{ext.TrimStart('.')} subtitle file";
+            return $"{ext.TrimStart('.')}";
         }
 
         internal static void DeleteFileAssociationViaRegistry(string ext, string appName)
