@@ -39,6 +39,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return ParseLog(log);
         }
 
+        public long GetTotalFrames()
+        {
+            return (long)((double)FramesRate * Duration.TotalMilliseconds / TimeCode.BaseUnit);
+        }
+
         public bool HasFrontCenterAudio(int trackNumber)
         {
             if (trackNumber < 0)
@@ -155,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
-        public static Process GetFFmpegProcess(string inputFileName)
+        private static Process GetFFmpegProcess(string inputFileName)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
