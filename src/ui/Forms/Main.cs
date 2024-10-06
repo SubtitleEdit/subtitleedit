@@ -15314,6 +15314,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+            RefreshSelectedParagraph();
             return true;
         }
 
