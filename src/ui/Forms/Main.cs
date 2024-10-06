@@ -15235,6 +15235,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
             }
 
+            _subtitleListViewIndex = -1;
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetCurrentFormat(format);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -15256,10 +15257,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
+            _subtitleListViewIndex = -1;
             UpdateSourceView();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+            RefreshSelectedParagraph();
             return true;
         }
 
