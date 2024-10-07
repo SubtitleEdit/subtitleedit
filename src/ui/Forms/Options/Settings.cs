@@ -771,6 +771,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxSpectrogramAppearance.Items.Clear();
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
+            checkBoxWaveformDuplicateTextWhileSplitting.Text = language.WaveformDuplicateTextWhileSplitting;
             labelWaveformTextSize.Text = language.WaveformTextFontSize;
             comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
             checkBoxWaveformTextBold.Text = language.SubtitleBold;
@@ -1187,6 +1188,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelWaveformCursorColor.BackColor = Configuration.Settings.VideoControls.WaveformCursorColor;
             checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
             comboBoxSpectrogramAppearance.SelectedIndex = Configuration.Settings.VideoControls.SpectrogramAppearance == "OneColorGradient" ? 0 : 1;
+            checkBoxWaveformDuplicateTextWhileSplitting.Checked = Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting;
             comboBoxWaveformTextSize.Text = Configuration.Settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture);
             checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
@@ -2436,6 +2438,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
             Configuration.Settings.VideoControls.SpectrogramAppearance = comboBoxSpectrogramAppearance.SelectedIndex == 0 ? "OneColorGradient" : "Classic";
 
+            Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting = checkBoxWaveformDuplicateTextWhileSplitting.Checked;
             Configuration.Settings.VideoControls.WaveformTextSize = int.Parse(comboBoxWaveformTextSize.Text);
             Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
