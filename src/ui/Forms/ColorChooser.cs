@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._label5 = new System.Windows.Forms.Label();
             this._pnlBrightness = new System.Windows.Forms.Panel();
             this._lblAlpha2 = new System.Windows.Forms.Label();
-            this._tbHexCode = new Controls.NikseTextBox();
+            this._tbHexCode = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this._flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._labelRed = new System.Windows.Forms.Label();
             this._tbRed = new System.Windows.Forms.TrackBar();
@@ -501,6 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
             // _tbHexCode
             // 
             this._tbHexCode.BackColor = System.Drawing.Color.White;
+            this._tbHexCode.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this._tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._tbHexCode.Location = new System.Drawing.Point(295, 50);
             this._tbHexCode.MaxLength = 9;
@@ -510,6 +511,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.TabIndex = 58;
             this._tbHexCode.TextChanged += new System.EventHandler(this.TextBoxHexCodeTextChanged);
             this._tbHexCode.Enter += new System.EventHandler(this.TextBoxHexCodeEnter);
+            this._tbHexCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this._tbHexCode_KeyDown);
             this._tbHexCode.Leave += new System.EventHandler(this.TextBoxHexCodeLeave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
@@ -729,7 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._buttonOk.UseVisualStyleBackColor = true;
             this._buttonOk.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // panelC0
+            // _panelC0
             // 
             this._panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC0.Location = new System.Drawing.Point(295, 97);
@@ -738,7 +740,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC0.TabIndex = 62;
             this._panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
             // 
-            // panelC1
+            // _panelC1
             // 
             this._panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC1.Location = new System.Drawing.Point(322, 97);
@@ -747,7 +749,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC1.TabIndex = 63;
             this._panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
             // 
-            // panelC2
+            // _panelC2
             // 
             this._panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC2.Location = new System.Drawing.Point(349, 97);
@@ -756,7 +758,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC2.TabIndex = 63;
             this._panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
             // 
-            // panelC3
+            // _panelC3
             // 
             this._panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC3.Location = new System.Drawing.Point(376, 97);
@@ -765,7 +767,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC3.TabIndex = 64;
             this._panelC3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC3_MouseClick);
             // 
-            // panelC7
+            // _panelC7
             // 
             this._panelC7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC7.Location = new System.Drawing.Point(376, 124);
@@ -774,7 +776,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC7.TabIndex = 68;
             this._panelC7.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC7_MouseClick);
             // 
-            // panelC6
+            // _panelC6
             // 
             this._panelC6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC6.Location = new System.Drawing.Point(349, 124);
@@ -783,7 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC6.TabIndex = 66;
             this._panelC6.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC6_MouseClick);
             // 
-            // panelC5
+            // _panelC5
             // 
             this._panelC5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC5.Location = new System.Drawing.Point(322, 124);
@@ -792,7 +794,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC5.TabIndex = 67;
             this._panelC5.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC5_MouseClick);
             // 
-            // panelC4
+            // _panelC4
             // 
             this._panelC4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC4.Location = new System.Drawing.Point(295, 124);
@@ -801,7 +803,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC4.TabIndex = 65;
             this._panelC4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC4_MouseClick);
             // 
-            // buttonColorPicker
+            // _buttonColorPicker
             // 
             this._buttonColorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._buttonColorPicker.Location = new System.Drawing.Point(295, 150);
@@ -1082,6 +1084,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void ColorChooser_Shown(object sender, EventArgs e)
         {
             _tbHexCode.MaxLength = _showAlpha ? 9 : 7;
+        }
+
+        private void _tbHexCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && _hexEditOn)
+            {
+                CheckValidHexInput();
+                if (_tbHexCode.BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    DialogResult = DialogResult.OK;
+                }
+            }
         }
     }
 }
