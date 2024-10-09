@@ -223,8 +223,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
         private void ShowHexColorCode(ColorHandler.Argb argb)
         {
+            if (_hexEditOn)
+            {
+                return;
+            }
+
+            _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
+
             if (_showAlpha)
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}{argb.Alpha:X2}";
@@ -233,6 +241,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
+
+            _tbHexCode.TextChanged += TextBoxHexCodeTextChanged;
         }
 
         private void SetHsvLabels(ColorHandler.Hsv hsv)
@@ -511,7 +521,6 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.TabIndex = 58;
             this._tbHexCode.TextChanged += new System.EventHandler(this.TextBoxHexCodeTextChanged);
             this._tbHexCode.Enter += new System.EventHandler(this.TextBoxHexCodeEnter);
-            this._tbHexCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this._tbHexCode_KeyDown);
             this._tbHexCode.Leave += new System.EventHandler(this.TextBoxHexCodeLeave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
@@ -929,6 +938,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -961,6 +974,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxHexCodeLeave(object sender, EventArgs e)
         {
+            if (_hexEditOn)
+            {
+                _hexEditOn = false;
+                CheckValidHexInput();
+            }
+
             _hexEditOn = false;
             _tbHexCode.BackColor = UiUtil.BackColor;
         }
@@ -1084,18 +1103,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void ColorChooser_Shown(object sender, EventArgs e)
         {
             _tbHexCode.MaxLength = _showAlpha ? 9 : 7;
-        }
-
-        private void _tbHexCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && _hexEditOn)
-            {
-                CheckValidHexInput();
-                if (_tbHexCode.BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
-                {
-                    DialogResult = DialogResult.OK;
-                }
-            }
         }
     }
 }
