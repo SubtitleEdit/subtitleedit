@@ -1246,6 +1246,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _cancellationTokenSource.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
             if (listViewInputFiles.Items.Count == 0)
             {
@@ -1255,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (radioButtonSaveInOutputFolder.Checked && !Directory.Exists(textBoxOutputFolder.Text))
             {
-                if (textBoxOutputFolder.Text.Length < 2)
+                if (!Path.IsPathRooted(textBoxOutputFolder.Text))
                 {
                     MessageBox.Show(LanguageSettings.Current.BatchConvert.PleaseChooseOutputFolder);
                     return;
