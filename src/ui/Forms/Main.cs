@@ -36887,7 +36887,7 @@ namespace Nikse.SubtitleEdit.Forms
             });
         }
 
-        private void async videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
