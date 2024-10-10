@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract5Version = "5.3.3";
+        private string Tesseract5Version = "5.4.1";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -5330,7 +5330,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             bmp.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, _ocrMethodIndex != _ocrMethodTesseract5);
+            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, bmp, _ocrMethodIndex != _ocrMethodTesseract5);
             if (_tesseractRunner.TesseractErrors.Count <= 2 && !string.IsNullOrEmpty(_tesseractRunner.LastError))
             {
                 MessageBox.Show(_tesseractRunner.LastError);
@@ -7108,29 +7108,37 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
                 checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract 3.02");
-                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
+                if (Configuration.IsRunningOnWindows)
                 {
-                    if (IntPtr.Size * 8 == 32)
-                    {
-                        MessageBox.Show("Sorry, Tesseract {Tesseract5Version} requires a 64-bit processor");
-                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                        return;
-                    }
-                    else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                    {
-                        comboBoxTesseractLanguages.Items.Clear();
-                        using (var form = new DownloadTesseract5(Tesseract5Version))
+                    if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "version.txt")) || File.ReadAllText(Path.Combine(Configuration.TesseractDirectory, "version.txt")) != "5.4.1")
+                    { 
+                        if (IntPtr.Size * 8 == 32)
                         {
-                            if (form.ShowDialog(this) == DialogResult.OK)
+                            MessageBox.Show($"Sorry, Tesseract {Tesseract5Version} requires a 64-bit processor");
+                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                            return;
+                        }
+                        else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        {
+                            comboBoxTesseractLanguages.Items.Clear();
+
+                            //delete previous tesseract files
+                            var oldtesseractfiles = Directory.EnumerateFiles(Configuration.TesseractDirectory);
+                            foreach(var file in oldtesseractfiles) File.Delete(file);
+
+                            using (var form = new DownloadTesseract5(Tesseract5Version))
                             {
-                                buttonGetTesseractDictionaries_Click(sender, e);
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    buttonGetTesseractDictionaries_Click(sender, e);
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                        return;
+                        else
+                        {
+                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                            return;
+                        }
                     }
                 }
             }
