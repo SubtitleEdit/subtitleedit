@@ -15,14 +15,15 @@
    * Try to add support for Eleven labs "eleven_turbo_v2_5" - thx laszlolaszlo
    * Add "Intel Quick Sync" for "video burn in" - thx ghostminhtoan
    * Allow save selected lines as subtitle with only 1 row selected - thx Pierrounator
+   * Ctrl+A not working in subtitle duration field - thx rRobis
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
-   * Fix new issue with OCR/Italic - thx Boulder08/Zoltan
+   * Fix issue with OCR/Italic - thx Boulder08/Zoltan
    * Fix bug in EBU validation
    * Minor fix for Cavena890 save options
    * Fix possible crash in "Gen transparent subs" when using video from "Program files"
    * Fix wrong dialog info text in FCE
-   * Fix for divide by zero in tts
+   * Fix for divide by zero in TTS
 
 
 4.0.8 (6th September 2024) 
