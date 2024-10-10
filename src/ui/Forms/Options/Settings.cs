@@ -245,20 +245,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 radioButtonVideoPlayerVLC.Checked = true;
             }
 
-            if (!LibVlcDynamic.IsInstalled)
-            {
-                radioButtonVideoPlayerVLC.Enabled = false;
-            }
-
-            if (!UiUtil.IsQuartsDllInstalled)
-            {
-                radioButtonVideoPlayerDirectShow.Enabled = false;
-            }
-
-            if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcFileName() == null)
-            {
-                radioButtonVideoPlayerMpcHc.Enabled = false;
-            }
+            radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
+            radioButtonVideoPlayerDirectShow.Enabled = UiUtil.IsQuartsDllInstalled;
+            radioButtonVideoPlayerMpcHc.Enabled = Logic.VideoPlayers.MpcHC.MpcHc.GetMpcFileName() != null;
 
             RefreshMpvSettings();
             buttonMpvSettings.Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
