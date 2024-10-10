@@ -1282,7 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Value = 0;
             progressBar1.Visible = progressBar1.Maximum > 2;
             var toFormat = ComboBoxSubtitleFormatText;
-            SetControlState(false);
+            DisableControls();
 
             _count = 0;
             _converted = 0;
@@ -1962,7 +1962,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             progressBar1.Visible = false;
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-            SetControlState(true);
+            EnableControls();
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
             _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
 
@@ -3628,6 +3628,10 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             UpdateNumberOfFiles();
         }
+
+        private void EnableControls() => SetControlState(true);
+        
+        private void DisableControls() => SetControlState(false);
 
         private void SetControlState(bool enabled)
         {
