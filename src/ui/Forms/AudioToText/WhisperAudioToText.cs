@@ -843,7 +843,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             catch
             {
                 var dir = Path.GetDirectoryName(fileName);
-                if (!IsDirectoryWritable(dir))
+                if (!FileUtil.IsDirectoryWritable(dir))
                 {
                     MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
                 }
@@ -852,20 +852,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        public static bool IsDirectoryWritable(string dirPath)
-        {
-            try
-            {
-                using (FileStream fs = File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
-                {
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+
 
         internal static string GetLanguage(string name)
         {
