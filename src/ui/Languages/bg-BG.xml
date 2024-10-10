@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.8</Version>
-    <TranslatedBy>Последен превод на български 25.07.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 10.10.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2168,8 +2168,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseGroupsToImport>Изберете групи за импортиране</ChooseGroupsToImport>
     <ChooseGroupsToExport>Изберете групи за експортиране</ChooseGroupsToExport>
     <Rules>Правила за експорт</Rules>
-    <MoveToTop>Преместване на горе</MoveToTop>
-    <MoveToBottom>Преместване на долу</MoveToBottom>
+    <MoveToTop>Преместване нагоре</MoveToTop>
+    <MoveToBottom>Преместване надолу</MoveToBottom>
     <MoveSelectedRulesToGroup>Преместване на избраното правило в групата</MoveSelectedRulesToGroup>
     <Groups>Групи</Groups>
     <RulesForGroupX>Правила за подмяна в група «{0}»</RulesForGroupX>
@@ -2593,7 +2593,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetEndTimeAndPause>Задаване на край и пауза</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Задаване на начало, авт. продължителност и преминаване на следващия</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Задаване на край, следващо начало и преминаване на следващия</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Клавиш стрелка НАДОЛУ=задаване на начало. Клавиш стрелка НАГОРЕ=задаване на край и преминаване на следващия</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Клавиш - стрелка (↓)=задаване на начало. Клавиш - стрелка (↑)=задаване на край и преминаване на следващия</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>Задаване на начало и край на предишния (минус мин. разлика)</AdjustSetStartAndEndOfPrevious>
     <AdjustSetStartAndEndOfPreviousAndGoToNext>Задаване на начало и край на предишния и преминаване на следващия (минус минимална разлика)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Преместване на избраното със 100 мс НАПРЕД</AdjustSelected100MsForward>
@@ -2634,7 +2634,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SetInCueToClosestShotChangeRightGreenZone>Задай подсказката на минимално разстояние след най-близката промяна на кадъра (дясна зелена зона)</SetInCueToClosestShotChangeRightGreenZone>
     <SetOutCueToClosestShotChangeLeftGreenZone>Постави подсказката на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeLeftGreenZone>
     <SetOutCueToClosestShotChangeRightGreenZone>Постави подсказката на минимално разстояние след най-близката промяна на кадъра (дясна зелена зона)</SetOutCueToClosestShotChangeRightGreenZone>
-    <MainCreateStartDownEndUp>Вмъкване на нови субтитри при натискане на клавиш - стрелка НАДОЛУ, задаване на крайно време при натискане на клавиш - стрелка НАГОРЕ</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Вмъкване на нови субтитри при натискане на клавиш - стрелка (↓), задаване на крайно време при натискане на клавиш - стрелка (↑)</MainCreateStartDownEndUp>
     <MergeDialog>Диалог за обединяване (вмъкване на тирета)</MergeDialog>
     <MergeDialogWithNext>Обединяване на диалога със следващия (вмъкване на тирета)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Обединяване на диалога с предишния (вмъкване на тирета)</MergeDialogWithPrevious>
@@ -2693,6 +2693,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformGoToPreviousShotChange>Преминаване към предишната промяна на сцената</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Преминаване към следващата промяна на сцената</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Превключване промяна на сцените</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Преместване на всички промени в кадъра с един кадър напред</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Преместване на всички промени в кадъра с един кадър назад</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Премахване/Експорт на промени в сцената</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Авт. настройка на старта чрез промяна силата на звука/сцената</WaveformGuessStart>
     <GoBack1Frame>1 кадър назад</GoBack1Frame>
@@ -2787,17 +2789,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnDeleteAndShiftUp>Колона, изтриване на текст и преместване</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Колона, вмъкване на текст</ListViewColumnInsert>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
-    <ListViewColumnTextUp>Колона, текста наГоре</ListViewColumnTextUp>
-    <ListViewColumnTextDown>Колона, текста наДолу</ListViewColumnTextDown>
+    <ListViewColumnTextUp>Колона, текста нагоре</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Колона, текста надолу</ListViewColumnTextDown>
     <ListViewGoToNextError>Преминаване към следващата грешка</ListViewGoToNextError>
     <ListViewListErrors>Списък с грешки</ListViewListErrors>
     <ListViewListSortByX>Сортиране по {0}</ListViewListSortByX>
     <ShowStyleManager>Показване мениджър на стилове</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>Преместване последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Преместване първата дума от следващият субтитърен ред нагоре</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxMoveFirstWordUpCurrent>Преместване първата дума от следващия ред нагоре (текущия субтитър)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDown>Преместване на последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Преместване на първата дума от следващият субтитърен ред нагоре</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Преместване на първата дума от следващия ред нагоре (текущия субтитър)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Преместване на текста след позицията на курсора до следващия субтитър и преминаване към следващия</MainTextBoxMoveFromCursorToNext>
-    <MainTextBoxMoveLastWordDownCurrent>Преместване последната дума от първия ред надолу (текущия субтитър)</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Преместване на последната дума от първия ред надолу (текущия субтитър)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Избраното в малки букви</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Избраното в ГЛАВНИ букви</MainTextBoxSelectionToUpper>
     <MainTextBoxSelectionToggleCasing>Превключване на избраното (правилно/главно/малко)</MainTextBoxSelectionToggleCasing>
@@ -2806,7 +2808,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Прекъсване на първото място от позицията на курсора</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване на първото място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
-    <MainTextBoxDictate>Диктуване (клавиш надолу=начало на запис, клавиш нагоре=край на записа)</MainTextBoxDictate>
+    <MainTextBoxDictate>Диктуване (клавиш -стрелка (↓)=начало на запис, клавиш - стрелка(↑)=край на записа)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Непрекъснато без интервал (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Показване на помощника за ASSA тагове</MainTextBoxAssaIntellisense>
@@ -3140,6 +3142,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <Angle>Ъгъл</Angle>
     <BoxPerLine>Кутия на ред (използвайте цвят на контура)</BoxPerLine>
     <BoxMultiLine>Една кутия (използвайте цвят на сянка)</BoxMultiLine>
+    <BoxPerLineShort>Кутия на ред</BoxPerLineShort>
+    <BoxMultiLineShort>Една кутия</BoxMultiLineShort>
+    <BoxType>Тип кутия</BoxType>
     <DuplicateStyleNames>Дублирани имена на стилове: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
