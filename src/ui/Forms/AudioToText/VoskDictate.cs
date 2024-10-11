@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         }
                         else
                         {
-                            var res = rec.PartialResult();
+                            _ = rec.PartialResult();
                         }
                     }
                 }
