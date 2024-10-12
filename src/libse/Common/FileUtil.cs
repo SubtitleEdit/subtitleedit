@@ -935,5 +935,23 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// Checks if a directory is writable by attempting to create and delete a temporary file within it.
+        /// </summary>
+        /// <param name="dirPath">The directory path to check for write access.</param>
+        /// <returns>True if the directory is writable, false otherwise.</returns>
+        public static bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose)) { }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
