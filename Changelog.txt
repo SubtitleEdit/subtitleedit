@@ -5,9 +5,16 @@
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
 * IMPROVED:
+   * Update Portuguese translation - thx hugok79
+   * Update Bulgarian translation - thx Калин
+   * Update Russian translation - thx elfriob
+   * Update Korean translation - thx domddol
+   * Update Polish translation - thx admas
+   * Update Italian translation - thx bovirus
+   * Update Romanian installer translation - thx mircea
    * Update Whisper CPP to V1.7.1
    * Add large-v3-turbo to Whisper OpenAI/CPP
-   * Minor improvements for color picker - thx MitchSirco
+   * Minor improvements for color picker - thx MitchSirco/Siamak
    * Fix some wrong OCR (English) corrections - thx Zoltan
    * Add Icelandic language to ChatGPT + Gemini - thx dhofverberg
    * Change new line handling to match VS code - thx darnn
@@ -18,12 +25,14 @@
    * Ctrl+A not working in subtitle duration field - thx rRobis
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
+   * Fix crash while translating subtitles - thx claudemartin
    * Fix issue with OCR/Italic - thx Boulder08/Zoltan
    * Fix bug in EBU validation
    * Minor fix for Cavena890 save options
    * Fix possible crash in "Gen transparent subs" when using video from "Program files"
    * Fix wrong dialog info text in FCE
    * Fix for divide by zero in TTS
+   * Fix bug in "Change casing" - thx Hlsgs
 
 
 4.0.8 (6th September 2024) 
