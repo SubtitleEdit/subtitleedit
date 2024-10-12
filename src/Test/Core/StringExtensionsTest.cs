@@ -404,6 +404,22 @@ namespace Test.Core
         }
 
         [TestMethod]
+        public void ToLowercaseButKeepTags1()
+        {
+            var input = "<i>HOW ARE YOU?</i>";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("<i>how are you?</i>", res);
+        }
+
+        [TestMethod]
+        public void ToLowercaseButKeepTags2()
+        {
+            var input = "{\\c&H0000FF&}Red";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("{\\c&H0000FF&}red", res);
+        }
+
+        [TestMethod]
         public void HasSentenceEndingCultureNeutralTest()
         {
             // language two letter language set to null
