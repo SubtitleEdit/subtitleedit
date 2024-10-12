@@ -500,6 +500,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             return RestoreSavedTags(properCaseText, tags);
         }
 
+        public static string ToLowercaseButKeepTags(this string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder();
+            var tags = RemoveAndSaveTags(input, sb, new SubRip());
+            var lowercaseText = sb.ToString().ToLowerInvariant();
+            return RestoreSavedTags(lowercaseText, tags);
+        }
+
         public static string ToggleCasing(this string input, SubtitleFormat format, string overrideFromStringInit = null)
         {
             if (string.IsNullOrWhiteSpace(input))
