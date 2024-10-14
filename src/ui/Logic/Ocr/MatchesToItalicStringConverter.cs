@@ -30,7 +30,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches.Matches);
                 if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches))
                 {
-                    sb.AppendLine("<i>" + GetRawString(lineMatches.Matches) + "</i>");
+                    sb.Append("<i>" + GetRawString(lineMatches.Matches) + "</i>");
+                    sb.Append(lineMatches.Separator);
                 }
                 else if (numberOfItalicLetters == 0 || numberOfLetters > 2 && numberOfItalicLetters < 2)
                 {
@@ -49,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = text.Replace("  ", " ");
             text = text.Replace("<i> ", " <i>");
             text = text.Replace(" </i>", "</i> ");
+            text = text.Replace("</i> <i>",  " ");
             text = text.Replace("  ", " ");
 
             return text.Trim();

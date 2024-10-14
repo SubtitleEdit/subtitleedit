@@ -76,6 +76,41 @@ namespace Test.Logic.Ocr
         }
 
         [TestMethod]
+        public void TestColonInItalic()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("[", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("O", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("v", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("c", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("m", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("s", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("]", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("H", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("w", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("y", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("u", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("?", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            var result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("<i>[Over coms] How are you?</i>", result);
+        }
+
+        [TestMethod]
         public void TestItalicAndColon()
         {
             var matches = new List<VobSubOcr.CompareMatch>
