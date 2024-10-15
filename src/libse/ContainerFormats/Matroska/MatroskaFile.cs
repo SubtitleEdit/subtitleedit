@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
@@ -400,16 +401,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        public List<MatroskaChapter> GetChapters()
+        public Task<List<MatroskaChapter>> GetChaptersAsync()
         {
-            ReadChapters();
-
-            if (_chapters == null)
+            return Task.Run(() =>
             {
-                return new List<MatroskaChapter>();
-            }
+                ReadChapters();
+                if (_chapters == null)
+                {
+                    return new List<MatroskaChapter>();
+                }
 
-            return _chapters.Distinct().ToList();
+                return _chapters.Distinct().ToList();
+            });
         }
 
         private void ReadChapters()

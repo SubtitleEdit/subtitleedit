@@ -980,7 +980,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _libvlc_media_player_set_hwnd(mediaPlayer, ownerControl.Handle); // windows
 
-                //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
+                //hack: sometimes vlc opens in its own windows - this code seems to prevent this
                 for (int j = 0; j < 50; j++)
                 {
                     System.Threading.Thread.Sleep(10);
