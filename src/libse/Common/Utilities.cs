@@ -1215,40 +1215,26 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            if (!text.Contains(startTag) || !text.Contains(endTag))
+            text = text.FixExtraSpaces();
+
+            string[] prefixFormats = { "{0}", "- {0}", "-{0}", "- ...{0}", "- {0}..." };
+            string[] suffixFormats = { "{0}", "{0}.", "{0}!", "{0}?", "{0}...", "{0}-" };
+
+            foreach (string prefixFormat in prefixFormats)
             {
-                return false;
+                if (text.StartsWith(string.Format(prefixFormat, startTag), StringComparison.Ordinal))
+                {
+                    foreach (string suffixFormat in suffixFormats)
+                    {
+                        if (text.EndsWith(string.Format(suffixFormat, endTag), StringComparison.Ordinal))
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
 
-            while (text.Contains("  "))
-            {
-                text = text.Replace("  ", " ");
-            }
-
-            var s1 = "- " + startTag;
-            var s2 = "-" + startTag;
-            var s3 = "- ..." + startTag;
-            var s4 = "- " + startTag + "..."; // - <i>...
-
-            var e1 = endTag + ".";
-            var e2 = endTag + "!";
-            var e3 = endTag + "?";
-            var e4 = endTag + "...";
-            var e5 = endTag + "-";
-
-            bool isStart = false;
-            bool isEnd = false;
-            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
-            {
-                isStart = true;
-            }
-
-            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
-            {
-                isEnd = true;
-            }
-
-            return isStart && isEnd;
+            return false;
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
