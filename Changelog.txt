@@ -4,6 +4,7 @@
 4.0.9 (xth December 2024) BETA
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
+   * Add DeepLX translate - thx rifatozkancomtr 
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
@@ -33,6 +34,7 @@
    * Fix wrong dialog info text in FCE
    * Fix for divide by zero in TTS
    * Fix bug in "Change casing" - thx Hlsgs
+   * Fix enter in textbox in FCE - thx p1nkyy/Roger
 
 
 4.0.8 (6th September 2024) 
