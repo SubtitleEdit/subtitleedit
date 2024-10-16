@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Cursor = Cursors.WaitCursor;
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.CreateProxiedHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
