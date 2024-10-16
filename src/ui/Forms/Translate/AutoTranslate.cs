@@ -123,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new GoogleTranslateV2(),
                 new MicrosoftTranslator(),
                 new DeepLTranslate(),
+                new DeepLXTranslate(),
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
@@ -223,6 +224,16 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseTextBoxApiKey.Visible = true;
 
                 SelectFormality();
+
+                return;
+            }
+
+            if (engineType == typeof(DeepLXTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
+                });
 
                 return;
             }
@@ -1105,6 +1116,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
+            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLXUrl = nikseComboBoxUrl.Text.Trim();
+            }
+
             if (engineType == typeof(LibreTranslate) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.AutoTranslateLibreApiKey = nikseTextBoxApiKey.Text.Trim();
@@ -1380,9 +1396,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
         {
-            if (listViewSelected == null || 
-                listViewOther == null || 
-                listViewSelected.SelectedItems.Count == 0 || 
+            if (listViewSelected == null ||
+                listViewOther == null ||
+                listViewSelected.SelectedItems.Count == 0 ||
                 listViewSelected.TopItem == null)
             {
                 return;
