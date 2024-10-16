@@ -610,6 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Select();
 
             AcceptButton = buttonNextFinish;
+            textBoxListViewText.AcceptsReturn = true;
         }
 
         private void FixLargeFonts()
