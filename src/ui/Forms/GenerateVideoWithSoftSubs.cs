@@ -46,7 +46,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _videoInfo = videoInfo;
             _subtitle = new Subtitle(subtitle);
-            _inputVideoFileName = inputVideoFileName;
 
             Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Title;
             labelInputVideoFile.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile;
