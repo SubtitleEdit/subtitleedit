@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -107,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
                 File.WriteAllText(fileName, targetFormat.ToText(_subtitle, string.Empty));
                 fileName = GetKnownFileNameOrConvertToSrtOrUtf8(fileName, _subtitle);
 
-                AddListViewItem(fileName);
+                AddListViewItem(CreateVideoPreviewGeneratorSub(fileName));
 
                 if (listViewSubtitles.Items.Count > 0)
                 {
@@ -186,6 +187,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddListViewItem(VideoPreviewGeneratorSub sub)
         {
+            if (sub is null)
+            {
+                return;
+            }
+            
             var item = new ListViewItem
             {
                 Tag = sub,
@@ -284,17 +290,17 @@ namespace Nikse.SubtitleEdit.Forms
             });
         }
 
-        private void AddListViewItem(string fileName)
+        private VideoPreviewGeneratorSub CreateVideoPreviewGeneratorSub(string fileName)
         {
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
             {
-                return;
+                return null;
             }
 
             if (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
                 FileUtil.IsBluRaySup(fileName))
             {
-                AddListViewItem(new VideoPreviewGeneratorSub
+                return new VideoPreviewGeneratorSub
                 {
                     Name = Path.GetFileName(fileName),
                     Language = GetLanguageFromFileName(fileName),
@@ -304,15 +310,13 @@ namespace Nikse.SubtitleEdit.Forms
                     IsForced = false,
                     IsDefault = false,
                     FileName = fileName,
-                });
-
-                return;
+                };
             }
 
             var subtitle = Subtitle.Parse(fileName);
             if (subtitle == null || subtitle.Paragraphs.Count == 0)
             {
-                return;
+                return null;
             }
 
             fileName = GetKnownFileNameOrConvertToSrtOrUtf8(fileName, subtitle);
@@ -334,7 +338,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            AddListViewItem(new VideoPreviewGeneratorSub
+            return new VideoPreviewGeneratorSub
             {
                 Name = Path.GetFileName(fileName),
                 Language = language,
@@ -345,7 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
                 IsForced = false,
                 IsDefault = false,
                 FileName = fileName,
-            });
+            };
         }
 
         private static string GetLanguageFromFileName(string fileName)
@@ -782,7 +786,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (var fileName in openFileDialog1.FileNames)
                 {
-                    AddListViewItem(fileName);
+                    AddListViewItem(CreateVideoPreviewGeneratorSub(fileName));
                 }
             }
 
@@ -840,16 +844,27 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void listViewSubtitles_DragDrop(object sender, DragEventArgs e)
+        private async void listViewSubtitles_DragDrop(object sender, DragEventArgs e)
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var fileName in fileNames)
+
+            Cursor = Cursors.WaitCursor;
+            var previewGeneratorSubs = await Task.Run(() =>
             {
-                if (!FileUtil.IsDirectory(fileName))
+                var previewItems = new List<VideoPreviewGeneratorSub>();
+                foreach (var fileName in fileNames)
                 {
-                    AddListViewItem(fileName);
+                    if (!FileUtil.IsDirectory(fileName))
+                    {
+                        previewItems.Add(CreateVideoPreviewGeneratorSub(fileName));
+                    }
                 }
-            }
+
+                return previewItems.Where(previewItem => previewItem != null).ToList();
+            }).ConfigureAwait(true);
+            
+            previewGeneratorSubs.ForEach(AddListViewItem);
+            Cursor = Cursors.Default;
         }
 
         private void ButtonRemoveSubtitles_Click(object sender, EventArgs e)
