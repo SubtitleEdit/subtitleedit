@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.contextMenuStripMain = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setSuffixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressBarDragDrop = new System.Windows.Forms.ProgressBar();
             this.labelNotSupported = new System.Windows.Forms.Label();
             this.buttonSetLanguage = new System.Windows.Forms.Button();
             this.buttonSetDefault = new System.Windows.Forms.Button();
@@ -49,11 +50,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAddSubtitles = new System.Windows.Forms.Button();
             this.labelSubtitles = new System.Windows.Forms.Label();
             this.listViewSubtitles = new System.Windows.Forms.ListView();
-            this.columnHeader1Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2Language = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3Default = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4Forced = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1Type = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2Language = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3Default = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4Forced = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader5FileName = new System.Windows.Forms.ColumnHeader();
             this.contextMenuSubtitles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -112,8 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripGenerate
             // 
-            this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.promptParameterBeforeGenerateToolStripMenuItem});
+            this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.promptParameterBeforeGenerateToolStripMenuItem });
             this.contextMenuStripGenerate.Name = "contextMenuStripGenerate";
             this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 26);
             // 
@@ -148,10 +148,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxSettings
             // 
-            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSettings.ContextMenuStrip = this.contextMenuStripMain;
+            this.groupBoxSettings.Controls.Add(this.progressBarDragDrop);
             this.groupBoxSettings.Controls.Add(this.labelNotSupported);
             this.groupBoxSettings.Controls.Add(this.buttonSetLanguage);
             this.groupBoxSettings.Controls.Add(this.buttonSetDefault);
@@ -174,8 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripMain
             // 
-            this.contextMenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setSuffixToolStripMenuItem});
+            this.contextMenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.setSuffixToolStripMenuItem });
             this.contextMenuStripMain.Name = "contextMenuStripMain";
             this.contextMenuStripMain.Size = new System.Drawing.Size(132, 26);
             // 
@@ -185,6 +183,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.setSuffixToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.setSuffixToolStripMenuItem.Text = "Set suffix...";
             this.setSuffixToolStripMenuItem.Click += new System.EventHandler(this.setSuffixToolStripMenuItem_Click);
+            // 
+            // progressBarDragDrop
+            // 
+            this.progressBarDragDrop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarDragDrop.Location = new System.Drawing.Point(263, 248);
+            this.progressBarDragDrop.MarqueeAnimationSpeed = 30;
+            this.progressBarDragDrop.Name = "progressBarDragDrop";
+            this.progressBarDragDrop.Size = new System.Drawing.Size(299, 31);
+            this.progressBarDragDrop.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarDragDrop.TabIndex = 37;
+            this.progressBarDragDrop.Visible = false;
             // 
             // labelNotSupported
             // 
@@ -296,15 +305,8 @@ namespace Nikse.SubtitleEdit.Forms
             // listViewSubtitles
             // 
             this.listViewSubtitles.AllowDrop = true;
-            this.listViewSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewSubtitles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1Type,
-            this.columnHeader2Language,
-            this.columnHeader3Default,
-            this.columnHeader4Forced,
-            this.columnHeader5FileName});
+            this.listViewSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewSubtitles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.columnHeader1Type, this.columnHeader2Language, this.columnHeader3Default, this.columnHeader4Forced, this.columnHeader5FileName });
             this.listViewSubtitles.ContextMenuStrip = this.contextMenuSubtitles;
             this.listViewSubtitles.FullRowSelect = true;
             this.listViewSubtitles.HideSelection = false;
@@ -344,19 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuSubtitles
             // 
-            this.contextMenuSubtitles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.toolStripMenuItemStorageRemove,
-            this.toolStripMenuItemStorageRemoveAll,
-            this.toolStripSeparator2,
-            this.toolStripMenuItemStorageMoveUp,
-            this.toolStripMenuItemStorageMoveDown,
-            this.toggleForcedToolStripMenuItem,
-            this.toggleDefaultToolStripMenuItem,
-            this.setLanguageToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.viewToolStripMenuItem});
+            this.contextMenuSubtitles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.addToolStripMenuItem, this.toolStripSeparator1, this.toolStripMenuItemStorageRemove, this.toolStripMenuItemStorageRemoveAll, this.toolStripSeparator2, this.toolStripMenuItemStorageMoveUp, this.toolStripMenuItemStorageMoveDown, this.toggleForcedToolStripMenuItem, this.toggleDefaultToolStripMenuItem, this.setLanguageToolStripMenuItem, this.toolStripSeparator3, this.viewToolStripMenuItem });
             this.contextMenuSubtitles.Name = "contextMenuStrip1";
             this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 220);
             // 
@@ -457,8 +447,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxInputFileName
             // 
-            this.textBoxInputFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxInputFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxInputFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxInputFileName.Location = new System.Drawing.Point(22, 44);
             this.textBoxInputFileName.Name = "textBoxInputFileName";
@@ -468,21 +457,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripRes
             // 
-            this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.x2160ToolStripMenuItem,
-            this.uHD3840x2160ToolStripMenuItem,
-            this.k2048x1080ToolStripMenuItem,
-            this.dCI2KScope2048x858ToolStripMenuItem,
-            this.dCI2KFlat1998x1080ToolStripMenuItem,
-            this.p1920x1080ToolStripMenuItem,
-            this.x1080ToolStripMenuItem,
-            this.p1280x720ToolStripMenuItem,
-            this.x720ToolStripMenuItem,
-            this.p848x480ToolStripMenuItem,
-            this.pAL720x576ToolStripMenuItem,
-            this.nTSC720x480ToolStripMenuItem,
-            this.x352ToolStripMenuItem,
-            this.x272ToolStripMenuItem});
+            this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.x2160ToolStripMenuItem, this.uHD3840x2160ToolStripMenuItem, this.k2048x1080ToolStripMenuItem, this.dCI2KScope2048x858ToolStripMenuItem, this.dCI2KFlat1998x1080ToolStripMenuItem, this.p1920x1080ToolStripMenuItem, this.x1080ToolStripMenuItem, this.p1280x720ToolStripMenuItem, this.x720ToolStripMenuItem, this.p848x480ToolStripMenuItem, this.pAL720x576ToolStripMenuItem, this.nTSC720x480ToolStripMenuItem, this.x352ToolStripMenuItem, this.x272ToolStripMenuItem });
             this.contextMenuStripRes.Name = "contextMenuStripRes";
             this.contextMenuStripRes.Size = new System.Drawing.Size(204, 312);
             // 
@@ -603,8 +578,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripMain2
             // 
-            this.contextMenuStripMain2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSuffix2});
+            this.contextMenuStripMain2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.toolStripMenuItemSuffix2 });
             this.contextMenuStripMain2.Name = "contextMenuStripMain";
             this.contextMenuStripMain2.Size = new System.Drawing.Size(132, 26);
             // 
@@ -647,8 +621,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripMain2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
+
+        private System.Windows.Forms.ProgressBar progressBarDragDrop;
 
         #endregion
         private System.Windows.Forms.Button buttonGenerate;

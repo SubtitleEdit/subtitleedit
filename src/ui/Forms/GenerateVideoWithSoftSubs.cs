@@ -848,6 +848,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
 
+            progressBarDragDrop.Visible = true;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             Cursor = Cursors.WaitCursor;
             var previewGeneratorSubs = await Task.Run(() =>
@@ -867,8 +868,9 @@ namespace Nikse.SubtitleEdit.Forms
             previewGeneratorSubs.ForEach(AddListViewItem);
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
+            progressBarDragDrop.Visible = false;
         }
-
+        
         private void ButtonRemoveSubtitles_Click(object sender, EventArgs e)
         {
             if (listViewSubtitles.Items.Count <= 0)
