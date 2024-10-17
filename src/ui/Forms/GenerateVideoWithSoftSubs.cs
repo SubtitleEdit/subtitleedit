@@ -848,6 +848,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
 
+            labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             Cursor = Cursors.WaitCursor;
             var previewGeneratorSubs = await Task.Run(() =>
             {
@@ -864,6 +865,7 @@ namespace Nikse.SubtitleEdit.Forms
             }).ConfigureAwait(true);
             
             previewGeneratorSubs.ForEach(AddListViewItem);
+            labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
         }
 
