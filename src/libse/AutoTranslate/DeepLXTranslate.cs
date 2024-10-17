@@ -26,7 +26,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public void Initialize()
         {
-            _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateDeepLXUrl))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLXUrl = "http://localhost:1188";
+            }
+            _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLXUrl;
+
             _client = new HttpClient();
             _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
         }

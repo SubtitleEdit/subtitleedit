@@ -123,7 +123,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new GoogleTranslateV2(),
                 new MicrosoftTranslator(),
                 new DeepLTranslate(),
-                new DeepLXTranslate(),
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
@@ -134,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
+                new DeepLXTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
             };
@@ -230,6 +230,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(DeepLXTranslate))
             {
+                if (string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateDeepLXUrl))
+                {
+                    Configuration.Settings.Tools.AutoTranslateDeepLXUrl = "http://localhost:1188";
+                }
+
                 FillUrls(new List<string>
                 {
                     Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
@@ -1064,6 +1069,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 {
                     UiUtil.ShowHelp("#translation");
                 }
+            }
+            else if (linesTranslate == 0 && engineType == typeof(DeepLXTranslate) && exception.Message.Contains("No connection could be made because the target machine actively refused it"))
+            {
+                MessageBox.Show(
+                    this, "You need a local API to use DeepLX. Run ths docker command:  "+ Environment.NewLine + 
+                          "docker run -itd -p 1188:1188 ghcr.io/owo-network/deeplx:latest" + Environment.NewLine +
+                          Environment.NewLine +
+                          exception.Message + Environment.NewLine + 
+                          Environment.NewLine +
+                          "For more information visit: " + new DeepLXTranslate().Url,
+                    Text,
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Error);
             }
             else if (linesTranslate == 0 &&
                      (nikseComboBoxUrl.Text.Contains("//192.", StringComparison.OrdinalIgnoreCase) ||

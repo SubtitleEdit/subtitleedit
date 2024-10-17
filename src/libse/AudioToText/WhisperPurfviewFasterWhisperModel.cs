@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.IO;
-using static System.Net.WebRequestMethods;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
