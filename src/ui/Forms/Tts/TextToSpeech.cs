@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Ups: " + exception.Message + Environment.NewLine + exception.Message);
+                MessageBox.Show("Oops: " + exception.Message + Environment.NewLine + exception.Message);
                 SeLogger.Error(exception, $"{Text}: Error running engine {nikseComboBoxEngine.Text} with video {_videoFileName}");
             }
         }
@@ -2230,7 +2230,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
                 if (!ok)
                 {
-                    MessageBox.Show(this, "Ups, voice generation failed!");
+                    MessageBox.Show(this, "Oops, voice generation failed!");
                     return;
                 }
 
