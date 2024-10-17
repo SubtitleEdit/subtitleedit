@@ -1019,5 +1019,25 @@ namespace Test.Logic
 
             Assert.AreEqual("В отеле", s);
         }
+
+        [TestMethod]
+        public void StartsAndEndsWithTagTest()
+        {
+            const string italicOpen = "<i>";
+            const string italicClose = "</i>";
+            
+            // all variation of openings
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>Hallo world!</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- <i>Hallo world!</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("-<i>Hallo world!</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- ...<i>Hallo world!</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- <i>...Hallo world!</i>", italicOpen, italicClose));
+            
+            // all variations of closings
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>Hallo world!</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>Hallo world?</i>", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>Hallo world</i>...", italicOpen, italicClose));
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>Hallo world</i>-", italicOpen, italicClose));
+        }
     }
 }
