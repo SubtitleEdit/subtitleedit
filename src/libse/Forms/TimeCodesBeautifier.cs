@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null)
+        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null, bool checkConnected = true)
         {
             if (leftParagraph == null || rightParagraph == null)
             {
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
 
-            if (subtitlesAreConnected)
+            if (subtitlesAreConnected || !checkConnected)
             {
                 var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
                 var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
@@ -545,7 +545,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 var performGeneralChaining = false;
 
-                if (isRightInCueOnShotChange)
+                if (isLeftOutCueOnShotChange && isRightInCueOnShotChange 
+                    && bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone
+                    && bestLeftOutCueFrame == bestRightInCueFrame)
+                {
+                    // If both cues are being snapped to the exact same shot change, the subtitles really are connected
+                    // So, handle using the designated function, ignoring the "treat connected" value (because otherwise it would have handled it before going into this function)
+                    FixConnectedSubtitles(leftParagraph, rightParagraph, checkConnected: false);
+
+                    return true;
+                }
+                else if (isRightInCueOnShotChange)
                 {
                     // The right in cue is on a shot change
                     // Try to chain the subtitles
