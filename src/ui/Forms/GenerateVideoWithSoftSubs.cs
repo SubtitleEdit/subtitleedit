@@ -864,7 +864,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return previewItems.Where(previewItem => previewItem != null).ToList();
             }).ConfigureAwait(true);
             
+            listViewSubtitles.BeginUpdate();
             previewGeneratorSubs.ForEach(AddListViewItem);
+            listViewSubtitles.EndUpdate();
+            
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
             progressBarDragDrop.Visible = false;
