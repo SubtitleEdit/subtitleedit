@@ -618,7 +618,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var timeSpent = 1; // process.ExitTime - DateTime.Now;
                     while (!process.HasExited && !process.WaitForExit(1000))
                     {
-                        // ensure standby prevention after every 30 seconds
+                        // ensure standby prevention every 30 seconds
                         if (timeSpent++ % 30 == 0)
                         {
                             WindowsHelper.PreventStandBy();
