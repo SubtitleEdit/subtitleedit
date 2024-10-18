@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -20,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GenerateVideoWithSoftSubs : Form
     {
-        private bool _abort;
+        private volatile bool _abort;
         private readonly Subtitle _subtitle;
         private VideoInfo _videoInfo;
         private string _inputVideoFileName;
@@ -434,7 +435,7 @@ namespace Nikse.SubtitleEdit.Forms
             _log?.AppendLine(outLine.Data);
         }
 
-        private void buttonGenerate_Click(object sender, EventArgs e)
+        private async void buttonGenerate_Click(object sender, EventArgs e)
         {
             if (_softSubs.Count == 0)
             {
@@ -499,7 +500,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var stopWatch = Stopwatch.StartNew();
 
-            RunEmbedding();
+            await RunEmbedding();
 
             MillisecondsEncoding = stopWatch.ElapsedMilliseconds;
             groupBoxSettings.Enabled = true;
@@ -592,7 +593,7 @@ namespace Nikse.SubtitleEdit.Forms
             return fileName;
         }
 
-        private void RunEmbedding()
+        private async Task RunEmbedding()
         {
             var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
@@ -607,20 +608,31 @@ namespace Nikse.SubtitleEdit.Forms
                 labelNotSupported.Text = string.Empty;
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Cursor = Cursors.WaitCursor;
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
 
-                while (!process.HasExited)
+                await Task.Run(() =>
                 {
-                    Application.DoEvents();
-                    WindowsHelper.PreventStandBy();
-                    System.Threading.Thread.Sleep(100);
-                    if (_abort)
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    var timeSpent = 1; // process.ExitTime - DateTime.Now;
+                    while (!process.HasExited && !process.WaitForExit(1000))
                     {
-                        process.Kill();
+                        // ensure standby prevention after every 30 seconds
+                        if (timeSpent++ % 30 == 0)
+                        {
+                            WindowsHelper.PreventStandBy();
+                        }
+
+                        if (_abort)
+                        {
+                            process.Kill();
+                            break;
+                        }
                     }
-                }
+
+                    process.Dispose();
+                }).ConfigureAwait(true);
             }
             finally
             {
