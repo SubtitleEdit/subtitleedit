@@ -13408,7 +13408,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var seconds = (int)numericUpDownDuration.Value;
                 var frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
-                return seconds * TimeCode.BaseUnit + frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
+                return seconds * TimeCode.BaseUnit + SubtitleFormat.FramesToMilliseconds(frames);
             }
 
             return ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
