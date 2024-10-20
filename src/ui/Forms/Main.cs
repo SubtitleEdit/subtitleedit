@@ -12122,7 +12122,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        lines = s.SplitToLines();
+                        if (Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting)
+                        {
+                            lines.Add(s);
+                        } else
+                        {
+                            lines = s.SplitToLines();
+                        }
+
                         if (lines.Count == 1)
                         {
                             s = Utilities.AutoBreakLine(currentParagraph.Text, 3, 20, language);
@@ -12236,8 +12243,8 @@ namespace Nikse.SubtitleEdit.Forms
                         newParagraph.Text = ContinuationUtilities.ConvertBackForArabic(newParagraph.Text);
                     }
                 }
-
-                FixSplitItalicTagAndAssa(currentParagraph, newParagraph);
+                if (!Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting)
+                    FixSplitItalicTagAndAssa(currentParagraph, newParagraph);
                 FixSplitFontTag(currentParagraph, newParagraph);
                 FixSplitBoxTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
@@ -13796,7 +13803,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox).
                 _forceClose = true;
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Application.Exit());
             }
