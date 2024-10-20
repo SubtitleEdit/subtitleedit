@@ -539,23 +539,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     bestRightInCueFrame = newRightInCueFrame;
                 }
 
-                // Check cases
-                var isLeftOutCueOnShotChange = IsCueOnShotChange(bestLeftOutCueFrame, false);
-                var isRightInCueOnShotChange = IsCueOnShotChange(bestRightInCueFrame, true);
-
-                var performGeneralChaining = false;
-
-                if (isLeftOutCueOnShotChange && isRightInCueOnShotChange 
-                    && bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone
-                    && bestLeftOutCueFrame == bestRightInCueFrame)
+                // Re-check if, with the new cues, the subtitles are actually connected
+                var newDistance = FramesToMilliseconds(bestRightInCueFrame) - FramesToMilliseconds(bestLeftOutCueFrame);
+                if (newDistance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected)
                 {
-                    // If both cues are being snapped to the exact same shot change, the subtitles really are connected
-                    // So, handle using the designated function, ignoring the "treat connected" value (because otherwise it would have handled it before going into this function)
+                    // Yes, so handle using the designated function, ignoring its check connected check
+                    // (because otherwise it would have handled it before going into the FixChainableSubtitles function)
                     FixConnectedSubtitles(leftParagraph, rightParagraph, checkConnected: false);
 
                     return true;
                 }
-                else if (isRightInCueOnShotChange)
+
+                // Check cases
+                var isLeftOutCueOnShotChange = IsCueOnShotChange(bestLeftOutCueFrame, false);
+                var isRightInCueOnShotChange = IsCueOnShotChange(bestRightInCueFrame, true);
+
+                var performGeneralChaining = false;                              
+
+                if (isRightInCueOnShotChange)
                 {
                     // The right in cue is on a shot change
                     // Try to chain the subtitles
