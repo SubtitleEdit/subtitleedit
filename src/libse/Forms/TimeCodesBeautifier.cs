@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var isLeftOutCueOnShotChange = IsCueOnShotChange(bestLeftOutCueFrame, false);
                 var isRightInCueOnShotChange = IsCueOnShotChange(bestRightInCueFrame, true);
 
-                var performGeneralChaining = false;                              
+                var performGeneralChaining = false;
 
                 if (isRightInCueOnShotChange)
                 {
