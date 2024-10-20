@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                                      "|JSON shot changes file|*.json" +
                                      "|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
+            openFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 LoadTextFile(openFileDialog1.FileName);
