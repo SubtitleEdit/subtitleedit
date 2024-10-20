@@ -131,11 +131,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return frames.ToString(CultureInfo.InvariantCulture);
         }
 
-        private static TimeCode DecodeTimeCode(string timePart)
-        {
-            int milliseconds = (int)Math.Round(TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate * int.Parse(timePart));
-            return new TimeCode(milliseconds);
-        }
-
+        private static TimeCode DecodeTimeCode(string timePart) => new TimeCode(FramesToMilliseconds(int.Parse(timePart)));
     }
 }

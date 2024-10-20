@@ -1522,8 +1522,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void WriteTime(Stream fs, TimeCode timeCode)
         {
-            double totalMilliseconds = timeCode.TotalMilliseconds;
-            int frames = (int)Math.Round(totalMilliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            int frames = MillisecondsToFrames(timeCode.TotalMilliseconds);
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
             fs.WriteByte((byte)(frames % 256));
@@ -1644,8 +1643,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else
                 {
                     subtitle.Paragraphs.Add(p);
-                    p.StartTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * startFrame;
-                    p.EndTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * endFrame;
+                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(startFrame);
+                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(endFrame);
                     p.Text = string.Join(Environment.NewLine, new[] { line1, line2 }.Select(l => l.TrimEnd()).Where(l => !string.IsNullOrWhiteSpace(l)));
                 }
                 if (boxType >= 0xa0 && boxType <= 0xa9 && !string.IsNullOrEmpty(p.Text)) // box
