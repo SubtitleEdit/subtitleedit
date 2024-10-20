@@ -9,13 +9,13 @@ configuration:
   - Release
 
 build_script:
+  - dotnet restore SubtitleEdit.sln
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 test_script:
   - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
 
-cache:
-  - 'packages -> **\src\ui\packages.config'
-
 matrix:
   fast_finish: true
+
+# https://www.appveyor.com/docs/appveyor-yml/
