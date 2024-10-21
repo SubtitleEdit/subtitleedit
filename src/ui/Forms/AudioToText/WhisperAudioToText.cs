@@ -1049,8 +1049,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else
             {
-                var rawText = FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8);
-                new WebVTT().LoadSubtitle(sub, rawText, srtFileName);
+                var rawText = FileUtil.ReadAllLinesShared(vttFileName, Encoding.UTF8);
+                new WebVTT().LoadSubtitle(sub, rawText, vttFileName);
                 outputText?.Add($"Loading result from {vttFileName}{Environment.NewLine}");
             }
 
