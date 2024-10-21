@@ -560,16 +560,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
                 Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
 
+            UpdateLog();
+            SeLogger.WhisperInfo(textBoxLog.Text);
             if (transcript == null || transcript.Paragraphs.Count == 0)
             {
-                UpdateLog();
-                SeLogger.WhisperInfo(textBoxLog.Text);
                 IncompleteModelName = comboBoxModels.Text;
-            }
-            else
-            {
-                UpdateLog();
-                SeLogger.WhisperInfo(textBoxLog.Text);
             }
 
             timer1.Stop();
