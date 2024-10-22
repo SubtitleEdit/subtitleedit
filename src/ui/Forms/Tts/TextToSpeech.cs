@@ -186,6 +186,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
             checkBoxAudioEncoding.Checked = Configuration.Settings.Tools.TextToSpeechCustomAudio;
             checkBoxAddToVideoFile.Enabled = _videoFileName != null;
+            nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
+            nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -220,6 +222,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void ButtonGenerateTtsClick(object sender, EventArgs e)
         {
+            SaveConfiguration();
+
             if (buttonGenerateTTS.Text == LanguageSettings.Current.General.Cancel)
             {
                 buttonGenerateTTS.Enabled = false;
@@ -1131,7 +1135,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         }
                     }
 
-                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": 0.8, \"similarity_boost\": 1.0 }} }}";
+                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture); 
+                    var similarity = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity, 1).ToString(CultureInfo.InvariantCulture);
+                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity} }} }}";
                     var content = new StringContent(data, Encoding.UTF8);
                     content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
@@ -1360,6 +1366,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelLanguage.Visible = false;
             nikseComboBoxLanguage.Visible = false;
 
+            labelStability.Visible = false;
+            labelSimilarity.Visible = false;
+            nikseUpDownStability.Visible = false;
+            nikseUpDownSimilarity.Visible = false;
+
             labelRegion.Text = LanguageSettings.Current.General.Region;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
             if (SubtitleFormatHasActors() && _actors.Any())
@@ -1485,6 +1496,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 nikseComboBoxRegion.Visible = true;
+
+                labelStability.Visible = true;
+                labelSimilarity.Visible = true;
+                nikseUpDownStability.Visible = true;
+                nikseUpDownSimilarity.Visible = true;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
@@ -2214,6 +2230,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonTestVoice_Click(object sender, EventArgs e)
         {
+            SaveConfiguration();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(TextBoxTest.Text))
@@ -2266,6 +2284,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
+        private void SaveConfiguration()
+        {
+            Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
+            Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+        }
+
         private void HandleError(Exception ex)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
@@ -2281,6 +2305,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void TextToSpeech_FormClosing(object sender, FormClosingEventArgs e)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+
+            SaveConfiguration();
 
             if (engine.Id == TextToSpeechEngineId.ElevenLabs)
             {
