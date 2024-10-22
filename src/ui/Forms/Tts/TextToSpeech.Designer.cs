@@ -167,10 +167,10 @@
             // 
             this.linkLabelCustomAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelCustomAudio.AutoSize = true;
-            this.linkLabelCustomAudio.Location = new System.Drawing.Point(169, 400);
+            this.linkLabelCustomAudio.Location = new System.Drawing.Point(168, 400);
             this.linkLabelCustomAudio.Name = "linkLabelCustomAudio";
             this.linkLabelCustomAudio.Size = new System.Drawing.Size(45, 13);
-            this.linkLabelCustomAudio.TabIndex = 34;
+            this.linkLabelCustomAudio.TabIndex = 43;
             this.linkLabelCustomAudio.TabStop = true;
             this.linkLabelCustomAudio.Text = "Settings";
             this.linkLabelCustomAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCustomAudio_LinkClicked);
@@ -182,7 +182,7 @@
             this.checkBoxAudioEncoding.Location = new System.Drawing.Point(32, 401);
             this.checkBoxAudioEncoding.Name = "checkBoxAudioEncoding";
             this.checkBoxAudioEncoding.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxAudioEncoding.TabIndex = 33;
+            this.checkBoxAudioEncoding.TabIndex = 42;
             this.checkBoxAudioEncoding.Text = "Custom audio encoding";
             this.checkBoxAudioEncoding.UseVisualStyleBackColor = true;
             // 
@@ -215,7 +215,7 @@
             this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 352);
             this.checkBoxShowPreview.Name = "checkBoxShowPreview";
             this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxShowPreview.TabIndex = 25;
+            this.checkBoxShowPreview.TabIndex = 40;
             this.checkBoxShowPreview.Text = "Review audio clips";
             this.checkBoxShowPreview.UseVisualStyleBackColor = true;
             // 
@@ -248,7 +248,7 @@
             this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 376);
             this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
             this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxAddToVideoFile.TabIndex = 26;
+            this.checkBoxAddToVideoFile.TabIndex = 41;
             this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
             this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
             // 
@@ -362,7 +362,7 @@
             0});
             this.nikseUpDownStability.Name = "nikseUpDownStability";
             this.nikseUpDownStability.Size = new System.Drawing.Size(75, 23);
-            this.nikseUpDownStability.TabIndex = 101;
+            this.nikseUpDownStability.TabIndex = 34;
             this.nikseUpDownStability.TabStop = false;
             this.nikseUpDownStability.Text = "nikseUpDownStability";
             this.nikseUpDownStability.ThousandsSeparator = false;
@@ -400,7 +400,7 @@
             0});
             this.nikseUpDownSimilarity.Name = "nikseUpDownSimilarity";
             this.nikseUpDownSimilarity.Size = new System.Drawing.Size(75, 23);
-            this.nikseUpDownSimilarity.TabIndex = 100;
+            this.nikseUpDownSimilarity.TabIndex = 35;
             this.nikseUpDownSimilarity.TabStop = false;
             this.nikseUpDownSimilarity.Text = "nikseUpDownSimilarity";
             this.nikseUpDownSimilarity.ThousandsSeparator = false;
