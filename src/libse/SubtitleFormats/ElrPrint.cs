@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string s;
             var ts = p.Duration.TimeSpan;
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            var frames = MillisecondsToFrames(ts.Milliseconds);
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
                 s = $"{ts.Seconds + 1:00}:{0:00}";

@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 {
                     if (bob.ExpandCount > 0)
                     {
-                        System.Windows.Forms.MessageBox.Show("Ups, expand image in CompareImages!");
+                        System.Windows.Forms.MessageBox.Show("Oops, expand image in CompareImages!");
                     }
 
                     bob.Save(gz);
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 {
                     if (bob.ExpandCount == 0)
                     {
-                        System.Windows.Forms.MessageBox.Show("Ups, not expanded image in CompareImagesExpanded!");
+                        System.Windows.Forms.MessageBox.Show("Oops, not expanded image in CompareImagesExpanded!");
                     }
 
                     bob.Save(gz);

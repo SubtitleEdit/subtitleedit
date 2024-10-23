@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateSeamlessM4TUrl { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
+        public string AutoTranslateDeepLXUrl { get; set; }
         public string AutoTranslatePapagoApiKeyId { get; set; }
         public string AutoTranslatePapagoApiKey { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
@@ -102,6 +103,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechAzureRegion { get; set; }
         public string TextToSpeechElevenLabsModel { get; set; }
         public string TextToSpeechElevenLabsLanguage { get; set; }
+        public double TextToSpeechElevenLabsStability { get; set; }
+        public double TextToSpeechElevenLabsSimilarity { get; set; }
         public bool TextToSpeechPreview { get; set; }
         public bool TextToSpeechCustomAudio { get; set; }
         public bool TextToSpeechCustomAudioStereo { get; set; }
@@ -470,6 +473,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
+            AutoTranslateDeepLUrl = "http://localhost:1188";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             ChatGptModel = ChatGptTranslate.Models[0];
@@ -488,6 +492,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = AnthropicTranslate.Models[0];
             TextToSpeechAzureRegion = "westeurope";
+            TextToSpeechElevenLabsSimilarity = 0.5;
+            TextToSpeechElevenLabsStability = 0.5;
             AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;

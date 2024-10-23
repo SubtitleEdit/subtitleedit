@@ -24,14 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var minutes = int.Parse(parts[1]);
             var seconds = int.Parse(parts[2]);
             var frames = int.Parse(parts[3]);
-
-            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * frames));
-            if (milliseconds > 999)
-            {
-                milliseconds = 999;
-            }
-
-            return new TimeCode(hour, minutes, seconds, milliseconds);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
         public override string ToText(Subtitle subtitle, string title)

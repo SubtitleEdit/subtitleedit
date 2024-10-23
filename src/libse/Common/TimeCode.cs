@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TimeCode AlignToFrame()
         {
             var ts = TimeSpan.FromMilliseconds(Math.Round(TotalMilliseconds, MidpointRounding.AwayFromZero));
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            var frames = SubtitleFormat.MillisecondsToFrames(ts.Milliseconds);
             TimeSpan ts2;
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
