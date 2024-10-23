@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -12,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly TextToSpeech _textToSpeech;
         private readonly Subtitle _subtitle;
         private readonly int _index;
+        private LibMpvDynamic _libMpv;
 
         public RegenerateAudioClip(TextToSpeech textToSpeech, Subtitle subtitle, int idx)
         {
@@ -28,10 +31,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
             buttonReGenerate.Text = LanguageSettings.Current.TextToSpeech.Regenerate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonPlay.Text = LanguageSettings.Current.TextToSpeech.Play;
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             TextBoxReGenerate.Text = subtitle.Paragraphs[idx].Text;
             textToSpeech.SetCurrentVoices(nikseComboBoxVoice);
+            buttonPlay.Enabled = false;
         }
 
         private void buttonReGenerate_Click(object sender, EventArgs e)
@@ -45,12 +51,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Cursor = Cursors.WaitCursor;
                 buttonReGenerate.Enabled = false;
-                var fileNameAndSpeedFactor =  _textToSpeech.ReGenerateAudio(paragraph, next, nikseComboBoxVoice.Text);
+                var fileNameAndSpeedFactor = _textToSpeech.ReGenerateAudio(paragraph, next, nikseComboBoxVoice.Text);
                 if (fileNameAndSpeedFactor != null)
                 {
                     FileNameAndSpeedFactor = fileNameAndSpeedFactor;
+                    buttonPlay.Enabled = true;
                     Cursor = Cursors.Default;
-                    DialogResult = DialogResult.OK;
+                    buttonPlay_Click(null, null);
                 }
             }
             finally
@@ -63,6 +70,62 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonPlay_Click(object sender, EventArgs e)
+        {
+            if (FileNameAndSpeedFactor == null)
+            {
+                return;
+            }
+
+            var waveFileName = FileNameAndSpeedFactor.Filename;
+
+            if (_libMpv != null)
+            {
+                _libMpv.Initialize(
+                    null,
+                    waveFileName,
+                    (sender2, args) =>
+                    {
+                        _libMpv.PlayRate = 1;
+                        _libMpv.Play();
+                    },
+                    null);
+
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1000), () =>
+                {
+                    var i = 0;
+                    while (i < 100 && !_libMpv.IsPaused)
+                    {
+                        i++;
+                        Thread.Sleep(100);
+                        Application.DoEvents();
+                    }
+
+                    buttonPlay.Enabled = true;
+                });
+            }
+            else
+            {
+                using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
+                {
+                    soundPlayer.PlaySync();
+                }
+            }
+        }
+
+        private void RegenerateAudioClip_Shown(object sender, EventArgs e)
+        {
+            if (LibMpvDynamic.IsInstalled)
+            {
+                _libMpv = new LibMpvDynamic();
+            }
         }
     }
 }
