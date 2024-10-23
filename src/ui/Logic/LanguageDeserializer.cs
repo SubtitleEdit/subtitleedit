@@ -8746,6 +8746,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "TextToSpeech/Speed":
                     language.TextToSpeech.Speed = reader.Value;
                     break;
+                case "TextToSpeech/Stability":
+                    language.TextToSpeech.Stability = reader.Value;
+                    break;
+                case "TextToSpeech/Similarity":
+                    language.TextToSpeech.Similarity = reader.Value;
+                    break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;
                     break;

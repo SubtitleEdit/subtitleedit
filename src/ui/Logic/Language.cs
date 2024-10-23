@@ -3586,6 +3586,8 @@ can edit in same subtitle file (collaboration)",
                 Play = "Play",
                 Regenerate = "Regenerate",
                 Speed = "Speed",
+                Stability = "Stability",
+                Similarity = "Similarity",
             };
 
             TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming
