@@ -284,8 +284,4 @@
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
   </ItemGroup>
-
-  <Target Name="BeforeClean">
-    <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
-  </Target>
 </Project>
