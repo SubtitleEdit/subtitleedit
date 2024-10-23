@@ -273,7 +273,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
                     listViewAudioClips.Items[idx].SubItems[4].Text = $"{(form.FileNameAndSpeedFactor.Factor * 100.0m):0.#}%";
                     listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
-                    Play(true);
                 }
             }
         }
