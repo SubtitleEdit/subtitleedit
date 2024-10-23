@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.8</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.09.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 23.10.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3188,6 +3188,8 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <AutoContinue>Continua automaticamente</AutoContinue>
     <Regenerate>Rigenera</Regenerate>
     <Speed>Velocità</Speed>
+    <Stability>Stabilità</Stability>
+    <Similarity>Somiglianza</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
