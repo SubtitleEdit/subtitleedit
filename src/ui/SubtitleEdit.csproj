@@ -284,4 +284,10 @@
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
   </ItemGroup>
+
+  <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+    <Exec Condition="'$(OS)' == 'Unix'" Command="bash $(ProjectDir)../../build_helpers.sh rev $(ConfigurationName)" />
+  </Target>
+  
 </Project>
