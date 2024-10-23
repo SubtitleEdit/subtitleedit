@@ -3188,6 +3188,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <AutoContinue>Auto-continue</AutoContinue>
     <Regenerate>Regenerate</Regenerate>
     <Speed>Speed</Speed>
+    <Stability>Stability</Stability>
+    <Similarity>Similarity</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>

@@ -2435,6 +2435,7 @@
     <Word from="spasli" to="spasili" />
     <Word from="spavaćeš" to="spavat ćeš" />
     <Word from="spavaćete" to="spavat ćete" />
+    <Word from="Spavaću" to="Spavat ću" />
     <Word from="speluje" to="sriče" />
     <Word from="speluju" to="sriču" />
     <Word from="spelujte" to="sričite" />
@@ -4007,6 +4008,8 @@
     <LinePart from="bez svesti" to="bez svijesti" />
     <LinePart from="Bez obzira što" to="Bez obzira na to što" />
     <LinePart from="bez obzira što" to="bez obzira na to što" />
+    <LinePart from="Biću dobro" to="Bit ću dobro" />
+    <LinePart from="Biće u redu" to="Bit će u redu" />
     <LinePart from="biću iskren" to="bit ću iskren" />
     <LinePart from="Biće mi" to="Bit će mi" />
     <LinePart from="Biće on" to="Bit će on" />
@@ -5575,6 +5578,7 @@
     <RegEx find="oslj?ep" replaceWith="oslijep" />
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
     <RegEx find="osb" replaceWith="osob" />
+    <RegEx find="oskb" replaceWith="osob" />
     <RegEx find="ot[čć]i" replaceWith="odči" />
     <RegEx find="otse" replaceWith="odsje" />
     <RegEx find="otstak" replaceWith="otak" />
@@ -5825,6 +5829,7 @@
     <RegEx find="vsj" replaceWith="vaj" />
     <RegEx find="vsn" replaceWith="van" />
     <RegEx find="([zZ])amenit" replaceWith="$1amijenit" />
+    <RegEx find="zamjs" replaceWith="zmajs" />
     <RegEx find="zankin" replaceWith="zank" />
     <RegEx find="zanš" replaceWith="znaš" />
     <RegEx find="zaklać" replaceWith="zaklat ć" />
@@ -5843,9 +5848,7 @@
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zpr" replaceWith="spr" />
     <RegEx find="zref" replaceWith="zrel" />
-    <RegEx find="zsk" replaceWith="zak" />
-    <RegEx find="zsn" replaceWith="zan" />
-    <RegEx find="zsp" replaceWith="zap" />
+    <RegEx find="zs([kgnp])" replaceWith="za$1" />
     <RegEx find="zqp" replaceWith="zap" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
     <RegEx find="zvešć" replaceWith="zvest ć" />

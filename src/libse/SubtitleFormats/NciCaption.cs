@@ -62,14 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int minutes = buffer[index + 1];
             int seconds = buffer[index + 2];
             int frames = buffer[index + 3];
-
-            int milliseconds = (int)Math.Round(TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate * frames);
-            if (milliseconds > 999)
-            {
-                milliseconds = 999;
-            }
-
-            return new TimeCode(hour, minutes, seconds, milliseconds);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

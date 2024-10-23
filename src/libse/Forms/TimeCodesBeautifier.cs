@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null)
+        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null, bool checkConnected = true)
         {
             if (leftParagraph == null || rightParagraph == null)
             {
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
 
-            if (subtitlesAreConnected)
+            if (subtitlesAreConnected || !checkConnected)
             {
                 var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
                 var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
@@ -537,6 +537,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
                     bestRightInCueFrame = newRightInCueFrame;
+                }
+
+                // Re-check if, with the new cues, the subtitles are actually connected
+                var newDistance = FramesToMilliseconds(bestRightInCueFrame) - FramesToMilliseconds(bestLeftOutCueFrame);
+                if (newDistance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected)
+                {
+                    // Yes, so handle using the designated function, ignoring its check connected check
+                    // (because otherwise it would have handled it before going into the FixChainableSubtitles function)
+                    FixConnectedSubtitles(leftParagraph, rightParagraph, checkConnected: false);
+
+                    return true;
                 }
 
                 // Check cases

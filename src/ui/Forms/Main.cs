@@ -5394,7 +5394,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.No;
                     }
 
-                    MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
+                    MessageBox.Show("Oops - save original does not support this format - please go to Github and create an issue!");
                 }
 
                 string allText = subAlt.ToText(format);
@@ -13408,7 +13408,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var seconds = (int)numericUpDownDuration.Value;
                 var frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
-                return seconds * TimeCode.BaseUnit + frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
+                return seconds * TimeCode.BaseUnit + SubtitleFormat.FramesToMilliseconds(frames);
             }
 
             return ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
@@ -18638,9 +18638,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (form.ImportedSubitle?.Paragraphs.Count > 0)
+                        if (form.ImportedSubtitle?.Paragraphs.Count > 0)
                         {
-                            _subtitle = form.ImportedSubitle;
+                            _subtitle = form.ImportedSubtitle;
                             _fileName = null;
                             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                             SetTitle();

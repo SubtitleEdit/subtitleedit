@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = text.Replace("  ", " ");
             text = text.Replace("<i> ", " <i>");
             text = text.Replace(" </i>", "</i> ");
-            text = text.Replace("</i> <i>",  " ");
+            text = text.Replace("</i> <i>", " ");
             text = text.Replace("  ", " ");
 
             return text.Trim();
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 var beforeHasLetter = i > 0 && !Separators.Contains(matches[i - 1].Text);
-                var afterHasLetter = i < matches.Count -1 && !Separators.Contains(matches[i + 1].Text);
+                var afterHasLetter = i < matches.Count - 1 && !Separators.Contains(matches[i + 1].Text);
                 if (beforeHasLetter || afterHasLetter)
                 {
                     continue;

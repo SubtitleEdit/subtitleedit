@@ -18,6 +18,7 @@
     <Preview>Voorbeeld</Preview>
     <ShowPreview>Voorbeeld weergeven</ShowPreview>
     <HidePreview>Voorbeeld verbergen</HidePreview>
+    <SubtitleFile>Ondertitelbestand</SubtitleFile>
     <SubtitleFiles>Ondertitelbestanden</SubtitleFiles>
     <AllFiles>Alle bestanden</AllFiles>
     <VideoFiles>Videobestanden</VideoFiles>
@@ -197,9 +198,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Engine>Engine</Engine>
     <VoskWebsite>Website van Vosk</VoskWebsite>
     <WhisperWebsite>Website van Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper niet gevonden.
-
-Meer informatie online weergeven?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Modellen</Models>
     <LanguagesAndModels>Talen en modellen</LanguagesAndModels>
@@ -216,12 +214,14 @@ Meer informatie online weergeven?</WhisperNotFound>
     <BatchMode>Batchmodus</BatchMode>
     <KeepPartialTranscription>Gedeeltelijke transcriptie behouden</KeepPartialTranscription>
     <TranslateToEnglish>Vertaal naar Engels</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max.  tekens per ondertitelregel</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Tijdelijke bestanden verwijderen</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Map CPP/Const-me-modellen instellen...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Alleen nabewerking uitvoeren/tijden aanpassen</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>cuBLAS en cuDNN voor Faster-Whisper downloaden</DownloadFasterWhisperCuda>
     <NoTextFound>Geen tekst gevonden!</NoTextFound>
+    <FixCasing>Hoofdlettergebruik corrigeren</FixCasing>
+    <AddPeriods>Punten toevoegen</AddPeriods>
+    <FixShortDuration>Korte duurtijden corrigeren</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha-bijlagen</Title>
@@ -731,6 +731,8 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <ChooseColor>Kleur kiezen:</ChooseColor>
     <TotalSeconds>Totaalaantal seconden:</TotalSeconds>
     <EndDelayInSeconds>Eindvertraging in seconden:</EndDelayInSeconds>
+    <WordEffect>Woordeffect</WordEffect>
+    <CharacterEffect>Tekeneffect</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typemachine-effect</Title>
@@ -1011,21 +1013,28 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Pixelindeling</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Optimaliseren voor</TuneFor>
     <AlignRight>Rechts uitlijnen</AlignRight>
     <GetStartPosition>Beginpositie gebruiken</GetStartPosition>
     <GetEndPosition>Eindpositie gebruiken</GetEndPosition>
+    <UseSource>Bron gebruiken</UseSource>
+    <UseSourceResolution>Bronresolutie gebruiken</UseSourceResolution>
+    <OutputSettings>Uitvoerbestand/-map...</OutputSettings>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Ondertitels toevoegen aan/verwijderen uit videobestand</Title>
     <InputVideoFile>Invoer-videobestand</InputVideoFile>
     <SubtitlesX>Ondertitels ({0})</SubtitlesX>
     <SetLanguage>Taal instellen...</SetLanguage>
+    <LanguageAndTitle>Taal/titel</LanguageAndTitle>
     <ToggleForced>Geforceerd aan/uit</ToggleForced>
     <ToggleDefault>Standaard aan/uit</ToggleDefault>
     <Default>Standaard</Default>
     <XGeneratedWithEmbeddedSubs>'{0}' gegenereerd met ingesloten ondertitels</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Invoervideobestand na genereren verwijderen</DeleteInputVideo>
+    <OutputFileNameSettings>Instellingen voor uitvoerbestandsnaam...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Woordenboek nodig?</Title>
@@ -1052,14 +1061,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <To>Naar:</To>
     <Translate>Vertalen</Translate>
     <PleaseWait>Dit kan enige tĳd duren. Een ogenblik geduld.</PleaseWait>
-    <PoweredByGoogleTranslate>Mogelijk gemaakt door Google Vertalen</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Mogelijk gemaakt door Microsoft Translator</PoweredByMicrosoftTranslate>
     <PoweredByX>Mogelijk gemaakt door {0}</PoweredByX>
-    <MsClientSecretNeeded>Voor toegang tot Microsoft Translator is een Cognitive Services ‘Translator Text’-sleutel van Microsoft vereist.
-
-Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Google Vertalen zonder API-sleutel... (traag en beperkt)</GoogleNoApiKeyWarning>
-    <Service>Dienst:</Service>
     <LineMergeHandling>Regels samenvoegen:</LineMergeHandling>
     <ProcessorMergeNext>Maximaal twee regels samenvoegen</ProcessorMergeNext>
     <ProcessorSentence>Zinnen samenvoegen</ProcessorSentence>
@@ -1079,6 +1081,13 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
     <XRequiresAnApiKey>Voor {0} is een API-sleutel vereist.</XRequiresAnApiKey>
     <ReadMore>Meer informatie weergeven?</ReadMore>
     <Formality>Aanspreekvorm</Formality>
+    <TranslateCurrentLine>Alleen huidige titel vertalen</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Huidige titel opnieuw vertalen</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Splitsen/samenvoegen</MergeSplitStrategy>
+    <Delay>Vertraging tussen serververzoeken</Delay>
+    <MaxBytes>Maximumaantal bytes per serververzoek</MaxBytes>
+    <PromptX>Vragen om {0}</PromptX>
+    <TranslateLinesSeparately>Elke regel afzonderlijk vertalen</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Vertalen met Google of Microsoft</Title>
@@ -1437,12 +1446,14 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <GenerateBlankVideo>Lege video genereren...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Video met ingebrande ondertiteling genereren...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Ondertitels toevoegen aan/verwijderen uit videobestand...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Transparante video met ondertitels genereren...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio naar tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Hoofdstukken uit video importeren</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Beeldwissels detecteren/importeren...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Beeldwissels verwijderen/exporteren...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Golfvormen genereren</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Golfvorm en spectrogram weergeven/verbergen</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Tekst naar spraak en aan video toevoegen...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Videovenster ontkoppelen</UnDockVideoControls>
         <ReDockVideoControls>Videovenster koppelen</ReDockVideoControls>
       </Video>
@@ -1600,6 +1611,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <GoToSourceView>Naar bronweergave</GoToSourceView>
         <GoToListView>Naar lijstweergave</GoToListView>
         <ExtractAudio>Audio extraheren...</ExtractAudio>
+        <MediaInfo>Media-informatie</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1636,6 +1648,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
       <StillTypingAutoContinueStopped>Er wordt nog getypt... automatisch doorgaan gestopt</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Nieuwe ondertitel invoegen</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Nieuwe ondertitel invoegen (tekstvak niet activeren)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Nieuwe ondertitel invoegen (indien mogelijk)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Automatisch</Auto>
       <PlayFromJustBeforeText>Vanaf vlak voor deze &amp;titel afspelen</PlayFromJustBeforeText>
       <PlayFromBeginning>Vanaf begin van video afspelen</PlayFromBeginning>
@@ -2122,6 +2135,10 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <EvenLines>Even regelnummers</EvenLines>
     <DurationLessThan>Tĳdsduur korter dan</DurationLessThan>
     <DurationGreaterThan>Tĳdsduur langer dan</DurationGreaterThan>
+    <CpsLessThan>CPS lager dan</CpsLessThan>
+    <CpsGreaterThan>CPS hoger dan</CpsGreaterThan>
+    <LengthLessThan>Lengte korter dan</LengthLessThan>
+    <LengthGreaterThan>Lengte langer dan</LengthGreaterThan>
     <ExactlyOneLine>Precies één regel</ExactlyOneLine>
     <ExactlyTwoLines>Precies twee regels</ExactlyTwoLines>
     <MoreThanTwoLines>Meer dan twee regels</MoreThanTwoLines>
@@ -2527,6 +2544,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <CpsLineLengthStyleCalcNoSpace>Alle tekens behalve spaties meetellen</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0,5, spatie 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>Inclusief compositietekens</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Inclusief compositietekens, zonder spaties</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Geen spaties of interpunctie ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Geen spaties of interpunctie, alleen voor CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
@@ -2673,6 +2692,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformGoToPreviousShotChange>Naar vorige beeldwissel</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Naar volgende beeldwissel</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Beeldwissel toevoegen/verwĳderen</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Alle beeldwissels één frame vooruit verplaatsen</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Alle beeldwissels één frame achteruit verplaatsen</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Beeldwissels verwijderen/exporteren</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Begin automatisch aanpassen aan de hand van volumewĳziging/beeldwissel</WaveformGuessStart>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
@@ -3122,6 +3143,9 @@ Probeer het later opnieuw.</XDownloadFailed>
     <Angle>Hoek</Angle>
     <BoxPerLine>Vak voor elke regel (gebruik omtrekkleur)</BoxPerLine>
     <BoxMultiLine>Eén vak (gebruik schaduwkleur)</BoxMultiLine>
+    <BoxPerLineShort>Vak voor elke regel</BoxPerLineShort>
+    <BoxMultiLineShort>Eén vak</BoxMultiLineShort>
+    <BoxType>Vaktype</BoxType>
     <DuplicateStyleNames>Dubbele stijlnamen: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3148,6 +3172,25 @@ Probeer het later opnieuw.</XDownloadFailed>
     <Info>Eén sync-punt past positie aan, twee of meer sync-punten passen positie én snelheid aan</Info>
     <ApplySync>Toepassen</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Tekst naar spraak</Title>
+    <Voice>Stem</Voice>
+    <TestVoice>Stem testen</TestVoice>
+    <DefaultVoice>Standaardstem</DefaultVoice>
+    <AddAudioToVideo>Audio aan video toevoegen (nieuw bestand)</AddAudioToVideo>
+    <GenerateSpeech>Spraak genereren</GenerateSpeech>
+    <ActorInfo>Rechtsklik om acteur aan stem toe te wijzen</ActorInfo>
+    <AdjustingSpeedXOfY>Snelheid aanpassen: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Audiospoor samenvoegen: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Spraak genereren: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Audiofragmenten controleren</ReviewAudioClips>
+    <CustomAudioEncoding>Aangepaste audiocodering</CustomAudioEncoding>
+    <ReviewInfo>Audiofragmenten controleren en bewerken/verwijderen</ReviewInfo>
+    <Play>Afspelen</Play>
+    <AutoContinue>Automatisch doorgaan</AutoContinue>
+    <Regenerate>Opnieuw genereren</Regenerate>
+    <Speed>Snelheid</Speed>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
     <UseSmpteTiming>SMPTE-timing voor huidige ondertitel gebruiken?</UseSmpteTiming>
@@ -3317,6 +3360,13 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <InspectItems>Items inspecteren</InspectItems>
     <AddBetterMatch>Betere overeenkomst toevoegen</AddBetterMatch>
     <Add>Toevoegen</Add>
+    <AddBetterMultiMatch>Betere multi-overeenkomst toevoegen</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Overeenkomst toevoegen of wijzigen</AddOrUpdateMatch>
+    <SelectPrevousMatch>Vorige overeenkomst selecteren</SelectPrevousMatch>
+    <SelectNextMatch>Volgende overeenkomst selecteren</SelectNextMatch>
+    <JumpPreviousMissingMatch>Naar vorige ontbrekende overeenkomst</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Naar volgende ontbrekende overeenkomst</JumpNextMissingMatch>
+    <FocusTextbox>Tekstvak activeren</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nieuwe map</Title>
@@ -3369,6 +3419,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <SplitAtCursor>Splitsen op cursor</SplitAtCursor>
     <MergeWithPrevious>Met vorige samenvoegen</MergeWithPrevious>
     <MergeWithNext>Met volgende samenvoegen</MergeWithNext>
+    <RunWhisperSelectedParagraph>Whisper uitvoeren op geselecteerde titel...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Tot vorige verlengen</ExtendToPrevious>
     <ExtendToNext>Tot volgende verlengen</ExtendToNext>
     <PlaySelection>Selectie afspelen</PlaySelection>
@@ -3381,6 +3432,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
     <InsertSubtitleHere>Ondertitel hier invoegen</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Ondertitelbestand hier invoegen...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
@@ -3408,6 +3460,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Waarde van X-TIMESTAMP-MAP-header gebruiken</UseXTimeStamp>
     <MergeLines>Titels met dezelfde tekst samenvoegen bij inladen</MergeLines>
+    <MergeStyleTags>Stijltags samenvoegen</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT-stijlen</Title>
@@ -3416,5 +3469,10 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <Title>Whisper (geavanceerd) – extra opdrachtregelargumenten</Title>
     <CommandLineArguments>Extra opdrachtregelargumenten voor Whisper:</CommandLineArguments>
     <Info>Let op: de opdrachtregelargumenten kunnen per Whisper-implementatie verschillen!</Info>
+    <Standard>Standaard</Standard>
+    <StandardAsia>Standaard (Azië)</StandardAsia>
+    <HighlightCurrentWord>Huidig woord markeren</HighlightCurrentWord>
+    <SingleWords>Afzonderlijke woorden</SingleWords>
+    <Sentence>Zinnen</Sentence>
   </WhisperAdvanced>
 </Language>

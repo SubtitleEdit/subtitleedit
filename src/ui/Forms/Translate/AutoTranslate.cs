@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
+                new DeepLXTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
             };
@@ -223,6 +224,21 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseTextBoxApiKey.Visible = true;
 
                 SelectFormality();
+
+                return;
+            }
+
+            if (engineType == typeof(DeepLXTranslate))
+            {
+                if (string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateDeepLXUrl))
+                {
+                    Configuration.Settings.Tools.AutoTranslateDeepLXUrl = "http://localhost:1188";
+                }
+
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
+                });
 
                 return;
             }
@@ -1054,6 +1070,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     UiUtil.ShowHelp("#translation");
                 }
             }
+            else if (linesTranslate == 0 && engineType == typeof(DeepLXTranslate) && exception.Message.Contains("No connection could be made because the target machine actively refused it"))
+            {
+                MessageBox.Show(
+                    this, "You need a local API to use DeepLX. Run ths docker command:  "+ Environment.NewLine + 
+                          "docker run -itd -p 1188:1188 ghcr.io/owo-network/deeplx:latest" + Environment.NewLine +
+                          Environment.NewLine +
+                          exception.Message + Environment.NewLine + 
+                          Environment.NewLine +
+                          "For more information visit: " + new DeepLXTranslate().Url,
+                    Text,
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Error);
+            }
             else if (linesTranslate == 0 &&
                      (nikseComboBoxUrl.Text.Contains("//192.", StringComparison.OrdinalIgnoreCase) ||
                       nikseComboBoxUrl.Text.Contains("//127.", StringComparison.OrdinalIgnoreCase) ||
@@ -1103,6 +1132,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.AutoTranslateDeepLUrl = nikseComboBoxUrl.Text.Trim();
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLXUrl = nikseComboBoxUrl.Text.Trim();
             }
 
             if (engineType == typeof(LibreTranslate) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
@@ -1380,9 +1414,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
         {
-            if (listViewSelected == null || 
-                listViewOther == null || 
-                listViewSelected.SelectedItems.Count == 0 || 
+            if (listViewSelected == null ||
+                listViewOther == null ||
+                listViewSelected.SelectedItems.Count == 0 ||
                 listViewSelected.TopItem == null)
             {
                 return;

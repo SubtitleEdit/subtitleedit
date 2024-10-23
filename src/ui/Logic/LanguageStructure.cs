@@ -3397,6 +3397,8 @@
             public string AutoContinue { get; set; }
             public string Regenerate { get; set; }
             public string Speed { get; set; }
+            public string Stability { get; set; }
+            public string Similarity { get; set; }
         }
 
         public class TimedTextSmpteTiming
