@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd} -vf scale={width}:{height} -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
+                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd} -vf scale={width}:{height} -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart -y {outputVideoFileName}".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
