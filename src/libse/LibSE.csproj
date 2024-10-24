@@ -6,7 +6,7 @@
 		<AssemblyName>libse</AssemblyName>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
