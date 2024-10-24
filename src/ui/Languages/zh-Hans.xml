@@ -3176,6 +3176,8 @@ Command line: {1} {2}
     <AutoContinue>自动继续</AutoContinue>
     <Regenerate>重新生成</Regenerate>
     <Speed>速度</Speed>
+    <Stability>稳定性</Stability>
+    <Similarity>相似性</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 时序</Title>
