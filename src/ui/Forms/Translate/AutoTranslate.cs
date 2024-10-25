@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Http;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 
@@ -1617,7 +1618,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private HttpClient _httpClient;
 
-        private HttpClient GetOllamaClient() => _httpClient ?? (_httpClient = new HttpClient());
+        private HttpClient GetOllamaClient() => _httpClient ?? (_httpClient = HttpClientFactory.CreateProxiedHttpClient());
 
         private void FillOllamaModels(string[] models)
         {

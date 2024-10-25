@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLXUrl;
 
-            _client = new HttpClient();
+            _client = HttpClientFactory.CreateProxiedHttpClient();
             _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
         }
 

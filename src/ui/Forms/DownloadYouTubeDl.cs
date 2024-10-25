@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = HttpClientFactory.CreateHttpClientDownloader())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(Url, downloadStream, new Progress<float>((progress) =>

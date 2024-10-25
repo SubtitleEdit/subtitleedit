@@ -6,17 +6,22 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.Http
 {
-    public static class DownloaderFactory
+    public static class HttpClientFactory
     {
-        public static IDownloader MakeHttpClient()
+        public static IDownloader CreateHttpClientDownloader()
         {
-            var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
+            var httpClient = CreateProxiedHttpClient();
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
                 return new LegacyDownloader(httpClient);
             }
 
             return new HttpClientDownloader(httpClient);
+        }
+
+        public static HttpClient CreateProxiedHttpClient()
+        {
+            return new HttpClient(CreateHandler(Configuration.Settings.Proxy));
         }
 
         private static HttpClientHandler CreateHandler(ProxySettings proxySettings)

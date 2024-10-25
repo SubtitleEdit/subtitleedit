@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 return;
             }
 
-            _client = new HttpClient();
+            _client = HttpClientFactory.CreateProxiedHttpClient();
             _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
             _client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "DeepL-Auth-Key " + _apiKey.Trim());
             _formality = string.IsNullOrWhiteSpace(_formality) ? "default" : _formality.Trim();

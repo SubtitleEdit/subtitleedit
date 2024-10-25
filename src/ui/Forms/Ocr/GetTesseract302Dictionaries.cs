@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             try
             {
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = HttpClientFactory.CreateHttpClientDownloader())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>

@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Http;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = new HttpClient(); //DownloaderFactory.MakeHttpClient();
+            _httpClient = HttpClientFactory.CreateProxiedHttpClient(); //HttpClientFactory.CreateHttpClientDownloader();
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
             _httpClient.BaseAddress = new Uri("https://translate.googleapis.com/");
