@@ -2643,6 +2643,7 @@
             public string WaveformBackgroundColor { get; set; }
             public string WaveformCursorColor { get; set; }
             public string WaveformTextColor { get; set; }
+            public string WaveformDuplicateTextWhileSplitting { get; set; }
             public string WaveformTextFontSize { get; set; }
             public string WaveformAndSpectrogramsFolderEmpty { get; set; }
             public string WaveformAndSpectrogramsFolderInfo { get; set; }
