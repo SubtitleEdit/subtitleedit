@@ -23,8 +23,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private bool _playing;
         private LibMpvDynamic _libMpv;
         private Timer _mpvDoneTimer;
+        private TextToSpeech.TextToSpeechEngine _engine;
 
-        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames)
+        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames, TextToSpeech.TextToSpeechEngine engine)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -45,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _textToSpeech = textToSpeech;
             _subtitle = subtitle;
             _fileNames = fileNames;
+            _engine = engine;
 
             SkipIndices = new List<int>();
 
@@ -264,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             var idx = listViewAudioClips.SelectedItems[0].Index;
-            using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx))
+            using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
             {
                 var dr = form.ShowDialog(this);
                 if (dr == DialogResult.OK)
