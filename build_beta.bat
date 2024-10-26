@@ -172,38 +172,32 @@ IF NOT EXIST "temp_zip\Icons\Black"        MD "temp_zip\Icons\Black"
 IF NOT EXIST "temp_zip\Icons\Black\VideoPlayer"        MD "temp_zip\Icons\Black\VideoPlayer"
 
 ECHO.
-COPY /Y /V "..\..\..\..\..\LICENSE.txt"               "temp_zip\"
-COPY /Y /V "..\..\..\..\..\Changelog.txt"             "temp_zip\"
-COPY /Y /V "..\..\..\..\..\preview.mkv"               "temp_zip\"
-COPY /Y /V "Hunspellx86.dll"                       "temp_zip\"
-COPY /Y /V "Hunspellx64.dll"                       "temp_zip\"
-COPY /Y /V "libse.dll"                             "temp_zip\"
-COPY /Y /V "zlib.net.dll"                          "temp_zip\"
-COPY /Y /V "NHunspell.dll"                         "temp_zip\"
-COPY /Y /V "UtfUnknown.dll"                        "temp_zip\"
-COPY /Y /V "Vosk.dll"                              "temp_zip\"
-COPY /Y /V "NCalc.dll"                             "temp_zip\"
-COPY /Y /V "..\..\..\DLLs\Interop.QuartzTypeLib.dll"  "temp_zip\"
-COPY /Y /V "System.Net.Http.Extensions.dll"        "temp_zip\"
-COPY /Y /V "Newtonsoft.Json.dll"                   "temp_zip\"
-COPY /Y /V "System.Net.Http.Primitives.dll"        "temp_zip\"
-COPY /Y /V "NAudio.Core.dll"                       "temp_zip\"
-COPY /Y /V "NAudio.WinMM.dll"                      "temp_zip\"
-COPY /Y /V "Microsoft.Win32.Registry.dll"          "temp_zip\"
-COPY /Y /V "SubtitleEdit.exe"                      "temp_zip\"
-COPY /Y /V "Languages\*.xml"                       "temp_zip\Languages\"
-COPY /Y /V "..\..\..\..\..\Dictionaries\*.*"          "temp_zip\Dictionaries\"
-COPY /Y /V "..\..\..\..\..\Ocr\*.*"                   "temp_zip\Ocr\"
-XCOPY /Y /V "..\..\..\..\..\Tesseract302\*.*"         "temp_zip\Tesseract302\" /S
-COPY /Y /V "..\..\..\..\..\Icons\*.ico"               "temp_zip\Icons\"
-COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\*.png"               "temp_zip\Icons\DefaultTheme"
-COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\VideoPlayer\*.png"               "temp_zip\Icons\DefaultTheme\VideoPlayer"
-COPY /Y /V "..\..\..\..\..\Icons\DarkTheme\*.png"               "temp_zip\Icons\DarkTheme"
-COPY /Y /V "..\..\..\..\..\Icons\DarkTheme\VideoPlayer\*.png"               "temp_zip\Icons\DarkTheme\VideoPlayer"
-COPY /Y /V "..\..\..\..\..\Icons\Legacy\*.png"               "temp_zip\Icons\Legacy"
-COPY /Y /V "..\..\..\..\..\Icons\Legacy\VideoPlayer\*.png"               "temp_zip\Icons\Legacy\VideoPlayer"
-COPY /Y /V "..\..\..\..\..\Icons\Black\*.png"               "temp_zip\Icons\Black"
-COPY /Y /V "..\..\..\..\..\Icons\Black\VideoPlayer\*.png"               "temp_zip\Icons\Black\VideoPlayer"
+set dest_dir=temp_zip\
+set src_root=..\..\..\..\..\
+REM Copy specific files
+COPY /Y /V "%src_root%LICENSE.txt" "%dest_dir%"
+COPY /Y /V "%src_root%Changelog.txt" "%dest_dir%"
+COPY /Y /V "%src_root%preview.mkv" "%dest_dir%"
+REM Copy all DLL files in current directory
+COPY /Y /V "*.dll" "%dest_dir%"
+REM Copy additional DLL files from specific directory
+COPY /Y /V "%src_root%DLLs\Interop.QuartzTypeLib.dll" "%dest_dir%"
+REM Copy executable
+COPY /Y /V "SubtitleEdit.exe" "%dest_dir%"
+REM Copy other file types into respective directories
+COPY /Y /V "Languages\*.xml" "%dest_dir%Languages\"
+COPY /Y /V "%src_root%Dictionaries\*.*" "%dest_dir%Dictionaries\"
+COPY /Y /V "%src_root%Ocr\*.*" "%dest_dir%Ocr\"
+XCOPY /Y /V "%src_root%Tesseract302\*.*" "%dest_dir%Tesseract302\" /S
+COPY /Y /V "%src_root%Icons\*.ico" "%dest_dir%Icons\"
+COPY /Y /V "%src_root%Icons\DefaultTheme\*.png" "%dest_dir%Icons\DefaultTheme"
+COPY /Y /V "%src_root%Icons\DefaultTheme\VideoPlayer\*.png" "%dest_dir%Icons\DefaultTheme\VideoPlayer"
+COPY /Y /V "%src_root%Icons\DarkTheme\*.png" "%dest_dir%Icons\DarkTheme"
+COPY /Y /V "%src_root%Icons\DarkTheme\VideoPlayer\*.png" "%dest_dir%Icons\DarkTheme\VideoPlayer"
+COPY /Y /V "%src_root%Icons\Legacy\*.png" "%dest_dir%Icons\Legacy"
+COPY /Y /V "%src_root%Icons\Legacy\VideoPlayer\*.png" "%dest_dir%Icons\Legacy\VideoPlayer"
+COPY /Y /V "%src_root%Icons\Black\*.png" "%dest_dir%Icons\Black"
+COPY /Y /V "%src_root%Icons\Black\VideoPlayer\*.png" "%dest_dir%Icons\Black\VideoPlayer"
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SubtitleEditBeta.zip" * >NUL

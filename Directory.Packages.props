@@ -6,6 +6,7 @@
     <PackageVersion Include="MSTest" Version="3.6.0" />
     <PackageVersion Include="System.Drawing.Common" Version="8.0.8" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    <PackageVersion Include="System.Resources.Extensions" Version="8.0.0" />
     <PackageVersion Include="UTF.Unknown" Version="2.5.1" />
     <PackageVersion Include="zlib.net-mutliplatform" Version="1.0.8" />
     <PackageVersion Include="Microsoft.Net.Http" Version="2.2.29" />
