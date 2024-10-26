@@ -3187,6 +3187,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AutoContinue>자동 계속</AutoContinue>
     <Regenerate>재생성</Regenerate>
     <Speed>속도</Speed>
+    <Stability>안정성</Stability>
+    <Similarity>유사성</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 타이밍</Title>
