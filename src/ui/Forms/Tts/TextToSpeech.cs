@@ -128,6 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right;
             labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
             labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
+            nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
