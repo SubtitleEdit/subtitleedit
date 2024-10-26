@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return 60.0;
                     }
 
-                    return 30.0; // should be DiskFormatcode STL30.01
+                    return 30.0; // should be DiskFormatCode STL30.01
                 }
             }
 
@@ -282,34 +282,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 CommentFlag = 0;
             }
 
-            public byte[] GetBytes(EbuGeneralSubtitleInformation header)
+            public byte[] GetBytesExtra(EbuGeneralSubtitleInformation header, MemoryStream extra)
             {
-                var buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
+                var buffer = SaveHeader(header);
+                var bytes = extra.ToArray();
+                for (var i = 0; i < 112; i++)
+                {
+                    if (i < bytes.Length)
+                    {
+                        buffer[16 + i] = bytes[i];
+                    }
+                    else
+                    {
+                        buffer[16 + i] = 0x8f;
+                    }
+                }
 
-                buffer[0] = SubtitleGroupNumber;
-                var temp = BitConverter.GetBytes(SubtitleNumber);
-                buffer[1] = temp[0];
-                buffer[2] = temp[1];
-                buffer[3] = ExtensionBlockNumber;
-                buffer[4] = CumulativeStatus;
+                return buffer;
+            }
 
-                var frames = GetFrameFromMilliseconds(TimeCodeInMilliseconds, header.FrameRate, out var extraSeconds);
-                var tc = new TimeCode(TimeCodeInHours, TimeCodeInMinutes, TimeCodeInSeconds + extraSeconds, 0);
-                buffer[5] = (byte)tc.Hours;
-                buffer[6] = (byte)tc.Minutes;
-                buffer[7] = (byte)tc.Seconds;
-                buffer[8] = frames;
-
-                frames = GetFrameFromMilliseconds(TimeCodeOutMilliseconds, header.FrameRate, out extraSeconds);
-                tc = new TimeCode(TimeCodeOutHours, TimeCodeOutMinutes, TimeCodeOutSeconds + extraSeconds, 0);
-                buffer[9] = (byte)tc.Hours;
-                buffer[10] = (byte)tc.Minutes;
-                buffer[11] = (byte)tc.Seconds;
-                buffer[12] = frames;
-
-                buffer[13] = VerticalPosition;
-                buffer[14] = JustificationCode;
-                buffer[15] = CommentFlag;
+            public byte[] GetBytes(EbuGeneralSubtitleInformation header, MemoryStream extra)
+            {
+                var buffer = SaveHeader(header);
 
                 var encoding = GetEncoding(header.CodePageNumber);
                 if (header.LanguageCode == LanguageCodeChinese)
@@ -338,6 +332,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             buffer[16 + i] = 0x8f;
                         }
+                    }
+
+                    if (byteList.Count > 112)
+                    {
+                        extra.Write(byteList.ToArray(), 112, byteList.Count - 112);
                     }
 
                     return buffer;
@@ -572,6 +571,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         buffer[16 + i] = 0x8f;
                     }
                 }
+
+                if (bytes.Length > 112)
+                {
+                    extra.Write(bytes, 112, bytes.Length - 112);
+                }
+
+                return buffer;
+            }
+
+            private byte[] SaveHeader(EbuGeneralSubtitleInformation header)
+            {
+                var buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
+
+                buffer[0] = SubtitleGroupNumber;
+                var temp = BitConverter.GetBytes(SubtitleNumber);
+                buffer[1] = temp[0];
+                buffer[2] = temp[1];
+                buffer[3] = ExtensionBlockNumber;
+                buffer[4] = CumulativeStatus;
+
+                var frames = GetFrameFromMilliseconds(TimeCodeInMilliseconds, header.FrameRate, out var extraSeconds);
+                var tc = new TimeCode(TimeCodeInHours, TimeCodeInMinutes, TimeCodeInSeconds + extraSeconds, 0);
+                buffer[5] = (byte)tc.Hours;
+                buffer[6] = (byte)tc.Minutes;
+                buffer[7] = (byte)tc.Seconds;
+                buffer[8] = frames;
+
+                frames = GetFrameFromMilliseconds(TimeCodeOutMilliseconds, header.FrameRate, out extraSeconds);
+                tc = new TimeCode(TimeCodeOutHours, TimeCodeOutMinutes, TimeCodeOutSeconds + extraSeconds, 0);
+                buffer[9] = (byte)tc.Hours;
+                buffer[10] = (byte)tc.Minutes;
+                buffer[11] = (byte)tc.Seconds;
+                buffer[12] = frames;
+
+                buffer[13] = VerticalPosition;
+                buffer[14] = JustificationCode;
+                buffer[15] = CommentFlag;
                 return buffer;
             }
 
@@ -1532,8 +1568,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
                 }
 
-                buffer = tti.GetBytes(header);
-                stream.Write(buffer, 0, buffer.Length);
+                var extra = new MemoryStream();
+                buffer = tti.GetBytes(header, extra);
+                if (extra.Length > 0)
+                {
+                    buffer[3] = 0; // ExtensionBlockNumber 
+                    stream.Write(buffer, 0, buffer.Length);
+
+                    buffer = tti.GetBytesExtra(header, extra);
+                    stream.Write(buffer, 0, buffer.Length);
+                }
+                else
+                {
+                    stream.Write(buffer, 0, buffer.Length);
+                }
                 subtitleNumber++;
             }
             return true;
@@ -1606,8 +1654,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-                        EbuGeneralSubtitleInformation header = ReadHeader(buffer);
+                        var buffer = FileUtil.ReadAllBytesShared(fileName);
+                        var header = ReadHeader(buffer);
                         if (header.DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL25", StringComparison.Ordinal) ||
