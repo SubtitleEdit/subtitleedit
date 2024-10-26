@@ -43,16 +43,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
             nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
 
-            if (engine.Id == TextToSpeech.TextToSpeechEngineId.ElevenLabs)
-            {
-            }
-            else
+            if (engine.Id != TextToSpeech.TextToSpeechEngineId.ElevenLabs)
             {
                 labelStability.Visible = false;
                 labelSimilarity.Visible = false;
                 nikseUpDownStability.Visible = false;
                 nikseUpDownSimilarity.Visible = false;
                 TextBoxReGenerate.Height = buttonOK.Top - TextBoxReGenerate.Top - 10;
+                nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
             }
         }
 
