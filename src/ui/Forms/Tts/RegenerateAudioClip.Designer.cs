@@ -148,6 +148,7 @@
             // 
             // nikseUpDownStability
             // 
+            this.nikseUpDownStability.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseUpDownStability.BackColor = System.Drawing.SystemColors.Window;
             this.nikseUpDownStability.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.nikseUpDownStability.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
@@ -186,6 +187,7 @@
             // 
             // nikseUpDownSimilarity
             // 
+            this.nikseUpDownSimilarity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseUpDownSimilarity.BackColor = System.Drawing.SystemColors.Window;
             this.nikseUpDownSimilarity.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.nikseUpDownSimilarity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
@@ -224,6 +226,7 @@
             // 
             // labelSimilarity
             // 
+            this.labelSimilarity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSimilarity.AutoSize = true;
             this.labelSimilarity.Location = new System.Drawing.Point(178, 183);
             this.labelSimilarity.Name = "labelSimilarity";
@@ -233,6 +236,7 @@
             // 
             // labelStability
             // 
+            this.labelStability.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStability.AutoSize = true;
             this.labelStability.Location = new System.Drawing.Point(29, 183);
             this.labelStability.Name = "labelStability";
