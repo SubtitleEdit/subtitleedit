@@ -13,8 +13,13 @@
    * Update Polish translation - thx admas
    * Update Italian translation - thx bovirus
    * Update Romanian installer translation - thx mircea
+   * Update Dutch translation - thx Flitskikker
    * Update Whisper CPP to V1.7.1
+   * Update ffmpeg to 7.1
+   * Improvements for "Beautify time codes" - thx Flitskikker
+   * Add new options for TTS with ElevenLabs - thx cvrle77
    * Add large-v3-turbo to Whisper OpenAI/CPP
+   * Update Anthropic Claude Sonnet model name to "claude-3-5-sonnet-latest"
    * Minor improvements for color picker - thx MitchSirco/Siamak
    * Fix some wrong OCR (English) corrections - thx Zoltan
    * Add Icelandic language to ChatGPT + Gemini - thx dhofverberg
