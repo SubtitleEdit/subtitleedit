@@ -206,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return;
             }
 
+            _libMpv?.Stop();
             buttonPlay.Enabled = false;
             _playing = true;
             _abortPlay = false;
@@ -264,6 +265,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 return;
             }
+
+            buttonStop_Click(null, null);
 
             var idx = listViewAudioClips.SelectedItems[0].Index;
             using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
