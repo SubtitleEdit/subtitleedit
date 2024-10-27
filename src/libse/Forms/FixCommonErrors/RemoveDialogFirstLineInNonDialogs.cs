@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var fixAction = Language.RemoveDialogFirstInNonDialogs;
             var noOfFixes = 0;
+            const char hyphenMinus = '-'; // Hyphen-Minus (-, U+002D)
+            const char hyphen = '‐'; // Hyphen (‐, U+2010)
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -22,15 +24,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var noHtml = HtmlUtil.RemoveHtmlTags(text, true).TrimStart();
 
 
-                var count = Utilities.CountTagInText(text, '-') + Utilities.CountTagInText(text, '‐');
-                if (count == 0 || !noHtml.StartsWith('-') && !noHtml.StartsWith('‐'))
+                var count = Utilities.CountTagInText(text, hyphenMinus) + Utilities.CountTagInText(text, hyphen);
+                if (count == 0 || !noHtml.StartsWith(hyphenMinus) && !noHtml.StartsWith(hyphen))
                 {
                     continue;
                 }
 
                 // test the two different dashes
-                text = RemoveDash(text, noHtml, '-'); 
-                text = RemoveDash(text, noHtml, '‐');
+                text = RemoveDash(text, noHtml, hyphenMinus); 
+                text = RemoveDash(text, noHtml, hyphen);
 
                 if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {
