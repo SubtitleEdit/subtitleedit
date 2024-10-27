@@ -56,6 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonReGenerate_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
+
             Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
             Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
 
@@ -86,21 +88,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
             DialogResult = DialogResult.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
             DialogResult = DialogResult.OK;
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
+
             if (FileNameAndSpeedFactor == null)
             {
                 return;
             }
 
+            buttonPlay.Enabled = false;
             var waveFileName = FileNameAndSpeedFactor.Filename;
 
             if (_libMpv != null)
@@ -133,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
                     soundPlayer.PlaySync();
+                    buttonPlay.Enabled = true;
                 }
             }
         }
