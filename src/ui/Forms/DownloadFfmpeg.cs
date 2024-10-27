@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2024-05/ffmpeg-2024-05-23.zip";
+            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v7-1/ffmpeg-7.1.zip";
             if (IntPtr.Size == 32)
             {
                 url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
             {
-                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2024-03-25/ffprobe-2024-03-25-git-ecdc94b97f.zip";
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v7-1/ffprobe-7.1.zip";
             }
 
             try
@@ -115,8 +115,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             var sha512Hashes = new[]
             {
-                "c07de58f2006565d7864bea7f3f8e0648e3b0596b0bab94fb1d8ff5a18ea7626bacc8c5206049549c01cda5176350df311e469d6f1f2bf99d968d55817852d4d", // ffprobe-2024-03-25-git-ecdc94b97f
-                "fe70d60e9fc0a59c24c0be15f0a8d8af33f1fb7d0027b6fcccce72b6dc41a4023ae276d3e033010b6f628ca6c8d34fc932052622e16a23b5258ec959d20daca9", // ffmpeg-2024-05-23
+                "42a42cbed3175165a71cc573960306f422373a3f30864cf81b476675bdb485aca81d904f1f5c67b0a3397b62a468ca4a4fcad6507103e7b8908e56ab63be6255", // ffmpeg
+                "74db8a0b8226c3104c52a986f3bd000b6eb57ab4a017d44aa10c00fb9310ce06a634e581cce76c5d82410dfd7b6cddfaceb8b7bdca17ee6c39e7213843041ab4", // ffprobe
             };
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             if (!sha512Hashes.Contains(hash))

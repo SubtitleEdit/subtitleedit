@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right;
             labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
             labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
+            nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -259,7 +260,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 if (checkBoxShowPreview.Checked)
                 {
-                    using (var form = new ReviewAudioClips(this, _subtitle, fileNameAndSpeedFactors))
+                    var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+                    using (var form = new ReviewAudioClips(this, _subtitle, fileNameAndSpeedFactors, engine))
                     {
                         var dr = form.ShowDialog(this);
                         if (dr != DialogResult.OK)
@@ -1138,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         }
                     }
 
-                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture); 
+                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture);
                     var similarity = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity, 1).ToString(CultureInfo.InvariantCulture);
                     var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity} }} }}";
                     var content = new StringContent(data, Encoding.UTF8);
@@ -2133,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using(var httpClient = HttpClientFactory.CreateProxiedHttpClient())
+                using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
@@ -2494,7 +2496,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             using (var form = new TtsAudioEncoding())
             {
-                 form.ShowDialog(this);
+                form.ShowDialog(this);
             }
         }
 

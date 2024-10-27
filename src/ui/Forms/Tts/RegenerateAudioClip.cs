@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly int _index;
         private LibMpvDynamic _libMpv;
 
-        public RegenerateAudioClip(TextToSpeech textToSpeech, Subtitle subtitle, int idx)
+        public RegenerateAudioClip(TextToSpeech textToSpeech, Subtitle subtitle, int idx, TextToSpeech.TextToSpeechEngine engine)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -29,6 +29,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             Text = LanguageSettings.Current.ExportCustomText.Edit;
             labelText.Text = LanguageSettings.Current.General.Text;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
+            labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
+            labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
             buttonReGenerate.Text = LanguageSettings.Current.TextToSpeech.Regenerate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -38,10 +40,27 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             TextBoxReGenerate.Text = subtitle.Paragraphs[idx].Text;
             textToSpeech.SetCurrentVoices(nikseComboBoxVoice);
             buttonPlay.Enabled = false;
+            nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
+            nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
+
+            if (engine.Id != TextToSpeech.TextToSpeechEngineId.ElevenLabs)
+            {
+                labelStability.Visible = false;
+                labelSimilarity.Visible = false;
+                nikseUpDownStability.Visible = false;
+                nikseUpDownSimilarity.Visible = false;
+                TextBoxReGenerate.Height = buttonOK.Top - TextBoxReGenerate.Top - 10;
+                nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
+            }
         }
 
         private void buttonReGenerate_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
+
+            Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
+            Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+
             var paragraph = _subtitle.Paragraphs[_index];
             paragraph.Text = TextBoxReGenerate.Text.Trim();
 
@@ -69,21 +88,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
             DialogResult = DialogResult.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
             DialogResult = DialogResult.OK;
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
+            _libMpv?.Stop();
+
             if (FileNameAndSpeedFactor == null)
             {
                 return;
             }
 
+            buttonPlay.Enabled = false;
             var waveFileName = FileNameAndSpeedFactor.Filename;
 
             if (_libMpv != null)
@@ -116,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
                     soundPlayer.PlaySync();
+                    buttonPlay.Enabled = true;
                 }
             }
         }
