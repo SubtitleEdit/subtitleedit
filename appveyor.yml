@@ -1,5 +1,4 @@
 version: "{build}"
-
 image: Visual Studio 2022
 
 platform:
@@ -8,14 +7,17 @@ platform:
 configuration:
   - Release
 
+environment:
+  EnableNuGetPackageRestore: false
+
 build_script:
-  - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - dotnet build "SubtitleEdit.sln" --configuration %CONFIGURATION%
 
 test_script:
-  - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
+  - dotnet test "src/Test/Test.csproj" --configuration %CONFIGURATION% --logger:trx
 
 cache:
-  - 'packages -> **\src\ui\packages.config'
+  - packages -> **\Directory.Packages.props
 
 matrix:
   fast_finish: true
