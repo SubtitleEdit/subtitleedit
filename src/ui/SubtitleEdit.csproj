@@ -269,6 +269,7 @@
     </HunspellAssemblies>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" />
     <PackageReference Include="Microsoft.Net.Http" />
     <PackageReference Include="Microsoft.Win32.Registry" />
     <PackageReference Include="NAudio.Core" />

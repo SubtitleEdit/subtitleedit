@@ -3,32 +3,69 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using DiscordRPC;
+using System.Timers;
 
 namespace Nikse.SubtitleEdit
 {
     internal static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        private static DiscordRPCMain discordRpcMain;
+        private static System.Windows.Forms.Timer timer;
+        private static string lastFileName = "";
+
         [STAThread]
         private static void Main()
         {
 #if !DEBUG
-            // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += Application_ThreadException;
-
-            // Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-
-            // Add the event handler for handling non-UI thread exceptions to the event.
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Initialize Discord RPC
+            discordRpcMain = new DiscordRPCMain();
+            discordRpcMain.Initialize();
+
+            // Set up the timer to monitor the window title
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = 2000; // Check every 2 seconds
+            timer.Tick += CheckWindowTitle;
+            timer.Start();
+
             Application.Run(new Main());
+
+            // Shutdown Discord RPC
+            discordRpcMain.Shutdown();
         }
+
+        private static void CheckWindowTitle(object sender, EventArgs e)
+        {
+            try
+            {
+                var process = Process.GetCurrentProcess();
+                var windowTitle = process.MainWindowTitle;
+
+                if (!string.IsNullOrEmpty(windowTitle) && windowTitle != lastFileName)
+                {
+                    lastFileName = windowTitle;
+
+                    // Extract name from the window
+                    var fileName = windowTitle.Contains(" - ") ? windowTitle.Split(new string[] { " - " }, StringSplitOptions.None)[0] : "No file opened";
+
+                    discordRpcMain.UpdatePresence($"Editing: {fileName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating Discord RPC: " + ex.Message);
+            }
+        }
+
+
 
         // Handle the UI exceptions by showing a dialog box, and asking the user whether or not they wish to abort execution.
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
