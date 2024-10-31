@@ -220,7 +220,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (line.Count > 0)
                     {
                         line.Add(t);
-                        if (index < matches.Count - 1 && matches[index + 1].Text == Environment.NewLine)
+                        if (index < matches.Count - 1 && ":)]".Contains(matches[index + 1].ToString()))
+                        {
+                            continue;
+                        }
+                        else if (index < matches.Count - 1 && matches[index + 1].Text == Environment.NewLine)
                         {
                             result.Add(new SplitItem { Matches = line, Separator = Environment.NewLine });
                             skipNext = true;
