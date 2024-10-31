@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public Keys MainTextBoxMoveLastWordDownCurrent { get; set; }
         public Keys MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
+        public Keys MainTextBoxMoveFirstWordToPrev { get; set; }
         public Keys MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public Keys MainTextBoxSelectionToLower { get; set; }
         public Keys MainTextBoxSelectionToUpper { get; set; }
@@ -458,6 +459,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             MainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
             MainTextBoxMoveFromCursorToNextAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
+            MainTextBoxMoveFirstWordToPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordToPrev);
             MainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             MainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             MainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);

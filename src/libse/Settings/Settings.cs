@@ -7914,6 +7914,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordToPrev");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFirstWordToPrev = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                 {
@@ -10166,6 +10172,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFromCursorToNext", shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordToPrev", shortcuts.MainTextBoxMoveFirstWordToPrev);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);
