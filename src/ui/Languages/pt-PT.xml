@@ -2541,14 +2541,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ContinuationStyleCustom>Personalizado</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/comprimento da linha</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Contar todos os caracteres</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar todos excepto o espaço, apenas cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar todos excepto o espaço, apenas CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Contar todos excepto o espaço</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composição</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composição, não espaço</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, apenas cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, apenas CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -3189,6 +3189,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <AutoContinue>Continuar automaticamente</AutoContinue>
     <Regenerate>Regenerar</Regenerate>
     <Speed>Velocidade</Speed>
+    <Stability>Estabilidade</Stability>
+    <Similarity>Semelhança</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Temporização SMPTE</Title>

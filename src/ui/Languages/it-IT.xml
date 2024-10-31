@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.8</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 23.10.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.10.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2540,14 +2540,14 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ContinuationStyleCustom>Personalizzato</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/lunghezza linea</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Conta tutti i caratteri</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Conta tutto tranne gli spazi, solo cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Conta tutto tranne gli spazi, solo CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Conta tutto tranne gli spazi</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, spazio 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Includi caratteri di composizione</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Includi caratteri composizione, non lo spazio</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Nessuno spazio o punteggiatura ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nessuno spazio o punteggiatura, solo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nessuno spazio o punteggiatura, solo CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Sostituisci con simbolo musicale:</MusicSymbol>
     <MusicSymbolsReplace>Caratteri sostitutivi (separati da "Virgole")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Correggi errori OCR comuni - usa anche regole forti</FixCommonOcrErrorsUseHardcodedRules>
