@@ -7690,6 +7690,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxMoveFromCursorToNext":
                     language.Settings.MainTextBoxMoveFromCursorToNext = reader.Value;
                     break;
+                case "Settings/MainTextBoxMoveFirstWordToPrev":
+                    language.Settings.MainTextBoxMoveFirstWordToPrev = reader.Value;
+                    break;
                 case "Settings/MainTextBoxMoveLastWordDownCurrent":
                     language.Settings.MainTextBoxMoveLastWordDownCurrent = reader.Value;
                     break;
