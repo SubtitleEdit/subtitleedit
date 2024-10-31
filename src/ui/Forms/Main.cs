@@ -11893,6 +11893,53 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void MoveFirstWordToPrev(SETextBox tb)
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex <= 0)
+            {
+                return;
+            }
+
+            var prev = _subtitle.GetParagraphOrDefault(firstIndex - 1);
+            var current = _subtitle.GetParagraphOrDefault(firstIndex);
+
+            if (tb == textBoxListViewTextOriginal)
+            {
+                prev = Utilities.GetOriginalParagraph(firstIndex - 1, prev, _subtitleOriginal.Paragraphs);
+                current = Utilities.GetOriginalParagraph(firstIndex, current, _subtitleOriginal.Paragraphs);
+            }
+
+            if (prev != null && current != null)
+            {
+                var moveUpDown = new MoveWordUpDown(prev.Text, current.Text);
+                moveUpDown.MoveWordUp();
+                if (moveUpDown.S1 != prev.Text && moveUpDown.S2 != current.Text)
+                {
+                    MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+                    prev.Text = moveUpDown.S1;
+                    current.Text = moveUpDown.S2;
+                    if (tb == textBoxListViewTextOriginal)
+                    {
+                        SubtitleListview1.SetOriginalText(firstIndex - 1, prev.Text);
+                        SubtitleListview1.SetOriginalText(firstIndex, current.Text);
+                    }
+                    else
+                    {
+                        SubtitleListview1.SetText(firstIndex - 1, prev.Text);
+                        SubtitleListview1.SetText(firstIndex, current.Text);
+                    }
+
+                    var selectionStart = textBoxListViewText.SelectionStart;
+                    tb.Text = current.Text;
+                    if (selectionStart >= 0)
+                    {
+                        tb.SelectionStart = selectionStart;
+                    }
+                }
+            }
+        }
+
         private void MoveLastWordDown(SETextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
@@ -18711,6 +18758,19 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     MoveTextFromCursorToNext(textBoxListViewText);
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordToPrev)
+            {
+                if (textBoxListViewTextOriginal.Focused)
+                {
+                    MoveFirstWordToPrev(textBoxListViewTextOriginal); 
+                }
+                else
+                {
+                    MoveFirstWordToPrev(textBoxListViewText); 
                 }
 
                 e.SuppressKeyPress = true;
