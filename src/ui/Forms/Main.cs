@@ -2474,6 +2474,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
         private void DoAutoSave()
         {
             _lastAutoSave = DateTime.UtcNow.Ticks + 1009000;
