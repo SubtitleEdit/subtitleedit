@@ -55,13 +55,13 @@ namespace Nikse.SubtitleEdit
 
                     // Extract name from the window
                     var fileName = windowTitle.Contains(" - ") ? windowTitle.Split(new string[] { " - " }, StringSplitOptions.None)[0] : "No file opened";
-
                     discordRpcMain.UpdatePresence($"Editing: {fileName}");
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("Error updating Discord RPC: " + ex.Message);
+                timer.Stop();
+                timer.Dispose();
             }
         }
 
