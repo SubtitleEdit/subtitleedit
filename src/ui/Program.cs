@@ -3,8 +3,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using DiscordRPC;
-using System.Timers;
 
 namespace Nikse.SubtitleEdit
 {
