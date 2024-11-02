@@ -663,7 +663,7 @@ namespace Nikse.SubtitleEdit.Forms
             return _allowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);
         }
 
-        public void ShowStatus(string message)
+        private void ShowStatus(string message)
         {
             message = message.Replace(Environment.NewLine, "  ");
             if (message.Length > 103)
@@ -712,10 +712,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (_nameList == null)
             {
                 string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
-                // Will contains both one word names and multi names
+                // Will contains both one-word names and multi names
                 var namesList = new NameList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _nameList = namesList.GetNames();
-                // Multi word names.
+                // Multi-word names.
                 foreach (var name in namesList.GetMultiNames())
                 {
                     _nameList.Add(name);
@@ -1474,7 +1474,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
 
             // save de-selected fixes
-            var deSelectedFixes = new List<string>();
+            var deSelectedFixes = new HashSet<string>();
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (!item.Checked)
@@ -1751,7 +1751,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+                if (lines.Count == 2 && lines[0].HasSentenceEnding())
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
