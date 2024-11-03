@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
@@ -11,6 +12,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixCommas { get; set; } = "Fix commas";
         }
+
+        private static readonly Lazy<Dictionary<Regex, string>> LazyCommaRegex = new Lazy<Dictionary<Regex, string>>(() => new Dictionary<Regex, string>
+        {
+            { new Regex(@"([\p{L}\d\s]) *،،([\p{L}\d\s])", RegexOptions.Compiled), "$1،$2" },
+            { new Regex(@"([\p{L}\d\s]) *، *، *،([\p{L}\d\s])", RegexOptions.Compiled), "$1...$2" },
+            { new Regex(@"([\p{L}\d\s]) *، *، *،$", RegexOptions.Compiled), "$1..." },
+            { new Regex(@"([\p{L}\d\s]) *،\s+،([\p{L}\d\s])", RegexOptions.Compiled), "$1،$2" },
+            { new Regex(@"،(\p{L})", RegexOptions.Compiled), "، $1" },
+        });
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -30,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var s = p.Text;
                     var oldText = s;
 
-                    if (p.Text.IndexOf(',') >= 0)
+                    if (p.Text.Contains(','))
                     {
                         s = commaDouble.Replace(s, "$1,$2");
                         s = commaTriple.Replace(s, "$1...$2");
@@ -38,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = commaWhiteSpaceBetween.Replace(s, "$1,$2");
 
                         var match = commaFollowedByLetter.Match(s);
-                        if (match.Success && (!(match.Index > 0 && s[match.Index-1] == 'ό' && s.Substring(match.Index).StartsWith(",τι", StringComparison.OrdinalIgnoreCase)) || callbacks.Language != "el"))
+                        if (match.Success && (!(match.Index > 0 && s[match.Index - 1] == 'ό' && s.Substring(match.Index).StartsWith(",τι", StringComparison.OrdinalIgnoreCase)) || callbacks.Language != "el"))
                         {
                             s = commaFollowedByLetter.Replace(s, ", $1");
                         }
@@ -46,18 +56,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = RemoveCommaBeforeSentenceEndingChar(s, ',');
                     }
 
-                    if (p.Text.IndexOf('،') >= 0)
+                    if (p.Text.Contains('،'))
                     {
-                        var commaDoubleAr = new Regex(@"([\p{L}\d\s]) *،،([\p{L}\d\s])");
-                        var commaTripleAr = new Regex(@"([\p{L}\d\s]) *، *، *،([\p{L}\d\s])");
-                        var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s]) *، *، *،$");
-                        var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s]) *،\s+،([\p{L}\d\s])");
-                        var commaFollowedByLetterAr = new Regex(@"،(\p{L})");
-                        s = commaDoubleAr.Replace(s, "$1،$2");
-                        s = commaTripleAr.Replace(s, "$1...$2");
-                        s = commaTripleEndOfLineAr.Replace(s, "$1...");
-                        s = commaWhiteSpaceBetweenAr.Replace(s, "$1،$2");
-                        s = commaFollowedByLetterAr.Replace(s, "، $1");
+                        foreach (var keyValue in LazyCommaRegex.Value)
+                        {
+                            s = keyValue.Key.Replace(s, keyValue.Value);
+                        }
 
                         s = RemoveCommaBeforeSentenceEndingChar(s, '،');
                     }
@@ -75,30 +79,33 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static string RemoveCommaBeforeSentenceEndingChar(string input, char comma)
         {
-            var s = input;
-            for (var i = s.Length - 1; i >= 0; i--)
+            // foo,,,,! bar => foo! bar
+            var len = input.Length;
+            var chars = input.ToCharArray();
+            int pos = 0;
+            for (int i = 0; i < len; i++)
             {
-                var ch = s[i];
-                if (i - 1 >= 0 && s[i - 1] == comma && IsSentenceEndingChar(ch))
+                var ch = input[i];
+                if (ch == comma && IsNextCharSentenceClosingSymbol(i, chars))
                 {
-                    var k = i;
-
-                    do
-                    {
-                        i--;
-                    } while (i - 1 >= 0 && s[i - 1] == comma);
-
-                    // remove commas
-                    if (k - i > 0)
-                    {
-                        s = s.Remove(i, k - i);
-                    }
+                    continue;
                 }
+
+                chars[pos++] = ch;
             }
 
-            return s;
-        }
+            return new string(chars, 0, pos);
 
-        private static bool IsSentenceEndingChar(char ch) => ch == '.' || ch == '!' || ch == '?' || ch == ')' || ch == ']' || ch == '؟';
+            bool IsNextCharSentenceClosingSymbol(int index, char[] characters)
+            {
+                if (index + 1 < characters.Length)
+                {
+                    var nextChar = characters[index + 1];
+                    return nextChar == '.' || nextChar == '?' || nextChar == '!' || nextChar == '(';
+                }
+
+                return false;
+            }
+        }
     }
 }
