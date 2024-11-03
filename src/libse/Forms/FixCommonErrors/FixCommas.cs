@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (index + 1 < characters.Length)
                 {
                     var nextChar = characters[index + 1];
-                    return nextChar == '.' || nextChar == '?' || nextChar == '!' || nextChar == '(';
+                    return nextChar == '.' || nextChar == '?' || nextChar == '!' || nextChar == ')' || nextChar == ']' || nextChar == '؟';
                 }
 
                 return false;
