@@ -2784,11 +2784,12 @@ Command line: {1} {2}
     <ListViewListErrors>列出错误</ListViewListErrors>
     <ListViewListSortByX>按{0}排序</ListViewListSortByX>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到下一条字幕，然后转到下一条</MainTextBoxMoveFromCursorToNext>
-    <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxMoveLastWordDown>将前行的最后一个单词移到次行</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>将次行的第一个单词移到前行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至前行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到次行字幕，然后转到次行</MainTextBoxMoveFromCursorToNext>
+     <MainTextBoxMoveFirstWordToPrev>将行首第一个单词上移至前行行末</MainTextBoxMoveFirstWordToPrev>
+    <MainTextBoxMoveLastWordDownCurrent>将前行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
     <MainTextBoxSelectionToggleCasing>切换所选内容的大小写（首字母大写/大写/小写）</MainTextBoxSelectionToggleCasing>
