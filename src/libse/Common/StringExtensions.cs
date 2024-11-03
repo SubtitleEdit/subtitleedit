@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
-        private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
+        public static readonly IReadOnlyCollection<char> NeutralSentenceEndingChars = new HashSet<char>
         {
             '.', '!', '?', ']', ')', '…', '♪', '؟', '。', '？'
         };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
@@ -98,13 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             bool IsNextCharSentenceClosingSymbol(int index, char[] characters)
             {
-                if (index + 1 < characters.Length)
-                {
-                    var nextChar = characters[index + 1];
-                    return nextChar == '.' || nextChar == '?' || nextChar == '!' || nextChar == ')' || nextChar == ']' || nextChar == '؟';
-                }
-
-                return false;
+                return index + 1 < characters.Length && StringExtensions.NeutralSentenceEndingChars.Contains(characters[index + 1]);
             }
         }
     }
