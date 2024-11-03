@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
+            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HandleListViewKeyEvents);
             // 
             // columnHeader1
             // 
@@ -422,7 +422,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewFixesColumnClick);
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.ListViewFixesSelectedIndexChanged);
-            this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
+            this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HandleListViewKeyEvents);
             // 
             // columnHeader4
             // 
