@@ -685,7 +685,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
-            WhisperPurfviewFasterWhisperDefaultCmd = "--standard";
+            WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             WhisperAutoAdjustTimings = true;

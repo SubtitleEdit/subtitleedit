@@ -2318,7 +2318,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else if ((engine == WhisperChoice.PurfviewFasterWhisper || engine == WhisperChoice.PurfviewFasterWhisperXXL) &&
                      !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
-                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
+                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard --beep_off")
             {
                 Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
             }
