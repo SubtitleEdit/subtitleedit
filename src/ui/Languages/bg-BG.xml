@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.8</Version>
-    <TranslatedBy>Последен превод на български 03.11.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 05.11.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -203,8 +203,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseLanguage>Изберете език</ChooseLanguage>
     <OpenModelsFolder>Папка с модели</OpenModelsFolder>
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
-    <Transcribing>Преобразуване и запис на аудио в текст...</Transcribing>
-    <TranscribingXOfY>Преобразуване и запис на аудиото в текстов файл {0} от {1}...</TranscribingXOfY>
+    <Transcribing>Записване на аудиото в текст...</Transcribing>
+    <TranscribingXOfY>Записване на аудиото в текстов файл {0} от {1}...</TranscribingXOfY>
     <PostProcessing>Последваща обработка...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видео източника</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Използвайте последваща обработка
