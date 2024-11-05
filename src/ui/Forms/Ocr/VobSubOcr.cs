@@ -31,6 +31,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -342,6 +343,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private XmlDocument _bdnXmlDocument;
         private string _bdnFileName;
         private bool _isSon;
+        private IBinaryParagraphList _binaryParagraphList;
 
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private readonly VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
@@ -1677,6 +1679,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+            else if (_binaryParagraphList != null)
+            {
+                if (index >= 0)
+                {
+                    returnBmp = _binaryParagraphList.GetSubtitleBitmap(index, crop);
+                }
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
@@ -2211,6 +2220,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binaryParagraphWithPositions != null)
             {
                 return _binaryParagraphWithPositions.Count;
+            }
+
+            if (_binaryParagraphList != null)
+            {
+                return _subtitle.Paragraphs.Count;
             }
 
             return _vobSubMergedPackList.Count;
@@ -4515,6 +4529,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxUseTimeCodesFromIdx.Visible = false;
             }
             else if (_xSubList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                SetButtonsEnabledAfterOcrDone();
+                buttonStartOcr.Focus();
+            }
+            else if (_binaryParagraphList != null)
             {
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
@@ -7653,6 +7675,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             LoadOcrFixEngine(threeLetterIsoLanguageName, LanguageString);
+        }
+
+
+        internal void InitializeIBinaryParagraphList(IBinaryParagraphList binaryParagraphList, Subtitle subtitle)
+        {
+            _binaryParagraphList = binaryParagraphList;
+            _subtitle = subtitle;
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            SetButtonsStartOcr();
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
+            SetOcrMethod();
+
+            groupBoxImagePalette.Visible = false;
+
+            Text += "OCR - " + Path.GetFileName(_bdnFileName);
+
+            autoTransparentBackgroundToolStripMenuItem.Visible = false;
+            _bdnXmlSubtitle = null;
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
