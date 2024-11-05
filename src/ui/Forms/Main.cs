@@ -3327,6 +3327,28 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    var f = new PlayStationSubs();
+                    var list = new List<string>();
+                    if (f.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrIBinaryParagraphList(fileName, f, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
                     var fcpImage = new FinalCutProImage();
                     var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (fcpImage.IsMine(list, fileName))
@@ -4519,6 +4541,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var formSubOcr = new VobSubOcr())
             {
                 var sub = new Subtitle();
+                sub.OriginalFormat = format;
                 format.LoadSubtitle(sub, list, fileName);
                 sub.FileName = fileName;
                 formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, false);
@@ -4527,6 +4550,41 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeImportingBdnXml);
                     FileNew();
                     _subtitle.Paragraphs.Clear();
+                    _subtitle.OriginalFormat = format;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, GetCurrentSubtitleFormat().Extension);
+                    SetTitle();
+                    _converted = true;
+                }
+            }
+        }
+
+        private void ImportAndOcrIBinaryParagraphList(string fileName, SubtitleFormat format, List<string> list)
+        {
+            using (var formSubOcr = new VobSubOcr())
+            {
+                var sub = new Subtitle();
+                sub.OriginalFormat = format;
+                format.LoadSubtitle(sub, list, fileName);
+                sub.FileName = fileName;
+                formSubOcr.InitializeIBinaryParagraphList(format as IBinaryParagraphList, sub);
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.OriginalFormat = format;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
                     {
