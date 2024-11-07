@@ -84,6 +84,7 @@
     <EmbeddedResource Include="Resources\AzureVoices.zip" />
     <EmbeddedResource Include="Resources\AllTalkVoices.zip" />
     <EmbeddedResource Include="Resources\PiperVoices.zip" />
+    <EmbeddedResource Include="Resources\TtsMurfVoices.zip" />
     <None Update="Resources\SMPTE-428-7-2007-DCST.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -283,6 +284,9 @@
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\TtsMurfVoices.zip" />
   </ItemGroup>
   <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
     <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />

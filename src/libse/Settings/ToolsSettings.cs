@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
+        public string TextToSpeechMurfApiKey { get; set; }
         public string TextToSpeechAzureApiKey { get; set; }
         public string TextToSpeechAzureRegion { get; set; }
         public string TextToSpeechElevenLabsModel { get; set; }
