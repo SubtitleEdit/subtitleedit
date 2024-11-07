@@ -2371,6 +2371,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.TextToSpeechElevenLabsSimilarity = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechMurfApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfApiKey = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
             if (subNode != null)
             {
@@ -9054,6 +9060,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsLanguage", settings.Tools.TextToSpeechElevenLabsLanguage);
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsStability", settings.Tools.TextToSpeechElevenLabsStability.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsSimilarity", settings.Tools.TextToSpeechElevenLabsSimilarity.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfApiKey", settings.Tools.TextToSpeechMurfApiKey);
                 xmlWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 xmlWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 xmlWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
