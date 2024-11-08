@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     {
         public static class Language
         {
-            public static string FixViaMultipleReplace { get; set; } = "Fix Via Multiple Replace Rules";
+            public static string FixViaMultipleReplace { get; set; } = "Fix via Multiple Replace rules";
         }
 
         private readonly ICollection<ReplaceExpression> _replaceExpressions;
