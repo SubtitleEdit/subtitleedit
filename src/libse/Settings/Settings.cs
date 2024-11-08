@@ -2377,6 +2377,24 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.TextToSpeechMurfApiKey = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechMurfVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfVoice = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfRate");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfRate = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfPitch");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfPitch = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
             if (subNode != null)
             {
@@ -9061,6 +9079,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsStability", settings.Tools.TextToSpeechElevenLabsStability.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsSimilarity", settings.Tools.TextToSpeechElevenLabsSimilarity.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("TextToSpeechMurfApiKey", settings.Tools.TextToSpeechMurfApiKey);
+                xmlWriter.WriteElementString("TextToSpeechMurfVoice", settings.Tools.TextToSpeechMurfVoice);
+                xmlWriter.WriteElementString("TextToSpeechMurfRate", settings.Tools.TextToSpeechMurfRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfPitch", settings.Tools.TextToSpeechMurfPitch.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 xmlWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 xmlWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
