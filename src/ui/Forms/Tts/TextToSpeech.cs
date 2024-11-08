@@ -211,8 +211,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
             checkBoxAudioEncoding.Checked = Configuration.Settings.Tools.TextToSpeechCustomAudio;
             checkBoxAddToVideoFile.Enabled = _videoFileName != null;
-            nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
-            nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -1434,10 +1432,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         overrideStyle = "Conversational";
                     }
 
+                    var rate = Configuration.Settings.Tools.TextToSpeechMurfRate.ToString(CultureInfo.InvariantCulture);
+                    var pitch = Configuration.Settings.Tools.TextToSpeechMurfPitch.ToString(CultureInfo.InvariantCulture);
                     var body = "{ \"voiceId\": \"" + voice.VoiceId + "\", \"style\": \"" + (voice.AvailableStyles.Contains(overrideStyle)
-                            ? overrideStyle
-                            : voice.AvailableStyles.FirstOrDefault()) + 
-                            "\", \"text\": \"" + Json.EncodeJsonText(text) + "\", \"rate\": 0, \"pitch\": 0, \"sampleRate\": 48000, \"format\": \"MP3\", \"channelType\": \"MONO\", \"pronunciationDictionary\": { }, \"encodeAsBase64\": false, \"modelVersion\": \"GEN2\" }";
+                                   ? overrideStyle
+                                   : voice.AvailableStyles.FirstOrDefault()) +
+                               "\", \"text\": \"" + Json.EncodeJsonText(text) + "\", \"rate\": " + rate + ", \"pitch\": " + pitch + ", \"sampleRate\": 48000, \"format\": \"MP3\", \"channelType\": \"MONO\", \"pronunciationDictionary\": { }, \"encodeAsBase64\": false, \"modelVersion\": \"GEN2\" }";
 
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
                     requestMessage.Content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -1635,8 +1635,19 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 nikseComboBoxRegion.Visible = true;
 
+                labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
+                labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
                 labelStability.Visible = true;
                 labelSimilarity.Visible = true;
+
+                nikseUpDownStability.Minimum = 0;
+                nikseUpDownStability.Maximum = 100;
+                nikseUpDownStability.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsStability;
+
+                nikseUpDownSimilarity.Minimum = 0;
+                nikseUpDownSimilarity.Maximum = 100;
+                nikseUpDownSimilarity.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity;
+
                 nikseUpDownStability.Visible = true;
                 nikseUpDownSimilarity.Visible = true;
             }
@@ -1712,6 +1723,34 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelRegion.Visible = true;
                 nikseComboBoxRegion.Visible = true;
                 nikseComboBoxRegion.Text = "English (US and Canada)";
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.TextToSpeechMurfVoice))
+                {
+                    var voice = _murfVoices.FirstOrDefault(p => p.ToString() == Configuration.Settings.Tools.TextToSpeechMurfVoice);
+                    if (voice != null)
+                    {
+                        var murfLanguage = _murfLanguages.FirstOrDefault(p => p.Code == voice.Locale);
+                        if (murfLanguage != null)
+                        {
+                            nikseComboBoxRegion.Text = murfLanguage.Name;
+                        }   
+                        nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechMurfVoice;
+                    }
+                }
+
+                labelStability.Text = "Pitch";
+                nikseUpDownStability.Minimum = -49;
+                nikseUpDownStability.Maximum = 50;
+                nikseUpDownStability.Value = Configuration.Settings.Tools.TextToSpeechMurfPitch;
+                labelStability.Visible = true;
+                nikseUpDownStability.Visible = true;
+
+                labelSimilarity.Text = "Speed";
+                nikseUpDownSimilarity.Minimum = -49;
+                nikseUpDownSimilarity.Maximum = 50;
+                nikseUpDownSimilarity.Value = Configuration.Settings.Tools.TextToSpeechMurfRate;
+                labelSimilarity.Visible = true;
+                nikseUpDownSimilarity.Visible = true;
             }
 
             if (nikseComboBoxVoice.Items.Count > 0 && nikseComboBoxVoice.SelectedIndex < 0)
@@ -2581,8 +2620,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void SaveConfiguration()
         {
-            Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
-            Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            {
+                Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+            }
+            else if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                Configuration.Settings.Tools.TextToSpeechMurfPitch = (int)nikseUpDownStability.Value;
+                Configuration.Settings.Tools.TextToSpeechMurfRate = (int)nikseUpDownSimilarity.Value;
+            }
         }
 
         private void HandleError(Exception ex)
@@ -2620,6 +2668,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             else if (engine.Id == TextToSpeechEngineId.Murf)
             {
                 Configuration.Settings.Tools.TextToSpeechMurfApiKey = nikseTextBoxApiKey.Text;
+                Configuration.Settings.Tools.TextToSpeechMurfVoice = nikseComboBoxVoice.Text;
             }
 
             Configuration.Settings.Tools.TextToSpeechEngine = engine.Id.ToString();

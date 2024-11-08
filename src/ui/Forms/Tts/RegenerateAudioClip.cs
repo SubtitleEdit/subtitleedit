@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly Subtitle _subtitle;
         private readonly int _index;
         private LibMpvDynamic _libMpv;
+        private TextToSpeech.TextToSpeechEngine _engine;
 
         public RegenerateAudioClip(TextToSpeech textToSpeech, Subtitle subtitle, int idx, TextToSpeech.TextToSpeechEngine engine)
         {
@@ -25,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _subtitle = subtitle;
             _textToSpeech = textToSpeech;
             _index = idx;
+            _engine = engine;
 
             Text = LanguageSettings.Current.ExportCustomText.Edit;
             labelText.Text = LanguageSettings.Current.General.Text;
@@ -43,23 +45,47 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
             nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
 
-            if (engine.Id != TextToSpeech.TextToSpeechEngineId.ElevenLabs)
+            if (engine.Id == TextToSpeech.TextToSpeechEngineId.ElevenLabs)
             {
-                labelStability.Visible = false;
-                labelSimilarity.Visible = false;
-                nikseUpDownStability.Visible = false;
-                nikseUpDownSimilarity.Visible = false;
-                TextBoxReGenerate.Height = buttonOK.Top - TextBoxReGenerate.Top - 10;
-                nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
+                return;
             }
+
+            if (engine.Id == TextToSpeech.TextToSpeechEngineId.Murf)
+            {
+                labelStability.Text = "Pitch";
+                nikseUpDownStability.Minimum = -49;
+                nikseUpDownStability.Maximum = 50;
+                nikseUpDownStability.Value = Configuration.Settings.Tools.TextToSpeechMurfPitch;
+
+                labelSimilarity.Text = "Speed";
+                nikseUpDownSimilarity.Minimum = -49;
+                nikseUpDownSimilarity.Maximum = 50;
+                nikseUpDownSimilarity.Value = Configuration.Settings.Tools.TextToSpeechMurfRate;
+                return;
+            }
+
+            labelStability.Visible = false;
+            labelSimilarity.Visible = false;
+            nikseUpDownStability.Visible = false;
+            nikseUpDownSimilarity.Visible = false;
+            TextBoxReGenerate.Height = buttonOK.Top - TextBoxReGenerate.Top - 10;
+            nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
         }
 
         private void buttonReGenerate_Click(object sender, EventArgs e)
         {
             _libMpv?.Stop();
 
-            Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
-            Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+            if (_engine.Id == TextToSpeech.TextToSpeechEngineId.ElevenLabs)
+            {
+                Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+            }
+            else if (_engine.Id == TextToSpeech.TextToSpeechEngineId.Murf)
+            {
+                Configuration.Settings.Tools.TextToSpeechMurfPitch = (int)nikseUpDownStability.Value;
+                Configuration.Settings.Tools.TextToSpeechMurfRate = (int)nikseUpDownSimilarity.Value;
+            }
 
             var paragraph = _subtitle.Paragraphs[_index];
             paragraph.Text = TextBoxReGenerate.Text.Trim();
