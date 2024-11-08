@@ -120,6 +120,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _subtitle.Paragraphs[_index].Text = TextBoxReGenerate.Text.Trim();
+
             _libMpv?.Stop();
             DialogResult = DialogResult.OK;
         }
