@@ -66,6 +66,11 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxLanguage.Text = attr.InnerText;
             }
 
+            if (!string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage))
+            {
+                comboBoxLanguage.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage;
+            }
+
             attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
             if (attr != null)
             {
@@ -321,6 +326,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Header = _xml.OuterXml;
+
+            Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage = comboBoxLanguage.Text;
 
             Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
             Configuration.Settings.SubtitleSettings.TimedText10FileExtension = comboBoxFileExtensions.SelectedItem.ToString();
