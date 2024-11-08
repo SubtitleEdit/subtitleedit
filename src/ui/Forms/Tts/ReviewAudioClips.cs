@@ -272,12 +272,18 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
             {
                 var dr = form.ShowDialog(this);
-                if (dr == DialogResult.OK)
+                if (dr != DialogResult.OK)
+                {
+                    return;
+                }
+
+                listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
+
+                if (form.FileNameAndSpeedFactor != null)
                 {
                     _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
                     _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
                     listViewAudioClips.Items[idx].SubItems[4].Text = $"{(form.FileNameAndSpeedFactor.Factor * 100.0m):0.#}%";
-                    listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
                 }
             }
         }
