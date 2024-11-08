@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexRemoveDashFirstLine = 32;
         private const int IndexNormalizeStrings = 33;
         private const int IndexFixEllipsesStart = 34;
+        private const int IndexFixViaMultipleReplace = 35;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -427,6 +428,8 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.BreakDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked),
                 new FixItem(_language.RemoveDialogFirstInNonDialogs, _language.RemoveDialogFirstInNonDialogsExample, () => new RemoveDialogFirstLineInNonDialogs().Fix(Subtitle, this), ce.RemoveDialogFirstLineInNonDialogs),
                 new FixItem(_language.NormalizeStrings, string.Empty, () => new NormalizeStrings().Fix(Subtitle, this), ce.NormalizeStringsTicked),
+                new FixItem(Nikse.SubtitleEdit.Core.Forms.FixCommonErrors.MultipleReplace.Language.FixViaMultipleReplace, 
+                    string.Empty, () => new Nikse.SubtitleEdit.Core.Forms.FixCommonErrors.MultipleReplace().Fix(Subtitle, this), ce.FixViaMultipleReplace),
             };
 
             if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
@@ -1096,6 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
             ce.RemoveDialogFirstLineInNonDialogs = listView1.Items[IndexRemoveDashFirstLine].Checked;
             ce.NormalizeStringsTicked = listView1.Items[IndexNormalizeStrings].Checked;
+            ce.FixViaMultipleReplace = listView1.Items[IndexFixViaMultipleReplace].Checked;
             if (_danishLetterIIndex >= 0)
             {
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
