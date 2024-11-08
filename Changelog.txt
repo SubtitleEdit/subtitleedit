@@ -4,6 +4,8 @@
 4.0.9 (xth December 2024) BETA
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
+   * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
+   * Add Murf TTS - thx David
    * Add DeepLX translate - thx rifatozkancomtr 
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
@@ -31,6 +33,7 @@
    * Ctrl+A not working in subtitle duration field - thx rRobis
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
+   * Fix crash in TTS re-generate - thx cvrle77
    * Fix crash while translating subtitles - thx claudemartin
    * Fix issue with OCR/Italic - thx Boulder08/Zoltan
    * Fix bug in EBU validation
