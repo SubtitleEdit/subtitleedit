@@ -4301,5 +4301,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             return _autoTranslatorEngines.First(p => p.Name == nikseComboBoxEngine.Text);
         }
+
+        private void BatchConvert_SizeChanged(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
+            listViewConvertOptions.AutoSizeLastColumn();
+        }
     }
 }
