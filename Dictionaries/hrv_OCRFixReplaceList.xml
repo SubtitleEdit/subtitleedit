@@ -5515,6 +5515,7 @@
     <RegEx find="ngažuj" replaceWith="ngažiraj" />
     <RegEx find="nkm" replaceWith="nom" />
     <RegEx find="nqm" replaceWith="nam" />
+    <RegEx find="nhag" replaceWith="njag" />
     <RegEx find="nho" replaceWith="nko" />
     <RegEx find="nisa([nlot])" replaceWith="nira$1" />
     <RegEx find="(?&lt;!am)nesti" replaceWith="nijeti" />
