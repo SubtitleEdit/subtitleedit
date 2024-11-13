@@ -1642,11 +1642,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 nikseUpDownStability.Minimum = 0;
                 nikseUpDownStability.Maximum = 100;
-                nikseUpDownStability.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsStability;
+                nikseUpDownStability.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100;
 
                 nikseUpDownSimilarity.Minimum = 0;
                 nikseUpDownSimilarity.Maximum = 100;
-                nikseUpDownSimilarity.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity;
+                nikseUpDownSimilarity.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100;
 
                 nikseUpDownStability.Visible = true;
                 nikseUpDownSimilarity.Visible = true;
