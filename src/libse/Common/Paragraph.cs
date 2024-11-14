@@ -94,6 +94,17 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
         }
 
+        /// <summary>
+        /// Adjusts the start and end times of a subtitle paragraph.
+        /// </summary>
+        /// <param name="factor">The factor by which to multiply the start and end times.</param>
+        /// <param name="adjustmentInSeconds">The number of seconds to adjust the start and end times by.</param>
+        /// <remarks>
+        /// This method adjusts the start and end times of a subtitle paragraph by multiplying them with the given factor
+        /// and then adding the adjustmentInSeconds value. It does not modify the paragraph if the start time is
+        /// TimeCode.MaxTime. The adjustment is performed by updating the TotalMilliseconds property of the paragraph's
+        /// StartTime and EndTime objects.
+        /// </remarks>
         public void Adjust(double factor, double adjustmentInSeconds)
         {
             if (StartTime.IsMaxTime)
@@ -125,6 +136,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Calculates the number of characters per second in a paragraph.
+        /// </summary>
+        /// <returns>The number of characters per second.</returns>
+        /// <remarks>
+        /// This method calculates the number of characters per second in a paragraph by dividing the total number of
+        /// characters by the duration of the paragraph in seconds. If the duration is less than 1 millisecond, a default
+        /// value of 999 is returned.
+        /// </remarks>
         public double GetCharactersPerSecond()
         {
             if (DurationTotalMilliseconds < 1)
@@ -135,6 +155,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (double)Text.CountCharacters(true) / DurationTotalSeconds;
         }
 
+        /// <summary>
+        /// Calculates the number of characters per second in a paragraph.
+        /// </summary>
+        /// <param name="numberOfCharacters">The total number of characters in the paragraph.</param>
+        /// <returns>The number of characters per second.</returns>
+        /// <remarks>
+        /// This method calculates the number of characters per second in a paragraph by dividing the total number of
+        /// characters by the duration of the paragraph in seconds. If the duration is less than 1 millisecond, a default
+        /// value of 999 is returned.
+        /// </remarks>
         public double GetCharactersPerSecond(double numberOfCharacters)
         {
             if (DurationTotalMilliseconds < 1)
@@ -145,6 +175,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return numberOfCharacters / DurationTotalSeconds;
         }
 
+        /// <summary>
+        /// Calculates the number of characters per second in a paragraph using the default <see cref="ICalcLength"/> implementation.
+        /// </summary>
+        /// <returns>The number of characters per second.</returns>
+        /// <remarks>
+        /// This method calculates the number of characters per second in a paragraph by dividing the total number of
+        /// characters by the duration of the paragraph in seconds. If the duration is less than 1 millisecond, a default
+        /// value of 999 is returned.
+        /// </remarks>
         public double GetCharactersPerSecond(ICalcLength calc)
         {
             if (DurationTotalMilliseconds < 1)
