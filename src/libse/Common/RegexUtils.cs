@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
+    /// <summary>
+    /// Provides utility methods for working with regular expressions.
+    /// </summary>
     public static class RegexUtils
     {
         // Others classes may want to use this regex.
@@ -161,6 +164,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             private static string ExpandWhiteSpace(string pattern) => pattern.Replace(" ", "[ \r\n]+");
         }
 
+        /// <summary>
+        /// Determines whether the specified string is a valid regular expression pattern.
+        /// </summary>
+        /// <param name="testPattern">The regex pattern to validate.</param>
+        /// <returns>True if the specified string is a valid regex pattern; otherwise, false.</returns>
         public static bool IsValidRegex(string testPattern)
         {
             if (string.IsNullOrEmpty(testPattern))
@@ -178,6 +186,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Creates a compiled regular expression to search for a whole word.
+        /// </summary>
+        /// <param name="word">The word to create a regular expression for.</param>
+        /// <returns>A compiled regular expression that matches the whole word.</returns>
         public static Regex MakeWordSearchRegex(string word)
         {
             string s = word.Replace("\\", "\\\\");
@@ -187,6 +200,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
         }
 
+        /// <summary>
+        /// Extracts the name of the first capturing group in the given regex pattern.
+        /// </summary>
+        /// <param name="pattern">The regex pattern to search for capturing groups.</param>
+        /// <returns>The name of the first capturing group, or null if no capturing group is found.</returns>
         public static string GetRegExGroup(string pattern)
         {
             var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
@@ -248,6 +266,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
+        /// <summary>
+        /// Counts the number of occurrences of a regular expression pattern in the specified text,
+        /// treating each line in the text as a separate unit for matching.
+        /// </summary>
+        /// <param name="regularExpression">The regular expression to match.</param>
+        /// <param name="text">The text to search for matches.</param>
+        /// <returns>The number of matches found in the text.</returns>
         public static int CountNewLineSafe(Regex regularExpression, string text)
         {
             return regularExpression.Matches(string.Join(Environment.NewLine, text.SplitToLines())).Count;
