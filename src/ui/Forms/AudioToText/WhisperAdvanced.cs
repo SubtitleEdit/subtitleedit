@@ -83,7 +83,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.WhisperExtraSettings = comboBoxWhisperExtra.Text;
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
             {
                 if (Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd != comboBoxWhisperExtra.Text)
                 {
