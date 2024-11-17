@@ -2246,7 +2246,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NonDigit>Не цифры (\D)</NonDigit>
     <AnyCharacter>Все символы (.)</AnyCharacter>
     <AnyWhitespace>Все пробелы (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Не пробельный символ (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Непробельный символ (\S)</NonSpaceCharacter>
     <ZeroOrMore>Ноль или больше (*)</ZeroOrMore>
     <OneOrMore>Один или больше (+)</OneOrMore>
     <InCharacterGroup>Группа символов ([test])</InCharacterGroup>
@@ -2805,14 +2805,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewListErrors>Список ошибок</ListViewListErrors>
     <ListViewListSortByX>Сортировать по {0}</ListViewListSortByX>
     <ShowStyleManager>Показать менеджер стилей</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveLastWordDown>Переместить последнее слово в следующий субтитр</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Извлечь первое слово из следующего субтитра</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Переместить текст за позицию курсора в следующую субтитру и перейдите к следующей</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Переместить первое слово в предыдущий субтитр</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Переместить последнее слово из первой строки вниз (текущий субтитр)</MainTextBoxMoveLastWordDownCurrent>
-    <MainTextBoxSelectionToLower>Уменьшить регистр для выделения</MainTextBoxSelectionToLower>
-    <MainTextBoxSelectionToUpper>Увеличить регистр для выделения</MainTextBoxSelectionToUpper>
-    <MainTextBoxSelectionToggleCasing>Переключение выбора регистра (правильный/верхний/нижний регистр)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToLower>Выделенное строчными буквами</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Выделенное заглавными буквами</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Переключать регистр выделенного (С Заглавной/ВЕРХНИЙ/нижний)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Выбранное в Ruby (Японский)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Автопереключение определения</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоперенос текста</MainTextBoxAutoBreak>
@@ -3199,6 +3200,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoContinue>Автопродолжение</AutoContinue>
     <Regenerate>Регенерировать</Regenerate>
     <Speed>Скорость</Speed>
+    <Stability>Стабильность</Stability>
+    <Similarity>Сходство</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Синхронизация SMPTE</Title>
