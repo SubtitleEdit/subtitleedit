@@ -18,6 +18,8 @@
    * Update Dutch translation - thx Flitskikker
    * Update Whisper CPP to V1.7.1
    * Update ffmpeg to 7.1
+   * Update Tesseract to 5.5.0
+   * Update yt-dlp to 2024.11.04
    * Improvements for "Beautify time codes" - thx Flitskikker
    * Add new options for TTS with ElevenLabs - thx cvrle77
    * Add large-v3-turbo to Whisper OpenAI/CPP
