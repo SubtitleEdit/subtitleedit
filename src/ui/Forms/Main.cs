@@ -2952,7 +2952,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (ext == ".mkv" || ext == ".mks")
+            if (ext == ".mkv" || ext == ".mks" ||
+
+                // allow for mkv files with wrong extension
+                ((ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
+                
+                ) 
             {
                 ImportSubtitleFromMatroskaFile(fileName);
                 return;
