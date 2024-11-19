@@ -1638,5 +1638,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             UiUtil.OpenUrl("https://ollama.com/library");
         }
+
+        private void AutoTranslate_Shown(object sender, EventArgs e)
+        {
+            buttonTranslate.Focus();
+        }
     }
 }

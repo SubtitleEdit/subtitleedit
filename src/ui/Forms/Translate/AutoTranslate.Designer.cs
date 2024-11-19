@@ -520,6 +520,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslate";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoTranslate_FormClosing);
+            this.Shown += new System.EventHandler(this.AutoTranslate_Shown);
             this.ResizeEnd += new System.EventHandler(this.AutoTranslate_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);
