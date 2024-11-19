@@ -349,6 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormRemoveTextForHearImpaired_Shown(object sender, EventArgs e)
         {
             FormRemoveTextForHearImpaired_Resize(sender, e);
+            buttonOK.Focus();
         }
 
         private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
