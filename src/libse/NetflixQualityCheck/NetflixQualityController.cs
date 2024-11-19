@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
 
             Records = Records
-                .Where(p=>p != null)
+                .Where(p => p != null)
                 .OrderBy(p => p.OriginalParagraph?.Number ?? 0)
                 .ToList();
         }

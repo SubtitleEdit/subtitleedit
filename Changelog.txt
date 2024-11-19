@@ -33,6 +33,7 @@
    * Add "Intel Quick Sync" for "video burn in" - thx ghostminhtoan
    * Allow save selected lines as subtitle with only 1 row selected - thx Pierrounator
    * Ctrl+A not working in subtitle duration field - thx rRobis
+   * Allow reading Matroska files with ".mp4" extension
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
    * Fix crash in TTS re-generate - thx cvrle77
@@ -45,6 +46,7 @@
    * Fix for divide by zero in TTS
    * Fix bug in "Change casing" - thx Hlsgs
    * Fix enter in textbox in FCE - thx p1nkyy/Roger
+   * Fix "Dialog styles" for many languags in Netflix quality check - thx Looi
 
 
 4.0.8 (6th September 2024) 
