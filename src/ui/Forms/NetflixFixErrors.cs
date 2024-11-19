@@ -150,14 +150,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLanguage.SelectedIndexChanged += RuleCheckedChanged;
         }
 
-        private async void RuleCheckedChanged(object sender, EventArgs e)
+        private void RuleCheckedChanged(object sender, EventArgs e)
         {
             if (_loading)
             {
                 return;
             }
 
-            await Task.Run(() => _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks())).ConfigureAwait(true);
+            _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks());
             labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
             linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
@@ -176,7 +176,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewFixes.Items.AddRange(listViewItems.ToArray());
-
             listViewFixes.EndUpdate();
         }
 
