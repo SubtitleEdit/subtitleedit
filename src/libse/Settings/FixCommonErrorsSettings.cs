@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool FixContinuationStyleTicked { get; set; }
         public bool FixUnnecessaryLeadingDotsTicked { get; set; }
         public bool NormalizeStringsTicked { get; set; }
+        public bool FixViaMultipleReplace { get; set; }
         public string DefaultFixes { get; set; }
 
 
@@ -253,6 +254,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             {
                 sb.Append(nameof(NormalizeStringsTicked) + ";");
             }
+            if (FixViaMultipleReplace)
+            {
+                sb.Append(nameof(FixViaMultipleReplace) + ";");
+            }
 
             DefaultFixes = sb.ToString().TrimEnd(';');
         }
@@ -299,6 +304,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             FixContinuationStyleTicked = list.Contains(nameof(FixContinuationStyleTicked));
             FixUnnecessaryLeadingDotsTicked = list.Contains(nameof(FixUnnecessaryLeadingDotsTicked));
             NormalizeStringsTicked = list.Contains(nameof(NormalizeStringsTicked));
+            FixViaMultipleReplace = list.Contains(nameof(FixViaMultipleReplace));
         }
 
         public void SetDefaultFixes()
@@ -334,6 +340,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             FixContinuationStyleTicked = false;
             FixUnnecessaryLeadingDotsTicked = true;
             NormalizeStringsTicked = false;
+            FixViaMultipleReplace = false;
             SaveUserDefaultFixes();
         }
     }

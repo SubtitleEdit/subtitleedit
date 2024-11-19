@@ -5258,6 +5258,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.CommonErrors.NormalizeStringsTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("FixViaMultipleReplace");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixViaMultipleReplace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("DefaultFixes");
             if (subNode != null)
             {
@@ -9610,6 +9616,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("NormalizeStringsTicked", settings.CommonErrors.NormalizeStringsTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixViaMultipleReplace", settings.CommonErrors.FixViaMultipleReplace.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("DefaultFixes", settings.CommonErrors.DefaultFixes);
                 xmlWriter.WriteEndElement();
 
