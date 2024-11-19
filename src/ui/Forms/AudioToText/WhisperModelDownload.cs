@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 });
                 foreach (var url in LastDownloadedModel.Urls)
                 {
-                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    using (var httpClient = HttpClientFactory.CreateHttpClientDownloader())
                     {
                         currentDownloadUrl = url;
                         _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
