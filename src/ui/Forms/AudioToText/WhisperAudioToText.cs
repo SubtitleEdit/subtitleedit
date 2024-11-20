@@ -929,7 +929,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var process = GetWhisperProcess(inputFile, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
-            _startTicks = DateTime.UtcNow.Ticks;
+            _startTicks = Stopwatch.GetTimestamp();
             _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
             if (!_batchMode)
@@ -1573,7 +1573,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var durationMs = (Stopwatch.GetTimestamp() - _startTicks) / 10_000;
 
             labelElapsed.Text = new TimeCode(durationMs).ToShortDisplayString();
             if (_endSeconds <= 0 || _videoInfo == null)

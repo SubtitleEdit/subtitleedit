@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            _startTicks = DateTime.UtcNow.Ticks;
+            _startTicks = Stopwatch.GetTimestamp();
             timer1.Start();
 
             while (!process.HasExited)
@@ -855,7 +855,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var durationMs = (Stopwatch.GetTimestamp() - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
             var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -694,7 +695,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             e.SuppressKeyPress = true;
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+                TimeSpan.FromTicks(Stopwatch.GetTimestamp()).TotalMilliseconds)
             {
                 _listBoxSearchString = string.Empty;
             }
@@ -866,7 +867,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             e.SuppressKeyPress = true;
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+                TimeSpan.FromTicks(Stopwatch.GetTimestamp()).TotalMilliseconds)
             {
                 _listBoxSearchString = string.Empty;
             }
@@ -902,7 +903,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             e.SuppressKeyPress = true;
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+                TimeSpan.FromTicks(Stopwatch.GetTimestamp()).TotalMilliseconds)
             {
                 _listBoxSearchString = string.Empty;
             }

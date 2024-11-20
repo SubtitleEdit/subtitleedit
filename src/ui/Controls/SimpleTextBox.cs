@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -30,7 +31,7 @@ namespace Nikse.SubtitleEdit.Controls
             KeyDown += SETextBox_KeyDown;
 
             // To fix issue where WM_LBUTTONDOWN got wrong "SelectedText" (only in undocked mode)
-            GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
+            GotFocus += (sender, args) => { _gotFocusTicks = Stopwatch.GetTimestamp(); };
         }
 
         private void SetAlignment()
@@ -208,7 +209,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;
-                    var milliseconds = (DateTime.UtcNow.Ticks - _dragStartTicks) / 10000;
+                    var milliseconds = (Stopwatch.GetTimestamp() - _dragStartTicks) / 10000;
                     if (milliseconds < 400)
                     {
                         SelectionLength = 0;
@@ -337,12 +338,12 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                var milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
+                var milliseconds = (Stopwatch.GetTimestamp() - _gotFocusTicks) / 10000;
                 if (milliseconds > 10)
                 {
                     _dragText = SelectedText;
                     _dragStartFrom = SelectionStart;
-                    _dragStartTicks = DateTime.UtcNow.Ticks;
+                    _dragStartTicks = Stopwatch.GetTimestamp();
                 }
             }
 

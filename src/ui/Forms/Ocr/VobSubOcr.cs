@@ -32,6 +32,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -6645,7 +6646,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (subtitleListView1.SelectedItems.Count > 1)
                     {
-                        if (DateTime.UtcNow.Ticks - _slvSelIdxChangedTicks < 100000)
+                        if (Stopwatch.GetTimestamp() - _slvSelIdxChangedTicks < 100000)
                         {
                             _slvSelIdx = new KeyValuePair<long, int>(_slvSelIdxChangedTicks, subtitleListView1.SelectedItems[0].Index);
                             if (_changeDelayTimer == null)
@@ -6659,10 +6660,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 _changeDelayTimer.Stop();
                                 _changeDelayTimer.Start();
                             }
-                            _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                            _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                             return;
                         }
-                        _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                        _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                     }
                     _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 }
