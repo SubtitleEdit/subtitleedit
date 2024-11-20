@@ -2456,7 +2456,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AutoSave(bool force = false)
         {
             if (!Configuration.Settings.General.AutoSave ||
-                DateTime.UtcNow.Ticks - _lastAutoSave < 10000 * 3000 && !force) // only check for auto save evety 3 seconds
+                Stopwatch.GetTimestamp() - _lastAutoSave < 10000 * 3000 && !force) // only check for auto save evety 3 seconds
             {
                 return;
             }
@@ -2476,7 +2476,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DoAutoSave()
         {
-            _lastAutoSave = DateTime.UtcNow.Ticks + 1009000;
+            _lastAutoSave = Stopwatch.GetTimestamp() + 1009000;
             var currentSubtitleHash = GetFastSubtitleHash();
             if (_changeSubtitleHash != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
             {
@@ -2493,7 +2493,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveOriginalSubtitle(GetCurrentSubtitleFormat(), true);
             }
 
-            _lastAutoSave = DateTime.UtcNow.Ticks;
+            _lastAutoSave = Stopwatch.GetTimestamp();
         }
 
         private bool ContinueNewOrExit()
@@ -2672,10 +2672,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if ((DateTime.UtcNow.Ticks - _lastHistoryTicks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
+            if ((Stopwatch.GetTimestamp() - _lastHistoryTicks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
             {
                 MakeHistoryForUndo(description);
-                _lastHistoryTicks = DateTime.UtcNow.Ticks;
+                _lastHistoryTicks = Stopwatch.GetTimestamp();
             }
         }
 
@@ -2887,7 +2887,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _lastAutoSave = DateTime.UtcNow.Ticks;
+            _lastAutoSave = Stopwatch.GetTimestamp();
             bool videoFileLoaded = false;
             _formatManuallyChanged = false;
             var file = new FileInfo(fileName);
@@ -6499,7 +6499,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
             _sourceViewChange = true;
             labelStatus.Text = string.Empty;
-            _sourceTextTicks = DateTime.UtcNow.Ticks;
+            _sourceTextTicks = Stopwatch.GetTimestamp();
         }
 
         private bool ShowProfileInStatusBar => Configuration.Settings.General.CurrentProfile != "Default";
@@ -11513,7 +11513,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
-            _listViewTextTicks = DateTime.UtcNow.Ticks;
+            _listViewTextTicks = Stopwatch.GetTimestamp();
 
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
             {
@@ -11810,7 +11810,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // last key down in text
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
@@ -15205,7 +15205,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
             statusStrip1.Refresh();
             TaskbarList.SetProgressValue(Handle, percent, 100);
-            if (DateTime.UtcNow.Ticks % 10 == 0)
+            if (Stopwatch.GetTimestamp() % 10 == 0)
             {
                 Application.DoEvents();
             }
@@ -16952,15 +16952,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.LWin)
             {
-                _winLeftDownTicks = DateTime.UtcNow.Ticks;
+                _winLeftDownTicks = Stopwatch.GetTimestamp();
             }
 
             if (e.KeyCode == Keys.RWin)
             {
-                _winRightDownTicks = DateTime.UtcNow.Ticks;
+                _winRightDownTicks = Stopwatch.GetTimestamp();
             }
 
-            if ((DateTime.UtcNow.Ticks - _winLeftDownTicks) <= 10000 * 999 || (DateTime.UtcNow.Ticks - _winRightDownTicks) <= 10000 * 999) // less than 999 ms
+            if ((Stopwatch.GetTimestamp() - _winLeftDownTicks) <= 10000 * 999 || (Stopwatch.GetTimestamp() - _winRightDownTicks) <= 10000 * 999) // less than 999 ms
             {
                 // if it's less than one second since Win key was pressed we ignore key (not perfect...)
                 e.SuppressKeyPress = true;
@@ -18398,7 +18398,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                     mediaPlayer.Play();
-                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    _endSecondsNewPositionTicks = Stopwatch.GetTimestamp();
                 }
 
                 e.SuppressKeyPress = true;
@@ -18414,7 +18414,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                     mediaPlayer.Play();
-                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    _endSecondsNewPositionTicks = Stopwatch.GetTimestamp();
                 }
 
                 e.SuppressKeyPress = true;
@@ -21033,7 +21033,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelNextWord.Text = string.Format(_language.NextX, HtmlUtil.RemoveHtmlTags(next.Text, true).Replace(Environment.NewLine, " "));
                     labelNextWord.Left = audioVisualizer.Width / 2 - labelNextWord.Width / 2 + audioVisualizer.Left;
                     labelNextWord.Visible = true;
-                    _labelNextTicks = DateTime.UtcNow.Ticks;
+                    _labelNextTicks = Stopwatch.GetTimestamp();
                 }
                 else
                 {
@@ -21231,7 +21231,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             mediaPlayer.ShowFullScreenControls();
             bool setRedockOnFullscreenEnd = false;
 
@@ -24183,7 +24183,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = ShowSubtitle();
                 if (index != -1 && oldIndex != index && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
                 {
-                    if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                    if ((Stopwatch.GetTimestamp() - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                     {
                         if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
@@ -24205,7 +24205,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Pause();
                         if (_playSelectionIndex < 0)
                         {
-                            if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > DateTime.UtcNow.Ticks - (10000 * 900)) // 900 ms
+                            if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > Stopwatch.GetTimestamp() - (10000 * 900)) // 900 ms
                             {
                                 mediaPlayer.CurrentPosition = _endSecondsNewPosition;
                             }
@@ -24329,7 +24329,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
 
-                if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
+                if (labelNextWord.Visible && _labelNextTicks + 100000000 < Stopwatch.GetTimestamp())
                 {
                     labelNextWord.Visible = false;
                 }
@@ -24367,7 +24367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Text.RemoveChar('*').TrimEnd();
             }
 
-            if (InSourceView && _sourceTextTicks != -1 && (DateTime.UtcNow.Ticks - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if (InSourceView && _sourceTextTicks != -1 && (Stopwatch.GetTimestamp() - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
                 ReloadFromSourceInSourceView();
                 _sourceTextTicks = -1;
@@ -24651,7 +24651,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             SubtitleListview1.AutoSizeAllColumns(this);
 
             if (WindowState == FormWindowState.Maximized ||
@@ -24684,7 +24684,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_ResizeBegin(object sender, EventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             if (_loading)
             {
                 return;
@@ -25697,7 +25697,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timerAutoContinue.Stop();
 
-                if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                if ((Stopwatch.GetTimestamp() - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
                     labelStatus.Text = string.Empty;
                     PlayNext();
@@ -26343,7 +26343,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+                    _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
                     _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
                 }
                 catch
@@ -26411,7 +26411,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Focus();
             }
 
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
             if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 var idx = _subtitleListViewIndex;
@@ -29732,7 +29732,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             mediaPlayer.ShowNonFullScreenControls();
 
             SaveUndockedPositions();
@@ -30091,7 +30091,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextOriginalKeyDown(object sender, KeyEventArgs e)
         {
-            _listViewOriginalTextTicks = DateTime.UtcNow.Ticks;
+            _listViewOriginalTextTicks = Stopwatch.GetTimestamp();
             if (_subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count < 1)
             {
                 return;
@@ -30283,7 +30283,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // last key down in text
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
 
             UpdatePositionAndTotalLength(labelTextOriginalLineTotal, textBoxListViewTextOriginal);
         }
@@ -31619,7 +31619,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if ((DateTime.UtcNow.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if ((Stopwatch.GetTimestamp() - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
                 var p = _subtitle.GetParagraphOrDefault(index);
                 if (p == null)
@@ -31713,7 +31713,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((DateTime.UtcNow.Ticks - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                if ((Stopwatch.GetTimestamp() - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
                     var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -34207,7 +34207,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
             {
-                if (Math.Abs(_lastWaveformMenuCloseTicks - DateTime.UtcNow.Ticks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
+                if (Math.Abs(_lastWaveformMenuCloseTicks - Stopwatch.GetTimestamp()) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
                 {
                     audioVisualizer.Focus();
                 }
@@ -34529,7 +34529,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripWaveformClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            _lastWaveformMenuCloseTicks = DateTime.UtcNow.Ticks;
+            _lastWaveformMenuCloseTicks = Stopwatch.GetTimestamp();
         }
 
         private void MenuOpened(object sender, EventArgs e)
@@ -35603,7 +35603,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var diff = DateTime.UtcNow.Ticks - _textHeightResizeIgnoreUpdate;
+            var diff = Stopwatch.GetTimestamp() - _textHeightResizeIgnoreUpdate;
             if (diff > 10_000 * 750 && // 750 ms
                 WindowState == _lastFormWindowState)
             {
@@ -35818,7 +35818,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitContainerMainSplitterMoving(object sender, SplitterCancelEventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
         }
 
         private void ApplyCustomStylesToolStripMenuItemClick(object sender, EventArgs e)
