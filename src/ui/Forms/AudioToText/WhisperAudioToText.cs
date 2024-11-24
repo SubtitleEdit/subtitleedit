@@ -2591,5 +2591,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
         }
+
+        private void WhisperAudioToText_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
     }
 }
