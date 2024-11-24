@@ -568,6 +568,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Audio to text";
+            this.Activated += new System.EventHandler(this.WhisperAudioToText_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
             this.Shown += new System.EventHandler(this.AudioToText_Shown);
