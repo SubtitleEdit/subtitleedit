@@ -14,15 +14,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        private const string DownloadUrl64Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-171/whisper-blas-bin-x64.zip";
-        private const string DownloadUrl32Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-171/whisper-blas-bin-Win32.zip";
+        private const string DownloadUrl64Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/whisper-blas-bin-x64.zip";
+        private const string DownloadUrl32Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
 
         private static readonly string[] Sha512HashesCpp =
         {
-            "2f6ab662aecd09ad5d06690ad01981d155630462da077072301b624efed702559616bf368a640864d44d8f50927d56d252345117084ef6e795b67964f6303fe4", // v171/whisper-blas-bin-x64.zip
-            "3ff1490ca2c0fa829ab0c4e5b485c4e93ed253adc30557ef4f369920925a246ffc459c122e0f3c0b166ef94b50e7f1e7e48c29c43ca551c3d8905f5ef3d8004c", // v171/whisper-blas-bin-Win32.zip
+            "66c97cff5514827c1f9496d69df7a86ba786dc94b6ba78350ba5e43ce28af5267de9b859232243c2dfd020fb33a7a8c80739b9169fdbaad330cde417e4afff08", // v172/whisper-blas-bin-x64.zip
+            "3833976a5278deac3983050944723963b5a2e1721734376bc25d64cc3ec87ff912dc3b12842d2e11ca85ce923b0a54f0c77d71f161fe97627bdc33ee6dcf64e2", // v172/whisper-blas-bin-Win32.zip
         };
 
         private static readonly string[] OldSha512HashesCpp =
@@ -55,13 +55,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "3c8a360d1e097d229500f3ccdd66a6dc30600fd8ea1b46405ed2ec03bb0b1c26c72cac983440b5793d24d6983c3d76482a17673251dd89f0a894a54a6d42d169", // AVX2 64-bit
             "96f8e6c073afc75062d230200c9406c38551d8ce65f609e433b35fb204dc297b415eb01181adb6b1087436ae82c4e582b20e97f6b204acf446189bde157187b7", // AVX2 32-bit
             "2a9e10f746a1ebe05dffa86e9f66cd20848faa6e849f3300c2281051c1a17b0fc35c60dc435f07f5974aa1191000aaf2866a4f03a5fe35ecffd4ae0919778e63", // SSE2 32-bit
+            "2f6ab662aecd09ad5d06690ad01981d155630462da077072301b624efed702559616bf368a640864d44d8f50927d56d252345117084ef6e795b67964f6303fe4", // v171/whisper-blas-bin-x64.zip
+            "3ff1490ca2c0fa829ab0c4e5b485c4e93ed253adc30557ef4f369920925a246ffc459c122e0f3c0b166ef94b50e7f1e7e48c29c43ca551c3d8905f5ef3d8004c", // v171/whisper-blas-bin-Win32.zip
         };
 
 
-        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-171/whisper-cublas-12.2.0-bin-x64.zip";
+        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/whisper-cublas-12.2.0-bin-x64.zip";
 
         private static readonly string[] Sha512HashesCppCuBlas =
         {
+            "1b105d38702a01ab8e98b31a690040ca54861b5e55773fff9242f33ba7b0718a6e9f25231ed107a7db0292d8349d508b18300f6c95a8e4234faef27cb05887aa", // v172/whisper-cublas-12.2.0-bin-x64.zip
             "37c77ce10739b67588fdc1ca06ac8ff3c578d230974af6c5d90cf80f0d85af1a28f6827447b7b63699c21a5fddfeedeb3bd6cf8a64dd859598e94faef2b9ba3e", // v171/whisper-cublas-12.2.0-bin-x64.zip
             "e0279cfc73473b3a9530f44906453c34d9d197cb1cdec860447ce226dd757cc13e3f5f2a22386b95553fc99961e56baf92b20ac1be4217c6a60e749bb5e95cc0", // v1.5.3/whisper-cublas-12.2.0-bin-x64.zip
             "9ca711e835075249a7ecbeb6188be2da2407f94ca04740ba56b984601e68df994e607f03c3816617d92562ed3820b170c48ec82840880efd524da6dfe5b70691", // v1.5.4/whisper-cublas-12.2.0-bin-x64.zip
