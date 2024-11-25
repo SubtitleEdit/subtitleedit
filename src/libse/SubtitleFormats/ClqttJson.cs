@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
 
-                        if (textString.Length > 0 && !string.IsNullOrEmpty(startString) && !string.IsNullOrEmpty(endString))
+                        if (!string.IsNullOrEmpty(startString) && !string.IsNullOrEmpty(endString))
                         {                            
                             var start = Double.Parse(startString);
                             var end = Double.Parse(endString);
