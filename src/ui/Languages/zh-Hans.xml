@@ -992,10 +992,10 @@ Command line: {1} {2}
     <GenerateWithFfmpegParametersPrompt>生成 - FFmpeg 命令行参数</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>生成带有内嵌字幕的视频</Title>
+    <Title>生成带有硬字幕的视频</Title>
     <InfoAssaOff>注意：支持 ASSA 样式。</InfoAssaOff>
     <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>带有硬字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingOneMinute>剩余时间：1 分钟</TimeRemainingOneMinute>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
@@ -1444,9 +1444,9 @@ Command line: {1} {2}
         <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithBurnedInSub>生成带有硬字幕的视频...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>生成带有内嵌字幕的视频...</GenerateVideoWithEmbeddedSubs>
-        <GenerateTransparentVideoWithSubs>生成带有字幕的透明视频...</GenerateTransparentVideoWithSubs>
+        <GenerateTransparentVideoWithSubs>生成带有硬字幕的透明视频...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
@@ -2321,7 +2321,7 @@ Command line: {1} {2}
     <Find>查找</Find>
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
-    <BurnIn>内嵌字幕</BurnIn>
+    <BurnIn>烧录硬字幕</BurnIn>
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
