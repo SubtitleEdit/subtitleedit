@@ -795,5 +795,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             WhisperAudioToText.ShowPostProcessingSettings(this);
         }
+
+        private void WhisperAudioToTextSelectedLines_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
     }
 }
