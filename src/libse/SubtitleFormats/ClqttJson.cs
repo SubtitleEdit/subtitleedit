@@ -111,7 +111,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 foreach (var annotationElement in annotationElements)
                                 {
-                                    annotations.Add(parser.GetFirstObject(annotationElement.Json, "description"));
+                                    var annotationText = parser.GetFirstObject(annotationElement.Json, "description");                                    
+                                    annotations.Add(Json.DecodeJsonText(annotationText));
                                 }
                             }
                         }
