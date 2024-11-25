@@ -16,7 +16,7 @@
    * Update Italian translation - thx bovirus
    * Update Romanian installer translation - thx mircea
    * Update Dutch translation - thx Flitskikker
-   * Update Whisper CPP to V1.7.1
+   * Update Whisper CPP to V1.7.2
    * Update ffmpeg to 7.1
    * Update Tesseract to 5.5.0
    * Update yt-dlp to 2024.11.04
@@ -40,6 +40,7 @@
    * Fix crash while translating subtitles - thx claudemartin
    * Fix issue with OCR/Italic - thx Boulder08/Zoltan
    * Fix bug in EBU validation
+   * Fix for restoring Whisper window after minimize - thx vimbackground/innerspeakerz 
    * Minor fix for Cavena890 save options
    * Fix possible crash in "Gen transparent subs" when using video from "Program files"
    * Fix wrong dialog info text in FCE
