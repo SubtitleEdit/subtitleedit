@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Google Gemini";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://deepmind.google/technologies/gemini/";
         public string Error { get; set; }

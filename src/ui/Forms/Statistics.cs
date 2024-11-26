@@ -143,7 +143,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
 
-                var charsSec = Utilities.GetCharactersPerSecond(p);
+                var charsSec = p.GetCharactersPerSecond();
                 minimumCharsSec = Math.Min(charsSec, minimumCharsSec);
                 maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
                 totalCharsSec += charsSec;
@@ -203,7 +203,7 @@ https://github.com/SubtitleEdit/subtitleedit
                     totalSingleLines++;
                 }
 
-                var cps = Utilities.GetCharactersPerSecond(p);
+                var cps = p.GetCharactersPerSecond();
                 if (cps > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
                 {
                     aboveOptimalCpsCount++;
@@ -246,13 +246,13 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
-            sb.AppendLine(string.Format(_l.LineLengthAverage, totalLineLength / _subtitle.Paragraphs.Count));
+            sb.AppendLine(string.Format(_l.LineLengthAverage, (double)totalLineLength / _subtitle.Paragraphs.Count));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (double)totalSingleLines / _subtitle.Paragraphs.Count));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
-            sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
+            sb.AppendLine(string.Format(_l.SingleLineLengthAverage, (double)totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumLength, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
@@ -261,7 +261,7 @@ https://github.com/SubtitleEdit/subtitleedit
             {
                 sb.AppendLine(string.Format(_l.SingleLineWidthMinimum, minimumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(minimumSingleLineWidth) + ")");
                 sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
-                sb.AppendLine(string.Format(_l.SingleLineWidthAverage, totalSingleLineWidth / totalSingleLines));
+                sb.AppendLine(string.Format(_l.SingleLineWidthAverage, (double)totalSingleLineWidth / totalSingleLines));
                 sb.AppendLine();
                 sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
                 sb.AppendLine();
@@ -343,7 +343,7 @@ https://github.com/SubtitleEdit/subtitleedit
             for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
-                if (Math.Abs(Utilities.GetCharactersPerSecond(p) - cps) < 0.01)
+                if (Math.Abs(p.GetCharactersPerSecond() - cps) < 0.01)
                 {
                     if (indices.Count >= NumberOfLinesToShow)
                     {

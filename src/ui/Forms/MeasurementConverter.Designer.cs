@@ -51,7 +51,7 @@
             this.listBoxCategory.SelectedIndex = -1;
             this.listBoxCategory.SelectedItem = null;
             this.listBoxCategory.SelectionMode = System.Windows.Forms.SelectionMode.One;
-            this.listBoxCategory.Size = new System.Drawing.Size(106, 175);
+            this.listBoxCategory.Size = new System.Drawing.Size(106, 185);
             this.listBoxCategory.Sorted = false;
             this.listBoxCategory.TabIndex = 0;
             this.listBoxCategory.TopIndex = 0;
@@ -61,7 +61,7 @@
             // labelConvertFrom
             // 
             this.labelConvertFrom.AutoSize = true;
-            this.labelConvertFrom.Location = new System.Drawing.Point(124, 32);
+            this.labelConvertFrom.Location = new System.Drawing.Point(124, 18);
             this.labelConvertFrom.Name = "labelConvertFrom";
             this.labelConvertFrom.Size = new System.Drawing.Size(70, 13);
             this.labelConvertFrom.TabIndex = 1;
@@ -80,7 +80,7 @@
             this.comboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFrom.DropDownWidth = 132;
             this.comboBoxFrom.FormattingEnabled = true;
-            this.comboBoxFrom.Location = new System.Drawing.Point(127, 54);
+            this.comboBoxFrom.Location = new System.Drawing.Point(127, 40);
             this.comboBoxFrom.MaxLength = 32767;
             this.comboBoxFrom.Name = "comboBoxFrom";
             this.comboBoxFrom.SelectedIndex = -1;
@@ -88,6 +88,7 @@
             this.comboBoxFrom.SelectedText = "";
             this.comboBoxFrom.Size = new System.Drawing.Size(132, 21);
             this.comboBoxFrom.TabIndex = 2;
+            this.comboBoxFrom.UsePopupWindow = true;
             this.comboBoxFrom.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrom_SelectedIndexChanged);
             // 
             // textBoxInput
@@ -101,7 +102,7 @@
             this.textBoxInput.IsSpellCheckRequested = false;
             this.textBoxInput.IsWrongWord = false;
             this.textBoxInput.LanguageChanged = false;
-            this.textBoxInput.Location = new System.Drawing.Point(127, 86);
+            this.textBoxInput.Location = new System.Drawing.Point(127, 72);
             this.textBoxInput.MaxLength = 32767;
             this.textBoxInput.Multiline = true;
             this.textBoxInput.Name = "textBoxInput";
@@ -122,7 +123,7 @@
             // labelConvertTo
             // 
             this.labelConvertTo.AutoSize = true;
-            this.labelConvertTo.Location = new System.Drawing.Point(264, 32);
+            this.labelConvertTo.Location = new System.Drawing.Point(264, 18);
             this.labelConvertTo.Name = "labelConvertTo";
             this.labelConvertTo.Size = new System.Drawing.Size(59, 13);
             this.labelConvertTo.TabIndex = 4;
@@ -141,7 +142,7 @@
             this.comboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTo.DropDownWidth = 132;
             this.comboBoxTo.FormattingEnabled = true;
-            this.comboBoxTo.Location = new System.Drawing.Point(267, 54);
+            this.comboBoxTo.Location = new System.Drawing.Point(267, 40);
             this.comboBoxTo.MaxLength = 32767;
             this.comboBoxTo.Name = "comboBoxTo";
             this.comboBoxTo.SelectedIndex = -1;
@@ -149,6 +150,7 @@
             this.comboBoxTo.SelectedText = "";
             this.comboBoxTo.Size = new System.Drawing.Size(132, 21);
             this.comboBoxTo.TabIndex = 5;
+            this.comboBoxTo.UsePopupWindow = true;
             this.comboBoxTo.SelectedIndexChanged += new System.EventHandler(this.comboBoxTo_SelectedIndexChanged);
             // 
             // textBoxResult
@@ -162,7 +164,7 @@
             this.textBoxResult.IsSpellCheckRequested = false;
             this.textBoxResult.IsWrongWord = false;
             this.textBoxResult.LanguageChanged = false;
-            this.textBoxResult.Location = new System.Drawing.Point(267, 86);
+            this.textBoxResult.Location = new System.Drawing.Point(267, 72);
             this.textBoxResult.MaxLength = 32767;
             this.textBoxResult.Multiline = true;
             this.textBoxResult.Name = "textBoxResult";
@@ -179,7 +181,7 @@
             // 
             // linkLabel1
             // 
-            this.linkLabel1.Location = new System.Drawing.Point(218, 112);
+            this.linkLabel1.Location = new System.Drawing.Point(218, 98);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(181, 23);
             this.linkLabel1.TabIndex = 7;
@@ -203,7 +205,7 @@
             // 
             this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInsert.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.buttonInsert.Location = new System.Drawing.Point(307, 174);
+            this.buttonInsert.Location = new System.Drawing.Point(304, 174);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(102, 23);
             this.buttonInsert.TabIndex = 9;

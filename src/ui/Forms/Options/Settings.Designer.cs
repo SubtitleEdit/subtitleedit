@@ -6549,11 +6549,6 @@
             this.nikseComboBoxChatGptModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.nikseComboBoxChatGptModel.DropDownWidth = 375;
             this.nikseComboBoxChatGptModel.FormattingEnabled = true;
-            this.nikseComboBoxChatGptModel.Items.AddRange(new string[] {
-            "gpt-4o",
-            "gpt-4-turbo",
-            "gpt-3.5-turbo",
-            "gpt-4"});
             this.nikseComboBoxChatGptModel.Location = new System.Drawing.Point(52, 109);
             this.nikseComboBoxChatGptModel.MaxLength = 32767;
             this.nikseComboBoxChatGptModel.Name = "nikseComboBoxChatGptModel";

@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -2073,11 +2073,11 @@ određeni podnaslov s drugim ljudima.</Information>
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Podnaslov duljina - minimalno: {0}</LineLengthMinimum>
     <LineLengthMaximum>Podnaslov duljina - maksimalno: {0}</LineLengthMaximum>
-    <LineLengthAverage>Duljina Podnaslova - prosjek: {0}</LineLengthAverage>
+    <LineLengthAverage>Duljina Podnaslova - prosjek: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Podnaslov, broj linija - prosječno: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Jedan redak duljina - minimalno: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Jedan redak duljina - maksimalno: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Jedan duljina linije - prosjek: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Jedan duljina linije - prosjek: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - minimum: {0:0.000} sekundi</DurationMinimum>
     <DurationMaximum>Trajanje - maksimalno: {0:0.000} sekundi</DurationMaximum>
     <DurationAverage>Trajanje - prosječno: {0:0.000} sekundi</DurationAverage>

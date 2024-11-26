@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -14,10 +14,10 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            if (DateTime.UtcNow.Ticks - _lastCall > 10_000_000 * 60) // one minute
+            if (Stopwatch.GetTimestamp() - _lastCall > 10_000_000 * 60) // one minute
             {
                 NativeMethods.SetThreadExecutionState(NativeMethods.ES_CONTINUOUS | NativeMethods.ES_SYSTEM_REQUIRED);
-                _lastCall = DateTime.UtcNow.Ticks;
+                _lastCall = Stopwatch.GetTimestamp();
             }
         }
     }

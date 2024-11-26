@@ -2,8 +2,8 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 14.06.2024</TranslatedBy>
+    <Version>4.0.8</Version>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 31.10.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1016,6 +1016,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Profilo</Preset>
+    <PixelFormat>Formato pixel</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizzati per</TuneFor>
     <AlignRight>Allinea a destra</AlignRight>
@@ -1449,6 +1450,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
         <GenerateBlankVideo>Genera video vuoto...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Genera video con sottotitoli forzati...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Genera video con sottotitoli incorporati aggiunti/rimossi...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Genera video trasparenti con sottotitoli...</GenerateTransparentVideoWithSubs>
         <VideoAudioToText>Audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
@@ -2538,14 +2540,14 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ContinuationStyleCustom>Personalizzato</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/lunghezza linea</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Conta tutti i caratteri</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Conta tutto tranne gli spazi, solo cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Conta tutto tranne gli spazi, solo CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Conta tutto tranne gli spazi</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, spazio 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Includi caratteri di composizione</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Includi caratteri composizione, non lo spazio</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Nessuno spazio o punteggiatura ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nessuno spazio o punteggiatura, solo cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Nessuno spazio o punteggiatura, solo CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Sostituisci con simbolo musicale:</MusicSymbol>
     <MusicSymbolsReplace>Caratteri sostitutivi (separati da "Virgole")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Correggi errori OCR comuni - usa anche regole forti</FixCommonOcrErrorsUseHardcodedRules>
@@ -2690,6 +2692,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformGoToPreviousShotChange>Vai al cambiamento di scena precedente</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Vai alla modifica della scena successiva</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Attiva/disattiva modifica scena</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Sposta tutte le modifiche dell'inquadratura un fotogramma in avanti</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Sposta tutte le modifiche dell'inquadratura un fotogramma indietro</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Rimuovi/esporta modifiche alla scena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Avvio con regolazione automatica tramite cambio Volume / Scena</WaveformGuessStart>
     <GoBack1Frame>Un fotogramma indietro</GoBack1Frame>
@@ -2794,6 +2798,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Recupera la prima parola dal sottotitolo successivo</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Sposta la prima parola dalla riga successiva in alto (sottotitolo attuale)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Sposta il testo dopo la posizione del cursore al sottotitolo successivo e vai al successivo</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Sposta la prima parola nel sottotitolo precedente</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Sposta l'ultima parola dalla prima riga in basso (sottotitolo attuale)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selezione in minuscolo</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selezione in Maiuscolo</MainTextBoxSelectionToUpper>
@@ -3018,16 +3023,16 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Numero tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
-    <LineLengthAverage>Lunghezza sottotitolo - media: {0}</LineLengthAverage>
+    <LineLengthAverage>Lunghezza sottotitolo - media: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Sottotitolo, numero di righe - media: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lunghezza riga singola - minimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lunghezza riga singola - massima: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lunghezza riga singola - media: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Lunghezza riga singola - media: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Lunghezza riga singola - superiore al massimo ({0} caratteri): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixel</SingleLineWidthMaximum>
     <SingleLineWidthExceedingMaximum>Larghezza riga singola - superiore al massimo ({0} pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
-    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixel</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Larghezza riga singola - media: {0:#.###} pixel</SingleLineWidthAverage>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
@@ -3137,6 +3142,9 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <Angle>Angolo</Angle>
     <BoxPerLine>Riquadro per riga (usa il colore del contorno)</BoxPerLine>
     <BoxMultiLine>Una casella (usa il colore dell'ombra)</BoxMultiLine>
+    <BoxPerLineShort>Box per linea</BoxPerLineShort>
+    <BoxMultiLineShort>Un box</BoxMultiLineShort>
+    <BoxType>Tipo box</BoxType>
     <DuplicateStyleNames>Nomi stile duplicati: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3181,6 +3189,8 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <AutoContinue>Continua automaticamente</AutoContinue>
     <Regenerate>Rigenera</Regenerate>
     <Speed>Velocità</Speed>
+    <Stability>Stabilità</Stability>
+    <Similarity>Somiglianza</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
@@ -3451,6 +3461,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+    <MergeStyleTags>Unisci tag stile</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Stili WebVTT</Title>

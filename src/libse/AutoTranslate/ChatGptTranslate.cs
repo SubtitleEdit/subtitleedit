@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
@@ -17,10 +18,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "ChatGPT";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://chat.openai.com/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
+        public static string[] Models => new[]
+        {
+            "gpt-4o-mini", "o1-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "gpt-4"
+        };
 
         public static string RemovePreamble(string original, string translation)
         {
@@ -70,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "gpt-4o";
+                model = Models[0];
                 Configuration.Settings.Tools.ChatGptModel = model;
             }
 
@@ -151,6 +157,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Hebrew","iw"),
                MakePair("Hindi","hi"),
                MakePair("Hungarian","hu"),
+               MakePair("Icelandic","is"),
                MakePair("Indonesian","id"),
                MakePair("Irish","ga"),
                MakePair("Italian","it"),
@@ -199,6 +206,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Swedish","sv"),
                MakePair("Turkish","tr"),
                MakePair("Ukrainian","uk"),
+               MakePair("Uyghur","ug"),
                MakePair("Urdu","ur"),
                MakePair("Uzbek","uz"),
                MakePair("Vietnamese","vi"),

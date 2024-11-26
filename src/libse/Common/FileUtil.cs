@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.Common
 {
     /// <summary>
-    /// File related utilities.
+    /// Provides utility methods for file operations and file type identification.
     /// </summary>
     public static class FileUtil
     {
@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Opens a binary file in read/write shared mode, reads the contents of the file into a
         /// byte array, and then closes the file.
         /// </summary>
-        /// <param name="path">The file to open for reading. </param>
+        /// <param name="path">The file to open for reading.</param>
         /// <returns>A byte array containing the contents of the file.</returns>
         public static byte[] ReadAllBytesShared(string path)
         {
@@ -51,6 +51,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Opens a binary file in read/write shared mode, reads the specified number of bytes from the file into a byte array, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading.</param>
+        /// <param name="bytesToRead">The number of bytes to read from the file.</param>
+        /// <returns>A byte array containing the specified number of bytes read from the file.</returns>
         public static byte[] ReadBytesShared(string path, int bytesToRead)
         {
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -80,6 +86,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Opens a text file in read/write shared mode, reads all lines of the file into a list of strings,
+        /// and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading.</param>
+        /// <param name="encoding">The encoding used to decode the text from the file.</param>
+        /// <returns>A list of strings containing all lines of the file.</returns>
         public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
             var bytes = ReadAllBytesShared(path);
@@ -96,6 +109,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return encoding.GetString(bytes).SplitToLines();
         }
 
+        /// <summary>
+        /// Opens a text file in read/write shared mode, reads the contents of the file into a
+        /// string, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file.</param>
+        /// <returns>A string containing the contents of the file.</returns>
         public static string ReadAllTextShared(string path, Encoding encoding)
         {
             var bytes = ReadAllBytesShared(path);
@@ -112,6 +132,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return encoding.GetString(bytes);
         }
 
+        /// <summary>
+        /// Determines whether the specified file is a ZIP archive based on its header bytes.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a ZIP archive; otherwise, false.</returns>
         public static bool IsZip(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -130,6 +155,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the specified file is a 7-Zip file by reading its signature bytes.
+        /// </summary>
+        /// <param name="fileName">The path to the file to check.</param>
+        /// <returns>True if the file is a 7-Zip file; otherwise, false.</returns>
         public static bool Is7Zip(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -150,6 +180,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the given file is an MP3 file by examining its file headers and extension.
+        /// </summary>
+        /// <param name="fileName">The path of the file to check.</param>
+        /// <returns>True if the file is an MP3 file; otherwise, false.</returns>
         public static bool IsMp3(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -167,6 +202,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the specified file is a WAV audio file by examining its header and file extension.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a WAV audio file; otherwise, false.</returns>
         public static bool IsWav(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -192,6 +232,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines if the specified file is a RAR archive by checking its magic number.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a RAR archive; otherwise, false.</returns>
         public static bool IsRar(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -210,6 +255,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the specified file is a PNG image by reading its header bytes.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a PNG image; otherwise, false.</returns>
         public static bool IsPng(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -232,6 +282,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the specified file is an SRR (Sample Rate Reduction) file by reading its initial bytes.
+        /// </summary>
+        /// <param name="fileName">The path to the file to check.</param>
+        /// <returns>True if the file is an SRR file, otherwise false.</returns>
         public static bool IsSrr(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -249,6 +304,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the file is a JPG by reading the header of the file.
+        /// </summary>
+        /// <param name="fileName">The path to the file to check.</param>
+        /// <returns>True if the file is a JPG, otherwise false.</returns>
         public static bool IsJpg(string fileName)
         {
             // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a unknown byte (most often E0 or E1 though)
@@ -267,6 +327,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines if the specified file is a Torrent file by reading its initial bytes and
+        /// checking for the presence of a specific Torrent file signature.
+        /// </summary>
+        /// <param name="fileName">The name of the file to verify.</param>
+        /// <returns>True if the file is a Torrent file; otherwise, false.</returns>
         public static bool IsTorrentFile(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -277,6 +343,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if a given file is a Blu-ray subtitle (.sup) file by reading its first two bytes.
+        /// </summary>
+        /// <param name="fileName">The file to check for Blu-ray subtitle format.</param>
+        /// <returns>True if the file is a Blu-ray subtitle file, otherwise false.</returns>
         public static bool IsBluRaySup(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -288,6 +359,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines if a file is a transport stream by inspecting its contents.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is identified as a transport stream; otherwise, false.</returns>
         public static bool IsTransportStream(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -312,6 +388,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified file is a M2 transport stream.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>true if the file is a M2 transport stream; otherwise, false.</returns>
         public static bool IsM2TransportStream(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -320,6 +401,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified file is an MPEG-2 Private Stream 2 file.
+        /// </summary>
+        /// <param name="fileName">The file to check.</param>
+        /// <returns>True if the specified file is an MPEG-2 Private Stream 2 file, otherwise false.</returns>
         public static bool IsMpeg2PrivateStream2(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -330,6 +416,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified file is a VobSub subtitle file.
+        /// </summary>
+        /// <param name="fileName">The path of the file to check.</param>
+        /// <returns>True if the file is a VobSub subtitle file; otherwise, false.</returns>
         public static bool IsVobSub(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -341,6 +432,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified file is a Manzanita file by reading the first 17 bytes.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a Manzanita file; otherwise, false.</returns>
         public static bool IsManzanita(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -352,6 +448,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines if the specified file is a SP (Subtitle Processor) DVD SUP file format.
+        /// </summary>
+        /// <param name="fileName">The path of the file to check.</param>
+        /// <returns>True if the file is a SP DVD SUP file; otherwise, false.</returns>
         public static bool IsSpDvdSup(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -423,6 +524,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Determines whether a file is in Rich Text Format (RTF).
+        /// </summary>
+        /// <param name="fileName">The path to the file to check.</param>
+        /// <returns>true if the file is in RTF format; otherwise, false.</returns>
         public static bool IsRtf(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -440,6 +546,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Checks if a file contains a UTF-8 byte order mark (BOM).
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file starts with a UTF-8 BOM; otherwise, false.</returns>
         public static bool HasUtf8Bom(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -450,6 +561,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines if a specified subtitle file consists entirely of binary zeroes.
+        /// </summary>
+        /// <param name="fileName">The path to the subtitle file to be checked.</param>
+        /// <returns>True if the file consists entirely of binary zeroes; otherwise, false.</returns>
         public static bool IsSubtitleFileAllBinaryZeroes(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -476,6 +592,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        /// <summary>
+        /// Determines whether the specified path represents a file.
+        /// </summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns>True if the specified path is a file; otherwise, false.</returns>
         public static bool IsFile(string path)
         {
             if (!Path.IsPathRooted(path))
@@ -486,6 +607,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
+        /// <summary>
+        /// Determines if the specified path refers to an existing directory.
+        /// </summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns>true if the path refers to an existing directory; otherwise, false.</returns>
         public static bool IsDirectory(string path)
         {
             if (!Path.IsPathRooted(path))
@@ -496,6 +622,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
+        /// <summary>
+        /// Determines whether the specified file is plain text based on its content and length.
+        /// </summary>
+        /// <param name="fileName">The path to the file to check.</param>
+        /// <returns>True if the file is determined to be plain text; otherwise, false.</returns>
         public static bool IsPlainText(string fileName)
         {
             var fileInfo = new FileInfo(fileName);
@@ -565,6 +696,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return numberCount < numberThreshold && letterCount > letterThreshold;
         }
 
+        /// <summary>
+        /// Attempts to read video information from the Matroska header of a specified file.
+        /// </summary>
+        /// <param name="fileName">The path to the Matroska file.</param>
+        /// <returns>A VideoInfo object containing video properties if successful; otherwise, an object with Success set to false.</returns>
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
             var info = new VideoInfo { Success = false };
@@ -587,6 +723,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return info;
         }
 
+        /// <summary>
+        /// Attempts to read video information from an AVI file header.
+        /// </summary>
+        /// <param name="fileName">The path to the AVI file to be read.</param>
+        /// <returns>A <see cref="VideoInfo"/> object containing details about the video. If reading the information fails, the <c>Success</c> property of the returned object will be <c>false</c>.</returns>
         public static VideoInfo TryReadVideoInfoViaAviHeader(string fileName)
         {
             var info = new VideoInfo { Success = false };
@@ -619,6 +760,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return info;
         }
 
+        /// <summary>
+        /// Attempts to read video information from an MP4 file.
+        /// </summary>
+        /// <param name="fileName">The path to the MP4 file.</param>
+        /// <returns>A VideoInfo object containing the video information, with the Success property indicating whether reading was successful.</returns>
         public static VideoInfo TryReadVideoInfoViaMp4(string fileName)
         {
             var info = new VideoInfo { Success = false };
@@ -646,11 +792,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             return info;
         }
 
+        /// <summary>
+        /// Generates a unique temporary file name with the specified extension.
+        /// </summary>
+        /// <param name="extension">The extension for the temporary file name.</param>
+        /// <returns>A string containing the full path of the temporary file.</returns>
         public static string GetTempFileName(string extension)
         {
             return Path.GetTempPath() + Guid.NewGuid() + extension;
         }
 
+        /// <summary>
+        /// Writes the specified string to a file, using the specified encoding. If the encoding
+        /// is UTF-8 without BOM, it writes the content without a BOM.
+        /// </summary>
+        /// <param name="fileName">The file to write to.</param>
+        /// <param name="contents">The string to write to the file.</param>
+        /// <param name="encoding">The encoding to use for writing the text.</param>
         public static void WriteAllText(string fileName, string contents, TextEncoding encoding)
         {
             if (encoding.DisplayName == TextEncoding.Utf8WithoutBom)
@@ -667,6 +825,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Writes specified text to a file with UTF-8 encoding, checking the global setting for the preferred encoding method (with or without BOM).
+        /// </summary>
+        /// <param name="fileName">The path and name of the file to write to.</param>
+        /// <param name="contents">The text content to be written to the file.</param>
         public static void WriteAllTextWithDefaultUtf8(string fileName, string contents)
         {
             if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
@@ -683,6 +846,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified file is a valid Matroska file.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a valid Matroska file; otherwise, false.</returns>
         public static bool IsMatroskaFile(string fileName)
         {
             using (var validator = new MatroskaFile(fileName))
@@ -691,6 +859,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static bool IsMatroskaFileFast(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, buffer.Length);
+
+                // 1a 45 df a3
+                return buffer[0] == 0x1a && buffer[1] == 0x45 && buffer[2] == 0xdf && buffer[3] == 0xa3;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a file is locked by attempting to open it with exclusive read access.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is locked, otherwise false.</returns>
         public static bool IsFileLocked(string fileName)
         {
             try
@@ -709,6 +894,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Searches for a subtitle file that matches the given video file in specified directories.
+        /// </summary>
+        /// <param name="path">The base path to search for subtitle files.</param>
+        /// <param name="videoFileName">The video file name for which a matching subtitle is being sought.</param>
+        /// <returns>The full path of the found subtitle file, or an empty string if no matching subtitle is found.</returns>
         public static string TryLocateSubtitleFile(string path, string videoFileName)
         {
             // search in these subdirectories: \Subs;\Sub;\Subtitles;
@@ -755,6 +946,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Checks if a directory is writable by attempting to create and delete a temporary file within it.
+        /// </summary>
+        /// <param name="dirPath">The directory path to check for write access.</param>
+        /// <returns>True if the directory is writable, false otherwise.</returns>
+        public static bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose)) { }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

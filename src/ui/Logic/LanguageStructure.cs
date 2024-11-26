@@ -1091,6 +1091,7 @@
             public string Audio { get; set; }
             public string Stereo { get; set; }
             public string Preset { get; set; }
+            public string PixelFormat { get; set; }
             public string Crf { get; set; }
             public string TuneFor { get; set; }
             public string AlignRight { get; set; }
@@ -1845,6 +1846,7 @@
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string GenerateVideoWithEmbeddedSubs { get; set; }
+                    public string GenerateTransparentVideoWithSubs { get; set; }
                     public string VideoAudioToTextX { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportShotChanges { get; set; }
@@ -2868,6 +2870,8 @@
             public string WaveformGoToPreviousShotChange { get; set; }
             public string WaveformGoToNextShotChange { get; set; }
             public string WaveformToggleShotChange { get; set; }
+            public string WaveformAllShotChangesOneFrameForward { get; set; }
+            public string WaveformAllShotChangesOneFrameBack { get; set; }
             public string WaveformRemoveOrExportShotChanges { get; set; }
             public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }
@@ -2973,6 +2977,7 @@
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
             public string MainTextBoxMoveFromCursorToNext { get; set; }
+            public string MainTextBoxMoveFirstWordToPrev { get; set; }
             public string MainTextBoxMoveLastWordDownCurrent { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
@@ -3340,6 +3345,9 @@
             public string Angle { get; set; }
             public string BoxPerLine { get; set; }
             public string BoxMultiLine { get; set; }
+            public string BoxPerLineShort { get; set; }
+            public string BoxMultiLineShort { get; set; }
+            public string BoxType { get; set; }
             public string DuplicateStyleNames { get; set; }
         }
 
@@ -3390,6 +3398,8 @@
             public string AutoContinue { get; set; }
             public string Regenerate { get; set; }
             public string Speed { get; set; }
+            public string Stability { get; set; }
+            public string Similarity { get; set; }
         }
 
         public class TimedTextSmpteTiming
@@ -3692,6 +3702,7 @@
         {
             public string UseXTimeStamp { get; set; }
             public string MergeLines { get; set; }
+            public string MergeStyleTags { get; set; }
         }
 
         public class WebVttStyleManager

@@ -17,6 +17,8 @@
             {
                 components.Dispose();
             }
+
+            _httpClient?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -272,7 +274,7 @@
             this.updateLocalModelsToolStripMenuItem,
             this.findModelsToolStripMenuItem});
             this.contextMenuStripOlamaModels.Name = "contextMenuStripOlamaModels";
-            this.contextMenuStripOlamaModels.Size = new System.Drawing.Size(184, 70);
+            this.contextMenuStripOlamaModels.Size = new System.Drawing.Size(184, 48);
             // 
             // updateLocalModelsToolStripMenuItem
             // 
@@ -446,6 +448,7 @@
             this.subtitleListViewTarget.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewTarget.HideSelection = false;
             this.subtitleListViewTarget.Location = new System.Drawing.Point(465, 53);
+            this.subtitleListViewTarget.MultiSelect = false;
             this.subtitleListViewTarget.Name = "subtitleListViewTarget";
             this.subtitleListViewTarget.OwnerDraw = true;
             this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 431);
@@ -469,6 +472,7 @@
             this.subtitleListViewSource.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewSource.HideSelection = false;
             this.subtitleListViewSource.Location = new System.Drawing.Point(12, 53);
+            this.subtitleListViewSource.MultiSelect = false;
             this.subtitleListViewSource.Name = "subtitleListViewSource";
             this.subtitleListViewSource.OwnerDraw = true;
             this.subtitleListViewSource.Size = new System.Drawing.Size(430, 431);
@@ -516,6 +520,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslate";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoTranslate_FormClosing);
+            this.Shown += new System.EventHandler(this.AutoTranslate_Shown);
             this.ResizeEnd += new System.EventHandler(this.AutoTranslate_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);

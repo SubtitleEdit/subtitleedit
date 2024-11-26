@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Netspark</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -3040,15 +3040,15 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <NumberOfAlignmentTags>Ausrichtung Tags:           {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Untertitellänge - Minimum:              {0}</LineLengthMinimum>
     <LineLengthMaximum>Untertitellänge - Maximum:             {0}</LineLengthMaximum>
-    <LineLengthAverage>Untertitellänge - Durchschnitt:        {0}</LineLengthAverage>
+    <LineLengthAverage>Untertitellänge - Durchschnitt:        {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Zeilenanzahl - Durchschnitt:          {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Einzelzeilenlänge - Minimum:          {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Einzelzeilenlänge - Maximum:         {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt:    {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt:    {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Einzelne Zeilenlänge - Überschreitung des Maximums ({0} Zeichen): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Einzelzeilenbreite - Minimum: {0} Pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Einzelzeilenbreite - Maximum: {0} Pixel</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Einzelzeilenbreite - Durchschnitt: {0} Pixel</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Einzelzeilenbreite - Durchschnitt: {0:#.###} Pixel</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Einzelne Zeilenbreite - Überschreitung des Maximums ({0} Pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Dauer - Minimum:                            {0:0.000} Sekunden</DurationMinimum>
     <DurationMaximum>Dauer - Maximum:                           {0:0.000} Sekunden</DurationMaximum>

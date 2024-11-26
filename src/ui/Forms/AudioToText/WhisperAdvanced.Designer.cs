@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonStandardAsia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonStandardAsia.Location = new System.Drawing.Point(160, 390);
             this.buttonStandardAsia.Name = "buttonStandardAsia";
-            this.buttonStandardAsia.Size = new System.Drawing.Size(148, 23);
+            this.buttonStandardAsia.Size = new System.Drawing.Size(148, 24);
             this.buttonStandardAsia.TabIndex = 12;
             this.buttonStandardAsia.Text = "Standard Asia";
             this.buttonStandardAsia.UseVisualStyleBackColor = true;
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonHighlightCurrentWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonHighlightCurrentWord.Location = new System.Drawing.Point(622, 390);
             this.buttonHighlightCurrentWord.Name = "buttonHighlightCurrentWord";
-            this.buttonHighlightCurrentWord.Size = new System.Drawing.Size(180, 23);
+            this.buttonHighlightCurrentWord.Size = new System.Drawing.Size(180, 24);
             this.buttonHighlightCurrentWord.TabIndex = 18;
             this.buttonHighlightCurrentWord.Text = "Highlight current word";
             this.buttonHighlightCurrentWord.UseVisualStyleBackColor = true;
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonStandard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonStandard.Location = new System.Drawing.Point(6, 390);
             this.buttonStandard.Name = "buttonStandard";
-            this.buttonStandard.Size = new System.Drawing.Size(148, 23);
+            this.buttonStandard.Size = new System.Drawing.Size(148, 24);
             this.buttonStandard.TabIndex = 10;
             this.buttonStandard.Text = "Standard";
             this.buttonStandard.UseVisualStyleBackColor = true;
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonSentence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSentence.Location = new System.Drawing.Point(314, 390);
             this.buttonSentence.Name = "buttonSentence";
-            this.buttonSentence.Size = new System.Drawing.Size(148, 23);
+            this.buttonSentence.Size = new System.Drawing.Size(148, 24);
             this.buttonSentence.TabIndex = 14;
             this.buttonSentence.Text = "Sentence";
             this.buttonSentence.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonSingleWords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSingleWords.Location = new System.Drawing.Point(468, 390);
             this.buttonSingleWords.Name = "buttonSingleWords";
-            this.buttonSingleWords.Size = new System.Drawing.Size(148, 23);
+            this.buttonSingleWords.Size = new System.Drawing.Size(148, 24);
             this.buttonSingleWords.TabIndex = 16;
             this.buttonSingleWords.Text = "Single word";
             this.buttonSingleWords.UseVisualStyleBackColor = true;
@@ -310,9 +310,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonXxlStandardAsia
             // 
             this.buttonXxlStandardAsia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonXxlStandardAsia.Location = new System.Drawing.Point(160, 391);
+            this.buttonXxlStandardAsia.Location = new System.Drawing.Point(160, 390);
             this.buttonXxlStandardAsia.Name = "buttonXxlStandardAsia";
-            this.buttonXxlStandardAsia.Size = new System.Drawing.Size(148, 23);
+            this.buttonXxlStandardAsia.Size = new System.Drawing.Size(148, 24);
             this.buttonXxlStandardAsia.TabIndex = 21;
             this.buttonXxlStandardAsia.Text = "Standard Asia";
             this.buttonXxlStandardAsia.UseVisualStyleBackColor = true;
@@ -321,9 +321,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonXxlHighlightWord
             // 
             this.buttonXxlHighlightWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonXxlHighlightWord.Location = new System.Drawing.Point(622, 391);
+            this.buttonXxlHighlightWord.Location = new System.Drawing.Point(622, 390);
             this.buttonXxlHighlightWord.Name = "buttonXxlHighlightWord";
-            this.buttonXxlHighlightWord.Size = new System.Drawing.Size(180, 23);
+            this.buttonXxlHighlightWord.Size = new System.Drawing.Size(180, 24);
             this.buttonXxlHighlightWord.TabIndex = 24;
             this.buttonXxlHighlightWord.Text = "Highlight current word";
             this.buttonXxlHighlightWord.UseVisualStyleBackColor = true;
@@ -332,9 +332,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonXxlStandard
             // 
             this.buttonXxlStandard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonXxlStandard.Location = new System.Drawing.Point(6, 391);
+            this.buttonXxlStandard.Location = new System.Drawing.Point(6, 390);
             this.buttonXxlStandard.Name = "buttonXxlStandard";
-            this.buttonXxlStandard.Size = new System.Drawing.Size(148, 23);
+            this.buttonXxlStandard.Size = new System.Drawing.Size(148, 24);
             this.buttonXxlStandard.TabIndex = 20;
             this.buttonXxlStandard.Text = "Standard";
             this.buttonXxlStandard.UseVisualStyleBackColor = true;
@@ -343,9 +343,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonXxlSentence
             // 
             this.buttonXxlSentence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonXxlSentence.Location = new System.Drawing.Point(314, 391);
+            this.buttonXxlSentence.Location = new System.Drawing.Point(314, 390);
             this.buttonXxlSentence.Name = "buttonXxlSentence";
-            this.buttonXxlSentence.Size = new System.Drawing.Size(148, 23);
+            this.buttonXxlSentence.Size = new System.Drawing.Size(148, 24);
             this.buttonXxlSentence.TabIndex = 22;
             this.buttonXxlSentence.Text = "Sentence";
             this.buttonXxlSentence.UseVisualStyleBackColor = true;
@@ -354,9 +354,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonXxlSingleWord
             // 
             this.buttonXxlSingleWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonXxlSingleWord.Location = new System.Drawing.Point(468, 391);
+            this.buttonXxlSingleWord.Location = new System.Drawing.Point(468, 390);
             this.buttonXxlSingleWord.Name = "buttonXxlSingleWord";
-            this.buttonXxlSingleWord.Size = new System.Drawing.Size(148, 23);
+            this.buttonXxlSingleWord.Size = new System.Drawing.Size(148, 24);
             this.buttonXxlSingleWord.TabIndex = 23;
             this.buttonXxlSingleWord.Text = "Single word";
             this.buttonXxlSingleWord.UseVisualStyleBackColor = true;
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nikseTextBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nikseTextBox1.Location = new System.Drawing.Point(3, 4);
+            this.nikseTextBox1.Location = new System.Drawing.Point(3, 3);
             this.nikseTextBox1.Multiline = true;
             this.nikseTextBox1.Name = "nikseTextBox1";
             this.nikseTextBox1.ReadOnly = true;
@@ -381,6 +381,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // comboBoxWhisperExtra
             // 
+            this.comboBoxWhisperExtra.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxWhisperExtra.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxWhisperExtra.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.comboBoxWhisperExtra.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
@@ -398,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedIndex = -1;
             this.comboBoxWhisperExtra.SelectedItem = null;
             this.comboBoxWhisperExtra.SelectedText = "";
-            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
+            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(838, 23);
             this.comboBoxWhisperExtra.TabIndex = 0;
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;

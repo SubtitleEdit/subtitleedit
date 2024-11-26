@@ -13,7 +13,7 @@ namespace Test.Core
         [TestMethod]
         public void LineStartsWithHtmlTagEmpty()
         {
-            string test = string.Empty;
+            var test = string.Empty;
             Assert.IsFalse(test.LineStartsWithHtmlTag(true));
         }
 
@@ -34,14 +34,14 @@ namespace Test.Core
         [TestMethod]
         public void EndsWithEmpty()
         {
-            string test = string.Empty;
+            var test = string.Empty;
             Assert.IsFalse(test.EndsWith('?'));
         }
 
         [TestMethod]
         public void EndsWithHtmlTagEmpty()
         {
-            string test = string.Empty;
+            var test = string.Empty;
             Assert.IsFalse(test.LineEndsWithHtmlTag(true));
         }
 
@@ -55,21 +55,21 @@ namespace Test.Core
         [TestMethod]
         public void LineBreakStartsWithHtmlTagEmpty()
         {
-            string test = string.Empty;
+            var test = string.Empty;
             Assert.IsFalse(test.LineBreakStartsWithHtmlTag(true));
         }
 
         [TestMethod]
         public void LineBreakStartsWithHtmlTagItalic()
         {
-            string test = "<i>Hej</i>" + Environment.NewLine + "<i>Hej</i>";
+            var test = "<i>Hej</i>" + Environment.NewLine + "<i>Hej</i>";
             Assert.IsTrue(test.LineBreakStartsWithHtmlTag(true));
         }
 
         [TestMethod]
         public void LineBreakStartsWithHtmlTagFont()
         {
-            string test = "Hej!" + Environment.NewLine + "<font color=FFFFFF>Hej!</font>";
+            var test = "Hej!" + Environment.NewLine + "<font color=FFFFFF>Hej!</font>";
             Assert.IsTrue(test.LineBreakStartsWithHtmlTag(true, true));
         }
 
@@ -91,28 +91,14 @@ namespace Test.Core
         [TestMethod]
         public void SplitToLines1()
         {
-            string input = "Line1" + Environment.NewLine + "Line2";
+            var input = "Line1" + Environment.NewLine + "Line2";
             Assert.AreEqual(2, input.SplitToLines().Count);
-        }
-
-        [TestMethod]
-        public void SplitToLines2()
-        {
-            string input = "Line1\r\r\nLine2\r\nLine3\rLine4\u2028Line5\nLine6";
-            var res = input.SplitToLines();
-            Assert.AreEqual(6, res.Count);
-            Assert.AreEqual("Line1", res[0]);
-            Assert.AreEqual("Line2", res[1]);
-            Assert.AreEqual("Line3", res[2]);
-            Assert.AreEqual("Line4", res[3]);
-            Assert.AreEqual("Line5", res[4]);
-            Assert.AreEqual("Line6", res[5]);
         }
 
         [TestMethod]
         public void SplitToLinesEmptyLines1()
         {
-            string input = "\n\nLine3\r\n\r\nLine5\r";
+            var input = "\n\nLine3\r\n\r\nLine5\r";
             var res = input.SplitToLines();
             Assert.AreEqual(6, res.Count);
             Assert.AreEqual(string.Empty, res[0]);
@@ -124,23 +110,38 @@ namespace Test.Core
         }
 
         [TestMethod]
-        public void SplitToLinesEmptyLines2()
+        public void SplitToLines0A0A0D()
         {
-            string input = "\r\n\r\nLine3\u2028\rLine5\r\r\n";
+            var input = "a\n\n\rb";
             var res = input.SplitToLines();
-            Assert.AreEqual(6, res.Count);
-            Assert.AreEqual(string.Empty, res[0]);
+            Assert.AreEqual(4, res.Count);
+            Assert.AreEqual("a", res[0]);
             Assert.AreEqual(string.Empty, res[1]);
-            Assert.AreEqual("Line3", res[2]);
+            Assert.AreEqual("b", res[3]);
+        }
+
+        [TestMethod]
+        public void SplitToLines650D0D0A650A0A650A650D650D0A650A0D65()
+        {
+            var input = "e\r\r\ne\n\ne\ne\re\r\ne\n\re";
+            var res = input.SplitToLines();
+            Assert.AreEqual(10, res.Count);
+            Assert.AreEqual("e", res[0]);
+            Assert.AreEqual(string.Empty, res[1]);
+            Assert.AreEqual("e", res[2]);
             Assert.AreEqual(string.Empty, res[3]);
-            Assert.AreEqual("Line5", res[4]);
-            Assert.AreEqual(string.Empty, res[5]);
+            Assert.AreEqual("e", res[4]);
+            Assert.AreEqual("e", res[5]);
+            Assert.AreEqual("e", res[6]);
+            Assert.AreEqual("e", res[7]);
+            Assert.AreEqual(string.Empty, res[8]);
+            Assert.AreEqual("e", res[9]);
         }
 
         [TestMethod]
         public void FixExtraSpaces()
         {
-            string input = "Hallo  world!";
+            var input = "Hallo  world!";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("Hallo world!", res);
         }
@@ -148,7 +149,7 @@ namespace Test.Core
         [TestMethod]
         public void FixExtraSpaces2()
         {
-            string input = "Hallo   world!";
+            var input = "Hallo   world!";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("Hallo world!", res);
         }
@@ -156,7 +157,7 @@ namespace Test.Core
         [TestMethod]
         public void FixExtraSpaces3()
         {
-            string input = "Hallo world!  ";
+            var input = "Hallo world!  ";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("Hallo world! ", res);
         }
@@ -164,7 +165,7 @@ namespace Test.Core
         [TestMethod]
         public void FixExtraSpaces4()
         {
-            string input = "Hallo " + Environment.NewLine + " world!";
+            var input = "Hallo " + Environment.NewLine + " world!";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("Hallo" + Environment.NewLine + "world!", res);
         }
@@ -173,7 +174,7 @@ namespace Test.Core
         [TestMethod]
         public void FixExtraSpaces5()
         {
-            string input = "a  " + Environment.NewLine + "b";
+            var input = "a  " + Environment.NewLine + "b";
             var res = input.FixExtraSpaces();
             Assert.AreEqual("a" + Environment.NewLine + "b", res);
         }
@@ -205,7 +206,7 @@ namespace Test.Core
         [TestMethod]
         public void RemoveChar1()
         {
-            string input = "Hallo world!";
+            var input = "Hallo world!";
             var res = input.RemoveChar(' ');
             Assert.AreEqual("Halloworld!", res);
         }
@@ -213,7 +214,7 @@ namespace Test.Core
         [TestMethod]
         public void RemoveChar2()
         {
-            string input = " Hallo  world! ";
+            var input = " Hallo  world! ";
             var res = input.RemoveChar(' ');
             Assert.AreEqual("Halloworld!", res);
         }
@@ -221,7 +222,7 @@ namespace Test.Core
         [TestMethod]
         public void RemoveChar3()
         {
-            string input = " Hallo  world! ";
+            var input = " Hallo  world! ";
             var res = input.RemoveChar(' ', '!');
             Assert.AreEqual("Halloworld", res);
         }
@@ -229,7 +230,7 @@ namespace Test.Core
         [TestMethod]
         public void RemoveChar4()
         {
-            string input = " Hallo  world! ";
+            var input = " Hallo  world! ";
             var res = input.RemoveChar(' ', '!', 'H');
             Assert.AreEqual("alloworld", res);
         }
@@ -400,6 +401,22 @@ namespace Test.Core
             var input = "<i>HOW ARE YOU?</i>";
             var res = input.ToProperCase(null);
             Assert.AreEqual("<i>How Are You?</i>", res);
+        }
+
+        [TestMethod]
+        public void ToLowercaseButKeepTags1()
+        {
+            var input = "<i>HOW ARE YOU?</i>";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("<i>how are you?</i>", res);
+        }
+
+        [TestMethod]
+        public void ToLowercaseButKeepTags2()
+        {
+            var input = "{\\c&H0000FF&}Red";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("{\\c&H0000FF&}red", res);
         }
 
         [TestMethod]

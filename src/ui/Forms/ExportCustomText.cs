@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                foreach (string template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                foreach (var template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
                 {
                     _templates.Add(template);
                 }
@@ -321,11 +321,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSave.Enabled = listViewTemplates.SelectedItems.Count == 1;
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Delete();
-        }
-
         private void Delete()
         {
             if (listViewTemplates.SelectedItems.Count != 1)
@@ -430,6 +425,161 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxPreview.SelectAll();
             }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Delete();
+        }
+
+        private void MoveUp(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+
+            var style = _templates[idx];
+            _templates.RemoveAt(idx);
+            _templates.Insert(idx - 1, style);
+
+
+            idx--;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveDown(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx >= listView.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+
+            var style = _templates[idx];
+            _templates.RemoveAt(idx);
+            _templates.Insert(idx + 1, style);
+
+            idx++;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveToTop(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+
+            var style = _templates[idx];
+            _templates.RemoveAt(idx);
+            _templates.Insert(0, style);
+
+            idx = 0;
+            listView.Items.Insert(idx, item);
+            UpdateSelectedIndices(listView, idx);
+        }
+
+        private void MoveToBottom(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == listView.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+
+            var style = _templates[idx];
+            _templates.RemoveAt(idx);
+            _templates.Add(style);
+
+            listView.Items.Add(item);
+            UpdateSelectedIndices(listView);
+        }
+
+        private static void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
+        {
+            if (numberOfSelectedItems == 0)
+            {
+                return;
+            }
+
+            if (startingIndex == -1 || startingIndex >= listview.Items.Count)
+            {
+                startingIndex = listview.Items.Count - 1;
+            }
+
+            if (startingIndex - numberOfSelectedItems < -1)
+            {
+                return;
+            }
+
+            listview.SelectedItems.Clear();
+            for (var i = 0; i < numberOfSelectedItems; i++)
+            {
+                listview.Items[startingIndex - i].Selected = true;
+                listview.Items[startingIndex - i].EnsureVisible();
+                listview.Items[startingIndex - i].Focused = true;
+            }
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoveUp(listViewTemplates);
+            SaveTemplates();
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoveDown(listViewTemplates);
+            SaveTemplates();
+        }
+
+        private void moveTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoveToTop(listViewTemplates);
+            SaveTemplates();
+        }
+
+        private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoveToBottom(listViewTemplates);
+            SaveTemplates();
         }
     }
 }

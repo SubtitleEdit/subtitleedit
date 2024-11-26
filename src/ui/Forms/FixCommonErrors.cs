@@ -7,12 +7,10 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -471,14 +469,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace;
             }
+
             if (dialogStyle == DialogType.DashSecondLineWithSpace)
             {
                 return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
             }
+
             if (dialogStyle == DialogType.DashBothLinesWithoutSpace)
             {
-                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithoutSpace;
             }
+
             return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithSpace;
         }
 
@@ -602,10 +603,14 @@ namespace Nikse.SubtitleEdit.Forms
             FixUnneededSpaces.Language.UnneededSpace = LanguageSettings.Current.FixCommonErrors.UnneededSpace;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWords;
+            RemoveSpaceBetweenNumbers.Language.RemoveSpaceBetweenNumber = LanguageSettings.Current.FixCommonErrors.RemoveSpaceBetweenNumber;
             NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
 
             FixLargeFonts();
             listView1.Select();
+
+            AcceptButton = buttonNextFinish;
+            textBoxListViewText.AcceptsReturn = true;
         }
 
         private void FixLargeFonts()
@@ -811,6 +816,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus(false);
+                AcceptButton = buttonFixesApply;
+                buttonFixesApply.Focus();
             }
             Cursor = Cursors.Default;
         }
@@ -1121,6 +1128,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Visible = true;
             ShowStatus(string.Empty);
             listViewFixes.Items.Clear();
+
+            AcceptButton = buttonNextFinish;
+            buttonNextFinish.Focus();
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -1418,6 +1428,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonFixesApply.Enabled = true;
+
+            if (listViewFixes.Items.Count == 0)
+            {
+                AcceptButton = buttonNextFinish;
+                buttonNextFinish.Focus();
+            }
         }
 
         private void ButtonRefreshFixesClick(object sender, EventArgs e)

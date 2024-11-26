@@ -18,7 +18,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Forms.AudioToText;
-using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Options;
@@ -47,6 +46,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Forms.Tts;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
@@ -825,9 +825,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var text = Clipboard.GetText();
                 var tmp = new Subtitle();
-                var format = new SubRip();
+                SubtitleFormat format = new SubRip();
                 var list = new List<string>(text.SplitToLines());
+
+                if (new AdvancedSubStationAlpha().IsMine(list, string.Empty))
+                {
+                    format = new AdvancedSubStationAlpha();
+                }
+
                 format.LoadSubtitle(tmp, list, null);
+
                 if (videoPositionInMilliseconds >= 0 && tmp.Paragraphs.Count > 0)
                 {
                     if (tmp.Paragraphs[0].StartTime.TotalMilliseconds > videoPositionInMilliseconds)
@@ -872,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var newDuration = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines - p.StartTime.TotalMilliseconds;
                                 if (newDuration >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
-                                    var cps = Utilities.GetCharactersPerSecond(p);
+                                    var cps = p.GetCharactersPerSecond();
                                     if (cps <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                                     {
                                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + newDuration;
@@ -1840,6 +1847,7 @@ namespace Nikse.SubtitleEdit.Forms
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
             generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
             generateVideoWithSoftcodedSubtitlesToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithEmbeddedSubs;
+            generaeTransparentVideoWithSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateTransparentVideoWithSubs;
             videoaudioToTextToolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi");
             audioToTextWhisperTolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Whisper");
             textToSpeechAndAddToVideoToolStripMenuItem.Text = _language.Menu.Video.TextToSpeechAndAddToVideo;
@@ -2448,7 +2456,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AutoSave(bool force = false)
         {
             if (!Configuration.Settings.General.AutoSave ||
-                DateTime.UtcNow.Ticks - _lastAutoSave < 10000 * 3000 && !force) // only check for auto save evety 3 seconds
+                Stopwatch.GetTimestamp() - _lastAutoSave < 10000 * 3000 && !force) // only check for auto save evety 3 seconds
             {
                 return;
             }
@@ -2468,7 +2476,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DoAutoSave()
         {
-            _lastAutoSave = DateTime.UtcNow.Ticks + 1009000;
+            _lastAutoSave = Stopwatch.GetTimestamp() + 1009000;
             var currentSubtitleHash = GetFastSubtitleHash();
             if (_changeSubtitleHash != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
             {
@@ -2485,7 +2493,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveOriginalSubtitle(GetCurrentSubtitleFormat(), true);
             }
 
-            _lastAutoSave = DateTime.UtcNow.Ticks;
+            _lastAutoSave = Stopwatch.GetTimestamp();
         }
 
         private bool ContinueNewOrExit()
@@ -2500,7 +2508,7 @@ namespace Nikse.SubtitleEdit.Forms
                     promptText = string.Format(_language.SaveChangesToX, _fileName);
                 }
 
-                var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel);
+                var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, true);
 
                 if (dr == DialogResult.Cancel)
                 {
@@ -2664,10 +2672,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if ((DateTime.UtcNow.Ticks - _lastHistoryTicks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
+            if ((Stopwatch.GetTimestamp() - _lastHistoryTicks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
             {
                 MakeHistoryForUndo(description);
-                _lastHistoryTicks = DateTime.UtcNow.Ticks;
+                _lastHistoryTicks = Stopwatch.GetTimestamp();
             }
         }
 
@@ -2879,7 +2887,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _lastAutoSave = DateTime.UtcNow.Ticks;
+            _lastAutoSave = Stopwatch.GetTimestamp();
             bool videoFileLoaded = false;
             _formatManuallyChanged = false;
             var file = new FileInfo(fileName);
@@ -2944,7 +2952,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (ext == ".mkv" || ext == ".mks")
+            if (ext == ".mkv" || ext == ".mks" ||
+
+                // allow for mkv files with wrong extension
+                ((ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
+                
+                ) 
             {
                 ImportSubtitleFromMatroskaFile(fileName);
                 return;
@@ -3304,6 +3317,28 @@ namespace Nikse.SubtitleEdit.Forms
                         if (ContinueNewOrExit())
                         {
                             ImportAndOcrDost(fileName, rhozetHarmonicImage, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var f = new PlayStationSubs();
+                    var list = new List<string>();
+                    if (f.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrIBinaryParagraphList(fileName, f, list);
                         }
 
                         return;
@@ -4511,6 +4546,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var formSubOcr = new VobSubOcr())
             {
                 var sub = new Subtitle();
+                sub.OriginalFormat = format;
                 format.LoadSubtitle(sub, list, fileName);
                 sub.FileName = fileName;
                 formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, false);
@@ -4519,6 +4555,41 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeImportingBdnXml);
                     FileNew();
                     _subtitle.Paragraphs.Clear();
+                    _subtitle.OriginalFormat = format;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, GetCurrentSubtitleFormat().Extension);
+                    SetTitle();
+                    _converted = true;
+                }
+            }
+        }
+
+        private void ImportAndOcrIBinaryParagraphList(string fileName, SubtitleFormat format, List<string> list)
+        {
+            using (var formSubOcr = new VobSubOcr())
+            {
+                var sub = new Subtitle();
+                sub.OriginalFormat = format;
+                format.LoadSubtitle(sub, list, fileName);
+                sub.FileName = fileName;
+                formSubOcr.InitializeIBinaryParagraphList(format as IBinaryParagraphList, sub);
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.OriginalFormat = format;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
                     {
@@ -5386,7 +5457,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.No;
                     }
 
-                    MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
+                    MessageBox.Show("Oops - save original does not support this format - please go to Github and create an issue!");
                 }
 
                 string allText = subAlt.ToText(format);
@@ -6428,7 +6499,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
             _sourceViewChange = true;
             labelStatus.Text = string.Empty;
-            _sourceTextTicks = DateTime.UtcNow.Ticks;
+            _sourceTextTicks = Stopwatch.GetTimestamp();
         }
 
         private bool ShowProfileInStatusBar => Configuration.Settings.General.CurrentProfile != "Default";
@@ -9685,7 +9756,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool noNetWorkSession = _networkSession == null;
 
-                toolStripMenuItemSaveSelectedLines.Visible = false;
+                toolStripMenuItemSaveSelectedLines.Visible = true;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = noNetWorkSession;
@@ -9727,7 +9798,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
-                    toolStripMenuItemSaveSelectedLines.Visible = true;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -11058,7 +11128,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (paragraph.DurationTotalSeconds > 0)
             {
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                double charactersPerSecond = paragraph.GetCharactersPerSecond();
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds &&
                     Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
@@ -11443,7 +11513,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
-            _listViewTextTicks = DateTime.UtcNow.Ticks;
+            _listViewTextTicks = Stopwatch.GetTimestamp();
 
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
             {
@@ -11740,7 +11810,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // last key down in text
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
@@ -11881,6 +11951,53 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             tb.SelectionStart = selectionStart;
                         }
+                    }
+                }
+            }
+        }
+
+        private void MoveFirstWordToPrev(SETextBox tb)
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex <= 0)
+            {
+                return;
+            }
+
+            var prev = _subtitle.GetParagraphOrDefault(firstIndex - 1);
+            var current = _subtitle.GetParagraphOrDefault(firstIndex);
+
+            if (tb == textBoxListViewTextOriginal)
+            {
+                prev = Utilities.GetOriginalParagraph(firstIndex - 1, prev, _subtitleOriginal.Paragraphs);
+                current = Utilities.GetOriginalParagraph(firstIndex, current, _subtitleOriginal.Paragraphs);
+            }
+
+            if (prev != null && current != null)
+            {
+                var moveUpDown = new MoveWordUpDown(prev.Text, current.Text);
+                moveUpDown.MoveWordUp();
+                if (moveUpDown.S1 != prev.Text && moveUpDown.S2 != current.Text)
+                {
+                    MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+                    prev.Text = moveUpDown.S1;
+                    current.Text = moveUpDown.S2;
+                    if (tb == textBoxListViewTextOriginal)
+                    {
+                        SubtitleListview1.SetOriginalText(firstIndex - 1, prev.Text);
+                        SubtitleListview1.SetOriginalText(firstIndex, current.Text);
+                    }
+                    else
+                    {
+                        SubtitleListview1.SetText(firstIndex - 1, prev.Text);
+                        SubtitleListview1.SetText(firstIndex, current.Text);
+                    }
+
+                    var selectionStart = textBoxListViewText.SelectionStart;
+                    tb.Text = current.Text;
+                    if (selectionStart >= 0)
+                    {
+                        tb.SelectionStart = selectionStart;
                     }
                 }
             }
@@ -12819,194 +12936,196 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeSelectedLines(BreakMode breakMode = BreakMode.Normal)
         {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
+            if (_subtitle.Paragraphs.Count <= 0 || SubtitleListview1.SelectedItems.Count <= 1)
             {
-                var sb = new StringBuilder();
-                var deleteIndices = new List<int>();
-                bool first = true;
-                int firstIndex = 0;
-                double endMilliseconds = 0;
-                int next = 0;
-                foreach (int index in SubtitleListview1.SelectedIndices)
+                return;
+            }
+
+            var sb = new StringBuilder();
+            var deleteIndices = new List<int>();
+            bool first = true;
+            int firstIndex = 0;
+            double endMilliseconds = 0;
+            int next = 0;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                if (first)
                 {
-                    if (first)
-                    {
-                        firstIndex = index;
-                        next = index + 1;
-                        first = !first;
-                    }
-                    else
-                    {
-                        deleteIndices.Add(index);
-                        if (next != index)
-                        {
-                            return;
-                        }
-
-                        next++;
-                    }
-
-                    var continuationStyle = Configuration.Settings.General.ContinuationStyle;
-                    if (continuationStyle != ContinuationStyle.None)
-                    {
-                        var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                        if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
-                        {
-                            var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                            _subtitle.Paragraphs[index].Text = mergeResult.Item1;
-                            _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
-                        }
-                    }
-
-                    var addText = _subtitle.Paragraphs[index].Text;
-
-                    if (firstIndex != index)
-                    {
-                        addText = RemoveAssStartAlignmentTag(addText);
-                    }
-
-                    if (breakMode == BreakMode.UnbreakNoSpace)
-                    {
-                        sb.Append(addText);
-                    }
-                    else
-                    {
-                        sb.AppendLine(addText);
-                    }
-
-                    endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
-                }
-
-                if (HtmlUtil.RemoveHtmlTags(sb.ToString(), true).Length > 200)
-                {
-                    return;
-                }
-
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(_language.BeforeMergeLines);
-
-                var currentParagraph = _subtitle.Paragraphs[firstIndex];
-                string text = sb.ToString();
-                text = HtmlUtil.FixInvalidItalicTags(text);
-                text = FixAssaTagsAfterMerge(text);
-                text = ChangeAllLinesTagsToSingleTag(text, "i");
-                text = ChangeAllLinesTagsToSingleTag(text, "b");
-                text = ChangeAllLinesTagsToSingleTag(text, "u");
-                if (breakMode == BreakMode.Unbreak)
-                {
-                    text = Utilities.UnbreakLine(text);
-                }
-                else if (breakMode == BreakMode.UnbreakNoSpace)
-                {
-                    text = text.Replace(" " + Environment.NewLine + " ", string.Empty)
-                        .Replace(Environment.NewLine + " ", string.Empty)
-                        .Replace(" " + Environment.NewLine, string.Empty)
-                        .Replace(Environment.NewLine, string.Empty);
+                    firstIndex = index;
+                    next = index + 1;
+                    first = !first;
                 }
                 else
                 {
-                    text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                }
-
-                currentParagraph.Text = text;
-
-                //display time
-                currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
-
-                var nextParagraph = _subtitle.GetParagraphOrDefault(next);
-                if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
-                {
-                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
-                }
-
-                // original subtitle
-                if (IsOriginalEditable)
-                {
-                    var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
-                    if (original != null)
+                    deleteIndices.Add(index);
+                    if (next != index)
                     {
-                        var originalTexts = new StringBuilder();
-                        originalTexts.Append(original.Text.TrimEnd());
-                        if (breakMode != BreakMode.UnbreakNoSpace)
-                        {
-                            originalTexts.Append(" ");
-                        }
+                        return;
+                    }
 
-                        for (int i = 0; i < deleteIndices.Count; i++)
-                        {
-                            var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
-                            if (originalNext != null)
-                            {
-                                if (breakMode == BreakMode.UnbreakNoSpace)
-                                {
-                                    originalTexts.Append(originalNext.Text.Trim());
-                                }
-                                else
-                                {
-                                    originalTexts.Append(originalNext.Text).Append(' ');
-                                }
-                            }
+                    next++;
+                }
 
-                        }
-
-                        for (int i = deleteIndices.Count - 1; i >= 0; i--)
-                        {
-                            var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
-                            if (originalNext != null)
-                            {
-                                _subtitleOriginal.Paragraphs.Remove(originalNext);
-                            }
-                        }
-
-                        original.Text = originalTexts.ToString().Replace("  ", " ");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
-                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
-
-                        if (breakMode == BreakMode.Unbreak)
-                        {
-                            original.Text = Utilities.UnbreakLine(original.Text);
-                        }
-                        else if (breakMode == BreakMode.UnbreakNoSpace)
-                        {
-                            original.Text = original.Text.Replace(" " + Environment.NewLine + " ", string.Empty)
-                                .Replace(Environment.NewLine + " ", string.Empty)
-                                .Replace(" " + Environment.NewLine, string.Empty)
-                                .Replace(Environment.NewLine, string.Empty);
-                        }
-                        else
-                        {
-                            original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
-                        }
-
-                        original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                        _subtitleOriginal.Renumber();
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                    if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
+                    {
+                        var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                        _subtitle.Paragraphs[index].Text = mergeResult.Item1;
+                        _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
                     }
                 }
 
-                if (_networkSession != null)
+                var addText = _subtitle.Paragraphs[index].Text;
+
+                if (firstIndex != index)
                 {
-                    _networkSession.TimerStop();
-                    _networkSession.UpdateLine(firstIndex, currentParagraph);
-                    NetworkGetSendUpdates(deleteIndices, 0, null);
+                    addText = RemoveAssStartAlignmentTag(addText);
+                }
+
+                if (breakMode == BreakMode.UnbreakNoSpace)
+                {
+                    sb.Append(addText);
                 }
                 else
                 {
+                    sb.AppendLine(addText);
+                }
+
+                endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+            }
+
+            if (HtmlUtil.RemoveHtmlTags(sb.ToString(), true).Length > 200)
+            {
+                return;
+            }
+
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            MakeHistoryForUndo(_language.BeforeMergeLines);
+
+            var currentParagraph = _subtitle.Paragraphs[firstIndex];
+            string text = sb.ToString().TrimEnd();
+            text = HtmlUtil.FixInvalidItalicTags(text);
+            text = FixAssaTagsAfterMerge(text);
+            text = ChangeAllLinesTagsToSingleTag(text, "i");
+            text = ChangeAllLinesTagsToSingleTag(text, "b");
+            text = ChangeAllLinesTagsToSingleTag(text, "u");
+            if (breakMode == BreakMode.Unbreak)
+            {
+                text = Utilities.UnbreakLine(text);
+            }
+            else if (breakMode == BreakMode.UnbreakNoSpace)
+            {
+                text = text.Replace(" " + Environment.NewLine + " ", string.Empty)
+                    .Replace(Environment.NewLine + " ", string.Empty)
+                    .Replace(" " + Environment.NewLine, string.Empty)
+                    .Replace(Environment.NewLine, string.Empty);
+            }
+            else
+            {
+                text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+            }
+
+            currentParagraph.Text = text;
+
+            //display time
+            currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
+
+            var nextParagraph = _subtitle.GetParagraphOrDefault(next);
+            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            {
+                currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+            }
+
+            // original subtitle
+            if (IsOriginalEditable)
+            {
+                var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
+                if (original != null)
+                {
+                    var originalTexts = new StringBuilder();
+                    originalTexts.Append(original.Text.TrimEnd());
+                    if (breakMode != BreakMode.UnbreakNoSpace)
+                    {
+                        originalTexts.Append(" ");
+                    }
+
+                    for (int i = 0; i < deleteIndices.Count; i++)
+                    {
+                        var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
+                        if (originalNext != null)
+                        {
+                            if (breakMode == BreakMode.UnbreakNoSpace)
+                            {
+                                originalTexts.Append(originalNext.Text.Trim());
+                            }
+                            else
+                            {
+                                originalTexts.Append(originalNext.Text).Append(' ');
+                            }
+                        }
+
+                    }
+
                     for (int i = deleteIndices.Count - 1; i >= 0; i--)
                     {
-                        _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
+                        var originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleOriginal.Paragraphs);
+                        if (originalNext != null)
+                        {
+                            _subtitleOriginal.Paragraphs.Remove(originalNext);
+                        }
                     }
 
-                    _subtitle.Renumber();
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    original.Text = originalTexts.ToString().Replace("  ", " ");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
+                    original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
+
+                    if (breakMode == BreakMode.Unbreak)
+                    {
+                        original.Text = Utilities.UnbreakLine(original.Text);
+                    }
+                    else if (breakMode == BreakMode.UnbreakNoSpace)
+                    {
+                        original.Text = original.Text.Replace(" " + Environment.NewLine + " ", string.Empty)
+                            .Replace(Environment.NewLine + " ", string.Empty)
+                            .Replace(" " + Environment.NewLine, string.Empty)
+                            .Replace(Environment.NewLine, string.Empty);
+                    }
+                    else
+                    {
+                        original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
+                    }
+
+                    original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                    _subtitleOriginal.Renumber();
+                }
+            }
+
+            if (_networkSession != null)
+            {
+                _networkSession.TimerStop();
+                _networkSession.UpdateLine(firstIndex, currentParagraph);
+                NetworkGetSendUpdates(deleteIndices, 0, null);
+            }
+            else
+            {
+                for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                {
+                    _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
                 }
 
-                UpdateSourceView();
-                ShowStatus(_language.LinesMerged);
-                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                RefreshSelectedParagraph();
+                _subtitle.Renumber();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             }
+
+            UpdateSourceView();
+            ShowStatus(_language.LinesMerged);
+            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            RefreshSelectedParagraph();
         }
 
         private void ExtendBeforeToolStripMenuItemClick(object sender, EventArgs e)
@@ -13399,7 +13518,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var seconds = (int)numericUpDownDuration.Value;
                 var frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
-                return seconds * TimeCode.BaseUnit + frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
+                return seconds * TimeCode.BaseUnit + SubtitleFormat.FramesToMilliseconds(frames);
             }
 
             return ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
@@ -15086,7 +15205,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
             statusStrip1.Refresh();
             TaskbarList.SetProgressValue(Handle, percent, 100);
-            if (DateTime.UtcNow.Ticks % 10 == 0)
+            if (Stopwatch.GetTimestamp() % 10 == 0)
             {
                 Application.DoEvents();
             }
@@ -15226,6 +15345,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
             }
 
+            _subtitleListViewIndex = -1;
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetCurrentFormat(format);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -15247,10 +15367,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
+            _subtitleListViewIndex = -1;
             UpdateSourceView();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+            RefreshSelectedParagraph();
             return true;
         }
 
@@ -15303,6 +15424,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+            RefreshSelectedParagraph();
             return true;
         }
 
@@ -16332,6 +16454,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenSubtitle(fileName, null);
             }
+            else if (SubtitleFormat.AllSubtitleFormats.Any(p => p.Extension == ext))
+            {
+                OpenSubtitle(fileName, null);
+            }
             else
             {
                 MessageBox.Show(string.Format(_language.DropSubtitleFileXNotAccepted, fileName));
@@ -16800,6 +16926,8 @@ namespace Nikse.SubtitleEdit.Forms
             timerWaveform.Stop();
 
             _showEarlierOrLater = new ShowEarlierLater();
+            _showEarlierOrLater.AllowSelection += ShowEarlierOrLaterAllowSelection;
+
             if (!_showEarlierOrLater.IsPositionAndSizeSaved)
             {
                 _showEarlierOrLater.Top = Top + 100;
@@ -16815,19 +16943,24 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshSelectedParagraph();
         }
 
+        private void ShowEarlierOrLaterAllowSelection(object sender, ShowEarlierLater.ViewStatus viewStatus)
+        {
+            viewStatus.AllowSelection = InListView;
+        }
+
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LWin)
             {
-                _winLeftDownTicks = DateTime.UtcNow.Ticks;
+                _winLeftDownTicks = Stopwatch.GetTimestamp();
             }
 
             if (e.KeyCode == Keys.RWin)
             {
-                _winRightDownTicks = DateTime.UtcNow.Ticks;
+                _winRightDownTicks = Stopwatch.GetTimestamp();
             }
 
-            if ((DateTime.UtcNow.Ticks - _winLeftDownTicks) <= 10000 * 999 || (DateTime.UtcNow.Ticks - _winRightDownTicks) <= 10000 * 999) // less than 999 ms
+            if ((Stopwatch.GetTimestamp() - _winLeftDownTicks) <= 10000 * 999 || (Stopwatch.GetTimestamp() - _winRightDownTicks) <= 10000 * 999) // less than 999 ms
             {
                 // if it's less than one second since Win key was pressed we ignore key (not perfect...)
                 e.SuppressKeyPress = true;
@@ -18265,7 +18398,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                     mediaPlayer.Play();
-                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    _endSecondsNewPositionTicks = Stopwatch.GetTimestamp();
                 }
 
                 e.SuppressKeyPress = true;
@@ -18281,7 +18414,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                     mediaPlayer.Play();
-                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    _endSecondsNewPositionTicks = Stopwatch.GetTimestamp();
                 }
 
                 e.SuppressKeyPress = true;
@@ -18547,6 +18680,28 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameForward)
+            {
+                var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
+                for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
+                {
+                    audioVisualizer.ShotChanges[i] += (frameMs / 1000.0);
+                }
+
+                ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameBack)
+            {
+                var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
+                for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
+                {
+                    audioVisualizer.ShotChanges[i] -= (frameMs / 1000.0);
+                }
+
+                ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformGuessStart)
             {
                 AutoGuessStartTime(_subtitleListViewIndex);
@@ -18572,15 +18727,30 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainFileExportCustomText1 == e.KeyData)
+            {
+                FileExportCustomText(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainFileExportCustomText2 == e.KeyData)
+            {
+                FileExportCustomText(1);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainFileExportCustomText3 == e.KeyData)
+            {
+                FileExportCustomText(2);
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I)
             {
                 using (var form = new ImportUnknownFormat(string.Empty))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (form.ImportedSubitle?.Paragraphs.Count > 0)
+                        if (form.ImportedSubtitle?.Paragraphs.Count > 0)
                         {
-                            _subtitle = form.ImportedSubitle;
+                            _subtitle = form.ImportedSubtitle;
                             _fileName = null;
                             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                             SetTitle();
@@ -18651,6 +18821,19 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     MoveTextFromCursorToNext(textBoxListViewText);
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordToPrev)
+            {
+                if (textBoxListViewTextOriginal.Focused)
+                {
+                    MoveFirstWordToPrev(textBoxListViewTextOriginal); 
+                }
+                else
+                {
+                    MoveFirstWordToPrev(textBoxListViewText); 
                 }
 
                 e.SuppressKeyPress = true;
@@ -19155,6 +19338,56 @@ namespace Nikse.SubtitleEdit.Forms
             //{
             //    new WordSplitDictionaryGenerator().ShowDialog(this);
             //}
+        }
+
+        private void FileExportCustomText(int index)
+        {
+            var templates = new List<string>();
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
+            {
+                templates.Add("SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
+            }
+            else
+            {
+                foreach (var item in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                {
+                    templates.Add(item);
+                }
+            }
+
+            if (index >= templates.Count)
+            {
+                ShowStatus("Custom text template not found at index " + index, false);
+                return;
+            }
+
+            var template = templates[index];
+            var name = template.Split('Æ')[0];
+            var fileExt = ExportCustomText.GetFileExtension(template);
+            saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName) + fileExt;
+            }
+
+            saveFileDialog1.Filter =
+                name + "|*" + fileExt + "|" +
+                LanguageSettings.Current.General.AllFiles + "|*.*";
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    FileUtil.WriteAllText(saveFileDialog1.FileName, ExportCustomText.GenerateCustomText(_subtitle, null, _title, null, template), new TextEncoding(GetCurrentEncoding(), null));
+                    ShowStatus(string.Format(LanguageSettings.Current.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName));
+                    DialogResult = DialogResult.OK;
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
         }
 
         private int _layout = 0;
@@ -20162,7 +20395,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var temp = new Paragraph(p);
                         temp.StartTime.TotalMilliseconds = newStartTimeMs;
                         if (temp.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ||
-                            Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                            temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
                             var next = _subtitle.GetParagraphOrDefault(index + 1);
                             if (next == null ||
@@ -20800,7 +21033,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelNextWord.Text = string.Format(_language.NextX, HtmlUtil.RemoveHtmlTags(next.Text, true).Replace(Environment.NewLine, " "));
                     labelNextWord.Left = audioVisualizer.Width / 2 - labelNextWord.Width / 2 + audioVisualizer.Left;
                     labelNextWord.Visible = true;
-                    _labelNextTicks = DateTime.UtcNow.Ticks;
+                    _labelNextTicks = Stopwatch.GetTimestamp();
                 }
                 else
                 {
@@ -20998,7 +21231,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             mediaPlayer.ShowFullScreenControls();
             bool setRedockOnFullscreenEnd = false;
 
@@ -23950,7 +24183,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = ShowSubtitle();
                 if (index != -1 && oldIndex != index && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
                 {
-                    if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                    if ((Stopwatch.GetTimestamp() - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                     {
                         if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
@@ -23972,7 +24205,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Pause();
                         if (_playSelectionIndex < 0)
                         {
-                            if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > DateTime.UtcNow.Ticks - (10000 * 900)) // 900 ms
+                            if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > Stopwatch.GetTimestamp() - (10000 * 900)) // 900 ms
                             {
                                 mediaPlayer.CurrentPosition = _endSecondsNewPosition;
                             }
@@ -24096,7 +24329,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
 
-                if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
+                if (labelNextWord.Visible && _labelNextTicks + 100000000 < Stopwatch.GetTimestamp())
                 {
                     labelNextWord.Visible = false;
                 }
@@ -24134,7 +24367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Text.RemoveChar('*').TrimEnd();
             }
 
-            if (InSourceView && _sourceTextTicks != -1 && (DateTime.UtcNow.Ticks - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if (InSourceView && _sourceTextTicks != -1 && (Stopwatch.GetTimestamp() - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
                 ReloadFromSourceInSourceView();
                 _sourceTextTicks = -1;
@@ -24418,7 +24651,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             SubtitleListview1.AutoSizeAllColumns(this);
 
             if (WindowState == FormWindowState.Maximized ||
@@ -24451,7 +24684,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_ResizeBegin(object sender, EventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             if (_loading)
             {
                 return;
@@ -25421,6 +25654,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _showEarlierOrLater = new ShowEarlierLater();
+            _showEarlierOrLater.AllowSelection += ShowEarlierOrLaterAllowSelection;
+
             if (!_showEarlierOrLater.IsPositionAndSizeSaved)
             {
                 _showEarlierOrLater.Top = Top + 100;
@@ -25462,7 +25697,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timerAutoContinue.Stop();
 
-                if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                if ((Stopwatch.GetTimestamp() - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
                     labelStatus.Text = string.Empty;
                     PlayNext();
@@ -26108,7 +26343,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+                    _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
                     _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
                 }
                 catch
@@ -26176,7 +26411,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Focus();
             }
 
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
             if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 var idx = _subtitleListViewIndex;
@@ -29497,7 +29732,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
             mediaPlayer.ShowNonFullScreenControls();
 
             SaveUndockedPositions();
@@ -29856,7 +30091,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextOriginalKeyDown(object sender, KeyEventArgs e)
         {
-            _listViewOriginalTextTicks = DateTime.UtcNow.Ticks;
+            _listViewOriginalTextTicks = Stopwatch.GetTimestamp();
             if (_subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count < 1)
             {
                 return;
@@ -30048,7 +30283,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // last key down in text
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
+            _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
 
             UpdatePositionAndTotalLength(labelTextOriginalLineTotal, textBoxListViewTextOriginal);
         }
@@ -31384,7 +31619,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if ((DateTime.UtcNow.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if ((Stopwatch.GetTimestamp() - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
                 var p = _subtitle.GetParagraphOrDefault(index);
                 if (p == null)
@@ -31392,12 +31627,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                string newText = p.Text.TrimEnd();
-                string oldText = _listViewTextUndoLast;
-                if (oldText == null)
+                var newText = p.Text.TrimEnd();
+                if (_listViewTextUndoLast == null)
                 {
                     return;
                 }
+                var oldText = _listViewTextUndoLast.TrimEnd();
 
                 if (_listViewTextUndoLast != newText)
                 {
@@ -31478,7 +31713,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((DateTime.UtcNow.Ticks - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                if ((Stopwatch.GetTimestamp() - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
                     var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -33972,7 +34207,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
             {
-                if (Math.Abs(_lastWaveformMenuCloseTicks - DateTime.UtcNow.Ticks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
+                if (Math.Abs(_lastWaveformMenuCloseTicks - Stopwatch.GetTimestamp()) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
                 {
                     audioVisualizer.Focus();
                 }
@@ -34294,7 +34529,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripWaveformClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            _lastWaveformMenuCloseTicks = DateTime.UtcNow.Ticks;
+            _lastWaveformMenuCloseTicks = Stopwatch.GetTimestamp();
         }
 
         private void MenuOpened(object sender, EventArgs e)
@@ -35368,7 +35603,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var diff = DateTime.UtcNow.Ticks - _textHeightResizeIgnoreUpdate;
+            var diff = Stopwatch.GetTimestamp() - _textHeightResizeIgnoreUpdate;
             if (diff > 10_000 * 750 && // 750 ms
                 WindowState == _lastFormWindowState)
             {
@@ -35521,12 +35756,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetFastSubtitleHash()
         {
-            return _subtitle.GetFastHashCode(_fileName + GetCurrentEncoding().BodyName);
+            return _subtitle.GetFastHashCode(_fileName + UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).DisplayName);
         }
 
         private int GetFastSubtitleOriginalHash()
         {
-            return _subtitleOriginal.GetFastHashCode(_subtitleOriginalFileName + GetCurrentEncoding().BodyName);
+            return _subtitleOriginal.GetFastHashCode(_subtitleOriginalFileName + UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).DisplayName);
         }
 
         private void MergeSentencesToolStripMenuItemClick(object sender, EventArgs e)
@@ -35583,7 +35818,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitContainerMainSplitterMoving(object sender, SplitterCancelEventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            _textHeightResizeIgnoreUpdate = Stopwatch.GetTimestamp();
         }
 
         private void ApplyCustomStylesToolStripMenuItemClick(object sender, EventArgs e)
@@ -36243,9 +36478,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
             {
-                if (!RequireWhisperCpp())
+                if (!RequireWhisperCpp() && Configuration.IsRunningOnWindows)
                 {
-                    return;
+                    Configuration.Settings.Tools.WhisperChoice = WhisperChoice.PurfviewFasterWhisper;
                 }
             }
 
@@ -36897,6 +37132,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
+        }
+
+        private void generaeTransparentVideoWithSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
+            var selectedLines = SubtitleListview1.GetSelectedIndices().ToList();
+            using (var form = new GenerateTransparentVideoWithSubtitles(_subtitle, selectedLines, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+            }
         }
     }
 }

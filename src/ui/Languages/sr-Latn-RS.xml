@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -2201,11 +2201,11 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <NumberOfAlignmentTags>Broj oznaka položaja: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Dužina prevoda - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Dužina prevoda - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Dužina prevoda - prosek: {0}</LineLengthAverage>
+    <LineLengthAverage>Dužina prevoda - prosek: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Prevod, broj linija - prosek: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Dužina jedne linije - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Dužina jedne linije - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Dužina jedne linije - prosek: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Dužina jedne linije - prosek: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - minimum: {0:0.000} sekundi</DurationMinimum>
     <DurationMaximum>Trajanje - maximum: {0:0.000} sekundi</DurationMaximum>
     <DurationAverage>Trajanje - prosek: {0:0.000} sekundi</DurationAverage>

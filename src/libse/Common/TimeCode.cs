@@ -17,12 +17,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new TimeCode(seconds * BaseUnit);
         }
 
+        /// <summary>
+        /// Parse time string to milliseconds, format: HH[:,.]MM[:,.]SS[:,.]MSec or MM[:,.]SS[:,.]MSec
+        /// </summary>
+        /// <param name="text">Time code as string.</param>
+        /// <returns>Total milliseconds.</returns>
         public static double ParseToMilliseconds(string text)
         {
             var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
-                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(parts[3], out var milliseconds))
+                var msString = parts[3].PadRight(3,'0');
+                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(msString, out var milliseconds))
                 {
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
@@ -30,7 +36,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (parts.Length == 3)
             {
-                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(parts[2], out var milliseconds))
+                var msString = parts[2].PadRight(3, '0');
+                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(msString, out var milliseconds))
                 {
                     return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
@@ -339,6 +346,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return ToShortString(true);
+        }
+
+        /// <summary>
+        /// Align time to frame rate.
+        /// </summary>
+        public TimeCode AlignToFrame()
+        {
+            var ts = TimeSpan.FromMilliseconds(Math.Round(TotalMilliseconds, MidpointRounding.AwayFromZero));
+            var frames = SubtitleFormat.MillisecondsToFrames(ts.Milliseconds);
+            TimeSpan ts2;
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+            {
+                ts = ts.Add(new TimeSpan(0, 0, 1));
+                ts2 = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, 0);
+            }
+            else
+            {
+                var ms = SubtitleFormat.FramesToMillisecondsMax999(SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                ts2 = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ms);
+            }
+
+            return new TimeCode(ts2.TotalMilliseconds);
         }
     }
 }

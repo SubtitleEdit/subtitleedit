@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonShowLater = new System.Windows.Forms.Button();
             this.buttonShowEarlier = new System.Windows.Forms.Button();
             this.labelTotalAdjustment = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timerRefreshAllowSelection = new System.Windows.Forms.Timer(this.components);
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
@@ -82,9 +82,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTotalAdjustment.TabIndex = 38;
             this.labelTotalAdjustment.Text = "labelTotalAdjustment";
             // 
-            // timer1
+            // timerRefreshAllowSelection
             // 
-            this.timer1.Interval = 250;
+            this.timerRefreshAllowSelection.Interval = 250;
+            this.timerRefreshAllowSelection.Tick += new System.EventHandler(this.timerRefreshAllowSelection_Tick);
             // 
             // radioButtonAllLines
             // 
@@ -188,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonShowLater;
         private System.Windows.Forms.Button buttonShowEarlier;
         private System.Windows.Forms.Label labelTotalAdjustment;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timerRefreshAllowSelection;
         private System.Windows.Forms.RadioButton radioButtonAllLines;
         private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
         private System.Windows.Forms.RadioButton radioButtonSelectedLineAndForward;

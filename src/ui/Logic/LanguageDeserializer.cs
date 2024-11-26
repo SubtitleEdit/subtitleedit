@@ -2689,6 +2689,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/Preset":
                     language.GenerateVideoWithBurnedInSubs.Preset = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/PixelFormat":
+                    language.GenerateVideoWithBurnedInSubs.PixelFormat = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/Crf":
                     language.GenerateVideoWithBurnedInSubs.Crf = reader.Value;
                     break;
@@ -4743,6 +4746,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Video/GenerateVideoWithEmbeddedSubs":
                     language.Main.Menu.Video.GenerateVideoWithEmbeddedSubs = reader.Value;
+                    break;
+                case "Main/Menu/Video/GenerateTransparentVideoWithSubs":
+                    language.Main.Menu.Video.GenerateTransparentVideoWithSubs = reader.Value;
                     break;
                 case "Main/Menu/Video/VideoAudioToTextX":
                     language.Main.Menu.Video.VideoAudioToTextX = reader.Value;
@@ -7366,6 +7372,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformToggleShotChange":
                     language.Settings.WaveformToggleShotChange = reader.Value;
                     break;
+                case "Settings/WaveformAllShotChangesOneFrameForward":
+                    language.Settings.WaveformAllShotChangesOneFrameForward = reader.Value;
+                    break;
+                case "Settings/WaveformAllShotChangesOneFrameBack":
+                    language.Settings.WaveformAllShotChangesOneFrameBack = reader.Value;
+                    break;
                 case "Settings/WaveformRemoveOrExportShotChanges":
                     language.Settings.WaveformRemoveOrExportShotChanges = reader.Value;
                     break;
@@ -7677,6 +7689,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/MainTextBoxMoveFromCursorToNext":
                     language.Settings.MainTextBoxMoveFromCursorToNext = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveFirstWordToPrev":
+                    language.Settings.MainTextBoxMoveFirstWordToPrev = reader.Value;
                     break;
                 case "Settings/MainTextBoxMoveLastWordDownCurrent":
                     language.Settings.MainTextBoxMoveLastWordDownCurrent = reader.Value;
@@ -8611,6 +8626,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/BoxMultiLine":
                     language.SubStationAlphaStyles.BoxMultiLine = reader.Value;
                     break;
+                case "SubStationAlphaStyles/BoxPerLineShort":
+                    language.SubStationAlphaStyles.BoxPerLineShort = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxMultiLineShort":
+                    language.SubStationAlphaStyles.BoxMultiLineShort = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxType":
+                    language.SubStationAlphaStyles.BoxType = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/DuplicateStyleNames":
                     language.SubStationAlphaStyles.DuplicateStyleNames = reader.Value;
                     break;
@@ -8724,6 +8748,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "TextToSpeech/Speed":
                     language.TextToSpeech.Speed = reader.Value;
+                    break;
+                case "TextToSpeech/Stability":
+                    language.TextToSpeech.Stability = reader.Value;
+                    break;
+                case "TextToSpeech/Similarity":
+                    language.TextToSpeech.Similarity = reader.Value;
                     break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;
@@ -9426,6 +9456,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "WebVttProperties/MergeLines":
                     language.WebVttProperties.MergeLines = reader.Value;
+                    break;
+                case "WebVttProperties/MergeStyleTags":
+                    language.WebVttProperties.MergeStyleTags = reader.Value;
                     break;
                 case "WebVttStyleManager/Title":
                     language.WebVttStyleManager.Title = reader.Value;

@@ -2,7 +2,7 @@
 <Language Name="Ελληνικά">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
@@ -1003,6 +1003,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Audio>Ήχος</Audio>
     <Stereo>Στερεοφωνικά</Stereo>
     <Preset>Προεπιλογή</Preset>
+    <PixelFormat>Μορφή εικονοστοιχείων</PixelFormat>
     <Crf>Σταθερός συντελεστής ρυθμού</Crf>
     <TuneFor>Συντονισμός για</TuneFor>
     <AlignRight>Στοίχιση δεξιά</AlignRight>
@@ -1435,6 +1436,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateBlankVideo>Δημιουργία κενού αρχείου βίντεο…</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Δημιουργία βίντεο με προσθήκη / αφαίρεση ενσωματωμένων υποτίτλων…</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Δημιουργία διαφανούς βίντεο με υπότιτλους</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Ήχος σε κείμενο ({0})…</VideoAudioToTextX>
         <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Δημιουργία / εισαγωγή αλλαγών λήψης…</GenerateImportShotChanges>
@@ -2120,6 +2122,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
     <CpsLessThan>Χαρ. / δευτ. λιγότεροι από</CpsLessThan>
     <CpsGreaterThan>Χαρ. / δευτ. περισσότεροι από</CpsGreaterThan>
+    <LengthLessThan>Μήκος μικρότερο από</LengthLessThan>
+    <LengthGreaterThan>Μήκος μεγαλύτερο από</LengthGreaterThan>
     <ExactlyOneLine>Ακριβώς μία γραμμή</ExactlyOneLine>
     <ExactlyTwoLines>Ακριβώς δύο γραμμές</ExactlyTwoLines>
     <MoreThanTwoLines>Πάνω από δύο γραμμές</MoreThanTwoLines>
@@ -2998,15 +3002,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Αριθμός ετικετών στοίχισης: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Ελάχιστο μήκος υποτίτλου: {0}</LineLengthMinimum>
     <LineLengthMaximum>Μέγιστο μήκος υποτίτλου: {0}</LineLengthMaximum>
-    <LineLengthAverage>Μέσο μήκος υποτίτλου: {0}</LineLengthAverage>
+    <LineLengthAverage>Μέσο μήκος υποτίτλου: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Μέσος αριθμός γραμμών υποτίτλων: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Ελάχιστο μήκος μονής γραμμής: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Μέγιστο μήκος μονής γραμμής: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} χαρακτήρες): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ελάχιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Μέγιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0:#.###} εικονοστοιχεία</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} εικονοστοιχεία): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Ελάχιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMinimum>
     <DurationMaximum>Μέγιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMaximum>
@@ -3117,6 +3121,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Angle>Κλίση</Angle>
     <BoxPerLine>Πλαίσιο ανά γραμμή (χρήση χρώματος περιγράμματος)</BoxPerLine>
     <BoxMultiLine>Ένα πλαίσιο (χρήση χρώματος σκιάς)</BoxMultiLine>
+    <BoxPerLineShort>Πλαίσιο ανά γραμμή</BoxPerLineShort>
+    <BoxMultiLineShort>Ένα πλαίσιο</BoxMultiLineShort>
+    <BoxType>Τύπος πλαισίου</BoxType>
     <DuplicateStyleNames>Αντιγραφή στυλ ονομάτων: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3155,6 +3162,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergingAudioTrackXOfY>Συγχώνευση κομματιού ήχου: {0} / {1}…</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Δημιουργία ομιλίας από κείμενο: {0} / {1}…</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Έλεγχος ήχων</ReviewAudioClips>
+    <CustomAudioEncoding>Προσαρμοσμένη κωδικοποίηση ήχου</CustomAudioEncoding>
     <ReviewInfo>Έλεγχος κι επεξεργασία / αφαίρεση ήχων</ReviewInfo>
     <Play>Αναπαραγωγή</Play>
     <AutoContinue>Αυτόματη συνέχεια</AutoContinue>
@@ -3430,6 +3438,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <WebVttProperties>
     <UseXTimeStamp>Χρήση των τιμών επικεφαλίδας X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Συγχώνευση γραμμών με ίδιο κείμενο κατά τη φόρτωση</MergeLines>
+    <MergeStyleTags>Συγχώνευση στυλ ετικετών</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Στυλ WebVTT</Title>

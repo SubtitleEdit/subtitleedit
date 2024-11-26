@@ -3,12 +3,12 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Test.FixCommonErrors
 {
@@ -563,6 +563,50 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'esprit.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'esprit.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'Esprit tue et.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Je connaîtrai la peur." + Environment.NewLine + "La peur tue l'Esprit tue et.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Á sėquencer l'ADN" + Environment.NewLine + "de micro-organismes ėteints");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Á sėquencer l'ADN" + Environment.NewLine + "de micro-organismes ėteints", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "À SÉQUENCER l'ADN DE MICRO-ORGANISMES ÉTEINTS");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("À SÉQUENCER L'ADN DE MICRO-ORGANISMES ÉTEINTS", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces
@@ -999,6 +1043,7 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
+                Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
                 InitializeFixCommonErrorsLine(target, "-Person one speaks." + Environment.NewLine +
                                                       "-The other person starts speaking and continues" + Environment.NewLine +
                                                       "to speak loudly for a little white.");

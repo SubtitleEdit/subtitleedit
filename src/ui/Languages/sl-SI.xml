@@ -2,7 +2,7 @@
 <Language Name="Slovenščina">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Prevod: Jadran Rudec, Pošta: jrudec@gmail.com</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -2818,14 +2818,14 @@ Nastavitev pisave za podnapise se običajno izvaja v predvajalniku videoposnetko
     <NumberOfAlignmentTags>Število oznak za poravnavo: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Dolžina podnapisa - najmanj: {0}</LineLengthMinimum>
     <LineLengthMaximum>Dolžina podnapisa - največ: {0}</LineLengthMaximum>
-    <LineLengthAverage>Dolžina podnapisov - povprečje: {0}</LineLengthAverage>
+    <LineLengthAverage>Dolžina podnapisov - povprečje: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Podnaslov, število vrstic - povprečje: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Dolžina ene vrstice - najmanj: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Dolžina ene vrstice – največ: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Dolžina ene vrstice - povprečje: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Dolžina ene vrstice - povprečje: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Širina ene vrstice - najmanj: {0} zaslonskih pik</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Širina ene vrstice - največ: {0} zaslonskih pik</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Širina ene vrstice - povprečje: {0} zaslonskih pik</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Širina ene vrstice - povprečje: {0:#.###} zaslonskih pik</SingleLineWidthAverage>
     <DurationMinimum>Trajanje - najkrajše: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Trajanje - najdaljše: {0:0.000} sekund</DurationMaximum>
     <DurationAverage>Trajanje - povprečje: {0:0.000} sekund</DurationAverage>

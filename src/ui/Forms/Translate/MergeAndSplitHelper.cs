@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
@@ -478,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 {
                     var part = GetPartFromItem(text, item);
                     text = text.Remove(0, part.Length).Trim();
-                    lines.Add(Utilities.AutoBreakLine(part));
+                    lines.Add(part.Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(part) : part);
                 }
             }
 
@@ -550,14 +551,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
 
                     // check max chars
-                    var cps1 = Utilities.GetCharactersPerSecond(new Paragraph(arr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds));
-                    var cps2 = Utilities.GetCharactersPerSecond(new Paragraph(arr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds));
+                    var cps1 = new Paragraph(arr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds).GetCharactersPerSecond();
+                    var cps2 = new Paragraph(arr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds).GetCharactersPerSecond();
 
-                    var cpsChar1 = Utilities.GetCharactersPerSecond(new Paragraph(pctCharArr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds));
-                    var cpsChar2 = Utilities.GetCharactersPerSecond(new Paragraph(pctCharArr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds));
+                    var cpsChar1 = new Paragraph(pctCharArr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds).GetCharactersPerSecond();
+                    var cpsChar2 = new Paragraph(pctCharArr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds).GetCharactersPerSecond();
 
-                    var cpsDuration1 = Utilities.GetCharactersPerSecond(new Paragraph(pctDurationArr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds));
-                    var cpsDuration2 = Utilities.GetCharactersPerSecond(new Paragraph(pctDurationArr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds));
+                    var cpsDuration1 = new Paragraph(pctDurationArr[0], item.Paragraphs[0].StartTime.TotalMilliseconds, item.Paragraphs[0].EndTime.TotalMilliseconds).GetCharactersPerSecond();
+                    var cpsDuration2 = new Paragraph(pctDurationArr[1], item.Paragraphs[1].StartTime.TotalMilliseconds, item.Paragraphs[1].EndTime.TotalMilliseconds).GetCharactersPerSecond();
 
                     if (pctCharArr[0].Length > 0 && pctCharArr[0].EndsWith(',') &&
                         cpsChar1 < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds &&

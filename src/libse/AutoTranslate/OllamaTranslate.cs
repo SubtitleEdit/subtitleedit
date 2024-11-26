@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -16,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Ollama (local LLM)";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/ollama/ollama";
         public string Error { get; set; }
@@ -59,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)

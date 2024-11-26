@@ -2,7 +2,7 @@
 <Language Name="Português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Traduzido para Português de Portugal, por Hugo Carvalho(hugok79)
 E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -1017,6 +1017,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Predefinição</Preset>
+    <PixelFormat>Formato de pixéis</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizar para</TuneFor>
     <AlignRight>Alinhar à direita</AlignRight>
@@ -1450,6 +1451,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda gravada...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Gerar vídeo com legendas embutidas adicionadas/removidas...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Gerar vídeo transparente com legendas...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Áudio para texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
@@ -2337,7 +2339,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <BeautifyTimeCodes>Optimizar tempos</BeautifyTimeCodes>
     <SettingsName>Definições</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
-    <FocusTextBox>Focar caixa de texto</FocusTextBox>
+    <FocusTextBox>Focar quadro de texto</FocusTextBox>
     <ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
     <ClearBookmarks>Eliminar marcadores</ClearBookmarks>
     <ExportBookmarks>Exportar marcadores...</ExportBookmarks>
@@ -2539,14 +2541,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ContinuationStyleCustom>Personalizado</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/comprimento da linha</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Contar todos os caracteres</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar todos excepto o espaço, apenas cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar todos excepto o espaço, apenas CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Contar todos excepto o espaço</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composição</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composição, não espaço</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, apenas cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, apenas CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -2691,6 +2693,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformGoToPreviousShotChange>Ir para a mudança de cena anterior</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Ir para a próxima mudança de cena</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Alternar a mudança de cena</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Mover todas as mudanças de cena um fotograma para a frente</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Mover todas as mudanças de cena um fotograma para trás</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Remover/exportar mudanças de cena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Ajuste automático do início através da mudança de volume/cena</WaveformGuessStart>
     <GoBack1Frame>Atrasar 1 fotograma</GoBack1Frame>
@@ -2795,6 +2799,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Mover a primeira palavra da linha de cima (linha actual)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Mover o texto após a posição do cursor para a próxima legenda e ir para a próxima</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Mover a primeira palavra para a legenda anterior</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Mover a primeira palavra da linha de baixo (linha actual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>
@@ -3019,15 +3024,15 @@ Continuar?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Número de etiquetas alinhamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Comprimento da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Comprimento da legenda - máximo: {0}</LineLengthMaximum>
-    <LineLengthAverage>Comprimento da legenda - médio: {0}</LineLengthAverage>
+    <LineLengthAverage>Comprimento da legenda - médio: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Legenda, número de linhas - médio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Comprimento de uma linha - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Comprimento de uma linha - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Comprimento de uma linha - médio: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Comprimento de uma linha - médio: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Comprimento de uma linha - excedendo o máximo ({0} cars): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Largura de uma linha - mínimo: {0} pixéis</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Largura de uma linha - máximo: {0} pixéis</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Largura de uma linha - média: {0} pixéis</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Largura de uma linha - média: {0:#.###} pixéis</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Largura de uma linha - excedendo o máximo ({0} pixéis): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
@@ -3138,6 +3143,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Angle>Ângulo</Angle>
     <BoxPerLine>Quadro por linha (usar cor de contorno)</BoxPerLine>
     <BoxMultiLine>Um quadro (usar cor de sombra)</BoxMultiLine>
+    <BoxPerLineShort>Quadro por linha</BoxPerLineShort>
+    <BoxMultiLineShort>Um quadro</BoxMultiLineShort>
+    <BoxType>Tipo de quadro</BoxType>
     <DuplicateStyleNames>Nomes de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3182,6 +3190,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <AutoContinue>Continuar automaticamente</AutoContinue>
     <Regenerate>Regenerar</Regenerate>
     <Speed>Velocidade</Speed>
+    <Stability>Estabilidade</Stability>
+    <Similarity>Semelhança</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Temporização SMPTE</Title>
@@ -3452,6 +3462,7 @@ Manter as alterações?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Usar o valor de cabeçalho X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Combinar linhas com o mesmo texto no carregamento</MergeLines>
+    <MergeStyleTags>Combinar etiquetas de estilo</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Estilos WebVTT</Title>

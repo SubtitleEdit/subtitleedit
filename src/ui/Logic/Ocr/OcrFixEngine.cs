@@ -588,7 +588,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     var affixes = new[] { " I'", " L'", " l'", " I’", " L’", " l’" };
                     foreach (var affix in affixes)
                     {
-                        text = FixFrenchLApostrophe(text, affix, prevLine);    
+                        text = FixFrenchLApostrophe(text, affix, prevLine);
                     }
                 }
 
@@ -663,23 +663,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-        private static bool IsToKeepCasing(string sentence)
-        {
-            // related to https://github.com/SubtitleEdit/subtitleedit/issues/8052
-            if (sentence.Length > 2)
-            {
-                // do not change 'L' to lowercase in text like "L'ASSASSIN"
-                return char.IsUpper(sentence[2]) && (sentence[1] == '\'' || sentence[1] == '’');
-            }
-
-            return false;
-        }
-        
         public static string FixFrenchLApostrophe(string input, string affix, string prevLine)
         {
             var text = input;
             var isPreviousLineClose = prevLine.HasSentenceEnding();
-            
+
             if (text.StartsWith(affix.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (isPreviousLineClose || char.IsUpper(text[2]))
@@ -706,22 +694,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var start = text.IndexOf(affix, StringComparison.Ordinal);
             while (start > 0)
             {
-                prevLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                isPreviousLineClose = string.IsNullOrEmpty(prevLine) || prevLine.EndsWith('.') || prevLine.EndsWith('!') || prevLine.EndsWith('?');
                 if (start < text.Length - 4)
                 {
-                    if (start == 1 && text.StartsWith('-'))
-                    {
-                        isPreviousLineClose = true;
-                    }
-
-                    if (start > 1)
-                    {
-                        var beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
-                        isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
-                    }
-
-                    if (isPreviousLineClose || IsToKeepCasing(text.Substring(start + 1)))
+                    if (text.Replace("l'", "L'") == text.ToUpperInvariant())
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }

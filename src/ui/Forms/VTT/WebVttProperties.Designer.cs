@@ -1,5 +1,5 @@
 ﻿
-namespace Nikse.SubtitleEdit.Forms.FormatProperties
+namespace Nikse.SubtitleEdit.Forms.VTT
 {
     partial class WebVttProperties
     {
@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.labelAn7 = new System.Windows.Forms.Label();
             this.checkBoxUseXTimestampMap = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoMerge = new System.Windows.Forms.CheckBox();
+            this.checkBoxMergeStyleTags = new System.Windows.Forms.CheckBox();
             this.groupBoxAlignment.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(465, 317);
+            this.buttonCancel.Location = new System.Drawing.Point(465, 342);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 23;
@@ -72,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(384, 317);
+            this.buttonOK.Location = new System.Drawing.Point(384, 342);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 22;
@@ -105,13 +106,14 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.groupBoxAlignment.Controls.Add(this.labelAn7);
             this.groupBoxAlignment.Location = new System.Drawing.Point(12, 22);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(528, 255);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(528, 258);
             this.groupBoxAlignment.TabIndex = 24;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
             // 
             // textBoxAn3
             // 
+            this.textBoxAn3.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn3.Location = new System.Drawing.Point(351, 206);
             this.textBoxAn3.Name = "textBoxAn3";
             this.textBoxAn3.Size = new System.Drawing.Size(151, 20);
@@ -128,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn2
             // 
+            this.textBoxAn2.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn2.Location = new System.Drawing.Point(194, 206);
             this.textBoxAn2.Name = "textBoxAn2";
             this.textBoxAn2.Size = new System.Drawing.Size(151, 20);
@@ -144,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn1
             // 
+            this.textBoxAn1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn1.Location = new System.Drawing.Point(37, 206);
             this.textBoxAn1.Name = "textBoxAn1";
             this.textBoxAn1.Size = new System.Drawing.Size(151, 20);
@@ -160,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn6
             // 
+            this.textBoxAn6.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn6.Location = new System.Drawing.Point(351, 133);
             this.textBoxAn6.Name = "textBoxAn6";
             this.textBoxAn6.Size = new System.Drawing.Size(151, 20);
@@ -176,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn5
             // 
+            this.textBoxAn5.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn5.Location = new System.Drawing.Point(194, 133);
             this.textBoxAn5.Name = "textBoxAn5";
             this.textBoxAn5.Size = new System.Drawing.Size(151, 20);
@@ -192,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn4
             // 
+            this.textBoxAn4.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn4.Location = new System.Drawing.Point(37, 133);
             this.textBoxAn4.Name = "textBoxAn4";
             this.textBoxAn4.Size = new System.Drawing.Size(151, 20);
@@ -208,6 +215,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn9
             // 
+            this.textBoxAn9.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn9.Location = new System.Drawing.Point(351, 63);
             this.textBoxAn9.Name = "textBoxAn9";
             this.textBoxAn9.Size = new System.Drawing.Size(151, 20);
@@ -224,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn8
             // 
+            this.textBoxAn8.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn8.Location = new System.Drawing.Point(194, 63);
             this.textBoxAn8.Name = "textBoxAn8";
             this.textBoxAn8.Size = new System.Drawing.Size(151, 20);
@@ -240,6 +249,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             // textBoxAn7
             // 
+            this.textBoxAn7.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAn7.Location = new System.Drawing.Point(37, 63);
             this.textBoxAn7.Name = "textBoxAn7";
             this.textBoxAn7.Size = new System.Drawing.Size(151, 20);
@@ -258,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             this.checkBoxUseXTimestampMap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxUseXTimestampMap.AutoSize = true;
-            this.checkBoxUseXTimestampMap.Location = new System.Drawing.Point(12, 274);
+            this.checkBoxUseXTimestampMap.Location = new System.Drawing.Point(12, 295);
             this.checkBoxUseXTimestampMap.Name = "checkBoxUseXTimestampMap";
             this.checkBoxUseXTimestampMap.Size = new System.Drawing.Size(212, 17);
             this.checkBoxUseXTimestampMap.TabIndex = 25;
@@ -269,18 +279,30 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             this.checkBoxAutoMerge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoMerge.AutoSize = true;
-            this.checkBoxAutoMerge.Location = new System.Drawing.Point(12, 297);
+            this.checkBoxAutoMerge.Location = new System.Drawing.Point(12, 318);
             this.checkBoxAutoMerge.Name = "checkBoxAutoMerge";
             this.checkBoxAutoMerge.Size = new System.Drawing.Size(188, 17);
             this.checkBoxAutoMerge.TabIndex = 26;
             this.checkBoxAutoMerge.Text = "Merge lines with same text on load";
             this.checkBoxAutoMerge.UseVisualStyleBackColor = true;
             // 
+            // checkBoxMergeStyleTags
+            // 
+            this.checkBoxMergeStyleTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxMergeStyleTags.AutoSize = true;
+            this.checkBoxMergeStyleTags.Location = new System.Drawing.Point(12, 341);
+            this.checkBoxMergeStyleTags.Name = "checkBoxMergeStyleTags";
+            this.checkBoxMergeStyleTags.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxMergeStyleTags.TabIndex = 27;
+            this.checkBoxMergeStyleTags.Text = "Merge style tags";
+            this.checkBoxMergeStyleTags.UseVisualStyleBackColor = true;
+            // 
             // WebVttProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(552, 352);
+            this.ClientSize = new System.Drawing.Size(552, 377);
+            this.Controls.Add(this.checkBoxMergeStyleTags);
             this.Controls.Add(this.checkBoxAutoMerge);
             this.Controls.Add(this.checkBoxUseXTimestampMap);
             this.Controls.Add(this.groupBoxAlignment);
@@ -328,5 +350,6 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
         private System.Windows.Forms.Label labelAn7;
         private System.Windows.Forms.CheckBox checkBoxUseXTimestampMap;
         private System.Windows.Forms.CheckBox checkBoxAutoMerge;
+        private System.Windows.Forms.CheckBox checkBoxMergeStyleTags;
     }
 }

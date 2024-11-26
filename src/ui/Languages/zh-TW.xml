@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -2635,14 +2635,14 @@ Continue?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>對齊標籤數: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕長度 - 最小: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕長度 - 最大: {0}</LineLengthMaximum>
-    <LineLengthAverage>字幕長度 - 平均: {0}</LineLengthAverage>
+    <LineLengthAverage>字幕長度 - 平均: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>字幕、行數 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>單行長度 - 最小: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>單行長度 - 最大: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>單行長度 - 平均: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>單行長度 - 平均: {0:#.###}</SingleLineLengthAverage>
     <SingleLineWidthMinimum>單行寬度 - 最小: {0} 像素</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>單行寬度 - 最大: {0} 像素</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>單行寬度 - 平均: {0} 像素</SingleLineWidthAverage>
+    <SingleLineWidthAverage>單行寬度 - 平均: {0:#.###} 像素</SingleLineWidthAverage>
     <DurationMinimum>持續時間 - 最小: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>持續時間 - 最大: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>持續時間 - 平均: {0:0.000} 秒</DurationAverage>

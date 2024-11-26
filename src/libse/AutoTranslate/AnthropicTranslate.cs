@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -16,10 +17,24 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Anthropic Claude";
+        public override string ToString() => StaticName;
+
         public string Name => StaticName;
         public string Url => "https://www.anthropic.com/";
         public string Error { get; set; }
         public int MaxCharacters => 900;
+
+        /// <summary>
+        /// See https://docs.anthropic.com/en/docs/about-claude/models
+        /// </summary>
+        public static string[] Models => new[]
+        {
+            "claude-3-5-sonnet-latest",
+            "claude-3-5-haiku-latest", 
+            "claude-3-opus-20240229", 
+            "claude-3-sonnet-20240229", 
+            "claude-3-haiku-20240307"
+        };
 
         public void Initialize()
         {
@@ -51,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.AnthropicApiModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "claude-3-opus-20240229";
+                model = Models[0];
                 Configuration.Settings.Tools.AnthropicApiModel = model;
             }
 

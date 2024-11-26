@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
@@ -18,10 +20,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly TextToSpeech _textToSpeech;
         private readonly List<TextToSpeech.FileNameAndSpeedFactor> _fileNames;
         private bool _abortPlay;
+        private bool _playing;
         private LibMpvDynamic _libMpv;
         private Timer _mpvDoneTimer;
+        private TextToSpeech.TextToSpeechEngine _engine;
 
-        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames)
+        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames, TextToSpeech.TextToSpeechEngine engine)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -42,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _textToSpeech = textToSpeech;
             _subtitle = subtitle;
             _fileNames = fileNames;
+            _engine = engine;
 
             SkipIndices = new List<int>();
 
@@ -51,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var item = new ListViewItem { Tag = p, Checked = true };
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(_textToSpeech.GetParagraphAudio(p));
-                item.SubItems.Add(Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture));
+                item.SubItems.Add(p.GetCharactersPerSecond().ToString("0.#", CultureInfo.InvariantCulture));
 
                 var pInfo = fileNames[subtitle.GetIndex(p)];
                 if (pInfo.Factor == 1)
@@ -109,6 +114,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             if (listViewAudioClips.SelectedItems.Count == 0)
             {
+                _playing = false;
+                buttonPlay.Enabled = true;
                 return;
             }
 
@@ -129,6 +136,22 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 if (checkBoxContinuePlay.Checked && !noAutoContinue)
                 {
                     _mpvDoneTimer.Start();
+                }
+                else
+                {
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1000), () =>
+                    {
+                        var i = 0;
+                        while (i < 100 && !_libMpv.IsPaused)
+                        {
+                            i++;
+                            Thread.Sleep(100);
+                            Application.DoEvents();
+                        }
+
+                        _playing = false;
+                        buttonPlay.Enabled = true;
+                    });
                 }
             }
             else
@@ -156,6 +179,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Play());
                 Application.DoEvents();
             }
+            else
+            {
+                _playing = false;
+                buttonPlay.Enabled = true;
+            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -173,7 +201,16 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
+            if (_playing)
+            {
+                return;
+            }
+
+            _libMpv?.Stop();
+            buttonPlay.Enabled = false;
+            _playing = true;
             _abortPlay = false;
+            Application.DoEvents();
             Play();
         }
 
@@ -181,6 +218,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             _libMpv?.Stop();
             _abortPlay = true;
+            _playing = false;
+            buttonPlay.Enabled = true;
         }
 
         private void VoicePreviewList_Shown(object sender, EventArgs e)
@@ -194,6 +233,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     if (listViewAudioClips.SelectedItems.Count == 0)
                     {
+                        _playing = false;
+                        buttonPlay.Enabled = true;
                         return;
                     }
 
@@ -225,17 +266,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return;
             }
 
+            buttonStop_Click(null, null);
+
             var idx = listViewAudioClips.SelectedItems[0].Index;
-            using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx))
+            using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
             {
                 var dr = form.ShowDialog(this);
-                if (dr == DialogResult.OK)
+                if (dr != DialogResult.OK)
+                {
+                    return;
+                }
+
+                listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
+
+                if (form.FileNameAndSpeedFactor != null)
                 {
                     _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
                     _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
                     listViewAudioClips.Items[idx].SubItems[4].Text = $"{(form.FileNameAndSpeedFactor.Factor * 100.0m):0.#}%";
-                    listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
-                    Play(true);
                 }
             }
         }
@@ -261,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var number = p.Number.ToString(CultureInfo.InvariantCulture);
                     var voice = _textToSpeech.GetParagraphAudio(p);
-                    var cps = Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture);
+                    var cps = p.GetCharactersPerSecond().ToString("0.#", CultureInfo.InvariantCulture);
                     var factor = "-";
                     if (pInfo.Factor != 1)
                     {

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -736,7 +737,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontName);
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
+            subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontSize.ToString("0.#", CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
 
             int count = 0;

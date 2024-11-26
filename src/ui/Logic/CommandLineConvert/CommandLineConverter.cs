@@ -1757,7 +1757,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 var isImageBased = IsImageBased(format);
 
                                 List<IBinaryParagraph> bin = null;
-                                if (bin != null)
+                                if (binaryParagraphs != null)
                                 {
                                     bin = binaryParagraphs.Cast<IBinaryParagraph>().ToList();
                                 }

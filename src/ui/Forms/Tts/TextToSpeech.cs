@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -35,6 +36,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly List<PiperModel> _piperVoices;
         private readonly List<ElevenLabModel> _elevenLabVoices;
         private readonly List<AzureVoiceModel> _azureVoices;
+        private readonly List<MurfVoice> _murfVoices;
+        private readonly List<TtsLanguage> _murfLanguages;
         private bool _actorsOn;
         private bool _converting;
 
@@ -83,12 +86,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         public enum TextToSpeechEngineId
         {
             Piper,
+            AllTalk,
+            ElevenLabs,
+            AzureTextToSpeech,
+            Murf,
             Tortoise,
             Coqui,
             MsSpeechSynthesizer,
-            ElevenLabs,
-            AzureTextToSpeech,
-            AllTalk,
         }
 
         public TextToSpeech(Subtitle subtitle, SubtitleFormat subtitleFormat, string videoFileName, VideoInfo videoInfo)
@@ -104,11 +108,28 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _piperVoices = new List<PiperModel>();
             _elevenLabVoices = new List<ElevenLabModel>();
             _azureVoices = new List<AzureVoiceModel>();
+            _murfVoices = new List<MurfVoice>();
             _actors = _subtitle.Paragraphs
                 .Where(p => !string.IsNullOrEmpty(p.Actor))
                 .Select(p => p.Actor)
                 .Distinct()
                 .ToList();
+
+            _murfLanguages = new List<TtsLanguage>
+            {
+                new TtsLanguage("English (US and Canada)", "en-US"),
+                new TtsLanguage("English (UK)", "en-UK"),
+                new TtsLanguage("English (Australia)", "en-AU"),
+                new TtsLanguage("English (Scottish)", "en-SCOTT"),
+                new TtsLanguage("English (India)", "en-IN"),
+                new TtsLanguage("Spanish", "es-ES"),
+                new TtsLanguage("Spanish (Mexico)", "es-MX"),
+                new TtsLanguage("France", "fr-FR"),
+                new TtsLanguage("German", "de-DE"),
+                new TtsLanguage("Italian", "it-IT"),
+                new TtsLanguage("Portuguese (Brazil)", "pt-BR"),
+                new TtsLanguage("Portuguese (Portugal)", "pl-PL"),
+            };
 
             Text = LanguageSettings.Current.TextToSpeech.Title;
             labelEngine.Text = LanguageSettings.Current.AudioToText.Engine;
@@ -120,10 +141,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxAddToVideoFile.Text = LanguageSettings.Current.TextToSpeech.AddAudioToVideo;
             buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
             labelRegion.Text = LanguageSettings.Current.General.Region;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             checkBoxShowPreview.Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
             checkBoxAudioEncoding.Text = LanguageSettings.Current.TextToSpeech.CustomAudioEncoding;
             linkLabelCustomAudio.Text = LanguageSettings.Current.Settings.Title;
-            linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right + 3;
+            linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right;
+            labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
+            labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
+            nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -135,14 +160,16 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _engines = new List<TextToSpeechEngine>();
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Piper, "Piper (fast/good)", _engines.Count));
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.AllTalk, "All Talk TTS (Coqui based)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.ElevenLabs, "ElevenLabs TTS (online/pay/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.AzureTextToSpeech, "Microsoft Azure TTS (online/pay/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Murf, "Murf (online/pay/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Tortoise, "Tortoise TTS (slow/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Tortoise, "Tortoise TTS (slow/good)", _engines.Count));
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Coqui, "Coqui AI TTS (only one voice)", _engines.Count));
             if (Configuration.IsRunningOnWindows)
             {
                 _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.MsSpeechSynthesizer, "Microsoft SpeechSynthesizer (very fast/robotic)", _engines.Count));
             }
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.ElevenLabs, "ElevenLabs TTS (online/pay/good)", _engines.Count));
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.AzureTextToSpeech, "Microsoft Azure TTS (online/pay/good)", _engines.Count));
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Tortoise, "Tortoise TTS (slow/good)", _engines.Count));
 
             _actorAndVoices = new List<ActorAndVoice>();
             nikseComboBoxEngine.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -218,6 +245,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void ButtonGenerateTtsClick(object sender, EventArgs e)
         {
+            SaveConfiguration();
+
             if (buttonGenerateTTS.Text == LanguageSettings.Current.General.Cancel)
             {
                 buttonGenerateTTS.Enabled = false;
@@ -250,7 +279,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 if (checkBoxShowPreview.Checked)
                 {
-                    using (var form = new ReviewAudioClips(this, _subtitle, fileNameAndSpeedFactors))
+                    var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+                    using (var form = new ReviewAudioClips(this, _subtitle, fileNameAndSpeedFactors, engine))
                     {
                         var dr = form.ShowDialog(this);
                         if (dr != DialogResult.OK)
@@ -317,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Ups: " + exception.Message + Environment.NewLine + exception.Message);
+                MessageBox.Show("Oops: " + exception.Message + Environment.NewLine + exception.Message);
                 SeLogger.Error(exception, $"{Text}: Error running engine {nikseComboBoxEngine.Text} with video {_videoFileName}");
             }
         }
@@ -379,6 +409,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
             {
                 var result = GenerateParagraphAudioAzure(subtitle, showProgressBar, overrideFileName);
+                return result;
+            }
+
+            if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                var result = GenerateParagraphAudioMurf(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
@@ -452,7 +488,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Value = 0;
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
-            var ext = ".wav";
+            const string ext = ".wav";
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
@@ -522,7 +558,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     continue;
                 }
 
-                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
+                var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
+                if (divisor <= 0)
+                {
+                    SeLogger.Error($"TextToSpeech: Duration is zero (skipping): {pFileName}, {p}");
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
+
+                var factor = (decimal)waveInfo.TotalMilliseconds / divisor;
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
@@ -933,126 +977,130 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private bool GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
+                httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
+
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
+
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    if (showProgressBar)
+                    {
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var result = httpClient.GetAsync("?text=" + Utilities.UrlEncode(text)).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"coqui TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}");
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
                 }
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
-
-                var text = Utilities.UnbreakLine(p.Text);
-                var result = httpClient.GetAsync("?text=" + Utilities.UrlEncode(text)).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    SeLogger.Error($"coqui TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}");
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private bool GenerateParagraphAudioAllTalk(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
 
-                var voice = nikseComboBoxVoice.Text;
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        voice = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var voice = nikseComboBoxVoice.Text;
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            voice = f.Voice;
+                        }
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+
+                    var multipartContent = new MultipartFormDataContent();
+                    var text = Utilities.UnbreakLine(p.Text);
+                    multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
+                    multipartContent.Add(new StringContent("standard"), "text_filtering");
+                    multipartContent.Add(new StringContent(voice), "character_voice_gen");
+                    multipartContent.Add(new StringContent("false"), "narrator_enabled");
+                    multipartContent.Add(new StringContent(voice), "narrator_voice_gen");
+                    multipartContent.Add(new StringContent("character"), "text_not_inside");
+                    multipartContent.Add(new StringContent(nikseComboBoxRegion.Text), "language");
+                    multipartContent.Add(new StringContent("output"), "output_file_name");
+                    multipartContent.Add(new StringContent("false"), "output_file_timestamp");
+                    multipartContent.Add(new StringContent("false"), "autoplay");
+                    multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
+                    var result = httpClient.PostAsync("/api/tts-generate", multipartContent).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                    var resultJson = Encoding.UTF8.GetString(bytes);
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"All Talk TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
+                    }
+
+                    var jsonParser = new SeJsonParser();
+                    var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
+                    File.Copy(allTalkOutput, outputFileName);
+                    SafeFileDelete(allTalkOutput);
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
                     }
                 }
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var multipartContent = new MultipartFormDataContent();
-                var text = Utilities.UnbreakLine(p.Text);
-                multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
-                multipartContent.Add(new StringContent("standard"), "text_filtering");
-                multipartContent.Add(new StringContent(voice), "character_voice_gen");
-                multipartContent.Add(new StringContent("false"), "narrator_enabled");
-                multipartContent.Add(new StringContent(voice), "narrator_voice_gen");
-                multipartContent.Add(new StringContent("character"), "text_not_inside");
-                multipartContent.Add(new StringContent(nikseComboBoxRegion.Text), "language");
-                multipartContent.Add(new StringContent("output"), "output_file_name");
-                multipartContent.Add(new StringContent("false"), "output_file_timestamp");
-                multipartContent.Add(new StringContent("false"), "autoplay");
-                multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
-                var result = httpClient.PostAsync("/api/tts-generate", multipartContent).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                var resultJson = Encoding.UTF8.GetString(bytes);
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    SeLogger.Error($"All Talk TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
-                }
-
-                var jsonParser = new SeJsonParser();
-                var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
-                File.Copy(allTalkOutput, outputFileName);
-                SafeFileDelete(allTalkOutput);
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
-
-                if (_abort)
-                {
-                    return false;
-                }
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private bool GenerateParagraphAudioElevenLabs(Subtitle subtitle, bool showProgressBar, string overrideFileName)
@@ -1064,72 +1112,92 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            var voices = _elevenLabVoices;
-            var v = nikseComboBoxVoice.Text;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+                var voices = _elevenLabVoices;
+                var v = nikseComboBoxVoice.Text;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        v = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            v = f.Voice;
+                        }
+                    }
+
+                    var voice = voices.First(x => x.ToString() == v);
+
+                    var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var model = nikseComboBoxRegion.Text;
+
+                    var language = string.Empty;
+                    if (model == "eleven_turbo_v2_5")
+                    {
+                        if (nikseComboBoxLanguage.SelectedItem is TranslationPair tp)
+                        {
+                            language = $", \"language_code\": \"{tp.Code}\"";
+                        }
+                    }
+
+                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture);
+                    var similarity = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity, 1).ToString(CultureInfo.InvariantCulture);
+                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity} }} }}";
+                    var content = new StringContent(data, Encoding.UTF8);
+                    content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                    var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"ElevenLabs TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
+                        return false;
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
                     }
                 }
 
-                var voice = voices.First(x => x.ToString() == v);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
-                var text = Utilities.UnbreakLine(p.Text);
-                var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
-                var content = new StringContent(data, Encoding.UTF8);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"ElevenLabs TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
-                    return false;
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+                return true;
             }
-
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
-
-            return true;
         }
 
         private List<AzureVoiceModel> GetAzureVoices(bool useCache)
@@ -1233,73 +1301,188 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "ssml+xml");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "audio-16khz-32kbitrate-mono-mp3");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "SubtitleEdit");
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = subtitle.Paragraphs.Count;
-            progressBar1.Visible = showProgressBar;
-
-            var voices = _azureVoices;
-            var v = nikseComboBoxVoice.Text;
-
-            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            using (var httpClient = new HttpClient())
             {
-                if (showProgressBar)
-                {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
-                }
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "ssml+xml");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "audio-16khz-32kbitrate-mono-mp3");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "SubtitleEdit");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
 
-                var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
-                {
-                    continue;
-                }
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+                var voices = _azureVoices;
+                var v = nikseComboBoxVoice.Text;
 
-                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
-                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    if (showProgressBar)
                     {
-                        v = f.Voice;
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            v = f.Voice;
+                        }
+                    }
+
+                    var voice = voices.First(x => x.ToString() == v);
+
+                    var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/v1";
+                    var text = Utilities.UnbreakLine(p.Text);
+                    var data = $"<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='{voice.Gender}' name='{voice.ShortName}'>{System.Net.WebUtility.HtmlEncode(text)}</voice></speak>";
+                    var content = new StringContent(data, Encoding.UTF8);
+                    var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    var bytes = result.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Azure TTS failed calling API on address {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error + result);
+                        return false;
+                    }
+
+                    File.WriteAllBytes(outputFileName, bytes);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
                     }
                 }
 
-                var voice = voices.First(x => x.ToString() == v);
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
 
-                var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/v1";
-                var text = Utilities.UnbreakLine(p.Text);
-                var data = $"<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='{voice.Gender}' name='{voice.ShortName}'>{System.Net.WebUtility.HtmlEncode(text)}</voice></speak>";
-                var content = new StringContent(data, Encoding.UTF8);
-                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                return true;
+            }
+        }
 
-                if (!result.IsSuccessStatusCode)
-                {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Azure TTS failed calling API on address {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error + result);
-                    return false;
-                }
-
-                File.WriteAllBytes(outputFileName, bytes);
-
-                progressBar1.Refresh();
-                labelProgress.Refresh();
-                Application.DoEvents();
+        private bool GenerateParagraphAudioMurf(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        {
+            if (string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                MessageBox.Show("Please add API key");
+                nikseTextBoxApiKey.Focus();
+                return false;
             }
 
-            progressBar1.Visible = false;
-            labelProgress.Text = string.Empty;
+            using (var httpClient = new HttpClient())
+            {
+                progressBar1.Value = 0;
+                progressBar1.Maximum = subtitle.Paragraphs.Count;
+                progressBar1.Visible = showProgressBar;
 
-            return true;
+                var voices = _murfVoices;
+                var v = nikseComboBoxVoice.Text;
+
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    if (showProgressBar)
+                    {
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                    }
+
+                    var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
+                    var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
+
+                    if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                    {
+                        var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                        if (f != null && !string.IsNullOrEmpty(f.Voice))
+                        {
+                            v = f.Voice;
+                        }
+                    }
+
+                    var voice = voices.First(x => x.ToString() == v);
+
+                    var text = HtmlUtil.RemoveHtmlTags(p.Text);
+
+                    var url = "https://api.murf.ai/v1/speech/generate";
+
+                    var overrideStyle = string.Empty;
+                    if (string.IsNullOrEmpty(overrideStyle))
+                    {
+                        overrideStyle = "Conversational";
+                    }
+
+                    var rate = Configuration.Settings.Tools.TextToSpeechMurfRate.ToString(CultureInfo.InvariantCulture);
+                    var pitch = Configuration.Settings.Tools.TextToSpeechMurfPitch.ToString(CultureInfo.InvariantCulture);
+                    var body = "{ \"voiceId\": \"" + voice.VoiceId + "\", \"style\": \"" + (voice.AvailableStyles.Contains(overrideStyle)
+                                   ? overrideStyle
+                                   : voice.AvailableStyles.FirstOrDefault()) +
+                               "\", \"text\": \"" + Json.EncodeJsonText(text) + "\", \"rate\": " + rate + ", \"pitch\": " + pitch + ", \"sampleRate\": 48000, \"format\": \"MP3\", \"channelType\": \"MONO\", \"pronunciationDictionary\": { }, \"encodeAsBase64\": false, \"modelVersion\": \"GEN2\" }";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+                    requestMessage.Content = new StringContent(body, Encoding.UTF8, "application/json");
+                    requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
+                    requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
+                    requestMessage.Headers.TryAddWithoutValidation("api-key", nikseTextBoxApiKey.Text.Trim());
+
+                    var result = httpClient.SendAsync(requestMessage).Result;
+                    var ms = new MemoryStream();
+                    result.Content.CopyToAsync(ms);
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(ms.ToArray()).Trim();
+                        SeLogger.Error($"Murf TTS failed calling API as base address {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + body);
+                        return false;
+                    }
+
+                    var parser = new SeJsonParser();
+                    var fileUrl = parser.GetFirstObject(Encoding.UTF8.GetString(ms.ToArray()), "audioFile");
+                    var audioResult = httpClient.GetAsync(fileUrl).Result;
+                    if (!audioResult.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"Murf TTS failed calling API as base address {fileUrl} : Status code={audioResult.StatusCode}");
+                        return false;
+                    }
+
+                    var arr = audioResult.Content.ReadAsByteArrayAsync().Result;
+
+                    File.WriteAllBytes(outputFileName, arr);
+
+                    progressBar1.Refresh();
+                    labelProgress.Refresh();
+                    Application.DoEvents();
+
+                    if (_abort)
+                    {
+                        return false;
+                    }
+                }
+
+                progressBar1.Visible = false;
+                labelProgress.Text = string.Empty;
+
+                return true;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -1317,6 +1500,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseTextBoxApiKey.Visible = false;
             labelRegion.Visible = false;
             nikseComboBoxRegion.Visible = false;
+            labelRegion.Text = LanguageSettings.Current.General.Region;
+            labelLanguage.Visible = false;
+            nikseComboBoxLanguage.Visible = false;
+
+            labelStability.Visible = false;
+            labelSimilarity.Visible = false;
+            nikseUpDownStability.Visible = false;
+            nikseUpDownSimilarity.Visible = false;
 
             labelRegion.Text = LanguageSettings.Current.General.Region;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
@@ -1429,6 +1620,36 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     nikseComboBoxVoice.Items.Add(voice.ToString());
                 }
+
+                labelRegion.Text = LanguageSettings.Current.AudioToText.Model;
+                labelRegion.Visible = true;
+                nikseComboBoxRegion.Items.Clear();
+                nikseComboBoxRegion.Items.Add("eleven_turbo_v2_5");
+                nikseComboBoxRegion.Items.Add("eleven_multilingual_v2");
+
+                nikseComboBoxRegion.Text = Configuration.Settings.Tools.TextToSpeechElevenLabsModel;
+                if (nikseComboBoxRegion.SelectedIndex < 0)
+                {
+                    nikseComboBoxRegion.SelectedIndex = 1;
+                }
+
+                nikseComboBoxRegion.Visible = true;
+
+                labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
+                labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
+                labelStability.Visible = true;
+                labelSimilarity.Visible = true;
+
+                nikseUpDownStability.Minimum = 0;
+                nikseUpDownStability.Maximum = 100;
+                nikseUpDownStability.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100;
+
+                nikseUpDownSimilarity.Minimum = 0;
+                nikseUpDownSimilarity.Maximum = 100;
+                nikseUpDownSimilarity.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100;
+
+                nikseUpDownStability.Visible = true;
+                nikseUpDownSimilarity.Visible = true;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
@@ -1479,6 +1700,57 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 nikseTextBoxApiKey.Text = Configuration.Settings.Tools.TextToSpeechAzureApiKey;
                 nikseComboBoxRegion.Text = Configuration.Settings.Tools.TextToSpeechAzureRegion;
+            }
+
+            if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.TextToSpeechMurfApiKey;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                _azureVoices.Clear();
+                var murfVoices = GetMurfVoices(true);
+                _murfVoices.AddRange(murfVoices);
+                nikseComboBoxVoice.Items.AddRange(_murfVoices.Select(p => p.ToString()).ToArray());
+
+                labelRegion.Text = LanguageSettings.Current.ChooseLanguage.Language;
+                nikseComboBoxRegion.Items.Clear();
+                foreach (var language in _murfLanguages)
+                {
+                    nikseComboBoxRegion.Items.Add(language);
+                }
+
+                labelRegion.Visible = true;
+                nikseComboBoxRegion.Visible = true;
+                nikseComboBoxRegion.Text = "English (US and Canada)";
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.TextToSpeechMurfVoice))
+                {
+                    var voice = _murfVoices.FirstOrDefault(p => p.ToString() == Configuration.Settings.Tools.TextToSpeechMurfVoice);
+                    if (voice != null)
+                    {
+                        var murfLanguage = _murfLanguages.FirstOrDefault(p => p.Code == voice.Locale);
+                        if (murfLanguage != null)
+                        {
+                            nikseComboBoxRegion.Text = murfLanguage.Name;
+                        }   
+                        nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechMurfVoice;
+                    }
+                }
+
+                labelStability.Text = "Pitch";
+                nikseUpDownStability.Minimum = -49;
+                nikseUpDownStability.Maximum = 50;
+                nikseUpDownStability.Value = Configuration.Settings.Tools.TextToSpeechMurfPitch;
+                labelStability.Visible = true;
+                nikseUpDownStability.Visible = true;
+
+                labelSimilarity.Text = "Speed";
+                nikseUpDownSimilarity.Minimum = -49;
+                nikseUpDownSimilarity.Maximum = 50;
+                nikseUpDownSimilarity.Value = Configuration.Settings.Tools.TextToSpeechMurfRate;
+                labelSimilarity.Visible = true;
+                nikseUpDownSimilarity.Visible = true;
             }
 
             if (nikseComboBoxVoice.Items.Count > 0 && nikseComboBoxVoice.SelectedIndex < 0)
@@ -1692,6 +1964,54 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                             }
                         }
                     }
+
+                    else if (engine.Id == TextToSpeechEngineId.Murf)
+                    {
+                        var voices = _murfVoices;
+                        foreach (var voiceLanguage in voices
+                                     .GroupBy(p => p.DisplayName)
+                                     .OrderBy(p => p.Key))
+                        {
+                            if (voiceLanguage.Count() == 1)
+                            {
+                                var voice = voiceLanguage.First();
+                                var tsi = new ToolStripMenuItem();
+                                tsi.Tag = new ActorAndVoice { Voice = voice.DisplayName, VoiceIndex = voices.IndexOf(voice) };
+                                tsi.Text = voice.ToString();
+                                tsi.Click += (x, args) =>
+                                {
+                                    var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                                    SetActor(a);
+                                };
+                                contextMenuStripActors.Items.Add(tsi);
+                            }
+                            else
+                            {
+                                var parent = new ToolStripMenuItem();
+                                parent.Text = voiceLanguage.Key;
+                                contextMenuStripActors.Items.Add(parent);
+
+                                foreach (var voice in voiceLanguage.OrderBy(p => p.DisplayName).ToList())
+                                {
+                                    var tsi = new ToolStripMenuItem();
+                                    tsi.Tag = new ActorAndVoice { Voice = voice.DisplayName, VoiceIndex = voices.IndexOf(voice) };
+                                    tsi.Text = voice.DisplayName;
+                                    tsi.Click += (x, args) =>
+                                    {
+                                        var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                                        SetActor(a);
+                                    };
+                                    parent.DropDownItems.Add(tsi);
+                                }
+
+                                if (Configuration.Settings.General.UseDarkTheme)
+                                {
+                                    DarkTheme.SetDarkTheme(parent);
+                                }
+                            }
+                        }
+                    }
+
                     else if (engine.Id == TextToSpeechEngineId.AllTalk)
                     {
                         var tsiList = new List<ToolStripItem>(nikseComboBoxVoice.Items.Count);
@@ -1740,6 +2060,69 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
+        private void FillElevenLabsLanguages(string model)
+        {
+            // see https://help.elevenlabs.io/hc/en-us/articles/17883183930129-What-models-do-you-offer-and-what-is-the-difference-between-them
+
+            if (model != "eleven_turbo_v2_5")
+            {
+                nikseComboBoxLanguage.Visible = false;
+                labelLanguage.Visible = false;
+                return;
+            }
+
+            nikseComboBoxLanguage.Items.Clear();
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Arabic", "ar"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Bulgarian", "bg"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Chinese", "zh"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Croatian", "hr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Czech", "cz"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Danish", "da"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Dutch", "nl"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("English", "en"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Filipino", "ph"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Finnish", "fi"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("French", "fr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("German", "de"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Greek", "el"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Hindi", "hi"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Hungarian", "hu"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Indonesian", "id"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Italian", "it"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Japanese", "ja"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Korean", "kr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Malay", "ms"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Norwegian", "no"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Polish", "pl"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Portuguese", "pt"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Romanian", "ro"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Russian", "ru"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Slovak", "sk"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Spanish", "es"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Swedish", "sv"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Tamil", "ta"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Turkish", "tr"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Ukrainian", "uk"));
+            nikseComboBoxLanguage.Items.Add(new TranslationPair("Vietnamese", "vi"));
+
+            nikseComboBoxLanguage.Visible = true;
+            labelLanguage.Visible = true;
+
+            nikseComboBoxLanguage.SelectedIndex = 7; // english
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage))
+            {
+                for (var i = 0; i < nikseComboBoxLanguage.Items.Count; i++)
+                {
+                    var tp = (TranslationPair)nikseComboBoxLanguage.Items[i];
+                    if (tp.ToString() == Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage)
+                    {
+                        nikseComboBoxLanguage.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
         private void SetFirstLanguageHitAsVoice()
         {
             nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechLastVoice;
@@ -1771,15 +2154,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 Directory.CreateDirectory(ttsPath);
             }
 
-            var elevenLabsPath = Path.Combine(ttsPath, "Piper");
-            if (!Directory.Exists(elevenLabsPath))
+            var piperPath = Path.Combine(ttsPath, "Piper");
+            if (!Directory.Exists(piperPath))
             {
-                Directory.CreateDirectory(elevenLabsPath);
+                Directory.CreateDirectory(piperPath);
             }
 
             var result = new List<PiperModel>();
 
-            var jsonFileName = Path.Combine(elevenLabsPath, "voices.json");
+            var jsonFileName = Path.Combine(piperPath, "voices.json");
 
             if (!File.Exists(jsonFileName))
             {
@@ -1796,7 +2179,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                             if (!string.IsNullOrEmpty(fileName))
                             {
                                 var name = entry.FilenameInZip;
-                                var path = Path.Combine(elevenLabsPath, name.Replace('/', Path.DirectorySeparatorChar));
+                                var path = Path.Combine(piperPath, name.Replace('/', Path.DirectorySeparatorChar));
                                 zip.ExtractFile(entry, path);
                             }
                         }
@@ -1806,22 +2189,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-                var url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/voices.json?download=true";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form Piper via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error + " " + result);
-                    return result;
-                }
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+                    var url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/voices.json?download=true";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
 
-                File.WriteAllBytes(jsonFileName, bytes);
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form Piper via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error + " " + result);
+                        return result;
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
             }
 
             if (File.Exists(jsonFileName))
@@ -1903,29 +2288,31 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-
-                if (!string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+                using (var httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+
+                    if (!string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+                    {
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("xi-api-key", nikseTextBoxApiKey.Text.Trim());
+                    }
+
+                    var url = "https://api.elevenlabs.io/v1/voices";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form ElevenLabs via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<ElevenLabModel>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
                 }
-
-                var url = "https://api.elevenlabs.io/v1/voices";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    Cursor = Cursors.Default;
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form ElevenLabs via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
-                    return new List<ElevenLabModel>();
-                }
-
-                File.WriteAllBytes(jsonFileName, bytes);
             }
 
             if (File.Exists(jsonFileName))
@@ -1991,24 +2378,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-
-                var url = "http://127.0.0.1:7851/api/voices";
-                var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
-                var bytes = res.Content.ReadAsByteArrayAsync().Result;
-
-                if (!res.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    Cursor = Cursors.Default;
-                    var error = Encoding.UTF8.GetString(bytes).Trim();
-                    SeLogger.Error($"Failed getting voices form AllTalk via url \"{url}\" : Status code={res.StatusCode} {error}");
-                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
-                    return new List<string>();
-                }
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
 
-                File.WriteAllBytes(jsonFileName, bytes);
+                    var url = "http://127.0.0.1:7851/api/voices";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form AllTalk via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<string>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
             }
 
             if (File.Exists(jsonFileName))
@@ -2019,6 +2408,92 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 foreach (var voice in voices)
                 {
                     result.Add(voice);
+                }
+            }
+
+            return result;
+        }
+
+        private List<MurfVoice> GetMurfVoices(bool useCache)
+        {
+            var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
+            if (!Directory.Exists(ttsPath))
+            {
+                Directory.CreateDirectory(ttsPath);
+            }
+
+            var murfPath = Path.Combine(ttsPath, "Murf");
+            if (!Directory.Exists(murfPath))
+            {
+                Directory.CreateDirectory(murfPath);
+            }
+
+            var result = new List<MurfVoice>();
+
+            var jsonFileName = Path.Combine(murfPath, "TtsMurfVoices.json");
+
+            if (!File.Exists(jsonFileName))
+            {
+                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var stream = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources.TtsMurfVoices.zip");
+                if (stream != null)
+                {
+                    using (var zip = ZipExtractor.Open(stream))
+                    {
+                        var dir = zip.ReadCentralDir();
+                        foreach (var entry in dir)
+                        {
+                            var fileName = Path.GetFileName(entry.FilenameInZip);
+                            if (!string.IsNullOrEmpty(fileName))
+                            {
+                                var name = entry.FilenameInZip;
+                                var path = Path.Combine(murfPath, name.Replace('/', Path.DirectorySeparatorChar));
+                                zip.ExtractFile(entry, path);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!useCache)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "application/json");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("api-key", nikseTextBoxApiKey.Text.Trim());
+
+                    var url = "https://api.murf.ai/v1/speech/voices";
+                    var res = httpClient.GetAsync(new Uri(url), CancellationToken.None).Result;
+                    var bytes = res.Content.ReadAsByteArrayAsync().Result;
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Cursor = Cursors.Default;
+                        var error = Encoding.UTF8.GetString(bytes).Trim();
+                        SeLogger.Error($"Failed getting voices form Murf via url \"{url}\" : Status code={res.StatusCode} {error}");
+                        MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "Got error: " + error);
+                        return new List<MurfVoice>();
+                    }
+
+                    File.WriteAllBytes(jsonFileName, bytes);
+                }
+            }
+
+            if (File.Exists(jsonFileName))
+            {
+                var json = File.ReadAllText(jsonFileName);
+                var parser = new SeJsonParser();
+                var voices = parser.GetArrayElements(json);
+                foreach (var voice in voices)
+                {
+                    var displayName = parser.GetFirstObject(voice, "displayName");
+                    var voiceId = parser.GetFirstObject(voice, "voiceId");
+                    var locale = parser.GetFirstObject(voice, "locale");
+                    var description = parser.GetFirstObject(voice, "description");
+                    var gender = parser.GetFirstObject(voice, "gender");
+                    var styles = parser.GetArrayElementsByName(voice, "availableStyles");
+                    result.Add(new MurfVoice(displayName, voiceId, locale, description, gender, styles.ToArray()));
                 }
             }
 
@@ -2089,6 +2564,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonTestVoice_Click(object sender, EventArgs e)
         {
+            SaveConfiguration();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(TextBoxTest.Text))
@@ -2105,7 +2582,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
                 if (!ok)
                 {
-                    MessageBox.Show(this, "Ups, voice generation failed!");
+                    MessageBox.Show(this, "Oops, voice generation failed!");
                     return;
                 }
 
@@ -2141,6 +2618,21 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
+        private void SaveConfiguration()
+        {
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            {
+                Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+            }
+            else if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                Configuration.Settings.Tools.TextToSpeechMurfPitch = (int)nikseUpDownStability.Value;
+                Configuration.Settings.Tools.TextToSpeechMurfRate = (int)nikseUpDownSimilarity.Value;
+            }
+        }
+
         private void HandleError(Exception ex)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
@@ -2157,14 +2649,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
 
+            SaveConfiguration();
+
             if (engine.Id == TextToSpeechEngineId.ElevenLabs)
             {
                 Configuration.Settings.Tools.TextToSpeechElevenLabsApiKey = nikseTextBoxApiKey.Text;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsModel = nikseComboBoxRegion.Text;
+                if (nikseComboBoxLanguage.Visible)
+                {
+                    Configuration.Settings.Tools.TextToSpeechElevenLabsLanguage = nikseComboBoxLanguage.Text;
+                }
             }
             else if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
             {
                 Configuration.Settings.Tools.TextToSpeechAzureApiKey = nikseTextBoxApiKey.Text;
                 Configuration.Settings.Tools.TextToSpeechAzureRegion = nikseComboBoxRegion.Text;
+            }
+            else if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                Configuration.Settings.Tools.TextToSpeechMurfApiKey = nikseTextBoxApiKey.Text;
+                Configuration.Settings.Tools.TextToSpeechMurfVoice = nikseComboBoxVoice.Text;
             }
 
             Configuration.Settings.Tools.TextToSpeechEngine = engine.Id.ToString();
@@ -2273,12 +2777,18 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
             else if (engine.Id == TextToSpeechEngineId.ElevenLabs)
             {
+                _elevenLabVoices.Clear();
                 GetElevenLabVoices(false);
                 nikseComboBoxEngine_SelectedIndexChanged(null, null);
             }
             else if (engine.Id == TextToSpeechEngineId.AllTalk)
             {
                 GetAllTalkVoices(false);
+                nikseComboBoxEngine_SelectedIndexChanged(null, null);
+            }
+            else if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                GetMurfVoices(false);
                 nikseComboBoxEngine_SelectedIndexChanged(null, null);
             }
 
@@ -2290,6 +2800,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech ||
                 engine.Id == TextToSpeechEngineId.ElevenLabs ||
+                engine.Id == TextToSpeechEngineId.Murf ||
                 engine.Id == TextToSpeechEngineId.Piper ||
                 engine.Id == TextToSpeechEngineId.AllTalk)
             {
@@ -2334,8 +2845,38 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             using (var form = new TtsAudioEncoding())
             {
-                 form.ShowDialog(this);
+                form.ShowDialog(this);
             }
+        }
+
+        private void nikseComboBoxRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            {
+                FillElevenLabsLanguages(nikseComboBoxRegion.Text);
+            }
+            else if (engine.Id == TextToSpeechEngineId.Murf)
+            {
+                var language = _murfLanguages.FirstOrDefault(p => p.ToString() == nikseComboBoxRegion.SelectedText);
+                if (language == null)
+                {
+                    language = _murfLanguages.First(p => p.Code == "en-US");
+                }
+
+                var filteredVoices = _murfVoices
+                    .Where(p => p.Locale == language.Code)
+                    .ToList();
+                nikseComboBoxVoice.Items.Clear();
+                nikseComboBoxVoice.Items.AddRange(filteredVoices.Select(p => p.ToString()).ToArray());
+                nikseComboBoxVoice.Text = filteredVoices.First().ToString();
+
+                labelVoiceCount.Text = nikseComboBoxVoice.Items.Count.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        private void nikseComboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

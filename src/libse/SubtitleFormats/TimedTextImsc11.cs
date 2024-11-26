@@ -117,8 +117,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 xmlTitle = "Untitled";
             }
 
-            xmlStructure = xmlStructure.Replace("[title]", HtmlUtil.EncodeNamed(xmlTitle));
-
+            var titleNode = xml.CreateElement("ttm", "title", TimedText10.TtmlMetadataNamespace);
+            titleNode.InnerText = xmlTitle;
+            xmlStructure = xmlStructure.Replace("[title]", titleNode.InnerXml);
 
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             xmlStructure = xmlStructure.Replace("lang=\"en\"", $"lang=\"{language}\"");

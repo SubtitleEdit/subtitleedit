@@ -2,8 +2,8 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
-    <TranslatedBy>Tłumaczenie: Adam Malich (mailto:adam_malich@windowslive.com)</TranslatedBy>
+    <Version>4.0.8</Version>
+    <TranslatedBy>Tłumaczenie: Adam Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1014,6 +1014,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Format pikseli</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Dostrój do</TuneFor>
     <AlignRight>Wyrównaj do prawej</AlignRight>
@@ -1447,6 +1448,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z dodanymi/usuniętymi osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Wygeneruj przezroczyste wideo z napisami...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany ujęcia...</GenerateImportShotChanges>
@@ -2133,6 +2135,8 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
     <CpsLessThan>ZNS mniej niż</CpsLessThan>
     <CpsGreaterThan>ZNS więcej niż</CpsGreaterThan>
+    <LengthLessThan>Długość mniejsza niż</LengthLessThan>
+    <LengthGreaterThan>Długość większa niż</LengthGreaterThan>
     <ExactlyOneLine>Dokładnie jedna linia</ExactlyOneLine>
     <ExactlyTwoLines>Dokładnie dwie linie</ExactlyTwoLines>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
@@ -2686,6 +2690,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <WaveformGoToPreviousShotChange>Przejdź do poprzedniej zmiany ujęcia</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Przejdź do następnej zmiany ujęcia</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Przełącz zmianę ujęcia</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Przesuń wszystkie zmiany ujęcia o jedną klatkę do przodu</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Przesuń wszystkie zmiany ujęcia o jedną klatkę do tyłu</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Usuń/Eksportuj zmiany ujęcia</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automatyczna regulacja startu za pomocą głośności/zmiany ujęcia</WaveformGuessStart>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
@@ -3014,15 +3020,15 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Liczba tagów wyrównania: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Długość napisów - minimalna: {0}</LineLengthMinimum>
     <LineLengthMaximum>Długość napisów - maksymalna: {0}</LineLengthMaximum>
-    <LineLengthAverage>Długość napisów - średnia: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Napisy, liczba linii - średnia: {0:0.0}</LinesPerSubtitleAverage>
+    <LineLengthAverage>Długość napisów - średnia: {0:#.###}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Napisy, liczba linii - średnia: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Długość pojedynczej linii - minimalna: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Długość pojedynczej linii - maksymalna: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Długość pojedynczej linii - przekroczenie wartości maksymalnej ({0} znaków): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Szerokość pojedynczej linii - minimum: {0} piks.</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Szerokość pojedynczej linii - maksimum: {0} pikseli</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Szerokość pojedynczej linii - średnio: {0} pikseli</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Szerokość pojedynczej linii - średnio: {0:#.###} pikseli</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Szerokość pojedynczej linii - przekroczenie wartości maksymalnej ({0} pikseli): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Czas trwania - minimalny: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Czas trwania - maksymalny: {0:0.000} sekund</DurationMaximum>
@@ -3133,6 +3139,9 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <Angle>Kąt</Angle>
     <BoxPerLine>Pole nieprzezroczyste na linię (użyj koloru konturu)</BoxPerLine>
     <BoxMultiLine>Jedno pole nieprzezroczyste (użyj koloru cienia)</BoxMultiLine>
+    <BoxPerLineShort>Pole nieprzezroczyste na linię</BoxPerLineShort>
+    <BoxMultiLineShort>Jedno pole nieprzezroczyste</BoxMultiLineShort>
+    <BoxType>Rodzaj pola nieprzezroczystego</BoxType>
     <DuplicateStyleNames>Zduplikowane nazwy stylów: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3171,6 +3180,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Łączenie ścieżki audio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generowanie mowy z tekstu: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Przegląd klipów audio</ReviewAudioClips>
+    <CustomAudioEncoding>Niestandardowe kodowanie audio</CustomAudioEncoding>
     <ReviewInfo>Przegląd i edycja/usuwanie klipów audio</ReviewInfo>
     <Play>Odtwarzaj</Play>
     <AutoContinue>Auto-kontynuacja</AutoContinue>
@@ -3446,6 +3456,7 @@ Zachować te zmiany?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Użyj wartości nagłówka X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Połącz linie z tym samym tekstem podczas wczytywania</MergeLines>
+    <MergeStyleTags>Scal tagi stylu</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Style WebVTT</Title>

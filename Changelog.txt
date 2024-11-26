@@ -1,5 +1,138 @@
 ﻿Subtitle Edit Changelog
 
+
+4.0.9 (xth December 2024) BETA
+* NEW:
+   * Add "Move all shot changes" shortcuts - thx acetilo
+   * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
+   * Add Murf TTS - thx David
+   * Add DeepLX translate - thx rifatozkancomtr 
+* IMPROVED:
+   * Update Portuguese translation - thx hugok79
+   * Update Bulgarian translation - thx Калин
+   * Update Russian translation - thx elfriob
+   * Update Korean translation - thx domddol
+   * Update Polish translation - thx admas
+   * Update Italian translation - thx bovirus
+   * Update Romanian installer translation - thx mircea
+   * Update Dutch translation - thx Flitskikker
+   * Update Whisper CPP to V1.7.2
+   * Update ffmpeg to 7.1
+   * Update Tesseract to 5.5.0
+   * Update yt-dlp to 2024.11.04
+   * Improvements for "Beautify time codes" - thx Flitskikker
+   * Add new options for TTS with ElevenLabs - thx cvrle77
+   * Add large-v3-turbo to Whisper OpenAI/CPP
+   * Update Anthropic Claude Sonnet model name to "claude-3-5-sonnet-latest"
+   * Minor improvements for color picker - thx MitchSirco/Siamak
+   * Fix some wrong OCR (English) corrections - thx Zoltan
+   * Add Icelandic language to ChatGPT + Gemini - thx dhofverberg
+   * Change new line handling to match VS code - thx darnn
+   * Align navigating video with frame when in frame-time-code-mode
+   * Try to add support for Eleven labs "eleven_turbo_v2_5" - thx laszlolaszlo
+   * Add "Intel Quick Sync" for "video burn in" - thx ghostminhtoan
+   * Allow save selected lines as subtitle with only 1 row selected - thx Pierrounator
+   * Ctrl+A not working in subtitle duration field - thx rRobis
+   * Allow reading Matroska files with ".mp4" extension
+* FIXED:
+   * Fix for nulling time code after load of sub from mkv
+   * Fix crash in TTS re-generate - thx cvrle77
+   * Fix crash while translating subtitles - thx claudemartin
+   * Fix issue with OCR/Italic - thx Boulder08/Zoltan
+   * Fix bug in EBU validation
+   * Fix for restoring Whisper window after minimize - thx vimbackground/innerspeakerz 
+   * Minor fix for Cavena890 save options
+   * Fix possible crash in "Gen transparent subs" when using video from "Program files"
+   * Fix wrong dialog info text in FCE
+   * Fix for divide by zero in TTS
+   * Fix bug in "Change casing" - thx Hlsgs
+   * Fix enter in textbox in FCE - thx p1nkyy/Roger
+   * Fix "Dialog styles" for many languags in Netflix quality check - thx Looi
+
+
+4.0.8 (6th September 2024) 
+* NEW:
+   * Add "Batch mode" for "Generate transparent video with subs" - thx David
+   * Add "Pixel format" paramter to burn-in - thx Hafran420
+   * Add new ChatGPT "gpt-4o-mini" model
+   * Add translation via Groq (api.groq.com)
+   * Add translation via OpenRouter - thx Nikodim
+   * Add custom shortcuts for custom export text templates - thx Oliver
+   * Add WebVTT setting for split of style tags - thx Oliver 
+   * PAC: Support Portuguese codepage + more - thx Ingo
+   * Cavena 890 Greek support etc - thx Ingo
+   * Add more "do-not-break-after" lists - thx oep42
+   * Handle "dvb_sub" in MKV in "Batch convert" - thx Gerben
+   * Add "Tetum" language to Google Translate - thx Asau
+   * Add "pt-PT" language to Google Translate + rename pt to "Portuguese (Brazil)" - thx Marco
+* IMPROVED:
+   * Update Portuguese translation - thx hugok79
+   * Update Chinese translation - thx nkh0472
+   * Update Italian translation - thx bovirus
+   * Update Polish translation - thx admas
+   * Update French translation - thx Pierre
+   * Update Greek translation - thx PMitsakis
+   * Update Spanish translations - thx jmaraujouy
+   * Update Romanian translation - thx Mircea
+   * Allow for larger files via drop to list view - thx Jim
+   * Improve "Generate transparent video with subs" box settings - thx JeditPro
+   * Disable line selection options in "Adjust all times" when in "source view"
+   * Remember "Adjust durations" in "Batch convert" - thx oep42
+* FIXED:
+   * Fix crash in TTML IMSC 1.1 - thx Louie
+   * Fix Romanian translation version number - thx MediaExpres
+   * Fix UI burn-in window spacing/width/height - thx Hafran420 
+   * Fix crash in "Whisper Audio to text" if no audio - thx morrellaberdeen 
+   * Fix running "Faster-Whisper-XXL" without "Faster-Whisper" - thx shanedk
+   * Fix crash in "Fix common errors" - thx Hardstylest
+   * Fix for "Visual sync" start/end time validation - thx improck
+   * Fix display resolution in "Burn-in subs" batch - thx David
+   * Fix combo boxes popup in "Measurement converter" - thx Dehrimon
+   * Detect change switching between UTF-8-no-bom/UTF-8-with-bom - thx Minherre
+   * Fix crash in Whisper UI (bug in Dutch translation) - thx hpcs444/tsg040
+   * Fix bad XML replace in "TTML 1.0" - thx Info
+   * Fix undo after "merge selected" for 3+ lines - thx Llorx
+   * Fix crash with resolution 0x0 in "Generate transparent subs" - thx hellobigbean*
+   * Fix edge case when parsing ms - thx PoneyClairDeLune
+   * Fix crash with "Undo-text-timer" - thx JDTR75/cvrle77
+   * Fix undesired line-break in auto-translate - thx Dyo-Anima
+   * Fix for batch translate via Ollama - thx Anon1337Elite
+   * Fix spell check shortcut (was the same as save-as, now Alt+F7) - thx Javier
+   * Fix for pasting ASSA in the waveform - thx MitchSirco
+   * Fix no header in Batch convert WebVTT to ASSA - thx SardanDev/aaron-meyers
+
+
+4.0.7 (8th July 2024) 
+* NEW:
+   * Add "Generate transparent video with subtitles" - thx JeditPro
+   * Add Edit - Modify selection - Line length
+   * Add support for Faster-Whisper-XXL
+   * Add audio settings for TTS final video file
+   * Add subtitle format "PodcastIndexer json" - thx rjgout 
+   * Add new subtitle format - thx Louie
+   * Add new Anthropic Claude 3.5 Sonnet model - thx Flash
+* IMPROVED:
+   * Update Portuguese translation - thx hugok79
+   * Update Brazilian Portuguese translation - thx igorruckert
+   * Update French translation - thx Pierre
+   * Update Chinese translation - thx nkh0472
+   * Update Finnish translation - thx Teijo S	
+   * Update Italian translation - thx bovirus
+   * Update Russian translation - thx elfriob
+   * Update mpv to 2024-06-09
+   * Update yt-dlp to 2024-07-02
+   * Add decimals to a few averages in statistics - thx Dvid
+* FIXED:
+   * Fix auto translate crash - thx soscaster
+   * Fix crash in Vosk audio to text on selected lines - thx MediaExpres
+   * Prompt for overwrite in "Multiple replace" export - thx redactedscribe
+   * Fix "abort" for TTS Azure/ElevenLabs - thx cvrle77
+   * UI fix for volume text in video player - thx Emiritus1
+   * Fix wrong casing fix after "L'" for French - thx Codling/ivandrofly
+   * Fix crash when double clicking on Play in TTS review window - thx cvrle77
+   * Fix for DCinema colors - thx Pamela
+
+
 4.0.6 (1st June 2024)
 * NEW:
    * Add "Text To Speech" - thx darnn/cvrle77/BlueBlue7891
@@ -33,7 +166,7 @@
    * Add Swedish to ChatGPT translate - thx Stefan
    * Allow larger subtitle preview font size - thx kadrimarzouki
 * FIXED:
-   * Fix for Antrophic translate - thx venomousraid 
+   * Fix for Anthropic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
    * Fix unwanted text boxes background color change - thx Leon
    * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
@@ -53,7 +186,7 @@
    * Add new shortcut "Insert new subtitle at video pos (fill)" - thx Leon/AuroraMartell
    * Add "LM Studio" translate (local) - thx fznx922
    * Add Ollama translate (local) - thx despairTK/Copy2Translator
-   * Add Antrophic translate 
+   * Add Anthropic translate 
    * Add distilled models for Purfview Faster Whisper
 * IMPROVED:
    * Update German translation - thx Netspark

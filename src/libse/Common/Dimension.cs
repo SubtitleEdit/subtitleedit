@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int Height { get; set; }
         public int Width { get; set; }
 
-        public Dimension(int height, int width) => (Height, Width) = (height, width);
+        public Dimension(int width, int height) => (Width, Height) = (width, height);
 
         /// <summary>
         /// Returns a string representation of the Dimension object, representing its height and width.
         /// </summary>
         /// <returns>A string representation of the Dimension object, in the format "height x width".</returns>
-        public override string ToString() => $"{Height}x{Width}";
+        public override string ToString() => $"{Width}x{Height}";
 
         public bool Equals(Dimension other) => Height == other.Height && Width == other.Width;
         public override bool Equals(object obj) => obj is Dimension other && Equals(other);

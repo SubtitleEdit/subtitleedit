@@ -1,3241 +1,18 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
-using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
-namespace Nikse.SubtitleEdit.Core.Common
+namespace Nikse.SubtitleEdit.Core.Settings
 {
     // The settings classes are built for easy xml-serialization (makes save/load code simple)
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
-    public class RecentFileEntry
-    {
-        public string FileName { get; set; }
-        public string OriginalFileName { get; set; }
-        public string VideoFileName { get; set; }
-        public int AudioTrack { get; set; }
-        public int FirstVisibleIndex { get; set; }
-        public int FirstSelectedIndex { get; set; }
-        public long VideoOffsetInMs { get; set; }
-        public bool VideoIsSmpte { get; set; }
-    }
-
-    public class RecentFilesSettings
-    {
-        private const int MaxRecentFiles = 25;
-
-        [XmlArrayItem("FileName")]
-        public List<RecentFileEntry> Files { get; set; }
-
-        public RecentFilesSettings()
-        {
-            Files = new List<RecentFileEntry>();
-        }
-
-        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, int audioTrack, string originalFileName, long videoOffset, bool isSmpte)
-        {
-            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
-
-            if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
-            {
-                fileName = originalFileName;
-                originalFileName = null;
-            }
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                Files.Insert(0, new RecentFileEntry { FileName = string.Empty });
-                return;
-            }
-
-            var existingEntry = GetRecentFile(fileName, originalFileName);
-            if (existingEntry == null)
-            {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName });
-            }
-            else
-            {
-                Files.Remove(existingEntry);
-                existingEntry.FirstSelectedIndex = firstSelectedIndex;
-                existingEntry.FirstVisibleIndex = firstVisibleIndex;
-                existingEntry.VideoFileName = videoFileName;
-                existingEntry.AudioTrack = audioTrack;
-                existingEntry.OriginalFileName = originalFileName;
-                existingEntry.VideoOffsetInMs = videoOffset;
-                existingEntry.VideoIsSmpte = isSmpte;
-                Files.Insert(0, existingEntry);
-            }
-            Files = Files.Take(MaxRecentFiles).ToList();
-        }
-
-        public void Add(string fileName, string videoFileName, int audioTrack, string originalFileName)
-        {
-            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
-
-            var existingEntry = GetRecentFile(fileName, originalFileName);
-            if (existingEntry == null)
-            {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName });
-            }
-            else
-            {
-                Files.Remove(existingEntry);
-                Files.Insert(0, existingEntry);
-            }
-            Files = Files.Take(MaxRecentFiles).ToList();
-        }
-
-        private RecentFileEntry GetRecentFile(string fileName, string originalFileName)
-        {
-            RecentFileEntry existingEntry;
-            if (string.IsNullOrEmpty(originalFileName))
-            {
-                existingEntry = Files.Find(p => !string.IsNullOrEmpty(p.FileName) &&
-                                                string.IsNullOrEmpty(p.OriginalFileName) &&
-                                                p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                existingEntry = Files.Find(p => !string.IsNullOrEmpty(p.FileName) &&
-                                                !string.IsNullOrEmpty(p.OriginalFileName) &&
-                                                p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
-                                                p.OriginalFileName.Equals(originalFileName, StringComparison.OrdinalIgnoreCase));
-            }
-            return existingEntry;
-        }
-    }
-
-    public class ToolsSettings
-    {
-        public List<AssaTemplateItem> AssaTagTemplates { get; set; }
-        public int StartSceneIndex { get; set; }
-        public int EndSceneIndex { get; set; }
-        public int VerifyPlaySeconds { get; set; }
-        public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
-        public bool RemoveEmptyLinesBetweenText { get; set; }
-        public string MusicSymbol { get; set; }
-        public string MusicSymbolReplace { get; set; }
-        public string UnicodeSymbolsToInsert { get; set; }
-        public bool SpellCheckAutoChangeNameCasing { get; set; }
-        public bool SpellCheckUseLargerFont { get; set; }
-        public bool SpellCheckAutoChangeNamesUseSuggestions { get; set; }
-        public string SpellCheckSearchEngine { get; set; }
-        public bool CheckOneLetterWords { get; set; }
-        public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
-        public bool RememberUseAlwaysList { get; set; }
-        public bool LiveSpellCheck { get; set; }
-        public bool SpellCheckShowCompletedMessage { get; set; }
-        public bool OcrFixUseHardcodedRules { get; set; }
-        public bool OcrGoogleCloudVisionSeHandlesTextMerge { get; set; }
-        public int OcrBinaryImageCompareRgbThreshold { get; set; }
-        public int OcrTesseract4RgbThreshold { get; set; }
-        public string OcrAddLetterRow1 { get; set; }
-        public string OcrAddLetterRow2 { get; set; }
-        public string OcrTrainFonts { get; set; }
-        public string OcrTrainMergedLetters { get; set; }
-        public string OcrTrainSrtFile { get; set; }
-        public bool OcrUseWordSplitList { get; set; }
-        public bool OcrUseWordSplitListAvoidPropercase { get; set; }
-        public string BDOpenIn { get; set; }
-        public string MicrosoftBingApiId { get; set; }
-        public string MicrosoftTranslatorApiKey { get; set; }
-        public string MicrosoftTranslatorTokenEndpoint { get; set; }
-        public string MicrosoftTranslatorCategory { get; set; }
-        public string GoogleApiV2Key { get; set; }
-        public bool GoogleTranslateNoKeyWarningShow { get; set; }
-        public int GoogleApiV1ChunkSize { get; set; }
-        public string GoogleTranslateLastSourceLanguage { get; set; }
-        public string GoogleTranslateLastTargetLanguage { get; set; }
-        public string AutoTranslateLastName { get; set; }
-        public string AutoTranslateLastUrl { get; set; }
-        public string AutoTranslateNllbApiUrl { get; set; }
-        public string AutoTranslateNllbServeUrl { get; set; }
-        public string AutoTranslateNllbServeModel { get; set; }
-        public string AutoTranslateLibreUrl { get; set; }
-        public string AutoTranslateLibreApiKey { get; set; }
-        public string AutoTranslateMyMemoryApiKey { get; set; }
-        public string AutoTranslateSeamlessM4TUrl { get; set; }
-        public string AutoTranslateDeepLApiKey { get; set; }
-        public string AutoTranslateDeepLUrl { get; set; }
-        public string AutoTranslatePapagoApiKeyId { get; set; }
-        public string AutoTranslatePapagoApiKey { get; set; }
-        public string AutoTranslateDeepLFormality { get; set; }
-        public bool TranslateAllowSplit { get; set; }
-        public string TranslateLastService { get; set; }
-        public string TranslateMergeStrategy { get; set; }
-        public string TranslateViaCopyPasteSeparator { get; set; }
-        public int TranslateViaCopyPasteMaxSize { get; set; }
-        public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
-        public string ChatGptUrl { get; set; }
-        public string ChatGptPrompt { get; set; }
-        public string ChatGptApiKey { get; set; }
-        public string ChatGptModel { get; set; }
-        public string LmStudioApiUrl { get; set; }
-        public string LmStudioModel { get; set; }
-        public string LmStudioPrompt { get; set; }
-        public string OllamaApiUrl { get; set; }
-        public string OllamaModels { get; set; }
-        public string OllamaModel { get; set; }
-        public string OllamaPrompt { get; set; }
-
-        public string AnthropicApiUrl { get; set; }
-        public string AnthropicPrompt { get; set; }
-        public string AnthropicApiKey { get; set; }
-        public string AnthropicApiModel { get; set; }
-        public int AutoTranslateDelaySeconds { get; set; }
-        public int AutoTranslateMaxBytes { get; set; }
-        public string AutoTranslateStrategy { get; set; }
-        public string GeminiProApiKey { get; set; }
-        public string TextToSpeechEngine { get; set; }
-        public string TextToSpeechLastVoice { get; set; }
-        public string TextToSpeechElevenLabsApiKey { get; set; }
-        public string TextToSpeechAzureApiKey { get; set; }
-        public string TextToSpeechAzureRegion { get; set; }
-        public bool TextToSpeechPreview { get; set; }
-        public bool TextToSpeechCustomAudio { get; set; }
-        public bool TextToSpeechCustomAudioStereo { get; set; }
-        public string TextToSpeechCustomAudioEncoding { get; set; }
-        public bool TextToSpeechAddToVideoFile { get; set; }
-        public bool ListViewSyntaxColorDurationSmall { get; set; }
-        public bool ListViewSyntaxColorDurationBig { get; set; }
-        public bool ListViewSyntaxColorOverlap { get; set; }
-        public bool ListViewSyntaxColorLongLines { get; set; }
-        public bool ListViewSyntaxColorWideLines { get; set; }
-        public bool ListViewSyntaxColorGap { get; set; }
-        public bool ListViewSyntaxMoreThanXLines { get; set; }
-        public Color ListViewSyntaxErrorColor { get; set; }
-        public Color ListViewUnfocusedSelectedColor { get; set; }
-        public Color Color1 { get; set; }
-        public Color Color2 { get; set; }
-        public Color Color3 { get; set; }
-        public Color Color4 { get; set; }
-        public Color Color5 { get; set; }
-        public Color Color6 { get; set; }
-        public Color Color7 { get; set; }
-        public Color Color8 { get; set; }
-        public bool ListViewShowColumnStartTime { get; set; }
-        public bool ListViewShowColumnEndTime { get; set; }
-        public bool ListViewShowColumnDuration { get; set; }
-        public bool ListViewShowColumnCharsPerSec { get; set; }
-        public bool ListViewShowColumnWordsPerMin { get; set; }
-        public bool ListViewShowColumnGap { get; set; }
-        public bool ListViewShowColumnActor { get; set; }
-        public bool ListViewShowColumnRegion { get; set; }
-        public bool ListViewMultipleReplaceShowColumnRuleInfo { get; set; }
-        public bool SplitAdvanced { get; set; }
-        public string SplitOutputFolder { get; set; }
-        public int SplitNumberOfParts { get; set; }
-        public string SplitVia { get; set; }
-        public bool JoinCorrectTimeCodes { get; set; }
-        public int JoinAddMs { get; set; }
-        public int SplitLongLinesMax { get; set; }
-        public string LastShowEarlierOrLaterSelection { get; set; }
-        public string NewEmptyTranslationText { get; set; }
-        public string BatchConvertOutputFolder { get; set; }
-        public bool BatchConvertOverwriteExisting { get; set; }
-        public bool BatchConvertSaveInSourceFolder { get; set; }
-        public bool BatchConvertRemoveFormatting { get; set; }
-        public bool BatchConvertRemoveFormattingAll { get; set; }
-        public bool BatchConvertRemoveFormattingItalic { get; set; }
-        public bool BatchConvertRemoveFormattingBold { get; set; }
-        public bool BatchConvertRemoveFormattingUnderline { get; set; }
-        public bool BatchConvertRemoveFormattingFontName { get; set; }
-        public bool BatchConvertRemoveFormattingColor { get; set; }
-        public bool BatchConvertRemoveFormattingAlignment { get; set; }
-        public bool BatchConvertRemoveStyle { get; set; }
-        public bool BatchConvertBridgeGaps { get; set; }
-        public bool BatchConvertFixCasing { get; set; }
-        public bool BatchConvertRemoveTextForHI { get; set; }
-        public bool BatchConvertConvertColorsToDialog { get; set; }
-        public bool BatchConvertBeautifyTimeCodes { get; set; }
-        public bool BatchConvertAutoTranslate { get; set; }
-        public bool BatchConvertFixCommonErrors { get; set; }
-        public bool BatchConvertMultipleReplace { get; set; }
-        public bool BatchConvertFixRtl { get; set; }
-        public string BatchConvertFixRtlMode { get; set; }
-        public bool BatchConvertSplitLongLines { get; set; }
-        public bool BatchConvertAutoBalance { get; set; }
-        public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
-        public bool BatchConvertMergeShortLines { get; set; }
-        public bool BatchConvertRemoveLineBreaks { get; set; }
-        public bool BatchConvertMergeSameText { get; set; }
-        public bool BatchConvertMergeSameTimeCodes { get; set; }
-        public bool BatchConvertChangeFrameRate { get; set; }
-        public bool BatchConvertChangeSpeed { get; set; }
-        public bool BatchConvertAdjustDisplayDuration { get; set; }
-        public bool BatchConvertApplyDurationLimits { get; set; }
-        public bool BatchConvertDeleteLines { get; set; }
-        public bool BatchConvertAssaChangeRes { get; set; }
-        public bool BatchConvertSortBy { get; set; }
-        public string BatchConvertSortByChoice { get; set; }
-        public bool BatchConvertOffsetTimeCodes { get; set; }
-        public bool BatchConvertScanFolderIncludeVideo { get; set; }
-        public string BatchConvertLanguage { get; set; }
-        public string BatchConvertFormat { get; set; }
-        public string BatchConvertAssStyles { get; set; }
-        public string BatchConvertSsaStyles { get; set; }
-        public bool BatchConvertUseStyleFromSource { get; set; }
-        public string BatchConvertExportCustomTextTemplate { get; set; }
-        public bool BatchConvertTsOverrideXPosition { get; set; }
-        public bool BatchConvertTsOverrideYPosition { get; set; }
-        public int BatchConvertTsOverrideBottomMargin { get; set; }
-        public string BatchConvertTsOverrideHAlign { get; set; }
-        public int BatchConvertTsOverrideHMargin { get; set; }
-        public bool BatchConvertTsOverrideScreenSize { get; set; }
-        public int BatchConvertTsScreenWidth { get; set; }
-        public int BatchConvertTsScreenHeight { get; set; }
-        public string BatchConvertTsFileNameAppend { get; set; }
-        public bool BatchConvertTsOnlyTeletext { get; set; }
-        public string BatchConvertMkvLanguageCodeStyle { get; set; }
-        public string BatchConvertOcrEngine { get; set; }
-        public string BatchConvertOcrLanguage { get; set; }
-        public string WaveformBatchLastFolder { get; set; }
-        public string ModifySelectionText { get; set; }
-        public string ModifySelectionRule { get; set; }
-        public bool ModifySelectionCaseSensitive { get; set; }
-        public string ExportVobSubFontName { get; set; }
-        public int ExportVobSubFontSize { get; set; }
-        public string ExportVobSubVideoResolution { get; set; }
-        public string ExportVobSubLanguage { get; set; }
-        public bool ExportVobSubSimpleRendering { get; set; }
-        public bool ExportVobAntiAliasingWithTransparency { get; set; }
-        public string ExportBluRayFontName { get; set; }
-        public int ExportBluRayFontSize { get; set; }
-        public string ExportFcpFontName { get; set; }
-        public string ExportFontNameOther { get; set; }
-        public int ExportFcpFontSize { get; set; }
-        public string ExportFcpImageType { get; set; }
-        public string ExportFcpPalNtsc { get; set; }
-        public string ExportBdnXmlImageType { get; set; }
-        public int ExportLastFontSize { get; set; }
-        public int ExportLastLineHeight { get; set; }
-        public int ExportLastBorderWidth { get; set; }
-        public bool ExportLastFontBold { get; set; }
-        public string ExportBluRayVideoResolution { get; set; }
-        public string ExportFcpVideoResolution { get; set; }
-        public Color ExportFontColor { get; set; }
-        public Color ExportBorderColor { get; set; }
-        public Color ExportShadowColor { get; set; }
-        public int ExportBoxBorderSize { get; set; }
-        public string ExportBottomMarginUnit { get; set; }
-        public int ExportBottomMarginPercent { get; set; }
-        public int ExportBottomMarginPixels { get; set; }
-        public string ExportLeftRightMarginUnit { get; set; }
-        public int ExportLeftRightMarginPercent { get; set; }
-        public int ExportLeftRightMarginPixels { get; set; }
-        public int ExportHorizontalAlignment { get; set; }
-        public int ExportBluRayBottomMarginPercent { get; set; }
-        public int ExportBluRayBottomMarginPixels { get; set; }
-        public int ExportBluRayShadow { get; set; }
-        public bool ExportBluRayRemoveSmallGaps { get; set; }
-        public string ExportCdgBackgroundImage { get; set; }
-        public int ExportCdgMarginLeft { get; set; }
-        public int ExportCdgMarginBottom { get; set; }
-        public string ExportCdgFormat { get; set; }
-        public int Export3DType { get; set; }
-        public int Export3DDepth { get; set; }
-        public int ExportLastShadowTransparency { get; set; }
-        public double ExportLastFrameRate { get; set; }
-        public bool ExportFullFrame { get; set; }
-        public bool ExportFcpFullPathUrl { get; set; }
-        public string ExportPenLineJoin { get; set; }
-        public Color BinEditBackgroundColor { get; set; }
-        public Color BinEditImageBackgroundColor { get; set; }
-        public int BinEditTopMargin { get; set; }
-        public int BinEditBottomMargin { get; set; }
-        public int BinEditLeftMargin { get; set; }
-        public int BinEditRightMargin { get; set; }
-        public string BinEditStartPosition { get; set; }
-        public string BinEditStartSize { get; set; }
-        public bool BinEditShowColumnGap { get; set; }
-        public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
-        public bool FixCommonErrorsSkipStepOne { get; set; }
-        public string ImportTextSplitting { get; set; }
-        public string ImportTextSplittingLineMode { get; set; }
-        public string ImportTextLineBreak { get; set; }
-        public bool ImportTextMergeShortLines { get; set; }
-        public bool ImportTextRemoveEmptyLines { get; set; }
-        public bool ImportTextAutoSplitAtBlank { get; set; }
-        public bool ImportTextRemoveLinesNoLetters { get; set; }
-        public bool ImportTextGenerateTimeCodes { get; set; }
-        public bool ImportTextTakeTimeCodeFromFileName { get; set; }
-        public bool ImportTextAutoBreak { get; set; }
-        public bool ImportTextAutoBreakAtEnd { get; set; }
-        public decimal ImportTextGap { get; set; }
-        public decimal ImportTextAutoSplitNumberOfLines { get; set; }
-        public string ImportTextAutoBreakAtEndMarkerText { get; set; }
-        public bool ImportTextDurationAuto { get; set; }
-        public decimal ImportTextFixedDuration { get; set; }
-        public string GenerateTimeCodePatterns { get; set; }
-        public string MusicSymbolStyle { get; set; }
-        public int BridgeGapMilliseconds { get; set; }
-        public int BridgeGapMillisecondsMinGap { get; set; }
-        public string ExportCustomTemplates { get; set; }
-        public string ChangeCasingChoice { get; set; }
-        public bool ChangeCasingNormalFixNames { get; set; }
-        public bool ChangeCasingNormalOnlyUppercase { get; set; }
-        public bool UseNoLineBreakAfter { get; set; }
-        public string NoLineBreakAfterEnglish { get; set; }
-        public List<string> FindHistory { get; set; }
-        public string ReplaceIn { get; set; }
-        public string ExportTextFormatText { get; set; }
-        public bool ExportTextRemoveStyling { get; set; }
-        public bool ExportTextShowLineNumbers { get; set; }
-        public bool ExportTextShowLineNumbersNewLine { get; set; }
-        public bool ExportTextShowTimeCodes { get; set; }
-        public bool ExportTextShowTimeCodesNewLine { get; set; }
-        public bool ExportTextNewLineAfterText { get; set; }
-        public bool ExportTextNewLineBetweenSubtitles { get; set; }
-        public string ExportTextTimeCodeFormat { get; set; }
-        public string ExportTextTimeCodeSeparator { get; set; }
-        public bool VideoOffsetKeepTimeCodes { get; set; }
-        public int MoveStartEndMs { get; set; }
-        public decimal AdjustDurationSeconds { get; set; }
-        public int AdjustDurationPercent { get; set; }
-        public string AdjustDurationLast { get; set; }
-        public bool AdjustDurationExtendOnly { get; set; }
-        public bool AdjustDurationExtendEnforceDurationLimits { get; set; }
-        public bool AdjustDurationExtendCheckShotChanges { get; set; }
-        public bool ChangeSpeedAllowOverlap { get; set; }
-        public bool AutoBreakCommaBreakEarly { get; set; }
-        public bool AutoBreakDashEarly { get; set; }
-        public bool AutoBreakLineEndingEarly { get; set; }
-        public bool AutoBreakUsePixelWidth { get; set; }
-        public bool AutoBreakPreferBottomHeavy { get; set; }
-        public double AutoBreakPreferBottomPercent { get; set; }
-        public bool ApplyMinimumDurationLimit { get; set; }
-        public bool ApplyMinimumDurationLimitCheckShotChanges { get; set; }
-        public bool ApplyMaximumDurationLimit { get; set; }
-        public int MergeShortLinesMaxGap { get; set; }
-        public int MergeShortLinesMaxChars { get; set; }
-        public bool MergeShortLinesOnlyContinuous { get; set; }
-        public int MergeTextWithSameTimeCodesMaxGap { get; set; }
-        public bool MergeTextWithSameTimeCodesMakeDialog { get; set; }
-        public bool MergeTextWithSameTimeCodesReBreakLines { get; set; }
-        public int MergeLinesWithSameTextMaxMs { get; set; }
-        public bool MergeLinesWithSameTextIncrement { get; set; }
-        public bool ConvertColorsToDialogRemoveColorTags { get; set; }
-        public bool ConvertColorsToDialogAddNewLines { get; set; }
-        public bool ConvertColorsToDialogReBreakLines { get; set; }
-        public string ColumnPasteColumn { get; set; }
-        public string ColumnPasteOverwriteMode { get; set; }
-        public string AssaAttachmentFontTextPreview { get; set; }
-        public string AssaSetPositionTarget { get; set; }
-        public string VisualSyncStartSize { get; set; }
-        public Color BlankVideoColor { get; set; }
-        public bool BlankVideoUseCheckeredImage { get; set; }
-        public int BlankVideoMinutes { get; set; }
-        public decimal BlankVideoFrameRate { get; set; }
-        public Color AssaProgressBarForeColor { get; set; }
-        public Color AssaProgressBarBackColor { get; set; }
-        public Color AssaProgressBarTextColor { get; set; }
-        public int AssaProgressBarHeight { get; set; }
-        public int AssaProgressBarSplitterWidth { get; set; }
-        public int AssaProgressBarSplitterHeight { get; set; }
-        public string AssaProgressBarFontName { get; set; }
-        public int AssaProgressBarFontSize { get; set; }
-        public bool AssaProgressBarTopAlign { get; set; }
-        public string AssaProgressBarTextAlign { get; set; }
-
-
-        public int AssaBgBoxPaddingLeft { get; set; }
-        public int AssaBgBoxPaddingRight { get; set; }
-        public int AssaBgBoxPaddingTop { get; set; }
-        public int AssaBgBoxPaddingBottom { get; set; }
-        public int AssaBgBoxDrawingMarginV { get; set; }
-        public int AssaBgBoxDrawingMarginH { get; set; }
-        public string AssaBgBoxDrawingAlignment { get; set; }
-        public Color AssaBgBoxColor { get; set; }
-        public Color AssaBgBoxOutlineColor { get; set; }
-        public Color AssaBgBoxShadowColor { get; set; }
-        public Color AssaBgBoxTransparentColor { get; set; }
-        public string AssaBgBoxStyle { get; set; }
-        public int AssaBgBoxStyleRadius { get; set; }
-        public int AssaBgBoxStyleCircleAdjustY { get; set; }
-        public int AssaBgBoxStyleSpikesStep { get; set; }
-        public int AssaBgBoxStyleSpikesHeight { get; set; }
-        public int AssaBgBoxStyleBubblesStep { get; set; }
-        public int AssaBgBoxStyleBubblesHeight { get; set; }
-        public int AssaBgBoxOutlineWidth { get; set; }
-        public int AssaBgBoxLayer { get; set; }
-        public string AssaBgBoxDrawing { get; set; }
-        public bool AssaBgBoxDrawingFileWatch { get; set; }
-        public bool AssaBgBoxDrawingOnly { get; set; }
-
-
-        public string GenVideoFontName { get; set; }
-        public bool GenVideoFontBold { get; set; }
-        public decimal GenVideoOutline { get; set; }
-        public int GenVideoFontSize { get; set; }
-        public string GenVideoEncoding { get; set; }
-        public string GenVideoPreset { get; set; }
-        public string GenVideoCrf { get; set; }
-        public string GenVideoTune { get; set; }
-        public string GenVideoAudioEncoding { get; set; }
-        public bool GenVideoAudioForceStereo { get; set; }
-        public string GenVideoAudioSampleRate { get; set; }
-        public bool GenVideoTargetFileSize { get; set; }
-        public float GenVideoFontSizePercentOfHeight { get; set; }
-        public bool GenVideoNonAssaBox { get; set; }
-        public Color GenVideoNonAssaBoxColor { get; set; }
-        public Color GenVideoNonAssaTextColor { get; set; }
-        public bool GenVideoNonAssaAlignRight { get; set; }
-        public bool GenVideoNonAssaFixRtlUnicode { get; set; }
-        public string GenVideoEmbedOutputExt { get; set; }
-        public string GenVideoEmbedOutputSuffix { get; set; }
-        public string GenVideoEmbedOutputReplace { get; set; }
-        public bool GenVideoDeleteInputVideoFile { get; set; }
-        public bool GenVideoUseOutputFolder { get; set; }
-        public string GenVideoOutputFolder { get; set; }
-        public string GenVideoOutputFileSuffix { get; set; }
-
-        public bool VoskPostProcessing { get; set; }
-        public string VoskModel { get; set; }
-        public string WhisperChoice { get; set; }
-        public bool WhisperIgnoreVersion { get; set; }
-
-        public bool WhisperDeleteTempFiles { get; set; }
-        public string WhisperModel { get; set; }
-        public string WhisperLanguageCode { get; set; }
-        public string WhisperLocation { get; set; }
-        public string WhisperCtranslate2Location { get; set; }
-        public string WhisperPurfviewFasterWhisperLocation { get; set; }
-        public string WhisperPurfviewFasterWhisperDefaultCmd { get; set; }
-        public string WhisperXLocation { get; set; }
-        public string WhisperStableTsLocation { get; set; }
-        public string WhisperCppModelLocation { get; set; }
-        public string WhisperExtraSettings { get; set; }
-        public string WhisperExtraSettingsHistory { get; set; }
-        public bool WhisperAutoAdjustTimings { get; set; }
-        public bool WhisperUseLineMaxChars { get; set; }
-        public bool WhisperPostProcessingAddPeriods { get; set; }
-        public bool WhisperPostProcessingMergeLines { get; set; }
-        public bool WhisperPostProcessingSplitLines { get; set; }
-        public bool WhisperPostProcessingFixCasing { get; set; }
-        public bool WhisperPostProcessingFixShortDuration { get; set; }
-        public int AudioToTextLineMaxChars { get; set; }
-        public int AudioToTextLineMaxCharsJp { get; set; }
-        public int AudioToTextLineMaxCharsCn { get; set; }
-        public int BreakLinesLongerThan { get; set; }
-        public int UnbreakLinesLongerThan { get; set; }
-
-        public ToolsSettings()
-        {
-            AssaTagTemplates = new List<AssaTemplateItem>();
-            StartSceneIndex = 1;
-            EndSceneIndex = 1;
-            VerifyPlaySeconds = 2;
-            FixShortDisplayTimesAllowMoveStartTime = false;
-            RemoveEmptyLinesBetweenText = true;
-            MusicSymbol = "♪";
-            MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
-                                 "<s M/>,<s m/>," + // music symbols by subtitle creator
-                                 "#,*,¶"; // common music symbols
-            UnicodeSymbolsToInsert = "♪;♫;°;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
-            SpellCheckAutoChangeNameCasing = false;
-            SpellCheckAutoChangeNamesUseSuggestions = false;
-            OcrFixUseHardcodedRules = true;
-            OcrGoogleCloudVisionSeHandlesTextMerge = true;
-            OcrBinaryImageCompareRgbThreshold = 200;
-            OcrTesseract4RgbThreshold = 200;
-            OcrAddLetterRow1 = "♪;á;é;í;ó;ö;ő;ú;ü;ű;ç;ñ;å;¿";
-            OcrAddLetterRow2 = "♫;Á;É;Í;Ó;Ö;Ő;Ú;Ü;Ű;Ç;Ñ;Å;¡";
-            OcrTrainFonts = "Arial;Calibri;Corbel;Futura Std Book;Futura Bis;Helvetica Neue;Lucida Console;Tahoma;Trebuchet MS;Verdana";
-            OcrTrainMergedLetters = "ff ft fi fj fy fl rf rt rv rw ry rt rz ryt tt TV tw yt yw wy wf ryt xy";
-            OcrUseWordSplitList = true;
-            OcrUseWordSplitListAvoidPropercase = true;
-            MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-            GoogleTranslateNoKeyWarningShow = true;
-            GoogleApiV1ChunkSize = 1500;
-            GoogleTranslateLastTargetLanguage = "en";
-            AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
-            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v2/";
-            AutoTranslateLibreUrl = "http://localhost:5000/";
-            AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
-            AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
-            ChatGptUrl = "https://api.openai.com/v1/chat/completions";
-            ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-            ChatGptModel = "gpt-4o";
-            LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-            OllamaApiUrl = "http://localhost:11434/api/generate";
-            OllamaModels = "llama3,llama2,mistral,dolphin-phi,phi,neural-chat,starling-lm,codellama,llama2-uncensored,llama2:13b,llama2:70b,orca-mini,vicuna,llava,gemma:2b,gemma:7b";
-            OllamaModel = "llama3";
-            OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
-            AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
-            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-3-opus-20240229";
-            TextToSpeechAzureRegion = "westeurope";
-            AutoTranslateMaxBytes = 2000;
-            TextToSpeechAddToVideoFile = true;
-            TranslateAllowSplit = true;
-            TranslateViaCopyPasteAutoCopyToClipboard = true;
-            TranslateViaCopyPasteMaxSize = 5000;
-            TranslateViaCopyPasteSeparator = ".";
-            CheckOneLetterWords = true;
-            SpellCheckEnglishAllowInQuoteAsIng = false;
-            SpellCheckShowCompletedMessage = true;
-            ListViewSyntaxColorDurationSmall = true;
-            ListViewSyntaxColorDurationBig = true;
-            ListViewSyntaxColorOverlap = true;
-            ListViewSyntaxColorLongLines = true;
-            ListViewSyntaxColorWideLines = false;
-            ListViewSyntaxMoreThanXLines = true;
-            ListViewSyntaxColorGap = true;
-            ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
-            ListViewUnfocusedSelectedColor = Color.LightBlue;
-            Color1 = Color.Yellow;
-            Color2 = Color.FromArgb(byte.MaxValue, 0, 0);
-            Color3 = Color.FromArgb(0, byte.MaxValue, 0);
-            Color4 = Color.Cyan;
-            Color5 = Color.Black;
-            Color6 = Color.White;
-            Color7 = Color.Orange;
-            Color8 = Color.Pink;
-            ListViewShowColumnStartTime = true;
-            ListViewShowColumnEndTime = true;
-            ListViewShowColumnDuration = true;
-            SplitAdvanced = false;
-            SplitNumberOfParts = 3;
-            SplitVia = "Lines";
-            JoinCorrectTimeCodes = true;
-            SplitLongLinesMax = 90;
-            NewEmptyTranslationText = string.Empty;
-            BatchConvertLanguage = string.Empty;
-            BatchConvertTsOverrideBottomMargin = 5; // pct
-            BatchConvertTsScreenWidth = 1920;
-            BatchConvertTsScreenHeight = 1080;
-            BatchConvertOcrEngine = "Tesseract";
-            BatchConvertOcrLanguage = "en";
-            BatchConvertTsOverrideHAlign = "center"; // left center right
-            BatchConvertTsOverrideHMargin = 5; // pct
-            BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
-            BatchConvertMkvLanguageCodeStyle = "2";
-            ModifySelectionRule = "Contains";
-            ModifySelectionText = string.Empty;
-            ImportTextDurationAuto = true;
-            ImportTextGap = 84;
-            ImportTextFixedDuration = 2500;
-            GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
-            MusicSymbolStyle = "Double"; // 'Double' or 'Single'
-            ExportFontColor = Color.White;
-            ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
-            ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
-            ExportBoxBorderSize = 8;
-            ExportBottomMarginUnit = "%";
-            ExportBottomMarginPercent = 5;
-            ExportBottomMarginPixels = 15;
-            ExportLeftRightMarginUnit = "%";
-            ExportLeftRightMarginPercent = 5;
-            ExportLeftRightMarginPixels = 15;
-            ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
-            ExportVobSubSimpleRendering = false;
-            ExportVobAntiAliasingWithTransparency = true;
-            ExportBluRayBottomMarginPercent = 5;
-            ExportBluRayBottomMarginPixels = 20;
-            ExportBluRayShadow = 1;
-            Export3DType = 0;
-            Export3DDepth = 0;
-            ExportCdgMarginLeft = 160;
-            ExportCdgMarginBottom = 67;
-            ExportLastShadowTransparency = 200;
-            ExportLastFrameRate = 24.0d;
-            ExportFullFrame = false;
-            ExportPenLineJoin = "Round";
-            ExportFcpImageType = "Bmp";
-            ExportFcpPalNtsc = "PAL";
-            ExportLastBorderWidth = 4;
-            BinEditBackgroundColor = Color.Black;
-            BinEditImageBackgroundColor = Color.Blue;
-            BinEditTopMargin = 10;
-            BinEditBottomMargin = 10;
-            BinEditLeftMargin = 10;
-            BinEditRightMargin = 10;
-            BridgeGapMilliseconds = 100;
-            BridgeGapMillisecondsMinGap = 24;
-            ChangeCasingNormalFixNames = true;
-            ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆÆsrtæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||ÆÆsub";
-            UseNoLineBreakAfter = false;
-            NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
-            FindHistory = new List<string>();
-            ExportTextFormatText = "None";
-            ExportTextRemoveStyling = true;
-            ExportTextShowLineNumbersNewLine = true;
-            ExportTextShowTimeCodesNewLine = true;
-            ExportTextNewLineAfterText = true;
-            ExportTextNewLineBetweenSubtitles = true;
-            ImportTextLineBreak = "|";
-            ImportTextAutoSplitNumberOfLines = 2;
-            ImportTextAutoSplitAtBlank = true;
-            ImportTextAutoBreakAtEndMarkerText = ".!?";
-            ImportTextAutoBreakAtEnd = true;
-            MoveStartEndMs = 100;
-            AdjustDurationSeconds = 0.1m;
-            AdjustDurationPercent = 120;
-            AdjustDurationExtendOnly = true;
-            AdjustDurationExtendEnforceDurationLimits = true;
-            AdjustDurationExtendCheckShotChanges = true;
-            AutoBreakCommaBreakEarly = false;
-            AutoBreakDashEarly = true;
-            AutoBreakLineEndingEarly = false;
-            AutoBreakUsePixelWidth = true;
-            AutoBreakPreferBottomHeavy = true;
-            AutoBreakPreferBottomPercent = 5;
-            ApplyMinimumDurationLimit = true;
-            ApplyMinimumDurationLimitCheckShotChanges = true;
-            ApplyMaximumDurationLimit = true;
-            MergeShortLinesMaxGap = 250;
-            MergeShortLinesMaxChars = 55;
-            MergeShortLinesOnlyContinuous = true;
-            MergeTextWithSameTimeCodesMaxGap = 250;
-            MergeTextWithSameTimeCodesReBreakLines = false;
-            MergeLinesWithSameTextMaxMs = 250;
-            MergeLinesWithSameTextIncrement = true;
-            MergeTextWithSameTimeCodesMakeDialog = false;
-            ConvertColorsToDialogRemoveColorTags = true;
-            ConvertColorsToDialogAddNewLines = true;
-            ConvertColorsToDialogReBreakLines = false;
-            ColumnPasteColumn = "all";
-            ColumnPasteOverwriteMode = "overwrite";
-            AssaAttachmentFontTextPreview =
-                "Hello World!" + Environment.NewLine +
-                "こんにちは世界" + Environment.NewLine +
-                "你好世界！" + Environment.NewLine +
-                "1234567890";
-            BlankVideoColor = Color.CadetBlue;
-            BlankVideoUseCheckeredImage = true;
-            BlankVideoMinutes = 2;
-            BlankVideoFrameRate = 23.976m;
-            AssaProgressBarForeColor = Color.FromArgb(200, 200, 0, 0);
-            AssaProgressBarBackColor = Color.FromArgb(150, 80, 80, 80);
-            AssaProgressBarTextColor = Color.White;
-            AssaProgressBarHeight = 40;
-            AssaProgressBarSplitterWidth = 2;
-            AssaProgressBarSplitterHeight = 40;
-            AssaProgressBarFontName = "Arial";
-            AssaProgressBarFontSize = 30;
-            AssaProgressBarTextAlign = "left";
-
-            AssaBgBoxPaddingLeft = 10;
-            AssaBgBoxPaddingRight = 10;
-            AssaBgBoxPaddingTop = 6;
-            AssaBgBoxPaddingBottom = 6;
-            AssaBgBoxColor = Color.FromArgb(200, 0, 0, 0);
-            AssaBgBoxOutlineColor = Color.FromArgb(200, 80, 80, 80);
-            AssaBgBoxShadowColor = Color.FromArgb(100, 0, 0, 0);
-            AssaBgBoxTransparentColor = Color.Cyan;
-            AssaBgBoxStyle = "square";
-            AssaBgBoxStyleRadius = 30;
-            AssaBgBoxStyleCircleAdjustY = 30;
-            AssaBgBoxStyleSpikesStep = 15;
-            AssaBgBoxStyleSpikesHeight = 30;
-            AssaBgBoxStyleBubblesStep = 75;
-            AssaBgBoxStyleBubblesHeight = 40;
-            AssaBgBoxOutlineWidth = 0;
-            AssaBgBoxLayer = -11893;
-            AssaBgBoxDrawingFileWatch = true;
-
-            GenVideoEncoding = "libx264";
-            GenVideoPreset = "medium";
-            GenVideoCrf = "23";
-            GenVideoTune = "film";
-            GenVideoAudioEncoding = "copy";
-            GenVideoAudioForceStereo = true;
-            GenVideoAudioSampleRate = "48000";
-            GenVideoFontBold = true;
-            GenVideoOutline = 6;
-            GenVideoFontSizePercentOfHeight = 0.078f;
-            GenVideoNonAssaBox = true;
-            GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
-            GenVideoNonAssaTextColor = Color.White;
-            GenVideoEmbedOutputSuffix = "embed";
-            GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
-            GenVideoOutputFileSuffix = "_new";
-            VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
-            WhisperDeleteTempFiles = true;
-            WhisperPurfviewFasterWhisperDefaultCmd = "--standard";
-            WhisperExtraSettings = "";
-            WhisperLanguageCode = "en";
-            WhisperAutoAdjustTimings = true;
-            WhisperPostProcessingAddPeriods = false;
-            WhisperPostProcessingMergeLines = true;
-            WhisperPostProcessingSplitLines = true;
-            WhisperPostProcessingFixCasing = false;
-            WhisperPostProcessingFixShortDuration = true;
-            AudioToTextLineMaxChars = 86;
-            AudioToTextLineMaxCharsJp = 32;
-            AudioToTextLineMaxCharsCn = 36;
-        }
-    }
-
-    public class FcpExportSettings
-    {
-        public string FontName { get; set; }
-        public int FontSize { get; set; }
-        public string Alignment { get; set; }
-        public int Baseline { get; set; }
-        public Color Color { get; set; }
-
-        public FcpExportSettings()
-        {
-            FontName = "Lucida Sans";
-            FontSize = 36;
-            Alignment = "center";
-            Baseline = 29;
-            Color = Color.WhiteSmoke;
-        }
-    }
-
-
-    public class WordListSettings
-    {
-        public string LastLanguage { get; set; }
-        public string NamesUrl { get; set; }
-        public bool UseOnlineNames { get; set; }
-
-        public WordListSettings()
-        {
-            LastLanguage = "en-US";
-            NamesUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/Dictionaries/names.xml";
-        }
-    }
-
-    public class SubtitleSettings
-    {
-        public List<AssaStorageCategory> AssaStyleStorageCategories { get; set; }
-        public List<string> AssaOverrideTagHistory { get; set; }
-        public bool AssaResolutionAutoNew { get; set; }
-        public bool AssaResolutionPromptChange { get; set; }
-        public bool AssaShowScaledBorderAndShadow { get; set; }
-        public bool AssaShowPlayDepth { get; set; }
-        public string DCinemaFontFile { get; set; }
-        public string DCinemaLoadFontResource { get; set; }
-        public int DCinemaFontSize { get; set; }
-        public int DCinemaBottomMargin { get; set; }
-        public double DCinemaZPosition { get; set; }
-        public int DCinemaFadeUpTime { get; set; }
-        public int DCinemaFadeDownTime { get; set; }
-        public bool DCinemaAutoGenerateSubtitleId { get; set; }
-
-        public string CurrentDCinemaSubtitleId { get; set; }
-        public string CurrentDCinemaMovieTitle { get; set; }
-        public string CurrentDCinemaReelNumber { get; set; }
-        public string CurrentDCinemaIssueDate { get; set; }
-        public string CurrentDCinemaLanguage { get; set; }
-        public string CurrentDCinemaEditRate { get; set; }
-        public string CurrentDCinemaTimeCodeRate { get; set; }
-        public string CurrentDCinemaStartTime { get; set; }
-        public string CurrentDCinemaFontId { get; set; }
-        public string CurrentDCinemaFontUri { get; set; }
-        public Color CurrentDCinemaFontColor { get; set; }
-        public string CurrentDCinemaFontEffect { get; set; }
-        public Color CurrentDCinemaFontEffectColor { get; set; }
-        public int CurrentDCinemaFontSize { get; set; }
-
-        public int CurrentCavena890LanguageIdLine1 { get; set; }
-        public int CurrentCavena890LanguageIdLine2 { get; set; }
-        public string CurrentCavena89Title { get; set; }
-        public string CurrentCavena890riginalTitle { get; set; }
-        public string CurrentCavena890Translator { get; set; }
-        public string CurrentCavena89Comment { get; set; }
-        public int CurrentCavena89LanguageId { get; set; }
-        public string Cavena890StartOfMessage { get; set; }
-
-        public bool EbuStlTeletextUseBox { get; set; }
-        public bool EbuStlTeletextUseDoubleHeight { get; set; }
-        public int EbuStlMarginTop { get; set; }
-        public int EbuStlMarginBottom { get; set; }
-        public int EbuStlNewLineRows { get; set; }
-        public bool EbuStlRemoveEmptyLines { get; set; }
-        public int PacVerticalTop { get; set; }
-        public int PacVerticalCenter { get; set; }
-        public int PacVerticalBottom { get; set; }
-
-        public string DvdStudioProHeader { get; set; }
-
-        public string TmpegEncXmlFontName { get; set; }
-        public string TmpegEncXmlFontHeight { get; set; }
-        public string TmpegEncXmlPosition { get; set; }
-
-        public bool CheetahCaptionAlwayWriteEndTime { get; set; }
-
-        public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
-        public int SamiHtmlEncodeMode { get; set; }
-
-        public string TimedText10TimeCodeFormat { get; set; }
-        public string TimedText10TimeCodeFormatSource { get; set; }
-        public bool TimedText10ShowStyleAndLanguage { get; set; }
-        public string TimedText10FileExtension { get; set; }
-        public string TimedTextItunesTopOrigin { get; set; }
-        public string TimedTextItunesTopExtent { get; set; }
-        public string TimedTextItunesBottomOrigin { get; set; }
-        public string TimedTextItunesBottomExtent { get; set; }
-        public string TimedTextItunesTimeCodeFormat { get; set; }
-        public string TimedTextItunesStyleAttribute { get; set; }
-        public string TimedTextImsc11TimeCodeFormat { get; set; }
-        public string TimedTextImsc11FileExtension { get; set; }
-
-
-        public int FcpFontSize { get; set; }
-        public string FcpFontName { get; set; }
-
-        public string NuendoCharacterListFile { get; set; }
-
-        public bool WebVttUseXTimestampMap { get; set; }
-        public bool WebVttUseMultipleXTimestampMap { get; set; }
-        public bool WebVttMergeLinesWithSameText { get; set; }
-        public long WebVttTimescale { get; set; }
-        public string WebVttCueAn1 { get; set; }
-        public string WebVttCueAn2 { get; set; }
-        public string WebVttCueAn3 { get; set; }
-        public string WebVttCueAn4 { get; set; }
-        public string WebVttCueAn5 { get; set; }
-        public string WebVttCueAn6 { get; set; }
-        public string WebVttCueAn7 { get; set; }
-        public string WebVttCueAn8 { get; set; }
-        public string WebVttCueAn9 { get; set; }
-        public string MPlayer2Extension { get; set; }
-        public bool TeletextItalicFix { get; set; }
-        public bool MccDebug { get; set; }
-        public bool BluRaySupSkipMerge { get; set; }
-        public bool BluRaySupForceMergeAll { get; set; }
-
-        public SubtitleSettings()
-        {
-            AssaStyleStorageCategories = new List<AssaStorageCategory>();
-            AssaOverrideTagHistory = new List<string>();
-            AssaResolutionAutoNew = true;
-            AssaResolutionPromptChange = true;
-            AssaShowScaledBorderAndShadow = true;
-            AssaShowPlayDepth = true;
-
-            DCinemaFontFile = "Arial.ttf";
-            DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
-            DCinemaFontSize = 42;
-            DCinemaBottomMargin = 8;
-            DCinemaZPosition = 0;
-            DCinemaFadeUpTime = 0;
-            DCinemaFadeDownTime = 0;
-            DCinemaAutoGenerateSubtitleId = true;
-
-            EbuStlTeletextUseBox = true;
-            EbuStlTeletextUseDoubleHeight = true;
-            EbuStlMarginTop = 0;
-            EbuStlMarginBottom = 2;
-            EbuStlNewLineRows = 2;
-
-            PacVerticalTop = 1;
-            PacVerticalCenter = 6;
-            PacVerticalBottom = 11;
-
-            DvdStudioProHeader = @"$VertAlign          =   Bottom
-$Bold               =   FALSE
-$Underlined         =   FALSE
-$Italic             =   FALSE
-$XOffset                =   0
-$YOffset                =   -5
-$TextContrast           =   15
-$Outline1Contrast           =   15
-$Outline2Contrast           =   13
-$BackgroundContrast     =   0
-$ForceDisplay           =   FALSE
-$FadeIn             =   0
-$FadeOut                =   0
-$HorzAlign          =   Center
-";
-
-            TmpegEncXmlFontName = "Tahoma";
-            TmpegEncXmlFontHeight = "0.069";
-            TmpegEncXmlPosition = "23";
-
-            SamiDisplayTwoClassesAsTwoSubtitles = true;
-            SamiHtmlEncodeMode = 0;
-
-            TimedText10TimeCodeFormat = "Source";
-            TimedText10ShowStyleAndLanguage = true;
-            TimedText10FileExtension = ".xml";
-
-            TimedTextItunesTopOrigin = "0% 0%";
-            TimedTextItunesTopExtent = "100% 15%";
-            TimedTextItunesBottomOrigin = "0% 85%";
-            TimedTextItunesBottomExtent = "100% 15%";
-            TimedTextItunesTimeCodeFormat = "Frames";
-            TimedTextItunesStyleAttribute = "tts:fontStyle";
-            TimedTextImsc11TimeCodeFormat = "hh:mm:ss.ms";
-            TimedTextImsc11FileExtension = ".xml";
-
-            FcpFontSize = 18;
-            FcpFontName = "Lucida Grande";
-
-            Cavena890StartOfMessage = "10:00:00:00";
-
-            WebVttTimescale = 90000;
-            WebVttUseXTimestampMap = true;
-            WebVttUseMultipleXTimestampMap = true;
-            WebVttCueAn1 = "position:20%";
-            WebVttCueAn2 = "";
-            WebVttCueAn3 = "position:80%";
-            WebVttCueAn4 = "position:20% line:50%";
-            WebVttCueAn5 = "line:50%";
-            WebVttCueAn6 = "position:80% line:50%";
-            WebVttCueAn7 = "position:20% line:20%";
-            WebVttCueAn8 = "line:20%";
-            WebVttCueAn9 = "position:80% line:20%";
-
-            MPlayer2Extension = ".txt";
-
-            TeletextItalicFix = true;
-        }
-
-        public void InitializeDCinameSettings(bool smpte)
-        {
-            if (smpte)
-            {
-                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
-                CurrentDCinemaLanguage = "en";
-                CurrentDCinemaFontUri = DCinemaLoadFontResource;
-                CurrentDCinemaFontId = "theFontId";
-            }
-            else
-            {
-                string hex = Guid.NewGuid().ToString().RemoveChar('-').ToLowerInvariant();
-                hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-                CurrentDCinemaSubtitleId = hex;
-                CurrentDCinemaLanguage = "English";
-                CurrentDCinemaFontUri = DCinemaFontFile;
-                CurrentDCinemaFontId = "Arial";
-            }
-            CurrentDCinemaIssueDate = DateTime.Now.ToString("s");
-            CurrentDCinemaMovieTitle = "title";
-            CurrentDCinemaReelNumber = "1";
-            CurrentDCinemaFontColor = Color.White;
-            CurrentDCinemaFontEffect = "border";
-            CurrentDCinemaFontEffectColor = Color.Black;
-            CurrentDCinemaFontSize = DCinemaFontSize;
-            CurrentCavena890LanguageIdLine1 = -1;
-            CurrentCavena890LanguageIdLine2 = -1;
-        }
-    }
-
-    public class ProxySettings
-    {
-        public string ProxyAddress { get; set; }
-        public string AuthType { get; set; }
-        public bool UseDefaultCredentials { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Domain { get; set; }
-
-        public string DecodePassword()
-        {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(Password));
-        }
-        public void EncodePassword(string unencryptedPassword)
-        {
-            Password = Convert.ToBase64String(Encoding.UTF8.GetBytes(unencryptedPassword));
-        }
-    }
-
-    public class FixCommonErrorsSettings
-    {
-        public string StartPosition { get; set; }
-        public string StartSize { get; set; }
-        public bool EmptyLinesTicked { get; set; }
-        public bool OverlappingDisplayTimeTicked { get; set; }
-        public bool TooShortDisplayTimeTicked { get; set; }
-        public bool TooLongDisplayTimeTicked { get; set; }
-        public bool TooShortGapTicked { get; set; }
-        public bool InvalidItalicTagsTicked { get; set; }
-        public bool BreakLongLinesTicked { get; set; }
-        public bool MergeShortLinesTicked { get; set; }
-        public bool MergeShortLinesAllTicked { get; set; }
-        public bool MergeShortLinesPixelWidthTicked { get; set; }
-        public bool UnneededSpacesTicked { get; set; }
-        public bool UnneededPeriodsTicked { get; set; }
-        public bool FixCommasTicked { get; set; }
-        public bool MissingSpacesTicked { get; set; }
-        public bool AddMissingQuotesTicked { get; set; }
-        public bool Fix3PlusLinesTicked { get; set; }
-        public bool FixHyphensTicked { get; set; }
-        public bool FixHyphensRemoveSingleLineTicked { get; set; }
-        public bool UppercaseIInsideLowercaseWordTicked { get; set; }
-        public bool DoubleApostropheToQuoteTicked { get; set; }
-        public bool AddPeriodAfterParagraphTicked { get; set; }
-        public bool StartWithUppercaseLetterAfterParagraphTicked { get; set; }
-        public bool StartWithUppercaseLetterAfterPeriodInsideParagraphTicked { get; set; }
-        public bool StartWithUppercaseLetterAfterColonTicked { get; set; }
-        public bool AloneLowercaseIToUppercaseIEnglishTicked { get; set; }
-        public bool FixOcrErrorsViaReplaceListTicked { get; set; }
-        public bool RemoveSpaceBetweenNumberTicked { get; set; }
-        public bool FixDialogsOnOneLineTicked { get; set; }
-        public bool RemoveDialogFirstLineInNonDialogs { get; set; }
-        public bool TurkishAnsiTicked { get; set; }
-        public bool DanishLetterITicked { get; set; }
-        public bool SpanishInvertedQuestionAndExclamationMarksTicked { get; set; }
-        public bool FixDoubleDashTicked { get; set; }
-        public bool FixDoubleGreaterThanTicked { get; set; }
-        public bool FixEllipsesStartTicked { get; set; }
-        public bool FixMissingOpenBracketTicked { get; set; }
-        public bool FixMusicNotationTicked { get; set; }
-        public bool FixContinuationStyleTicked { get; set; }
-        public bool FixUnnecessaryLeadingDotsTicked { get; set; }
-        public bool NormalizeStringsTicked { get; set; }
-        public string DefaultFixes { get; set; }
-
-
-        public FixCommonErrorsSettings()
-        {
-            SetDefaultFixes();
-        }
-
-        public void SaveUserDefaultFixes()
-        {
-            var sb = new StringBuilder();
-
-            if (EmptyLinesTicked)
-            {
-                sb.Append(nameof(EmptyLinesTicked) + ";");
-            }
-
-            if (OverlappingDisplayTimeTicked)
-            {
-                sb.Append(nameof(OverlappingDisplayTimeTicked) + ";");
-            }
-
-            if (TooShortDisplayTimeTicked)
-            {
-                sb.Append(nameof(TooShortDisplayTimeTicked) + ";");
-            }
-
-            if (TooLongDisplayTimeTicked)
-            {
-                sb.Append(nameof(TooLongDisplayTimeTicked) + ";");
-            }
-
-            if (TooShortGapTicked)
-            {
-                sb.Append(nameof(TooShortGapTicked) + ";");
-            }
-
-            if (InvalidItalicTagsTicked)
-            {
-                sb.Append(nameof(InvalidItalicTagsTicked) + ";");
-            }
-
-            if (BreakLongLinesTicked)
-            {
-                sb.Append(nameof(BreakLongLinesTicked) + ";");
-            }
-
-            if (MergeShortLinesTicked)
-            {
-                sb.Append(nameof(MergeShortLinesTicked) + ";");
-            }
-
-            if (MergeShortLinesAllTicked)
-            {
-                sb.Append(nameof(MergeShortLinesAllTicked) + ";");
-            }
-
-            if (MergeShortLinesPixelWidthTicked)
-            {
-                sb.Append(nameof(MergeShortLinesPixelWidthTicked) + ";");
-            }
-
-            if (UnneededSpacesTicked)
-            {
-                sb.Append(nameof(UnneededSpacesTicked) + ";");
-            }
-
-            if (UnneededPeriodsTicked)
-            {
-                sb.Append(nameof(UnneededPeriodsTicked) + ";");
-            }
-
-            if (FixCommasTicked)
-            {
-                sb.Append(nameof(FixCommasTicked) + ";");
-            }
-
-            if (MissingSpacesTicked)
-            {
-                sb.Append(nameof(MissingSpacesTicked) + ";");
-            }
-
-            if (AddMissingQuotesTicked)
-            {
-                sb.Append(nameof(AddMissingQuotesTicked) + ";");
-            }
-
-            if (Fix3PlusLinesTicked)
-            {
-                sb.Append(nameof(Fix3PlusLinesTicked) + ";");
-            }
-
-            if (FixHyphensTicked)
-            {
-                sb.Append(nameof(FixHyphensTicked) + ";");
-            }
-
-            if (FixHyphensRemoveSingleLineTicked)
-            {
-                sb.Append(nameof(FixHyphensRemoveSingleLineTicked) + ";");
-            }
-
-            if (UppercaseIInsideLowercaseWordTicked)
-            {
-                sb.Append(nameof(UppercaseIInsideLowercaseWordTicked) + ";");
-            }
-
-            if (DoubleApostropheToQuoteTicked)
-            {
-                sb.Append(nameof(DoubleApostropheToQuoteTicked) + ";");
-            }
-
-            if (AddPeriodAfterParagraphTicked)
-            {
-                sb.Append(nameof(AddPeriodAfterParagraphTicked) + ";");
-            }
-
-            if (StartWithUppercaseLetterAfterParagraphTicked)
-            {
-                sb.Append(nameof(StartWithUppercaseLetterAfterParagraphTicked) + ";");
-            }
-
-            if (StartWithUppercaseLetterAfterPeriodInsideParagraphTicked)
-            {
-                sb.Append(nameof(StartWithUppercaseLetterAfterPeriodInsideParagraphTicked) + ";");
-            }
-
-            if (StartWithUppercaseLetterAfterColonTicked)
-            {
-                sb.Append(nameof(StartWithUppercaseLetterAfterColonTicked) + ";");
-            }
-
-            if (AloneLowercaseIToUppercaseIEnglishTicked)
-            {
-                sb.Append(nameof(AloneLowercaseIToUppercaseIEnglishTicked) + ";");
-            }
-
-            if (FixOcrErrorsViaReplaceListTicked)
-            {
-                sb.Append(nameof(FixOcrErrorsViaReplaceListTicked) + ";");
-            }
-
-            if (RemoveSpaceBetweenNumberTicked)
-            {
-                sb.Append(nameof(RemoveSpaceBetweenNumberTicked) + ";");
-            }
-
-            if (FixDialogsOnOneLineTicked)
-            {
-                sb.Append(nameof(FixDialogsOnOneLineTicked) + ";");
-            }
-
-            if (RemoveDialogFirstLineInNonDialogs)
-            {
-                sb.Append(nameof(RemoveDialogFirstLineInNonDialogs) + ";");
-            }
-
-            if (TurkishAnsiTicked)
-            {
-                sb.Append(nameof(TurkishAnsiTicked) + ";");
-            }
-
-            if (DanishLetterITicked)
-            {
-                sb.Append(nameof(DanishLetterITicked) + ";");
-            }
-
-            if (SpanishInvertedQuestionAndExclamationMarksTicked)
-            {
-                sb.Append(nameof(SpanishInvertedQuestionAndExclamationMarksTicked) + ";");
-            }
-
-            if (FixDoubleDashTicked)
-            {
-                sb.Append(nameof(FixDoubleDashTicked) + ";");
-            }
-
-            if (FixEllipsesStartTicked)
-            {
-                sb.Append(nameof(FixEllipsesStartTicked) + ";");
-            }
-
-            if (FixMissingOpenBracketTicked)
-            {
-                sb.Append(nameof(FixMissingOpenBracketTicked) + ";");
-            }
-
-            if (FixMusicNotationTicked)
-            {
-                sb.Append(nameof(FixMusicNotationTicked) + ";");
-            }
-
-            if (FixContinuationStyleTicked)
-            {
-                sb.Append(nameof(FixContinuationStyleTicked) + ";");
-            }
-
-            if (FixUnnecessaryLeadingDotsTicked)
-            {
-                sb.Append(nameof(FixUnnecessaryLeadingDotsTicked) + ";");
-            }
-
-            if (NormalizeStringsTicked)
-            {
-                sb.Append(nameof(NormalizeStringsTicked) + ";");
-            }
-
-            DefaultFixes = sb.ToString().TrimEnd(';');
-        }
-
-        public void LoadUserDefaultFixes(string fixes)
-        {
-            var list = fixes.Split(';');
-            EmptyLinesTicked = list.Contains(nameof(EmptyLinesTicked));
-            OverlappingDisplayTimeTicked = list.Contains(nameof(OverlappingDisplayTimeTicked));
-            TooShortDisplayTimeTicked = list.Contains(nameof(TooShortDisplayTimeTicked));
-            TooLongDisplayTimeTicked = list.Contains(nameof(TooLongDisplayTimeTicked));
-            TooShortGapTicked = list.Contains(nameof(TooShortGapTicked));
-            InvalidItalicTagsTicked = list.Contains(nameof(InvalidItalicTagsTicked));
-            BreakLongLinesTicked = list.Contains(nameof(BreakLongLinesTicked));
-            MergeShortLinesTicked = list.Contains(nameof(MergeShortLinesTicked));
-            MergeShortLinesAllTicked = list.Contains(nameof(MergeShortLinesAllTicked));
-            MergeShortLinesPixelWidthTicked = list.Contains(nameof(MergeShortLinesPixelWidthTicked));
-            UnneededSpacesTicked = list.Contains(nameof(UnneededSpacesTicked));
-            UnneededPeriodsTicked = list.Contains(nameof(UnneededPeriodsTicked));
-            FixCommasTicked = list.Contains(nameof(FixCommasTicked));
-            MissingSpacesTicked = list.Contains(nameof(MissingSpacesTicked));
-            AddMissingQuotesTicked = list.Contains(nameof(AddMissingQuotesTicked));
-            Fix3PlusLinesTicked = list.Contains(nameof(Fix3PlusLinesTicked));
-            FixHyphensTicked = list.Contains(nameof(FixHyphensTicked));
-            FixHyphensRemoveSingleLineTicked = list.Contains(nameof(FixHyphensRemoveSingleLineTicked));
-            UppercaseIInsideLowercaseWordTicked = list.Contains(nameof(UppercaseIInsideLowercaseWordTicked));
-            DoubleApostropheToQuoteTicked = list.Contains(nameof(DoubleApostropheToQuoteTicked));
-            AddPeriodAfterParagraphTicked = list.Contains(nameof(AddPeriodAfterParagraphTicked));
-            StartWithUppercaseLetterAfterParagraphTicked = list.Contains(nameof(StartWithUppercaseLetterAfterParagraphTicked));
-            StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = list.Contains(nameof(StartWithUppercaseLetterAfterPeriodInsideParagraphTicked));
-            StartWithUppercaseLetterAfterColonTicked = list.Contains(nameof(StartWithUppercaseLetterAfterColonTicked));
-            AloneLowercaseIToUppercaseIEnglishTicked = list.Contains(nameof(AloneLowercaseIToUppercaseIEnglishTicked));
-            FixOcrErrorsViaReplaceListTicked = list.Contains(nameof(FixOcrErrorsViaReplaceListTicked));
-            RemoveSpaceBetweenNumberTicked = list.Contains(nameof(RemoveSpaceBetweenNumberTicked));
-            FixDialogsOnOneLineTicked = list.Contains(nameof(FixDialogsOnOneLineTicked));
-            RemoveDialogFirstLineInNonDialogs = list.Contains(nameof(RemoveDialogFirstLineInNonDialogs));
-            TurkishAnsiTicked = list.Contains(nameof(TurkishAnsiTicked));
-            DanishLetterITicked = list.Contains(nameof(DanishLetterITicked));
-            SpanishInvertedQuestionAndExclamationMarksTicked = list.Contains(nameof(SpanishInvertedQuestionAndExclamationMarksTicked));
-            FixDoubleDashTicked = list.Contains(nameof(FixDoubleDashTicked));
-            FixEllipsesStartTicked = list.Contains(nameof(FixEllipsesStartTicked));
-            FixMissingOpenBracketTicked = list.Contains(nameof(FixMissingOpenBracketTicked));
-            FixMusicNotationTicked = list.Contains(nameof(FixMusicNotationTicked));
-            FixContinuationStyleTicked = list.Contains(nameof(FixContinuationStyleTicked));
-            FixUnnecessaryLeadingDotsTicked = list.Contains(nameof(FixUnnecessaryLeadingDotsTicked));
-            NormalizeStringsTicked = list.Contains(nameof(NormalizeStringsTicked));
-        }
-
-        public void SetDefaultFixes()
-        {
-            LoadUserDefaultFixes(string.Empty);
-            EmptyLinesTicked = true;
-            OverlappingDisplayTimeTicked = true;
-            TooShortDisplayTimeTicked = true;
-            TooLongDisplayTimeTicked = true;
-            TooShortGapTicked = false;
-            InvalidItalicTagsTicked = true;
-            BreakLongLinesTicked = true;
-            MergeShortLinesTicked = true;
-            MergeShortLinesPixelWidthTicked = false;
-            UnneededPeriodsTicked = true;
-            FixCommasTicked = true;
-            UnneededSpacesTicked = true;
-            MissingSpacesTicked = true;
-            UppercaseIInsideLowercaseWordTicked = true;
-            DoubleApostropheToQuoteTicked = true;
-            AddPeriodAfterParagraphTicked = false;
-            StartWithUppercaseLetterAfterParagraphTicked = true;
-            StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = false;
-            StartWithUppercaseLetterAfterColonTicked = false;
-            AloneLowercaseIToUppercaseIEnglishTicked = false;
-            TurkishAnsiTicked = false;
-            DanishLetterITicked = false;
-            FixDoubleDashTicked = true;
-            FixDoubleGreaterThanTicked = true;
-            FixEllipsesStartTicked = true;
-            FixMissingOpenBracketTicked = true;
-            FixMusicNotationTicked = true;
-            FixContinuationStyleTicked = false;
-            FixUnnecessaryLeadingDotsTicked = true;
-            NormalizeStringsTicked = false;
-            SaveUserDefaultFixes();
-        }
-    }
-
-    public class GeneralSettings
-    {
-        public List<RulesProfile> Profiles { get; set; }
-        public string CurrentProfile { get; set; }
-        public bool ShowToolbarNew { get; set; }
-        public bool ShowToolbarOpen { get; set; }
-        public bool ShowToolbarOpenVideo { get; set; }
-        public bool ShowToolbarSave { get; set; }
-        public bool ShowToolbarSaveAs { get; set; }
-        public bool ShowToolbarFind { get; set; }
-        public bool ShowToolbarReplace { get; set; }
-        public bool ShowToolbarFixCommonErrors { get; set; }
-        public bool ShowToolbarRemoveTextForHi { get; set; }
-        public bool ShowToolbarToggleSourceView { get; set; }
-        public bool ShowToolbarVisualSync { get; set; }
-        public bool ShowToolbarBurnIn { get; set; }
-        public bool ShowToolbarSpellCheck { get; set; }
-        public bool ShowToolbarNetflixGlyphCheck { get; set; }
-        public bool ShowToolbarBeautifyTimeCodes { get; set; }
-        public bool ShowToolbarSettings { get; set; }
-        public bool ShowToolbarHelp { get; set; }
-
-        public int LayoutNumber { get; set; }
-        public string LayoutSizes { get; set; }
-        public bool ShowVideoPlayer { get; set; }
-        public bool ShowAudioVisualizer { get; set; }
-        public bool ShowWaveform { get; set; }
-        public bool ShowSpectrogram { get; set; }
-        public bool ShowFrameRate { get; set; }
-        public bool ShowVideoControls { get; set; }
-        public bool TextAndOrigianlTextBoxesSwitched { get; set; }
-        public double DefaultFrameRate { get; set; }
-        public double CurrentFrameRate { get; set; }
-        public string DefaultSubtitleFormat { get; set; }
-        public string DefaultSaveAsFormat { get; set; }
-        public string FavoriteSubtitleFormats { get; set; }
-        public string DefaultEncoding { get; set; }
-        public bool AutoConvertToUtf8 { get; set; }
-        public bool AutoGuessAnsiEncoding { get; set; }
-        public string TranslationAutoSuffixes { get; set; }
-        public string TranslationAutoSuffixDefault { get; set; }
-        public string SystemSubtitleFontNameOverride { get; set; }
-        public int SystemSubtitleFontSizeOverride { get; set; }
-
-        public string SubtitleFontName { get; set; }
-        public int SubtitleTextBoxFontSize { get; set; }
-        public bool SubtitleTextBoxSyntaxColor { get; set; }
-        public Color SubtitleTextBoxHtmlColor { get; set; }
-        public Color SubtitleTextBoxAssColor { get; set; }
-        public int SubtitleListViewFontSize { get; set; }
-        public bool SubtitleTextBoxFontBold { get; set; }
-        public bool SubtitleListViewFontBold { get; set; }
-        public Color SubtitleFontColor { get; set; }
-        public Color SubtitleBackgroundColor { get; set; }
-        public string MeasureFontName { get; set; }
-        public int MeasureFontSize { get; set; }
-        public bool MeasureFontBold { get; set; }
-        public int SubtitleLineMaximumPixelWidth { get; set; }
-        public bool CenterSubtitleInTextBox { get; set; }
-        public bool ShowRecentFiles { get; set; }
-        public bool RememberSelectedLine { get; set; }
-        public bool StartLoadLastFile { get; set; }
-        public bool StartRememberPositionAndSize { get; set; }
-        public string StartPosition { get; set; }
-        public string StartSize { get; set; }
-        public bool StartInSourceView { get; set; }
-        public bool RemoveBlankLinesWhenOpening { get; set; }
-        public bool RemoveBadCharsWhenOpening { get; set; }
-        public int SubtitleLineMaximumLength { get; set; }
-        public int MaxNumberOfLines { get; set; }
-        public int MaxNumberOfLinesPlusAbort { get; set; }
-        public int MergeLinesShorterThan { get; set; }
-        public int SubtitleMinimumDisplayMilliseconds { get; set; }
-        public int SubtitleMaximumDisplayMilliseconds { get; set; }
-        public int MinimumMillisecondsBetweenLines { get; set; }
-        public int SetStartEndHumanDelay { get; set; }
-        public bool AutoWrapLineWhileTyping { get; set; }
-        public double SubtitleMaximumCharactersPerSeconds { get; set; }
-        public double SubtitleOptimalCharactersPerSeconds { get; set; }
-        public string CpsLineLengthStrategy { get; set; }
-        public double SubtitleMaximumWordsPerMinute { get; set; }
-        public DialogType DialogStyle { get; set; }
-        public ContinuationStyle ContinuationStyle { get; set; }
-        public int ContinuationPause { get; set; }
-        public string CustomContinuationStyleSuffix { get; set; }
-        public bool CustomContinuationStyleSuffixApplyIfComma { get; set; }
-        public bool CustomContinuationStyleSuffixAddSpace { get; set; }
-        public bool CustomContinuationStyleSuffixReplaceComma { get; set; }
-        public string CustomContinuationStylePrefix { get; set; }
-        public bool CustomContinuationStylePrefixAddSpace { get; set; }
-        public bool CustomContinuationStyleUseDifferentStyleGap { get; set; }
-        public string CustomContinuationStyleGapSuffix { get; set; }
-        public bool CustomContinuationStyleGapSuffixApplyIfComma { get; set; }
-        public bool CustomContinuationStyleGapSuffixAddSpace { get; set; }
-        public bool CustomContinuationStyleGapSuffixReplaceComma { get; set; }
-        public string CustomContinuationStyleGapPrefix { get; set; }
-        public bool CustomContinuationStyleGapPrefixAddSpace { get; set; }
-        public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
-        public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
-        public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
-        public bool FixContinuationStyleHideContinuationCandidatesWithoutName { get; set; }
-        public bool FixContinuationStyleIgnoreLyrics { get; set; }
-        public string SpellCheckLanguage { get; set; }
-        public string VideoPlayer { get; set; }
-        public int VideoPlayerDefaultVolume { get; set; }
-        public string VideoPlayerPreviewFontName { get; set; }
-        public int VideoPlayerPreviewFontSize { get; set; }
-        public bool VideoPlayerPreviewFontBold { get; set; }
-        public bool VideoPlayerShowStopButton { get; set; }
-        public bool VideoPlayerShowFullscreenButton { get; set; }
-        public bool VideoPlayerShowMuteButton { get; set; }
-        public string Language { get; set; }
-        public string ListViewLineSeparatorString { get; set; }
-        public int ListViewDoubleClickAction { get; set; }
-        public string SaveAsUseFileNameFrom { get; set; }
-        public string UppercaseLetters { get; set; }
-        public int DefaultAdjustMilliseconds { get; set; }
-        public bool AutoRepeatOn { get; set; }
-        public int AutoRepeatCount { get; set; }
-        public bool AutoContinueOn { get; set; }
-        public int AutoContinueDelay { get; set; }
-        public bool ReturnToStartAfterRepeat { get; set; }
-        public bool SyncListViewWithVideoWhilePlaying { get; set; }
-        public int AutoBackupSeconds { get; set; }
-        public int AutoBackupDeleteAfterMonths { get; set; }
-        public string SpellChecker { get; set; }
-        public bool AllowEditOfOriginalSubtitle { get; set; }
-        public bool PromptDeleteLines { get; set; }
-        public bool Undocked { get; set; }
-        public string UndockedVideoPosition { get; set; }
-        public bool UndockedVideoFullscreen { get; set; }
-        public string UndockedWaveformPosition { get; set; }
-        public string UndockedVideoControlsPosition { get; set; }
-        public bool WaveformCenter { get; set; }
-        public bool WaveformAutoGenWhenOpeningVideo { get; set; }
-        public int WaveformUpdateIntervalMs { get; set; }
-        public int SmallDelayMilliseconds { get; set; }
-        public int LargeDelayMilliseconds { get; set; }
-        public bool ShowOriginalAsPreviewIfAvailable { get; set; }
-        public int LastPacCodePage { get; set; }
-        public string OpenSubtitleExtraExtensions { get; set; }
-        public bool ListViewColumnsRememberSize { get; set; }
-
-        public int ListViewNumberWidth { get; set; }
-        public int ListViewStartWidth { get; set; }
-        public int ListViewEndWidth { get; set; }
-        public int ListViewDurationWidth { get; set; }
-        public int ListViewCpsWidth { get; set; }
-        public int ListViewWpmWidth { get; set; }
-        public int ListViewGapWidth { get; set; }
-        public int ListViewActorWidth { get; set; }
-        public int ListViewRegionWidth { get; set; }
-        public int ListViewTextWidth { get; set; }
-
-        public int ListViewNumberDisplayIndex { get; set; } = -1;
-        public int ListViewStartDisplayIndex { get; set; } = -1;
-        public int ListViewEndDisplayIndex { get; set; } = -1;
-        public int ListViewDurationDisplayIndex { get; set; } = -1;
-        public int ListViewCpsDisplayIndex { get; set; } = -1;
-        public int ListViewWpmDisplayIndex { get; set; } = -1;
-        public int ListViewGapDisplayIndex { get; set; } = -1;
-        public int ListViewActorDisplayIndex { get; set; } = -1;
-        public int ListViewRegionDisplayIndex { get; set; } = -1;
-        public int ListViewTextDisplayIndex { get; set; } = -1;
-
-        public bool DirectShowDoubleLoad { get; set; }
-        public string VlcWaveTranscodeSettings { get; set; }
-        public string VlcLocation { get; set; }
-        public string VlcLocationRelative { get; set; }
-        public string MpvVideoOutputWindows { get; set; }
-        public string MpvVideoOutputLinux { get; set; }
-        public string MpvVideoVf { get; set; }
-        public string MpvVideoAf { get; set; }
-        public string MpvExtraOptions { get; set; }
-        public bool MpvLogging { get; set; }
-        public bool MpvHandlesPreviewText { get; set; }
-        public Color MpvPreviewTextPrimaryColor { get; set; }
-        public Color MpvPreviewTextOutlineColor { get; set; }
-        public Color MpvPreviewTextBackgroundColor { get; set; }
-        public decimal MpvPreviewTextOutlineWidth { get; set; }
-        public decimal MpvPreviewTextShadowWidth { get; set; }
-        public bool MpvPreviewTextOpaqueBox { get; set; }
-        public string MpvPreviewTextOpaqueBoxStyle { get; set; }
-        public string MpvPreviewTextAlignment { get; set; }
-        public int MpvPreviewTextMarginVertical { get; set; }
-        public string MpcHcLocation { get; set; }
-        public string MkvMergeLocation { get; set; }
-        public bool UseFFmpegForWaveExtraction { get; set; }
-        public bool FFmpegUseCenterChannelOnly { get; set; }
-        public string FFmpegLocation { get; set; }
-        public string FFmpegSceneThreshold { get; set; }
-        public bool UseTimeFormatHHMMSSFF { get; set; }
-        public int SplitBehavior { get; set; }
-        public bool SplitRemovesDashes { get; set; }
-        public int ClearStatusBarAfterSeconds { get; set; }
-        public string Company { get; set; }
-        public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
-        public bool DisableVideoAutoLoading { get; set; }
-        public bool DisableShowingLoadErrors { get; set; }
-        public bool AllowVolumeBoost { get; set; }
-        public int NewEmptyDefaultMs { get; set; }
-        public bool NewEmptyUseAutoDuration { get; set; }
-        public bool RightToLeftMode { get; set; }
-        public string LastSaveAsFormat { get; set; }
-        public bool CheckForUpdates { get; set; }
-        public DateTime LastCheckForUpdates { get; set; }
-        public bool AutoSave { get; set; }
-        public string PreviewAssaText { get; set; }
-        public string TagsInToggleHiTags { get; set; }
-        public string TagsInToggleCustomTags { get; set; }
-        public bool ShowProgress { get; set; }
-        public bool ShowNegativeDurationInfoOnSave { get; set; }
-        public bool ShowFormatRequiresUtf8Warning { get; set; }
-        public long DefaultVideoOffsetInMs { get; set; }
-        public string DefaultVideoOffsetInMsList { get; set; }
-        public long CurrentVideoOffsetInMs { get; set; }
-        public bool CurrentVideoIsSmpte { get; set; }
-        public bool AutoSetVideoSmpteForTtml { get; set; }
-        public bool AutoSetVideoSmpteForTtmlPrompt { get; set; }
-        public string TitleBarAsterisk { get; set; } // Show asteriks "before" or "after" file name (any other value will hide asteriks)
-        public bool TitleBarFullFileName { get; set; } // Show full file name with path or just file name
-        public bool MeasurementConverterCloseOnInsert { get; set; }
-        public string MeasurementConverterCategories { get; set; }
-        public bool SubtitleTextBoxAutoVerticalScrollBars { get; set; }
-        public int SubtitleTextBoxMaxHeight { get; set; }
-        public bool AllowLetterShortcutsInTextBox { get; set; }
-        public Color DarkThemeForeColor { get; set; }
-        public Color DarkThemeBackColor { get; set; }
-        public Color DarkThemeSelectedBackgroundColor { get; set; }
-        public Color DarkThemeDisabledColor { get; set; }
-        public Color LastColorPickerColor { get; set; }
-        public Color LastColorPickerColor1 { get; set; }
-        public Color LastColorPickerColor2 { get; set; }
-        public Color LastColorPickerColor3 { get; set; }
-        public Color LastColorPickerColor4 { get; set; }
-        public Color LastColorPickerColor5 { get; set; }
-        public Color LastColorPickerColor6 { get; set; }
-        public Color LastColorPickerColor7 { get; set; }
-        public Color LastColorPickerDropper { get; set; }
-        public string ToolbarIconTheme { get; set; }
-        public bool UseDarkTheme { get; set; }
-        public bool DarkThemeShowListViewGridLines { get; set; }
-        public bool ShowBetaStuff { get; set; }
-        public bool DebugTranslationSync { get; set; }
-        public bool UseLegacyDownloader { get; set; }
-        public bool UseLegacyHtmlColor { get; set; } = true;
-        public string DefaultLanguages { get; set; }
-
-        public GeneralSettings()
-        {
-            ShowToolbarNew = true;
-            ShowToolbarOpen = true;
-            ShowToolbarSave = true;
-            ShowToolbarSaveAs = false;
-            ShowToolbarFind = true;
-            ShowToolbarReplace = true;
-            ShowToolbarFixCommonErrors = false;
-            ShowToolbarVisualSync = true;
-            ShowToolbarSpellCheck = true;
-            ShowToolbarNetflixGlyphCheck = true;
-            ShowToolbarBeautifyTimeCodes = false;
-            ShowToolbarSettings = true;
-            ShowToolbarHelp = true;
-            ShowToolbarToggleSourceView = false;
-            ShowVideoPlayer = true;
-            ShowAudioVisualizer = true;
-            ShowWaveform = true;
-            ShowSpectrogram = true;
-            ShowFrameRate = false;
-            ShowVideoControls = true;
-            DefaultFrameRate = 23.976;
-            CurrentFrameRate = DefaultFrameRate;
-            SubtitleFontName = "Tahoma";
-            SubtitleTextBoxFontSize = 12;
-            SubtitleListViewFontSize = 10;
-            SubtitleTextBoxSyntaxColor = false;
-            SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
-            SubtitleTextBoxAssColor = Color.BlueViolet;
-            SubtitleTextBoxFontBold = true;
-            SubtitleFontColor = Color.Black;
-            MeasureFontName = "Arial";
-            MeasureFontSize = 24;
-            MeasureFontBold = false;
-            SubtitleLineMaximumPixelWidth = 576;
-            SubtitleBackgroundColor = Color.White;
-            CenterSubtitleInTextBox = false;
-            DefaultSubtitleFormat = "SubRip";
-            DefaultEncoding = TextEncoding.Utf8WithBom;
-            AutoConvertToUtf8 = false;
-            AutoGuessAnsiEncoding = true;
-            TranslationAutoSuffixes = ";.translation;_translation;.en;_en";
-            TranslationAutoSuffixDefault = "<Auto>";
-            ShowRecentFiles = true;
-            RememberSelectedLine = true;
-            StartLoadLastFile = true;
-            StartRememberPositionAndSize = true;
-            SubtitleLineMaximumLength = 43;
-            MaxNumberOfLines = 2;
-            MaxNumberOfLinesPlusAbort = 1;
-            MergeLinesShorterThan = 33;
-            SubtitleMinimumDisplayMilliseconds = 1000;
-            SubtitleMaximumDisplayMilliseconds = 8 * 1000;
-            RemoveBadCharsWhenOpening = true;
-            MinimumMillisecondsBetweenLines = 24;
-            SetStartEndHumanDelay = 100;
-            AutoWrapLineWhileTyping = false;
-            SubtitleMaximumCharactersPerSeconds = 25.0;
-            SubtitleOptimalCharactersPerSeconds = 15.0;
-            SubtitleMaximumWordsPerMinute = 400;
-            DialogStyle = DialogType.DashBothLinesWithSpace;
-            ContinuationStyle = ContinuationStyle.None;
-            ContinuationPause = 300;
-            CustomContinuationStyleSuffix = "";
-            CustomContinuationStyleSuffixApplyIfComma = false;
-            CustomContinuationStyleSuffixAddSpace = false;
-            CustomContinuationStyleSuffixReplaceComma = false;
-            CustomContinuationStylePrefix = "";
-            CustomContinuationStylePrefixAddSpace = false;
-            CustomContinuationStyleUseDifferentStyleGap = true;
-            CustomContinuationStyleGapSuffix = "...";
-            CustomContinuationStyleGapSuffixApplyIfComma = true;
-            CustomContinuationStyleGapSuffixAddSpace = false;
-            CustomContinuationStyleGapSuffixReplaceComma = true;
-            CustomContinuationStyleGapPrefix = "...";
-            CustomContinuationStyleGapPrefixAddSpace = false;
-            FixContinuationStyleUncheckInsertsAllCaps = true;
-            FixContinuationStyleUncheckInsertsItalic = true;
-            FixContinuationStyleUncheckInsertsLowercase = true;
-            FixContinuationStyleHideContinuationCandidatesWithoutName = true;
-            FixContinuationStyleIgnoreLyrics = true;
-            SpellCheckLanguage = null;
-            VideoPlayer = string.Empty;
-            VideoPlayerDefaultVolume = 75;
-            VideoPlayerPreviewFontName = "Tahoma";
-            VideoPlayerPreviewFontSize = 12;
-            VideoPlayerPreviewFontBold = true;
-            VideoPlayerShowStopButton = true;
-            VideoPlayerShowMuteButton = true;
-            VideoPlayerShowFullscreenButton = true;
-            ListViewLineSeparatorString = "<br />";
-            ListViewDoubleClickAction = 1;
-            SaveAsUseFileNameFrom = "video";
-            UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑÎΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
-            DefaultAdjustMilliseconds = 1000;
-            AutoRepeatOn = true;
-            AutoRepeatCount = 2;
-            AutoContinueOn = false;
-            AutoContinueDelay = 2;
-            ReturnToStartAfterRepeat = false;
-            SyncListViewWithVideoWhilePlaying = false;
-            AutoBackupSeconds = 60 * 5;
-            AutoBackupDeleteAfterMonths = 3;
-            SpellChecker = "hunspell";
-            AllowEditOfOriginalSubtitle = true;
-            PromptDeleteLines = true;
-            Undocked = false;
-            UndockedVideoPosition = "-32000;-32000";
-            UndockedWaveformPosition = "-32000;-32000";
-            UndockedVideoControlsPosition = "-32000;-32000";
-            WaveformUpdateIntervalMs = 40;
-            SmallDelayMilliseconds = 500;
-            LargeDelayMilliseconds = 5000;
-            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
-            ListViewColumnsRememberSize = true;
-            DirectShowDoubleLoad = true;
-            VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutputWindows = string.Empty; // could also be e.g. "gpu" or "directshow"
-            MpvVideoOutputLinux = "x11"; // could also be e.g. "x11";
-            MpvHandlesPreviewText = true;
-            MpvPreviewTextPrimaryColor = Color.White;
-            MpvPreviewTextOutlineColor = Color.Black;
-            MpvPreviewTextBackgroundColor = Color.Black;
-            MpvPreviewTextOutlineWidth = 1;
-            MpvPreviewTextShadowWidth = 1;
-            MpvPreviewTextOpaqueBox = false;
-            MpvPreviewTextOpaqueBoxStyle = "1";
-            MpvPreviewTextAlignment = "2";
-            MpvPreviewTextMarginVertical = 10;
-            FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
-            UseTimeFormatHHMMSSFF = false;
-            SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
-            SplitRemovesDashes = true;
-            ClearStatusBarAfterSeconds = 10;
-            MoveVideo100Or500MsPlaySmallSample = false;
-            DisableVideoAutoLoading = false;
-            NewEmptyUseAutoDuration = true;
-            RightToLeftMode = false;
-            LastSaveAsFormat = string.Empty;
-            SystemSubtitleFontNameOverride = string.Empty;
-            CheckForUpdates = true;
-            LastCheckForUpdates = DateTime.Now;
-            ShowProgress = false;
-            ShowNegativeDurationInfoOnSave = true;
-            ShowFormatRequiresUtf8Warning = true;
-            DefaultVideoOffsetInMs = 10 * 60 * 60 * 1000;
-            DefaultVideoOffsetInMsList = "36000000;3600000";
-            DarkThemeForeColor = Color.FromArgb(155, 155, 155);
-            DarkThemeBackColor = Color.FromArgb(30, 30, 30);
-            DarkThemeSelectedBackgroundColor = Color.FromArgb(24, 52, 75);
-            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120);
-            LastColorPickerColor = Color.Yellow;
-            LastColorPickerColor1 = Color.Red;
-            LastColorPickerColor2 = Color.Green;
-            LastColorPickerColor3 = Color.Blue;
-            LastColorPickerColor4 = Color.White;
-            LastColorPickerColor5 = Color.Black;
-            LastColorPickerColor6 = Color.Cyan;
-            LastColorPickerColor7 = Color.DarkOrange;
-            LastColorPickerDropper = Color.Transparent;
-            ToolbarIconTheme = "Auto";
-            UseDarkTheme = false;
-            DarkThemeShowListViewGridLines = false;
-            AutoSetVideoSmpteForTtml = true;
-            AutoSetVideoSmpteForTtmlPrompt = true;
-            TitleBarAsterisk = "before";
-            MeasurementConverterCloseOnInsert = true;
-            MeasurementConverterCategories = "Length;Kilometers;Meters";
-            PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
-            TagsInToggleHiTags = "[;]";
-            TagsInToggleCustomTags = "(Æ)";
-            SubtitleTextBoxMaxHeight = 300;
-            ShowBetaStuff = false;
-            DebugTranslationSync = false;
-            NewEmptyDefaultMs = 2000;
-            DialogStyle = DialogType.DashBothLinesWithSpace;
-            ContinuationStyle = ContinuationStyle.None;
-
-            if (Configuration.IsRunningOnLinux)
-            {
-                SubtitleFontName = Configuration.DefaultLinuxFontName;
-                VideoPlayerPreviewFontName = Configuration.DefaultLinuxFontName;
-            }
-
-            Profiles = new List<RulesProfile>();
-            CurrentProfile = "Default";
-            Profiles.Add(new RulesProfile
-            {
-                Name = CurrentProfile,
-                SubtitleLineMaximumLength = SubtitleLineMaximumLength,
-                MaxNumberOfLines = MaxNumberOfLines,
-                MergeLinesShorterThan = MergeLinesShorterThan,
-                SubtitleMaximumCharactersPerSeconds = (decimal)SubtitleMaximumCharactersPerSeconds,
-                SubtitleOptimalCharactersPerSeconds = (decimal)SubtitleOptimalCharactersPerSeconds,
-                SubtitleMaximumDisplayMilliseconds = SubtitleMaximumDisplayMilliseconds,
-                SubtitleMinimumDisplayMilliseconds = SubtitleMinimumDisplayMilliseconds,
-                SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
-                CpsLineLengthStrategy = CpsLineLengthStrategy,
-                MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
-                DialogStyle = DialogStyle,
-                ContinuationStyle = ContinuationStyle
-            });
-            AddExtraProfiles(Profiles);
-        }
-
-        internal static void AddExtraProfiles(List<RulesProfile> profiles)
-        {
-            profiles.Add(new RulesProfile
-            {
-                Name = "Netflix (English)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 20,
-                SubtitleOptimalCharactersPerSeconds = 15,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 240,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Netflix (Other languages)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 17,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 204,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Netflix (Dutch)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 17,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 204,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Netflix (Simplified Chinese)",
-                SubtitleLineMaximumLength = 16,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 17,
-                SubtitleMaximumCharactersPerSeconds = 9,
-                SubtitleOptimalCharactersPerSeconds = 9,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 100,
-                CpsLineLengthStrategy = "CalcAll",
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Amazon Prime (English/Spanish/French)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 17,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 204,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Amazon Prime (Arabic)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 20,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 240,
-                CpsLineLengthStrategy = typeof(CalcAll).Name,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Amazon Prime (Danish)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 17,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 204,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Amazon Prime (Dutch)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 17,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 204,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingEllipsis,
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "TikTok/YouTube-shorts (9:16)",
-                SubtitleLineMaximumLength = 24,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 0,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5000,
-                SubtitleMinimumDisplayMilliseconds = 700,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 0,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Arte (German/English)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 20,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 10000,
-                SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 240,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Dutch professional subtitles (23.976/24 fps)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 15,
-                SubtitleOptimalCharactersPerSeconds = 11,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 180,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Dutch professional subtitles (25 fps)",
-                SubtitleLineMaximumLength = 42,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 43,
-                SubtitleMaximumCharactersPerSeconds = 15,
-                SubtitleOptimalCharactersPerSeconds = 11,
-                SubtitleMaximumDisplayMilliseconds = 7000,
-                SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 180,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Dutch fansubs (23.976/24 fps)",
-                SubtitleLineMaximumLength = 45,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 46,
-                SubtitleMaximumCharactersPerSeconds = 22.5m,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7007,
-                SubtitleMinimumDisplayMilliseconds = 1200,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashSecondLineWithSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Dutch fansubs (25 fps)",
-                SubtitleLineMaximumLength = 45,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 46,
-                SubtitleMaximumCharactersPerSeconds = 22.5m,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
-                SubtitleMinimumDisplayMilliseconds = 1200,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashSecondLineWithSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Danish professional subtitles (23.976/24 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 15,
-                SubtitleOptimalCharactersPerSeconds = 10,
-                SubtitleMaximumDisplayMilliseconds = 8008,
-                SubtitleMinimumDisplayMilliseconds = 2002,
-                SubtitleMaximumWordsPerMinute = 180,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "Danish professional subtitles (25 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 15,
-                SubtitleOptimalCharactersPerSeconds = 10,
-                SubtitleMaximumDisplayMilliseconds = 8000,
-                SubtitleMinimumDisplayMilliseconds = 2000,
-                SubtitleMaximumWordsPerMinute = 180,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SDI (Dutch)",
-                SubtitleLineMaximumLength = 37,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 38,
-                SubtitleMaximumCharactersPerSeconds = 18.75m,
-                SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
-                SubtitleMinimumDisplayMilliseconds = 1320,
-                SubtitleMaximumWordsPerMinute = 225,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 160,
-                DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW2 (French) (23.976/24 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5005,
-                SubtitleMinimumDisplayMilliseconds = 792,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW2 (French) (25 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5000,
-                SubtitleMinimumDisplayMilliseconds = 800,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW3 (French) (23.976/24 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5005,
-                SubtitleMinimumDisplayMilliseconds = 792,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 167,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW3 (French) (25 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5000,
-                SubtitleMinimumDisplayMilliseconds = 800,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 160,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW4 (French) (23.976/24 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5005,
-                SubtitleMinimumDisplayMilliseconds = 792,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 250,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-            profiles.Add(new RulesProfile
-            {
-                Name = "SW4 (French) (25 fps)",
-                SubtitleLineMaximumLength = 40,
-                MaxNumberOfLines = 2,
-                MergeLinesShorterThan = 41,
-                SubtitleMaximumCharactersPerSeconds = 25,
-                SubtitleOptimalCharactersPerSeconds = 18,
-                SubtitleMaximumDisplayMilliseconds = 5000,
-                SubtitleMinimumDisplayMilliseconds = 800,
-                SubtitleMaximumWordsPerMinute = 300,
-                CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 240,
-                DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.None
-            });
-        }
-    }
-
-    public class VideoControlsSettings
-    {
-        public string CustomSearchText1 { get; set; }
-        public string CustomSearchText2 { get; set; }
-        public string CustomSearchText3 { get; set; }
-        public string CustomSearchText4 { get; set; }
-        public string CustomSearchText5 { get; set; }
-        public string CustomSearchUrl1 { get; set; }
-        public string CustomSearchUrl2 { get; set; }
-        public string CustomSearchUrl3 { get; set; }
-        public string CustomSearchUrl4 { get; set; }
-        public string CustomSearchUrl5 { get; set; }
-        public string LastActiveTab { get; set; }
-        public bool WaveformDrawGrid { get; set; }
-        public bool WaveformDrawCps { get; set; }
-        public bool WaveformDrawWpm { get; set; }
-        public bool WaveformAllowOverlap { get; set; }
-        public bool WaveformFocusOnMouseEnter { get; set; }
-        public bool WaveformListViewFocusOnMouseEnter { get; set; }
-        public bool WaveformSetVideoPositionOnMoveStartEnd { get; set; }
-        public bool WaveformSingleClickSelect { get; set; }
-        public bool WaveformSnapToShotChanges { get; set; }
-        public int WaveformShotChangeStartTimeBeforeMs { get; set; }
-        public int WaveformShotChangeStartTimeAfterMs { get; set; }
-        public int WaveformShotChangeEndTimeBeforeMs { get; set; }
-        public int WaveformShotChangeEndTimeAfterMs { get; set; }
-        public int WaveformBorderHitMs { get; set; }
-        public Color WaveformGridColor { get; set; }
-        public Color WaveformColor { get; set; }
-        public Color WaveformSelectedColor { get; set; }
-        public Color WaveformBackgroundColor { get; set; }
-        public Color WaveformTextColor { get; set; }
-        public Color WaveformCursorColor { get; set; }
-        public Color WaveformChaptersColor { get; set; }
-        public int WaveformTextSize { get; set; }
-        public bool WaveformTextBold { get; set; }
-        public string WaveformDoubleClickOnNonParagraphAction { get; set; }
-        public string WaveformRightClickOnNonParagraphAction { get; set; }
-        public bool WaveformMouseWheelScrollUpIsForward { get; set; }
-        public bool WaveformLabelShowCodec { get; set; }
-        public bool GenerateSpectrogram { get; set; }
-        public string SpectrogramAppearance { get; set; }
-        public int WaveformMinimumSampleRate { get; set; }
-        public double WaveformSeeksSilenceDurationSeconds { get; set; }
-        public double WaveformSeeksSilenceMaxVolume { get; set; }
-        public bool WaveformUnwrapText { get; set; }
-        public bool WaveformHideWpmCpsLabels { get; set; }
-
-
-        public VideoControlsSettings()
-        {
-            CustomSearchText1 = "The Free Dictionary";
-            CustomSearchUrl1 = "https://www.thefreedictionary.com/{0}";
-            CustomSearchText2 = "Wikipedia";
-            CustomSearchUrl2 = "https://en.wikipedia.org/wiki?search={0}";
-            CustomSearchText3 = "DuckDuckGo";
-            CustomSearchUrl3 = "https://duckduckgo.com/?q={0}";
-
-            LastActiveTab = "Translate";
-            WaveformDrawGrid = true;
-            WaveformAllowOverlap = false;
-            WaveformBorderHitMs = 15;
-            WaveformGridColor = Color.FromArgb(255, 20, 20, 18);
-            WaveformColor = Color.FromArgb(255, 160, 240, 30);
-            WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
-            WaveformBackgroundColor = Color.Black;
-            WaveformTextColor = Color.Gray;
-            WaveformCursorColor = Color.Turquoise;
-            WaveformChaptersColor = Color.FromArgb(255, 104, 33, 122);
-            WaveformTextSize = 9;
-            WaveformTextBold = true;
-            WaveformDoubleClickOnNonParagraphAction = "PlayPause";
-            WaveformDoubleClickOnNonParagraphAction = string.Empty;
-            WaveformMouseWheelScrollUpIsForward = true;
-            WaveformLabelShowCodec = true;
-            SpectrogramAppearance = "OneColorGradient";
-            WaveformMinimumSampleRate = 126;
-            WaveformSeeksSilenceDurationSeconds = 0.3;
-            WaveformSeeksSilenceMaxVolume = 0.1;
-            WaveformSnapToShotChanges = true;
-        }
-    }
-
-    public class VobSubOcrSettings
-    {
-        public int XOrMorePixelsMakesSpace { get; set; }
-        public double AllowDifferenceInPercent { get; set; }
-        public double BlurayAllowDifferenceInPercent { get; set; }
-        public string LastImageCompareFolder { get; set; }
-        public int LastModiLanguageId { get; set; }
-        public string LastOcrMethod { get; set; }
-        public string TesseractLastLanguage { get; set; }
-        public bool UseTesseractFallback { get; set; }
-        public bool UseItalicsInTesseract { get; set; }
-        public int TesseractEngineMode { get; set; }
-        public bool UseMusicSymbolsInTesseract { get; set; }
-        public bool RightToLeft { get; set; }
-        public bool TopToBottom { get; set; }
-        public int DefaultMillisecondsForUnknownDurations { get; set; }
-        public bool FixOcrErrors { get; set; }
-        public bool PromptForUnknownWords { get; set; }
-        public bool GuessUnknownWords { get; set; }
-        public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
-        public double ItalicFactor { get; set; }
-
-        public bool LineOcrDraw { get; set; }
-        public int LineOcrMinHeightSplit { get; set; }
-        public bool LineOcrAdvancedItalic { get; set; }
-        public string LineOcrLastLanguages { get; set; }
-        public string LineOcrLastSpellCheck { get; set; }
-        public int LineOcrLinesToAutoGuess { get; set; }
-        public int LineOcrMinLineHeight { get; set; }
-        public int LineOcrMaxLineHeight { get; set; }
-        public int LineOcrMaxErrorPixels { get; set; }
-        public string LastBinaryImageCompareDb { get; set; }
-        public string LastBinaryImageSpellCheck { get; set; }
-        public bool BinaryAutoDetectBestDb { get; set; }
-        public string LastTesseractSpellCheck { get; set; }
-        public bool CaptureTopAlign { get; set; }
-        public int UnfocusedAttentionBlinkCount { get; set; }
-        public int UnfocusedAttentionPlaySoundCount { get; set; }
-        public string CloudVisionApiKey { get; set; }
-        public string CloudVisionLanguage { get; set; }
-        public bool CloudVisionSendOriginalImages { get; set; }
-
-        public VobSubOcrSettings()
-        {
-            XOrMorePixelsMakesSpace = 8;
-            AllowDifferenceInPercent = 1.0;
-            BlurayAllowDifferenceInPercent = 7.5;
-            LastImageCompareFolder = "English";
-            LastModiLanguageId = 9;
-            LastOcrMethod = "Tesseract";
-            UseItalicsInTesseract = true;
-            TesseractEngineMode = 3; // Default, based on what is available (T4 docs)
-            UseMusicSymbolsInTesseract = true;
-            UseTesseractFallback = true;
-            RightToLeft = false;
-            TopToBottom = true;
-            DefaultMillisecondsForUnknownDurations = 5000;
-            FixOcrErrors = true;
-            PromptForUnknownWords = true;
-            GuessUnknownWords = true;
-            AutoBreakSubtitleIfMoreThanTwoLines = true;
-            ItalicFactor = 0.2f;
-            LineOcrLinesToAutoGuess = 100;
-            LineOcrMaxErrorPixels = 45;
-            LastBinaryImageCompareDb = "Latin+Latin";
-            BinaryAutoDetectBestDb = true;
-            CaptureTopAlign = false;
-            UnfocusedAttentionBlinkCount = 50;
-            UnfocusedAttentionPlaySoundCount = 1;
-            CloudVisionApiKey = string.Empty;
-            CloudVisionLanguage = "en";
-            CloudVisionSendOriginalImages = false;
-        }
-    }
-
-    public class MultipleSearchAndReplaceSetting
-    {
-        public bool Enabled { get; set; }
-        public string FindWhat { get; set; }
-        public string ReplaceWith { get; set; }
-        public string SearchType { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class MultipleSearchAndReplaceGroup
-    {
-        public string Name { get; set; }
-        public bool Enabled { get; set; }
-        public List<MultipleSearchAndReplaceSetting> Rules { get; set; }
-    }
-
-    public class AssaStorageCategory
-    {
-        public string Name { get; set; }
-        public bool IsDefault { get; set; }
-        public List<SsaStyle> Styles { get; set; }
-    }
-
-    public class NetworkSettings
-    {
-        public string UserName { get; set; }
-        public string WebApiUrl { get; set; }
-        public string SessionKey { get; set; }
-        public int PollIntervalSeconds { get; set; }
-        public string NewMessageSound { get; set; }
-
-        public NetworkSettings()
-        {
-            UserName = string.Empty;
-            SessionKey = Guid.NewGuid().ToString();
-            WebApiUrl = "https://www.nikse.dk/api/SeNet";
-            PollIntervalSeconds = 5;
-        }
-    }
-
-    public class Shortcuts
-    {
-        // General
-        public string GeneralMergeSelectedLines { get; set; }
-        public string GeneralMergeWithPrevious { get; set; }
-        public string GeneralMergeWithNext { get; set; }
-        public string GeneralMergeWithPreviousAndUnbreak { get; set; }
-        public string GeneralMergeWithNextAndUnbreak { get; set; }
-        public string GeneralMergeWithPreviousAndBreak { get; set; }
-        public string GeneralMergeWithNextAndBreak { get; set; }
-        public string GeneralMergeSelectedLinesAndAutoBreak { get; set; }
-        public string GeneralMergeSelectedLinesAndUnbreak { get; set; }
-        public string GeneralMergeSelectedLinesAndUnbreakCjk { get; set; }
-        public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
-        public string GeneralMergeSelectedLinesBilingual { get; set; }
-        public string GeneralMergeWithPreviousBilingual { get; set; }
-        public string GeneralMergeWithNextBilingual { get; set; }
-        public string GeneralMergeOriginalAndTranslation { get; set; }
-        public string GeneralToggleTranslationMode { get; set; }
-        public string GeneralSwitchOriginalAndTranslation { get; set; }
-        public string GeneralSwitchOriginalAndTranslationTextBoxes { get; set; }
-        public string GeneralLayoutChoose { get; set; }
-        public string GeneralLayoutChoose1 { get; set; }
-        public string GeneralLayoutChoose2 { get; set; }
-        public string GeneralLayoutChoose3 { get; set; }
-        public string GeneralLayoutChoose4 { get; set; }
-        public string GeneralLayoutChoose5 { get; set; }
-        public string GeneralLayoutChoose6 { get; set; }
-        public string GeneralLayoutChoose7 { get; set; }
-        public string GeneralLayoutChoose8 { get; set; }
-        public string GeneralLayoutChoose9 { get; set; }
-        public string GeneralLayoutChoose10 { get; set; }
-        public string GeneralLayoutChoose11 { get; set; }
-        public string GeneralLayoutChoose12 { get; set; }
-        public string GeneralPlayFirstSelected { get; set; }
-        public string GeneralGoToFirstSelectedLine { get; set; }
-        public string GeneralGoToNextEmptyLine { get; set; }
-        public string GeneralGoToNextSubtitle { get; set; }
-        public string GeneralGoToNextSubtitlePlayTranslate { get; set; }
-        public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
-        public string GeneralGoToPrevSubtitle { get; set; }
-        public string GeneralGoToPrevSubtitlePlayTranslate { get; set; }
-        public string GeneralGoToStartOfCurrentSubtitle { get; set; }
-        public string GeneralGoToEndOfCurrentSubtitle { get; set; }
-        public string GeneralGoToPreviousSubtitleAndFocusVideo { get; set; }
-        public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
-        public string GeneralGoToPreviousSubtitleAndFocusWaveform { get; set; }
-        public string GeneralGoToNextSubtitleAndFocusWaveform { get; set; }
-        public string GeneralGoToPrevSubtitleAndPlay { get; set; }
-        public string GeneralGoToNextSubtitleAndPlay { get; set; }
-        public string GeneralToggleBookmarks { get; set; }
-        public string GeneralToggleBookmarksWithText { get; set; }
-        public string GeneralEditBookmarks { get; set; }
-        public string GeneralClearBookmarks { get; set; }
-        public string GeneralGoToBookmark { get; set; }
-        public string GeneralGoToPreviousBookmark { get; set; }
-        public string GeneralGoToNextBookmark { get; set; }
-        public string GeneralChooseProfile { get; set; }
-        public string GeneralDuplicateLine { get; set; }
-        public string OpenDataFolder { get; set; }
-        public string OpenContainingFolder { get; set; }
-        public string GeneralToggleView { get; set; }
-        public string GeneralToggleMode { get; set; }
-        public string GeneralTogglePreviewOnVideo { get; set; }
-        public string GeneralRemoveBlankLines { get; set; }
-        public string GeneralApplyAssaOverrideTags { get; set; }
-        public string GeneralSetAssaPosition { get; set; }
-        public string GeneralSetAssaResolution { get; set; }
-        public string GeneralSetAssaBgBox { get; set; }
-        public string GeneralColorPicker { get; set; }
-        public string GeneralTakeAutoBackup { get; set; }
-        public string GeneralHelp { get; set; }
-        public string GeneralFocusTextBox { get; set; }
-
-        // File
-        public string MainFileNew { get; set; }
-        public string MainFileOpen { get; set; }
-        public string MainFileOpenKeepVideo { get; set; }
-        public string MainFileSave { get; set; }
-        public string MainFileSaveOriginal { get; set; }
-        public string MainFileSaveOriginalAs { get; set; }
-        public string MainFileSaveAs { get; set; }
-        public string MainFileSaveAll { get; set; }
-        public string MainFileOpenOriginal { get; set; }
-        public string MainFileCloseOriginal { get; set; }
-        public string MainFileCloseTranslation { get; set; }
-        public string MainFileCompare { get; set; }
-        public string MainFileVerifyCompleteness { get; set; }
-        public string MainFileImportPlainText { get; set; }
-        public string MainFileImportBdSupForEdit { get; set; }
-        public string MainFileImportTimeCodes { get; set; }
-        public string MainFileExportEbu { get; set; }
-        public string MainFileExportPac { get; set; }
-        public string MainFileExportBdSup { get; set; }
-        public string MainFileExportEdlClip { get; set; }
-        public string MainFileExportPlainText { get; set; }
-        public string MainFileExit { get; set; }
-
-        // Edit
-        public string MainEditUndo { get; set; }
-        public string MainEditRedo { get; set; }
-        public string MainEditFind { get; set; }
-        public string MainEditFindNext { get; set; }
-        public string MainEditReplace { get; set; }
-        public string MainEditMultipleReplace { get; set; }
-        public string MainEditGoToLineNumber { get; set; }
-        public string MainEditRightToLeft { get; set; }
-        public string MainEditFixRTLViaUnicodeChars { get; set; }
-        public string MainEditRemoveRTLUnicodeChars { get; set; }
-        public string MainEditReverseStartAndEndingForRTL { get; set; }
-        public string MainVideoToggleControls { get; set; }
-        public string MainEditToggleTranslationOriginalInPreviews { get; set; }
-        public string MainEditInverseSelection { get; set; }
-        public string MainEditModifySelection { get; set; }
-
-        // Tools
-        public string MainToolsAdjustDuration { get; set; }
-        public string MainToolsAdjustDurationLimits { get; set; }
-        public string MainToolsFixCommonErrors { get; set; }
-        public string MainToolsFixCommonErrorsPreview { get; set; }
-        public string MainToolsMergeShortLines { get; set; }
-        public string MainToolsMergeDuplicateText { get; set; }
-        public string MainToolsMergeSameTimeCodes { get; set; }
-        public string MainToolsMakeEmptyFromCurrent { get; set; }
-        public string MainToolsSplitLongLines { get; set; }
-        public string MainToolsDurationsBridgeGap { get; set; }
-        public string MainToolsMinimumDisplayTimeBetweenParagraphs { get; set; }
-
-        public string MainToolsRenumber { get; set; }
-        public string MainToolsRemoveTextForHI { get; set; }
-        public string MainToolsConvertColorsToDialog { get; set; }
-        public string MainToolsChangeCasing { get; set; }
-        public string MainToolsAutoDuration { get; set; }
-        public string MainToolsBatchConvert { get; set; }
-        public string MainToolsMeasurementConverter { get; set; }
-        public string MainToolsSplit { get; set; }
-        public string MainToolsAppend { get; set; }
-        public string MainToolsJoin { get; set; }
-        public string MainToolsStyleManager { get; set; }
-
-        // Video
-        public string MainVideoOpen { get; set; }
-        public string MainVideoClose { get; set; }
-        public string MainVideoPause { get; set; }
-        public string MainVideoStop { get; set; }
-        public string MainVideoPlayFromJustBefore { get; set; }
-        public string MainVideoPlayFromBeginning { get; set; }
-        public string MainVideoPlayPauseToggle { get; set; }
-        public string MainVideoPlay150Speed { get; set; }
-        public string MainVideoPlay200Speed { get; set; }
-        public string MainVideoFocusSetVideoPosition { get; set; }
-        public string MainVideoToggleVideoControls { get; set; }
-        public string MainVideo1FrameLeft { get; set; }
-        public string MainVideo1FrameRight { get; set; }
-        public string MainVideo1FrameLeftWithPlay { get; set; }
-        public string MainVideo1FrameRightWithPlay { get; set; }
-        public string MainVideo100MsLeft { get; set; }
-        public string MainVideo100MsRight { get; set; }
-        public string MainVideo500MsLeft { get; set; }
-        public string MainVideo500MsRight { get; set; }
-        public string MainVideo1000MsLeft { get; set; }
-        public string MainVideo1000MsRight { get; set; }
-        public string MainVideo5000MsLeft { get; set; }
-        public string MainVideo5000MsRight { get; set; }
-        public string MainVideoXSMsLeft { get; set; }
-        public string MainVideoXSMsRight { get; set; }
-        public string MainVideoXLMsLeft { get; set; }
-        public string MainVideoXLMsRight { get; set; }
-        public string MainVideo3000MsLeft { get; set; }
-        public string MainVideo3000MsRight { get; set; }
-        public string MainVideoGoToStartCurrent { get; set; }
-        public string MainVideoToggleStartEndCurrent { get; set; }
-        public string MainVideoPlaySelectedLines { get; set; }
-        public string MainVideoLoopSelectedLines { get; set; }
-        public string MainVideoGoToPrevSubtitle { get; set; }
-        public string MainVideoGoToNextSubtitle { get; set; }
-        public string MainVideoGoToPrevTimeCode { get; set; }
-        public string MainVideoGoToNextTimeCode { get; set; }
-        public string MainVideoGoToPrevChapter { get; set; }
-        public string MainVideoGoToNextChapter { get; set; }
-        public string MainVideoSelectNextSubtitle { get; set; }
-        public string MainVideoFullscreen { get; set; }
-        public string MainVideoSlower { get; set; }
-        public string MainVideoFaster { get; set; }
-        public string MainVideoSpeedToggle { get; set; }
-        public string MainVideoReset { get; set; }
-        public string MainVideoToggleBrightness { get; set; }
-        public string MainVideoToggleContrast { get; set; }
-        public string MainVideoAudioToTextVosk { get; set; }
-        public string MainVideoAudioToTextWhisper { get; set; }
-        public string MainVideoAudioExtractAudioSelectedLines { get; set; }
-        public string MainVideoTextToSpeech { get; set; }
-
-        // spell check
-        public string MainSpellCheck { get; set; }
-        public string MainSpellCheckFindDoubleWords { get; set; }
-        public string MainSpellCheckAddWordToNames { get; set; }
-
-        // Sync
-        public string MainSynchronizationAdjustTimes { get; set; }
-        public string MainSynchronizationVisualSync { get; set; }
-        public string MainSynchronizationPointSync { get; set; }
-        public string MainSynchronizationPointSyncViaFile { get; set; }
-        public string MainSynchronizationChangeFrameRate { get; set; }
-
-        // List view
-        public string MainListViewItalic { get; set; }
-        public string MainListViewBold { get; set; }
-        public string MainListViewUnderline { get; set; }
-        public string MainListViewBox { get; set; }
-        public string MainListViewToggleQuotes { get; set; }
-        public string MainListViewToggleHiTags { get; set; }
-        public string MainListViewToggleCustomTags { get; set; }
-        public string MainListViewSplit { get; set; }
-        public string MainListViewToggleDashes { get; set; }
-        public string MainListViewToggleMusicSymbols { get; set; }
-        public string MainListViewAlignment { get; set; }
-        public string MainListViewAlignmentN1 { get; set; }
-        public string MainListViewAlignmentN2 { get; set; }
-        public string MainListViewAlignmentN3 { get; set; }
-        public string MainListViewAlignmentN4 { get; set; }
-        public string MainListViewAlignmentN5 { get; set; }
-        public string MainListViewAlignmentN6 { get; set; }
-        public string MainListViewAlignmentN7 { get; set; }
-        public string MainListViewAlignmentN8 { get; set; }
-        public string MainListViewAlignmentN9 { get; set; }
-        public string MainListViewColor1 { get; set; }
-        public string MainListViewColor2 { get; set; }
-        public string MainListViewColor3 { get; set; }
-        public string MainListViewColor4 { get; set; }
-        public string MainListViewColor5 { get; set; }
-        public string MainListViewColor6 { get; set; }
-        public string MainListViewColor7 { get; set; }
-        public string MainListViewColor8 { get; set; }
-        public string MainListViewSetNewActor { get; set; }
-        public string MainListViewSetActor1 { get; set; }
-        public string MainListViewSetActor2 { get; set; }
-        public string MainListViewSetActor3 { get; set; }
-        public string MainListViewSetActor4 { get; set; }
-        public string MainListViewSetActor5 { get; set; }
-        public string MainListViewSetActor6 { get; set; }
-        public string MainListViewSetActor7 { get; set; }
-        public string MainListViewSetActor8 { get; set; }
-        public string MainListViewSetActor9 { get; set; }
-        public string MainListViewSetActor10 { get; set; }
-        public string MainListViewColorChoose { get; set; }
-        public string MainRemoveFormatting { get; set; }
-        public string MainListViewCopyText { get; set; }
-        public string MainListViewCopyPlainText { get; set; }
-        public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
-        public string MainListViewAutoDuration { get; set; }
-        public string MainListViewColumnDeleteText { get; set; }
-        public string MainListViewColumnDeleteTextAndShiftUp { get; set; }
-        public string MainListViewColumnInsertText { get; set; }
-        public string MainListViewColumnPaste { get; set; }
-        public string MainListViewColumnTextUp { get; set; }
-        public string MainListViewColumnTextDown { get; set; }
-        public string MainListViewGoToNextError { get; set; }
-        public string MainListViewListErrors { get; set; }
-        public string MainListViewSortByNumber { get; set; }
-        public string MainListViewSortByStartTime { get; set; }
-        public string MainListViewSortByEndTime { get; set; }
-        public string MainListViewSortByDuration { get; set; }
-        public string MainListViewSortByGap { get; set; }
-        public string MainListViewSortByText { get; set; }
-        public string MainListViewSortBySingleLineMaxLen { get; set; }
-        public string MainListViewSortByTextTotalLength { get; set; }
-        public string MainListViewSortByCps { get; set; }
-        public string MainListViewSortByWpm { get; set; }
-        public string MainListViewSortByNumberOfLines { get; set; }
-        public string MainListViewSortByActor { get; set; }
-        public string MainListViewSortByStyle { get; set; }
-        public string MainListViewRemoveTimeCodes { get; set; }
-        public string MainTextBoxSplitAtCursor { get; set; }
-        public string MainTextBoxSplitAtCursorAndAutoBr { get; set; }
-        public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
-        public string MainTextBoxSplitSelectedLineBilingual { get; set; }
-        public string MainTextBoxMoveLastWordDown { get; set; }
-        public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
-        public string MainTextBoxMoveLastWordDownCurrent { get; set; }
-        public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
-        public string MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
-        public string MainTextBoxSelectionToLower { get; set; }
-        public string MainTextBoxSelectionToUpper { get; set; }
-        public string MainTextBoxSelectionToggleCasing { get; set; }
-        public string MainTextBoxSelectionToRuby { get; set; }
-        public string MainTextBoxToggleAutoDuration { get; set; }
-        public string MainCreateInsertSubAtVideoPos { get; set; }
-        public string MainCreateInsertSubAtVideoPosMax { get; set; }
-        public string MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
-        public string MainCreateSetStart { get; set; }
-        public string MainCreateSetEnd { get; set; }
-        public string MainAdjustVideoSetStartForAppropriateLine { get; set; }
-        public string MainAdjustVideoSetEndForAppropriateLine { get; set; }
-        public string MainAdjustSetEndAndPause { get; set; }
-        public string MainCreateSetEndAddNewAndGoToNew { get; set; }
-        public string MainCreateStartDownEndUp { get; set; }
-        public string MainAdjustSetStartAndOffsetTheRest { get; set; }
-        public string MainAdjustSetStartAndOffsetTheRest2 { get; set; }
-        public string MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
-        public string MainAdjustSetEndAndOffsetTheRest { get; set; }
-        public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
-        public string MainAdjustSetStartAndGotoNext { get; set; }
-        public string MainAdjustSetEndAndGotoNext { get; set; }
-        public string MainAdjustViaEndAutoStart { get; set; }
-        public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
-        public string MainAdjustSetEndMinusGapAndStartNextHere { get; set; }
-        public string MainSetEndAndStartNextAfterGap { get; set; }
-        public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
-        public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
-        public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
-        public string MainAdjustSetStartAndEndOfPrevious { get; set; }
-        public string MainAdjustSetStartAndEndOfPreviousAndGoToNext { get; set; }
-        public string MainAdjustSetStartKeepDuration { get; set; }
-        public string MainAdjustSelected100MsForward { get; set; }
-        public string MainAdjustSelected100MsBack { get; set; }
-        public string MainAdjustStartXMsBack { get; set; }
-        public string MainAdjustStartXMsForward { get; set; }
-        public string MainAdjustEndXMsBack { get; set; }
-        public string MainAdjustEndXMsForward { get; set; }
-        public string MoveStartOneFrameBack { get; set; }
-        public string MoveStartOneFrameForward { get; set; }
-        public string MoveEndOneFrameBack { get; set; }
-        public string MoveEndOneFrameForward { get; set; }
-        public string MoveStartOneFrameBackKeepGapPrev { get; set; }
-        public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
-        public string MoveEndOneFrameBackKeepGapNext { get; set; }
-        public string MoveEndOneFrameForwardKeepGapNext { get; set; }
-        public string MainAdjustSnapStartToNextShotChange { get; set; }
-        public string MainAdjustSnapEndToPreviousShotChange { get; set; }
-        public string MainAdjustExtendToNextShotChange { get; set; }
-        public string MainAdjustExtendToPreviousShotChange { get; set; }
-        public string MainAdjustExtendToNextSubtitle { get; set; }
-        public string MainAdjustExtendToPreviousSubtitle { get; set; }
-        public string MainAdjustExtendToNextSubtitleMinusChainingGap { get; set; }
-        public string MainAdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
-        public string MainAdjustExtendCurrentSubtitle { get; set; }
-        public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
-        public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
-        public string MainSetInCueToClosestShotChangeLeftGreenZone { get; set; }
-        public string MainSetInCueToClosestShotChangeRightGreenZone { get; set; }
-        public string MainSetOutCueToClosestShotChangeLeftGreenZone { get; set; }
-        public string MainSetOutCueToClosestShotChangeRightGreenZone { get; set; }
-        public string GeneralAutoCalcCurrentDuration { get; set; }
-        public string GeneralAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
-        public string GeneralAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
-        public string MainInsertAfter { get; set; }
-        public string MainTextBoxAutoBreak { get; set; }
-        public string MainTextBoxBreakAtPosition { get; set; }
-        public string MainTextBoxBreakAtPositionAndGoToNext { get; set; }
-        public string MainTextBoxRecord { get; set; }
-        public string MainTextBoxUnbreak { get; set; }
-        public string MainTextBoxUnbreakNoSpace { get; set; }
-        public string MainTextBoxAssaIntellisense { get; set; }
-        public string MainTextBoxAssaRemoveTag { get; set; }
-        public string MainWaveformInsertAtCurrentPosition { get; set; }
-        public string MainInsertBefore { get; set; }
-        public string MainMergeDialog { get; set; }
-        public string MainMergeDialogWithNext { get; set; }
-        public string MainMergeDialogWithPrevious { get; set; }
-        public string MainAutoBalanceSelectedLines { get; set; }
-        public string MainEvenlyDistributeSelectedLines { get; set; }
-        public string MainToggleFocus { get; set; }
-        public string MainToggleFocusWaveform { get; set; }
-        public string MainToggleFocusWaveformTextBox { get; set; }
-        public string WaveformAdd { get; set; }
-        public string WaveformVerticalZoom { get; set; }
-        public string WaveformVerticalZoomOut { get; set; }
-        public string WaveformZoomIn { get; set; }
-        public string WaveformZoomOut { get; set; }
-        public string WaveformSplit { get; set; }
-        public string WaveformPlaySelection { get; set; }
-        public string WaveformPlaySelectionEnd { get; set; }
-        public string WaveformSearchSilenceForward { get; set; }
-        public string WaveformSearchSilenceBack { get; set; }
-        public string WaveformAddTextHere { get; set; }
-        public string WaveformAddTextHereFromClipboard { get; set; }
-        public string WaveformSetParagraphAsSelection { get; set; }
-        public string WaveformGoToPreviousShotChange { get; set; }
-        public string WaveformGoToNextShotChange { get; set; }
-        public string WaveformToggleShotChange { get; set; }
-        public string WaveformListShotChanges { get; set; }
-        public string WaveformGuessStart { get; set; }
-        public string Waveform100MsLeft { get; set; }
-        public string Waveform100MsRight { get; set; }
-        public string Waveform1000MsLeft { get; set; }
-        public string Waveform1000MsRight { get; set; }
-        public string WaveformAudioToTextVosk { get; set; }
-        public string WaveformAudioToTextWhisper { get; set; }
-        public string MainCheckFixTimingViaShotChanges { get; set; }
-        public string MainTranslateGoogleIt { get; set; }
-        public string MainTranslateGoogleTranslateIt { get; set; }
-        public string MainTranslateAuto { get; set; }
-        public string MainTranslateAutoSelectedLines { get; set; }
-        public string MainTranslateCustomSearch1 { get; set; }
-        public string MainTranslateCustomSearch2 { get; set; }
-        public string MainTranslateCustomSearch3 { get; set; }
-        public string MainTranslateCustomSearch4 { get; set; }
-        public string MainTranslateCustomSearch5 { get; set; }
-        public List<PluginShortcut> PluginShortcuts { get; set; }
-
-
-        public Shortcuts()
-        {
-            GeneralGoToFirstSelectedLine = "Control+L";
-            GeneralMergeSelectedLines = "Control+Shift+M";
-            GeneralToggleTranslationMode = "Control+Shift+O";
-            GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
-            GeneralGoToNextSubtitle = "Shift+Return";
-            GeneralGoToNextSubtitlePlayTranslate = "Alt+Down";
-            GeneralGoToPrevSubtitlePlayTranslate = "Alt+Up";
-            GeneralToggleBookmarksWithText = "Control+Shift+B";
-            OpenDataFolder = "Control+Alt+Shift+D";
-            GeneralToggleView = "F2";
-            GeneralHelp = "F1";
-            MainFileNew = "Control+N";
-            MainFileOpen = "Control+O";
-            MainFileSave = "Control+S";
-            MainFileSaveAs = "Control+Shift+S";
-            MainEditUndo = "Control+Z";
-            MainEditRedo = "Control+Y";
-            MainEditFind = "Control+F";
-            MainEditFindNext = "F3";
-            MainEditReplace = "Control+H";
-            MainEditMultipleReplace = "Control+Alt+M";
-            MainEditGoToLineNumber = "Control+G";
-            MainEditRightToLeft = "Control+Shift+Alt+R";
-            MainEditInverseSelection = "Control+Shift+I";
-            MainToolsFixCommonErrors = "Control+Shift+F";
-            MainToolsFixCommonErrorsPreview = "Control+P";
-            MainToolsRenumber = "Control+Shift+N";
-            MainToolsRemoveTextForHI = "Control+Shift+H";
-            MainToolsChangeCasing = "Control+Shift+C";
-            MainVideoPlayFromJustBefore = "Shift+F10";
-            MainVideoPlayPauseToggle = "Control+P";
-            MainVideoPause = "Control+Alt+P";
-            MainVideo500MsLeft = "Alt+Left";
-            MainVideo500MsRight = "Alt+Right";
-            MainVideoFullscreen = "Alt+Return";
-            MainVideoReset = "Control+D0";
-            MainSpellCheck = "Control+Shift+S";
-            MainSpellCheckFindDoubleWords = "Control+Shift+D";
-            MainSpellCheckAddWordToNames = "Control+Shift+L";
-            MainSynchronizationAdjustTimes = "Control+Shift+A";
-            MainSynchronizationVisualSync = "Control+Shift+V";
-            MainSynchronizationPointSync = "Control+Shift+P";
-            MainListViewItalic = "Control+I";
-            MainTextBoxSplitAtCursor = "Control+Alt+V";
-            MainTextBoxSelectionToLower = "Control+U";
-            MainTextBoxSelectionToUpper = "Control+Shift+U";
-            MainTextBoxSelectionToggleCasing = "Control+Shift+F3";
-            MainCreateInsertSubAtVideoPos = "Shift+F9";
-            MainVideoGoToStartCurrent = "Shift+F11";
-            MainVideoToggleStartEndCurrent = "F4";
-            MainVideoPlaySelectedLines = "F5";
-            MainVideoGoToStartCurrent = "F6";
-            MainVideo3000MsLeft = "F7";
-            MainListViewGoToNextError = "F8";
-            MainListViewListErrors = "Control+F8";
-            MainCreateSetStart = "F11";
-            MainCreateSetEnd = "F12";
-            MainAdjustSetStartAndOffsetTheRest = "Control+Space";
-            MainAdjustSetStartAndOffsetTheRest2 = "F9";
-            MainAdjustSetEndAndGotoNext = "F10";
-            MainInsertAfter = "Alt+Insert";
-            MainWaveformInsertAtCurrentPosition = "Insert";
-            MainInsertBefore = "Control+Shift+Insert";
-            MainTextBoxAutoBreak = "Control+R";
-            MainTranslateAuto = "Control+Shift+G";
-            MainAdjustExtendToNextSubtitle = "Control+Shift+E";
-            MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
-            MainAdjustExtendToNextSubtitleMinusChainingGap = "Control+Shift+W";
-            MainAdjustExtendToPreviousSubtitleMinusChainingGap = "Alt+Shift+W";
-            WaveformVerticalZoom = "Shift+Add";
-            WaveformVerticalZoomOut = "Shift+Subtract";
-            WaveformAddTextHere = "Return";
-            Waveform100MsLeft = "Shift+Left";
-            Waveform100MsRight = "Shift+Right";
-            Waveform1000MsLeft = "Left";
-            Waveform1000MsRight = "Right";
-            MainCheckFixTimingViaShotChanges = "Control+Shift+D9";
-            PluginShortcuts = new List<PluginShortcut>();
-        }
-
-        public Shortcuts Clone()
-        {
-            var xws = new XmlWriterSettings { Indent = true };
-            var sb = new StringBuilder();
-            using (var textWriter = XmlWriter.Create(sb, xws))
-            {
-                textWriter.WriteStartDocument();
-                textWriter.WriteStartElement("Settings", string.Empty);
-                Settings.WriteShortcuts(this, textWriter);
-                textWriter.WriteEndElement();
-                textWriter.WriteEndDocument();
-            }
-
-            var doc = new XmlDocument { PreserveWhitespace = true };
-            doc.LoadXml(sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""));
-            var shortcuts = new Shortcuts();
-            Settings.ReadShortcuts(doc, shortcuts);
-            return shortcuts;
-        }
-
-        public static void Save(string fileName, Shortcuts shortcuts)
-        {
-            var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
-            var sb = new StringBuilder();
-            using (var textWriter = XmlWriter.Create(sb, xws))
-            {
-                textWriter.WriteStartDocument();
-                textWriter.WriteStartElement("Settings", string.Empty);
-                Settings.WriteShortcuts(shortcuts, textWriter);
-                textWriter.WriteEndElement();
-                textWriter.WriteEndDocument();
-            }
-            File.WriteAllText(fileName, sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
-        }
-
-        public static Shortcuts Load(string fileName)
-        {
-            var doc = new XmlDocument { PreserveWhitespace = true };
-            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                doc.Load(stream);
-                var shortcuts = new Shortcuts();
-                Settings.ReadShortcuts(doc, shortcuts);
-                return shortcuts;
-            }
-        }
-    }
-
-    public class RemoveTextForHearingImpairedSettings
-    {
-        public bool RemoveTextBetweenBrackets { get; set; }
-        public bool RemoveTextBetweenParentheses { get; set; }
-        public bool RemoveTextBetweenCurlyBrackets { get; set; }
-        public bool RemoveTextBetweenQuestionMarks { get; set; }
-        public bool RemoveTextBetweenCustom { get; set; }
-        public string RemoveTextBetweenCustomBefore { get; set; }
-        public string RemoveTextBetweenCustomAfter { get; set; }
-        public bool RemoveTextBetweenOnlySeparateLines { get; set; }
-        public bool RemoveTextBeforeColon { get; set; }
-        public bool RemoveTextBeforeColonOnlyIfUppercase { get; set; }
-        public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
-        public bool RemoveInterjections { get; set; }
-        public bool RemoveInterjectionsOnlyOnSeparateLine { get; set; }
-        public bool RemoveIfContains { get; set; }
-        public bool RemoveIfAllUppercase { get; set; }
-        public string RemoveIfContainsText { get; set; }
-        public bool RemoveIfOnlyMusicSymbols { get; set; }
-
-        public RemoveTextForHearingImpairedSettings()
-        {
-            RemoveTextBetweenBrackets = true;
-            RemoveTextBetweenParentheses = true;
-            RemoveTextBetweenCurlyBrackets = true;
-            RemoveTextBetweenQuestionMarks = true;
-            RemoveTextBetweenCustom = false;
-            RemoveTextBetweenCustomBefore = "¶";
-            RemoveTextBetweenCustomAfter = "¶";
-            RemoveTextBeforeColon = true;
-            RemoveTextBeforeColonOnlyIfUppercase = true;
-            RemoveIfContainsText = "¶";
-            RemoveIfOnlyMusicSymbols = true;
-        }
-    }
-
-    public class SubtitleBeaming
-    {
-        public string FontName { get; set; }
-        public int FontSize { get; set; }
-        public Color FontColor { get; set; }
-        public Color BorderColor { get; set; }
-        public int BorderWidth { get; set; }
-
-        public SubtitleBeaming()
-        {
-            FontName = "Verdana";
-            FontSize = 30;
-            FontColor = Color.White;
-            BorderColor = Color.DarkGray;
-            BorderWidth = 2;
-        }
-    }
-
-    public class BeautifyTimeCodesSettings
-    {
-        public bool AlignTimeCodes { get; set; }
-        public bool ExtractExactTimeCodes { get; set; }
-        public bool SnapToShotChanges { get; set; }
-        public int OverlapThreshold { get; set; }
-        public BeautifyTimeCodesProfile Profile { get; set; }
-
-        public BeautifyTimeCodesSettings()
-        {
-            AlignTimeCodes = true;
-            ExtractExactTimeCodes = false;
-            SnapToShotChanges = true;
-            OverlapThreshold = 1000;
-            Profile = new BeautifyTimeCodesProfile();
-        }
-
-        public class BeautifyTimeCodesProfile
-        {
-            // General
-            public int Gap { get; set; }
-
-            // In cues
-            public int InCuesGap { get; set; }
-            public int InCuesLeftGreenZone { get; set; }
-            public int InCuesLeftRedZone { get; set; }
-            public int InCuesRightRedZone { get; set; }
-            public int InCuesRightGreenZone { get; set; }
-
-            // Out cues
-            public int OutCuesGap { get; set; }
-            public int OutCuesLeftGreenZone { get; set; }
-            public int OutCuesLeftRedZone { get; set; }
-            public int OutCuesRightRedZone { get; set; }
-            public int OutCuesRightGreenZone { get; set; }
-
-            // Connected subtitles
-            public int ConnectedSubtitlesInCueClosestLeftGap { get; set; }
-            public int ConnectedSubtitlesInCueClosestRightGap { get; set; }
-            public int ConnectedSubtitlesOutCueClosestLeftGap { get; set; }
-            public int ConnectedSubtitlesOutCueClosestRightGap { get; set; }
-            public int ConnectedSubtitlesLeftGreenZone { get; set; }
-            public int ConnectedSubtitlesLeftRedZone { get; set; }
-            public int ConnectedSubtitlesRightRedZone { get; set; }
-            public int ConnectedSubtitlesRightGreenZone { get; set; }
-            public int ConnectedSubtitlesTreatConnected { get; set; }
-
-            // Chaining
-            public bool ChainingGeneralUseZones { get; set; }
-            public int ChainingGeneralMaxGap { get; set; }
-            public int ChainingGeneralLeftGreenZone { get; set; }
-            public int ChainingGeneralLeftRedZone { get; set; }
-            public ChainingShotChangeBehaviorEnum ChainingGeneralShotChangeBehavior { get; set; }
-            public bool ChainingInCueOnShotUseZones { get; set; }
-            public int ChainingInCueOnShotMaxGap { get; set; }
-            public int ChainingInCueOnShotLeftGreenZone { get; set; }
-            public int ChainingInCueOnShotLeftRedZone { get; set; }
-            public ChainingShotChangeBehaviorEnum ChainingInCueOnShotShotChangeBehavior { get; set; }
-            public bool ChainingInCueOnShotCheckGeneral { get; set; }
-            public bool ChainingOutCueOnShotUseZones { get; set; }
-            public int ChainingOutCueOnShotMaxGap { get; set; }
-            public int ChainingOutCueOnShotRightRedZone { get; set; }
-            public int ChainingOutCueOnShotRightGreenZone { get; set; }
-            public ChainingShotChangeBehaviorEnum ChainingOutCueOnShotShotChangeBehavior { get; set; }
-            public bool ChainingOutCueOnShotCheckGeneral { get; set; }
-
-            public enum Preset : int
-            {
-                Default = 0,
-                Netflix = 1,
-                SDI = 2,
-            }
-
-            public enum ChainingShotChangeBehaviorEnum : int
-            {
-                DontChain = 0,
-                ExtendCrossingShotChange = 1,
-                ExtendUntilShotChange = 2
-            }
-
-            public BeautifyTimeCodesProfile(Preset preset = Preset.Default)
-            {
-                switch (preset)
-                {
-                    case Preset.Netflix:
-                        Gap = 2;
-
-                        InCuesGap = 0;
-                        InCuesLeftGreenZone = 12;
-                        InCuesLeftRedZone = 7;
-                        InCuesRightRedZone = 7;
-                        InCuesRightGreenZone = 12;
-
-                        OutCuesGap = 2;
-                        OutCuesLeftGreenZone = 12;
-                        OutCuesLeftRedZone = 7;
-                        OutCuesRightRedZone = 7;
-                        OutCuesRightGreenZone = 12;
-
-                        ConnectedSubtitlesInCueClosestLeftGap = 2;
-                        ConnectedSubtitlesInCueClosestRightGap = 0;
-                        ConnectedSubtitlesOutCueClosestLeftGap = 2;
-                        ConnectedSubtitlesOutCueClosestRightGap = 0;
-                        ConnectedSubtitlesLeftGreenZone = 12;
-                        ConnectedSubtitlesLeftRedZone = 7;
-                        ConnectedSubtitlesRightRedZone = 7;
-                        ConnectedSubtitlesRightGreenZone = 12;
-                        ConnectedSubtitlesTreatConnected = 180;
-
-                        ChainingGeneralUseZones = false;
-                        ChainingGeneralMaxGap = 500;
-                        ChainingGeneralLeftGreenZone = 12;
-                        ChainingGeneralLeftRedZone = 11;
-                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingInCueOnShotUseZones = false;
-                        ChainingInCueOnShotMaxGap = 500;
-                        ChainingInCueOnShotLeftGreenZone = 12;
-                        ChainingInCueOnShotLeftRedZone = 11;
-                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingInCueOnShotCheckGeneral = true;
-                        ChainingOutCueOnShotUseZones = false;
-                        ChainingOutCueOnShotMaxGap = 500;
-                        ChainingOutCueOnShotRightRedZone = 11;
-                        ChainingOutCueOnShotRightGreenZone = 12;
-                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingOutCueOnShotCheckGeneral = true;
-                        break;
-                    case Preset.SDI:
-                        Gap = 4;
-
-                        InCuesGap = 2;
-                        InCuesLeftGreenZone = 12;
-                        InCuesLeftRedZone = 7;
-                        InCuesRightRedZone = 7;
-                        InCuesRightGreenZone = 12;
-
-                        OutCuesGap = 2;
-                        OutCuesLeftGreenZone = 12;
-                        OutCuesLeftRedZone = 7;
-                        OutCuesRightRedZone = 7;
-                        OutCuesRightGreenZone = 12;
-
-                        ConnectedSubtitlesInCueClosestLeftGap = 2;
-                        ConnectedSubtitlesInCueClosestRightGap = 2;
-                        ConnectedSubtitlesOutCueClosestLeftGap = 2;
-                        ConnectedSubtitlesOutCueClosestRightGap = 2;
-                        ConnectedSubtitlesLeftGreenZone = 12;
-                        ConnectedSubtitlesLeftRedZone = 7;
-                        ConnectedSubtitlesRightRedZone = 7;
-                        ConnectedSubtitlesRightGreenZone = 12;
-                        ConnectedSubtitlesTreatConnected = 240;
-
-                        ChainingGeneralUseZones = false;
-                        ChainingGeneralMaxGap = 1000;
-                        ChainingGeneralLeftGreenZone = 25;
-                        ChainingGeneralLeftRedZone = 24;
-                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
-                        ChainingInCueOnShotUseZones = false;
-                        ChainingInCueOnShotMaxGap = 1000;
-                        ChainingInCueOnShotLeftGreenZone = 25;
-                        ChainingInCueOnShotLeftRedZone = 24;
-                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
-                        ChainingInCueOnShotCheckGeneral = true;
-                        ChainingOutCueOnShotUseZones = true;
-                        ChainingOutCueOnShotMaxGap = 500;
-                        ChainingOutCueOnShotRightRedZone = 7;
-                        ChainingOutCueOnShotRightGreenZone = 12;
-                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
-                        ChainingOutCueOnShotCheckGeneral = true;
-                        break;
-                    default:
-                        Gap = 3;
-
-                        InCuesGap = 0;
-                        InCuesLeftGreenZone = 3;
-                        InCuesLeftRedZone = 3;
-                        InCuesRightRedZone = 5;
-                        InCuesRightGreenZone = 5;
-
-                        OutCuesGap = 0;
-                        OutCuesLeftGreenZone = 10;
-                        OutCuesLeftRedZone = 10;
-                        OutCuesRightRedZone = 3;
-                        OutCuesRightGreenZone = 12;
-
-                        ConnectedSubtitlesInCueClosestLeftGap = 3;
-                        ConnectedSubtitlesInCueClosestRightGap = 0;
-                        ConnectedSubtitlesOutCueClosestLeftGap = 0;
-                        ConnectedSubtitlesOutCueClosestRightGap = 3;
-                        ConnectedSubtitlesLeftGreenZone = 3;
-                        ConnectedSubtitlesLeftRedZone = 3;
-                        ConnectedSubtitlesRightRedZone = 3;
-                        ConnectedSubtitlesRightGreenZone = 3;
-                        ConnectedSubtitlesTreatConnected = 180;
-
-                        ChainingGeneralUseZones = false;
-                        ChainingGeneralMaxGap = 1000;
-                        ChainingGeneralLeftGreenZone = 25;
-                        ChainingGeneralLeftRedZone = 24;
-                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingInCueOnShotUseZones = false;
-                        ChainingInCueOnShotMaxGap = 1000;
-                        ChainingInCueOnShotLeftGreenZone = 25;
-                        ChainingInCueOnShotLeftRedZone = 24;
-                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingInCueOnShotCheckGeneral = true;
-                        ChainingOutCueOnShotUseZones = false;
-                        ChainingOutCueOnShotMaxGap = 500;
-                        ChainingOutCueOnShotRightRedZone = 11;
-                        ChainingOutCueOnShotRightGreenZone = 12;
-                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
-                        ChainingOutCueOnShotCheckGeneral = true;
-                        break;
-                }
-            }
-        }
-    }
-
-    public class CompareSettings
-    {
-        public bool ShowOnlyDifferences { get; set; }
-        public bool OnlyLookForDifferenceInText { get; set; }
-        public bool IgnoreLineBreaks { get; set; }
-        public bool IgnoreWhitespace { get; set; }
-        public bool IgnoreFormatting { get; set; }
-
-        public CompareSettings()
-        {
-            OnlyLookForDifferenceInText = true;
-        }
-    }
-
-    public class VerifyCompletenessSettings
-    {
-        public ListSortEnum ListSort { get; set; }
-
-        public enum ListSortEnum : int
-        {
-            Coverage = 0,
-            Time = 1,
-        }
-
-        public VerifyCompletenessSettings()
-        {
-            ListSort = ListSortEnum.Coverage;
-        }
-    }
 
     public class Settings
     {
@@ -3358,6 +135,11 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
                 }
 
+                if (settings.Shortcuts.MainFileSaveAs == "Control+Shift+S" && settings.Shortcuts.MainSpellCheck == "Control+Shift+S")
+                {
+                    settings.Shortcuts.MainSpellCheck = "Alt+F7";
+                }
+
                 if (settings.General.UseFFmpegForWaveExtraction && string.IsNullOrEmpty(settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
                 {
                     var guessPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
@@ -3416,7 +198,7 @@ $HorzAlign          =   Center
         /// </summary>
         /// <param name="fileName">File name of xml settings file to load</param>
         /// <returns>Newly loaded settings</returns>
-        private static Settings CustomDeserialize(string fileName)
+        public static Settings CustomDeserialize(string fileName)
         {
             var doc = new XmlDocument { PreserveWhitespace = true };
             using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -5409,6 +2191,54 @@ $HorzAlign          =   Center
                 settings.Tools.ChatGptModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GroqUrl");
+            if (subNode != null)
+            {
+                settings.Tools.GroqUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.GroqPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.GroqApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GroqModel");
+            if (subNode != null)
+            {
+                settings.Tools.GroqModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterUrl");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OpenRouterModel");
+            if (subNode != null)
+            {
+                settings.Tools.OpenRouterModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LmStudioApiUrl");
             if (subNode != null)
             {
@@ -5515,6 +2345,54 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsModel");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsLanguage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsStability");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsStability = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsSimilarity");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsSimilarity = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfVoice = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfRate");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfRate = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfPitch");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfPitch = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
@@ -6115,6 +2993,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertOcrLanguage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTranslateEngine");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTranslateEngine = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WaveformBatchLastFolder");
@@ -7175,6 +4059,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoPreset = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoPixelFormat");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoPixelFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenVideoCrf");
             if (subNode != null)
             {
@@ -7223,6 +4113,24 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenTransparentVideoNonAssaBox");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenTransparentVideoNonAssaBoxPerLine");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoNonAssaBoxPerLine = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenTransparentVideoExtension");
+            if (subNode != null)
+            {
+                settings.Tools.GenTransparentVideoExtension = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
             if (subNode != null)
             {
@@ -7233,6 +4141,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GenVideoNonAssaTextColor = FromHtml(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaShadowColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaShadowColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("GenVideoNonAssaAlignRight");
@@ -8000,6 +4914,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     settings.SubtitleSettings.WebVttMergeLinesWithSameText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("WebVttDoNoMergeTags");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttDoNoMergeTags = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
             }
 
@@ -9913,6 +6833,24 @@ $HorzAlign          =   Center
                     shortcuts.MainFileExportPlainText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileExportCustomText1");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportCustomText2");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportCustomText3");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportCustomText3 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExit");
                 if (subNode != null)
                 {
@@ -11000,6 +7938,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordToPrev");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFirstWordToPrev = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                 {
@@ -11576,6 +8520,18 @@ $HorzAlign          =   Center
                     shortcuts.WaveformToggleShotChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameForward");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAllShotChangesOneFrameBack");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAllShotChangesOneFrameBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformListShotChanges");
                 if (subNode != null)
                 {
@@ -11690,752 +8646,774 @@ $HorzAlign          =   Center
         {
             var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
-            using (var textWriter = XmlWriter.Create(sb, xws))
+            using (var xmlWriter = XmlWriter.Create(sb, xws))
             {
-                textWriter.WriteStartDocument();
+                xmlWriter.WriteStartDocument();
 
-                textWriter.WriteStartElement("Settings", string.Empty);
+                xmlWriter.WriteStartElement("Settings", string.Empty);
 
-                textWriter.WriteElementString("Version", Utilities.AssemblyVersion);
+                xmlWriter.WriteElementString("Version", Utilities.AssemblyVersion);
 
-                textWriter.WriteStartElement("Compare", string.Empty);
-                textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("IgnoreWhitespace", settings.Compare.IgnoreWhitespace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("Compare", string.Empty);
+                xmlWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("IgnoreWhitespace", settings.Compare.IgnoreWhitespace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("VerifyCompleteness", string.Empty);
-                textWriter.WriteElementString("ListSort", settings.VerifyCompleteness.ListSort.ToString());
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("VerifyCompleteness", string.Empty);
+                xmlWriter.WriteElementString("ListSort", settings.VerifyCompleteness.ListSort.ToString());
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("RecentFiles", string.Empty);
-                textWriter.WriteStartElement("FileNames", string.Empty);
+                xmlWriter.WriteStartElement("RecentFiles", string.Empty);
+                xmlWriter.WriteStartElement("FileNames", string.Empty);
                 foreach (var item in settings.RecentFiles.Files)
                 {
-                    textWriter.WriteStartElement("FileName");
+                    xmlWriter.WriteStartElement("FileName");
                     if (item.OriginalFileName != null)
                     {
-                        textWriter.WriteAttributeString("OriginalFileName", item.OriginalFileName);
+                        xmlWriter.WriteAttributeString("OriginalFileName", item.OriginalFileName);
                     }
 
                     if (item.VideoFileName != null)
                     {
-                        textWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
-                        textWriter.WriteAttributeString("AudioTrack", item.AudioTrack.ToString(CultureInfo.InvariantCulture));
+                        xmlWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
+                        xmlWriter.WriteAttributeString("AudioTrack", item.AudioTrack.ToString(CultureInfo.InvariantCulture));
                     }
 
-                    textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
 
                     if (item.VideoOffsetInMs != 0)
                     {
-                        textWriter.WriteAttributeString("VideoOffset", item.VideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
+                        xmlWriter.WriteAttributeString("VideoOffset", item.VideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
                     }
 
                     if (item.VideoIsSmpte)
                     {
-                        textWriter.WriteAttributeString("IsSmpte", item.VideoIsSmpte.ToString(CultureInfo.InvariantCulture));
+                        xmlWriter.WriteAttributeString("IsSmpte", item.VideoIsSmpte.ToString(CultureInfo.InvariantCulture));
                     }
 
-                    textWriter.WriteString(item.FileName);
-                    textWriter.WriteEndElement();
+                    xmlWriter.WriteString(item.FileName);
+                    xmlWriter.WriteEndElement();
                 }
 
-                textWriter.WriteEndElement();
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("General", string.Empty);
+                xmlWriter.WriteStartElement("General", string.Empty);
 
-                textWriter.WriteStartElement("Profiles", string.Empty);
+                xmlWriter.WriteStartElement("Profiles", string.Empty);
                 foreach (var profile in settings.General.Profiles)
                 {
-                    textWriter.WriteStartElement("Profile");
-                    textWriter.WriteElementString("Name", profile.Name);
-                    textWriter.WriteElementString("SubtitleLineMaximumLength", profile.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", profile.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", profile.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", profile.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", profile.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", profile.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("MinimumMillisecondsBetweenLines", profile.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("CpsLineLengthStrategy", profile.CpsLineLengthStrategy);
-                    textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
-                    textWriter.WriteElementString("ContinuationStyle", profile.ContinuationStyle.ToString());
-                    textWriter.WriteEndElement();
+                    xmlWriter.WriteStartElement("Profile");
+                    xmlWriter.WriteElementString("Name", profile.Name);
+                    xmlWriter.WriteElementString("SubtitleLineMaximumLength", profile.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", profile.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", profile.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", profile.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", profile.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("SubtitleMaximumWordsPerMinute", profile.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("MinimumMillisecondsBetweenLines", profile.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("CpsLineLengthStrategy", profile.CpsLineLengthStrategy);
+                    xmlWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
+                    xmlWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
+                    xmlWriter.WriteElementString("ContinuationStyle", profile.ContinuationStyle.ToString());
+                    xmlWriter.WriteEndElement();
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
-                textWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarOpenVideo", settings.General.ShowToolbarOpenVideo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarSaveAs", settings.General.ShowToolbarSaveAs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarReplace", settings.General.ShowToolbarReplace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarFixCommonErrors", settings.General.ShowToolbarFixCommonErrors.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarToggleSourceView", settings.General.ShowToolbarToggleSourceView.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarBurnIn", settings.General.ShowToolbarBurnIn.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarBeautifyTimeCodes", settings.General.ShowToolbarBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
+                xmlWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
+                xmlWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarOpenVideo", settings.General.ShowToolbarOpenVideo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarSaveAs", settings.General.ShowToolbarSaveAs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarReplace", settings.General.ShowToolbarReplace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarFixCommonErrors", settings.General.ShowToolbarFixCommonErrors.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarToggleSourceView", settings.General.ShowToolbarToggleSourceView.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarBurnIn", settings.General.ShowToolbarBurnIn.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarBeautifyTimeCodes", settings.General.ShowToolbarBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
 
-                textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
-                textWriter.WriteElementString("DefaultSaveAsFormat", settings.General.DefaultSaveAsFormat);
-                textWriter.WriteElementString("FavoriteSubtitleFormats", settings.General.FavoriteSubtitleFormats);
-                textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
-                textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TranslationAutoSuffixes", settings.General.TranslationAutoSuffixes);
-                textWriter.WriteElementString("TranslationAutoSuffixDefault", settings.General.TranslationAutoSuffixDefault);
-                textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
-                textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
-                textWriter.WriteElementString("SubtitleTextBoxFontSize", settings.General.SubtitleTextBoxFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleTextBoxFontBold", settings.General.SubtitleTextBoxFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleTextBoxSyntaxColor", settings.General.SubtitleTextBoxSyntaxColor.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleTextBoxHtmlColor", settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleTextBoxAssColor", settings.General.SubtitleTextBoxAssColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);
-                textWriter.WriteElementString("MeasureFontSize", settings.General.MeasureFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MeasureFontBold", settings.General.MeasureFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleLineMaximumPixelWidth", settings.General.SubtitleLineMaximumPixelWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartLoadLastFile", settings.General.StartLoadLastFile.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
-                textWriter.WriteElementString("StartSize", settings.General.StartSize);
-                textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MaxNumberOfLines", settings.General.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MaxNumberOfLinesPlusAbort", settings.General.MaxNumberOfLinesPlusAbort.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeLinesShorterThan", settings.General.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MinimumMillisecondsBetweenLines", settings.General.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CpsLineLengthStrategy", settings.General.CpsLineLengthStrategy);
-                textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
+                xmlWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
+                xmlWriter.WriteElementString("DefaultSaveAsFormat", settings.General.DefaultSaveAsFormat);
+                xmlWriter.WriteElementString("FavoriteSubtitleFormats", settings.General.FavoriteSubtitleFormats);
+                xmlWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
+                xmlWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TranslationAutoSuffixes", settings.General.TranslationAutoSuffixes);
+                xmlWriter.WriteElementString("TranslationAutoSuffixDefault", settings.General.TranslationAutoSuffixDefault);
+                xmlWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
+                xmlWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
+                xmlWriter.WriteElementString("SubtitleTextBoxFontSize", settings.General.SubtitleTextBoxFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleTextBoxFontBold", settings.General.SubtitleTextBoxFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleTextBoxSyntaxColor", settings.General.SubtitleTextBoxSyntaxColor.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleTextBoxHtmlColor", settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleTextBoxAssColor", settings.General.SubtitleTextBoxAssColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);
+                xmlWriter.WriteElementString("MeasureFontSize", settings.General.MeasureFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MeasureFontBold", settings.General.MeasureFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleLineMaximumPixelWidth", settings.General.SubtitleLineMaximumPixelWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartLoadLastFile", settings.General.StartLoadLastFile.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartPosition", settings.General.StartPosition);
+                xmlWriter.WriteElementString("StartSize", settings.General.StartSize);
+                xmlWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MaxNumberOfLines", settings.General.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MaxNumberOfLinesPlusAbort", settings.General.MaxNumberOfLinesPlusAbort.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeLinesShorterThan", settings.General.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MinimumMillisecondsBetweenLines", settings.General.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CpsLineLengthStrategy", settings.General.CpsLineLengthStrategy);
+                xmlWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
 
-                textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
+                xmlWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
 
-                textWriter.WriteElementString("ContinuationPause", settings.General.ContinuationPause.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleSuffix", settings.General.CustomContinuationStyleSuffix.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleSuffixApplyIfComma", settings.General.CustomContinuationStyleSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleSuffixAddSpace", settings.General.CustomContinuationStyleSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleSuffixReplaceComma", settings.General.CustomContinuationStyleSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStylePrefix", settings.General.CustomContinuationStylePrefix.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStylePrefixAddSpace", settings.General.CustomContinuationStylePrefixAddSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleUseDifferentStyleGap", settings.General.CustomContinuationStyleUseDifferentStyleGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapSuffix", settings.General.CustomContinuationStyleGapSuffix.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapSuffixApplyIfComma", settings.General.CustomContinuationStyleGapSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapSuffixAddSpace", settings.General.CustomContinuationStyleGapSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapSuffixReplaceComma", settings.General.CustomContinuationStyleGapSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapPrefix", settings.General.CustomContinuationStyleGapPrefix.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CustomContinuationStyleGapPrefixAddSpace", settings.General.CustomContinuationStyleGapPrefixAddSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixContinuationStyleHideContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
-                textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
+                xmlWriter.WriteElementString("ContinuationPause", settings.General.ContinuationPause.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleSuffix", settings.General.CustomContinuationStyleSuffix.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleSuffixApplyIfComma", settings.General.CustomContinuationStyleSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleSuffixAddSpace", settings.General.CustomContinuationStyleSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleSuffixReplaceComma", settings.General.CustomContinuationStyleSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStylePrefix", settings.General.CustomContinuationStylePrefix.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStylePrefixAddSpace", settings.General.CustomContinuationStylePrefixAddSpace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleUseDifferentStyleGap", settings.General.CustomContinuationStyleUseDifferentStyleGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapSuffix", settings.General.CustomContinuationStyleGapSuffix.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapSuffixApplyIfComma", settings.General.CustomContinuationStyleGapSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapSuffixAddSpace", settings.General.CustomContinuationStyleGapSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapSuffixReplaceComma", settings.General.CustomContinuationStyleGapSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapPrefix", settings.General.CustomContinuationStyleGapPrefix.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CustomContinuationStyleGapPrefixAddSpace", settings.General.CustomContinuationStyleGapPrefixAddSpace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixContinuationStyleHideContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
+                xmlWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
 
-                textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
-                textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerShowMuteButton", settings.General.VideoPlayerShowMuteButton.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerShowFullscreenButton", settings.General.VideoPlayerShowFullscreenButton.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Language", settings.General.Language);
-                textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
-                textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SaveAsUseFileNameFrom", settings.General.SaveAsUseFileNameFrom);
-                textWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
-                textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoContinueDelay", settings.General.AutoContinueDelay.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ReturnToStartAfterRepeat", settings.General.ReturnToStartAfterRepeat.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBackupDeleteAfterMonths", settings.General.AutoBackupDeleteAfterMonths.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
-                textWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PromptDeleteLines", settings.General.PromptDeleteLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Undocked", settings.General.Undocked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
-                textWriter.WriteElementString("UndockedVideoFullscreen", settings.General.UndockedVideoFullscreen.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
-                textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
-                textWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformAutoGenWhenOpeningVideo", settings.General.WaveformAutoGenWhenOpeningVideo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformUpdateIntervalMs", settings.General.WaveformUpdateIntervalMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
-                textWriter.WriteElementString("ListViewColumnsRememberSize", settings.General.ListViewColumnsRememberSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
+                xmlWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerShowMuteButton", settings.General.VideoPlayerShowMuteButton.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerShowFullscreenButton", settings.General.VideoPlayerShowFullscreenButton.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Language", settings.General.Language);
+                xmlWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
+                xmlWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SaveAsUseFileNameFrom", settings.General.SaveAsUseFileNameFrom);
+                xmlWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
+                xmlWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoContinueDelay", settings.General.AutoContinueDelay.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ReturnToStartAfterRepeat", settings.General.ReturnToStartAfterRepeat.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBackupDeleteAfterMonths", settings.General.AutoBackupDeleteAfterMonths.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
+                xmlWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PromptDeleteLines", settings.General.PromptDeleteLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Undocked", settings.General.Undocked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
+                xmlWriter.WriteElementString("UndockedVideoFullscreen", settings.General.UndockedVideoFullscreen.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
+                xmlWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
+                xmlWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformAutoGenWhenOpeningVideo", settings.General.WaveformAutoGenWhenOpeningVideo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformUpdateIntervalMs", settings.General.WaveformUpdateIntervalMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
+                xmlWriter.WriteElementString("ListViewColumnsRememberSize", settings.General.ListViewColumnsRememberSize.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewCpsWidth", settings.General.ListViewCpsWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewWpmWidth", settings.General.ListViewWpmWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewCpsWidth", settings.General.ListViewCpsWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewWpmWidth", settings.General.ListViewWpmWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteElementString("ListViewNumberDisplayIndex", settings.General.ListViewNumberDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewStartDisplayIndex", settings.General.ListViewStartDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewEndDisplayIndex", settings.General.ListViewEndDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewDurationDisplayIndex", settings.General.ListViewDurationDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewCpsDisplayIndex", settings.General.ListViewCpsDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewWpmDisplayIndex", settings.General.ListViewWpmDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewGapDisplayIndex", settings.General.ListViewGapDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewActorDisplayIndex", settings.General.ListViewActorDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewRegionDisplayIndex", settings.General.ListViewRegionDisplayIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewTextDisplayIndex", settings.General.ListViewTextDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewNumberDisplayIndex", settings.General.ListViewNumberDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewStartDisplayIndex", settings.General.ListViewStartDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewEndDisplayIndex", settings.General.ListViewEndDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewDurationDisplayIndex", settings.General.ListViewDurationDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewCpsDisplayIndex", settings.General.ListViewCpsDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewWpmDisplayIndex", settings.General.ListViewWpmDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewGapDisplayIndex", settings.General.ListViewGapDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewActorDisplayIndex", settings.General.ListViewActorDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewRegionDisplayIndex", settings.General.ListViewRegionDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewTextDisplayIndex", settings.General.ListViewTextDisplayIndex.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
-                textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
+                xmlWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
+                xmlWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
 
-                textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
-                textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
-                textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
-                textWriter.WriteElementString("MpvVideoVf", settings.General.MpvVideoVf);
+                xmlWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
+                xmlWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
+                xmlWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
+                xmlWriter.WriteElementString("MpvVideoVf", settings.General.MpvVideoVf);
 
-                textWriter.WriteElementString("MpvVideoAf", settings.General.MpvVideoAf);
+                xmlWriter.WriteElementString("MpvVideoAf", settings.General.MpvVideoAf);
 
-                textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
-                textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ToHtml(settings.General.MpvPreviewTextPrimaryColor));
-                textWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
-                textWriter.WriteElementString("MpvPreviewTextBackgroundColor", ToHtml(settings.General.MpvPreviewTextBackgroundColor));
-                textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextOpaqueBoxStyle", settings.General.MpvPreviewTextOpaqueBoxStyle);
-                textWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
-                textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
-                textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
-                textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FFmpegUseCenterChannelOnly", settings.General.FFmpegUseCenterChannelOnly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
-                textWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
-                textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitBehavior", settings.General.SplitBehavior.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitRemovesDashes", settings.General.SplitRemovesDashes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Company", settings.General.Company);
-                textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DisableShowingLoadErrors", settings.General.DisableShowingLoadErrors.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
-                textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
-                textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
-                textWriter.WriteElementString("TagsInToggleHiTags", settings.General.TagsInToggleHiTags);
-                textWriter.WriteElementString("TagsInToggleCustomTags", settings.General.TagsInToggleCustomTags);
-                textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultVideoOffsetInMs", settings.General.DefaultVideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultVideoOffsetInMsList", settings.General.DefaultVideoOffsetInMsList);
-                textWriter.WriteElementString("AutoSetVideoSmpteForTtml", settings.General.AutoSetVideoSmpteForTtml.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoSetVideoSmpteForTtmlPrompt", settings.General.AutoSetVideoSmpteForTtmlPrompt.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
-                textWriter.WriteElementString("TitleBarFullFileName", settings.General.TitleBarFullFileName.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MeasurementConverterCloseOnInsert", settings.General.MeasurementConverterCloseOnInsert.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
-                textWriter.WriteElementString("SubtitleTextBoxAutoVerticalScrollBars", settings.General.SubtitleTextBoxAutoVerticalScrollBars.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AllowLetterShortcutsInTextBox", settings.General.AllowLetterShortcutsInTextBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastColorPickerColor", ToHtml(settings.General.LastColorPickerColor));
-                textWriter.WriteElementString("LastColorPickerColor1", ToHtml(settings.General.LastColorPickerColor1));
-                textWriter.WriteElementString("LastColorPickerColor2", ToHtml(settings.General.LastColorPickerColor2));
-                textWriter.WriteElementString("LastColorPickerColor3", ToHtml(settings.General.LastColorPickerColor3));
-                textWriter.WriteElementString("LastColorPickerColor4", ToHtml(settings.General.LastColorPickerColor4));
-                textWriter.WriteElementString("LastColorPickerColor5", ToHtml(settings.General.LastColorPickerColor5));
-                textWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
-                textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
-                textWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeBackColor));
-                textWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
-                textWriter.WriteElementString("DarkThemeForeColor", ToHtml(settings.General.DarkThemeForeColor));
-                textWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
-                textWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
-                textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseLegacyHtmlColor", false.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultLanguages", settings.General.DefaultLanguages);
-                textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
+                xmlWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvPreviewTextPrimaryColor", ToHtml(settings.General.MpvPreviewTextPrimaryColor));
+                xmlWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
+                xmlWriter.WriteElementString("MpvPreviewTextBackgroundColor", ToHtml(settings.General.MpvPreviewTextBackgroundColor));
+                xmlWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpvPreviewTextOpaqueBoxStyle", settings.General.MpvPreviewTextOpaqueBoxStyle);
+                xmlWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
+                xmlWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
+                xmlWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
+                xmlWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FFmpegUseCenterChannelOnly", settings.General.FFmpegUseCenterChannelOnly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
+                xmlWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
+                xmlWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitBehavior", settings.General.SplitBehavior.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitRemovesDashes", settings.General.SplitRemovesDashes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Company", settings.General.Company);
+                xmlWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DisableShowingLoadErrors", settings.General.DisableShowingLoadErrors.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
+                xmlWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
+                xmlWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
+                xmlWriter.WriteElementString("TagsInToggleHiTags", settings.General.TagsInToggleHiTags);
+                xmlWriter.WriteElementString("TagsInToggleCustomTags", settings.General.TagsInToggleCustomTags);
+                xmlWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultVideoOffsetInMs", settings.General.DefaultVideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultVideoOffsetInMsList", settings.General.DefaultVideoOffsetInMsList);
+                xmlWriter.WriteElementString("AutoSetVideoSmpteForTtml", settings.General.AutoSetVideoSmpteForTtml.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoSetVideoSmpteForTtmlPrompt", settings.General.AutoSetVideoSmpteForTtmlPrompt.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
+                xmlWriter.WriteElementString("TitleBarFullFileName", settings.General.TitleBarFullFileName.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MeasurementConverterCloseOnInsert", settings.General.MeasurementConverterCloseOnInsert.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
+                xmlWriter.WriteElementString("SubtitleTextBoxAutoVerticalScrollBars", settings.General.SubtitleTextBoxAutoVerticalScrollBars.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AllowLetterShortcutsInTextBox", settings.General.AllowLetterShortcutsInTextBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastColorPickerColor", ToHtml(settings.General.LastColorPickerColor));
+                xmlWriter.WriteElementString("LastColorPickerColor1", ToHtml(settings.General.LastColorPickerColor1));
+                xmlWriter.WriteElementString("LastColorPickerColor2", ToHtml(settings.General.LastColorPickerColor2));
+                xmlWriter.WriteElementString("LastColorPickerColor3", ToHtml(settings.General.LastColorPickerColor3));
+                xmlWriter.WriteElementString("LastColorPickerColor4", ToHtml(settings.General.LastColorPickerColor4));
+                xmlWriter.WriteElementString("LastColorPickerColor5", ToHtml(settings.General.LastColorPickerColor5));
+                xmlWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
+                xmlWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
+                xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeBackColor));
+                xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
+                xmlWriter.WriteElementString("DarkThemeForeColor", ToHtml(settings.General.DarkThemeForeColor));
+                xmlWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
+                xmlWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
+                xmlWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UseLegacyHtmlColor", false.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultLanguages", settings.General.DefaultLanguages);
+                xmlWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Tools", string.Empty);
+                xmlWriter.WriteStartElement("Tools", string.Empty);
 
-                textWriter.WriteStartElement("AssTagTemplates", string.Empty);
+                xmlWriter.WriteStartElement("AssTagTemplates", string.Empty);
                 foreach (var template in settings.Tools.AssaTagTemplates)
                 {
-                    textWriter.WriteStartElement("Template");
-                    textWriter.WriteElementString("Tag", template.Tag);
-                    textWriter.WriteElementString("Hint", template.Hint);
-                    textWriter.WriteEndElement();
+                    xmlWriter.WriteStartElement("Template");
+                    xmlWriter.WriteElementString("Tag", template.Tag);
+                    xmlWriter.WriteElementString("Hint", template.Hint);
+                    xmlWriter.WriteEndElement();
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveEmptyLinesBetweenText", settings.Tools.RemoveEmptyLinesBetweenText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
-                textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
-                textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
-                textWriter.WriteElementString("SpellCheckAutoChangeNameCasing", settings.Tools.SpellCheckAutoChangeNameCasing.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckUseLargerFont", settings.Tools.SpellCheckUseLargerFont.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckSearchEngine", settings.Tools.SpellCheckSearchEngine);
-                textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LiveSpellCheck", settings.Tools.LiveSpellCheck.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrGoogleCloudVisionSeHandlesTextMerge", settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrTesseract4RgbThreshold", settings.Tools.OcrTesseract4RgbThreshold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrAddLetterRow1", settings.Tools.OcrAddLetterRow1);
-                textWriter.WriteElementString("OcrAddLetterRow2", settings.Tools.OcrAddLetterRow2);
-                textWriter.WriteElementString("OcrTrainFonts", settings.Tools.OcrTrainFonts);
-                textWriter.WriteElementString("OcrTrainMergedLetters", settings.Tools.OcrTrainMergedLetters);
-                textWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
-                textWriter.WriteElementString("OcrUseWordSplitList", settings.Tools.OcrUseWordSplitList.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OcrUseWordSplitListAvoidPropercase", settings.Tools.OcrUseWordSplitListAvoidPropercase.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BDOpenIn", settings.Tools.BDOpenIn);
-                textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
-                textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
-                textWriter.WriteElementString("MicrosoftTranslatorTokenEndpoint", settings.Tools.MicrosoftTranslatorTokenEndpoint);
-                textWriter.WriteElementString("MicrosoftTranslatorCategory", settings.Tools.MicrosoftTranslatorCategory);
-                textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
-                textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GoogleTranslateLastSourceLanguage", settings.Tools.GoogleTranslateLastSourceLanguage);
-                textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
-                textWriter.WriteElementString("AutoTranslateLastName", settings.Tools.AutoTranslateLastName);
-                textWriter.WriteElementString("AutoTranslateLastUrl", settings.Tools.AutoTranslateLastUrl);
-                textWriter.WriteElementString("AutoTranslateNllbApiUrl", settings.Tools.AutoTranslateNllbApiUrl);
-                textWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
-                textWriter.WriteElementString("AutoTranslateNllbServeModel", settings.Tools.AutoTranslateNllbServeModel);
-                textWriter.WriteElementString("AutoTranslateLibreUrl", settings.Tools.AutoTranslateLibreUrl);
-                textWriter.WriteElementString("AutoTranslateLibreApiKey", settings.Tools.AutoTranslateLibreApiKey);
-                textWriter.WriteElementString("AutoTranslateMyMemoryApiKey", settings.Tools.AutoTranslateMyMemoryApiKey);
-                textWriter.WriteElementString("AutoTranslateSeamlessM4TUrl", settings.Tools.AutoTranslateSeamlessM4TUrl);
-                textWriter.WriteElementString("AutoTranslateDeepLApiKey", settings.Tools.AutoTranslateDeepLApiKey);
-                textWriter.WriteElementString("AutoTranslateDeepLUrl", settings.Tools.AutoTranslateDeepLUrl);
-                textWriter.WriteElementString("AutoTranslatePapagoApiKeyId", settings.Tools.AutoTranslatePapagoApiKeyId);
-                textWriter.WriteElementString("AutoTranslatePapagoApiKey", settings.Tools.AutoTranslatePapagoApiKey);
-                textWriter.WriteElementString("AutoTranslateDeepLFormality", settings.Tools.AutoTranslateDeepLFormality);
-                textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
-                textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
-                textWriter.WriteElementString("TranslateViaCopyPasteSeparator", settings.Tools.TranslateViaCopyPasteSeparator);
-                textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
-                textWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
-                textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
-                textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
-                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
-                textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
-                textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
-                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
-                textWriter.WriteElementString("OllamaModels", settings.Tools.OllamaModels);
-                textWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
-                textWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
-                textWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);
-                textWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
-                textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
-                textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
-                textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
-                textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
-                textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
-                textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
-                textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
-                textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
-                textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
-                textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TextToSpeechCustomAudio", settings.Tools.TextToSpeechCustomAudio.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TextToSpeechCustomAudioStereo", settings.Tools.TextToSpeechCustomAudioStereo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TextToSpeechCustomAudioEncoding", settings.Tools.TextToSpeechCustomAudioEncoding);
-                textWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorWideLines", settings.Tools.ListViewSyntaxColorWideLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color1", ToHtml(settings.Tools.Color1));
-                textWriter.WriteElementString("Color2", ToHtml(settings.Tools.Color2));
-                textWriter.WriteElementString("Color3", ToHtml(settings.Tools.Color3));
-                textWriter.WriteElementString("Color4", ToHtml(settings.Tools.Color4));
-                textWriter.WriteElementString("Color5", ToHtml(settings.Tools.Color5));
-                textWriter.WriteElementString("Color6", ToHtml(settings.Tools.Color6));
-                textWriter.WriteElementString("Color7", ToHtml(settings.Tools.Color7));
-                textWriter.WriteElementString("Color8", ToHtml(settings.Tools.Color8));
-                textWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnGap", settings.Tools.ListViewShowColumnGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnActor", settings.Tools.ListViewShowColumnActor.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewShowColumnRegion", settings.Tools.ListViewShowColumnRegion.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewMultipleReplaceShowColumnRuleInfo", settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
-                textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
-                textWriter.WriteElementString("JoinCorrectTimeCodes", settings.Tools.JoinCorrectTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("JoinAddMs", settings.Tools.JoinAddMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitLongLinesMax", settings.Tools.SplitLongLinesMax.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
-                textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
-                textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertSaveInSourceFolder", settings.Tools.BatchConvertSaveInSourceFolder.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingAll", settings.Tools.BatchConvertRemoveFormattingAll.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingItalic", settings.Tools.BatchConvertRemoveFormattingItalic.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingBold", settings.Tools.BatchConvertRemoveFormattingBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingUnderline", settings.Tools.BatchConvertRemoveFormattingUnderline.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingFontName", settings.Tools.BatchConvertRemoveFormattingFontName.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingColor", settings.Tools.BatchConvertRemoveFormattingColor.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveFormattingAlignment", settings.Tools.BatchConvertRemoveFormattingAlignment.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveStyle", settings.Tools.BatchConvertRemoveStyle.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertBeautifyTimeCodes", settings.Tools.BatchConvertBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertAutoTranslate", settings.Tools.BatchConvertAutoTranslate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertFixRtl", settings.Tools.BatchConvertFixRtl.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertFixRtlMode", settings.Tools.BatchConvertFixRtlMode);
-                textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertMergeShortLines", settings.Tools.BatchConvertMergeShortLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertRemoveLineBreaks", settings.Tools.BatchConvertRemoveLineBreaks.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertMergeSameText", settings.Tools.BatchConvertMergeSameText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertMergeSameTimeCodes", settings.Tools.BatchConvertMergeSameTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertAdjustDisplayDuration", settings.Tools.BatchConvertAdjustDisplayDuration.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertApplyDurationLimits", settings.Tools.BatchConvertApplyDurationLimits.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertDeleteLines", settings.Tools.BatchConvertDeleteLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertAssaChangeRes", settings.Tools.BatchConvertAssaChangeRes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertSortBy", settings.Tools.BatchConvertSortBy.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertSortByChoice", settings.Tools.BatchConvertSortByChoice);
-                textWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertScanFolderIncludeVideo", settings.Tools.BatchConvertScanFolderIncludeVideo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
-                textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
-                textWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
-                textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
-                textWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
-                textWriter.WriteElementString("BatchConvertTsOverrideXPosition", settings.Tools.BatchConvertTsOverrideXPosition.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsOverrideYPosition", settings.Tools.BatchConvertTsOverrideYPosition.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsOverrideBottomMargin", settings.Tools.BatchConvertTsOverrideBottomMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsOverrideHAlign", settings.Tools.BatchConvertTsOverrideHAlign);
-                textWriter.WriteElementString("BatchConvertTsOverrideHMargin", settings.Tools.BatchConvertTsOverrideHMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsOverrideScreenSize", settings.Tools.BatchConvertTsOverrideScreenSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsOnlyTeletext", settings.Tools.BatchConvertTsOnlyTeletext.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
-                textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
-                textWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
-                textWriter.WriteElementString("BatchConvertOcrLanguage", settings.Tools.BatchConvertOcrLanguage);
-                textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
-                textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
-                textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
-                textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportVobSubFontName", settings.Tools.ExportVobSubFontName);
-                textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
-                textWriter.WriteElementString("ExportVobSubLanguage", settings.Tools.ExportVobSubLanguage);
-                textWriter.WriteElementString("ExportVobSubSimpleRendering", settings.Tools.ExportVobSubSimpleRendering.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportVobAntiAliasingWithTransparency", settings.Tools.ExportVobAntiAliasingWithTransparency.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
-                textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
-                textWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
-                textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
-                textWriter.WriteElementString("ExportFcpPalNtsc", settings.Tools.ExportFcpPalNtsc);
-                textWriter.WriteElementString("ExportBdnXmlImageType", settings.Tools.ExportBdnXmlImageType);
-                textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
-                textWriter.WriteElementString("ExportFcpVideoResolution", settings.Tools.ExportFcpVideoResolution);
-                textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBoxBorderSize", settings.Tools.ExportBoxBorderSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBottomMarginUnit", settings.Tools.ExportBottomMarginUnit);
-                textWriter.WriteElementString("ExportBottomMarginPercent", settings.Tools.ExportBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBottomMarginPixels", settings.Tools.ExportBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLeftRightMarginUnit", settings.Tools.ExportLeftRightMarginUnit);
-                textWriter.WriteElementString("ExportLeftRightMarginPercent", settings.Tools.ExportLeftRightMarginPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLeftRightMarginPixels", settings.Tools.ExportLeftRightMarginPixels.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayBottomMarginPercent", settings.Tools.ExportBluRayBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayBottomMarginPixels", settings.Tools.ExportBluRayBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayRemoveSmallGaps", settings.Tools.ExportBluRayRemoveSmallGaps.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportCdgBackgroundImage", settings.Tools.ExportCdgBackgroundImage);
-                textWriter.WriteElementString("ExportCdgMarginLeft", settings.Tools.ExportCdgMarginLeft.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportCdgMarginBottom", settings.Tools.ExportCdgMarginBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportCdgFormat", settings.Tools.ExportCdgFormat);
-                textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
-                textWriter.WriteElementString("BinEditShowColumnGap", settings.Tools.BinEditShowColumnGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
-                textWriter.WriteElementString("ImportTextSplittingLineMode", settings.Tools.ImportTextSplittingLineMode);
-                textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);
-                textWriter.WriteElementString("ImportTextRemoveEmptyLines", settings.Tools.ImportTextRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextAutoSplitAtBlank", settings.Tools.ImportTextAutoSplitAtBlank.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextRemoveLinesNoLetters", settings.Tools.ImportTextRemoveLinesNoLetters.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextGenerateTimeCodes", settings.Tools.ImportTextGenerateTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextTakeTimeCodeFromFileName", settings.Tools.ImportTextTakeTimeCodeFromFileName.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextAutoBreak", settings.Tools.ImportTextAutoBreak.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextAutoBreakAtEnd", settings.Tools.ImportTextAutoBreakAtEnd.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextGap", settings.Tools.ImportTextGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextAutoSplitNumberOfLines", settings.Tools.ImportTextAutoSplitNumberOfLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextAutoBreakAtEndMarkerText", settings.Tools.ImportTextAutoBreakAtEndMarkerText);
-                textWriter.WriteElementString("ImportTextDurationAuto", settings.Tools.ImportTextDurationAuto.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ImportTextFixedDuration", settings.Tools.ImportTextFixedDuration.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
-                textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
-                textWriter.WriteElementString("BinEditBackgroundColor", settings.Tools.BinEditBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditImageBackgroundColor", settings.Tools.BinEditImageBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditTopMargin", settings.Tools.BinEditTopMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditBottomMargin", settings.Tools.BinEditBottomMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditStartPosition", settings.Tools.BinEditStartPosition);
-                textWriter.WriteElementString("BinEditStartSize", settings.Tools.BinEditStartSize);
-                textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BridgeGapMillisecondsMinGap", settings.Tools.BridgeGapMillisecondsMinGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
-                textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
-                textWriter.WriteElementString("ChangeCasingNormalFixNames", settings.Tools.ChangeCasingNormalFixNames.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChangeCasingNormalOnlyUppercase", settings.Tools.ChangeCasingNormalOnlyUppercase.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
-                textWriter.WriteElementString("ExportTextFormatText", settings.Tools.ExportTextFormatText);
-                textWriter.WriteElementString("ReplaceIn", settings.Tools.ReplaceIn);
-                textWriter.WriteElementString("ExportTextRemoveStyling", settings.Tools.ExportTextRemoveStyling.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextShowLineNumbers", settings.Tools.ExportTextShowLineNumbers.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextShowLineNumbersNewLine", settings.Tools.ExportTextShowLineNumbersNewLine.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextShowTimeCodes", settings.Tools.ExportTextShowTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextShowTimeCodesNewLine", settings.Tools.ExportTextShowTimeCodesNewLine.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportTextTimeCodeFormat", settings.Tools.ExportTextTimeCodeFormat);
-                textWriter.WriteElementString("ExportTextTimeCodeSeparator", settings.Tools.ExportTextTimeCodeSeparator);
-                textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
-                textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AdjustDurationExtendEnforceDurationLimits", settings.Tools.AdjustDurationExtendEnforceDurationLimits.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AdjustDurationExtendCheckShotChanges", settings.Tools.AdjustDurationExtendCheckShotChanges.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChangeSpeedAllowOverlap", settings.Tools.ChangeSpeedAllowOverlap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakLineEndingEarly", settings.Tools.AutoBreakLineEndingEarly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakUsePixelWidth", settings.Tools.AutoBreakUsePixelWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakPreferBottomHeavy", settings.Tools.AutoBreakPreferBottomHeavy.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakPreferBottomPercent", settings.Tools.AutoBreakPreferBottomPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ApplyMinimumDurationLimitCheckShotChanges", settings.Tools.ApplyMinimumDurationLimitCheckShotChanges.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeTextWithSameTimeCodesMaxGap", settings.Tools.MergeTextWithSameTimeCodesMaxGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeTextWithSameTimeCodesMakeDialog", settings.Tools.MergeTextWithSameTimeCodesMakeDialog.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeTextWithSameTimeCodesReBreakLines", settings.Tools.MergeTextWithSameTimeCodesReBreakLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeLinesWithSameTextMaxMs", settings.Tools.MergeLinesWithSameTextMaxMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeLinesWithSameTextIncrement", settings.Tools.MergeLinesWithSameTextIncrement.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConvertColorsToDialogRemoveColorTags", settings.Tools.ConvertColorsToDialogRemoveColorTags.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConvertColorsToDialogAddNewLines", settings.Tools.ConvertColorsToDialogAddNewLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConvertColorsToDialogReBreakLines", settings.Tools.ConvertColorsToDialogReBreakLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
-                textWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
-                textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
-                textWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
-                textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
-                textWriter.WriteElementString("BlankVideoColor", ToHtml(settings.Tools.BlankVideoColor));
-                textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarBackColor", ToHtml(settings.Tools.AssaProgressBarBackColor));
-                textWriter.WriteElementString("AssaProgressBarForeColor", ToHtml(settings.Tools.AssaProgressBarForeColor));
-                textWriter.WriteElementString("AssaProgressBarTextColor", ToHtml(settings.Tools.AssaProgressBarTextColor));
-                textWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarSplitterWidth", settings.Tools.AssaProgressBarSplitterWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarSplitterHeight", settings.Tools.AssaProgressBarSplitterHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarFontName", settings.Tools.AssaProgressBarFontName);
-                textWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarTextAlign", settings.Tools.AssaProgressBarTextAlign);
-                textWriter.WriteElementString("AssaBgBoxPaddingLeft", settings.Tools.AssaBgBoxPaddingLeft.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxPaddingRight", settings.Tools.AssaBgBoxPaddingRight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxPaddingTop", settings.Tools.AssaBgBoxPaddingTop.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxPaddingBottom", settings.Tools.AssaBgBoxPaddingBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawingMarginH", settings.Tools.AssaBgBoxDrawingMarginH.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawingMarginV", settings.Tools.AssaBgBoxDrawingMarginV.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawingAlignment", settings.Tools.AssaBgBoxDrawingAlignment);
-                textWriter.WriteElementString("AssaBgBoxColor", ToHtml(settings.Tools.AssaBgBoxColor));
-                textWriter.WriteElementString("AssaBgBoxOutlineColor", ToHtml(settings.Tools.AssaBgBoxOutlineColor));
-                textWriter.WriteElementString("AssaBgBoxShadowColor", ToHtml(settings.Tools.AssaBgBoxShadowColor));
-                textWriter.WriteElementString("AssaBgBoxTransparentColor", ToHtml(settings.Tools.AssaBgBoxTransparentColor));
-                textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
-                textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxStyleCircleAdjustY", settings.Tools.AssaBgBoxStyleCircleAdjustY.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxStyleSpikesStep", settings.Tools.AssaBgBoxStyleSpikesStep.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxStyleSpikesHeight", settings.Tools.AssaBgBoxStyleSpikesHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxStyleBubblesStep", settings.Tools.AssaBgBoxStyleBubblesStep.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxStyleBubblesHeight", settings.Tools.AssaBgBoxStyleBubblesHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
-                textWriter.WriteElementString("GenVideoFontName", settings.Tools.GenVideoFontName);
-                textWriter.WriteElementString("GenVideoFontBold", settings.Tools.GenVideoFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoOutline", settings.Tools.GenVideoOutline.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
-                textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
-                textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);
-                textWriter.WriteElementString("GenVideoTune", settings.Tools.GenVideoTune);
-                textWriter.WriteElementString("GenVideoAudioEncoding", settings.Tools.GenVideoAudioEncoding);
-                textWriter.WriteElementString("GenVideoAudioForceStereo", settings.Tools.GenVideoAudioForceStereo.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
-                textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
-                textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
-                textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
-                textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
-                textWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
-                textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoUseOutputFolder", settings.Tools.GenVideoUseOutputFolder.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenVideoOutputFolder", settings.Tools.GenVideoOutputFolder);
-                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFileSuffix);
-                textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
-                textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
-                textWriter.WriteElementString("WhisperIgnoreVersion", settings.Tools.WhisperIgnoreVersion.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
-                textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
-                textWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
-                textWriter.WriteElementString("WhisperPurfviewFasterWhisperLocation", settings.Tools.WhisperPurfviewFasterWhisperLocation);
-                textWriter.WriteElementString("WhisperPurfviewFasterWhisperDefaultCmd", settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd);
-                textWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
-                textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
-                textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
-                textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
-                textWriter.WriteElementString("WhisperExtraSettingsHistory", settings.Tools.WhisperExtraSettingsHistory);
-                textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
-                textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperUseLineMaxChars", settings.Tools.WhisperUseLineMaxChars.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperPostProcessingAddPeriods", settings.Tools.WhisperPostProcessingAddPeriods.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperPostProcessingSplitLines", settings.Tools.WhisperPostProcessingSplitLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperPostProcessingMergeLines", settings.Tools.WhisperPostProcessingMergeLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperPostProcessingFixCasing", settings.Tools.WhisperPostProcessingFixCasing.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WhisperPostProcessingFixShortDuration", settings.Tools.WhisperPostProcessingFixShortDuration.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnbreakLinesLongerThan", settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BreakLinesLongerThan", settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveEmptyLinesBetweenText", settings.Tools.RemoveEmptyLinesBetweenText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
+                xmlWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
+                xmlWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
+                xmlWriter.WriteElementString("SpellCheckAutoChangeNameCasing", settings.Tools.SpellCheckAutoChangeNameCasing.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckUseLargerFont", settings.Tools.SpellCheckUseLargerFont.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckSearchEngine", settings.Tools.SpellCheckSearchEngine);
+                xmlWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LiveSpellCheck", settings.Tools.LiveSpellCheck.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrGoogleCloudVisionSeHandlesTextMerge", settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrTesseract4RgbThreshold", settings.Tools.OcrTesseract4RgbThreshold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrAddLetterRow1", settings.Tools.OcrAddLetterRow1);
+                xmlWriter.WriteElementString("OcrAddLetterRow2", settings.Tools.OcrAddLetterRow2);
+                xmlWriter.WriteElementString("OcrTrainFonts", settings.Tools.OcrTrainFonts);
+                xmlWriter.WriteElementString("OcrTrainMergedLetters", settings.Tools.OcrTrainMergedLetters);
+                xmlWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
+                xmlWriter.WriteElementString("OcrUseWordSplitList", settings.Tools.OcrUseWordSplitList.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OcrUseWordSplitListAvoidPropercase", settings.Tools.OcrUseWordSplitListAvoidPropercase.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BDOpenIn", settings.Tools.BDOpenIn);
+                xmlWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
+                xmlWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
+                xmlWriter.WriteElementString("MicrosoftTranslatorTokenEndpoint", settings.Tools.MicrosoftTranslatorTokenEndpoint);
+                xmlWriter.WriteElementString("MicrosoftTranslatorCategory", settings.Tools.MicrosoftTranslatorCategory);
+                xmlWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
+                xmlWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GoogleTranslateLastSourceLanguage", settings.Tools.GoogleTranslateLastSourceLanguage);
+                xmlWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
+                xmlWriter.WriteElementString("AutoTranslateLastName", settings.Tools.AutoTranslateLastName);
+                xmlWriter.WriteElementString("AutoTranslateLastUrl", settings.Tools.AutoTranslateLastUrl);
+                xmlWriter.WriteElementString("AutoTranslateNllbApiUrl", settings.Tools.AutoTranslateNllbApiUrl);
+                xmlWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
+                xmlWriter.WriteElementString("AutoTranslateNllbServeModel", settings.Tools.AutoTranslateNllbServeModel);
+                xmlWriter.WriteElementString("AutoTranslateLibreUrl", settings.Tools.AutoTranslateLibreUrl);
+                xmlWriter.WriteElementString("AutoTranslateLibreApiKey", settings.Tools.AutoTranslateLibreApiKey);
+                xmlWriter.WriteElementString("AutoTranslateMyMemoryApiKey", settings.Tools.AutoTranslateMyMemoryApiKey);
+                xmlWriter.WriteElementString("AutoTranslateSeamlessM4TUrl", settings.Tools.AutoTranslateSeamlessM4TUrl);
+                xmlWriter.WriteElementString("AutoTranslateDeepLApiKey", settings.Tools.AutoTranslateDeepLApiKey);
+                xmlWriter.WriteElementString("AutoTranslateDeepLUrl", settings.Tools.AutoTranslateDeepLUrl);
+                xmlWriter.WriteElementString("AutoTranslatePapagoApiKeyId", settings.Tools.AutoTranslatePapagoApiKeyId);
+                xmlWriter.WriteElementString("AutoTranslatePapagoApiKey", settings.Tools.AutoTranslatePapagoApiKey);
+                xmlWriter.WriteElementString("AutoTranslateDeepLFormality", settings.Tools.AutoTranslateDeepLFormality);
+                xmlWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
+                xmlWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
+                xmlWriter.WriteElementString("TranslateViaCopyPasteSeparator", settings.Tools.TranslateViaCopyPasteSeparator);
+                xmlWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
+                xmlWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
+                xmlWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
+                xmlWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
+                xmlWriter.WriteElementString("GroqUrl", settings.Tools.GroqUrl);
+                xmlWriter.WriteElementString("GroqPrompt", settings.Tools.GroqPrompt);
+                xmlWriter.WriteElementString("GroqApiKey", settings.Tools.GroqApiKey);
+                xmlWriter.WriteElementString("GroqModel", settings.Tools.GroqModel);
+                xmlWriter.WriteElementString("OpenRouterUrl", settings.Tools.OpenRouterUrl);
+                xmlWriter.WriteElementString("OpenRouterPrompt", settings.Tools.OpenRouterPrompt);
+                xmlWriter.WriteElementString("OpenRouterApiKey", settings.Tools.OpenRouterApiKey);
+                xmlWriter.WriteElementString("OpenRouterModel", settings.Tools.OpenRouterModel);
+                xmlWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                xmlWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
+                xmlWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
+                xmlWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                xmlWriter.WriteElementString("OllamaModels", settings.Tools.OllamaModels);
+                xmlWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
+                xmlWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
+                xmlWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);
+                xmlWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
+                xmlWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
+                xmlWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
+                xmlWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
+                xmlWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
+                xmlWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
+                xmlWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsModel", settings.Tools.TextToSpeechElevenLabsModel);
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsLanguage", settings.Tools.TextToSpeechElevenLabsLanguage);
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsStability", settings.Tools.TextToSpeechElevenLabsStability.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsSimilarity", settings.Tools.TextToSpeechElevenLabsSimilarity.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfApiKey", settings.Tools.TextToSpeechMurfApiKey);
+                xmlWriter.WriteElementString("TextToSpeechMurfVoice", settings.Tools.TextToSpeechMurfVoice);
+                xmlWriter.WriteElementString("TextToSpeechMurfRate", settings.Tools.TextToSpeechMurfRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfPitch", settings.Tools.TextToSpeechMurfPitch.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
+                xmlWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
+                xmlWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechCustomAudio", settings.Tools.TextToSpeechCustomAudio.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechCustomAudioStereo", settings.Tools.TextToSpeechCustomAudioStereo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechCustomAudioEncoding", settings.Tools.TextToSpeechCustomAudioEncoding);
+                xmlWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorWideLines", settings.Tools.ListViewSyntaxColorWideLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Color1", ToHtml(settings.Tools.Color1));
+                xmlWriter.WriteElementString("Color2", ToHtml(settings.Tools.Color2));
+                xmlWriter.WriteElementString("Color3", ToHtml(settings.Tools.Color3));
+                xmlWriter.WriteElementString("Color4", ToHtml(settings.Tools.Color4));
+                xmlWriter.WriteElementString("Color5", ToHtml(settings.Tools.Color5));
+                xmlWriter.WriteElementString("Color6", ToHtml(settings.Tools.Color6));
+                xmlWriter.WriteElementString("Color7", ToHtml(settings.Tools.Color7));
+                xmlWriter.WriteElementString("Color8", ToHtml(settings.Tools.Color8));
+                xmlWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnGap", settings.Tools.ListViewShowColumnGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnActor", settings.Tools.ListViewShowColumnActor.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewShowColumnRegion", settings.Tools.ListViewShowColumnRegion.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ListViewMultipleReplaceShowColumnRuleInfo", settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
+                xmlWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
+                xmlWriter.WriteElementString("JoinCorrectTimeCodes", settings.Tools.JoinCorrectTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("JoinAddMs", settings.Tools.JoinAddMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SplitLongLinesMax", settings.Tools.SplitLongLinesMax.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
+                xmlWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
+                xmlWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertSaveInSourceFolder", settings.Tools.BatchConvertSaveInSourceFolder.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingAll", settings.Tools.BatchConvertRemoveFormattingAll.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingItalic", settings.Tools.BatchConvertRemoveFormattingItalic.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingBold", settings.Tools.BatchConvertRemoveFormattingBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingUnderline", settings.Tools.BatchConvertRemoveFormattingUnderline.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingFontName", settings.Tools.BatchConvertRemoveFormattingFontName.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingColor", settings.Tools.BatchConvertRemoveFormattingColor.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveFormattingAlignment", settings.Tools.BatchConvertRemoveFormattingAlignment.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveStyle", settings.Tools.BatchConvertRemoveStyle.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertBeautifyTimeCodes", settings.Tools.BatchConvertBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertAutoTranslate", settings.Tools.BatchConvertAutoTranslate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertFixRtl", settings.Tools.BatchConvertFixRtl.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertFixRtlMode", settings.Tools.BatchConvertFixRtlMode);
+                xmlWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertMergeShortLines", settings.Tools.BatchConvertMergeShortLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertRemoveLineBreaks", settings.Tools.BatchConvertRemoveLineBreaks.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertMergeSameText", settings.Tools.BatchConvertMergeSameText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertMergeSameTimeCodes", settings.Tools.BatchConvertMergeSameTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertAdjustDisplayDuration", settings.Tools.BatchConvertAdjustDisplayDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertApplyDurationLimits", settings.Tools.BatchConvertApplyDurationLimits.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertDeleteLines", settings.Tools.BatchConvertDeleteLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertAssaChangeRes", settings.Tools.BatchConvertAssaChangeRes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertSortBy", settings.Tools.BatchConvertSortBy.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertSortByChoice", settings.Tools.BatchConvertSortByChoice);
+                xmlWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertScanFolderIncludeVideo", settings.Tools.BatchConvertScanFolderIncludeVideo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
+                xmlWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
+                xmlWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
+                xmlWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
+                xmlWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
+                xmlWriter.WriteElementString("BatchConvertTsOverrideXPosition", settings.Tools.BatchConvertTsOverrideXPosition.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsOverrideYPosition", settings.Tools.BatchConvertTsOverrideYPosition.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsOverrideBottomMargin", settings.Tools.BatchConvertTsOverrideBottomMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsOverrideHAlign", settings.Tools.BatchConvertTsOverrideHAlign);
+                xmlWriter.WriteElementString("BatchConvertTsOverrideHMargin", settings.Tools.BatchConvertTsOverrideHMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsOverrideScreenSize", settings.Tools.BatchConvertTsOverrideScreenSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsOnlyTeletext", settings.Tools.BatchConvertTsOnlyTeletext.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
+                xmlWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
+                xmlWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
+                xmlWriter.WriteElementString("BatchConvertOcrLanguage", settings.Tools.BatchConvertOcrLanguage);
+                xmlWriter.WriteElementString("BatchConvertTranslateEngine", settings.Tools.BatchConvertTranslateEngine);
+                xmlWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
+                xmlWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
+                xmlWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
+                xmlWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportVobSubFontName", settings.Tools.ExportVobSubFontName);
+                xmlWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
+                xmlWriter.WriteElementString("ExportVobSubLanguage", settings.Tools.ExportVobSubLanguage);
+                xmlWriter.WriteElementString("ExportVobSubSimpleRendering", settings.Tools.ExportVobSubSimpleRendering.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportVobAntiAliasingWithTransparency", settings.Tools.ExportVobAntiAliasingWithTransparency.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
+                xmlWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
+                xmlWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
+                xmlWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
+                xmlWriter.WriteElementString("ExportFcpPalNtsc", settings.Tools.ExportFcpPalNtsc);
+                xmlWriter.WriteElementString("ExportBdnXmlImageType", settings.Tools.ExportBdnXmlImageType);
+                xmlWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
+                xmlWriter.WriteElementString("ExportFcpVideoResolution", settings.Tools.ExportFcpVideoResolution);
+                xmlWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBoxBorderSize", settings.Tools.ExportBoxBorderSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBottomMarginUnit", settings.Tools.ExportBottomMarginUnit);
+                xmlWriter.WriteElementString("ExportBottomMarginPercent", settings.Tools.ExportBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBottomMarginPixels", settings.Tools.ExportBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLeftRightMarginUnit", settings.Tools.ExportLeftRightMarginUnit);
+                xmlWriter.WriteElementString("ExportLeftRightMarginPercent", settings.Tools.ExportLeftRightMarginPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLeftRightMarginPixels", settings.Tools.ExportLeftRightMarginPixels.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayBottomMarginPercent", settings.Tools.ExportBluRayBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayBottomMarginPixels", settings.Tools.ExportBluRayBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportBluRayRemoveSmallGaps", settings.Tools.ExportBluRayRemoveSmallGaps.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportCdgBackgroundImage", settings.Tools.ExportCdgBackgroundImage);
+                xmlWriter.WriteElementString("ExportCdgMarginLeft", settings.Tools.ExportCdgMarginLeft.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportCdgMarginBottom", settings.Tools.ExportCdgMarginBottom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportCdgFormat", settings.Tools.ExportCdgFormat);
+                xmlWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
+                xmlWriter.WriteElementString("BinEditShowColumnGap", settings.Tools.BinEditShowColumnGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
+                xmlWriter.WriteElementString("ImportTextSplittingLineMode", settings.Tools.ImportTextSplittingLineMode);
+                xmlWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);
+                xmlWriter.WriteElementString("ImportTextRemoveEmptyLines", settings.Tools.ImportTextRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextAutoSplitAtBlank", settings.Tools.ImportTextAutoSplitAtBlank.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextRemoveLinesNoLetters", settings.Tools.ImportTextRemoveLinesNoLetters.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextGenerateTimeCodes", settings.Tools.ImportTextGenerateTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextTakeTimeCodeFromFileName", settings.Tools.ImportTextTakeTimeCodeFromFileName.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextAutoBreak", settings.Tools.ImportTextAutoBreak.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextAutoBreakAtEnd", settings.Tools.ImportTextAutoBreakAtEnd.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextGap", settings.Tools.ImportTextGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextAutoSplitNumberOfLines", settings.Tools.ImportTextAutoSplitNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextAutoBreakAtEndMarkerText", settings.Tools.ImportTextAutoBreakAtEndMarkerText);
+                xmlWriter.WriteElementString("ImportTextDurationAuto", settings.Tools.ImportTextDurationAuto.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ImportTextFixedDuration", settings.Tools.ImportTextFixedDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
+                xmlWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
+                xmlWriter.WriteElementString("BinEditBackgroundColor", settings.Tools.BinEditBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditImageBackgroundColor", settings.Tools.BinEditImageBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditTopMargin", settings.Tools.BinEditTopMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditBottomMargin", settings.Tools.BinEditBottomMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BinEditStartPosition", settings.Tools.BinEditStartPosition);
+                xmlWriter.WriteElementString("BinEditStartSize", settings.Tools.BinEditStartSize);
+                xmlWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BridgeGapMillisecondsMinGap", settings.Tools.BridgeGapMillisecondsMinGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
+                xmlWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
+                xmlWriter.WriteElementString("ChangeCasingNormalFixNames", settings.Tools.ChangeCasingNormalFixNames.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChangeCasingNormalOnlyUppercase", settings.Tools.ChangeCasingNormalOnlyUppercase.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
+                xmlWriter.WriteElementString("ExportTextFormatText", settings.Tools.ExportTextFormatText);
+                xmlWriter.WriteElementString("ReplaceIn", settings.Tools.ReplaceIn);
+                xmlWriter.WriteElementString("ExportTextRemoveStyling", settings.Tools.ExportTextRemoveStyling.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextShowLineNumbers", settings.Tools.ExportTextShowLineNumbers.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextShowLineNumbersNewLine", settings.Tools.ExportTextShowLineNumbersNewLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextShowTimeCodes", settings.Tools.ExportTextShowTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextShowTimeCodesNewLine", settings.Tools.ExportTextShowTimeCodesNewLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExportTextTimeCodeFormat", settings.Tools.ExportTextTimeCodeFormat);
+                xmlWriter.WriteElementString("ExportTextTimeCodeSeparator", settings.Tools.ExportTextTimeCodeSeparator);
+                xmlWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
+                xmlWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AdjustDurationExtendEnforceDurationLimits", settings.Tools.AdjustDurationExtendEnforceDurationLimits.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AdjustDurationExtendCheckShotChanges", settings.Tools.AdjustDurationExtendCheckShotChanges.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChangeSpeedAllowOverlap", settings.Tools.ChangeSpeedAllowOverlap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakLineEndingEarly", settings.Tools.AutoBreakLineEndingEarly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakUsePixelWidth", settings.Tools.AutoBreakUsePixelWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakPreferBottomHeavy", settings.Tools.AutoBreakPreferBottomHeavy.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakPreferBottomPercent", settings.Tools.AutoBreakPreferBottomPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ApplyMinimumDurationLimitCheckShotChanges", settings.Tools.ApplyMinimumDurationLimitCheckShotChanges.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeTextWithSameTimeCodesMaxGap", settings.Tools.MergeTextWithSameTimeCodesMaxGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeTextWithSameTimeCodesMakeDialog", settings.Tools.MergeTextWithSameTimeCodesMakeDialog.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeTextWithSameTimeCodesReBreakLines", settings.Tools.MergeTextWithSameTimeCodesReBreakLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeLinesWithSameTextMaxMs", settings.Tools.MergeLinesWithSameTextMaxMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeLinesWithSameTextIncrement", settings.Tools.MergeLinesWithSameTextIncrement.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConvertColorsToDialogRemoveColorTags", settings.Tools.ConvertColorsToDialogRemoveColorTags.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConvertColorsToDialogAddNewLines", settings.Tools.ConvertColorsToDialogAddNewLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConvertColorsToDialogReBreakLines", settings.Tools.ConvertColorsToDialogReBreakLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
+                xmlWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
+                xmlWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
+                xmlWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
+                xmlWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
+                xmlWriter.WriteElementString("BlankVideoColor", ToHtml(settings.Tools.BlankVideoColor));
+                xmlWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarBackColor", ToHtml(settings.Tools.AssaProgressBarBackColor));
+                xmlWriter.WriteElementString("AssaProgressBarForeColor", ToHtml(settings.Tools.AssaProgressBarForeColor));
+                xmlWriter.WriteElementString("AssaProgressBarTextColor", ToHtml(settings.Tools.AssaProgressBarTextColor));
+                xmlWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarSplitterWidth", settings.Tools.AssaProgressBarSplitterWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarSplitterHeight", settings.Tools.AssaProgressBarSplitterHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarFontName", settings.Tools.AssaProgressBarFontName);
+                xmlWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaProgressBarTextAlign", settings.Tools.AssaProgressBarTextAlign);
+                xmlWriter.WriteElementString("AssaBgBoxPaddingLeft", settings.Tools.AssaBgBoxPaddingLeft.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxPaddingRight", settings.Tools.AssaBgBoxPaddingRight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxPaddingTop", settings.Tools.AssaBgBoxPaddingTop.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxPaddingBottom", settings.Tools.AssaBgBoxPaddingBottom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawingMarginH", settings.Tools.AssaBgBoxDrawingMarginH.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawingMarginV", settings.Tools.AssaBgBoxDrawingMarginV.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawingAlignment", settings.Tools.AssaBgBoxDrawingAlignment);
+                xmlWriter.WriteElementString("AssaBgBoxColor", ToHtml(settings.Tools.AssaBgBoxColor));
+                xmlWriter.WriteElementString("AssaBgBoxOutlineColor", ToHtml(settings.Tools.AssaBgBoxOutlineColor));
+                xmlWriter.WriteElementString("AssaBgBoxShadowColor", ToHtml(settings.Tools.AssaBgBoxShadowColor));
+                xmlWriter.WriteElementString("AssaBgBoxTransparentColor", ToHtml(settings.Tools.AssaBgBoxTransparentColor));
+                xmlWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
+                xmlWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxStyleCircleAdjustY", settings.Tools.AssaBgBoxStyleCircleAdjustY.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxStyleSpikesStep", settings.Tools.AssaBgBoxStyleSpikesStep.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxStyleSpikesHeight", settings.Tools.AssaBgBoxStyleSpikesHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxStyleBubblesStep", settings.Tools.AssaBgBoxStyleBubblesStep.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxStyleBubblesHeight", settings.Tools.AssaBgBoxStyleBubblesHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
+                xmlWriter.WriteElementString("GenVideoFontName", settings.Tools.GenVideoFontName);
+                xmlWriter.WriteElementString("GenVideoFontBold", settings.Tools.GenVideoFontBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoOutline", settings.Tools.GenVideoOutline.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoPixelFormat", settings.Tools.GenVideoPixelFormat);
+                xmlWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
+                xmlWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
+                xmlWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);
+                xmlWriter.WriteElementString("GenVideoTune", settings.Tools.GenVideoTune);
+                xmlWriter.WriteElementString("GenVideoAudioEncoding", settings.Tools.GenVideoAudioEncoding);
+                xmlWriter.WriteElementString("GenVideoAudioForceStereo", settings.Tools.GenVideoAudioForceStereo.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
+                xmlWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenTransparentVideoNonAssaBox", settings.Tools.GenTransparentVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenTransparentVideoNonAssaBoxPerLine", settings.Tools.GenTransparentVideoNonAssaBoxPerLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenTransparentVideoExtension", settings.Tools.GenTransparentVideoExtension);
+                xmlWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
+                xmlWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
+                xmlWriter.WriteElementString("GenVideoNonAssaShadowColor", ToHtml(settings.Tools.GenVideoNonAssaShadowColor));
+                xmlWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
+                xmlWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
+                xmlWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
+                xmlWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoUseOutputFolder", settings.Tools.GenVideoUseOutputFolder.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenVideoOutputFolder", settings.Tools.GenVideoOutputFolder);
+                xmlWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFileSuffix);
+                xmlWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
+                xmlWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
+                xmlWriter.WriteElementString("WhisperIgnoreVersion", settings.Tools.WhisperIgnoreVersion.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
+                xmlWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
+                xmlWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
+                xmlWriter.WriteElementString("WhisperPurfviewFasterWhisperLocation", settings.Tools.WhisperPurfviewFasterWhisperLocation);
+                xmlWriter.WriteElementString("WhisperPurfviewFasterWhisperDefaultCmd", settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd);
+                xmlWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
+                xmlWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
+                xmlWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
+                xmlWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
+                xmlWriter.WriteElementString("WhisperExtraSettingsHistory", settings.Tools.WhisperExtraSettingsHistory);
+                xmlWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
+                xmlWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperUseLineMaxChars", settings.Tools.WhisperUseLineMaxChars.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperPostProcessingAddPeriods", settings.Tools.WhisperPostProcessingAddPeriods.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperPostProcessingSplitLines", settings.Tools.WhisperPostProcessingSplitLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperPostProcessingMergeLines", settings.Tools.WhisperPostProcessingMergeLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperPostProcessingFixCasing", settings.Tools.WhisperPostProcessingFixCasing.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperPostProcessingFixShortDuration", settings.Tools.WhisperPostProcessingFixShortDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UnbreakLinesLongerThan", settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BreakLinesLongerThan", settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
-                    textWriter.WriteStartElement("FindHistory", string.Empty);
+                    xmlWriter.WriteStartElement("FindHistory", string.Empty);
                     int maxIndex = settings.Tools.FindHistory.Count;
                     if (maxIndex > maximumFindHistoryItems)
                     {
@@ -12445,398 +9423,399 @@ $HorzAlign          =   Center
                     for (int index = 0; index < maxIndex; index++)
                     {
                         var text = settings.Tools.FindHistory[index];
-                        textWriter.WriteElementString("Text", text);
+                        xmlWriter.WriteElementString("Text", text);
                     }
 
-                    textWriter.WriteEndElement();
+                    xmlWriter.WriteEndElement();
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("SubtitleSettings", string.Empty);
-                textWriter.WriteStartElement("AssaStyleStorageCategories", string.Empty);
+                xmlWriter.WriteStartElement("SubtitleSettings", string.Empty);
+                xmlWriter.WriteStartElement("AssaStyleStorageCategories", string.Empty);
                 foreach (var category in settings.SubtitleSettings.AssaStyleStorageCategories)
                 {
                     if (!string.IsNullOrEmpty(category?.Name))
                     {
-                        textWriter.WriteStartElement("Category", string.Empty);
-                        textWriter.WriteElementString("Name", category.Name);
-                        textWriter.WriteElementString("IsDefault", category.IsDefault.ToString(CultureInfo.InvariantCulture));
+                        xmlWriter.WriteStartElement("Category", string.Empty);
+                        xmlWriter.WriteElementString("Name", category.Name);
+                        xmlWriter.WriteElementString("IsDefault", category.IsDefault.ToString(CultureInfo.InvariantCulture));
                         foreach (var style in category.Styles)
                         {
-                            textWriter.WriteStartElement("Style");
-                            textWriter.WriteElementString("Name", style.Name);
-                            textWriter.WriteElementString("FontName", style.FontName);
-                            textWriter.WriteElementString("FontSize", style.FontSize.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Bold", style.Bold.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Italic", style.Italic.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Underline", style.Underline.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("StrikeOut", style.Strikeout.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Background", style.Background.ToArgb().ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("ShadowWidth", style.ShadowWidth.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("OutlineWidth", style.OutlineWidth.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Alignment", style.Alignment);
-                            textWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("MarginRight", style.MarginRight.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("BorderStyle", style.BorderStyle);
-                            textWriter.WriteElementString("ScaleX", style.ScaleX.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("ScaleY", style.ScaleY.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Spacing", style.Spacing.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Angle", style.Angle.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteEndElement();
+                            xmlWriter.WriteStartElement("Style");
+                            xmlWriter.WriteElementString("Name", style.Name);
+                            xmlWriter.WriteElementString("FontName", style.FontName);
+                            xmlWriter.WriteElementString("FontSize", style.FontSize.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Bold", style.Bold.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Italic", style.Italic.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Underline", style.Underline.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("StrikeOut", style.Strikeout.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Background", style.Background.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("ShadowWidth", style.ShadowWidth.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("OutlineWidth", style.OutlineWidth.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Alignment", style.Alignment);
+                            xmlWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("MarginRight", style.MarginRight.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("BorderStyle", style.BorderStyle);
+                            xmlWriter.WriteElementString("ScaleX", style.ScaleX.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("ScaleY", style.ScaleY.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Spacing", style.Spacing.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("Angle", style.Angle.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteEndElement();
                         }
 
-                        textWriter.WriteEndElement();
+                        xmlWriter.WriteEndElement();
                     }
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("AssaApplyOverrideTags", string.Empty);
+                xmlWriter.WriteStartElement("AssaApplyOverrideTags", string.Empty);
                 foreach (var tag in settings.SubtitleSettings.AssaOverrideTagHistory)
                 {
-                    textWriter.WriteElementString("Tag", tag);
+                    xmlWriter.WriteElementString("Tag", tag);
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteElementString("AssaResolutionAutoNew", settings.SubtitleSettings.AssaResolutionAutoNew.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaResolutionPromptChange", settings.SubtitleSettings.AssaResolutionPromptChange.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaShowPlayDepth", settings.SubtitleSettings.AssaShowPlayDepth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaShowScaledBorderAndShadow", settings.SubtitleSettings.AssaShowScaledBorderAndShadow.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaResolutionAutoNew", settings.SubtitleSettings.AssaResolutionAutoNew.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaResolutionPromptChange", settings.SubtitleSettings.AssaResolutionPromptChange.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaShowPlayDepth", settings.SubtitleSettings.AssaShowPlayDepth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AssaShowScaledBorderAndShadow", settings.SubtitleSettings.AssaShowScaledBorderAndShadow.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
-                textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DCinemaFadeUpTime", settings.SubtitleSettings.DCinemaFadeUpTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DCinemaFadeDownTime", settings.SubtitleSettings.DCinemaFadeDownTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DCinemaAutoGenerateSubtitleId", settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SamiHtmlEncodeMode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
-                textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TimedText10FileExtension", settings.SubtitleSettings.TimedText10FileExtension);
-                textWriter.WriteElementString("TimedTextItunesTopOrigin", settings.SubtitleSettings.TimedTextItunesTopOrigin);
-                textWriter.WriteElementString("TimedTextItunesTopExtent", settings.SubtitleSettings.TimedTextItunesTopExtent);
-                textWriter.WriteElementString("TimedTextItunesBottomOrigin", settings.SubtitleSettings.TimedTextItunesBottomOrigin);
-                textWriter.WriteElementString("TimedTextItunesBottomExtent", settings.SubtitleSettings.TimedTextItunesBottomExtent);
-                textWriter.WriteElementString("TimedTextItunesTimeCodeFormat", settings.SubtitleSettings.TimedTextItunesTimeCodeFormat);
-                textWriter.WriteElementString("TimedTextItunesStyleAttribute", settings.SubtitleSettings.TimedTextItunesStyleAttribute);
-                textWriter.WriteElementString("TimedTextImsc11TimeCodeFormat", settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat);
-                textWriter.WriteElementString("TimedTextImsc11FileExtension", settings.SubtitleSettings.TimedTextImsc11FileExtension);
-                textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
-                textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
-                textWriter.WriteElementString("EbuStlTeletextUseBox", settings.SubtitleSettings.EbuStlTeletextUseBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EbuStlTeletextUseDoubleHeight", settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("EbuStlRemoveEmptyLines", settings.SubtitleSettings.EbuStlRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PacVerticalTop", settings.SubtitleSettings.PacVerticalTop.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PacVerticalCenter", settings.SubtitleSettings.PacVerticalCenter.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PacVerticalBottom", settings.SubtitleSettings.PacVerticalBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DvdStudioProHeader", settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine);
-                textWriter.WriteElementString("TmpegEncXmlFontName", settings.SubtitleSettings.TmpegEncXmlFontName.TrimEnd());
-                textWriter.WriteElementString("TmpegEncXmlFontHeight", settings.SubtitleSettings.TmpegEncXmlFontHeight.TrimEnd());
-                textWriter.WriteElementString("TmpegEncXmlPosition", settings.SubtitleSettings.TmpegEncXmlPosition.TrimEnd());
-                textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
-                textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WebVttCueAn1", settings.SubtitleSettings.WebVttCueAn1);
-                textWriter.WriteElementString("WebVttCueAn2", settings.SubtitleSettings.WebVttCueAn2);
-                textWriter.WriteElementString("WebVttCueAn3", settings.SubtitleSettings.WebVttCueAn3);
-                textWriter.WriteElementString("WebVttCueAn4", settings.SubtitleSettings.WebVttCueAn4);
-                textWriter.WriteElementString("WebVttCueAn5", settings.SubtitleSettings.WebVttCueAn5);
-                textWriter.WriteElementString("WebVttCueAn6", settings.SubtitleSettings.WebVttCueAn6);
-                textWriter.WriteElementString("WebVttCueAn7", settings.SubtitleSettings.WebVttCueAn7);
-                textWriter.WriteElementString("WebVttCueAn8", settings.SubtitleSettings.WebVttCueAn8);
-                textWriter.WriteElementString("WebVttCueAn9", settings.SubtitleSettings.WebVttCueAn9);
-                textWriter.WriteElementString("MPlayer2Extension", settings.SubtitleSettings.MPlayer2Extension);
-                textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BluRaySupSkipMerge", settings.SubtitleSettings.BluRaySupSkipMerge.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BluRaySupForceMergeAll", settings.SubtitleSettings.BluRaySupForceMergeAll.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WebVttUseMultipleXTimestampMap", settings.SubtitleSettings.WebVttUseMultipleXTimestampMap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WebVttMergeLinesWithSameText", settings.SubtitleSettings.WebVttMergeLinesWithSameText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
+                xmlWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DCinemaFadeUpTime", settings.SubtitleSettings.DCinemaFadeUpTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DCinemaFadeDownTime", settings.SubtitleSettings.DCinemaFadeDownTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DCinemaAutoGenerateSubtitleId", settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SamiHtmlEncodeMode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
+                xmlWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TimedText10FileExtension", settings.SubtitleSettings.TimedText10FileExtension);
+                xmlWriter.WriteElementString("TimedTextItunesTopOrigin", settings.SubtitleSettings.TimedTextItunesTopOrigin);
+                xmlWriter.WriteElementString("TimedTextItunesTopExtent", settings.SubtitleSettings.TimedTextItunesTopExtent);
+                xmlWriter.WriteElementString("TimedTextItunesBottomOrigin", settings.SubtitleSettings.TimedTextItunesBottomOrigin);
+                xmlWriter.WriteElementString("TimedTextItunesBottomExtent", settings.SubtitleSettings.TimedTextItunesBottomExtent);
+                xmlWriter.WriteElementString("TimedTextItunesTimeCodeFormat", settings.SubtitleSettings.TimedTextItunesTimeCodeFormat);
+                xmlWriter.WriteElementString("TimedTextItunesStyleAttribute", settings.SubtitleSettings.TimedTextItunesStyleAttribute);
+                xmlWriter.WriteElementString("TimedTextImsc11TimeCodeFormat", settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat);
+                xmlWriter.WriteElementString("TimedTextImsc11FileExtension", settings.SubtitleSettings.TimedTextImsc11FileExtension);
+                xmlWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
+                xmlWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
+                xmlWriter.WriteElementString("EbuStlTeletextUseBox", settings.SubtitleSettings.EbuStlTeletextUseBox.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EbuStlTeletextUseDoubleHeight", settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("EbuStlRemoveEmptyLines", settings.SubtitleSettings.EbuStlRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PacVerticalTop", settings.SubtitleSettings.PacVerticalTop.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PacVerticalCenter", settings.SubtitleSettings.PacVerticalCenter.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PacVerticalBottom", settings.SubtitleSettings.PacVerticalBottom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DvdStudioProHeader", settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine);
+                xmlWriter.WriteElementString("TmpegEncXmlFontName", settings.SubtitleSettings.TmpegEncXmlFontName.TrimEnd());
+                xmlWriter.WriteElementString("TmpegEncXmlFontHeight", settings.SubtitleSettings.TmpegEncXmlFontHeight.TrimEnd());
+                xmlWriter.WriteElementString("TmpegEncXmlPosition", settings.SubtitleSettings.TmpegEncXmlPosition.TrimEnd());
+                xmlWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
+                xmlWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WebVttCueAn1", settings.SubtitleSettings.WebVttCueAn1);
+                xmlWriter.WriteElementString("WebVttCueAn2", settings.SubtitleSettings.WebVttCueAn2);
+                xmlWriter.WriteElementString("WebVttCueAn3", settings.SubtitleSettings.WebVttCueAn3);
+                xmlWriter.WriteElementString("WebVttCueAn4", settings.SubtitleSettings.WebVttCueAn4);
+                xmlWriter.WriteElementString("WebVttCueAn5", settings.SubtitleSettings.WebVttCueAn5);
+                xmlWriter.WriteElementString("WebVttCueAn6", settings.SubtitleSettings.WebVttCueAn6);
+                xmlWriter.WriteElementString("WebVttCueAn7", settings.SubtitleSettings.WebVttCueAn7);
+                xmlWriter.WriteElementString("WebVttCueAn8", settings.SubtitleSettings.WebVttCueAn8);
+                xmlWriter.WriteElementString("WebVttCueAn9", settings.SubtitleSettings.WebVttCueAn9);
+                xmlWriter.WriteElementString("MPlayer2Extension", settings.SubtitleSettings.MPlayer2Extension);
+                xmlWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BluRaySupSkipMerge", settings.SubtitleSettings.BluRaySupSkipMerge.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BluRaySupForceMergeAll", settings.SubtitleSettings.BluRaySupForceMergeAll.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WebVttUseMultipleXTimestampMap", settings.SubtitleSettings.WebVttUseMultipleXTimestampMap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WebVttMergeLinesWithSameText", settings.SubtitleSettings.WebVttMergeLinesWithSameText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WebVttDoNoMergeTags", settings.SubtitleSettings.WebVttDoNoMergeTags.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Proxy", string.Empty);
-                textWriter.WriteElementString("ProxyAddress", settings.Proxy.ProxyAddress);
-                textWriter.WriteElementString("UserName", settings.Proxy.UserName);
-                textWriter.WriteElementString("Password", settings.Proxy.Password);
-                textWriter.WriteElementString("Domain", settings.Proxy.Domain);
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("Proxy", string.Empty);
+                xmlWriter.WriteElementString("ProxyAddress", settings.Proxy.ProxyAddress);
+                xmlWriter.WriteElementString("UserName", settings.Proxy.UserName);
+                xmlWriter.WriteElementString("Password", settings.Proxy.Password);
+                xmlWriter.WriteElementString("Domain", settings.Proxy.Domain);
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("WordLists", string.Empty);
-                textWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
-                textWriter.WriteElementString("Names", settings.WordLists.NamesUrl);
-                textWriter.WriteElementString("UseOnlineNames", settings.WordLists.UseOnlineNames.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("WordLists", string.Empty);
+                xmlWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
+                xmlWriter.WriteElementString("Names", settings.WordLists.NamesUrl);
+                xmlWriter.WriteElementString("UseOnlineNames", settings.WordLists.UseOnlineNames.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("FcpExportSettings", string.Empty);
-                textWriter.WriteElementString("FontName", settings.FcpExportSettings.FontName);
-                textWriter.WriteElementString("FontSize", settings.FcpExportSettings.FontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Alignment", settings.FcpExportSettings.Alignment);
-                textWriter.WriteElementString("Baseline", settings.FcpExportSettings.Baseline.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color", settings.FcpExportSettings.Color.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("FcpExportSettings", string.Empty);
+                xmlWriter.WriteElementString("FontName", settings.FcpExportSettings.FontName);
+                xmlWriter.WriteElementString("FontSize", settings.FcpExportSettings.FontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Alignment", settings.FcpExportSettings.Alignment);
+                xmlWriter.WriteElementString("Baseline", settings.FcpExportSettings.Baseline.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Color", settings.FcpExportSettings.Color.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("CommonErrors", string.Empty);
-                textWriter.WriteElementString("StartPosition", settings.CommonErrors.StartPosition);
-                textWriter.WriteElementString("StartSize", settings.CommonErrors.StartSize);
-                textWriter.WriteElementString("EmptyLinesTicked", settings.CommonErrors.EmptyLinesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OverlappingDisplayTimeTicked", settings.CommonErrors.OverlappingDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TooShortDisplayTimeTicked", settings.CommonErrors.TooShortDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TooLongDisplayTimeTicked", settings.CommonErrors.TooLongDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TooShortGapTicked", settings.CommonErrors.TooShortGapTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InvalidItalicTagsTicked", settings.CommonErrors.InvalidItalicTagsTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeShortLinesPixelWidthTicked", settings.CommonErrors.MergeShortLinesPixelWidthTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MissingSpacesTicked", settings.CommonErrors.MissingSpacesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixHyphensTicked", settings.CommonErrors.FixHyphensTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixHyphensRemoveSingleLineTicked", settings.CommonErrors.FixHyphensRemoveSingleLineTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UppercaseIInsideLowercaseWordTicked", settings.CommonErrors.UppercaseIInsideLowercaseWordTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DoubleApostropheToQuoteTicked", settings.CommonErrors.DoubleApostropheToQuoteTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartWithUppercaseLetterAfterParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("StartWithUppercaseLetterAfterColonTicked", settings.CommonErrors.StartWithUppercaseLetterAfterColonTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AloneLowercaseIToUppercaseIEnglishTicked", settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixOcrErrorsViaReplaceListTicked", settings.CommonErrors.FixOcrErrorsViaReplaceListTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveSpaceBetweenNumberTicked", settings.CommonErrors.RemoveSpaceBetweenNumberTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixDialogsOnOneLineTicked", settings.CommonErrors.FixDialogsOnOneLineTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveDialogFirstLineInNonDialogs", settings.CommonErrors.RemoveDialogFirstLineInNonDialogs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TurkishAnsiTicked", settings.CommonErrors.TurkishAnsiTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DanishLetterITicked", settings.CommonErrors.DanishLetterITicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpanishInvertedQuestionAndExclamationMarksTicked", settings.CommonErrors.SpanishInvertedQuestionAndExclamationMarksTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixDoubleDashTicked", settings.CommonErrors.FixDoubleDashTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixDoubleGreaterThanTicked", settings.CommonErrors.FixDoubleGreaterThanTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixEllipsesStartTicked", settings.CommonErrors.FixEllipsesStartTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixMissingOpenBracketTicked", settings.CommonErrors.FixMissingOpenBracketTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NormalizeStringsTicked", settings.CommonErrors.NormalizeStringsTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultFixes", settings.CommonErrors.DefaultFixes);
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("CommonErrors", string.Empty);
+                xmlWriter.WriteElementString("StartPosition", settings.CommonErrors.StartPosition);
+                xmlWriter.WriteElementString("StartSize", settings.CommonErrors.StartSize);
+                xmlWriter.WriteElementString("EmptyLinesTicked", settings.CommonErrors.EmptyLinesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OverlappingDisplayTimeTicked", settings.CommonErrors.OverlappingDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TooShortDisplayTimeTicked", settings.CommonErrors.TooShortDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TooLongDisplayTimeTicked", settings.CommonErrors.TooLongDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TooShortGapTicked", settings.CommonErrors.TooShortGapTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InvalidItalicTagsTicked", settings.CommonErrors.InvalidItalicTagsTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MergeShortLinesPixelWidthTicked", settings.CommonErrors.MergeShortLinesPixelWidthTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("MissingSpacesTicked", settings.CommonErrors.MissingSpacesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixHyphensTicked", settings.CommonErrors.FixHyphensTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixHyphensRemoveSingleLineTicked", settings.CommonErrors.FixHyphensRemoveSingleLineTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UppercaseIInsideLowercaseWordTicked", settings.CommonErrors.UppercaseIInsideLowercaseWordTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DoubleApostropheToQuoteTicked", settings.CommonErrors.DoubleApostropheToQuoteTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartWithUppercaseLetterAfterParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("StartWithUppercaseLetterAfterColonTicked", settings.CommonErrors.StartWithUppercaseLetterAfterColonTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AloneLowercaseIToUppercaseIEnglishTicked", settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixOcrErrorsViaReplaceListTicked", settings.CommonErrors.FixOcrErrorsViaReplaceListTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveSpaceBetweenNumberTicked", settings.CommonErrors.RemoveSpaceBetweenNumberTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixDialogsOnOneLineTicked", settings.CommonErrors.FixDialogsOnOneLineTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveDialogFirstLineInNonDialogs", settings.CommonErrors.RemoveDialogFirstLineInNonDialogs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TurkishAnsiTicked", settings.CommonErrors.TurkishAnsiTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DanishLetterITicked", settings.CommonErrors.DanishLetterITicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpanishInvertedQuestionAndExclamationMarksTicked", settings.CommonErrors.SpanishInvertedQuestionAndExclamationMarksTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixDoubleDashTicked", settings.CommonErrors.FixDoubleDashTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixDoubleGreaterThanTicked", settings.CommonErrors.FixDoubleGreaterThanTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixEllipsesStartTicked", settings.CommonErrors.FixEllipsesStartTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixMissingOpenBracketTicked", settings.CommonErrors.FixMissingOpenBracketTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NormalizeStringsTicked", settings.CommonErrors.NormalizeStringsTicked.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultFixes", settings.CommonErrors.DefaultFixes);
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("VideoControls", string.Empty);
-                textWriter.WriteElementString("CustomSearchText1", settings.VideoControls.CustomSearchText1);
-                textWriter.WriteElementString("CustomSearchText2", settings.VideoControls.CustomSearchText2);
-                textWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
-                textWriter.WriteElementString("CustomSearchText4", settings.VideoControls.CustomSearchText4);
-                textWriter.WriteElementString("CustomSearchText5", settings.VideoControls.CustomSearchText5);
-                textWriter.WriteElementString("CustomSearchUrl1", settings.VideoControls.CustomSearchUrl1);
-                textWriter.WriteElementString("CustomSearchUrl2", settings.VideoControls.CustomSearchUrl2);
-                textWriter.WriteElementString("CustomSearchUrl3", settings.VideoControls.CustomSearchUrl3);
-                textWriter.WriteElementString("CustomSearchUrl4", settings.VideoControls.CustomSearchUrl4);
-                textWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
-                textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
-                textWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformDrawCps", settings.VideoControls.WaveformDrawCps.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformDrawWpm", settings.VideoControls.WaveformDrawWpm.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformAllowOverlap", settings.VideoControls.WaveformAllowOverlap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSingleClickSelect", settings.VideoControls.WaveformSingleClickSelect.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSnapToShotChanges", settings.VideoControls.WaveformSnapToShotChanges.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformShotChangeStartTimeBeforeMs", settings.VideoControls.WaveformShotChangeStartTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformShotChangeStartTimeAfterMs", settings.VideoControls.WaveformShotChangeStartTimeAfterMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformShotChangeEndTimeBeforeMs", settings.VideoControls.WaveformShotChangeEndTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformShotChangeEndTimeAfterMs", settings.VideoControls.WaveformShotChangeEndTimeAfterMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSelectedColor", settings.VideoControls.WaveformSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformCursorColor", settings.VideoControls.WaveformCursorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformChaptersColor", settings.VideoControls.WaveformChaptersColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
-                textWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
-                textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformLabelShowCodec", settings.VideoControls.WaveformLabelShowCodec.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
-                textWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformUnwrapText", settings.VideoControls.WaveformUnwrapText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformHideWpmCpsLabels", settings.VideoControls.WaveformHideWpmCpsLabels.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("VideoControls", string.Empty);
+                xmlWriter.WriteElementString("CustomSearchText1", settings.VideoControls.CustomSearchText1);
+                xmlWriter.WriteElementString("CustomSearchText2", settings.VideoControls.CustomSearchText2);
+                xmlWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
+                xmlWriter.WriteElementString("CustomSearchText4", settings.VideoControls.CustomSearchText4);
+                xmlWriter.WriteElementString("CustomSearchText5", settings.VideoControls.CustomSearchText5);
+                xmlWriter.WriteElementString("CustomSearchUrl1", settings.VideoControls.CustomSearchUrl1);
+                xmlWriter.WriteElementString("CustomSearchUrl2", settings.VideoControls.CustomSearchUrl2);
+                xmlWriter.WriteElementString("CustomSearchUrl3", settings.VideoControls.CustomSearchUrl3);
+                xmlWriter.WriteElementString("CustomSearchUrl4", settings.VideoControls.CustomSearchUrl4);
+                xmlWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
+                xmlWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
+                xmlWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformDrawCps", settings.VideoControls.WaveformDrawCps.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformDrawWpm", settings.VideoControls.WaveformDrawWpm.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformAllowOverlap", settings.VideoControls.WaveformAllowOverlap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSingleClickSelect", settings.VideoControls.WaveformSingleClickSelect.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSnapToShotChanges", settings.VideoControls.WaveformSnapToShotChanges.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformShotChangeStartTimeBeforeMs", settings.VideoControls.WaveformShotChangeStartTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformShotChangeStartTimeAfterMs", settings.VideoControls.WaveformShotChangeStartTimeAfterMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformShotChangeEndTimeBeforeMs", settings.VideoControls.WaveformShotChangeEndTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformShotChangeEndTimeAfterMs", settings.VideoControls.WaveformShotChangeEndTimeAfterMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSelectedColor", settings.VideoControls.WaveformSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformCursorColor", settings.VideoControls.WaveformCursorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformChaptersColor", settings.VideoControls.WaveformChaptersColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
+                xmlWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
+                xmlWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformLabelShowCodec", settings.VideoControls.WaveformLabelShowCodec.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
+                xmlWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformUnwrapText", settings.VideoControls.WaveformUnwrapText.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformHideWpmCpsLabels", settings.VideoControls.WaveformHideWpmCpsLabels.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("NetworkSettings", string.Empty);
-                textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
-                textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
-                textWriter.WriteElementString("WebApiUrl", settings.NetworkSettings.WebApiUrl);
-                textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("NetworkSettings", string.Empty);
+                xmlWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
+                xmlWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
+                xmlWriter.WriteElementString("WebApiUrl", settings.NetworkSettings.WebApiUrl);
+                xmlWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("VobSubOcr", string.Empty);
-                textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BlurayAllowDifferenceInPercent", settings.VobSubOcr.BlurayAllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastImageCompareFolder", settings.VobSubOcr.LastImageCompareFolder);
-                textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
-                textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
-                textWriter.WriteElementString("UseTesseractFallback", settings.VobSubOcr.UseTesseractFallback.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TesseractEngineMode", settings.VobSubOcr.TesseractEngineMode.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseMusicSymbolsInTesseract", settings.VobSubOcr.UseMusicSymbolsInTesseract.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixOcrErrors", settings.VobSubOcr.FixOcrErrors.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrMinHeightSplit", settings.VobSubOcr.LineOcrMinHeightSplit.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
-                textWriter.WriteElementString("LineOcrLastSpellCheck", settings.VobSubOcr.LineOcrLastSpellCheck);
-                textWriter.WriteElementString("LineOcrLinesToAutoGuess", settings.VobSubOcr.LineOcrLinesToAutoGuess.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LineOcrMaxErrorPixels", settings.VobSubOcr.LineOcrMaxErrorPixels.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
-                textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
-                textWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
-                textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);
-                textWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
-                textWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteStartElement("VobSubOcr", string.Empty);
+                xmlWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BlurayAllowDifferenceInPercent", settings.VobSubOcr.BlurayAllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastImageCompareFolder", settings.VobSubOcr.LastImageCompareFolder);
+                xmlWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
+                xmlWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
+                xmlWriter.WriteElementString("UseTesseractFallback", settings.VobSubOcr.UseTesseractFallback.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TesseractEngineMode", settings.VobSubOcr.TesseractEngineMode.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UseMusicSymbolsInTesseract", settings.VobSubOcr.UseMusicSymbolsInTesseract.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FixOcrErrors", settings.VobSubOcr.FixOcrErrors.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrMinHeightSplit", settings.VobSubOcr.LineOcrMinHeightSplit.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
+                xmlWriter.WriteElementString("LineOcrLastSpellCheck", settings.VobSubOcr.LineOcrLastSpellCheck);
+                xmlWriter.WriteElementString("LineOcrLinesToAutoGuess", settings.VobSubOcr.LineOcrLinesToAutoGuess.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LineOcrMaxErrorPixels", settings.VobSubOcr.LineOcrMaxErrorPixels.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
+                xmlWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
+                xmlWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
+                xmlWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);
+                xmlWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
+                xmlWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
+                xmlWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
                 foreach (var group in settings.MultipleSearchAndReplaceGroups)
                 {
                     if (!string.IsNullOrEmpty(group?.Name))
                     {
-                        textWriter.WriteStartElement("Group", string.Empty);
-                        textWriter.WriteElementString("Name", group.Name);
-                        textWriter.WriteElementString("Enabled", group.Enabled.ToString(CultureInfo.InvariantCulture));
+                        xmlWriter.WriteStartElement("Group", string.Empty);
+                        xmlWriter.WriteElementString("Name", group.Name);
+                        xmlWriter.WriteElementString("Enabled", group.Enabled.ToString(CultureInfo.InvariantCulture));
                         foreach (var item in group.Rules)
                         {
-                            textWriter.WriteStartElement("Rule", string.Empty);
-                            textWriter.WriteElementString("Enabled", item.Enabled.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("FindWhat", item.FindWhat);
-                            textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                            textWriter.WriteElementString("SearchType", item.SearchType);
-                            textWriter.WriteElementString("Description", item.Description);
-                            textWriter.WriteEndElement();
+                            xmlWriter.WriteStartElement("Rule", string.Empty);
+                            xmlWriter.WriteElementString("Enabled", item.Enabled.ToString(CultureInfo.InvariantCulture));
+                            xmlWriter.WriteElementString("FindWhat", item.FindWhat);
+                            xmlWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
+                            xmlWriter.WriteElementString("SearchType", item.SearchType);
+                            xmlWriter.WriteElementString("Description", item.Description);
+                            xmlWriter.WriteEndElement();
                         }
 
-                        textWriter.WriteEndElement();
+                        xmlWriter.WriteEndElement();
                     }
                 }
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                WriteShortcuts(settings.Shortcuts, textWriter);
+                WriteShortcuts(settings.Shortcuts, xmlWriter);
 
-                textWriter.WriteStartElement("RemoveTextForHearingImpaired", string.Empty);
-                textWriter.WriteElementString("RemoveTextBetweenBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBetweenParentheses", settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBetweenCurlyBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBetweenQuestionMarks", settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBetweenCustom", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBetweenCustomBefore", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore);
-                textWriter.WriteElementString("RemoveTextBetweenCustomAfter", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter);
-                textWriter.WriteElementString("RemoveTextBetweenOnlySeparateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveInterjectionsOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
-                textWriter.WriteElementString("RemoveIfOnlyMusicSymbols", settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("RemoveTextForHearingImpaired", string.Empty);
+                xmlWriter.WriteElementString("RemoveTextBetweenBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBetweenParentheses", settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBetweenCurlyBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBetweenQuestionMarks", settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBetweenCustom", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBetweenCustomBefore", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore);
+                xmlWriter.WriteElementString("RemoveTextBetweenCustomAfter", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter);
+                xmlWriter.WriteElementString("RemoveTextBetweenOnlySeparateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveInterjectionsOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
+                xmlWriter.WriteElementString("RemoveIfOnlyMusicSymbols", settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("SubtitleBeaming", string.Empty);
-                textWriter.WriteElementString("FontName", settings.SubtitleBeaming.FontName);
-                textWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("SubtitleBeaming", string.Empty);
+                xmlWriter.WriteElementString("FontName", settings.SubtitleBeaming.FontName);
+                xmlWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("BeautifyTimeCodes", string.Empty);
-                textWriter.WriteElementString("AlignTimeCodes", settings.BeautifyTimeCodes.AlignTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExtractExactTimeCodes", settings.BeautifyTimeCodes.ExtractExactTimeCodes.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SnapToShotChanges", settings.BeautifyTimeCodes.SnapToShotChanges.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OverlapThreshold", settings.BeautifyTimeCodes.OverlapThreshold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteStartElement("Profile", string.Empty);
-                textWriter.WriteElementString("Gap", settings.BeautifyTimeCodes.Profile.Gap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InCuesGap", settings.BeautifyTimeCodes.Profile.InCuesGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.InCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InCuesRightRedZone", settings.BeautifyTimeCodes.Profile.InCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("InCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OutCuesGap", settings.BeautifyTimeCodes.Profile.OutCuesGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OutCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OutCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OutCuesRightRedZone", settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("OutCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesInCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesInCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesOutCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesOutCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesLeftGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesLeftRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesRightRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesRightGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesTreatConnected", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingGeneralUseZones", settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingGeneralMaxGap", settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingGeneralLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingGeneralLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingGeneralShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior.ToString());
-                textWriter.WriteElementString("ChainingInCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingInCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingInCueOnShotLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingInCueOnShotLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingInCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior.ToString());
-                textWriter.WriteElementString("ChainingInCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingOutCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingOutCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingOutCueOnShotRightRedZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingOutCueOnShotRightGreenZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ChainingOutCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior.ToString());
-                textWriter.WriteElementString("ChainingOutCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteEndElement();
-                textWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("BeautifyTimeCodes", string.Empty);
+                xmlWriter.WriteElementString("AlignTimeCodes", settings.BeautifyTimeCodes.AlignTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ExtractExactTimeCodes", settings.BeautifyTimeCodes.ExtractExactTimeCodes.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("SnapToShotChanges", settings.BeautifyTimeCodes.SnapToShotChanges.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OverlapThreshold", settings.BeautifyTimeCodes.OverlapThreshold.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteStartElement("Profile", string.Empty);
+                xmlWriter.WriteElementString("Gap", settings.BeautifyTimeCodes.Profile.Gap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InCuesGap", settings.BeautifyTimeCodes.Profile.InCuesGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.InCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InCuesRightRedZone", settings.BeautifyTimeCodes.Profile.InCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("InCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OutCuesGap", settings.BeautifyTimeCodes.Profile.OutCuesGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OutCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OutCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OutCuesRightRedZone", settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OutCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesInCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesInCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesOutCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesOutCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesLeftGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesLeftRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesRightRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesRightGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ConnectedSubtitlesTreatConnected", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingGeneralUseZones", settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingGeneralMaxGap", settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingGeneralLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingGeneralLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingGeneralShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior.ToString());
+                xmlWriter.WriteElementString("ChainingInCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingInCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingInCueOnShotLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingInCueOnShotLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingInCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior.ToString());
+                xmlWriter.WriteElementString("ChainingInCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingOutCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingOutCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingOutCueOnShotRightRedZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingOutCueOnShotRightGreenZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChainingOutCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior.ToString());
+                xmlWriter.WriteElementString("ChainingOutCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
 
-                textWriter.WriteEndDocument();
-                textWriter.Flush();
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Flush();
 
                 return sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
             }
@@ -13034,6 +10013,9 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainFileImportBdSupForEdit", shortcuts.MainFileImportBdSupForEdit);
             textWriter.WriteElementString("MainFileImportTimeCodes", shortcuts.MainFileImportTimeCodes);
             textWriter.WriteElementString("MainFileExportPlainText", shortcuts.MainFileExportPlainText);
+            textWriter.WriteElementString("MainFileExportCustomText1", shortcuts.MainFileExportCustomText1);
+            textWriter.WriteElementString("MainFileExportCustomText2", shortcuts.MainFileExportCustomText2);
+            textWriter.WriteElementString("MainFileExportCustomText3", shortcuts.MainFileExportCustomText3);
             textWriter.WriteElementString("MainFileExportEbu", shortcuts.MainFileExportEbu);
             textWriter.WriteElementString("MainFileExportPac", shortcuts.MainFileExportPac);
             textWriter.WriteElementString("MainFileExportBdSup", shortcuts.MainFileExportBdSup);
@@ -13218,6 +10200,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFromCursorToNext", shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordToPrev", shortcuts.MainTextBoxMoveFirstWordToPrev);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);
@@ -13314,6 +10297,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformGoToPreviousShotChange", shortcuts.WaveformGoToPreviousShotChange);
             textWriter.WriteElementString("WaveformGoToNextShotChange", shortcuts.WaveformGoToNextShotChange);
             textWriter.WriteElementString("WaveformToggleShotChange", shortcuts.WaveformToggleShotChange);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameForward", shortcuts.WaveformAllShotChangesOneFrameForward);
+            textWriter.WriteElementString("WaveformAllShotChangesOneFrameBack", shortcuts.WaveformAllShotChangesOneFrameBack);
             textWriter.WriteElementString("WaveformListShotChanges", shortcuts.WaveformListShotChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);

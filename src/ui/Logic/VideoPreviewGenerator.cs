@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null, string audioCutTrack = "")
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null, string audioCutTrack = "")
         {
             if (width % 2 == 1)
             {
@@ -157,8 +157,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            audioSettings = audioCutTrack + " " + audioSettings;
+            if (!string.IsNullOrWhiteSpace(pixelFormat))
+            {
+                pixelFormat = $"-pix_fmt {pixelFormat}";
+            }
 
+            audioSettings = audioCutTrack + " " + audioSettings;
 
             var presetSettings = string.Empty;
             if (!string.IsNullOrEmpty(preset))
@@ -271,7 +275,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd} -vf scale={width}:{height} -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
+                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd} -vf scale={width}:{height} -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
@@ -680,6 +684,37 @@ namespace Nikse.SubtitleEdit.Logic
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 
+            return processMakeVideo;
+        }
+
+        public static Process GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, string timeCode, DataReceivedEventHandler dataReceivedHandler)
+        {
+            if (width % 2 == 1)
+            {
+                width++;
+            }
+
+            if (height % 2 == 1)
+            {
+                height++;
+            }
+
+            outputVideoFileName = $"\"{outputVideoFileName}\"";
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $" -y -f lavfi -i \"color=c=black@0.0:s={width}x{height}:r={frameRate}:d={timeCode},format=rgba,subtitles=f={Path.GetFileName(assaSubtitleFileName)}:alpha=1\" -c:v png {outputVideoFileName}".TrimStart(),
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
             return processMakeVideo;
         }
     }

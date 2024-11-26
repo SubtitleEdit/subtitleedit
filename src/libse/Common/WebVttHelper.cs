@@ -440,26 +440,34 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string AddStyleToText(string input, WebVttStyle style, List<WebVttStyle> webVttStyles)
         {
-            var text = input;
-            if (text.Contains("<c."))
+            if (Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags)
             {
-                if (!text.Contains("." + style.Name.TrimStart('.') + ".") && !text.Contains("." + style.Name.TrimStart('.') + ">"))
-                {
-                    var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-                    var match = regex.Match(text);
-                    if (match.Success)
-                    {
-                        text = RemoveUnusedColorStylesFromText(text, webVttStyles);
-                        text = text.Insert(match.Index + match.Length - 1, "." + style.Name.TrimStart('.'));
-                    }
-                }
+                var text = "<c." + style.Name.TrimStart('.') + ">" + input + "</c>";
+                return text;
             }
             else
             {
-                text = "<c." + style.Name.TrimStart('.') + ">" + text + "</c>";
-            }
+                var text = input;
+                if (text.Contains("<c."))
+                {
+                    if (!text.Contains("." + style.Name.TrimStart('.') + ".") && !text.Contains("." + style.Name.TrimStart('.') + ">"))
+                    {
+                        var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+                        var match = regex.Match(text);
+                        if (match.Success)
+                        {
+                            text = RemoveUnusedColorStylesFromText(text, webVttStyles);
+                            text = text.Insert(match.Index + match.Length - 1, "." + style.Name.TrimStart('.'));
+                        }
+                    }
+                }
+                else
+                {
+                    text = "<c." + style.Name.TrimStart('.') + ">" + text + "</c>";
+                }
 
-            return text;
+                return text;
+            }
         }
 
         public static List<string> GetParagraphStyles(Paragraph paragraph)
@@ -509,9 +517,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            var prefix = "<c" + string.Join("", styles.Select(s => s.Name)) + ">";
+            if (Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags)
+            {
+                foreach (var style in styles)
+                {
+                    text = "<c." + style.Name.TrimStart('.') + ">" + text + "</c>";
+                }
 
-            return prefix + text + "</c>";
+                return text;
+            }
+            else
+            {
+                var prefix = "<c" + string.Join("", styles.Select(s => s.Name)) + ">";
+                return prefix + text + "</c>";
+            }
         }
 
         public static string RemoveUnusedColorStylesFromText(string input, string header)

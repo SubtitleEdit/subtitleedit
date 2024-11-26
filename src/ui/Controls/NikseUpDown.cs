@@ -253,20 +253,6 @@ namespace Nikse.SubtitleEdit.Controls
                     AddValue(-Increment);
                     e.Handled = true;
                 }
-                else if (InterceptArrowKeys && e.KeyCode == Keys.Up)
-                {
-                    AddValue(Increment);
-                    e.Handled = true;
-                }
-                else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
-                         e.KeyData != Keys.Tab &&
-                         e.KeyData != Keys.Left &&
-                         e.KeyData != Keys.Right)
-                {
-                    _dirty = true;
-                    KeyDown?.Invoke(sender, e);
-                    Invalidate();
-                }
                 else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
                 {
                     _textBox.SelectAll();
@@ -281,6 +267,20 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _textBox.Paste();
                     e.SuppressKeyPress = true;
+                }
+                else if (InterceptArrowKeys && e.KeyCode == Keys.Up)
+                {
+                    AddValue(Increment);
+                    e.Handled = true;
+                }
+                else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
+                         e.KeyData != Keys.Tab &&
+                         e.KeyData != Keys.Left &&
+                         e.KeyData != Keys.Right)
+                {
+                    _dirty = true;
+                    KeyDown?.Invoke(sender, e);
+                    Invalidate();
                 }
                 else
                 {
@@ -407,6 +407,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 e.Handled = !(DecimalPlaces > 0);
             }
+
             else
             {
                 e.Handled = true;

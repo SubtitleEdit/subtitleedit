@@ -2,7 +2,7 @@
 <Language Name="Bahasa Indonesia">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Diterjemahkan oleh Nicedward (04/2018)</TranslatedBy>
     <CultureName>id-ID</CultureName>
     <HelpFile />
@@ -2126,11 +2126,11 @@ Mengatur huruf untuk subjudul biasanya dilakukan di pemutar video, tetapi juga b
     <NumberOfAlignmentTags>Jumlah tag perataan: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Panjang subjudul - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Panjang subjudul - maksimum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Panjang subjudul - rata-rata: {0}</LineLengthAverage>
+    <LineLengthAverage>Panjang subjudul - rata-rata: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subjudul, jumlah baris - rata-rata: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Panjang baris tunggal - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Panjang baris tunggal - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Panjang baris tunggal - rata-rata: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Panjang baris tunggal - rata-rata: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>Durasi - minimum: {0:0.000} detik</DurationMinimum>
     <DurationMaximum>Durasi - maksimum: {0:0.000} detik</DurationMaximum>
     <DurationAverage>Durasi - rata-rata: {0:0.000} detik</DurationAverage>

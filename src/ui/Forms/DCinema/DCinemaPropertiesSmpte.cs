@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {
@@ -297,6 +298,14 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
                 exporter.Save(saveDialog.FileName);
             }
+        }
+
+        private void DCinemaPropertiesSmpte_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }   
         }
     }
 }

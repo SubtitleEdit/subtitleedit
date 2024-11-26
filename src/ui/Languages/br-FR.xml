@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -1975,10 +1975,10 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <NumberOfFontTags>Niver a valizennoù nodrezh : {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Niver a valizennoù steudet : {0}</NumberOfAlignmentTags>
     <LineLengthMaximum>Hirder an istitloù - an hini hirañ : {0} a arouezioù</LineLengthMaximum>
-    <LineLengthAverage>Hirder an istitloù - keidenn : {0} a arouezioù</LineLengthAverage>
+    <LineLengthAverage>Hirder an istitloù - keidenn : {0:#.###} a arouezioù</LineLengthAverage>
     <LinesPerSubtitleAverage>Linennoù dre istitloù - keidenn : {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMaximum>Hirder al linenn unanel - maksimom : {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Hirder al linenn unanel - keidenn : {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Hirder al linenn unanel - keidenn : {0:#.###}</SingleLineLengthAverage>
     <DurationMaximum>Padelezh - maksimom : {0:0.000} eilennoù</DurationMaximum>
     <DurationAverage>Padelezh - keidenn : {0:0.000} eilennoù</DurationAverage>
     <CharactersPerSecondMaximum>Arouezioù/eil - maksimom : {0:0.000}</CharactersPerSecondMaximum>

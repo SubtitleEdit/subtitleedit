@@ -2,7 +2,7 @@
 <Language Name="Español (España)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Traducido por m2s y paconaranjo</TranslatedBy>
     <CultureName>es-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -2787,14 +2787,14 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <NumberOfAlignmentTags>Cantidad de etiquetas de alineación: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longitud del subtítulo - mínima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Longitud del subtítulo - máxima: {0}</LineLengthMaximum>
-    <LineLengthAverage>Longitud del subtítulo - promedio: {0}</LineLengthAverage>
+    <LineLengthAverage>Longitud del subtítulo - promedio: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtitulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longitud de una sola línea - mínima: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longitud de una sola línea - máxima: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0} Duración</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0:#.###} Duración</SingleLineLengthAverage>
     <SingleLineWidthMinimum>Ancho de línea simple - mínimo: {0} píxeles</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Single line width - maximum: {0} pixelsAncho de línea simple - máximo: {0} píxeles</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Single line width - average: {0} pixelsAncho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Single line width - average: {0:#.###} pixelsAncho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duración - promedio: {0:0.000} segundos</DurationAverage>

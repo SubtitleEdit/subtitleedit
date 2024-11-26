@@ -69,44 +69,46 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 _model = new Model(modelFileName);
             }
 
-            var rec = new VoskRecognizer(_model, 16000.0f);
-            rec.SetMaxAlternatives(0);
-            rec.SetWords(true);
-            var list = new List<ResultText>();
-            var buffer = new byte[4096];
-            using (var source = File.OpenRead(WaveFileName))
+            using (var rec = new VoskRecognizer(_model, 16000.0f))
             {
-                int bytesRead;
-                while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+                rec.SetMaxAlternatives(0);
+                rec.SetWords(true);
+                var list = new List<ResultText>();
+                var buffer = new byte[4096];
+                using (var source = File.OpenRead(WaveFileName))
                 {
-                    if (rec.AcceptWaveform(buffer, bytesRead))
+                    int bytesRead;
+                    while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        var res = rec.Result();
-                        var results = VoskAudioToText.ParseJsonToResult(res);
-                        list.AddRange(results);
-                    }
-                    else
-                    {
-                        var res = rec.PartialResult();
+                        if (rec.AcceptWaveform(buffer, bytesRead))
+                        {
+                            var res = rec.Result();
+                            var results = VoskAudioToText.ParseJsonToResult(res);
+                            list.AddRange(results);
+                        }
+                        else
+                        {
+                            _ = rec.PartialResult();
+                        }
                     }
                 }
-            }
 
-            var finalResult = rec.FinalResult();
-            var finalResults = VoskAudioToText.ParseJsonToResult(finalResult);
-            list.AddRange(finalResults);
+                var finalResult = rec.FinalResult();
+                var finalResults = VoskAudioToText.ParseJsonToResult(finalResult);
+                list.AddRange(finalResults);
 
-            try
-            {
-                File.Delete(WaveFileName);
-                WaveFileName = null;
-            }
-            catch
-            {
-                // ignore
-            }
+                try
+                {
+                    File.Delete(WaveFileName);
+                    WaveFileName = null;
+                }
+                catch
+                {
+                    // ignore
+                }
 
-            return ResultListToText(list);
+                return ResultListToText(list);
+            }
         }
 
         private static string ResultListToText(List<ResultText> list)

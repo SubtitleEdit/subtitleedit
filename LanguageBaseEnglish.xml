@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -1016,6 +1016,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Pixel format</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Tune for</TuneFor>
     <AlignRight>Align right</AlignRight>
@@ -1449,6 +1450,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in subtitle...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Generate video with added/removed embedded subtitles...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Generate transparent video with subtitles...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
@@ -2538,14 +2540,14 @@ can edit in same subtitle file (collaboration)</Information>
     <ContinuationStyleCustom>Custom</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/line-length</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Count all characters</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Count all except space, cps only</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Count all except space, CPS only</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Count all except space</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Include composition characters</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Include composition characters, not space</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>No space or punctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>No space or punctuation, cps only</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>No space or punctuation, CPS only</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
@@ -2690,6 +2692,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToPreviousShotChange>Go to previous shot change</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Go to next shot change</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Toggle shot change</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Move all shot changes one frame forward</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Move all shot changes one frame back</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Remove/export shot changes</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Auto adjust start via volume/shot change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>
@@ -2794,6 +2798,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Move text after cursor position to next subtitle and go to next</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Move first word to previous subtitle</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
@@ -3018,15 +3023,15 @@ Continue?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Number of alignment tags: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Subtitle length - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle length - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Subtitle length - average: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAverage>
+    <LineLengthAverage>Subtitle length - average: {0:#.###}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Single line length - average: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Single line length - exceeding maximum ({0} chars): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Single line width - minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Single line width - maximum: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Single line width - average: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Single line width - average: {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Single line width - exceeding maximum ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
@@ -3137,6 +3142,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Box per line (use outline color)</BoxPerLine>
     <BoxMultiLine>One box (use shadow color)</BoxMultiLine>
+    <BoxPerLineShort>Box per line</BoxPerLineShort>
+    <BoxMultiLineShort>One box</BoxMultiLineShort>
+    <BoxType>Box type</BoxType>
     <DuplicateStyleNames>Duplicate style names: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3181,6 +3189,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <AutoContinue>Auto-continue</AutoContinue>
     <Regenerate>Regenerate</Regenerate>
     <Speed>Speed</Speed>
+    <Stability>Stability</Stability>
+    <Similarity>Similarity</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
@@ -3451,6 +3461,7 @@ Keep changes?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Use X-TIMESTAMP-MAP header value</UseXTimeStamp>
     <MergeLines>Merge lines with same text on load</MergeLines>
+    <MergeStyleTags>Merge style tags</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT styles</Title>

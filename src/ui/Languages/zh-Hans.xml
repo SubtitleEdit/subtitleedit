@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -1013,6 +1013,7 @@ Command line: {1} {2}
     <Audio>音频</Audio>
     <Stereo>立体声</Stereo>
     <Preset>预设</Preset>
+    <PixelFormat>像素格式</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>视频类型</TuneFor>
     <AlignRight>右对齐</AlignRight>
@@ -1444,7 +1445,8 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>生成带有嵌入式字幕的视频...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>生成带有内嵌字幕的视频...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>生成带有字幕的透明视频...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
@@ -2679,6 +2681,8 @@ Command line: {1} {2}
     <WaveformGoToPreviousShotChange>转到下一个场景切换点</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>转到下一处场景切换</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>切换场景切换</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>将所有场景切换向前移动一帧</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>将所有场景切换向后移动一帧</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>删除/导出场景切换</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>根据音量/场景切换点调节起始点</WaveformGuessStart>
     <GoBack1Frame>回退一帧</GoBack1Frame>
@@ -2780,11 +2784,12 @@ Command line: {1} {2}
     <ListViewListErrors>列出错误</ListViewListErrors>
     <ListViewListSortByX>按{0}排序</ListViewListSortByX>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到下一条字幕，然后转到下一条</MainTextBoxMoveFromCursorToNext>
-    <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxMoveLastWordDown>将前行的最后一个单词移到次行</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>将次行的第一个单词移到前行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至前行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到次行字幕，然后转到次行</MainTextBoxMoveFromCursorToNext>
+     <MainTextBoxMoveFirstWordToPrev>将行首第一个单词上移至前行行末</MainTextBoxMoveFirstWordToPrev>
+    <MainTextBoxMoveLastWordDownCurrent>将前行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
     <MainTextBoxSelectionToggleCasing>切换所选内容的大小写（首字母大写/大写/小写）</MainTextBoxSelectionToggleCasing>
@@ -3006,11 +3011,11 @@ Command line: {1} {2}
     <NumberOfAlignmentTags>排列位置标签数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕长度（最短）: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕长度（最长）: {0}</LineLengthMaximum>
-    <LineLengthAverage>字幕长度（平均）: {0}</LineLengthAverage>
+    <LineLengthAverage>字幕长度（平均）: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>平均行数: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>单行长度（最短）: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度（最长）: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>单行长度（平均）: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>单行长度（平均）: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>单行长度 - 超过最大值（{0} 个字符）: {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>单行宽度（最短）: {0} 像素</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>单行宽度（最长）: {0} 像素</SingleLineWidthMaximum>
@@ -3125,6 +3130,9 @@ Command line: {1} {2}
     <Angle>角度</Angle>
     <BoxPerLine>每行一个框（使用轮廓色）</BoxPerLine>
     <BoxMultiLine>共用一个框（使用阴影色）</BoxMultiLine>
+    <BoxPerLineShort>每行一个框</BoxPerLineShort>
+    <BoxMultiLineShort>共用一个框</BoxMultiLineShort>
+    <BoxType>框类型</BoxType>
     <DuplicateStyleNames>为样式创建副本: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3169,6 +3177,8 @@ Command line: {1} {2}
     <AutoContinue>自动继续</AutoContinue>
     <Regenerate>重新生成</Regenerate>
     <Speed>速度</Speed>
+    <Stability>稳定性</Stability>
+    <Similarity>相似性</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 时序</Title>
@@ -3437,6 +3447,7 @@ Command line: {1} {2}
   <WebVttProperties>
     <UseXTimeStamp>使用 X-TIMESTAMP-MAP 标头值</UseXTimeStamp>
     <MergeLines>加载时合并具有相同文本的行</MergeLines>
+    <MergeStyleTags>合并样式标签</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT 样式</Title>

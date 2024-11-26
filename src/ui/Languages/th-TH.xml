@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.6</Version>
+    <Version>4.0.8</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -1873,11 +1873,11 @@
     <NumberOfAlignmentTags>จำนวนแท็กการวางแนว: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>ความยาวซับไตเติ้ล - ต่ำสุด: {0}</LineLengthMinimum>
     <LineLengthMaximum>ความยาวซับไตเติ้ล - สูงสุด: {0}</LineLengthMaximum>
-    <LineLengthAverage>ความยาวซับไตเติ้ล - เฉลี่ย: {0}</LineLengthAverage>
+    <LineLengthAverage>ความยาวซับไตเติ้ล - เฉลี่ย: {0:#.###}</LineLengthAverage>
     <LinesPerSubtitleAverage>จำนวนบรรทัดต่อซับไตเติ้ล - เฉลี่ย: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>ความยาวบรรทัดเดี่ยว - ต่ำสุด: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>ความยาวบรรทัดเดี่ยว - สูงสุด: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0:#.###}</SingleLineLengthAverage>
     <DurationMinimum>ระยะเวลา- ต่ำสุด: {0:0.000} วินาที</DurationMinimum>
     <DurationMaximum>ระยะเวลา- สูงสุด: {0:0.000} วินาที</DurationMaximum>
     <DurationAverage>ระยะเวลา- เฉลี่ย: {0:0.000} วินาที</DurationAverage>

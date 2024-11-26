@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Init();
             _loading = false;
 
-            _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
+            _oldSettings = Core.Settings.Settings.CustomSerialize(Configuration.Settings);
         }
 
         public void Init()
@@ -910,6 +911,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxLibreTranslateApiKey.Left = labelLibreApiKey.Right + 3;
             nikseTextBoxLibreTranslateApiKey.Width = nikseTextBoxLibreTranslateUrl.Width - labelLibreApiKey.Width - 3;
 
+            nikseComboBoxChatGptModel.Items.Clear();
+            nikseComboBoxChatGptModel.Items.AddRange(ChatGptTranslate.Models);
+
             labelLibreUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
@@ -1609,6 +1613,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportBluRaySup, nameof(Configuration.Settings.Shortcuts.MainFileExportBdSup), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> EDL/CLIPNAME", nameof(Configuration.Settings.Shortcuts.MainFileExportEdlClip), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 1", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText1));
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 2", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText2));
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportCustomTextFormat + " 3", nameof(Configuration.Settings.Shortcuts.MainFileExportCustomText3));
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Exit, nameof(Configuration.Settings.Shortcuts.MainFileExit), true);
             _shortcuts.Nodes.Add(fileNode);
 
@@ -1643,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MergeDuplicateText, nameof(Configuration.Settings.Shortcuts.MainToolsMergeDuplicateText), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MergeSameTimeCodes, nameof(Configuration.Settings.Shortcuts.MainToolsMergeSameTimeCodes), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SplitLongLines, nameof(Configuration.Settings.Shortcuts.MainToolsSplitLongLines), true);
-            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.BatchConvert, nameof(Configuration.Settings.Shortcuts.MainToolsBatchConvert));
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.BatchConvert, nameof(Configuration.Settings.Shortcuts.MainToolsBatchConvert), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MeasurementConverter, nameof(Configuration.Settings.Shortcuts.MainToolsMeasurementConverter), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SplitSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsSplit), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.AppendSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsAppend), true);
@@ -1817,6 +1824,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(textBoxNode, language.MainTextBoxMoveLastWordDownCurrent, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent));
             AddNode(textBoxNode, language.MainTextBoxMoveFirstWordUpCurrent, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent));
             AddNode(textBoxNode, language.MainTextBoxMoveFromCursorToNext, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext));
+            AddNode(textBoxNode, language.MainTextBoxMoveFirstWordToPrev, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordToPrev));
             AddNode(textBoxNode, language.MainTextBoxSelectionToLower, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
             AddNode(textBoxNode, language.MainTextBoxSelectionToUpper, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
             AddNode(textBoxNode, language.MainTextBoxSelectionToRuby, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToRuby), true);
@@ -1920,6 +1928,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(audioVisualizerNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             AddNode(audioVisualizerNode, language.WaveformGoToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousShotChange));
             AddNode(audioVisualizerNode, language.WaveformGoToNextShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextShotChange));
+            AddNode(audioVisualizerNode, language.WaveformAllShotChangesOneFrameBack, nameof(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameBack));
+            AddNode(audioVisualizerNode, language.WaveformAllShotChangesOneFrameForward, nameof(Configuration.Settings.Shortcuts.WaveformAllShotChangesOneFrameForward));
             AddNode(audioVisualizerNode, language.WaveformToggleShotChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleShotChange));
             AddNode(audioVisualizerNode, language.WaveformRemoveOrExportShotChanges, nameof(Configuration.Settings.Shortcuts.WaveformListShotChanges), true);
             AddNode(audioVisualizerNode, language.WaveformGuessStart, nameof(Configuration.Settings.Shortcuts.WaveformGuessStart));
@@ -2455,7 +2465,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            if (_oldSettings == Core.Common.Settings.CustomSerialize(Configuration.Settings))
+            if (_oldSettings == Core.Settings.Settings.CustomSerialize(Configuration.Settings))
             {
                 DialogResult = DialogResult.Cancel;
                 return;

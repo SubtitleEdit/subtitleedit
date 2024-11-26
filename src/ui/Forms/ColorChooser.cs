@@ -62,15 +62,15 @@ namespace Nikse.SubtitleEdit.Forms
         private TrackBar _tbValue;
         private bool _showAlpha = true;
         private readonly Timer _hexCodeEditTimer;
-        private Panel panelC0;
-        private Panel panelC1;
-        private Panel panelC2;
-        private Panel panelC3;
-        private Panel panelC7;
-        private Panel panelC6;
-        private Panel panelC5;
-        private Panel panelC4;
-        private Button buttonColorPicker;
+        private Panel _panelC0;
+        private Panel _panelC1;
+        private Panel _panelC2;
+        private Panel _panelC3;
+        private Panel _panelC7;
+        private Panel _panelC6;
+        private Panel _panelC5;
+        private Panel _panelC4;
+        private Button _buttonColorPicker;
         private bool _hexEditOn;
 
         public ColorChooser()
@@ -95,25 +95,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
 
-            panelC0.BackColor = Configuration.Settings.General.LastColorPickerColor;
-            panelC1.BackColor = Configuration.Settings.General.LastColorPickerColor1;
-            panelC2.BackColor = Configuration.Settings.General.LastColorPickerColor2;
-            panelC3.BackColor = Configuration.Settings.General.LastColorPickerColor3;
-            panelC4.BackColor = Configuration.Settings.General.LastColorPickerColor4;
-            panelC5.BackColor = Configuration.Settings.General.LastColorPickerColor5;
-            panelC6.BackColor = Configuration.Settings.General.LastColorPickerColor6;
-            panelC7.BackColor = Configuration.Settings.General.LastColorPickerColor7;
+            _panelC0.BackColor = Configuration.Settings.General.LastColorPickerColor;
+            _panelC1.BackColor = Configuration.Settings.General.LastColorPickerColor1;
+            _panelC2.BackColor = Configuration.Settings.General.LastColorPickerColor2;
+            _panelC3.BackColor = Configuration.Settings.General.LastColorPickerColor3;
+            _panelC4.BackColor = Configuration.Settings.General.LastColorPickerColor4;
+            _panelC5.BackColor = Configuration.Settings.General.LastColorPickerColor5;
+            _panelC6.BackColor = Configuration.Settings.General.LastColorPickerColor6;
+            _panelC7.BackColor = Configuration.Settings.General.LastColorPickerColor7;
 
             if (Configuration.Settings.General.LastColorPickerDropper == Color.Transparent)
             {
-                buttonColorPicker.Visible = false;
+                _buttonColorPicker.Visible = false;
             }
             else
             {
-                buttonColorPicker.BackColor = Configuration.Settings.General.LastColorPickerDropper;
-                buttonColorPicker.BackgroundImage = Properties.Resources.color_picker_small2;
-                buttonColorPicker.ImageAlign = ContentAlignment.MiddleCenter;
-                buttonColorPicker.BackgroundImageLayout = ImageLayout.Center;
+                _buttonColorPicker.BackColor = Configuration.Settings.General.LastColorPickerDropper;
+                _buttonColorPicker.BackgroundImage = Properties.Resources.color_picker_small2;
+                _buttonColorPicker.ImageAlign = ContentAlignment.MiddleCenter;
+                _buttonColorPicker.BackgroundImageLayout = ImageLayout.Center;
             }
         }
 
@@ -196,6 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            ActiveControl = null;
             _changeType = ChangeStyle.MouseMove;
             _selectedPoint = new Point(e.X, e.Y);
             Invalidate();
@@ -223,8 +224,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
         private void ShowHexColorCode(ColorHandler.Argb argb)
         {
+            if (_hexEditOn)
+            {
+                return;
+            }
+
+            _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
+
             if (_showAlpha)
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}{argb.Alpha:X2}";
@@ -233,6 +242,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
+
+            _tbHexCode.TextChanged += TextBoxHexCodeTextChanged;
         }
 
         private void SetHsvLabels(ColorHandler.Hsv hsv)
@@ -299,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             // code to update the HSV values and invalidate
             // the color wheel (so it updates the pointers).
             // Check the isInUpdate flag to avoid recursive events
-            // when you update the NumericUpdownControls.
+            // when you update the NumericUpDownControls.
             _changeType = ChangeStyle.RGB;
             _alphaRedGreenBlue = new ColorHandler.Argb(_tbAlpha.Value, _tbRed.Value, _tbGreen.Value, _tbBlue.Value);
             SetHsv(ColorHandler.RgbToHsv(_alphaRedGreenBlue));
@@ -359,7 +370,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._label5 = new System.Windows.Forms.Label();
             this._pnlBrightness = new System.Windows.Forms.Panel();
             this._lblAlpha2 = new System.Windows.Forms.Label();
-            this._tbHexCode = new Controls.NikseTextBox();
+            this._tbHexCode = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this._flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._labelRed = new System.Windows.Forms.Label();
             this._tbRed = new System.Windows.Forms.TrackBar();
@@ -377,15 +388,15 @@ namespace Nikse.SubtitleEdit.Forms
             this._pnlSelectedColor = new System.Windows.Forms.Panel();
             this._buttonCancel = new System.Windows.Forms.Button();
             this._buttonOk = new System.Windows.Forms.Button();
-            this.panelC0 = new System.Windows.Forms.Panel();
-            this.panelC1 = new System.Windows.Forms.Panel();
-            this.panelC2 = new System.Windows.Forms.Panel();
-            this.panelC3 = new System.Windows.Forms.Panel();
-            this.panelC7 = new System.Windows.Forms.Panel();
-            this.panelC6 = new System.Windows.Forms.Panel();
-            this.panelC5 = new System.Windows.Forms.Panel();
-            this.panelC4 = new System.Windows.Forms.Panel();
-            this.buttonColorPicker = new System.Windows.Forms.Button();
+            this._panelC0 = new System.Windows.Forms.Panel();
+            this._panelC1 = new System.Windows.Forms.Panel();
+            this._panelC2 = new System.Windows.Forms.Panel();
+            this._panelC3 = new System.Windows.Forms.Panel();
+            this._panelC7 = new System.Windows.Forms.Panel();
+            this._panelC6 = new System.Windows.Forms.Panel();
+            this._panelC5 = new System.Windows.Forms.Panel();
+            this._panelC4 = new System.Windows.Forms.Panel();
+            this._buttonColorPicker = new System.Windows.Forms.Button();
             this._flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._tbRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).BeginInit();
@@ -487,6 +498,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._pnlBrightness.Size = new System.Drawing.Size(24, 216);
             this._pnlBrightness.TabIndex = 39;
             this._pnlBrightness.Visible = false;
+            this._pnlBrightness.MouseClick += new System.Windows.Forms.MouseEventHandler(this._pnlBrightness_MouseClick);
             // 
             // _lblAlpha2
             // 
@@ -501,6 +513,7 @@ namespace Nikse.SubtitleEdit.Forms
             // _tbHexCode
             // 
             this._tbHexCode.BackColor = System.Drawing.Color.White;
+            this._tbHexCode.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this._tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._tbHexCode.Location = new System.Drawing.Point(295, 50);
             this._tbHexCode.MaxLength = 9;
@@ -729,101 +742,101 @@ namespace Nikse.SubtitleEdit.Forms
             this._buttonOk.UseVisualStyleBackColor = true;
             this._buttonOk.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // panelC0
+            // _panelC0
             // 
-            this.panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC0.Location = new System.Drawing.Point(295, 97);
-            this.panelC0.Name = "panelC0";
-            this.panelC0.Size = new System.Drawing.Size(21, 20);
-            this.panelC0.TabIndex = 62;
-            this.panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
+            this._panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC0.Location = new System.Drawing.Point(295, 97);
+            this._panelC0.Name = "_panelC0";
+            this._panelC0.Size = new System.Drawing.Size(21, 20);
+            this._panelC0.TabIndex = 62;
+            this._panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
             // 
-            // panelC1
+            // _panelC1
             // 
-            this.panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC1.Location = new System.Drawing.Point(322, 97);
-            this.panelC1.Name = "panelC1";
-            this.panelC1.Size = new System.Drawing.Size(21, 20);
-            this.panelC1.TabIndex = 63;
-            this.panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
+            this._panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC1.Location = new System.Drawing.Point(322, 97);
+            this._panelC1.Name = "_panelC1";
+            this._panelC1.Size = new System.Drawing.Size(21, 20);
+            this._panelC1.TabIndex = 63;
+            this._panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
             // 
-            // panelC2
+            // _panelC2
             // 
-            this.panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC2.Location = new System.Drawing.Point(349, 97);
-            this.panelC2.Name = "panelC2";
-            this.panelC2.Size = new System.Drawing.Size(21, 20);
-            this.panelC2.TabIndex = 63;
-            this.panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
+            this._panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC2.Location = new System.Drawing.Point(349, 97);
+            this._panelC2.Name = "_panelC2";
+            this._panelC2.Size = new System.Drawing.Size(21, 20);
+            this._panelC2.TabIndex = 63;
+            this._panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
             // 
-            // panelC3
+            // _panelC3
             // 
-            this.panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC3.Location = new System.Drawing.Point(376, 97);
-            this.panelC3.Name = "panelC3";
-            this.panelC3.Size = new System.Drawing.Size(21, 20);
-            this.panelC3.TabIndex = 64;
-            this.panelC3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC3_MouseClick);
+            this._panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC3.Location = new System.Drawing.Point(376, 97);
+            this._panelC3.Name = "_panelC3";
+            this._panelC3.Size = new System.Drawing.Size(21, 20);
+            this._panelC3.TabIndex = 64;
+            this._panelC3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC3_MouseClick);
             // 
-            // panelC7
+            // _panelC7
             // 
-            this.panelC7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC7.Location = new System.Drawing.Point(376, 124);
-            this.panelC7.Name = "panelC7";
-            this.panelC7.Size = new System.Drawing.Size(21, 20);
-            this.panelC7.TabIndex = 68;
-            this.panelC7.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC7_MouseClick);
+            this._panelC7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC7.Location = new System.Drawing.Point(376, 124);
+            this._panelC7.Name = "_panelC7";
+            this._panelC7.Size = new System.Drawing.Size(21, 20);
+            this._panelC7.TabIndex = 68;
+            this._panelC7.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC7_MouseClick);
             // 
-            // panelC6
+            // _panelC6
             // 
-            this.panelC6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC6.Location = new System.Drawing.Point(349, 124);
-            this.panelC6.Name = "panelC6";
-            this.panelC6.Size = new System.Drawing.Size(21, 20);
-            this.panelC6.TabIndex = 66;
-            this.panelC6.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC6_MouseClick);
+            this._panelC6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC6.Location = new System.Drawing.Point(349, 124);
+            this._panelC6.Name = "_panelC6";
+            this._panelC6.Size = new System.Drawing.Size(21, 20);
+            this._panelC6.TabIndex = 66;
+            this._panelC6.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC6_MouseClick);
             // 
-            // panelC5
+            // _panelC5
             // 
-            this.panelC5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC5.Location = new System.Drawing.Point(322, 124);
-            this.panelC5.Name = "panelC5";
-            this.panelC5.Size = new System.Drawing.Size(21, 20);
-            this.panelC5.TabIndex = 67;
-            this.panelC5.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC5_MouseClick);
+            this._panelC5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC5.Location = new System.Drawing.Point(322, 124);
+            this._panelC5.Name = "_panelC5";
+            this._panelC5.Size = new System.Drawing.Size(21, 20);
+            this._panelC5.TabIndex = 67;
+            this._panelC5.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC5_MouseClick);
             // 
-            // panelC4
+            // _panelC4
             // 
-            this.panelC4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC4.Location = new System.Drawing.Point(295, 124);
-            this.panelC4.Name = "panelC4";
-            this.panelC4.Size = new System.Drawing.Size(21, 20);
-            this.panelC4.TabIndex = 65;
-            this.panelC4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC4_MouseClick);
+            this._panelC4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC4.Location = new System.Drawing.Point(295, 124);
+            this._panelC4.Name = "_panelC4";
+            this._panelC4.Size = new System.Drawing.Size(21, 20);
+            this._panelC4.TabIndex = 65;
+            this._panelC4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC4_MouseClick);
             // 
-            // buttonColorPicker
+            // _buttonColorPicker
             // 
-            this.buttonColorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonColorPicker.Location = new System.Drawing.Point(295, 150);
-            this.buttonColorPicker.Name = "buttonColorPicker";
-            this.buttonColorPicker.Size = new System.Drawing.Size(102, 74);
-            this.buttonColorPicker.TabIndex = 69;
-            this.buttonColorPicker.UseVisualStyleBackColor = true;
-            this.buttonColorPicker.Click += new System.EventHandler(this.buttonColorPicker_Click);
+            this._buttonColorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._buttonColorPicker.Location = new System.Drawing.Point(295, 150);
+            this._buttonColorPicker.Name = "_buttonColorPicker";
+            this._buttonColorPicker.Size = new System.Drawing.Size(102, 74);
+            this._buttonColorPicker.TabIndex = 69;
+            this._buttonColorPicker.UseVisualStyleBackColor = true;
+            this._buttonColorPicker.Click += new System.EventHandler(this.buttonColorPicker_Click);
             // 
             // ColorChooser
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(413, 441);
-            this.Controls.Add(this.buttonColorPicker);
-            this.Controls.Add(this.panelC7);
-            this.Controls.Add(this.panelC3);
-            this.Controls.Add(this.panelC6);
-            this.Controls.Add(this.panelC2);
-            this.Controls.Add(this.panelC5);
-            this.Controls.Add(this.panelC4);
-            this.Controls.Add(this.panelC1);
-            this.Controls.Add(this.panelC0);
+            this.Controls.Add(this._buttonColorPicker);
+            this.Controls.Add(this._panelC7);
+            this.Controls.Add(this._panelC3);
+            this.Controls.Add(this._panelC6);
+            this.Controls.Add(this._panelC2);
+            this.Controls.Add(this._panelC5);
+            this.Controls.Add(this._panelC4);
+            this.Controls.Add(this._panelC1);
+            this.Controls.Add(this._panelC0);
             this.Controls.Add(this._buttonCancel);
             this.Controls.Add(this._buttonOk);
             this.Controls.Add(this._label5);
@@ -927,6 +940,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -959,6 +976,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxHexCodeLeave(object sender, EventArgs e)
         {
+            if (_hexEditOn)
+            {
+                _hexEditOn = false;
+                CheckValidHexInput();
+            }
+
             _hexEditOn = false;
             _tbHexCode.BackColor = UiUtil.BackColor;
         }
@@ -1014,6 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PanelColorClick(Control panel)
         {
+            panel.Focus();
             var c = panel.BackColor;
             UpdateRgb($"{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}");
             _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
@@ -1024,46 +1048,42 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void panelC0_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC0);
+            PanelColorClick(_panelC0);
         }
 
         private void panelC1_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC1);
+            PanelColorClick(_panelC1);
         }
 
         private void panelC2_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC2);
-
+            PanelColorClick(_panelC2);
         }
 
         private void panelC3_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC3);
-
+            PanelColorClick(_panelC3);
         }
 
         private void panelC4_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC4);
-
+            PanelColorClick(_panelC4);
         }
 
         private void panelC5_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC5);
-
+            PanelColorClick(_panelC5);
         }
 
         private void panelC6_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC6);
+            PanelColorClick(_panelC6);
         }
 
         private void panelC7_MouseClick(object sender, MouseEventArgs e)
         {
-            PanelColorClick(panelC7);
+            PanelColorClick(_panelC7);
         }
 
         private void _tbHexCode_MouseUp(object sender, MouseEventArgs e)
@@ -1076,12 +1096,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonColorPicker_Click(object sender, EventArgs e)
         {
-            PanelColorClick(buttonColorPicker);
+            PanelColorClick(_buttonColorPicker);
         }
 
         private void ColorChooser_Shown(object sender, EventArgs e)
         {
             _tbHexCode.MaxLength = _showAlpha ? 9 : 7;
+        }
+
+        private void _pnlBrightness_MouseClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

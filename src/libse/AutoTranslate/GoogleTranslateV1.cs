@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Google Translate V1 API";
+        public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://translate.google.com/";
         public string Error { get; set; }
@@ -168,7 +169,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("PASHTO", "ps"),
                 new TranslationPair("PERSIAN", "fa"),
                 new TranslationPair("POLISH", "pl"),
-                new TranslationPair("PORTUGUESE", "pt"),
+                new TranslationPair("PORTUGUESE", "pt-PT"),
+                new TranslationPair("PORTUGUESE (BRAZIL)", "pt"),
                 new TranslationPair("PUNJABI", "pa"),
                 new TranslationPair("QUECHUABI", "qu"),
                 new TranslationPair("ROMANIAN", "ro"),
@@ -194,6 +196,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("TAMIL", "ta"),
                 new TranslationPair("TATAR", "tt"),
                 new TranslationPair("TELUGU", "te"),
+                new TranslationPair("TETUM", "tet"), 
                 new TranslationPair("THAI", "th"),
                 new TranslationPair("TIGRINYA", "ti"),
                 new TranslationPair("TSONGA", "ts"),

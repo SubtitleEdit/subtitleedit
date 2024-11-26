@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -66,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic
             return LibMpvDynamic.GetVideoInfo(fileName);
         }
 
-        private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
+        private static long _lastShowSubTicks = Stopwatch.GetTimestamp();
         private static int _lastShowSubHash;
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph p = null)
         {
-            if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
+            if (Stopwatch.GetTimestamp() - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
@@ -123,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _lastShowSubHash = newHash;
                 }
 
-                _lastShowSubTicks = DateTime.UtcNow.Ticks;
+                _lastShowSubTicks = Stopwatch.GetTimestamp();
             }
         }
 

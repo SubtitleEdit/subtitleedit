@@ -163,10 +163,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 start = DecodeFormatToSeconds(start);
             }
+            else if (start != null && start.Contains(":") && start.Length == 8 && start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 3)
+            {
+                start = DecodeFormatHourMinuteSecondsToSeconds(start);
+            }
 
             if (end != null && end.Contains(":") && end.Length >= 11 && end.Length <= 12 && end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
             {
                 end = DecodeFormatToSeconds(end);
+            }
+            else if (end != null && end.Contains(":") && end.Length == 8 && end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 3)
+            {
+                end = DecodeFormatHourMinuteSecondsToSeconds(end);
             }
 
             if (start != null && end != null && text != null)
@@ -199,11 +207,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (ms / TimeCode.BaseUnit).ToString(CultureInfo.InvariantCulture);
         }
 
+        private static string DecodeFormatHourMinuteSecondsToSeconds(string s)
+        {
+            return DecodeFormatToSeconds(s + ":00");
+        }
+
         private static string ReadStartTag(string s)
         {
             return ReadFirstMultiTag(s, new[]
             {
-                "start", "in",
+                "start", "in", "begin",
                 "startTime", "start_time", "starttime",
                 "startMillis", "start_Millis", "startmillis",
                 "startMs", "start_ms", "startms",
@@ -230,6 +243,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return ReadFirstMultiTag(s, new[]
             {
                 "duration",
+                "durationMs",
                 "dur",
             });
         }

@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     tagOn = true;
                 }
-                else if (ch == '<' || ch == '}')
+                else if (ch == '>' || ch == '}')
                 {
                     tagOn = false;
                 }
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var text = original;
             if (FixNormal)
             {
-                if (FixNormalOnlyAllUppercase && text != text.ToUpper(subtitleCulture))
+                if (FixNormalOnlyAllUppercase && HtmlUtil.RemoveHtmlTags(text, true) != HtmlUtil.RemoveHtmlTags(text, true).ToUpper(subtitleCulture))
                 {
                     return text;
                 }
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (text.Length > 1)
                 {
                     // first all to lower
-                    text = text.ToLower(subtitleCulture).Trim();
+                    text = text.ToLowercaseButKeepTags().Trim();
                     text = text.FixExtraSpaces();
                     var st = new StrippableText(text);
                     st.FixCasing(nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a separate option)
