@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 "end", "out", "stop",
                 "endTime", "end_time", "endtime",
                 "endMillis", "end_Millis", "endmillis",
-                "endMs", "end_ms", "startms",
+                "endMs", "end_ms", "endms",
                 "endMilliseconds", "end_Millisesonds", "endmilliseconds",
                 "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds"
             });
@@ -296,6 +296,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (text == null)
             {
                 text = Json.ReadTag(s, "sentence");
+            }
+            if (text == null)
+            {
+                text = Json.ReadTag(s, "dialog");
             }
 
             if (text != null)
