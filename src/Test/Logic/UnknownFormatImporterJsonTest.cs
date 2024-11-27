@@ -5,7 +5,7 @@ using System;
 namespace Test.Logic
 {
     [TestClass]
-    public class UknownFormatImporterJsonTest
+    public class UnknownFormatImporterJsonTest
     {
         [TestMethod]
         public void TestUnknownJson1()

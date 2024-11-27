@@ -1027,7 +1027,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     UiUtil.ShowHelp("#translation");
                 }
             }
-            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && _autoTranslator.Error.Contains("Wrong endpoint. Use https://api.deepl.com"))
+            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) &&
+                     _autoTranslator.Error != null &&
+                     _autoTranslator.Error.Contains("Wrong endpoint. Use https://api.deepl.com"))
             {
                 nikseComboBoxUrl.Text = "https://api.deepl.com/";
 
@@ -1039,7 +1041,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Error);
             }
-            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && _autoTranslator.Error.Contains("Wrong endpoint. Use https://api-free.deepl.com"))
+            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && 
+                     _autoTranslator.Error != null &&
+                     _autoTranslator.Error.Contains("Wrong endpoint. Use https://api-free.deepl.com"))
             {
                 nikseComboBoxUrl.Text = "https://api-free.deepl.com/";
 
@@ -1073,10 +1077,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (linesTranslate == 0 && engineType == typeof(DeepLXTranslate) && exception.Message.Contains("No connection could be made because the target machine actively refused it"))
             {
                 MessageBox.Show(
-                    this, "You need a local API to use DeepLX. Run ths docker command:  "+ Environment.NewLine + 
+                    this, "You need a local API to use DeepLX. Run ths docker command: " + Environment.NewLine +
                           "docker run -itd -p 1188:1188 ghcr.io/owo-network/deeplx:latest" + Environment.NewLine +
                           Environment.NewLine +
-                          exception.Message + Environment.NewLine + 
+                          exception.Message + Environment.NewLine +
                           Environment.NewLine +
                           "For more information visit: " + new DeepLXTranslate().Url,
                     Text,
