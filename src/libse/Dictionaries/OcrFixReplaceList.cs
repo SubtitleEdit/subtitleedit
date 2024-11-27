@@ -65,14 +65,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     WordReplaceList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "WholeWords"))
-            {
-                if (!WordReplaceList.ContainsKey(kp.Key))
-                {
-                    WordReplaceList.Add(kp.Key, kp.Value);
-                }
-            }
-
             foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialLines"))
             {
                 if (PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
@@ -80,14 +72,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     PartialLineWordBoundaryReplaceList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "PartialLines"))
-            {
-                if (!PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
-                {
-                    PartialLineWordBoundaryReplaceList.Add(kp.Key, kp.Value);
-                }
-            }
-
             foreach (var kp in LoadReplaceList(userDoc, "RemovedBeginLines"))
             {
                 if (_beginLineReplaceList.ContainsKey(kp.Key))
@@ -95,14 +79,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     _beginLineReplaceList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "BeginLines"))
-            {
-                if (!_beginLineReplaceList.ContainsKey(kp.Key))
-                {
-                    _beginLineReplaceList.Add(kp.Key, kp.Value);
-                }
-            }
-
             foreach (var kp in LoadReplaceList(userDoc, "RemovedEndLines"))
             {
                 if (_endLineReplaceList.ContainsKey(kp.Key))
@@ -110,14 +86,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     _endLineReplaceList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "EndLines"))
-            {
-                if (!_endLineReplaceList.ContainsKey(kp.Key))
-                {
-                    _endLineReplaceList.Add(kp.Key, kp.Value);
-                }
-            }
-
             foreach (var kp in LoadReplaceList(userDoc, "RemovedWholeLines"))
             {
                 if (_wholeLineReplaceList.ContainsKey(kp.Key))
@@ -125,14 +93,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     _wholeLineReplaceList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "WholeLines"))
-            {
-                if (!_wholeLineReplaceList.ContainsKey(kp.Key))
-                {
-                    _wholeLineReplaceList.Add(kp.Key, kp.Value);
-                }
-            }
-
             foreach (var kp in LoadRegExList(userDoc, "RemovedRegularExpressions"))
             {
                 if (_regExList.ContainsKey(kp.Key))
