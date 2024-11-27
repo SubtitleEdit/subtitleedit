@@ -5823,6 +5823,7 @@
     <RegEx find="vwg" replaceWith="veg" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
+    <RegEx find="vrjt" replaceWith="vjet" />
     <RegEx find="vrijedić" replaceWith="vrijedit ć" />
     <RegEx find="([kv])ršić" replaceWith="$1ršit ć" />
     <RegEx find="vrtel" replaceWith="vrtjel" />
