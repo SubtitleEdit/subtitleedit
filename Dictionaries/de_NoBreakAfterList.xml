@@ -1,7 +1,12 @@
 ﻿<NoBreakAfterList>
-  <Item>Absatz</Item>
-  <Item>Artikel</Item>
   <Item>Dr.</Item>
+  <Item>Dr</Item>
+  <Item>Fr.</Item>
+  <Item>Fr</Item>
+  <Item>Frl.</Item>
+  <Item>Frl</Item>
+  <Item>Hr.</Item>
+  <Item>Hr</Item>
   <Item>Ihr</Item>
   <Item>Mr.</Item>
   <Item>Mrs.</Item>
@@ -20,7 +25,10 @@
   <Item>deinen</Item>
   <Item>deiner</Item>
   <Item>deines</Item>
+  <Item>dem</Item>
+  <Item>den</Item>
   <Item>der</Item>
+  <Item>des</Item>
   <Item>die</Item>
   <Item>du</Item>
   <Item>ein</Item>
