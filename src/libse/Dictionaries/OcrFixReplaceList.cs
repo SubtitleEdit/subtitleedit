@@ -140,13 +140,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     _regExList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadRegExList(userDoc, "RegularExpressions"))
-            {
-                if (!_regExList.ContainsKey(kp.Key))
-                {
-                    _regExList.Add(kp.Key, kp.Value);
-                }
-            }
         }
 
         public static OcrFixReplaceList FromLanguageId(string languageId)
