@@ -7,7 +7,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <OutputType>WinExe</OutputType>
     <PublishWizardCompleted>true</PublishWizardCompleted>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
     <RootNamespace>Nikse.SubtitleEdit</RootNamespace>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
