@@ -1,9 +1,18 @@
 ﻿<NoBreakAfterList>
-  <Item>в своем</Item>
-  <Item>в своём</Item>
-  <Item>как бы</Item>
-  <Item>нашёл</Item>
-  <Item>спрятал</Item>
-  <Item>был</Item>
-  <Item>таков</Item>
+  <Item>Д-р</Item>
+  <Item>Д-р.</Item>
+  <Item>Др</Item>
+  <Item>Г-н</Item>
+  <Item>Г-н.</Item>
+  <Item>Г-жа</Item>
+  <Item>Г-жа.</Item>
+  <Item>Г-ца</Item>
+  <Item>д-р</Item>
+  <Item>д-р.</Item>
+  <Item>др</Item>
+  <Item>г-н</Item>
+  <Item>г-н.</Item>
+  <Item>г-жа</Item>
+  <Item>г-жа.</Item>
+  <Item>г-ца.</Item>
 </NoBreakAfterList>
