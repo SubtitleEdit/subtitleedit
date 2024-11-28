@@ -1354,7 +1354,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             var unknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
-                            var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                            var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines(), fileName);
                             if (genericParseSubtitle.Paragraphs.Count > 1)
                             {
                                 sub = genericParseSubtitle;

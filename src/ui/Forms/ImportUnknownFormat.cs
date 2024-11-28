@@ -12,12 +12,14 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public Subtitle ImportedSubtitle { get; private set; }
         private readonly Timer _refreshTimer = new Timer();
+        private readonly string _fileName;
 
         public ImportUnknownFormat(string fileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _fileName = fileName;
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
 
@@ -46,8 +48,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            var uknownFormatImporter = new UnknownFormatImporter { UseFrames = radioButtonTimeCodeFrames.Checked };
-            ImportedSubtitle = uknownFormatImporter.AutoGuessImport(textBoxText.Lines.ToList());
+            var unknownFormatImporter = new UnknownFormatImporter { UseFrames = radioButtonTimeCodeFrames.Checked };
+            ImportedSubtitle = unknownFormatImporter.AutoGuessImport(textBoxText.Lines.ToList(), _fileName);
             groupBoxImportResult.Text = string.Format(LanguageSettings.Current.ImportText.PreviewLinesModifiedX, ImportedSubtitle.Paragraphs.Count);
             SubtitleListview1.Fill(ImportedSubtitle);
             if (ImportedSubtitle.Paragraphs.Count > 0)

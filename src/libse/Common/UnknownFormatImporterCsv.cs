@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in" };
         private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out" };
-        private readonly List<string> _durationNames = new List<string> { "duration", "durationMs", "dur" };
+        private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
         private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog" };
         private readonly List<string> _characterNames = new List<string> { "character", "role", "name", "actor", "rolle" };
 
@@ -51,9 +52,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             var subtitle = new Subtitle();
             foreach (var csvLine in csvLines)
             {
-                double start = 0;
-                double end = 0;
-                double duration = 0;
+                double start;
+                double end;
+                double duration;
                 var text = csvLine.Text ?? string.Empty;
                 var character = csvLine.Character ?? string.Empty;
                 var startText = csvLine.Start ?? string.Empty;
@@ -100,12 +101,29 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Paragraphs.Add(paragraph);
             }
 
+            subtitle.RemoveEmptyLines();
+            subtitle.Renumber();
+
             return subtitle;
         }
 
         private bool DetectIsFrames(List<string> toList)
         {
-            return false;
+            foreach (var s in toList)
+            {
+                if (s == null)
+                {
+                    return false;
+                }
+
+                var parts = s.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length != 4 || parts[3].Trim().Length != 2)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private List<CsvLine> ReadCsvLines(List<string> headers, List<string> lines, char separator)
@@ -127,27 +145,66 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var fields = line.Split(separator).ToList();
                 var csvLine = new CsvLine();
-                if (startIndex >= 0)
+                if (startIndex >= 0 && startIndex < fields.Count)
                 {
                     csvLine.Start = fields[startIndex];
+                    if (!string.IsNullOrEmpty(csvLine.Start) &&
+                        !csvLine.Start.Contains(',') &&
+                        !csvLine.Start.Contains('.') &&
+                        !csvLine.Start.Contains(':') &&
+                        !csvLine.Start.Contains(';') &&
+                        double.TryParse(csvLine.Start, out var n))
+                    {
+                        var msNames = new List<string> { "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
+                        if (msNames.Contains(headers[startIndex].ToLowerInvariant()))
+                        {
+                            csvLine.Start = new TimeCode(n).ToString(false);
+                        }
+                    }
                 }
-                
-                if (endIndex >= 0)
+
+                if (endIndex >= 0 && endIndex < fields.Count)
                 {
                     csvLine.End = fields[endIndex];
+                    if (!string.IsNullOrEmpty(csvLine.End) &&
+                        !csvLine.End.Contains(',') &&
+                        !csvLine.End.Contains('.') &&
+                        !csvLine.End.Contains(':') &&
+                        !csvLine.End.Contains(';') &&
+                        double.TryParse(csvLine.End, out var n))
+                    {
+                        var msNames = new List<string> { "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
+                        if (msNames.Contains(headers[endIndex].ToLowerInvariant()))
+                        {
+                            csvLine.End = new TimeCode(n).ToString(false);
+                        }
+                    }
                 }
-                
-                if (durationIndex >= 0)
+
+                if (durationIndex >= 0 && durationIndex < fields.Count)
                 {
                     csvLine.Duration = fields[durationIndex];
+                    if (!string.IsNullOrEmpty(csvLine.Duration) &&
+                        !csvLine.Duration.Contains(',') &&
+                        !csvLine.Duration.Contains('.') &&
+                        !csvLine.Duration.Contains(':') &&
+                        !csvLine.Duration.Contains(';') &&
+                        double.TryParse(csvLine.Duration, out var n))
+                    {
+                        var msNames = new List<string> { "durationms" };
+                        if (msNames.Contains(headers[durationIndex].ToLowerInvariant()))
+                        {
+                            csvLine.Duration = new TimeCode(n).ToString(false);
+                        }
+                    }
                 }
-                
-                if (textIndex >= 0)
+
+                if (textIndex >= 0 && textIndex < fields.Count)
                 {
                     csvLine.Text = fields[textIndex];
                 }
-                
-                if (characterIndex >= 0)
+
+                if (characterIndex >= 0 && characterIndex < fields.Count)
                 {
                     csvLine.Character = fields[characterIndex];
                 }

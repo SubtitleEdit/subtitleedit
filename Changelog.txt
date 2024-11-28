@@ -7,6 +7,7 @@
    * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
    * Add Murf TTS - thx David
    * Add DeepLX translate - thx rifatozkancomtr 
+   * Add some auto detect of CSV files with header
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
