@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly char[] ExpectedSplitChars = { '.', ',', ';', ':' };
         public bool UseFrames { get; set; }
 
-        public Subtitle AutoGuessImport(List<string> lines)
+        public Subtitle AutoGuessImport(List<string> lines, string fileName)
         {
             var subtitle = ImportTimeCodesOnSameSeparateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
@@ -94,6 +94,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (subtitle.Paragraphs.Count > 0 && lines.Count > 0 && lines.Count / subtitle.Paragraphs.Count > 25)
             { // no more than 25 raw lines per subtitle lines
                 return new Subtitle();
+            }
+
+            if (subtitle.Paragraphs.Count == 0 && !string.IsNullOrEmpty(fileName) && fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                var unknownCsvImporter = new UnknownFormatImporterCsv();
+                return unknownCsvImporter.AutoGuessImport(lines);
             }
 
             return subtitle;
