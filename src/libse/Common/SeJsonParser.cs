@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -153,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 return list;
                             }
                         }
-                        var objectValue = content.Substring(i, end - i).Trim();
+                        var objectValue = content.Substring(i, end - i);
                         if (objectName == name)
                         {
                             list.Add(objectValue);
@@ -471,7 +470,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 return list;
                             }
                         }
-                        var objectValue = content.Substring(i, end - i).Trim();
+                        var objectValue = content.Substring(i, end - i);
                         if (objectName == name)
                         {
                             list.Add(objectValue);
