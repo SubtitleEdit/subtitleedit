@@ -15,11 +15,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             public string Character { get; set; }
         }
 
-        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in" };
-        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out" };
+        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show" };
+        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide" };
         private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
         private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog" };
-        private readonly List<string> _characterNames = new List<string> { "character", "role", "name", "actor", "rolle" };
+        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle" };
 
         public Subtitle AutoGuessImport(List<string> lines)
         {
@@ -135,7 +135,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             var characterIndex = headers.IndexOf(_characterNames.FirstOrDefault(headers.Contains));
             var isHeader = true;
             var csvLines = new List<CsvLine>();
-            foreach (var line in lines)
+            var linesArray = CsvUtil.CsvSplitLines(lines, separator);
+
+            foreach (var fields in linesArray)
             {
                 if (isHeader)
                 {
@@ -143,7 +145,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     continue;
                 }
 
-                var fields = line.Split(separator).ToList();
                 var csvLine = new CsvLine();
                 if (startIndex >= 0 && startIndex < fields.Count)
                 {
