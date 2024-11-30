@@ -5659,7 +5659,7 @@
     <RegEx find="rpeu" replaceWith="preu" />
     <RegEx find="rpv" replaceWith="rov" />
     <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
-    <RegEx find="([rv])pd" replaceWith="$1od" />
+    <RegEx find="([krv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
     <RegEx find="rstk" replaceWith="ratk" />
     <RegEx find="ršč" replaceWith="ršć" />
@@ -5752,6 +5752,7 @@
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
+    <RegEx find="trq" replaceWith="tra" />
     <RegEx find="ts([nm])" replaceWith="ta$1" />
     <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
