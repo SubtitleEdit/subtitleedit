@@ -49,7 +49,7 @@ CATE;00:00:10:00;00:00:12:00; Ja. Ich habe den Test gemacht.";
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ja. Ich habe den Test gemacht.", subtitle.Paragraphs[1].Text);
 
-            Assert.Equals("en-US", Thread.CurrentThread.CurrentCulture);
+            Assert.AreEqual("en-US", Thread.CurrentThread.CurrentCulture.Name);
 
             // assert the duration of milliseconds
             Assert.AreEqual(10000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
