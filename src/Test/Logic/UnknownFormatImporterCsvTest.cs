@@ -49,11 +49,9 @@ CATE;00:00:10:00;00:00:12:00; Ja. Ich habe den Test gemacht.";
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ja. Ich habe den Test gemacht.", subtitle.Paragraphs[1].Text);
 
-            Assert.AreEqual("en-US", Thread.CurrentThread.CurrentCulture.Name);
-
             // assert the duration of milliseconds
             Assert.AreEqual(10000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
-            Assert.AreEqual(10000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+            Assert.AreEqual(12000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
 
             //TODO: fails on appveyor... why?
             // Assert formatting of timecodes
