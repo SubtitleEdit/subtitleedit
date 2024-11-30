@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic
@@ -47,6 +48,8 @@ CATE;00:00:10:00;00:00:12:00; Ja. Ich habe den Test gemacht.";
             var subtitle = importer.AutoGuessImport(raw.Trim().SplitToLines());
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ja. Ich habe den Test gemacht.", subtitle.Paragraphs[1].Text);
+
+            Assert.Equals("en-US", Thread.CurrentThread.CurrentCulture);
 
             // assert the duration of milliseconds
             Assert.AreEqual(10000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
