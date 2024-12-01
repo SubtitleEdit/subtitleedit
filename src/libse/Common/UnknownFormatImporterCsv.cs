@@ -38,9 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var csvLines = ReadCsvLines(headers, lines, separator);
 
-            var subtitle = MakeSubtitle(csvLines);
-
-            return subtitle;
+            return MakeSubtitle(csvLines);
         }
 
         private Subtitle MakeSubtitle(List<CsvLine> csvLines)
@@ -249,20 +247,38 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static char DetectSeparator(List<string> lines)
         {
             const char defaultSeparator = ',';
-            char[] potentialSeparators = { defaultSeparator, ';', '\t' };
 
-            if (lines == null || lines.Count < 2)
+            if (lines == null)
             {
                 return defaultSeparator;
             }
 
-            var noSpaceLines = lines.Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
+            if (lines.Count == 1)
+            {
+                var semicolonCount = lines[0].Count(c => c == ';');
+                var commaCount = lines[0].Count(c => c == ',');
+                var tabCount = lines[0].Count(c => c == '\t');
+
+                if (semicolonCount > commaCount)
+                {
+                    return semicolonCount > tabCount ? ';' : '\t';
+                }
+
+                return commaCount > tabCount ? defaultSeparator : '\t';
+            }
+
+            char[] potentialSeparators = { defaultSeparator, ';', '\t' };
+
+            var noSpaceLines = lines
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .Take(2).ToArray();
+
             foreach (var separator in potentialSeparators)
             {
-                var firstLineParts = noSpaceLines[0].Split(separator);
-                var secondLineParts = noSpaceLines[1].Split(separator);
+                var firstLineTokens = noSpaceLines[0].Split(separator);
+                var secondLineTokens = noSpaceLines[1].Split(separator);
 
-                if (firstLineParts.Length > 1 && secondLineParts.Length == firstLineParts.Length)
+                if (firstLineTokens.Length > 1 && firstLineTokens.Length == secondLineTokens.Length)
                 {
                     return separator;
                 }
