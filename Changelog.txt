@@ -50,6 +50,7 @@
    * Fix enter in textbox in FCE - thx p1nkyy/Roger
    * Fix "Dialog styles" for many languags in Netflix quality check - thx Looi
    * Fix wrong timestamp (rounding) for format "CSV" - thx MariaB99
+   * Fix LRC with milliseconds issue - thx AverageHoarder
 
 
 4.0.8 (6th September 2024) 
