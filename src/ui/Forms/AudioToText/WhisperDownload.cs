@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
             {
-                UiUtil.OpenUrl("https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r193.1_windows.7z");
+                UiUtil.OpenUrl("https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r194.5_windows.7z");
 
                 var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
                 if (!Directory.Exists(folder))
