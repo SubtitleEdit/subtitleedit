@@ -980,7 +980,6 @@ namespace Nikse.SubtitleEdit.Forms
                         // ignore short/empty words and special chars
                     }
                     else if (IsBetweenActiveAssaTags(_words[_wordsIndex].Index, _currentParagraph, _subtitleFormat))
-
                     {
                         // ignore words between {} in ASSA/SSA
                     }
