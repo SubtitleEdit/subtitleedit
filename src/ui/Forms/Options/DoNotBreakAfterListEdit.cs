@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -41,26 +42,34 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             var idx = 0;
             _languages.Clear();
-            comboBoxDictionaries.Items.Clear();
-            foreach (var fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
+            var comboBoxItems = new List<string>();
+            var selectedText = string.Empty;
+            var files = Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml");
+            var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
+            foreach (var fileName in files)
             {
                 try
                 {
                     var s = Path.GetFileName(fileName);
                     var languageId = s.Substring(0, s.IndexOf('_'));
-                    var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
-                    comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
+                    var ci = cultures.FirstOrDefault(p => p.TwoLetterISOLanguageName == languageId);
+                    if (ci == null)
+                    {
+                        ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
+                    }
+
+                    comboBoxItems.Add(ci.EnglishName + " (" + ci.NativeName + ")");
 
                     if (!string.IsNullOrEmpty(selectTwoLetterCode))
                     {
                         if (ci.TwoLetterISOLanguageName == selectTwoLetterCode)
                         {
-                            idx = _languages.Count;
+                            selectedText = comboBoxItems[comboBoxItems.Count - 1];
                         }
                     }
                     else if ((Configuration.Settings.WordLists.LastLanguage ?? "en-US").StartsWith(languageId, StringComparison.OrdinalIgnoreCase))
                     {
-                        idx = _languages.Count;
+                        selectedText = comboBoxItems[comboBoxItems.Count - 1];
                     }
 
                     _languages.Add(fileName);
@@ -70,7 +79,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     // ignored
                 }
             }
-
+            comboBoxDictionaries.Items.Clear();
+            comboBoxDictionaries.Items.AddRange(comboBoxItems.OrderBy(p => p).ToArray());
+            comboBoxDictionaries.Text = selectedText;
             if (comboBoxDictionaries.Items.Count > 0 && idx < comboBoxDictionaries.Items.Count)
             {
                 comboBoxDictionaries.SelectedIndex = idx;
