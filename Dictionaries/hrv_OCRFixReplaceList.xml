@@ -304,6 +304,7 @@
     <Word from="Decom" to="Djecom" />
     <Word from="decu" to="djecu" />
     <Word from="Decu" to="Djecu" />
+    <Word from="deobu" to="diobu" />
     <Word from="deugo" to="drugo" />
     <Word from="dibro" to="dobro" />
     <Word from="dijeca" to="djeca" />
@@ -1523,6 +1524,7 @@
     <Word from="onde" to="ondje" />
     <Word from="onik" to="onim" />
     <Word from="onlajn" to="online" />
+    <Word from="oproštaj" to="oprost" />
     <Word from="opuštano" to="opušteno" />
     <Word from="organizuj" to="organiziraj" />
     <Word from="Organizuj" to="Organiziraj" />
@@ -1982,6 +1984,7 @@
     <Word from="prisetim" to="prisjetim" />
     <Word from="prisetio" to="prisjetio" />
     <Word from="prisetite" to="prisjetite" />
+    <Word from="prisetiti" to="prisjetiti" />
     <Word from="pritiskam" to="pritišćem" />
     <Word from="pritvorni" to="prijetvorni" />
     <Word from="priveska" to="privjeska" />
@@ -4225,6 +4228,8 @@
     <LinePart from="plašim se" to="bojim se" />
     <LinePart from="pravo u oči" to="ravno u oči" />
     <LinePart from="radi toga što" to="zbog toga što" />
+    <LinePart from="sa nama" to="s nama" />
+    <LinePart from="sa njima" to="s njima" />
     <LinePart from="sam da budem" to="sam biti" />
     <LinePart from="sam se ustao" to="sam ustao" />
     <LinePart from="sići dolje" to="sići" />
@@ -5428,6 +5433,7 @@
     <RegEx find="jdm" replaceWith="jem" />
     <RegEx find="jdi?n" replaceWith="jedin" />
     <RegEx find="jerm" replaceWith="jem" />
+    <RegEx find="jestić" replaceWith="jestit ć" />
     <RegEx find="jho" replaceWith="jno" />
     <RegEx find="jr([dgklnpst])" replaceWith="je$1" />
     <RegEx find="jq" replaceWith="ja" />
@@ -5483,7 +5489,7 @@
     <RegEx find="lwn" replaceWith="lan" />
     <RegEx find="mlž" replaceWith="mož" />
     <RegEx find="mjn" replaceWith="mnj" />
-    <RegEx find="mpz" replaceWith="mož" />
+    <RegEx find="mp([zž])" replaceWith="mož" />
     <RegEx find="mbog" replaceWith="mnog" />
     <RegEx find="mejl" replaceWith="mail" />
     <RegEx find="(?&lt;![Mm])ekd" replaceWith="egd" />
