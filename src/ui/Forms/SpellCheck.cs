@@ -1272,6 +1272,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentSpellCheckWord.Index += 2;
                                 _currentWord = _currentWord.Trim('\'');
                             }
+
                             if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
                             {
                                 _prefix = string.Empty;
@@ -1279,16 +1280,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentWord = _currentWord.Trim('\'');
                             }
 
-                            if (_postfix != null && _postfix == "'")
-                            {
-                                _currentSpellCheckWord.Text = _currentWord + _postfix;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                            }
-                            else
-                            {
-                                _currentSpellCheckWord.Text = _currentWord;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                            }
+                            _currentSpellCheckWord.Text = _postfix != null && _postfix == "'" ? _currentWord + _postfix : _currentWord;
+                            var progress = string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count);
+                            
+                            Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, progress);
+
                             if (!Visible)
                             {
                                 ShowDialog(_mainWindow);
