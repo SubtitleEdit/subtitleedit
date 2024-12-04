@@ -523,9 +523,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             sb = new StringBuilder();
             var word = new StringBuilder();
             string lastWord = null;
+            const string wordBoundaryChars = "\r\n ";
             for (var i = 0; i < text.Length; i++)
             {
-                if (text[i] != '.' && "\r\n ".Contains(text[i]))
+                if (wordBoundaryChars.Contains(text[i]))
                 {
                     if (word.Length > 0)
                     {
