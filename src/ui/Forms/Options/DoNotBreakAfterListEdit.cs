@@ -57,7 +57,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void InitLanguages(string selectTwoLetterCode)
         {
-            var idx = 0;
             var selectedText = string.Empty;
             var files = Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml");
             var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
@@ -74,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                         ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     }
 
-                    _list.Add(new DoNotBreakDictionary(ci.EnglishName + " (" + ci.NativeName + ")", fileName));
+                    _list.Add(new DoNotBreakDictionary(ci.EnglishName + " (" + ci.NativeName.CapitalizeFirstLetter() + ")", fileName));
 
                     if (!string.IsNullOrEmpty(selectTwoLetterCode))
                     {
@@ -99,9 +98,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxDictionaries.Items.Clear();
             comboBoxDictionaries.Items.AddRange(_list.Select(p=>p.Text).ToArray());
             comboBoxDictionaries.Text = selectedText;
-            if (comboBoxDictionaries.Items.Count > 0 && idx < comboBoxDictionaries.Items.Count)
+            if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
             {
-                comboBoxDictionaries.SelectedIndex = idx;
+                comboBoxDictionaries.Text = _list.FirstOrDefault(p => p.Text.Contains("English"))?.Text;
+                if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
+                {
+                    comboBoxDictionaries.SelectedIndex = 0;
+                }
             }
         }
 
