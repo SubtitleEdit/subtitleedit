@@ -542,85 +542,7 @@ optional arguments:
   --ff_lowhighpass      Audio filter: Pass 50Hz - 7800 band. sinc + afir. (default: False)</value>
   </data>
   <data name="nikseTextBox1.Text" xml:space="preserve">
-    <value>[--device DEVICE]
-[--verbose VERBOSE]
-[--language_detection_threshold LANGUAGE_DETECTION_THRESHOLD]
-[--language_detection_segments LANGUAGE_DETECTION_SEGMENTS]
-[--temperature TEMPERATURE] [--best_of BEST_OF]
-[--beam_size BEAM_SIZE] [--patience PATIENCE]
-[--length_penalty LENGTH_PENALTY]
-[--repetition_penalty REPETITION_PENALTY]
-[--no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE]
-[--suppress_blank SUPPRESS_BLANK]
-[--suppress_tokens SUPPRESS_TOKENS]
-[--initial_prompt INITIAL_PROMPT]
-[--prefix PREFIX]
-[--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT]
-[--prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE]
-[--without_timestamps WITHOUT_TIMESTAMPS]
-[--max_initial_timestamp MAX_INITIAL_TIMESTAMP]
-[--temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK]
-[--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
-[--logprob_threshold LOGPROB_THRESHOLD]
-[--no_speech_threshold NO_SPEECH_THRESHOLD]
-[--v3_offsets_off]
-[--hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD]
-[--hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}]
-[--clip_timestamps CLIP_TIMESTAMPS]
-[--no_speech_strict_lvl {0,1,2}]
-[--word_timestamps WORD_TIMESTAMPS]
-[--highlight_words HIGHLIGHT_WORDS]
-[--prepend_punctuations PREPEND_PUNCTUATIONS]
-[--append_punctuations APPEND_PUNCTUATIONS]
-[--threads THREADS] [--version]
-[--vad_filter VAD_FILTER]
-[--vad_threshold VAD_THRESHOLD]
-[--vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS]
-[--vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S]
-[--vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS]
-[--vad_speech_pad_ms VAD_SPEECH_PAD_MS]
-[--vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES]
-[--vad_method {silero_v3,silero_v4,pyannote_v3,pyannote_onnx_v3,auditok,webrtc}]
-[--vad_dump] [--nullify_non_speech]
-[--max_new_tokens MAX_NEW_TOKENS]
-[--chunk_length CHUNK_LENGTH]
-[--compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}]
-[--batch_recursive] [--beep_off] [--skip]
-[--checkcuda] [--print_progress] [--postfix]
-[--check_files] [--PR163_off]
-[--hallucinations_list_off] [--alt_writer_off]
-[--one_word {0,1,2}] [--sentence] [--standard]
-[--standard_asia] [--max_comma MAX_COMMA]
-[--max_comma_cent {50,60,70,80,90,100}]
-[--max_gap MAX_GAP]
-[--max_line_width MAX_LINE_WIDTH]
-[--max_line_count MAX_LINE_COUNT]
-[--min_dist_to_end {0,4,5,6,7,8,9,10,11,12}]
-[--prompt_max {16,32,64,128,223}]
-[--reprompt {0,1,2}]
-[--prompt_reset_on_no_end {0,1,2}] [--ff_dump]
-[--ff_track {1,2,3,4,5,6}] [--ff_fc] [--ff_mp3]
-[--ff_sync] [--ff_rnndn_sh] [--ff_rnndn_xiph]
-[--ff_fftdn [0 - 97]] [--ff_tempo [0.5 - 2.0]]
-[--ff_gate] [--ff_speechnorm] [--ff_loudnorm]
-[--ff_silence_suppress noise duration]
-[--ff_lowhighpass] [--ff_mdx_kim2]
-[--mdx_chunk MDX_CHUNK]
-[--mdx_device MDX_DEVICE] [--diarize]
-[--diarize_device DIARIZE_DEVICE]
-[--diarize_threads DIARIZE_THREADS]
-[--speaker SPEAKER]
-audio [audio ...]
-
-positional arguments:
-  audio                 audio file(s). You can enter a file wildcard, filelist
-                        (txt. m3u, m3u8, lst) or directory to do batch
-                        processing. Note: non-media files in list or directory
-                        are filtered out by extension.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --model MODEL, -m MODEL
+    <value>  --model MODEL, -m MODEL
                         name of the Whisper model to use (default: medium)
   --model_dir MODEL_DIR
                         the path to save model files; uses C:\git\subtitleedit
@@ -636,9 +558,10 @@ optional arguments:
                         file is if --batch_recursive=True. '.'- sets to the
                         current folder. 'source' - sets to where media file
                         is. (default: default)
-  --output_format {lrc,txt,text,vtt,srt,tsv,json,all}, -f {lrc,txt,text,vtt,srt,tsv,json,all}
-                        format of the output file; if not specified srt will
-                        be produced (default: srt)
+  --output_format [{json,lrc,txt,text,vtt,srt,tsv,all} ...], -f [{json,lrc,txt,text,vtt,srt,tsv,all} ...]
+                        Format(s) of the output file; specify multiple formats
+                        separated by spaces. Note: dont add audio after this
+                        arg. (default: ['srt'])
   --verbose VERBOSE, -v VERBOSE
                         whether to print out debug messages (default: False)
   --task {transcribe,translate}
@@ -648,11 +571,11 @@ optional arguments:
   --language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}, -l {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}
                         language spoken in the audio, specify None to perform
                         language detection (default: None)
-  --language_detection_threshold LANGUAGE_DETECTION_THRESHOLD
+  --language_detection_threshold LANGUAGE_DETECTION_THRESHOLD, -ldt LANGUAGE_DETECTION_THRESHOLD
                         If the maximum probability of the language tokens is
                         higher than this value, the language is detected.
                         (default: None)
-  --language_detection_segments LANGUAGE_DETECTION_SEGMENTS
+  --language_detection_segments LANGUAGE_DETECTION_SEGMENTS, -lds LANGUAGE_DETECTION_SEGMENTS
                         Number of segments/chunks to consider for the language
                         detection. (default: 1)
   --temperature TEMPERATURE
@@ -689,8 +612,8 @@ optional arguments:
                         optional text to provide context as a prompt for the
                         first window. Use 'None' to disable it. Note: 'auto'
                         and 'default' are experimental ~universal prompt
-                        presets, they work if --language is set. (default:
-                        auto)
+                        presets, if task=transcribe then they work only if
+                        --language is set. (default: auto)
   --prefix PREFIX       Optional text to provide as a prefix for the first
                         window (default: None)
   --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT, -condition CONDITION_ON_PREVIOUS_TEXT
@@ -759,7 +682,8 @@ optional arguments:
                         based on them (default: True)
   --highlight_words HIGHLIGHT_WORDS, -hw HIGHLIGHT_WORDS
                         underline each word as it is spoken AKA karaoke in srt
-                        and vtt output formats (default: False)
+                        and vtt output formats. Note: it has no effect with
+                        --sentence (default: False)
   --prepend_punctuations PREPEND_PUNCTUATIONS
                         if word_timestamps is True, merge these punctuation
                         symbols with the next word (default: "'“¿([{-)
@@ -800,6 +724,11 @@ optional arguments:
   --vad_dump            Dumps VAD timings to a subtitle file for inspection.
                         Additionaly dumps various intermediate audio files for
                         debug. (default: False)
+  --vad_device VAD_DEVICE
+                        Device to use for pyannote_v3/pyannote_onnx_v3 VAD.
+                        Default is 'cuda' if CUDA device is detected, else is
+                        'cpu'. If CUDA GPU is a second device then set
+                        'cuda:1'. (default: cpu)
   --nullify_non_speech, -nullify
                         For dev experiments. (default: False)
   --max_new_tokens MAX_NEW_TOKENS
@@ -819,7 +748,9 @@ optional arguments:
   --beep_off            Disables the beep sound when operation is finished.
                         (default: False)
   --skip                Skips media file if subtitle exists. Works if input is
-                        wildcard or directory. (default: False)
+                        wildcard or directory. Note: Checks for the first
+                        format in the list of --output_format. (default:
+                        False)
   --checkcuda, -cc      Returns CUDA device count. (for Subtitle Edit's
                         internal use)
   --print_progress, -pp
@@ -843,25 +774,24 @@ optional arguments:
                         ensures &gt;= 50ms for sub lines. Note: VAD may slightly
                         reduce the accuracy of timestamps on some lines.
                         (default: 0)
-  --sentence            Enables splitting lines to sentences for srt and vtt
-                        subs. Every sentence starts in the new segment. By
-                        default meant to output whole sentence per line for
-                        better translations, but not limited to, read about '
-                        --max_...' parameters. Note: has no effect on
-                        'highlight_words'. (default: False)
-  --standard            Quick hardcoded preset to split lines in standard way.
-                        42 chars per 2 lines with max_comma_cent=70 and
-                        --sentence are activated automatically. (default:
-                        False)
-  --standard_asia       Quick hardcoded preset to split lines in standard way
-                        for some Asian languages. 16 chars per 2 lines with
-                        max_comma_cent=80 and --sentence are activated
+  --sentence            Enables splitting lines to sentences. Every sentence
+                        starts in the new segment. By default meant to output
+                        whole sentence per line for better translations, but
+                        not limited to, read about '--max_...' parameters.
+                        (default: False)
+  --standard            Quick hardcoded preset to split lines in standard way:
+                        --max_line_width=42, --max_line_count=2,
+                        --max_comma_cent=70 and --sentence are activated
                         automatically. (default: False)
+  --standard_asia       Quick hardcoded preset to split lines in standard way
+                        for some Asian languages. --max_line_width=16,
+                        --max_line_count=2, --max_comma_cent=80 and --sentence
+                        are activated automatically. (default: False)
   --max_comma MAX_COMMA
                         (requires --sentence) After this line length a comma
                         is treated as the end of sentence. Note: disabled if
                         it's over or equal to --max_line_width. (default: 250)
-  --max_comma_cent {50,60,70,80,90,100}
+  --max_comma_cent {20,30,40,50,60,70,80,90,100}
                         (requires --sentence) Percentage of --max_line_width
                         when it starts breaking the line after comma. Note:
                         100 = disabled. (default: 100)
@@ -948,13 +878,29 @@ optional arguments:
                         Device to use for MDX-Net filter. Default is 'cuda' if
                         CUDA device is detected, else is 'cpu'. If CUDA GPU is
                         a second device then set 'cuda:1'. (default: cpu)
-  --diarize             Enable diarization. (default: False)
+  --diarize {pyannote_v3.0,pyannote_v3.1,reverb_v1,reverb_v2}
+                        Notes: It will activate --sentence and all output
+                        formats will be affected, exept json. Read more there
+                        - 'https://github.com/Purfview/whisper-standalone-
+                        win/discussions/322'. (default: None)
   --diarize_device DIARIZE_DEVICE
                         Device to use for '--diarize'. Default is 'cuda' if
                         CUDA device is detected, else is 'cpu'. If CUDA GPU is
                         a second device then set 'cuda:1'. (default: cpu)
   --diarize_threads DIARIZE_THREADS
-  --speaker SPEAKER     To replace 'SPEAKER' string with your own word.
-                        (default: SPEAKER)</value>
+                        Automatic by default. (default: 0)
+  --diarize_dump        Dump diarization output to a file. (default: False)
+  --speaker SPEAKER     Diarization: To replace 'SPEAKER' string with your own
+                        word. (default: SPEAKER)
+  --num_speakers NUM_SPEAKERS
+                        Diarization: Number of speakers, when known. (default:
+                        None)
+  --min_speakers MIN_SPEAKERS
+                        Diarization: Minimum number of speakers. Has no effect
+                        when `num_speakers` is provided. (default: None)
+  --max_speakers MAX_SPEAKERS
+                        Diarization: Maximum number of speakers. Has no effect
+                        when `num_speakers` is provided. (default: None)
+</value>
   </data>
 </root>
