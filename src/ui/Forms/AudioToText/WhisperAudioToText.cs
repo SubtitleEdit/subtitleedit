@@ -353,6 +353,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // Check if chosen whisper implementation is installed
             if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
             {
+                if (Configuration.Settings.Tools.WhisperExtraSettings == Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd)
+                {
+                    Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
+                    SetAdvancedLabel();
+                }
+
                 var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.Cpp);
                 if (!File.Exists(fileName))
                 {
@@ -2443,7 +2449,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
-            if (labelAdvanced.Right > Width && labelProgress.Font.Size == labelAdvanced.Font.Size)
+            if (labelAdvanced.Right > Width && Math.Abs(labelProgress.Font.Size - labelAdvanced.Font.Size) < 0.01)
             {
                 labelAdvanced.Font = new Font(labelAdvanced.Font.FontFamily, labelAdvanced.Font.Size - 1);
             }
