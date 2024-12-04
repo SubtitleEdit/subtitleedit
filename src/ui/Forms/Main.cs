@@ -8589,17 +8589,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripButtonSpellCheckClick(object sender, EventArgs e)
+        private async void ToolStripButtonSpellCheckClick(object sender, EventArgs e)
         {
-            SpellCheck(true, 0);
+            await SpellCheck(true, 0);
         }
 
-        private void SpellCheckToolStripMenuItemClick(object sender, EventArgs e)
+        private async void SpellCheckToolStripMenuItemClick(object sender, EventArgs e)
         {
-            SpellCheck(true, 0);
+            await SpellCheck(true, 0);
         }
 
-        private void SpellCheck(bool autoDetect, int startFromLine)
+        private async Task SpellCheck(bool autoDetect, int startFromLine)
         {
             if (!IsSubtitleLoaded)
             {
@@ -8634,7 +8634,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            _spellCheckForm.ContinueSpellCheck(_subtitle);
+                            await _spellCheckForm.ResumeSpellCheckAsync(_subtitle);
                         }
                     }
                     else
