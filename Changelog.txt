@@ -51,6 +51,7 @@
    * Fix "Dialog styles" for many languags in Netflix quality check - thx Looi
    * Fix wrong timestamp (rounding) for format "CSV" - thx MariaB99
    * Fix LRC with milliseconds issue - thx AverageHoarder
+   * Fix crash trying to get subtitles from mp4 - thx nounours18200 
 
 
 4.0.8 (6th September 2024) 
