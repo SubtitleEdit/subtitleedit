@@ -24412,26 +24412,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void HideVideoPlayer()
-        {
-            mediaPlayer.Pause();
-
-            int textHeight = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-
-            splitContainer1.Panel2Collapsed = true;
-            splitContainerMain.Panel2Collapsed = true;
-            Main_Resize(null, null);
-
-            try
-            {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-
         private void ShowVideoPlayer()
         {
             int textHeight = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
@@ -24540,36 +24520,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoControlsUndocked.Visible = false;
                 }
             }
-        }
-
-        private void MoveVideoUp()
-        {
-            if (splitContainer1.Panel2.Controls.Count == 0)
-            {
-                var control = panelVideoPlayer;
-                groupBoxVideo.Controls.Remove(control);
-                splitContainer1.Panel2.Controls.Add(control);
-            }
-
-            panelVideoPlayer.Top = 0;
-            panelVideoPlayer.Left = 0;
-            panelVideoPlayer.Height = splitContainer1.Panel2.Height - 2;
-            panelVideoPlayer.Width = splitContainer1.Panel2.Width - 2;
-        }
-
-        private void MoveVideoDown()
-        {
-            if (splitContainer1.Panel2.Controls.Count > 0)
-            {
-                var control = panelVideoPlayer;
-                splitContainer1.Panel2.Controls.Clear();
-                groupBoxVideo.Controls.Add(control);
-            }
-
-            panelVideoPlayer.Top = 32;
-            panelVideoPlayer.Left = tabControlModes.Left + tabControlModes.Width + 5;
-            panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
-            panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
         }
 
         private void FixLargeFonts()
