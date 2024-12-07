@@ -904,6 +904,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
                 .Replace("\u2120", "(Service Mark)") // ℠ service mark
                 .Replace("\u2122", "(Trademark)") // ™ trademark
+                .Replace("\u00ae", "(Registered Trademark)") // ® Registered trademark
 
                 // RTL/LTR markers
                 .Replace("\u202B", string.Empty) // &rlm;
