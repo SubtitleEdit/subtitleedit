@@ -1525,6 +1525,7 @@
     <Word from="onik" to="onim" />
     <Word from="onlajn" to="online" />
     <Word from="oproštaj" to="oprost" />
+    <Word from="oprt" to="opet" />
     <Word from="opuštano" to="opušteno" />
     <Word from="organizuj" to="organiziraj" />
     <Word from="Organizuj" to="Organiziraj" />
@@ -5665,7 +5666,7 @@
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
     <RegEx find="rpv" replaceWith="rov" />
-    <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
+    <RegEx find="rq([dlmntvz])" replaceWith="ra$1" />
     <RegEx find="([krv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
     <RegEx find="rstk" replaceWith="ratk" />
