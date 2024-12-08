@@ -53,7 +53,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelEngine = new System.Windows.Forms.Label();
             this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAdvanced = new System.Windows.Forms.Label();
@@ -321,8 +320,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setCPPConstmeModelsFolderToolStripMenuItem,
-            this.removeTemporaryFilesToolStripMenuItem,
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem});
+            this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
             this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(358, 70);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
@@ -340,13 +338,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(357, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
-            // 
-            // downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem
-            // 
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem";
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(357, 22);
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = "Download cuBLAS and cuDNN libs for Faster-Whisper";
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // labelEngine
             // 
@@ -487,7 +478,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
         private System.Windows.Forms.Label labelAdvanced;
         private System.Windows.Forms.Button buttonAdvanced;
-        private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem;
         private System.Windows.Forms.LinkLabel linkLabelPostProcessingConfigure;
     }
 }
