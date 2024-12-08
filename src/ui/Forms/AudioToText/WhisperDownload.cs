@@ -2,12 +2,17 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
+using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using SharpCompress.Readers;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -18,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private const string DownloadUrl32Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
+        private string _tempFileName;
 
         private static readonly string[] Sha512HashesCpp =
         {
@@ -129,25 +135,31 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
             {
-                UiUtil.OpenUrl("https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r194.5_windows.7z");
-
-                var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
-                if (!Directory.Exists(folder))
+                _tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".7z");
+                using (var downloadStream = new FileStream(_tempFileName, FileMode.Create, FileAccess.Write))
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    Directory.CreateDirectory(folder);
+                    var downloadTask = httpClient.DownloadAsync(DownloadUrlPurfviewFasterWhisperXxl, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                        labelPleaseWait.Refresh();
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
                 }
-
-                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-
-                UiUtil.OpenFolder(folder);
-
-                MessageBox.Show(this, $"Unpack and copy files from \"Faster-Whisper-XXL\" to: \"{folder}\"" + Environment.NewLine +
-                                               $"(so \"faster-whisper-xxl.exe\" should exist in \"{folder}\")");
-                DialogResult = DialogResult.OK;
+                CompleteDownloadFasterWhisperXxl(_tempFileName);
                 return;
             }
 
@@ -159,10 +171,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 downloadUrl = DownloadUrlConstMe;
-            }
-            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
-            {
-                downloadUrl = DownloadUrlPurfviewFasterWhisperXxl;
             }
             else if (_whisperChoice == WhisperChoice.CppCuBlasLib)
             {
@@ -290,30 +298,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
+            if (_whisperChoice == WhisperChoice.CppCuBlasLib)
             {
-                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-
-                using (var zip = ZipExtractor.Open(downloadStream))
-                {
-                    var dir = zip.ReadCentralDir();
-                    foreach (var entry in dir)
-                    {
-                        if (entry.FilenameInZip.EndsWith(WhisperHelper.GetExecutableFileName(WhisperChoice.PurfviewFasterWhisperXxl)))
-                        {
-                            var path = Path.Combine(folder, Path.GetFileName(entry.FilenameInZip));
-                            zip.ExtractFile(entry, path);
-                        }
-                    }
-                }
-            }
-            else if (_whisperChoice == WhisperChoice.CppCuBlasLib)
-            {
-
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
                 {
                     folder = Path.Combine(folder, WhisperChoice.CppCuBlas);
@@ -361,6 +347,99 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             DialogResult = DialogResult.OK;
+        }
+
+        private void CompleteDownloadFasterWhisperXxl(string fileName)
+        {
+            var fileInfo = new FileInfo(fileName);
+
+            if (fileInfo.Length == 0)
+            {
+                throw new Exception("No content downloaded - missing file or no internet connection!");
+            }
+
+            var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            Extract7Zip(_tempFileName, folder);
+            Cursor = Cursors.Default;
+            labelPleaseWait.Text = string.Empty;
+            DialogResult = DialogResult.OK;
+            File.Delete(_tempFileName);
+        }
+
+        private void Extract7Zip(string tempFileName, string dir)
+        {
+            using (Stream stream = File.OpenRead(tempFileName))
+            using (var archive = SevenZipArchive.Open(stream))
+            {
+                double totalSize = archive.TotalUncompressSize;
+                double unpackedSize = 0;
+
+                var reader = archive.ExtractAllEntries();
+                while (reader.MoveToNextEntry())
+                {
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    var skipFolderLevel = "Faster-Whisper-XXL";
+                    if (!string.IsNullOrEmpty(reader.Entry.Key))
+                    {
+                        var entryFullName = reader.Entry.Key;
+                        if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
+                        {
+                            entryFullName = entryFullName.Substring(skipFolderLevel.Length);
+                        }
+
+                        entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
+                        entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+
+                        var fullFileName = Path.Combine(dir, entryFullName);
+
+                        if (reader.Entry.IsDirectory)
+                        {
+                            if (!Directory.Exists(fullFileName))
+                            {
+                                Directory.CreateDirectory(fullFileName);
+                            }
+
+                            continue;
+                        }
+
+                        var fullPath = Path.GetDirectoryName(fullFileName);
+                        if (fullPath == null)
+                        {
+                            continue;
+                        }
+
+                        var displayName = entryFullName;
+                        if (displayName.Length > 30)
+                        {
+                            displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
+                        }
+
+                        var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
+                        labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)"; 
+                        labelPleaseWait.Refresh();
+
+                        reader.WriteEntryToDirectory(fullPath, new ExtractionOptions() { ExtractFullPath = false, Overwrite = true });
+                        unpackedSize += reader.Entry.Size;
+                    }
+                }
+            }
+
+            labelPleaseWait.Text = string.Empty;
         }
 
         public static bool IsOld(string fullPath, string whisperChoice)
