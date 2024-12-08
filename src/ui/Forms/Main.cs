@@ -36430,7 +36430,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!RequireWhisperCpp() && Configuration.IsRunningOnWindows)
                 {
-                    Configuration.Settings.Tools.WhisperChoice = WhisperChoice.PurfviewFasterWhisper;
+                    Configuration.Settings.Tools.WhisperChoice = WhisperChoice.PurfviewFasterWhisperXxl;
                 }
             }
 
@@ -36478,13 +36478,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
                         }
-                    }
-                    else if (form.RunningOnCuda &&
-                             Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper &&
-                             !WhisperAudioToText.IsFasterWhisperCudaInstalled())
-                    {
-                        MessageBox.Show("cuBLAS or cuDNN seems to be missing.");
-                        WhisperAudioToText.DownloadCudaForWhisperFaster(this);
                     }
                     else
                     {

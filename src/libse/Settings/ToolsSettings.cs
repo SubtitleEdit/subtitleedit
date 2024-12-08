@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoOutputFileSuffix = "_new";
             GenTransparentVideoExtension = ".mkv";
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
+            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
             WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";
