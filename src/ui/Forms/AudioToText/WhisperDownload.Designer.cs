@@ -30,6 +30,7 @@
         {
             this.labelDescription1 = new System.Windows.Forms.Label();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelDescription1
@@ -50,11 +51,23 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Location = new System.Drawing.Point(233, 101);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 30;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
             // WhisperDownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(320, 93);
+            this.ClientSize = new System.Drawing.Size(320, 136);
+            this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelDescription1);
             this.Controls.Add(this.labelPleaseWait);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -74,5 +87,6 @@
 
         private System.Windows.Forms.Label labelDescription1;
         private System.Windows.Forms.Label labelPleaseWait;
+        private System.Windows.Forms.Button buttonCancel;
     }
 }

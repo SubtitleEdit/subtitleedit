@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
+using SevenZipExtractor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -121,7 +122,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Text = LanguageSettings.Current.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " " + whisperChoice;
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
+            {
+                labelDescription1.Text += " (1.4 GB)";
+            }
             _cancellationTokenSource = new CancellationTokenSource();
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             _whisperChoice = whisperChoice;
         }
 
@@ -373,65 +379,57 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
-            //using (Stream stream = File.OpenRead(tempFileName))
-            //using (var archive = SevenZipArchive.Open(stream))
-            //{
-            //    double totalSize = archive.TotalUncompressSize;
-            //    double unpackedSize = 0;
+            using (Stream stream = File.OpenRead(tempFileName))
+            using (var archive = new ArchiveFile(stream))
+            {
+                double totalSize = 0;
+                foreach (var entry in archive.Entries)
+                {
+                    totalSize += entry.Size;
+                }
 
-            //    var reader = archive.ExtractAllEntries();
-            //    while (reader.MoveToNextEntry())
-            //    {
-            //        if (_cancellationTokenSource.IsCancellationRequested)
-            //        {
-            //            return;
-            //        }
+                double unpackedSize = 0;
+                foreach (var entry in archive.Entries)
+                {
 
-            //        var skipFolderLevel = "Faster-Whisper-XXL";
-            //        if (!string.IsNullOrEmpty(reader.Entry.Key))
-            //        {
-            //            var entryFullName = reader.Entry.Key;
-            //            if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
-            //            {
-            //                entryFullName = entryFullName.Substring(skipFolderLevel.Length);
-            //            }
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
-            //            entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
-            //            entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+                    var skipFolderLevel = "Faster-Whisper-XXL";
 
-            //            var fullFileName = Path.Combine(dir, entryFullName);
+                    var entryFullName = entry.FileName;
+                    if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
+                    {
+                        entryFullName = entryFullName.Substring(skipFolderLevel.Length);
+                    }
 
-            //            if (reader.Entry.IsDirectory)
-            //            {
-            //                if (!Directory.Exists(fullFileName))
-            //                {
-            //                    Directory.CreateDirectory(fullFileName);
-            //                }
+                    entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
+                    entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
 
-            //                continue;
-            //            }
+                    var fullFileName = Path.Combine(dir, entryFullName);
 
-            //            var fullPath = Path.GetDirectoryName(fullFileName);
-            //            if (fullPath == null)
-            //            {
-            //                continue;
-            //            }
+                    var fullPath = Path.GetDirectoryName(fullFileName);
+                    if (fullPath == null)
+                    {
+                        continue;
+                    }
 
-            //            var displayName = entryFullName;
-            //            if (displayName.Length > 30)
-            //            {
-            //                displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
-            //            }
+                    var displayName = entryFullName;
+                    if (displayName.Length > 30)
+                    {
+                        displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
+                    }
 
-            //            var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
-            //            labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)"; 
-            //            labelPleaseWait.Refresh();
+                    var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
+                    labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)";
+                    labelPleaseWait.Refresh();
 
-            //            reader.WriteEntryToDirectory(fullPath, new ExtractionOptions() { ExtractFullPath = false, Overwrite = true });
-            //            unpackedSize += reader.Entry.Size;
-            //        }
-            //    }
-            //}
+                    entry.Extract(fullFileName);
+                    unpackedSize += entry.Size;
+                }
+            }
 
             labelPleaseWait.Text = string.Empty;
         }
@@ -510,6 +508,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             return false;
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            _cancellationTokenSource.Cancel();
         }
     }
 }
