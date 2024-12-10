@@ -17,6 +17,8 @@
    * Update Italian translation - thx bovirus
    * Update Romanian installer translation - thx mircea
    * Update Dutch translation - thx Flitskikker
+   * Update Whisper XXL to r239.1
+   * Update Whisper XXL in-program 7-zip unpack
    * Update Whisper CPP to V1.7.2
    * Update ffmpeg to 7.1
    * Update Tesseract to 5.5.0

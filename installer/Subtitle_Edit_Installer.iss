@@ -322,6 +322,7 @@ Source: {#bindir}\UtfUnknown.dll;                  DestDir: {app};              
 Source: {#bindir}\Vosk.dll;                        DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NCalc.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\SharpCompress.dll;               DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\System.Memory.dll;               DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -365,6 +366,7 @@ Type: files;      Name: {app}\UtfUnknown.dll;                         Check: IsU
 Type: files;      Name: {app}\Vosk.dll;                               Check: IsUpgrade()
 Type: files;      Name: {app}\NCalc.dll;                              Check: IsUpgrade()
 Type: files;      Name: {app}\SharpCompress.dll;                      Check: IsUpgrade()
+Type: files;      Name: {app}\System.Memory.dll;                      Check: IsUpgrade()
 Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
