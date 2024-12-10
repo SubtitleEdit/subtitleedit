@@ -299,6 +299,8 @@
 	<name>Burnham</name>
 	<name>Burundian</name>
 	<name>Burundians</name>
+	<name>C.I.A.</name>
+	<name>C.S.I.</name>
 	<name>Cade</name>
 	<name>Cadence</name>
 	<name>Cahill</name>
@@ -430,6 +432,7 @@
 	<name>Czechs</name>
 	<name>Côte d’Ivoire</name>
 	<name>D.A.</name>
+	<name>D.E.A.</name>	
 	<name>DR Congo</name>
 	<name>DRC</name>
 	<name>DROC</name>
@@ -577,6 +580,7 @@
 	<name>Ezequiel</name>
 	<name>Ezra</name>
 	<name>F.O.B.</name>
+	<name>F.B.I.</name>
 	<name>Falcone</name>
 	<name>Falkland Islanders</name>
 	<name>Falkland Islands</name>
@@ -746,6 +750,7 @@
 	<name>Huyang</name>
 	<name>I-Kiribati</name>
 	<name>I.D.</name>
+	<name>I.R.S.</name>
 	<name>Iceland</name>
 	<name>Icelander</name>
 	<name>Icelanders</name>
@@ -1165,6 +1170,7 @@
 	<name>Luz</name>
 	<name>Lylah</name>
 	<name>M&amp;M</name>
+	<name>M.I.6.</name>
 	<name>MDMA</name>
 	<name>MI5</name>
 	<name>Maasai</name>
@@ -1329,6 +1335,7 @@
 	<name>Myles</name>
 	<name>Myra</name>
 	<name>Myrna</name>
+	<name>N.Y.P.D</name>
 	<name>Nadi</name>
 	<name>Nahla</name>
 	<name>Namibian</name>
@@ -1917,6 +1924,7 @@
 	<name>Zoie</name>
 	<name>Zuri</name>
 	<name>Åland Islands</name>
+	<name>L.A.P.D.</name>
 	<name>LGBTQ</name>
 	<name>TSA</name>
 	<name>Winterton</name>
