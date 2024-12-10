@@ -2,17 +2,12 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SharpCompress.Readers;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -378,65 +373,65 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
-            using (Stream stream = File.OpenRead(tempFileName))
-            using (var archive = SevenZipArchive.Open(stream))
-            {
-                double totalSize = archive.TotalUncompressSize;
-                double unpackedSize = 0;
+            //using (Stream stream = File.OpenRead(tempFileName))
+            //using (var archive = SevenZipArchive.Open(stream))
+            //{
+            //    double totalSize = archive.TotalUncompressSize;
+            //    double unpackedSize = 0;
 
-                var reader = archive.ExtractAllEntries();
-                while (reader.MoveToNextEntry())
-                {
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        return;
-                    }
+            //    var reader = archive.ExtractAllEntries();
+            //    while (reader.MoveToNextEntry())
+            //    {
+            //        if (_cancellationTokenSource.IsCancellationRequested)
+            //        {
+            //            return;
+            //        }
 
-                    var skipFolderLevel = "Faster-Whisper-XXL";
-                    if (!string.IsNullOrEmpty(reader.Entry.Key))
-                    {
-                        var entryFullName = reader.Entry.Key;
-                        if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
-                        {
-                            entryFullName = entryFullName.Substring(skipFolderLevel.Length);
-                        }
+            //        var skipFolderLevel = "Faster-Whisper-XXL";
+            //        if (!string.IsNullOrEmpty(reader.Entry.Key))
+            //        {
+            //            var entryFullName = reader.Entry.Key;
+            //            if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
+            //            {
+            //                entryFullName = entryFullName.Substring(skipFolderLevel.Length);
+            //            }
 
-                        entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
-                        entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+            //            entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
+            //            entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
 
-                        var fullFileName = Path.Combine(dir, entryFullName);
+            //            var fullFileName = Path.Combine(dir, entryFullName);
 
-                        if (reader.Entry.IsDirectory)
-                        {
-                            if (!Directory.Exists(fullFileName))
-                            {
-                                Directory.CreateDirectory(fullFileName);
-                            }
+            //            if (reader.Entry.IsDirectory)
+            //            {
+            //                if (!Directory.Exists(fullFileName))
+            //                {
+            //                    Directory.CreateDirectory(fullFileName);
+            //                }
 
-                            continue;
-                        }
+            //                continue;
+            //            }
 
-                        var fullPath = Path.GetDirectoryName(fullFileName);
-                        if (fullPath == null)
-                        {
-                            continue;
-                        }
+            //            var fullPath = Path.GetDirectoryName(fullFileName);
+            //            if (fullPath == null)
+            //            {
+            //                continue;
+            //            }
 
-                        var displayName = entryFullName;
-                        if (displayName.Length > 30)
-                        {
-                            displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
-                        }
+            //            var displayName = entryFullName;
+            //            if (displayName.Length > 30)
+            //            {
+            //                displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
+            //            }
 
-                        var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
-                        labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)"; 
-                        labelPleaseWait.Refresh();
+            //            var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
+            //            labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)"; 
+            //            labelPleaseWait.Refresh();
 
-                        reader.WriteEntryToDirectory(fullPath, new ExtractionOptions() { ExtractFullPath = false, Overwrite = true });
-                        unpackedSize += reader.Entry.Size;
-                    }
-                }
-            }
+            //            reader.WriteEntryToDirectory(fullPath, new ExtractionOptions() { ExtractFullPath = false, Overwrite = true });
+            //            unpackedSize += reader.Entry.Size;
+            //        }
+            //    }
+            //}
 
             labelPleaseWait.Text = string.Empty;
         }
