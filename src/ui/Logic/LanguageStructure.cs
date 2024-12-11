@@ -2654,6 +2654,7 @@
             public string WaveformUseFFmpeg { get; set; }
             public string WaveformUseCenterChannelOnly { get; set; }
             public string DownloadX { get; set; }
+            public string ExtractingX { get; set; }
             public string WaveformFFmpegPath { get; set; }
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }

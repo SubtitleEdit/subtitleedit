@@ -6730,6 +6730,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/DownloadX":
                     language.Settings.DownloadX = reader.Value;
                     break;
+                case "Settings/ExtractingX":
+                    language.Settings.ExtractingX = reader.Value;
+                    break;
                 case "Settings/WaveformFFmpegPath":
                     language.Settings.WaveformFFmpegPath = reader.Value;
                     break;
