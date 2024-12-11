@@ -379,6 +379,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
+            labelDescription1.Text = "Extracting " + _whisperChoice;
+
             double totalSize = 0;
             double unpackedSize = 0;
             using (var archiveFile = new ArchiveFile(tempFileName))
@@ -424,7 +426,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
 
                     var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
-                    labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)";
+                    labelPleaseWait.Text = $"Extracting {displayName} ({progressValue}%)";
                     labelPleaseWait.Refresh();
 
                     unpackedSize += entry.Size;
