@@ -12539,7 +12539,16 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        _subtitleOriginal.InsertParagraphInCorrectTimeOrder(originalNew);
+                        if (originalCurrent != null && _subtitleOriginal.GetIndex(originalCurrent) >= 0)
+                        {
+                            var idx = _subtitleOriginal.GetIndex(originalCurrent);
+                            _subtitleOriginal.Paragraphs.Insert(idx + 1, originalNew);
+                        }
+                        else
+                        {
+                            _subtitleOriginal.InsertParagraphInCorrectTimeOrder(originalNew);
+                        }
+
                         _subtitleOriginal.Renumber();
                         FixSplitItalicTagAndAssa(originalCurrent, originalNew);
                         FixSplitFontTag(originalCurrent, originalNew);
