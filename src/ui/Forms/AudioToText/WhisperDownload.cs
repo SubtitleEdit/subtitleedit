@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -379,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
-            labelDescription1.Text = "Extracting " + _whisperChoice;
+            labelDescription1.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, _whisperChoice);
 
             double totalSize = 0;
             double unpackedSize = 0;
@@ -426,7 +427,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
 
                     var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
-                    labelPleaseWait.Text = $"Extracting {displayName} ({progressValue}%)";
+                    labelPleaseWait.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, $"{ displayName} ({progressValue}%)");
                     labelPleaseWait.Refresh();
 
                     unpackedSize += entry.Size;
