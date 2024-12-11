@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "a4681b139c93d7b4b6cefbb4d72de175b3980a4c6052499ca9db473e817659479d2ef8096dfd0c50876194671b09b25985f6db56450b6b5f8a4117851cfd9f1f",
         };
 
-
         private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r239.1_windows.7z";
+        // - for test: private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/test.7z";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisperXxl =
         {
@@ -379,25 +379,26 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
-            using (Stream stream = File.OpenRead(tempFileName))
-            using (var archive = new ArchiveFile(stream))
+            double totalSize = 0;
+            double unpackedSize = 0;
+            using (var archiveFile = new ArchiveFile(tempFileName))
             {
-                double totalSize = 0;
-                foreach (var entry in archive.Entries)
+                archiveFile.Extract(entry =>
                 {
                     totalSize += entry.Size;
-                }
+                    return null; // null means skip and do not extract
+                });
+            }
 
-                double unpackedSize = 0;
-                foreach (var entry in archive.Entries)
+            var skipFolderLevel = "Faster-Whisper-XXL";
+            using (var archiveFile = new ArchiveFile(tempFileName))
+            {
+                archiveFile.Extract(entry =>
                 {
-
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
-                        return;
+                        return null;
                     }
-
-                    var skipFolderLevel = "Faster-Whisper-XXL";
 
                     var entryFullName = entry.FileName;
                     if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
@@ -413,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     var fullPath = Path.GetDirectoryName(fullFileName);
                     if (fullPath == null)
                     {
-                        continue;
+                        return null;
                     }
 
                     var displayName = entryFullName;
@@ -426,12 +427,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     labelPleaseWait.Text = $"Unpacking: {displayName} ({progressValue}%)";
                     labelPleaseWait.Refresh();
 
-                    entry.Extract(fullFileName);
                     unpackedSize += entry.Size;
-                }
-            }
 
-            labelPleaseWait.Text = string.Empty;
+                    return fullFileName;
+                });
+            }
         }
 
         public static bool IsOld(string fullPath, string whisperChoice)
