@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -381,17 +380,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void Extract7Zip(string tempFileName, string dir)
         {
             labelDescription1.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, _whisperChoice);
-
-            double totalSize = 0;
-            double unpackedSize = 0;
-            using (var archiveFile = new ArchiveFile(tempFileName))
-            {
-                archiveFile.Extract(entry =>
-                {
-                    totalSize += entry.Size;
-                    return null; // null means skip and do not extract
-                });
-            }
+            labelDescription1.Refresh();
 
             var skipFolderLevel = "Faster-Whisper-XXL";
             using (var archiveFile = new ArchiveFile(tempFileName))
@@ -426,11 +415,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
                     }
 
-                    var progressValue = (int)(Math.Round((float)(unpackedSize / totalSize) * 100.0, MidpointRounding.AwayFromZero));
-                    labelPleaseWait.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, $"{ displayName} ({progressValue}%)");
+                    labelPleaseWait.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, $"{displayName}");
                     labelPleaseWait.Refresh();
-
-                    unpackedSize += entry.Size;
 
                     return fullFileName;
                 });
