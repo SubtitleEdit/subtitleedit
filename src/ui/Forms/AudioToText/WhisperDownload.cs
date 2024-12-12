@@ -379,6 +379,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void Extract7Zip(string tempFileName, string dir)
         {
+            Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, string.Empty);
             labelDescription1.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, _whisperChoice);
             labelDescription1.Refresh();
 
