@@ -5763,7 +5763,7 @@
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
     <RegEx find="trq" replaceWith="tra" />
-    <RegEx find="ts([nm])" replaceWith="ta$1" />
+    <RegEx find="ts([lnm])" replaceWith="ta$1" />
     <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
     <RegEx find="twt" replaceWith="tet" />
