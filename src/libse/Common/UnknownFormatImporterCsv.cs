@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             public string Duration { get; set; }
             public string Text { get; set; }
             public string Character { get; set; }
+            public bool Play { get; set; }
         }
 
         private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show" };
