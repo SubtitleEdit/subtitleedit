@@ -21,8 +21,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                var text = string.IsNullOrEmpty(p.Text) ? string.Empty : "\"" + p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n") + "\"";
-                var actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : "\"" + p.Actor.Replace(",", " ").Replace("\"", string.Empty) + "\"";
+                var text = string.IsNullOrEmpty(p.Text) ? string.Empty : p.Text.Replace("\"", "\"\"");
+                var actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : p.Actor.Replace(",", " ").Replace("\"", string.Empty);
                 sb.AppendLine(
                     string.Format(
                         LineFormat,
@@ -68,6 +68,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool ParseTimeCode(string s, out TimeCode tc)
         {
+            if (string.IsNullOrEmpty(s))
+            {
+                tc = new TimeCode();
+                return false;
+            }
+
             var arr = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length == 4)
             {
