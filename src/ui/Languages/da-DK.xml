@@ -1012,6 +1012,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <Audio>Lyd</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Pixel format</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Indstil efter</TuneFor>
     <AlignRight>Juster til højre</AlignRight>
@@ -2470,6 +2471,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Brug kun forreste centerkanal (til 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Download {0}</DownloadX>
+    <ExtractingX>Udpakker {0}</ExtractingX>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
@@ -2684,6 +2686,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformGoToPreviousShotChange>Gå til forrige sceneændring</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Gå til næste sceneskift</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Toggle sceneskift</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Flyt alle sceneskiftefr en frame frem</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Flyt alle scenesken frame tilbage</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Fjern/eksporter sceneændringer</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Autojuster start via lydstyrke/sceneændring</WaveformGuessStart>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -2789,6 +2793,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Flyt tekst efter markørposition til næste undertekst, og gå til næste</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Flyt første ord til forrige undertekst</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
@@ -3131,6 +3136,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Boks pr. Linje (brug konturfarve)</BoxPerLine>
     <BoxMultiLine>En boks (brug skygge farve)</BoxMultiLine>
+    <BoxPerLineShort>Boks pr linje</BoxPerLineShort>
+    <BoxMultiLineShort>Én boks</BoxMultiLineShort>
+    <BoxType>Boks type</BoxType>
     <DuplicateStyleNames>Dublerede stilnavne: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3175,6 +3183,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AutoContinue>Auto-fortsæt</AutoContinue>
     <Regenerate>Regenerer</Regenerate>
     <Speed>Fart</Speed>
+    <Stability>Stabilitet</Stability>
+    <Similarity>Lighed</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
@@ -3443,6 +3453,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
   <WebVttProperties>
     <UseXTimeStamp>Brug X-TIMESTAMP-MAP headerværdi</UseXTimeStamp>
     <MergeLines>Flet linjer med samme tekst ved indlæsning</MergeLines>
+    <MergeStyleTags>Flet stiltags</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT stilarter</Title>
