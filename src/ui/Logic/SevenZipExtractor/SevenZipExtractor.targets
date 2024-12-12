@@ -1,0 +1,15 @@
+<!-- Based on https://www.dxsdata.com/2019/02/visual-studio-adding-unmanaged-dll-or-any-file-to-projects-nuget-package-output/ -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+  ******************************************************************************
+  **               SevenZipExtractor Native Provider Interop Files            **
+  ******************************************************************************
+  -->
+  <ItemGroup>
+    <NativeLibs Include="$(MSBuildThisFileDirectory)**\*.dll" />
+    <None Include="@(NativeLibs)">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

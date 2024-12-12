@@ -108,6 +108,12 @@
     <None Update="Hunspellx86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="x64\7z.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="x86\7z.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -277,7 +283,6 @@
     <PackageReference Include="ncalc" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NHunspell" />
-    <PackageReference Include="SevenZipExtractor" />
     <PackageReference Include="System.Security.AccessControl" />
     <PackageReference Include="System.Security.Principal.Windows" />
     <PackageReference Include="Vosk" />
