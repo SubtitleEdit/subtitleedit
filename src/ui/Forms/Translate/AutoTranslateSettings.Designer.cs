@@ -98,7 +98,7 @@
             0});
             this.nikseUpDownMaxBytes.Location = new System.Drawing.Point(217, 105);
             this.nikseUpDownMaxBytes.Maximum = new decimal(new int[] {
-            10000,
+            128000,
             0,
             0,
             0});
