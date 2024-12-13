@@ -1320,6 +1320,7 @@
     <Word from="nekoč" to="nekoć" />
     <Word from="nekto" to="netko" />
     <Word from="neks" to="neka" />
+    <Word from="nem" to="nijem" />
     <Word from="nemi" to="nijemi" />
     <Word from="nemo" to="nijemo" />
     <Word from="nemof" to="nijemog" />
@@ -5610,6 +5611,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="pbo" replaceWith="pno" />
     <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="pisho" replaceWith="psiho" />
@@ -5658,7 +5660,7 @@
     <RegEx find="resed" replaceWith="resjed" />
     <RegEx find="rgk" replaceWith="rgl" />
     <RegEx find="rgv" replaceWith="rgov" />
-    <RegEx find="rqv" replaceWith="rav" />
+    <RegEx find="rq([vn])" replaceWith="ra$1" />
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
@@ -5761,7 +5763,7 @@
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
     <RegEx find="trq" replaceWith="tra" />
-    <RegEx find="ts([nm])" replaceWith="ta$1" />
+    <RegEx find="ts([lnm])" replaceWith="ta$1" />
     <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
     <RegEx find="twt" replaceWith="tet" />
