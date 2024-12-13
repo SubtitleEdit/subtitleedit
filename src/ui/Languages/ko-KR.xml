@@ -2476,6 +2476,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformUseFFmpeg>파형 추출을 위해 FFmpeg 사용</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>전면 중앙 채널만 사용 (5.1/7.1용)</WaveformUseCenterChannelOnly>
     <DownloadX>{0} 다운로드</DownloadX>
+    <ExtractingX>{0} 추출 중</ExtractingX>
     <WaveformFFmpegPath>- FFmpeg 경로</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>FFmpeg 찾기...</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC 포터블 찾기...</WaveformBrowseToVLC>
