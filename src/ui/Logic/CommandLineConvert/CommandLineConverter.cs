@@ -252,6 +252,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = Pac.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
+                else if (targetFormat == "vtt")
+                {
+                    targetFormat = WebVTT.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
+                }
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
                 var offset = GetOffset(unconsumedArguments);
