@@ -8,6 +8,7 @@
    * Add Murf TTS - thx David
    * Add DeepLX translate - thx rifatozkancomtr 
    * Add some auto detect of CSV files with header
+   * Add new "CSV daVinci" subtitle format - thx Jacques
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
@@ -37,11 +38,13 @@
    * Allow save selected lines as subtitle with only 1 row selected - thx Pierrounator
    * Ctrl+A not working in subtitle duration field - thx rRobis
    * Allow reading Matroska files with ".mp4" extension
+   * Up max byte size for auto-translate server calls to 128K - thx despairTK
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
    * Fix crash in TTS re-generate - thx cvrle77
    * Fix crash while translating subtitles - thx claudemartin
    * Fix issue with OCR/Italic - thx Boulder08/Zoltan
+   * Fix for cmd line convert WebVTT to ASSA - thx aaron-meyers
    * Fix bug in EBU validation
    * Fix for restoring Whisper window after minimize - thx vimbackground/innerspeakerz 
    * Minor fix for Cavena890 save options
