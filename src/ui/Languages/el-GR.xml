@@ -2463,6 +2463,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformUseFFmpeg>Χρήση FFmpeg για εξαγωγή κυματομορφής</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Χρήση μόνο μπροστινού, κεντρικού καναλιού (για 5.1 / 7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Λήψη {0}</DownloadX>
+    <ExtractingX>Εξαγωγή {0}</ExtractingX>
     <WaveformFFmpegPath>Διαδρομή του FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Περιήγηση για FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Περιήγηση για φορητό VLC</WaveformBrowseToVLC>
