@@ -2,9 +2,7 @@
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -1569,42 +1567,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
             return sb.ToString().Trim();
-        }
-
-        public static List<string> GetInterjections(string fileName)
-        {
-            var words = new List<string>();
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    var xml = new XmlDocument();
-                    xml.Load(fileName);
-                    if (xml.DocumentElement != null)
-                    {
-                        var nodes = xml.DocumentElement.SelectNodes("word");
-                        if (nodes != null)
-                        {
-                            foreach (XmlNode node in nodes)
-                            {
-                                var w = node.InnerText.Trim();
-                                if (w.Length > 0)
-                                {
-                                    words.Add(w);
-                                }
-                            }
-                        }
-
-                        return words;
-                    }
-                }
-                catch
-                {
-                    // ignore
-                }
-            }
-
-            return words;
         }
 
         public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName, out List<string> skipIfStartsWith)
