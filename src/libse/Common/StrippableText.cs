@@ -6,6 +6,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class StrippableText
     {
+        private const string PrefixChars = " >-\"„”“['‘`´¶(♪¿¡.…—";
+        private const string SuffixChars = " -\"”“]'`´¶)♪.!?:…—؛،؟";
+        
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
@@ -14,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string MergedString => Pre + StrippedText + Post;
 
         public StrippableText(string text)
-            : this(text, " >-\"„”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—؛،؟")
+            : this(text, PrefixChars, SuffixChars)
         {
         }
 
