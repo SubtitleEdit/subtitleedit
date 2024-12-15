@@ -2956,8 +2956,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // allow for mkv files with wrong extension
                 ((ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
-                
-                ) 
+
+                )
             {
                 ImportSubtitleFromMatroskaFile(fileName);
                 return;
@@ -6779,26 +6779,56 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 int textBoxStart = tb.SelectionStart;
-                if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
-                    _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
+                var oldStart = textBoxStart;
+                var oldLineIndex = _findHelper.SelectedLineIndex;
+                var repeat = true;
+                int count = 0;
+                while (repeat)
                 {
-                    textBoxStart = tb.SelectionStart - 1;
+                    if (_findHelper.FindPrevious(_subtitle, _subtitleOriginal, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                    {
+                        count++;
+                        if (count > 100)
+                        {
+                            repeat = false;
+                        }
+                        else if (oldLineIndex != _findHelper.SelectedLineIndex)
+                        {
+                            repeat = false;
+                        }
+                        else if (oldStart <= _findHelper.SelectedPosition)
+                        {
+                            textBoxStart--;
+                            repeat = true;
+                            continue;
+                        }
+                        else
+                        {
+                            repeat = false;
+                        }
+
+                        tb = GetFindReplaceTextBox();
+                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+                        tb.Focus();
+                        tb.SelectionStart = _findHelper.SelectedPosition;
+                        tb.SelectionLength = _findHelper.FindTextLength;
+                        _findHelper.SelectedPosition--;
+                    }
+                    else
+                    {
+                        ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
+                        repeat = false;
+                    }
                 }
 
-                if (_findHelper.FindPrevious(_subtitle, _subtitleOriginal, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                {
-                    tb = GetFindReplaceTextBox();
-                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
-                    tb.Focus();
-                    tb.SelectionStart = _findHelper.SelectedPosition;
-                    tb.SelectionLength = _findHelper.FindTextLength;
-                    _findHelper.SelectedPosition--;
-                }
-                else
-                {
-                    ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
-                }
+                //if ((_findHelper.SelectedPosition - 1 == tb.SelectionStart || _findHelper.SelectedPosition +1 == tb.SelectionStart) && 
+                //    tb.SelectionLength > 0 ||
+                //    _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    textBoxStart = tb.SelectionStart - 1;
+                //}
+
             }
             else if (InSourceView)
             {
@@ -18838,11 +18868,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextOriginal.Focused)
                 {
-                    MoveFirstWordToPrev(textBoxListViewTextOriginal); 
+                    MoveFirstWordToPrev(textBoxListViewTextOriginal);
                 }
                 else
                 {
-                    MoveFirstWordToPrev(textBoxListViewText); 
+                    MoveFirstWordToPrev(textBoxListViewText);
                 }
 
                 e.SuppressKeyPress = true;
