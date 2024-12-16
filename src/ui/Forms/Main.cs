@@ -23464,6 +23464,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _subtitleOriginal = new Subtitle();
             _subtitleOriginalFileName = fileName;
+            _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
             SubtitleFormat format = _subtitleOriginal.LoadSubtitle(fileName, out _, null);
 
             if (format == null)
