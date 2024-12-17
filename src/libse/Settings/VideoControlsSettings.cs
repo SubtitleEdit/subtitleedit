@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public Color WaveformTextColor { get; set; }
         public Color WaveformCursorColor { get; set; }
         public Color WaveformChaptersColor { get; set; }
+        public bool WaveformDuplicateTextWhileSplitting { get; set; }
         public int WaveformTextSize { get; set; }
         public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
@@ -73,6 +74,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             WaveformChaptersColor = Color.FromArgb(255, 104, 33, 122);
             WaveformTextSize = 9;
             WaveformTextBold = true;
+            WaveformDuplicateTextWhileSplitting = false;
+
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
