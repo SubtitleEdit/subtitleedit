@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -47,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffProbePath,
-                    Arguments = $"-select_streams v -show_frames -show_entries frame=pkt_dts_time -of csv -threads 0 \"{videoFileName}\"",
+                    Arguments = $"-select_streams v -show_frames -show_entries frame=pkt_dts_time -of csv \"{videoFileName}\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -71,19 +70,14 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            if (!line.StartsWith("frame,") || line.Contains("N/A"))
+            var arr = line.Split(',');
+            if (arr.Length < 2 || arr[0] != "frame")
             {
                 return;
             }
 
-            var timeString = line.Replace("frame,", "").Trim();
-            if (timeString.Contains("side_data"))
-            {
-                timeString = timeString.Substring(0, timeString.IndexOf("side_data", StringComparison.Ordinal)).TrimEnd(',');
-            }
-
-            var timeCode = timeString.Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
-            if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds))
+            var timeString = arr[1].Trim().Replace("⠨", ".");
+            if (double.TryParse(timeString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds))
             {
                 lock (TimeCodesLock)
                 {
