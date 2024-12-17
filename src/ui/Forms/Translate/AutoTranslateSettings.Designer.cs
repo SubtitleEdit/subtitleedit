@@ -28,40 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxParagraphHandling = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelParagraphHandling = new System.Windows.Forms.Label();
             this.labelMaxBytes = new System.Windows.Forms.Label();
-            this.nikseUpDownMaxBytes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOk = new System.Windows.Forms.Button();
             this.labelPrompt = new System.Windows.Forms.Label();
-            this.nikseTextBoxPrompt = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.nikseUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDelay = new System.Windows.Forms.Label();
+            this.nikseUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.nikseTextBoxPrompt = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseUpDownMaxBytes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.comboBoxParagraphHandling = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
-            // 
-            // comboBoxParagraphHandling
-            // 
-            this.comboBoxParagraphHandling.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxParagraphHandling.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxParagraphHandling.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxParagraphHandling.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxParagraphHandling.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxParagraphHandling.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxParagraphHandling.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxParagraphHandling.DropDownHeight = 400;
-            this.comboBoxParagraphHandling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxParagraphHandling.DropDownWidth = 165;
-            this.comboBoxParagraphHandling.FormattingEnabled = true;
-            this.comboBoxParagraphHandling.Location = new System.Drawing.Point(112, 20);
-            this.comboBoxParagraphHandling.MaxLength = 32767;
-            this.comboBoxParagraphHandling.Name = "comboBoxParagraphHandling";
-            this.comboBoxParagraphHandling.SelectedIndex = -1;
-            this.comboBoxParagraphHandling.SelectedItem = null;
-            this.comboBoxParagraphHandling.SelectedText = "";
-            this.comboBoxParagraphHandling.Size = new System.Drawing.Size(272, 21);
-            this.comboBoxParagraphHandling.TabIndex = 10;
-            this.comboBoxParagraphHandling.UsePopupWindow = false;
             // 
             // labelParagraphHandling
             // 
@@ -81,49 +58,11 @@
             this.labelMaxBytes.TabIndex = 94;
             this.labelMaxBytes.Text = "Max byte size for each server request";
             // 
-            // nikseUpDownMaxBytes
-            // 
-            this.nikseUpDownMaxBytes.BackColor = System.Drawing.SystemColors.Window;
-            this.nikseUpDownMaxBytes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.nikseUpDownMaxBytes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.nikseUpDownMaxBytes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.nikseUpDownMaxBytes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.nikseUpDownMaxBytes.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.nikseUpDownMaxBytes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseUpDownMaxBytes.DecimalPlaces = 0;
-            this.nikseUpDownMaxBytes.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nikseUpDownMaxBytes.Location = new System.Drawing.Point(217, 105);
-            this.nikseUpDownMaxBytes.Maximum = new decimal(new int[] {
-            128000,
-            0,
-            0,
-            0});
-            this.nikseUpDownMaxBytes.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.nikseUpDownMaxBytes.Name = "nikseUpDownMaxBytes";
-            this.nikseUpDownMaxBytes.Size = new System.Drawing.Size(75, 23);
-            this.nikseUpDownMaxBytes.TabIndex = 30;
-            this.nikseUpDownMaxBytes.TabStop = false;
-            this.nikseUpDownMaxBytes.Text = "nikseUpDown1";
-            this.nikseUpDownMaxBytes.ThousandsSeparator = false;
-            this.nikseUpDownMaxBytes.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(378, 232);
+            this.buttonCancel.Location = new System.Drawing.Point(429, 283);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 101;
@@ -135,7 +74,7 @@
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(297, 232);
+            this.buttonOk.Location = new System.Drawing.Point(348, 283);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 100;
@@ -152,17 +91,14 @@
             this.labelPrompt.TabIndex = 98;
             this.labelPrompt.Text = "Prompt for ChatGPT";
             // 
-            // nikseTextBoxPrompt
+            // labelDelay
             // 
-            this.nikseTextBoxPrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nikseTextBoxPrompt.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxPrompt.Location = new System.Drawing.Point(22, 166);
-            this.nikseTextBoxPrompt.Multiline = true;
-            this.nikseTextBoxPrompt.Name = "nikseTextBoxPrompt";
-            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(431, 50);
-            this.nikseTextBoxPrompt.TabIndex = 40;
+            this.labelDelay.AutoSize = true;
+            this.labelDelay.Location = new System.Drawing.Point(19, 67);
+            this.labelDelay.Name = "labelDelay";
+            this.labelDelay.Size = new System.Drawing.Size(179, 13);
+            this.labelDelay.TabIndex = 101;
+            this.labelDelay.Text = "Delay seconds after each server call";
             // 
             // nikseUpDownDelay
             // 
@@ -202,20 +138,85 @@
             0,
             0});
             // 
-            // labelDelay
+            // nikseTextBoxPrompt
             // 
-            this.labelDelay.AutoSize = true;
-            this.labelDelay.Location = new System.Drawing.Point(19, 67);
-            this.labelDelay.Name = "labelDelay";
-            this.labelDelay.Size = new System.Drawing.Size(179, 13);
-            this.labelDelay.TabIndex = 101;
-            this.labelDelay.Text = "Delay seconds after each server call";
+            this.nikseTextBoxPrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nikseTextBoxPrompt.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPrompt.Location = new System.Drawing.Point(22, 166);
+            this.nikseTextBoxPrompt.Multiline = true;
+            this.nikseTextBoxPrompt.Name = "nikseTextBoxPrompt";
+            this.nikseTextBoxPrompt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(482, 101);
+            this.nikseTextBoxPrompt.TabIndex = 40;
+            // 
+            // nikseUpDownMaxBytes
+            // 
+            this.nikseUpDownMaxBytes.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseUpDownMaxBytes.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseUpDownMaxBytes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseUpDownMaxBytes.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseUpDownMaxBytes.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseUpDownMaxBytes.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseUpDownMaxBytes.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseUpDownMaxBytes.DecimalPlaces = 0;
+            this.nikseUpDownMaxBytes.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nikseUpDownMaxBytes.Location = new System.Drawing.Point(217, 105);
+            this.nikseUpDownMaxBytes.Maximum = new decimal(new int[] {
+            128000,
+            0,
+            0,
+            0});
+            this.nikseUpDownMaxBytes.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.nikseUpDownMaxBytes.Name = "nikseUpDownMaxBytes";
+            this.nikseUpDownMaxBytes.Size = new System.Drawing.Size(75, 23);
+            this.nikseUpDownMaxBytes.TabIndex = 30;
+            this.nikseUpDownMaxBytes.TabStop = false;
+            this.nikseUpDownMaxBytes.Text = "nikseUpDown1";
+            this.nikseUpDownMaxBytes.ThousandsSeparator = false;
+            this.nikseUpDownMaxBytes.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // comboBoxParagraphHandling
+            // 
+            this.comboBoxParagraphHandling.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxParagraphHandling.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxParagraphHandling.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxParagraphHandling.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxParagraphHandling.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxParagraphHandling.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxParagraphHandling.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxParagraphHandling.DropDownHeight = 400;
+            this.comboBoxParagraphHandling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxParagraphHandling.DropDownWidth = 165;
+            this.comboBoxParagraphHandling.FormattingEnabled = true;
+            this.comboBoxParagraphHandling.Location = new System.Drawing.Point(112, 20);
+            this.comboBoxParagraphHandling.MaxLength = 32767;
+            this.comboBoxParagraphHandling.Name = "comboBoxParagraphHandling";
+            this.comboBoxParagraphHandling.SelectedIndex = -1;
+            this.comboBoxParagraphHandling.SelectedItem = null;
+            this.comboBoxParagraphHandling.SelectedText = "";
+            this.comboBoxParagraphHandling.Size = new System.Drawing.Size(272, 21);
+            this.comboBoxParagraphHandling.TabIndex = 10;
+            this.comboBoxParagraphHandling.UsePopupWindow = false;
             // 
             // AutoTranslateSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 267);
+            this.ClientSize = new System.Drawing.Size(516, 318);
             this.Controls.Add(this.labelDelay);
             this.Controls.Add(this.nikseUpDownDelay);
             this.Controls.Add(this.nikseTextBoxPrompt);
@@ -226,10 +227,10 @@
             this.Controls.Add(this.labelMaxBytes);
             this.Controls.Add(this.comboBoxParagraphHandling);
             this.Controls.Add(this.labelParagraphHandling);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(520, 340);
             this.Name = "AutoTranslateSettings";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
