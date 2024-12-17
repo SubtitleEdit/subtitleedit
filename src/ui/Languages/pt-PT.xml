@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.8</Version>
-    <TranslatedBy>Traduzido para Português de Portugal, por Hugo Carvalho(hugok79)
+    <TranslatedBy>Traduzido para Português de Portugal, por Hugo Carvalho (hugok79)
 E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
@@ -2479,6 +2479,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformUseFFmpeg>Usar o FFmpeg para extrair a onda áudio</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Usar apenas o canal central frontal (para 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Transferir o {0}</DownloadX>
+    <ExtractingX>A extrair {0}</ExtractingX>
     <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
