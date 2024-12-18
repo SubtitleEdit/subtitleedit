@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
         private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r239.1_windows.7z";
+        private const string DownloadUrlPurfviewFasterWhisperXxlWin7 = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r192.3.4_windows.7z";
 //          private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/test.7z";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisperXxl =
@@ -131,6 +132,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _whisperChoice = whisperChoice;
         }
 
+        private static bool IsWindows7()
+        {
+            return Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1;
+        }
+
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
             if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
@@ -139,7 +145,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 using (var downloadStream = new FileStream(_tempFileName, FileMode.Create, FileAccess.Write))
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    var downloadTask = httpClient.DownloadAsync(DownloadUrlPurfviewFasterWhisperXxl, downloadStream, new Progress<float>((progress) =>
+                    var url = IsWindows7() ? DownloadUrlPurfviewFasterWhisperXxlWin7 : DownloadUrlPurfviewFasterWhisperXxl;
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
                     {
                         var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                         labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
