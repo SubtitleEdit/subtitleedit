@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
+                if (string.IsNullOrWhiteSpace(p.Text))              // p.Duration.TotalMilliseconds available for translation
                 {
                     continue;
                 }
