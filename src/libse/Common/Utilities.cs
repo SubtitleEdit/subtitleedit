@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static readonly char[] NewLineChars = { '\r', '\n' };
 
-        private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
+        private static readonly Regex NumericSeparatorRegex = new Regex(@"\b\d+(?>[ ]+[\.:;][ ]*|[ ]*[\.:;][ ]+)\d+\b", RegexOptions.Compiled);
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
@@ -2551,12 +2551,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace(" . ", ". ");
             }
 
-            var numberSeparatorNumberMatch = NumberSeparatorNumberRegEx.Match(text);
+            var numberSeparatorNumberMatch = NumericSeparatorRegex.Match(text);
             while (numberSeparatorNumberMatch.Success)
             {
                 var spaceIdx = text.IndexOf(' ', numberSeparatorNumberMatch.Index);
                 text = text.Remove(spaceIdx, 1);
-                numberSeparatorNumberMatch = NumberSeparatorNumberRegEx.Match(text);
+                numberSeparatorNumberMatch = NumericSeparatorRegex.Match(text);
             }
 
             return text;
