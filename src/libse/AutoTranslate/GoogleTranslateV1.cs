@@ -90,6 +90,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("BENGALI", "bn"),
                 new TranslationPair("BHOJPURI", "bho"),
                 new TranslationPair("BOSNIAN", "bs"),
+                new TranslationPair("BRETON", "br"),
                 new TranslationPair("BULGARIAN", "bg"),
                 new TranslationPair("CATALAN", "ca"),
                 new TranslationPair("CEBUANO", "ceb"),
