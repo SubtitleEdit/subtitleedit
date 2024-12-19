@@ -17,8 +17,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>4.0.8.0</FileVersion>
-    <AssemblyVersion>4.0.8.0</AssemblyVersion>
+    <FileVersion>4.0.9.0</FileVersion>
+    <AssemblyVersion>4.0.9.0</AssemblyVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
