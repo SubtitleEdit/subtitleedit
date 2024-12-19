@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-4.0.9 19th December 2024)
+4.0.9 (19th December 2024)
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
    * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
