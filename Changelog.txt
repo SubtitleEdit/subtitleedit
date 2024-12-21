@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-4.0.9 (xth December 2024) BETA
+4.0.9 (19th December 2024)
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
    * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
@@ -39,6 +39,7 @@
    * Ctrl+A not working in subtitle duration field - thx rRobis
    * Allow reading Matroska files with ".mp4" extension
    * Up max byte size for auto-translate server calls to 128K - thx despairTK
+   * Make auto-translate setting resizable + a little larger - thx gjaskula
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
    * Fix crash in TTS re-generate - thx cvrle77
@@ -57,6 +58,8 @@
    * Fix wrong timestamp (rounding) for format "CSV" - thx MariaB99
    * Fix LRC with milliseconds issue - thx AverageHoarder
    * Fix crash trying to get subtitles from mp4 - thx nounours18200 
+   * Fix crash in split - thx Leon
+   * Fix for ffprobe and HDR10 - thx warrentc3 
 
 
 4.0.8 (6th September 2024) 

@@ -12181,8 +12181,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var lines = currentParagraph.Text.SplitToLines();
                 if (textIndex != null)
                 {
-                    string a = oldText.Substring(0, textIndex.Value).Trim();
-                    string b = oldText.Substring(textIndex.Value).Trim();
+                    var ix = Math.Min(oldText.Length, textIndex.Value);
+                    string a = oldText.Substring(0, ix).Trim();
+                    string b = oldText.Substring(ix).Trim();
 
                     if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
