@@ -15,7 +15,7 @@
 		<IsPackable>true</IsPackable>
 		<RepositoryType>git</RepositoryType>
 		<IncludeContentInPack>true</IncludeContentInPack>
-		<PackageReleaseNotes>SE 4.0.9</PackageReleaseNotes>
+		<PackageReleaseNotes>SE 4.0.10</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageReadmeFile>Readme.md</PackageReadmeFile>
 	</PropertyGroup>
