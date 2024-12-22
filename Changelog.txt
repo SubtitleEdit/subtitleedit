@@ -1,6 +1,14 @@
 ﻿Subtitle Edit Changelog
 
 
+4.0.10 (22nd December 2024)
+* IMPROVED:
+   * Update Whisper CPP to V1.7.3
+   * More GT languages
+* FIXED:
+   * Fix for 7z unpacking (fix missing dll for portable version) - thx Purfview
+
+
 4.0.9 (19th December 2024)
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
