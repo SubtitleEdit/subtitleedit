@@ -322,6 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 SetRegEx();
+                _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
 
             buttonFindPrev.Focus();

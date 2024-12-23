@@ -177,6 +177,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
 
                 sb.AppendFormat(header, title).AppendLine();
+
+                if (!sb.ToString().Contains("Format: Layer"))
+                {
+                    sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+                }
             }
             else
             {

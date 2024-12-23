@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Перевод на русский: Leserg | Elheym | elfriob</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile />
@@ -2487,6 +2487,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Использовать только передний центральный канал (для 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Загрузить {0}</DownloadX>
+    <ExtractingX>Извлечение {0}</ExtractingX>
     <WaveformFFmpegPath>Путь к FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Обзор FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Обзор VLC portable</WaveformBrowseToVLC>

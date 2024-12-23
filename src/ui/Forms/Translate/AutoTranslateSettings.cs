@@ -91,6 +91,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 labelPrompt.Visible = false;
                 nikseTextBoxPrompt.Visible = false;
+                MinimumSize = new System.Drawing.Size(MinimumSize.Width, MinimumSize.Height - nikseTextBoxPrompt.Height);
+                Height -= nikseTextBoxPrompt.Height;
+                this.FormBorderStyle = FormBorderStyle.FixedSingle;
             }
 
             comboBoxParagraphHandling.Items.Clear();

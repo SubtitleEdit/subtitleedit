@@ -17,8 +17,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>4.0.8.0</FileVersion>
-    <AssemblyVersion>4.0.8.0</AssemblyVersion>
+    <FileVersion>4.0.9.0</FileVersion>
+    <AssemblyVersion>4.0.9.0</AssemblyVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -76,6 +76,9 @@
     </Compile>
     <Compile Update="Controls\SubtitleListView.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Forms\ShotChanges\ImportShotChangesFromSe.cs">
+      <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
