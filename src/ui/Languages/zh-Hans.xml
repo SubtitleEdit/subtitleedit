@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -2467,6 +2467,7 @@ Command line: {1} {2}
     <WaveformUseFFmpeg>使用 FFmpeg 提取波形</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>仅使用前置/中置声道（适用于 5.1/7.1声道）</WaveformUseCenterChannelOnly>
     <DownloadX>下载 {0}</DownloadX>
+    <ExtractingX>正在提取 {0}</ExtractingX>
     <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>浏览至VLC便携版安装路径</WaveformBrowseToVLC>
@@ -2788,7 +2789,7 @@ Command line: {1} {2}
     <MainTextBoxMoveFirstWordFromNextUp>将次行的第一个单词移到前行</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至前行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到次行字幕，然后转到次行</MainTextBoxMoveFromCursorToNext>
-     <MainTextBoxMoveFirstWordToPrev>将行首第一个单词上移至前行行末</MainTextBoxMoveFirstWordToPrev>
+    <MainTextBoxMoveFirstWordToPrev>将行首第一个单词上移至前行行末</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>将前行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
