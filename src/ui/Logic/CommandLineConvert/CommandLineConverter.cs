@@ -165,9 +165,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BeautifyTimeCodes);
                 _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
-                _stdOutWriter.WriteLine("        /deletefirst:<count>");
-                _stdOutWriter.WriteLine("        /deletelast:<count>");
-                _stdOutWriter.WriteLine("        /deletecontains:<word>");
+                _stdOutWriter.WriteLine("        /DeleteFirst:<count>");
+                _stdOutWriter.WriteLine("        /DeleteLast:<count>");
+                _stdOutWriter.WriteLine("        /DeleteContains:<word>");
                 _stdOutWriter.WriteLine("        /" + BatchAction.FixCommonErrors);
                 _stdOutWriter.WriteLine("        /" + BatchAction.FixRtlViaUnicodeChars);
                 _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTexts);
@@ -1254,9 +1254,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         {
             var actions = new List<string>();
             var actionNames = typeof(BatchAction).GetEnumNames().ToList();
-            actionNames.Add("deletefirst:");
-            actionNames.Add("deletelast:");
-            actionNames.Add("deletecontains:");
+            actionNames.Add("DeleteFirst:");
+            actionNames.Add("DeleteLast:");
+            actionNames.Add("DeleteContains:");
             for (var i = commandLineArguments.Count - 1; i >= 0; i--)
             {
                 var argument = commandLineArguments[i];
@@ -2197,7 +2197,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             {
                 foreach (var actionString in actions)
                 {
-                    if (Enum.TryParse(actionString.TrimStart('/', '-'), out BatchAction action))
+                    if (Enum.TryParse(actionString.TrimStart('/', '-'), true, out BatchAction action))
                     {
                         switch (action)
                         {

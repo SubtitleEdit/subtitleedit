@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="MSTest" Version="3.6.4" />
+    <PackageVersion Include="MSTest" Version="3.7.0" />
     <PackageVersion Include="SevenZipExtractor" Version="1.0.17" />
     <PackageVersion Include="SharpCompress" Version="0.38.0" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
