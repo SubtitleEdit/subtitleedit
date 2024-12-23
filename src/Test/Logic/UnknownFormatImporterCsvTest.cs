@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic
@@ -48,9 +49,14 @@ CATE;00:00:10:00;00:00:12:00; Ja. Ich habe den Test gemacht.";
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ja. Ich habe den Test gemacht.", subtitle.Paragraphs[1].Text);
 
+            // assert the duration of milliseconds
+            Assert.AreEqual(10000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+            Assert.AreEqual(12000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+
             //TODO: fails on appveyor... why?
-            //Assert.AreEqual("10,000", subtitle.Paragraphs[1].StartTime.ToShortString());
-            //Assert.AreEqual("12,000", subtitle.Paragraphs[1].EndTime.ToShortString());
+            // Assert formatting of timecodes
+            // Assert.AreEqual("10,000", subtitle.Paragraphs[1].StartTime.ToShortString());
+            // Assert.AreEqual("12,000", subtitle.Paragraphs[1].EndTime.ToShortString());
         }
     }
 }
