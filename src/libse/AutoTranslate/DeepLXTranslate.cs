@@ -57,6 +57,20 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                Task.Delay(555).Wait();
+                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                Task.Delay(1007).Wait();
+                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
             if (!result.IsSuccessStatusCode)
             {
                 SeLogger.Error("DeepLTranslate error: " + resultContent);
