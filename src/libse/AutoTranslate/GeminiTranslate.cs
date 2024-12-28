@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Hebrew","iw"),
                MakePair("Hindi","hi"),
                MakePair("Hungarian","hu"),
+               MakePair("Icelandic","is"),
                MakePair("Indonesian","id"),
                MakePair("Irish","ga"),
                MakePair("Italian","it"),
