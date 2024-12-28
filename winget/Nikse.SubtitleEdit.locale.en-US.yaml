@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 4.0.9.0
+PackageVersion: 4.0.10.0
 PackageLocale: en-US
 Publisher: Nikse
 PublisherUrl: https://www.nikse.dk/
