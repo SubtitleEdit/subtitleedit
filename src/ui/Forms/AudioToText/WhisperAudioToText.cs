@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 engines.Add(WhisperChoice.PurfviewFasterWhisperXxl);
                 engines.Add(WhisperChoice.Cpp);
-// could not find v1.7.3                engines.Add(WhisperChoice.CppCuBlas);
+                engines.Add(WhisperChoice.CppCuBlas);
                 engines.Add(WhisperChoice.ConstMe);
             }
             else
