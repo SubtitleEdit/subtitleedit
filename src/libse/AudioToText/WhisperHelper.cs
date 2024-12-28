@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
                 {
-                    return "main";
+                    return "whisper-cli.exe";
                 }
 
                 if (whisperChoice == WhisperChoice.CTranslate2)
@@ -346,9 +346,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             if (Configuration.IsRunningOnWindows)
             {
-                if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+                if (whisperChoice == WhisperChoice.Cpp)
                 {
                     return "main.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.CppCuBlas)
+                {
+                    return "whisper-cli.exe";
                 }
 
                 if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
