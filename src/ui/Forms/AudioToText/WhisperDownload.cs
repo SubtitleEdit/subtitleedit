@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/whisper-cublas-12.2.0-bin-x64.zip";
+        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-173/whisper-cublas-11.8.0-bin-x64.7z";
 
         private static readonly string[] Sha512HashesCppCuBlas =
         {
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r239.1_windows.7z";
         private const string DownloadUrlPurfviewFasterWhisperXxlWin7 = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r192.3.4_windows.7z";
-//          private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/test.7z";
+        //          private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/test.7z";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisperXxl =
         {
@@ -169,6 +169,37 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 }
                 CompleteDownloadFasterWhisperXxl(_tempFileName);
+                return;
+            }
+
+            if (_whisperChoice == WhisperChoice.CppCuBlas)
+            {
+                _tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".7z");
+                using (var downloadStream = new FileStream(_tempFileName, FileMode.Create, FileAccess.Write))
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                {
+                    var url = DownloadUrl64CppCuBlas;
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                        labelPleaseWait.Refresh();
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                }
+                CompleteDownloadFasterWhisperCppCublas(_tempFileName);
                 return;
             }
 
@@ -379,20 +410,47 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Directory.CreateDirectory(folder);
             }
 
-            Extract7Zip(_tempFileName, folder);
+            Extract7Zip(_tempFileName, folder, "Faster-Whisper-XXL");
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             DialogResult = DialogResult.OK;
             File.Delete(_tempFileName);
         }
 
-        private void Extract7Zip(string tempFileName, string dir)
+        private void CompleteDownloadFasterWhisperCppCublas(string fileName)
+        {
+            var fileInfo = new FileInfo(fileName);
+
+            if (fileInfo.Length == 0)
+            {
+                throw new Exception("No content downloaded - missing file or no internet connection!");
+            }
+
+            var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            folder = Path.Combine(folder, WhisperChoice.CppCuBlas);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            Extract7Zip(_tempFileName, folder, string.Empty);
+            Cursor = Cursors.Default;
+            labelPleaseWait.Text = string.Empty;
+            DialogResult = DialogResult.OK;
+            File.Delete(_tempFileName);
+        }
+
+        private void Extract7Zip(string tempFileName, string dir, string skipFolderLevel)
         {
             Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, string.Empty);
             labelDescription1.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, _whisperChoice);
             labelDescription1.Refresh();
 
-            var skipFolderLevel = "Faster-Whisper-XXL";
             using (var archiveFile = new ArchiveFile(tempFileName))
             {
                 archiveFile.Extract(entry =>
