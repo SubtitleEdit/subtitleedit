@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
-                    var s = line.Substring(1, 8);
+                    var s = line.Substring(1, 9);
                     var parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {

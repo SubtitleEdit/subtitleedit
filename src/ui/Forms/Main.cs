@@ -14772,7 +14772,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var assaColor = AdvancedSubStationAlpha.GetSsaColorStringForEvent(c);
                 if (allSelected)
                 {
-                    text = $"{{\\c{assaColor}&}}{text}";
+                    text = $"{{\\{assaColor}&}}{text}";
                 }
                 else
                 {
