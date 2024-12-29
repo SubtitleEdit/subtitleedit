@@ -54,6 +54,23 @@ namespace Nikse.SubtitleEdit.Controls
 
         public float FontSizeFactor { get; set; }
 
+        private static int GetSubtitlesHeight()
+        {
+            var subtitlesHeight = 57;
+
+            var configValue = Configuration.Settings.General.VideoPlayerPreviewBoxHeight;
+            if (configValue > 25 && configValue < 300) // only allow reasonable values
+            {
+                subtitlesHeight = configValue;
+            }
+            else
+            {
+                Configuration.Settings.General.VideoPlayerPreviewBoxHeight = subtitlesHeight;
+            }
+
+            return subtitlesHeight;
+        }
+
         public VideoPlayer VideoPlayer
         {
             get => _videoPlayer;
@@ -71,17 +88,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    _subtitlesHeight = 57;
-
-                    var configValue = Configuration.Settings.General.VideoPlayerPreviewBoxHeight;
-                    if (configValue > 25 && configValue < 200) // only allow reasonable values
-                    {
-                        _subtitlesHeight = configValue;
-                    }
-                    else
-                    {
-                        Configuration.Settings.General.VideoPlayerPreviewBoxHeight = _subtitlesHeight;
-                    }
+                    _subtitlesHeight = GetSubtitlesHeight();
                 }
                 DeleteTempMpvFileName();
                 VideoPlayerContainerResize(this, null);
@@ -99,8 +106,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool PlayedWithCustomSpeed;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         public int ControlsHeight = 47;
-        private const int OriginalSubtitlesHeight = 57;
-        private int _subtitlesHeight = OriginalSubtitlesHeight;
+        private int _subtitlesHeight = GetSubtitlesHeight();
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelControls;
 
