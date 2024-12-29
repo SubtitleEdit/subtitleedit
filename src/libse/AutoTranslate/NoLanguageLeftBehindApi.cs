@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            var result = _httpClient.PostAsync("translate", content).Result;
+            var result = _httpClient.PostAsync("translator", content).Result;
             result.EnsureSuccessStatusCode();
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var resultText = Encoding.UTF8.GetString(bytes).Trim();
