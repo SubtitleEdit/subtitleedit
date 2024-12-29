@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int VideoPlayerDefaultVolume { get; set; }
         public string VideoPlayerPreviewFontName { get; set; }
         public int VideoPlayerPreviewFontSize { get; set; }
+        public int VideoPlayerPreviewBoxHeight { get; set; }
         public bool VideoPlayerPreviewFontBold { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
         public bool VideoPlayerShowFullscreenButton { get; set; }
@@ -342,6 +343,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             VideoPlayerDefaultVolume = 75;
             VideoPlayerPreviewFontName = "Tahoma";
             VideoPlayerPreviewFontSize = 12;
+            VideoPlayerPreviewBoxHeight = 57;
             VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
             VideoPlayerShowMuteButton = true;

@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Settings;
 
@@ -73,6 +72,16 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     _subtitlesHeight = 57;
+
+                    var configValue = Configuration.Settings.General.VideoPlayerPreviewBoxHeight;
+                    if (configValue > 25 && configValue < 200) // only allow reasonable values
+                    {
+                        _subtitlesHeight = configValue;
+                    }
+                    else
+                    {
+                        Configuration.Settings.General.VideoPlayerPreviewBoxHeight = _subtitlesHeight;
+                    }
                 }
                 DeleteTempMpvFileName();
                 VideoPlayerContainerResize(this, null);
