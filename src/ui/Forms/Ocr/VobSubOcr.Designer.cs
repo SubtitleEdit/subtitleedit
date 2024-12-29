@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOcrMethod.DropDownWidth = 366;
             this.comboBoxOcrMethod.FormattingEnabled = true;
-            this.comboBoxOcrMethod.Items.AddRange(new object[] {
+            this.comboBoxOcrMethod.Items.AddRange(new string[] {
             "OCR via Tesseract",
             "OCR via image compare",
             "OCR via Microsoft MODI",
@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTesseractEngineMode.DropDownWidth = 195;
             this.comboBoxTesseractEngineMode.FormattingEnabled = true;
-            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
+            this.comboBoxTesseractEngineMode.Items.AddRange(new string[] {
             "Original Tesseract only (can detect italic)",
             "Neural nets LSTM only",
             "Tesseract + LSTM",
@@ -844,7 +844,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxNOcrLineSplitMinHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxNOcrLineSplitMinHeight.DropDownWidth = 103;
             this.comboBoxNOcrLineSplitMinHeight.FormattingEnabled = true;
-            this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new object[] {
+            this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new string[] {
             "Auto",
             "5",
             "6",
@@ -1152,7 +1152,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxLineSplitMinLineHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLineSplitMinLineHeight.DropDownWidth = 121;
             this.comboBoxLineSplitMinLineHeight.FormattingEnabled = true;
-            this.comboBoxLineSplitMinLineHeight.Items.AddRange(new object[] {
+            this.comboBoxLineSplitMinLineHeight.Items.AddRange(new string[] {
             "Auto",
             "5",
             "6",
@@ -2306,6 +2306,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import/OCR VobSub (sub/idx) subtitle";
+            this.Activated += new System.EventHandler(this.VobSubOcr_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VobSubOcr_FormClosing);
             this.Shown += new System.EventHandler(this.FormVobSubOcr_Shown);
             this.ResizeEnd += new System.EventHandler(this.VobSubOcr_ResizeEnd);
