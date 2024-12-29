@@ -2226,9 +2226,19 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
                                 var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
                                 var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
-                                foreach (var p in sub.Paragraphs)
+
+                                var index = sub.Paragraphs.Count - 1;
+                                while (index >= 0)
                                 {
-                                    p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p), lang);
+                                    var p = sub.Paragraphs[index];
+                                    p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, index, lang);
+
+                                    if (string.IsNullOrWhiteSpace(p.Text))
+                                    {
+                                        sub.Paragraphs.RemoveAt(index);
+                                    }
+
+                                    index--;
                                 }
 
                                 break;
