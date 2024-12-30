@@ -12,7 +12,7 @@ build_script:
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 test_script:
-  - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
+  - vstest.console "src\Tests\bin\%CONFIGURATION%\Tests.dll" /logger:Appveyor
 
 cache:
   - 'packages -> **\src\ui\packages.config'

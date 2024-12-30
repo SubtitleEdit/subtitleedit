@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 15.2.26430.04
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateAssemblyInfo", "src\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateLanguageFiles", "src\UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
@@ -90,6 +88,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{
 		installer\Languages\Vietnamese.isl = installer\Languages\Vietnamese.isl
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Tests\Tests.csproj", "{6B9E7002-6B09-47BF-9246-A22077790344}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,10 +100,6 @@ Global
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -119,6 +115,10 @@ Global
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B9E7002-6B09-47BF-9246-A22077790344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B9E7002-6B09-47BF-9246-A22077790344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B9E7002-6B09-47BF-9246-A22077790344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B9E7002-6B09-47BF-9246-A22077790344}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
