@@ -176,7 +176,7 @@ you think i went myself?";
 
 all the stuff
 for the show?";
-            Assert.AreEqual(expected, subtitle.Paragraphs[1].Text);
+            Assert.AreEqual(string.Join(Environment.NewLine, expected.SplitToLines()), string.Join(Environment.NewLine, subtitle.Paragraphs[1].Text.SplitToLines()));
         }
 
         [TestMethod]
@@ -289,13 +289,14 @@ ppp
             Assert.AreEqual(3, subtitle.Paragraphs.Count);
             Assert.AreEqual(@"<font color='white' face='monospace' size='1c'>
     We have detected a new signal.
-   </font>", subtitle.Paragraphs[0].Text); Assert.AreEqual(@"<font color='white' face='monospace' size='1c'>
+   </font>", subtitle.Paragraphs[0].Text); 
+            Assert.AreEqual(string.Join(Environment.NewLine, @"<font color='white' face='monospace' size='1c'>
 
 
 
 
     Where is it this time?
-   </font>", subtitle.Paragraphs[1].Text);
+   </font>".SplitToLines()), string.Join(Environment.NewLine, subtitle.Paragraphs[1].Text.SplitToLines()));
         }
 
         [TestMethod]
@@ -1219,7 +1220,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                     format.BatchMode = true;
                     var text = format.ToText(subtitle, "test");
                     var list = new List<string>();
-                    foreach (var line in text.Replace("\r\n", "\n").Split('\n'))
+                    foreach (var line in text.SplitToLines())
                     {
                         list.Add(line);
                     }

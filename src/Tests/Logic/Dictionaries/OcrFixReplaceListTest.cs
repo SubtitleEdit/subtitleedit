@@ -131,6 +131,7 @@ namespace Tests.Logic.Dictionaries
         }
 
         [TestMethod]
+        [DoNotParallelize]
         public void OcrFixReplaceListRemoveWordReload()
         {
             // Arrange
