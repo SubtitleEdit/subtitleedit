@@ -255,7 +255,7 @@ ppp
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             const string expected = @" 
 6530";
-            Assert.AreEqual(expected.Trim(), subtitle.Paragraphs[0].Text.Trim());
+            Assert.AreEqual(string.Join(Environment.NewLine, expected.Trim().SplitToLines()), string.Join(Environment.NewLine,  subtitle.Paragraphs[0].Text.Trim().SplitToLines()));
         }
 
 
