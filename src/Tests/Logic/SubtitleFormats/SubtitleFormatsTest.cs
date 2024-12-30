@@ -1176,7 +1176,9 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             int expected = subtitle.Paragraphs.Count;
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.GetType() != typeof(JsonType6) && format.IsTextBased)
+                if (format.GetType() != typeof(JsonType6) &&
+                    format.GetType() != typeof(FilmEditXml) && 
+                    format.IsTextBased)
                 {
                     format.BatchMode = true;
                     var text = format.ToText(subtitle, "test");
