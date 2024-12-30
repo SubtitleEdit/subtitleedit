@@ -18,7 +18,7 @@ namespace Tests.Core
         [TestMethod]
         public void LineStartsWithHtmlTagNull()
         {
-            string test = null;
+            string? test = null;
             Assert.IsFalse(test.LineStartsWithHtmlTag(true));
         }
 
