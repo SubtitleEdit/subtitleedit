@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.IO;
 using System.Text;
 
 namespace Tests.Core

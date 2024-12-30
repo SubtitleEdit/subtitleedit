@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Cea708;
 using Nikse.SubtitleEdit.Core.Cea708.Commands;
+using System;
 
 namespace Tests.Logic.SubtitleFormats
 {

@@ -4,6 +4,10 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Tests.FixCommonErrors
 {

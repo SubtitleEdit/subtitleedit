@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System.Drawing;
+using System.IO;
 
 namespace Tests.Logic.Ocr
 {

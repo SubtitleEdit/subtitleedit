@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Tests.Core

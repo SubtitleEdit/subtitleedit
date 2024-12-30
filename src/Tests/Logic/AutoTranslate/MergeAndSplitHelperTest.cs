@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Forms.Translate;
+using System;
+using System.Linq;
 
 namespace Tests.Logic.AutoTranslate
 {
