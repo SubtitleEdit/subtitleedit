@@ -1,1 +1,1 @@
-﻿[assembly: Parallelize(Scope = ExecutionScope.ClassLevel)]
+﻿[assembly: Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize(Scope = ExecutionScope.ClassLevel)]
