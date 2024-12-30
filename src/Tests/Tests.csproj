@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

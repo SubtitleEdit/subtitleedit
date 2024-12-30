@@ -2241,6 +2241,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     index--;
                                 }
 
+                                sub.Renumber();
+
                                 break;
                             case BatchAction.ConvertColorsToDialog:
                                 ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(sub, Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags, Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines, Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines);
