@@ -1,4 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.IO;
+using System.Linq;
 
 namespace Tests.Logic
 {

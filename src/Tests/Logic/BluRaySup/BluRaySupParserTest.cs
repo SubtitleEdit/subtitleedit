@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using System;
 using System.Drawing;
+using System.IO;
 using System.Text;
 
 namespace Tests.Logic.BluRaySup

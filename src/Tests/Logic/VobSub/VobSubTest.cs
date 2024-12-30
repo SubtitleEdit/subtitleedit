@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.Drawing;
 
 namespace Tests.Logic.VobSub

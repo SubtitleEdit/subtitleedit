@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Collections.Generic;
 
 namespace Tests.Logic.SubtitleFormats
 {

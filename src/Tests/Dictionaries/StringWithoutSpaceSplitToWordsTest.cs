@@ -1,4 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Dictionaries;
+using System;
+using System.Linq;
 
 namespace Tests.Dictionaries
 {

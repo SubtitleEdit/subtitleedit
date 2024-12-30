@@ -1,4 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using System;
+using System.IO;
 
 namespace Tests.Logic.VideoFormats
 {

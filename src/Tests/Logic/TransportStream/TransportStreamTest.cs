@@ -1,4 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Tests.Logic.TransportStream
 {

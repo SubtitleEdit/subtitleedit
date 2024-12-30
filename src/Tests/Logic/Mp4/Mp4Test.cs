@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using System;
+using System.IO;
 
 namespace Tests.Logic.Mp4
 {

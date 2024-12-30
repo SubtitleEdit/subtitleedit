@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Dictionaries;
+using System.IO;
 
 namespace Tests.Logic.Dictionaries
 {

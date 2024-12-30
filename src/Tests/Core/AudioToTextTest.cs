@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 
 namespace Tests.Core
 {
