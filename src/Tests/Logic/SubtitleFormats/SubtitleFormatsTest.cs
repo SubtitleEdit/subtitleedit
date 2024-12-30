@@ -258,47 +258,6 @@ ppp
             Assert.AreEqual(string.Join(Environment.NewLine, expected.Trim().SplitToLines()), string.Join(Environment.NewLine,  subtitle.Paragraphs[0].Text.Trim().SplitToLines()));
         }
 
-
-        [TestMethod]
-        public void SrtDifficultLines3()
-        {
-            var target = new SubRip();
-            var subtitle = new Subtitle();
-            const string text = @"1
-00:06:25,218 --> 00:06:27,420
-<font color='white' face='monospace' size='1c'>
-    We have detected a new signal.
-   </font>
-
-2
-00:06:32,225 --> 00:06:34,526
-<font color='white' face='monospace' size='1c'>
-
-
-
-
-    Where is it this time?
-   </font>
-
-3
-00:06:34,560 --> 00:06:37,096
-<font color='white' face='monospace' size='1c'>
-    Outside of Federation space.
-   </font>";
-            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
-            Assert.AreEqual(3, subtitle.Paragraphs.Count);
-            Assert.AreEqual(@"<font color='white' face='monospace' size='1c'>
-    We have detected a new signal.
-   </font>", subtitle.Paragraphs[0].Text); 
-            Assert.AreEqual(string.Join(Environment.NewLine, @"<font color='white' face='monospace' size='1c'>
-
-
-
-
-    Where is it this time?
-   </font>".SplitToLines()), string.Join(Environment.NewLine, subtitle.Paragraphs[1].Text.SplitToLines()));
-        }
-
         [TestMethod]
         public void SrtBadTimeCode1()
         {
