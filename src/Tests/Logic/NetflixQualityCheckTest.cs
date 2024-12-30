@@ -250,6 +250,40 @@ namespace Tests.Logic
         }
 
         [TestMethod]
+        public void TestNetflixCheckNumbersOneToTenSpellOut_NoChange()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("This is 5,000 dollers!", 0, 832);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line two.", 0, 832);
+            sub.Paragraphs.Add(p2);
+
+            var controller = new NetflixQualityController();
+            var checker = new NetflixCheckNumbersOneToTenSpellOut();
+
+            checker.Check(sub, controller);
+
+            Assert.AreEqual(0, controller.Records.Count);
+        }
+
+        [TestMethod]
+        public void TestNetflixCheckNumbersOneToTenSpellOut_NoChange2()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("This is 5.0 dollers!", 0, 832);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line two.", 0, 832);
+            sub.Paragraphs.Add(p2);
+
+            var controller = new NetflixQualityController();
+            var checker = new NetflixCheckNumbersOneToTenSpellOut();
+
+            checker.Check(sub, controller);
+
+            Assert.AreEqual(0, controller.Records.Count);
+        }
+
+        [TestMethod]
         public void TestNetflixCheckTextForHiUseBrackets()
         {
             var sub = new Subtitle();
