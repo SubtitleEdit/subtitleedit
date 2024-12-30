@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     bool ok = newText.Length <= m.Index + 1 || newText.Length > m.Index + 1 && !":.".Contains(newText[m.Index + 1].ToString());
                     if (!ok && newText.Length > m.Index + 1)
                     {
-                        var rest = newText.Substring(m.Index + 1);
+                        var rest = newText.Substring(m.Index + m.Length);
                         if (rest == "." || rest == "?" || rest == "!" ||
                             rest == ".</i>" || rest == "?</i>" || rest == "!</i>" ||
                             rest == "." + Environment.NewLine || rest == "?" + Environment.NewLine || rest == "!" + Environment.NewLine ||
@@ -37,6 +37,17 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                             ok = true;
                         }
                     }
+
+                    if (ok && m.Index + m.Length < newText.Length && newText.Substring(m.Index + m.Length).StartsWith(","))
+                    {
+                        var rest = newText.Substring(m.Index + 1);
+                        var regex = new Regex(@",\d");
+                        if (regex.IsMatch(rest))
+                        {
+                            ok = false;
+                        }
+                    }
+
                     if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
                     {
                         ok = false;
