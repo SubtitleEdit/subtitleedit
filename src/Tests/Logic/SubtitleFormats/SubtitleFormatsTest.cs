@@ -1187,7 +1187,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                     var s2 = new Subtitle();
                     format.LoadSubtitle(s2, list, null);
                     var actual = s2.Paragraphs.Count;
-                    Assert.AreEqual(expected, actual, format.FriendlyName);
+                    Assert.AreEqual(expected, actual, format.FriendlyName + Environment.NewLine + text);
                 }
             }
         }
