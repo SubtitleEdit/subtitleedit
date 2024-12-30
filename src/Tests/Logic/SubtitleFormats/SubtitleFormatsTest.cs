@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests.Logic.SubtitleFormats
 {
@@ -255,7 +256,7 @@ ppp
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
             const string expected = @" 
 6530";
-            Assert.AreEqual(string.Join(Environment.NewLine, expected.Trim().SplitToLines()), string.Join(Environment.NewLine,  subtitle.Paragraphs[0].Text.Trim().SplitToLines()));
+            Assert.AreEqual(string.Join(Environment.NewLine, expected.Trim().SplitToLines()), string.Join(Environment.NewLine, subtitle.Paragraphs[0].Text.Trim().SplitToLines()));
         }
 
         [TestMethod]
@@ -1171,6 +1172,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
+            var sb = new StringBuilder();
             int expected = subtitle.Paragraphs.Count;
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
@@ -1187,9 +1189,17 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                     var s2 = new Subtitle();
                     format.LoadSubtitle(s2, list, null);
                     var actual = s2.Paragraphs.Count;
-                    Assert.AreEqual(expected, actual, format.FriendlyName + Environment.NewLine + text);
+
+                    if (actual != expected)
+                    {
+                        sb.Append(actual);
+                        Console.WriteLine(format.FriendlyName + " " + actual + ": " + text);
+                    }
+//                    Assert.AreEqual(expected, actual, format.FriendlyName + Environment.NewLine + text);
+
                 }
             }
+            Assert.AreEqual("blaf", sb.ToString());
         }
 
         [TestMethod]

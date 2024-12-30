@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -561,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
             }
 
-            return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));
+            return new TimeCode(int.Parse(tokens[0], CultureInfo.InvariantCulture), int.Parse(tokens[1], CultureInfo.InvariantCulture), int.Parse(tokens[2], CultureInfo.InvariantCulture), FramesToMillisecondsMax999(int.Parse(tokens[3], CultureInfo.InvariantCulture)));
         }
 
         protected static TimeCode DecodeTimeCodeMsFourParts(string[] tokens)
