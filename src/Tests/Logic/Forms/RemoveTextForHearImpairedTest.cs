@@ -18,7 +18,7 @@ namespace Tests.Logic.Forms
         /// </summary>
         public TestContext TestContext { get; set; }
 
-        private static string _interjectionsLanguageCode;
+        private static string? _interjectionsLanguageCode;
 
         private static RemoveTextForHI GetRemoveTextForHiLib()
         {

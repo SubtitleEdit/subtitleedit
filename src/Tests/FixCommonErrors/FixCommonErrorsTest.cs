@@ -21,7 +21,7 @@ namespace Tests.FixCommonErrors
         ///</summary>
         public TestContext TestContext { get; set; }
 
-        private Subtitle _subtitle;
+        private Subtitle _subtitle = new Subtitle();
 
         private static Nikse.SubtitleEdit.Forms.FixCommonErrors GetFixCommonErrorsLib()
         {
