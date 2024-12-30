@@ -44,20 +44,38 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            var result = _httpClient.PostAsync("translate", content).Result;
+            var result = await _httpClient.PostAsync("translator", content);
             result.EnsureSuccessStatusCode();
-            var bytes = await result.Content.ReadAsByteArrayAsync();
-            var resultText = Encoding.UTF8.GetString(bytes).Trim();
 
-            // error messages are returned as json, translated text are just returned as normal utf-8 text
+            var responseString = await result.Content.ReadAsStringAsync();
+
             var validator = new SeJsonValidator();
-            var isValidJson = validator.ValidateJson(resultText);
+            var isValidJson = validator.ValidateJson(responseString);
             if (isValidJson)
             {
-                SeLogger.Error($"{this.GetType().Name} got json back which is probably an error: {resultText}");
+                const string key = "\"result\":";
+                var startIndex = responseString.IndexOf(key, StringComparison.OrdinalIgnoreCase);
+                if (startIndex >= 0)
+                {
+                    startIndex += key.Length;
+
+                    var firstQuoteIndex = responseString.IndexOf('"', startIndex);
+                    var secondQuoteIndex = responseString.IndexOf('"', firstQuoteIndex + 1);
+
+                    if (firstQuoteIndex >= 0 && secondQuoteIndex > firstQuoteIndex)
+                    {
+                        return responseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
+                    }
+                }
+
+                SeLogger.Error($"{this.GetType().Name} recibió un JSON inesperado: {responseString}");
+            }
+            else
+            {
+                SeLogger.Error($"{this.GetType().Name} no recibió un JSON válido: {responseString}");
             }
 
-            return resultText;
+            return responseString;
         }
 
         public void Dispose() => _httpClient?.Dispose();
