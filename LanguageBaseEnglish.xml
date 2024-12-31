@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.9</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -2948,7 +2948,10 @@ Continue?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>White space issue ({0}) found at column {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>line ending</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>missing before punctuation</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ consecutive</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
     <OpenReportInFolder>Open report in folder</OpenReportInFolder>
     <FoundXIssues>Netflix quality check found {0:#,##0} issues.</FoundXIssues>

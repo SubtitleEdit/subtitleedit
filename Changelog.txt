@@ -1,5 +1,28 @@
 ﻿Subtitle Edit Changelog
 
+4.0.11 (xth March 2025) BETA
+* IMPROVED:
+   * Update Polish translation - thx admas
+   * Include Whisper CuBlas again
+   * Add simple retry for DeepL translate - thx rifatozkancomtr/dante3732
+   * Add Icelandic to Gemini - thx dhofverberg
+   * Update NLLB API from v2 to v4 - thx chelis10
+* FIXED:
+   * Make cmd line parameters case insensitive - thx czyrichard
+   * Fix LRC ms start time reading - thx AverageHoarder
+   * Fix ASS color picking bug - thx rRobis
+   * Fix for "un-minimize" ocr window - thx GC
+   * Fix "Remove text for HI" cmd line - thx Manujito
+   * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
+
+
+4.0.10 (22nd December 2024)
+* IMPROVED:
+   * Update Whisper CPP to V1.7.3
+   * More GT languages
+* FIXED:
+   * Fix for 7z unpacking (fix missing dll for portable version) - thx Purfview
+
 
 4.0.9 (19th December 2024)
 * NEW:

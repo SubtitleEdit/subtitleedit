@@ -260,8 +260,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 FillUrls(new List<string>
                 {
                     Configuration.Settings.Tools.AutoTranslateNllbApiUrl,
-                    "http://localhost:7860/api/v2/",
-                    "https://winstxnhdw-nllb-api.hf.space/api/v2/",
+                    "http://localhost:7860/api/v4/",
+                    "https://winstxnhdw-nllb-api.hf.space/api/v4/",
                 });
 
                 return;

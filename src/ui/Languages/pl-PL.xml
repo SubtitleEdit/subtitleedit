@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.9</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
@@ -2476,6 +2476,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <WaveformUseFFmpeg>Użyj FFmpeg do wyodrębnienia wykresu falowego</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Użyj tylko przedniego kanału centralnego (dla 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Pobierz {0}</DownloadX>
+    <ExtractingX>Wyodrębnianie {0}</ExtractingX>
     <WaveformFFmpegPath>Ścieżka do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
@@ -2796,6 +2797,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Pobierz pierwsze słowo z następnego napisu</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Przenieś do góry pierwsze słowo z następnej linii napisów (bieżące napisy)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Przenieś tekst za pozycję kursora do następnego napisu i przejdź do następnego</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Przenieś pierwsze słowo do poprzedniego napisu</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Przenieś w dół ostatnie słowo z pierwszej linii (bieżące napisy)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Zaznacz do dużych liter</MainTextBoxSelectionToUpper>
@@ -3186,6 +3188,8 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <AutoContinue>Auto-kontynuacja</AutoContinue>
     <Regenerate>Generuj ponownie</Regenerate>
     <Speed>Prędkość</Speed>
+    <Stability>Stabilność</Stability>
+    <Similarity>Podobieństwo</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Synchronizacja SMPTE</Title>

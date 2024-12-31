@@ -10001,5 +10001,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             return false;
         }
+
+        private void VobSubOcr_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
     }
 }

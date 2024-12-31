@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 4.0.9.0
+PackageVersion: 4.0.10.0
 InstallerType: inno
 FileExtensions:
 - srt
@@ -23,8 +23,8 @@ FileExtensions:
 ProductCode: SubtitleEdit_is1
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.9/SubtitleEdit-4.0.9-Setup.exe
-  InstallerSha256: F1DBC298F29AA28391977869B3955EE07CAF8622FF79C66046D6C90A4D6F77EA
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.10/SubtitleEdit-4.0.10-Setup.exe
+  InstallerSha256: 1677D2E5DABB08EA76B4B32DBCDE302B395AD8D5A613AC34C4E582B3502CC66F
 ManifestType: installer
 ManifestVersion: 1.6.0
 

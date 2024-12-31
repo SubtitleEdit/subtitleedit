@@ -2154,7 +2154,10 @@ namespace Nikse.SubtitleEdit.Forms
             FormatLanguage.LineNumberXExpectedNumberFromSourceLineY = LanguageSettings.Current.Main.LineNumberXExpectedNumberFromSourceLineY;
 
             NetflixLanguage.GlyphCheckReport = LanguageSettings.Current.NetflixQualityCheck.GlyphCheckReport;
-            NetflixLanguage.WhiteSpaceCheckReport = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckReport;
+            NetflixLanguage.WhiteSpaceCheckForXReport = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckForXReport;
+            NetflixLanguage.WhiteSpaceLineEnding = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceLineEncding;
+            NetflixLanguage.WhiteSpaceCheckconsecutive = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckconsecutive;
+            NetflixLanguage.WhiteSpaceBeforePunctuation = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceBeforePunctuation;
 
             DvdSubtitleLanguage.Language.NotSpecified = LanguageSettings.Current.LanguageNames.NotSpecified;
             DvdSubtitleLanguage.Language.UnknownCodeX = LanguageSettings.Current.LanguageNames.UnknownCodeX;
@@ -14772,7 +14775,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var assaColor = AdvancedSubStationAlpha.GetSsaColorStringForEvent(c);
                 if (allSelected)
                 {
-                    text = $"{{\\c{assaColor}&}}{text}";
+                    text = $"{{\\{assaColor}&}}{text}";
                 }
                 else
                 {
