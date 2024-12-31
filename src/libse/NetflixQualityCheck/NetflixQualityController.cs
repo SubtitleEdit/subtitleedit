@@ -307,22 +307,23 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             return new List<INetflixQualityChecker>
             {
-                new NetflixCheckTimedTextFrameRate(),
+                new NetflixCheckBridgeGaps(),
                 new NetflixCheckDialogHyphenSpace(),
+                new NetflixCheckEllipsesNotThreeDots(),
                 new NetflixCheckGlyph(),
+                new NetflixCheckItalics(),
                 new NetflixCheckMaxCps(),
-                new NetflixCheckMaxLineLength(),
                 new NetflixCheckMaxDuration(),
+                new NetflixCheckMaxLineLength(),
                 new NetflixCheckMinDuration(),
                 new NetflixCheckNumberOfLines(),
                 new NetflixCheckNumbersOneToTenSpellOut(),
+                new NetflixCheckShotChange(),
                 new NetflixCheckStartNumberSpellOut(),
                 new NetflixCheckTextForHiUseBrackets(),
+                new NetflixCheckTimedTextFrameRate(),
                 new NetflixCheckTwoFramesGap(),
-                new NetflixCheckBridgeGaps(),
                 new NetflixCheckWhiteSpace(),
-                new NetflixCheckItalics(),
-                new NetflixCheckShotChange()
             };
         }
 

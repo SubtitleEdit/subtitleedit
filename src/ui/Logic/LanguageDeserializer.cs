@@ -8086,8 +8086,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "NetflixQualityCheck/GlyphCheckReport":
                     language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
                     break;
-                case "NetflixQualityCheck/WhiteSpaceCheckReport":
-                    language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
+                case "NetflixQualityCheck/WhiteSpaceCheckForXReport":
+                    language.NetflixQualityCheck.WhiteSpaceCheckForXReport = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceLineEncding":
+                    language.NetflixQualityCheck.WhiteSpaceLineEncding = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceBeforePunctuation":
+                    language.NetflixQualityCheck.WhiteSpaceBeforePunctuation = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckconsecutive":
+                    language.NetflixQualityCheck.WhiteSpaceCheckconsecutive = reader.Value;
                     break;
                 case "NetflixQualityCheck/ReportPrompt":
                     language.NetflixQualityCheck.ReportPrompt = reader.Value;

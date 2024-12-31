@@ -3137,7 +3137,10 @@
         public class NetflixQualityCheck
         {
             public string GlyphCheckReport { get; set; }
-            public string WhiteSpaceCheckReport { get; set; }
+            public string WhiteSpaceCheckForXReport { get; set; }
+            public string WhiteSpaceLineEncding { get; set; }
+            public string WhiteSpaceBeforePunctuation { get; set; }
+            public string WhiteSpaceCheckconsecutive { get; set; }
             public string ReportPrompt { get; set; }
             public string OpenReportInFolder { get; set; }
             public string FoundXIssues { get; set; }

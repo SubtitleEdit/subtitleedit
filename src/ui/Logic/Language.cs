@@ -3326,7 +3326,10 @@ can edit in same subtitle file (collaboration)",
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
             {
                 GlyphCheckReport = "Invalid character {0} found at column {1}",
-                WhiteSpaceCheckReport = "Invalid white space found at column {0}.",
+                WhiteSpaceCheckForXReport = "White space issue ({0}) found at column {1}.",
+                WhiteSpaceBeforePunctuation = "missing before punctuation",
+                WhiteSpaceLineEncding = "line ending",
+                WhiteSpaceCheckconsecutive = "2+ consecutive",
                 ReportPrompt = "Please see full report here: {0}.",
                 OpenReportInFolder = "Open report in folder",
                 FoundXIssues = "Netflix quality check found {0:#,##0} issues.",
