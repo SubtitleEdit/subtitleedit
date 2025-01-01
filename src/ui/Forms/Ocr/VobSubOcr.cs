@@ -31,6 +31,8 @@ using System.Xml;
 using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -335,13 +337,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract5Version = "5.4.1";
+        private string Tesseract5Version = "5.5.0";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private XmlDocument _bdnXmlDocument;
         private string _bdnFileName;
         private bool _isSon;
+        private IBinaryParagraphList _binaryParagraphList;
 
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private readonly VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
@@ -1080,7 +1083,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             for (int i = 0; i < 20; i++)
             {
-                System.Threading.Thread.Sleep(25);
+                Thread.Sleep(25);
                 Application.DoEvents();
             }
         }
@@ -1677,6 +1680,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+            else if (_binaryParagraphList != null)
+            {
+                if (index >= 0)
+                {
+                    returnBmp = _binaryParagraphList.GetSubtitleBitmap(index, crop);
+                }
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
@@ -2211,6 +2221,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binaryParagraphWithPositions != null)
             {
                 return _binaryParagraphWithPositions.Count;
+            }
+
+            if (_binaryParagraphList != null)
+            {
+                return _subtitle.Paragraphs.Count;
             }
 
             return _vobSubMergedPackList.Count;
@@ -4522,6 +4537,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
+            else if (_binaryParagraphList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                SetButtonsEnabledAfterOcrDone();
+                buttonStartOcr.Focus();
+            }
             else
             {
                 ReadyVobSubRip();
@@ -5330,7 +5353,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             bmp.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, bmp, _ocrMethodIndex != _ocrMethodTesseract5);
+            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, _ocrMethodIndex != _ocrMethodTesseract5);
             if (_tesseractRunner.TesseractErrors.Count <= 2 && !string.IsNullOrEmpty(_tesseractRunner.LastError))
             {
                 MessageBox.Show(_tesseractRunner.LastError);
@@ -6623,7 +6646,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (subtitleListView1.SelectedItems.Count > 1)
                     {
-                        if (DateTime.UtcNow.Ticks - _slvSelIdxChangedTicks < 100000)
+                        if (Stopwatch.GetTimestamp() - _slvSelIdxChangedTicks < 100000)
                         {
                             _slvSelIdx = new KeyValuePair<long, int>(_slvSelIdxChangedTicks, subtitleListView1.SelectedItems[0].Index);
                             if (_changeDelayTimer == null)
@@ -6637,10 +6660,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 _changeDelayTimer.Stop();
                                 _changeDelayTimer.Start();
                             }
-                            _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                            _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                             return;
                         }
-                        _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                        _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                     }
                     _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 }
@@ -7108,37 +7131,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
                 checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract 3.02");
-                if (Configuration.IsRunningOnWindows)
+                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "version.txt")) || File.ReadAllText(Path.Combine(Configuration.TesseractDirectory, "version.txt")) != "5.4.1")
-                    { 
-                        if (IntPtr.Size * 8 == 32)
+                    if (IntPtr.Size * 8 == 32)
+                    {
+                        MessageBox.Show("Sorry, Tesseract {Tesseract5Version} requires a 64-bit processor");
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                    else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        comboBoxTesseractLanguages.Items.Clear();
+                        using (var form = new DownloadTesseract5(Tesseract5Version))
                         {
-                            MessageBox.Show($"Sorry, Tesseract {Tesseract5Version} requires a 64-bit processor");
-                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                            return;
-                        }
-                        else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                        {
-                            comboBoxTesseractLanguages.Items.Clear();
-
-                            //delete previous tesseract files
-                            var oldtesseractfiles = Directory.EnumerateFiles(Configuration.TesseractDirectory);
-                            foreach(var file in oldtesseractfiles) File.Delete(file);
-
-                            using (var form = new DownloadTesseract5(Tesseract5Version))
+                            if (form.ShowDialog(this) == DialogResult.OK)
                             {
-                                if (form.ShowDialog(this) == DialogResult.OK)
-                                {
-                                    buttonGetTesseractDictionaries_Click(sender, e);
-                                }
+                                buttonGetTesseractDictionaries_Click(sender, e);
                             }
                         }
-                        else
-                        {
-                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                            return;
-                        }
+                    }
+                    else
+                    {
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
                     }
                 }
             }
@@ -7661,6 +7676,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             LoadOcrFixEngine(threeLetterIsoLanguageName, LanguageString);
+        }
+
+
+        internal void InitializeIBinaryParagraphList(IBinaryParagraphList binaryParagraphList, Subtitle subtitle)
+        {
+            _binaryParagraphList = binaryParagraphList;
+            _subtitle = subtitle;
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            SetButtonsStartOcr();
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
+            SetOcrMethod();
+
+            groupBoxImagePalette.Visible = false;
+
+            Text += "OCR - " + Path.GetFileName(_bdnFileName);
+
+            autoTransparentBackgroundToolStripMenuItem.Visible = false;
+            _bdnXmlSubtitle = null;
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
@@ -9960,6 +10000,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         public bool GetAllowReplaceInOriginal()
         {
             return false;
+        }
+
+        private void VobSubOcr_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
         }
     }
 }

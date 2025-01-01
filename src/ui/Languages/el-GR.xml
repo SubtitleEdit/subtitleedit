@@ -2,7 +2,7 @@
 <Language Name="Ελληνικά">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
@@ -2463,6 +2463,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformUseFFmpeg>Χρήση FFmpeg για εξαγωγή κυματομορφής</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Χρήση μόνο μπροστινού, κεντρικού καναλιού (για 5.1 / 7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Λήψη {0}</DownloadX>
+    <ExtractingX>Εξαγωγή {0}</ExtractingX>
     <WaveformFFmpegPath>Διαδρομή του FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Περιήγηση για FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Περιήγηση για φορητό VLC</WaveformBrowseToVLC>
@@ -2677,6 +2678,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformGoToPreviousShotChange>Μετάβαση σε προηγούμενη αλλαγή λήψης</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Μετάβαση σε επόμενη αλλαγή λήψης</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Εναλλαγή αλλαγή λήψης</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Μετακίνηση αλλαγών σκηνής ένα καρέ μπροστά</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Μετακίνηση αλλαγών σκηνής ένα καρέ πίσω</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Αφαίρεση / εξαγωγή αλλαγών λήψης</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Αυτόματη προσαρμογή έναρξης μέσω έντασης / αλλαγή λήψης</WaveformGuessStart>
     <GoBack1Frame>Πίσω ένα καρέ</GoBack1Frame>
@@ -2781,6 +2784,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Μετακίνηση πρώτης λέξης της κάτω γραμμής πάνω</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Μετακίνηση κειμένου μετά τον δείκτη στον επόμενο υπότιτλο και μετάβαση σε επόμενο</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Μετακίνηση της πρώτης λέξης στον προηγούμενο υπότιτλο</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Μετακίνηση τελευταίας λέξης της άνω γραμμής κάτω</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Επιλογή σε μικρά</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Επιλογή σε κεφαλαία</MainTextBoxSelectionToUpper>
@@ -3168,6 +3172,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoContinue>Αυτόματη συνέχεια</AutoContinue>
     <Regenerate>Αναδημιουργία</Regenerate>
     <Speed>Ταχύτητα</Speed>
+    <Stability>Σταθερότητα</Stability>
+    <Similarity>Ομοιότητα</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Συγχρονισμός SMPTE</Title>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -19,9 +18,56 @@ namespace Nikse.SubtitleEdit.Core.Common
                 Directory.CreateDirectory(dir);
             }
 
-            var newFileName = MovieHasher.GenerateHash(videoFileName) + ".shotchanges";
+            var videoFileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName)
+                .Replace(".", string.Empty)
+                .Replace("_", string.Empty);
+            if (videoFileNameWithoutExtension.Length > 25)
+            {
+                videoFileNameWithoutExtension = videoFileNameWithoutExtension.Substring(0, 25);
+            }
+
+            var newFileName = $"{MovieHasher.GenerateHash(videoFileName)}_{videoFileNameWithoutExtension}.shotchanges";
             newFileName = Path.Combine(dir, newFileName);
             return newFileName;
+        }
+
+        /// <summary>
+        /// Find shot changes file name
+        /// </summary>
+        /// <param name="videoFileName">Video file name</param>
+        /// <returns>Return file name of existing shot changes, or null</returns>
+        private static string FindShotChangesFileName(string videoFileName)
+        {
+            var dir = Configuration.ShotChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            var videoFileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName)
+                .Replace(".", string.Empty)
+                .Replace("_", string.Empty);
+            if (videoFileNameWithoutExtension.Length > 25)
+            {
+                videoFileNameWithoutExtension = videoFileNameWithoutExtension.Substring(0, 25);
+            }
+
+            var hash = MovieHasher.GenerateHash(videoFileName);
+
+            var newFileName = Path.Combine(dir, $"{hash}_{videoFileNameWithoutExtension}.shotchanges");
+            if (File.Exists(newFileName))
+            {
+                return newFileName;
+            }
+
+            var searchFileName = $"{hash}*.shotchanges";
+            var files = Directory.GetFiles(dir, searchFileName);
+            if (files.Length > 0)
+            {
+                return files[0];
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -38,8 +84,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return list;
             }
 
-            var shotChangesFileName = GetShotChangesFileName(videoFileName);
-            if (!File.Exists(shotChangesFileName))
+            var shotChangesFileName = FindShotChangesFileName(videoFileName);
+            if (shotChangesFileName == null)
             {
                 return list;
             }

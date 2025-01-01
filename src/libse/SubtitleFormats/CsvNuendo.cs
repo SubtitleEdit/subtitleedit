@@ -34,6 +34,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
 
+                if (line.Trim().Length == 0)
+                {
+                    continue;
+                }
+
                 sb.Append(line);
 
                 try

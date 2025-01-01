@@ -94,16 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
-                var fraction = p.StartTime.Milliseconds;
-                if (fraction >= 100)
-                {
-                    var ms = new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, 0).TotalMilliseconds;
-                    ms += 1000;
-                    p = new Paragraph(p.Text, ms, p.EndTime.TotalMilliseconds);
-                    fraction = 0;
-                }
-
-                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, fraction, text));
+                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, text));
 
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
@@ -146,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
-                    var s = line.Substring(1, 8);
+                    var s = line.Substring(1, 9);
                     var parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {

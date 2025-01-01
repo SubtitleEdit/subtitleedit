@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null)
+        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null, bool checkConnected = true)
         {
             if (leftParagraph == null || rightParagraph == null)
             {
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
 
-            if (subtitlesAreConnected)
+            if (subtitlesAreConnected || !checkConnected)
             {
                 var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
                 var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
@@ -364,8 +364,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     else
                     {
-                        // Fallback when no shot changes were apparently found: just chain them
-                        newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        // Check if there are really no shot changes in between
+                        var firstShotChangeInBetween = GetFirstShotChangeFrameInBetween(bestLeftOutCueFrameInfo.cueFrame, bestRightInCueFrameInfo.cueFrame);
+                        var lastShotChangeInBetween = GetLastShotChangeFrameInBetween(bestLeftOutCueFrameInfo.cueFrame, bestRightInCueFrameInfo.cueFrame);
+
+                        if (firstShotChangeInBetween != null || lastShotChangeInBetween != null)
+                        {
+                            // There are, so snap to the one that is closest to either of the two cues
+                            AlignCuesAroundClosestShotChange(firstShotChangeInBetween ?? int.MinValue, lastShotChangeInBetween ?? int.MaxValue);
+                        } 
+                        else
+                        {
+                            // Fallback when no shot changes were apparently found: just chain them
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
                     }
                 }
                 else
@@ -537,6 +549,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
                     bestRightInCueFrame = newRightInCueFrame;
+                }
+
+                // Re-check if, with the new cues, the subtitles are actually connected
+                var newDistance = FramesToMilliseconds(bestRightInCueFrame) - FramesToMilliseconds(bestLeftOutCueFrame);
+                if (newDistance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected)
+                {
+                    // Yes, so handle using the designated function, ignoring its check connected check
+                    // (because otherwise it would have handled it before going into the FixChainableSubtitles function)
+                    FixConnectedSubtitles(leftParagraph, rightParagraph, checkConnected: false);
+
+                    return true;
                 }
 
                 // Check cases

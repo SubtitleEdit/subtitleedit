@@ -47,11 +47,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageConstMe;
             }
-            else if (whisperEngine == WhisperChoice.CTranslate2 || whisperEngine == WhisperChoice.PurfviewFasterWhisper)
+            else if (whisperEngine == WhisperChoice.CTranslate2)
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisper;
             }
-            else if (whisperEngine == WhisperChoice.PurfviewFasterWhisperXXL)
+            else if (whisperEngine == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisperXxl;
             }
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.WhisperExtraSettings = comboBoxWhisperExtra.Text;
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 if (Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd != comboBoxWhisperExtra.Text)
                 {

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 fs.Read(buffer, 0, buffer.Length);
                 var nalSize = GetUInt32(buffer, 0);
                 var flag = fs.ReadByte();
-                if (IsRbspNalUnitType(flag & 0x1F))
+                if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
                 {
                     var seiData = GetSeiData(fs, i + 5, i + nalSize + 3);
                     ParseCcDataFromSei(seiData, fieldData);
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         public static void ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)
         {
             var x = 0;
-            while (x < buffer.Length)
+            while (x < buffer.Length -1)
             {
                 var payloadType = 0;
                 var payloadSize = 0;
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 {
                     now = buffer[x++];
                     payloadSize += now;
-                } while (now == 0xFF);
+                } while (now == 0xFF && x < buffer.Length -1);
 
                 if (IsStartOfCcDataHeader(payloadType, buffer, x))
                 {

@@ -17,8 +17,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>4.0.8.0</FileVersion>
-    <AssemblyVersion>4.0.8.0</AssemblyVersion>
+    <FileVersion>4.0.9.0</FileVersion>
+    <AssemblyVersion>4.0.9.0</AssemblyVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -77,6 +77,9 @@
     <Compile Update="Controls\SubtitleListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Forms\ShotChanges\ImportShotChangesFromSe.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
@@ -84,6 +87,7 @@
     <EmbeddedResource Include="Resources\AzureVoices.zip" />
     <EmbeddedResource Include="Resources\AllTalkVoices.zip" />
     <EmbeddedResource Include="Resources\PiperVoices.zip" />
+    <EmbeddedResource Include="Resources\TtsMurfVoices.zip" />
     <None Update="Resources\SMPTE-428-7-2007-DCST.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -105,6 +109,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="x64\7zxa.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="x86\7zxa.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Languages\ar-EG.xml">
@@ -284,18 +294,11 @@
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
   </ItemGroup>
-  <Target Name="BeforeCompile">
-    <XmlPeek XmlInputPath="$(ProjectDir)packages.config" Query="//package[@id='NHunspell']/@version">
-      <Output TaskParameter="Result" PropertyName="HunspellVersion" />
-    </XmlPeek>
-    <PropertyGroup>
-      <HunspellDir>..\..\packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
-    </PropertyGroup>
-    <Copy SourceFiles="@(HunspellAssemblies -> '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+  <ItemGroup>
+    <None Remove="Resources\TtsMurfVoices.zip" />
+  </ItemGroup>
+  <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
     <Exec Condition="'$(OS)' == 'Unix'" Command="bash $(ProjectDir)../../build_helpers.sh rev $(ConfigurationName)" />
-  </Target>
-  <Target Name="BeforeClean">
-    <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
   </Target>
 </Project>

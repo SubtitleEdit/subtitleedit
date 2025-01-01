@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                                      "|JSON shot changes file|*.json" +
                                      "|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
+            openFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 LoadTextFile(openFileDialog1.FileName);
@@ -458,6 +459,11 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
 
         private void ImportShotChanges_Shown(object sender, EventArgs e)
         {
+            var dir = Configuration.ShotChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            var searchFileName = "*.shotchanges";
+            var files = Directory.GetFiles(dir, searchFileName);
+            buttonFromSeCache.Enabled = files.Length > 0;
+
             Activate();
         }
 
@@ -473,6 +479,16 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                     numericUpDownThreshold.Enabled = true;
                     Configuration.Settings.Save();
                 }
+            }
+        }
+
+        private void buttonFromSeCache_Click(object sender, EventArgs e)
+        {
+            var form = new ImportShotChangesFromSe();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                ShotChangesInSeconds = form.ShotChanges;
+                DialogResult = DialogResult.OK;
             }
         }
     }

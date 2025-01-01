@@ -291,6 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainTextBoxMoveLastWordDownCurrent { get; set; }
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
+        public string MainTextBoxMoveFirstWordToPrev { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxSelectionToggleCasing { get; set; }

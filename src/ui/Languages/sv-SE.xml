@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -1018,6 +1018,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Förinställa</Preset>
+    <PixelFormat>Pixel format</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Ställ in efter</TuneFor>
     <AlignRight>Justera höger</AlignRight>
@@ -2479,6 +2480,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformUseFFmpeg>Använd FFmpeg för ljudextraktion</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Använd endast främre mittkanal (för 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Ladda ned {0}</DownloadX>
+    <ExtractingX>Extraherar {0}</ExtractingX>
     <WaveformFFmpegPath>Sökväg till FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Bläddra till FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bläddra till VLC-portabel</WaveformBrowseToVLC>
@@ -2693,6 +2695,8 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformGoToPreviousShotChange>Gå till föregående scenförändring</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Gå till nästa scenförändring</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Växla scenförändring</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Flytta alla scenförändring en bildruta framåt</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Flytta alla scenförändringr en bildruta bakåt</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Ta bort/exportera skottändringar</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Autojustera start via volym/bildändring</WaveformGuessStart>
     <GoBack1Frame>En bildruta bakåt</GoBack1Frame>
@@ -2797,6 +2801,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Hämta första ordet från nästa undertext</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flytta första ordet från nästa rad upp (aktuell undertext)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Flytta text efter markörposition till nästa undertext och gå till nästa</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Flytta första ordet till föregående undertext</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Flytta sista ordet från första raden ner (aktuell undertext)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Valda till gemener</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Valda till versaler</MainTextBoxSelectionToUpper>
@@ -3141,6 +3146,9 @@ och N bryter</WrapStyle2>
     <Angle>Vinkel</Angle>
     <BoxPerLine>Ruta per rad (använd konturfärg)</BoxPerLine>
     <BoxMultiLine>En ruta (använd skuggfärg)</BoxMultiLine>
+    <BoxPerLineShort>Box per rad</BoxPerLineShort>
+    <BoxMultiLineShort>En box</BoxMultiLineShort>
+    <BoxType>Box typ</BoxType>
     <DuplicateStyleNames>Dubbletter av stilnamn: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3185,6 +3193,8 @@ och N bryter</WrapStyle2>
     <AutoContinue>Auto-fortsätt</AutoContinue>
     <Regenerate>Regenerera</Regenerate>
     <Speed>Fart</Speed>
+    <Stability>Stabilitet</Stability>
+    <Similarity>Likhet</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
@@ -3455,6 +3465,7 @@ Behålla ändringarna?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Använd X-TIMESTAMP-MAP rubrikvärde</UseXTimeStamp>
     <MergeLines>Slå samman rader med samma text vid laddning</MergeLines>
+    <MergeStyleTags>Slå ihop stiltaggar</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT-stilar</Title>

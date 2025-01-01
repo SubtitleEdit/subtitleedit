@@ -1354,7 +1354,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             var unknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
-                            var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                            var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines(), fileName);
                             if (genericParseSubtitle.Paragraphs.Count > 1)
                             {
                                 sub = genericParseSubtitle;
@@ -4300,6 +4300,12 @@ namespace Nikse.SubtitleEdit.Forms
         private IAutoTranslator GetCurrentEngine()
         {
             return _autoTranslatorEngines.First(p => p.Name == nikseComboBoxEngine.Text);
+        }
+
+        private void BatchConvert_SizeChanged(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
+            listViewConvertOptions.AutoSizeLastColumn();
         }
     }
 }

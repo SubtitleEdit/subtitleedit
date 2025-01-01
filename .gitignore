@@ -10,7 +10,6 @@
 /src/Properties/AssemblyInfo.cs
 /src/ui/Properties/AssemblyInfo.cs
 /src/libse/Properties/AssemblyInfo.cs
-/src/TestResults/
 /SubtitleEdit.lzma
 /SubtitleEdit.tar
 /SubtitleEdit.tgz
@@ -20,26 +19,21 @@ SubtitleEdit-*-setup.exe
 SubtitleEdit-*.zip
 .vscode/
 
+ # JetBrains Rider
+/.idea/
+
 # Visual Studio cache/options directory
 .vs/
 *.ide
 
 # NuGet
-/src/.nuget/NuGet.exe
-/src/.nuget/NuGet.Config
-/src/packages/
 /src/SubtitleEdit.VC.opendb
 /src/SubtitleEdit.VC.VC.opendb
 /src/SubtitleEdit.VC.db
 /src/SubtitleEdit.userprefs
 SubtitleEditBeta
 /src/SubtitleEdit.sln.DotSettings
-/packages/NHunspell.1.2.5554.16953
-/packages/ILRepack.2.0.18
-/src/ui/packages
-/src/ui/ILRepack*
-/src/ui/NHunspell*
 /TestResults
-/packages
 /src/ui/Languages/XmlContentTranslator.exe
 /SubtitleEditBetaSetup.zip
+/packages

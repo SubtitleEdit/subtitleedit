@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public Dimension Dimension { get; set; }
         public TimeCode Duration { get; set; }
+        public decimal FramesRate { get; set; } 
 
         private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
         private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
+        private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
+        private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
 
         private FfmpegMediaInfo()
         {
@@ -33,6 +37,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var log = GetFfmpegLog(videoFileName);
             return ParseLog(log);
+        }
+
+        public long GetTotalFrames()
+        {
+            return (long)((double)FramesRate * Duration.TotalMilliseconds / TimeCode.BaseUnit);
         }
 
         public bool HasFrontCenterAudio(int trackNumber)
@@ -57,6 +66,20 @@ namespace Nikse.SubtitleEdit.Core.Common
         internal static FfmpegMediaInfo ParseLog(string log)
         {
             var info = new FfmpegMediaInfo();
+
+            var fpsMatch = Fps1Regex.Match(log);
+            if (!fpsMatch.Success)
+            {
+                fpsMatch = Fps2Regex.Match(log);
+            }
+            if (fpsMatch.Success)
+            {
+                var fps = fpsMatch.Value.Trim().Split(' ')[0];
+                if (double.TryParse(fps, NumberStyles.Any, CultureInfo.InvariantCulture, out var f))
+                {
+                    info.FramesRate = (decimal)f;
+                }
+            }
 
             foreach (var line in log.SplitToLines())
             {
@@ -137,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
-        public static Process GetFFmpegProcess(string inputFileName)
+        private static Process GetFFmpegProcess(string inputFileName)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))

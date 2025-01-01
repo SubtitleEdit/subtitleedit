@@ -120,7 +120,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     p.Style.Contains("\"fromms\"") ||
                     p.Style.Contains("\"fromMillis\"") ||
                     p.Style.Contains("\"fromMilliseconds\"") ||
-                    p.Style.Contains("\"from_milliseconds\""))
+                    p.Style.Contains("\"from_milliseconds\"") ||
+                    p.Style.Contains("\"show\""))
                 {
                     msFound++;
                 }
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 "startMillis", "start_Millis", "startmillis",
                 "startMs", "start_ms", "startms",
                 "startMilliseconds", "start_Millisesonds", "startmilliseconds",
-                "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds"
+                "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds", "show"
             });
         }
 
@@ -232,9 +233,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 "end", "out", "stop",
                 "endTime", "end_time", "endtime",
                 "endMillis", "end_Millis", "endmillis",
-                "endMs", "end_ms", "startms",
+                "endMs", "end_ms", "endms",
                 "endMilliseconds", "end_Millisesonds", "endmilliseconds",
-                "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds"
+                "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds", "hide"
             });
         }
 
@@ -297,6 +298,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 text = Json.ReadTag(s, "sentence");
             }
+            if (text == null)
+            {
+                text = Json.ReadTag(s, "dialog");
+            }
 
             if (text != null)
             {
@@ -310,7 +315,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var isArray = s.Contains("[");
-            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms"))
+            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms" | p == "hide"))
             {
                 isArray = false;
             }

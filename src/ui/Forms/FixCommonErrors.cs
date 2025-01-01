@@ -610,6 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Select();
 
             AcceptButton = buttonNextFinish;
+            textBoxListViewText.AcceptsReturn = true;
         }
 
         private void FixLargeFonts()
@@ -815,6 +816,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus(false);
+                AcceptButton = buttonFixesApply;
+                buttonFixesApply.Focus();
             }
             Cursor = Cursors.Default;
         }
@@ -1125,6 +1128,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Visible = true;
             ShowStatus(string.Empty);
             listViewFixes.Items.Clear();
+
+            AcceptButton = buttonNextFinish;
+            buttonNextFinish.Focus();
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -1422,6 +1428,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonFixesApply.Enabled = true;
+
+            if (listViewFixes.Items.Count == 0)
+            {
+                AcceptButton = buttonNextFinish;
+                buttonNextFinish.Focus();
+            }
         }
 
         private void ButtonRefreshFixesClick(object sender, EventArgs e)

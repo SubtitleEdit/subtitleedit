@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class TimeCode
     {
-        private static readonly char[] TimeSplitChars = { ':', ',', '.' };
+        public static readonly char[] TimeSplitChars = { ':', ',', '.' };
         public const double BaseUnit = 1000.0; // Base unit of time
 
         public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TimeCode AlignToFrame()
         {
             var ts = TimeSpan.FromMilliseconds(Math.Round(TotalMilliseconds, MidpointRounding.AwayFromZero));
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            var frames = SubtitleFormat.MillisecondsToFrames(ts.Milliseconds);
             TimeSpan ts2;
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {

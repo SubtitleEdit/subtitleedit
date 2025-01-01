@@ -979,6 +979,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.General.VideoPlayerPreviewFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("VideoPlayerPreviewBoxHeight");
+            if (subNode != null)
+            {
+                settings.General.VideoPlayerPreviewBoxHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontBold");
             if (subNode != null)
             {
@@ -2357,6 +2363,42 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechElevenLabsLanguage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsStability");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsStability = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsSimilarity");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsSimilarity = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfVoice = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfRate");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfRate = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechMurfPitch");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechMurfPitch = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
@@ -7902,6 +7944,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordToPrev");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFirstWordToPrev = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                 {
@@ -8788,6 +8836,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
                 xmlWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("VideoPlayerPreviewBoxHeight", settings.General.VideoPlayerPreviewBoxHeight.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("VideoPlayerShowMuteButton", settings.General.VideoPlayerShowMuteButton.ToString(CultureInfo.InvariantCulture));
@@ -9034,6 +9083,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsModel", settings.Tools.TextToSpeechElevenLabsModel);
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsLanguage", settings.Tools.TextToSpeechElevenLabsLanguage);
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsStability", settings.Tools.TextToSpeechElevenLabsStability.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechElevenLabsSimilarity", settings.Tools.TextToSpeechElevenLabsSimilarity.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfApiKey", settings.Tools.TextToSpeechMurfApiKey);
+                xmlWriter.WriteElementString("TextToSpeechMurfVoice", settings.Tools.TextToSpeechMurfVoice);
+                xmlWriter.WriteElementString("TextToSpeechMurfRate", settings.Tools.TextToSpeechMurfRate.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("TextToSpeechMurfPitch", settings.Tools.TextToSpeechMurfPitch.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
                 xmlWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 xmlWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
@@ -10152,6 +10207,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFromCursorToNext", shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordToPrev", shortcuts.MainTextBoxMoveFirstWordToPrev);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);

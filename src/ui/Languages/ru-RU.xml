@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Перевод на русский: Leserg | Elheym | elfriob</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile />
@@ -2246,7 +2246,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NonDigit>Не цифры (\D)</NonDigit>
     <AnyCharacter>Все символы (.)</AnyCharacter>
     <AnyWhitespace>Все пробелы (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Не пробельный символ (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Непробельный символ (\S)</NonSpaceCharacter>
     <ZeroOrMore>Ноль или больше (*)</ZeroOrMore>
     <OneOrMore>Один или больше (+)</OneOrMore>
     <InCharacterGroup>Группа символов ([test])</InCharacterGroup>
@@ -2487,6 +2487,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Использовать только передний центральный канал (для 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Загрузить {0}</DownloadX>
+    <ExtractingX>Извлечение {0}</ExtractingX>
     <WaveformFFmpegPath>Путь к FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Обзор FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Обзор VLC portable</WaveformBrowseToVLC>
@@ -2702,6 +2703,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению плана</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Перейти к следующему изменению плана</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Переключить смену плана</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Переместить все изменения плана на один кадр вперёд</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Переместить все изменения плана на один кадр назад</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения плана</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения плана</WaveformGuessStart>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
@@ -2803,14 +2806,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewListErrors>Список ошибок</ListViewListErrors>
     <ListViewListSortByX>Сортировать по {0}</ListViewListSortByX>
     <ShowStyleManager>Показать менеджер стилей</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveLastWordDown>Переместить последнее слово в следующий субтитр</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Извлечь первое слово из следующего субтитра</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Переместить текст за позицию курсора в следующую субтитру и перейдите к следующей</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Переместить первое слово в предыдущий субтитр</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Переместить последнее слово из первой строки вниз (текущий субтитр)</MainTextBoxMoveLastWordDownCurrent>
-    <MainTextBoxSelectionToLower>Уменьшить регистр для выделения</MainTextBoxSelectionToLower>
-    <MainTextBoxSelectionToUpper>Увеличить регистр для выделения</MainTextBoxSelectionToUpper>
-    <MainTextBoxSelectionToggleCasing>Переключение выбора регистра (правильный/верхний/нижний регистр)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToLower>Выделенное строчными буквами</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Выделенное заглавными буквами</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Переключать регистр выделенного (С Заглавной/ВЕРХНИЙ/нижний)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Выбранное в Ruby (Японский)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Автопереключение определения</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоперенос текста</MainTextBoxAutoBreak>
@@ -3197,6 +3201,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoContinue>Автопродолжение</AutoContinue>
     <Regenerate>Регенерировать</Regenerate>
     <Speed>Скорость</Speed>
+    <Stability>Стабильность</Stability>
+    <Similarity>Сходство</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Синхронизация SMPTE</Title>
