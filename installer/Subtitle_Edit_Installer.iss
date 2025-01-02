@@ -327,6 +327,7 @@ Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};              
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\System.Resources.Extensions;     DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NAudio.Core.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NAudio.WinMM.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Microsoft.Win32.Registry.dll;    DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -372,6 +373,7 @@ Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsU
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
+Type: files;      Name: {app}\System.Resources.Extensions;            Check: IsUpgrade()
 Type: files;      Name: {app}\NAudio.Core.dll;                        Check: IsUpgrade()
 Type: files;      Name: {app}\NAudio.WinMM.dll;                       Check: IsUpgrade()
 Type: files;      Name: {app}\Microsoft.Win32.Registry.dll;           Check: IsUpgrade()
