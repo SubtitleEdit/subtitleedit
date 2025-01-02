@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class StrippableText
+    public struct StrippableText
     {
         private const string PrefixChars = " >-\"„”“['‘`´¶(♪¿¡.…—";
         private const string SuffixChars = " -\"”“]'`´¶)♪.!?:…—؛،؟";
-        
+
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
@@ -61,8 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         Pre += text.Substring(0, endIndex);
                         text = text.Remove(0, endIndex);
                     }
-                }
-                while (text.Length < beginLength);
+                } while (text.Length < beginLength);
             }
 
             Post = string.Empty;
@@ -97,8 +96,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             text = text.Substring(0, text.Length - 7);
                         }
                     }
-                }
-                while (text.Length < beginLength);
+                } while (text.Length < beginLength);
             }
 
             StrippedText = text;
@@ -154,6 +152,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             lower = StrippedText.ToLowerInvariant();
                         }
                     }
+
                     if (start + 3 > lower.Length)
                     {
                         start = lower.Length + 1;
@@ -181,6 +180,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
+
         public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
         {
             var replaceIds = new List<string>();
@@ -327,6 +327,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
                 }
+
                 StrippedText = sb.ToString();
             }
 
@@ -392,6 +393,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     lastChar = tempPreLine[tempPreLine.Length - 1];
                 }
             }
+
             if (lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ']' || lastChar == ')' || lastChar == ':' || lastChar == '_')
             {
                 return true;
