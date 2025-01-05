@@ -1969,22 +1969,22 @@ namespace Tests.FixCommonErrors
         [TestMethod]
         public void FixDoubleGreaterThanTest2()
         {
-            const string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
-            const string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
-            const string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
-            const string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
+            var input1 = $"<i>>>Hello world!</i>{Environment.NewLine}<i>>>Hello</i>";
+            var input2 = $"<b>>>Hello world!</b>{Environment.NewLine}<i>>>Hello</i>";
+            var input3 = $"<u>>>Hello world!</u>{Environment.NewLine}<b>>>Hello</b>";
+            var input4 = $"<font color=\"#008040\">>>Hello world!</font>{Environment.NewLine}<font color=\"#008040\">>>Hello</font>";
 
-            const string expected1 = "<i>Hello world!</i>\r\n<i>Hello</i>";
-            const string expected2 = "<b>Hello world!</b>\r\n<i>Hello</i>";
-            const string expected3 = "<u>Hello world!</u>\r\n<b>Hello</b>";
-            const string expected4 = "<font color=\"#008040\">Hello world!</font>\r\n<font color=\"#008040\">Hello</font>";
+            var expected1 = $"<i>Hello world!</i>{Environment.NewLine}<i>Hello</i>";
+            var expected2 = $"<b>Hello world!</b>{Environment.NewLine}<i>Hello</i>";
+            var expected3 = $"<u>Hello world!</u>{Environment.NewLine}<b>Hello</b>";
+            var expected4 = $"<font color=\"#008040\">Hello world!</font>{Environment.NewLine}<font color=\"#008040\">Hello</font>";
 
             var lines1 = input1.SplitToLines();
             var lines2 = input2.SplitToLines();
             var lines3 = input3.SplitToLines();
             var lines4 = input4.SplitToLines();
 
-            for (int i = 0; i < lines1.Count; i++)
+            for (var i = 0; i < lines1.Count; i++)
             {
                 lines1[i] = Helper.FixDoubleGreaterThanHelper(lines1[i]);
                 lines2[i] = Helper.FixDoubleGreaterThanHelper(lines2[i]);
