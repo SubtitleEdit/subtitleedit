@@ -1355,7 +1355,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             // Test text.
             phxSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
             Assert.AreEqual("You should come to the Drama Club, too.", subtitle.Paragraphs[0].Text);
-            Assert.AreEqual("Yeah. The Drama Club is worried\r\nthat you haven't been coming.", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual($"Yeah. The Drama Club is worried{Environment.NewLine}that you haven't been coming.", subtitle.Paragraphs[1].Text);
 
             // Test frames.
             Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
