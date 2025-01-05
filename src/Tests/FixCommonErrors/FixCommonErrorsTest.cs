@@ -502,10 +502,10 @@ namespace Tests.FixCommonErrors
             using (var form = new GoToLine())
             {
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
-                const string input = "Foobar\r\n<i>-";
+                string input = $"Foobar{Environment.NewLine}<i>-";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
                 var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", null, new HashSet<string>());
-                Assert.AreEqual(res, "Foobar\r\n<i>-");
+                Assert.AreEqual(res, $"Foobar{Environment.NewLine}<i>-");
             }
         }
 
@@ -557,9 +557,9 @@ namespace Tests.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "ENCORE UNE VICTIME\r\nDE L'ASSASSIN MYSTERIEUX.");
+                InitializeFixCommonErrorsLine(target, $"ENCORE UNE VICTIME{Environment.NewLine}DE L'ASSASSIN MYSTERIEUX.");
                 target.FixOcrErrorsViaReplaceList("fra");
-                Assert.AreEqual("ENCORE UNE VICTIME\r\nDE L'ASSASSIN MYSTERIEUX.", target.Subtitle.Paragraphs[0].Text);
+                Assert.AreEqual($"ENCORE UNE VICTIME{Environment.NewLine}DE L'ASSASSIN MYSTERIEUX.", target.Subtitle.Paragraphs[0].Text);
             }
         }
 
@@ -569,9 +569,9 @@ namespace Tests.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "Encore une victime\r\nde L'assassin mysterieux.");
+                InitializeFixCommonErrorsLine(target, $"Encore une victime{Environment.NewLine}de L'assassin mysterieux.");
                 target.FixOcrErrorsViaReplaceList("fra");
-                Assert.AreEqual("Encore une victime\r\nde l'assassin mysterieux.", target.Subtitle.Paragraphs[0].Text);
+                Assert.AreEqual($"Encore une victime{Environment.NewLine}de l'assassin mysterieux.", target.Subtitle.Paragraphs[0].Text);
             }
         }
 
@@ -1373,7 +1373,7 @@ namespace Tests.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "<i>\r\nHello world!\r\n</i>");
+                InitializeFixCommonErrorsLine(target, $"<i>{Environment.NewLine}Hello world!{Environment.NewLine}</i>");
                 new FixEmptyLines().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Hello world!</i>");
             }
@@ -1384,7 +1384,7 @@ namespace Tests.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">\r\nHello world!\r\n</font>");
+                InitializeFixCommonErrorsLine(target, $"<font color=\"#000000\">{Environment.NewLine}Hello world!{Environment.NewLine}</font>");
                 new FixEmptyLines().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<font color=\"#000000\">Hello world!</font>");
             }
@@ -2175,9 +2175,9 @@ namespace Tests.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 // <font color="#000000"> and <font>
-                InitializeFixCommonErrorsLine(target, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">-- foobar</font>");
+                InitializeFixCommonErrorsLine(target, $"<b>Mm-hmm.</b>{Environment.NewLine}<font color=\"#000000\">-- foobar</font>");
                 new FixDoubleDash().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, $"<b>Mm-hmm.</b>{Environment.NewLine}<font color=\"#000000\">...foobar</font>");
             }
         }
 
@@ -3635,7 +3635,7 @@ namespace Tests.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
-                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's this...");
+                InitializeFixCommonErrorsLine(target, $"It is I this illustrious illiteration.{Environment.NewLine}It's this...");
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("It is I this illustrious illiteration. It's this...", _subtitle.Paragraphs[0].Text);
             }
@@ -3672,7 +3672,7 @@ namespace Tests.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
-                InitializeFixCommonErrorsLine(target, "<i>It is I this illustrious illiteration.</i>\r\n<i>It's this...</i>");
+                InitializeFixCommonErrorsLine(target, $"<i>It is I this illustrious illiteration.</i>{Environment.NewLine}<i>It's this...</i>");
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("<i>It is I this illustrious illiteration. It's this...</i>", _subtitle.Paragraphs[0].Text);
             }
