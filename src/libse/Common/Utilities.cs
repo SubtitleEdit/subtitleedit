@@ -282,8 +282,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             string s = AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language, Configuration.Settings.Tools.AutoBreakLineEndingEarly);
 
             var arr = HtmlUtil.RemoveHtmlTags(s, true).SplitToLines();
-            if (arr.Count == 1 && arr[0].Length <= maximumLength ||
-                arr.Count == 2 && arr[0].Length <= maximumLength && arr[1].Length <= maximumLength)
+
+            if (arr.All(line => line.Length < maximumLength))
             {
                 return s;
             }
