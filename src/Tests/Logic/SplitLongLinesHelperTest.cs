@@ -49,8 +49,8 @@ namespace Tests.Logic
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             var procSubtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(_subtitle, _maxLineLength * 2, _maxLineLength);
 
-            Assert.AreEqual("We have never been to Asia,\r\nnor have we visited Africa.", procSubtitle.Paragraphs[0].Text);
-            Assert.AreEqual("We have never\r\nbeen to Asia, nor\r\nhave we visited Africa.", procSubtitle.Paragraphs[1].Text);
+            Assert.AreEqual($"We have never been to Asia,{Environment.NewLine}nor have we visited Africa.", procSubtitle.Paragraphs[0].Text);
+            Assert.AreEqual($"We have never{Environment.NewLine}been to Asia, nor{Environment.NewLine}have we visited Africa.", procSubtitle.Paragraphs[1].Text);
             Assert.AreEqual(_subtitle.Paragraphs[2].Text, procSubtitle.Paragraphs[2].Text);
 
             Assert.AreNotEqual(_subtitle.Paragraphs.Count, procSubtitle.Paragraphs.Count);
@@ -60,8 +60,8 @@ namespace Tests.Logic
             Assert.AreEqual(Utilities.AutoBreakLine("Of yourself and laugh it off to realise that life isn’t so bad after all.", "en"), procSubtitle.Paragraphs[4].Text);
 
             // too long
-            Assert.AreEqual("Sometimes, all you need to do is\r\ncompletely make an ass of yourself", procSubtitle.Paragraphs[5].Text);
-            Assert.AreEqual("and laugh it off to realise that\r\nlife isn’t so bad after all.", procSubtitle.Paragraphs[6].Text);
+            Assert.AreEqual($"Sometimes, all you need to do is{Environment.NewLine}completely make an ass of yourself", procSubtitle.Paragraphs[5].Text);
+            Assert.AreEqual($"and laugh it off to realise that{Environment.NewLine}life isn’t so bad after all.", procSubtitle.Paragraphs[6].Text);
 
             // timing test
             if (procSubtitle.Paragraphs[5].DurationTotalMilliseconds > procSubtitle.Paragraphs[6].DurationTotalMilliseconds)
@@ -88,7 +88,7 @@ namespace Tests.Logic
         [TestMethod]
         public void MillisecondsPerCharTest()
         {
-            string text = Utilities.AutoBreakLine("The waves were crashing on the\r\nshore; it was a lovely sight.");
+            string text = Utilities.AutoBreakLine($"The waves were crashing on the{Environment.NewLine}shore; it was a lovely sight.");
             double optimalDuration = Utilities.GetOptimalDisplayMilliseconds(text);
             double displayCharLen = HtmlUtil.RemoveHtmlTags(text, true).Length - (Utilities.GetNumberOfLines(text) - 1) * Environment.NewLine.Length;
             double msPerChar = optimalDuration / displayCharLen;
