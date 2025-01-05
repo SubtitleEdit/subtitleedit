@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            text = text.Substring(newLineIdx + 2);
+            text = text.Substring(newLineIdx + Environment.NewLine.Length);
             return StartsWithHtmlTag(text, threeLengthTag, includeFont);
         }
 
