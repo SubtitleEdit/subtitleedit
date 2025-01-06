@@ -1537,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             return KnownHtmlTags.Contains(tag) ||
                    tag.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) ||
-                   tag.StartsWith("</");
+                   tag.StartsWith("</", StringComparison.Ordinal);
         }
     }
 }
