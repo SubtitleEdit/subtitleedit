@@ -2223,8 +2223,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                                 break;
                             case BatchAction.RemoveTextForHI:
-                                var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
-                                var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
+                                var hiSettings = new RemoveTextForHISettings(sub);
+                                var hiLib = new RemoveTextForHI(hiSettings);
                                 var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
 
                                 var index = sub.Paragraphs.Count - 1;
