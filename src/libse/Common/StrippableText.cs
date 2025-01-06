@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var tag = input.Substring(l, r - l + 1);
 
                     // {man} etc...
-                    if (tag[0] == '{' && !tag.StartsWith("{\\", StringComparison.Ordinal))
+                    if (!HtmlUtil.IsKnownHtmlTag(tag) && !Utilities.IsKnownAssTags(tag))
                     {
                         // try to find non-visible char
                         l++;
@@ -72,6 +72,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (input[j] == '<' && input[k] == '>')
                 {
+                    if (!HtmlUtil.IsKnownHtmlTag(input.Substring(j, k - j + 1)))
+                    {
+                        while (j > k && stripEndCharacters.Contains(input[k]) || input[k] == '>' || input[k] == '}')
+                        {
+                            k--;
+                        }
+
+                        if (input[k] != '>')
+                        {
+                            break;
+                        }
+                    }
+
                     k = j - 1;
                 }
                 else if (input[k] != '>' && stripEndCharacters.Contains(input[j]))

@@ -1527,5 +1527,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="ch">The character to check.</param>
         /// <returns>True if the character is a start tag symbol; otherwise, false.</returns>
         public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
+
+        private static readonly HashSet<string> KnownHtmlTags = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "<i>", "<b>", "<u>", "</i>", "</b>", "</u>", "</font>"
+        };
+
+        public static bool IsKnownHtmlTag(string tag)
+        {
+            return KnownHtmlTags.Contains(tag) || tag.StartsWith("<font ", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

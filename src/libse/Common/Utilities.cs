@@ -3313,5 +3313,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             throw new NotImplementedException();
         }
+
+        public static bool IsKnownAssTags(string tag)
+        {
+            return tag.StartsWith("{\\", StringComparison.Ordinal);
+        }
     }
 }
