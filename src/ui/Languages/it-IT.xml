@@ -31,13 +31,13 @@
     <NoVideoLoaded>Nessun video caricato</NoVideoLoaded>
     <OnlineVideoFeatureNotAvailable>Funzionalità non disponibile per i video online</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Informazioni video</VideoInformation>
-    <StartTime>Tempo iniziale</StartTime>
-    <EndTime>Tempo finale</EndTime>
+    <StartTime>Punto iniziale</StartTime>
+    <EndTime>Punto finale</EndTime>
     <Duration>Durata</Duration>
     <CharsPerSec>Caratteri/sec</CharsPerSec>
     <WordsPerMin>Parole/min</WordsPerMin>
     <Actor>Attore</Actor>
-    <Gap>Divario</Gap>
+    <Gap>Spazio</Gap>
     <Region>Regione</Region>
     <Layer>Layer</Layer>
     <NumberSymbol>N.</NumberSymbol>
@@ -123,11 +123,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Aggiungi all'elenco nomi</Title>
-    <Description>Aggiungi a elenco nomi (sensibile maiuscole/minuscole)</Description>
+    <Description>Aggiungi ad elenco nomi (sensibile maiuscole/minuscole)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Aggiungi all'elenco sostituzioni OCR</Title>
-    <Description>Aggiungi coppia a elenco sostituzioni OCR (sensibile a maiuscole/minuscole)</Description>
+    <Description>Aggiungi coppia ad elenco sostituzioni OCR (sensibile a maiuscole/minuscole)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Aggiungi al dizionario utente</Title>
@@ -138,7 +138,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>File video sorgente:</SourceVideoFile>
     <GenerateWaveformData>Genera dati forma d'onda</GenerateWaveformData>
     <PleaseWait>Potrebbero volerci alcuni minuti. Attendi...</PleaseWait>
-    <FfmpegNotFound>Per l'estrazione dei dati audio per generare le forme d'onda a  Subtitle Edit serve Ffmpeg.
+    <FfmpegNotFound>Per l'estrazione dei dati audio per generare le forme d'onda a Subtitle Edit serve Ffmpeg.
 
 Vuoi scaricare ed usare Ffmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Generazione file di picco...</GeneratingPeakFile>
@@ -153,14 +153,14 @@ Riga di comando: {1} {2}</WaveFileNotFound>
 
 Riga di comando: {1} {2}
 
-Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
+Nota: controlla lo spazio libero nel disco.</WaveFileMalformed>
     <LowDiskSpace>SPAZIO SU DISCO INSUFFICIENTE!</LowDiskSpace>
     <FreeDiskSpace>{0} liberi</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>Nessuna traccia audio trovata! Vuoi generare una forma d'onda vuota?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Generazione dati forma d'onda batch</Title>
-    <ExtractTimeCodes>Estrai time code con FFprobe</ExtractTimeCodes>
+    <Title>Generazione batch dati forma d'onda</Title>
+    <ExtractTimeCodes>Estrai timecode con FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Estrazione audio...</ExtractingAudio>
     <Calculating>Calcolo...</Calculating>
     <ExtractingTimeCodes>Estrazione time code...</ExtractingTimeCodes>
@@ -169,7 +169,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Error>Errore</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
-    <Title>Regola tempi di durata</Title>
+    <Title>Regola durata</Title>
     <AdjustVia>Regola tramite</AdjustVia>
     <Seconds>Secondi</Seconds>
     <Percent>Percentuale</Percent>
@@ -180,7 +180,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Fixed>Fisso</Fixed>
     <Milliseconds>Millisecondi</Milliseconds>
     <ExtendOnly>Estendi solo</ExtendOnly>
-    <EnforceDurationLimits>Applica la durata minima e massima</EnforceDurationLimits>
+    <EnforceDurationLimits>Applica durata minima e massima</EnforceDurationLimits>
     <CheckShotChanges>Non prolungare oltre i cambi di inquadratura</CheckShotChanges>
     <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
@@ -192,7 +192,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio/video a testo</Title>
+    <Title>Audio a testo</Title>
     <Info>Genera testo dall'audio tramite il riconoscimento vocale Vosk/Kaldi</Info>
     <WhisperInfo>Genera testo dall'audio tramite il riconoscimento vocale Whisper</WhisperInfo>
     <Engine>Motore</Engine>
@@ -205,23 +205,23 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <ChooseLanguage>Scegli lingua</ChooseLanguage>
     <OpenModelsFolder>Apri cartella modelli</OpenModelsFolder>
     <LoadingVoskModel>Caricamento modello riconoscimento vocale Vosk...</LoadingVoskModel>
-    <Transcribing>Conversione dell'audio in testo...</Transcribing>
-    <TranscribingXOfY>Conversione dell'audio in testo - file {0} di {1}...</TranscribingXOfY>
+    <Transcribing>Conversione audio in testo...</Transcribing>
+    <TranscribingXOfY>Conversione audio in testo - file {0} di {1}...</TranscribingXOfY>
     <PostProcessing>Post elaborazione...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} file salvati nella cartella sorgente video</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usa la post-elaborazione (unione di righe, correzione di maiuscole e minuscole, punteggiatura e altro)</UsePostProcessing>
     <AutoAdjustTimings>Regola automaticamente i tempi</AutoAdjustTimings>
     <BatchMode>Modo batch</BatchMode>
-    <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
+    <KeepPartialTranscription>Mantieni trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
-    <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
+    <OnlyRunPostProcessing>Esegui solo post-elaborazione/regola tempi</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Nessun testo trovato!</NoTextFound>
     <FixCasing>Correggi maiuscolo/minuscolo</FixCasing>
-    <AddPeriods>Aggiungi periodo</AddPeriods>
-    <FixShortDuration>Correggi breve durata</FixShortDuration>
+    <AddPeriods>Aggiungi periodi</AddPeriods>
+    <FixShortDuration>Correggi durata breve</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -231,10 +231,10 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Font>Font</Font>
     <ImageName>Nome immagine ({0}x{1}):</ImageName>
     <IconName>Nome icona:</IconName>
-    <FontName>Nome carattere:</FontName>
+    <FontName>Nome font:</FontName>
     <ImageResized>Immagine ridimensionata per adattarsi alla finestra attuale</ImageResized>
     <FilesSkippedX>File ignorati: {0}</FilesSkippedX>
-    <RemoveOneAttachment>Vuoi rimuovere l'allegato?</RemoveOneAttachment>
+    <RemoveOneAttachment>Vuoi eliminare l'allegato?</RemoveOneAttachment>
     <RemoveXAttachments>Vuoi eliminare {0} allegati?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
@@ -251,28 +251,28 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Chapters>Capitoli</Chapters>
     <SplitterWidth>Larghezza separatore</SplitterWidth>
     <SplitterHeight>Altezza separatore</SplitterHeight>
-    <XAdjustment>Regolazione x</XAdjustment>
-    <YAdjustment>Regolazione y</YAdjustment>
+    <XAdjustment>Regolazione X</XAdjustment>
+    <YAdjustment>Regolazione Y</YAdjustment>
     <Position>Posizione</Position>
     <TextAlignment>Allineamento testo</TextAlignment>
     <SquareCorners>Angoli quadrati</SquareCorners>
     <RoundedCorners>Angoli arrotondati</RoundedCorners>
     <Top>Superiore</Top>
     <Bottom>Inferiore</Bottom>
-    <TakePosFromVideo>Prendi posizione video</TakePosFromVideo>
+    <TakePosFromVideo>Ottieni posizione video</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResolutionChanger>
     <Title>Modifica risoluzione script</Title>
     <SourceVideoRes>Risoluzione video sorgente</SourceVideoRes>
     <TargetVideoRes>Risoluzione video destinazione</TargetVideoRes>
     <ChangeResolutionMargins>Modifica risoluzione per il margine</ChangeResolutionMargins>
-    <ChangeResolutionFontSize>Modifica risoluzione per dimensione del font</ChangeResolutionFontSize>
-    <ChangeResolutionPositions>Modifica risoluzione per posizione</ChangeResolutionPositions>
-    <ChangeResolutionDrawing>Modifica risoluzione per disegno</ChangeResolutionDrawing>
-    <SourceAndTargetEqual>La risoluzione di sorgente e destinazione è la stessa: Nessuna operazione necessaria.</SourceAndTargetEqual>
+    <ChangeResolutionFontSize>Modifica risoluzione per la dimensione font</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Modifica risoluzione per la posizione</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Modifica risoluzione per il disegno</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>La risoluzione sorgente e destinazione è la stessa: Nessuna operazione necessaria.</SourceAndTargetEqual>
   </AssaResolutionChanger>
   <ImageColorPicker>
-    <Title>Selettore colore immagine</Title>
+    <Title>Selezione colore immagine</Title>
     <CopyColorHex>Copia negli Appunti come colore HEX {0}</CopyColorHex>
     <CopyColorAssa>Copia negli Appunti come colore ASSA {0}</CopyColorAssa>
     <CopyColorRgb>Copia negli Appunti come colore RGB {0}</CopyColorRgb>
@@ -292,7 +292,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <MarginY>Margine Y</MarginY>
     <OnlyDrawing>Solo disegno</OnlyDrawing>
     <DrawingFile>File disegno</DrawingFile>
-    <ColorPickerSetLastColor>L'ultimo colore del selettore colore è ora: {0}</ColorPickerSetLastColor>
+    <ColorPickerSetLastColor>L'ultimo colore selezionato è ora: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Imposta posizione</SetPosition>
@@ -2948,7 +2948,10 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{0} di caratteri non validi trovati nella colonna {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Spazio vuoto non valido trovato nella colonna {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Problema spazio vuoto ({0}) rilevato nella colonna {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>fine riga</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>mancante prima della punteggiatura</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ consecutivi</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Consulta il rapporto completo qui: {0}.</ReportPrompt>
     <OpenReportInFolder>Apri rapporto nella cartella</OpenReportInFolder>
     <FoundXIssues>Trovato controllo qualità Netflix {0:#,###} problemi.</FoundXIssues>
@@ -2958,26 +2961,26 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <MinimumDuration>Durata minima: 5/6 secondo (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
-    <Title>Dividi Sottotitolo</Title>
-    <SplitOptions>Opzioni di divisione</SplitOptions>
+    <Title>Dividi sottotitolo</Title>
+    <SplitOptions>Opzioni divisione</SplitOptions>
     <Lines>righe</Lines>
     <Characters>Caratteri</Characters>
-    <NumberOfEqualParts>Numero di parti uguali</NumberOfEqualParts>
+    <NumberOfEqualParts>Numero parti uguali</NumberOfEqualParts>
     <SubtitleInfo>Informazioni sottotitolo</SubtitleInfo>
-    <NumberOfLinesX>Numero di righe: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Numero di caratteri: {0:#,###,###}</NumberOfCharactersX>
+    <NumberOfLinesX>Numero righe: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Numero caratteri: {0:#,###,###}</NumberOfCharactersX>
     <Output>Destinazione</Output>
-    <FileName>Nome del file</FileName>
+    <FileName>Nome file</FileName>
     <OutputFolder>Cartella destinazione</OutputFolder>
     <DoSplit>Dividi</DoSplit>
     <Basic>Base</Basic>
   </Split>
   <SplitLongLines>
     <Title>Dividi righe lunghe</Title>
-    <SingleLineMaximumLength>Massima lunghezza singola riga</SingleLineMaximumLength>
-    <LineMaximumLength>Massima lunghezza riga</LineMaximumLength>
+    <SingleLineMaximumLength>Lunghezza massima singola riga</SingleLineMaximumLength>
+    <LineMaximumLength>Lunghezza massima riga</LineMaximumLength>
     <LineContinuationBeginEndStrings>Stringhe inizio/fine continuazione riga</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Numero di divisioni: {0}</NumberOfSplits>
+    <NumberOfSplits>Numero divisioni: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>La singola riga più lunga è di {0} caratteri alla riga {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>La riga più lunga è di {0} caratteri alla riga {1}</LongestLineIsXAtY>
     <SplitAtLineBreaks>Dividi alle interruzioni di riga</SplitAtLineBreaks>
