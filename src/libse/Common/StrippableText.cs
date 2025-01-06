@@ -21,99 +21,72 @@ namespace Nikse.SubtitleEdit.Core.Common
         public StrippableText(string input, string stripStartCharacters, string stripEndCharacters)
         {
             OriginalText = input;
-            var text = input;
-
-            Pre = string.Empty;
-            if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))
+            var len = input.Length;
+            var l = 0;
+            for (var r = 0; r < len; r++)
             {
-                int beginLength;
-                do
+                if (input[r] == '<' || input[r] == '{')
                 {
-                    beginLength = text.Length;
+                    l = r;
+                }
+                else if ((input[r] == '>' && input[l] == '<') || (input[r] == '}' && input[l] == '{'))
+                {
+                    // get the tag from l to r
+                    var tag = input.Substring(l, r - l + 1);
 
-                    while (text.Length > 0 && stripStartCharacters.Contains(text[0]))
+                    // {man} etc...
+                    if (tag[0] == '{' && !tag.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        Pre += text[0];
-                        text = text.Remove(0, 1);
-                    }
-
-                    // ASS/SSA codes like {\an9}
-                    int endIndex = text.IndexOf('}');
-                    if (endIndex > 0 && text.StartsWith("{\\", StringComparison.Ordinal))
-                    {
-                        int nextStartIndex = text.IndexOf('{', 2);
-                        if (nextStartIndex == -1 || nextStartIndex > endIndex)
+                        // try to find non-visible char
+                        l++;
+                        while (l < r && stripStartCharacters.Contains(input[l]) || input[l] == '{' || input[l] == '<')
                         {
-                            endIndex++;
-                            Pre += text.Substring(0, endIndex);
-                            text = text.Remove(0, endIndex);
+                            l++;
+                        }
+
+                        // non-special char found in between l and r
+                        if (input[l] != '<' && input[l] != '{')
+                        {
+                            break;
                         }
                     }
 
-                    // tags like <i> or <font face="Segoe Print" color="#ff0000">
-                    endIndex = text.IndexOf('>');
-                    if (text.StartsWith('<') && endIndex >= 2)
-                    {
-                        endIndex++;
-                        Pre += text.Substring(0, endIndex);
-                        text = text.Remove(0, endIndex);
-                    }
+                    l = r + 1;
                 }
-                while (text.Length < beginLength);
+                else if (input[l] != '<' && stripStartCharacters.Contains(input[r]))
+                {
+                    l = r + 1;
+                }
+                else if (input[l] != '<' && input[l] != '{')
+                {
+                    break;
+                }
             }
 
-            Post = string.Empty;
-            if (text.Length > 0 && (">" + stripEndCharacters).Contains(text[text.Length - 1]))
+            var k = len - 1;
+            for (int j = len - 1; j >= l; j--)
             {
-                int beginLength;
-                do
+                if (input[j] == '>')
                 {
-                    beginLength = text.Length;
-
-                    while (text.Length > 0 && stripEndCharacters.Contains(text[text.Length - 1]))
-                    {
-                        Post = text[text.Length - 1] + Post;
-                        text = text.Substring(0, text.Length - 1);
-                    }
-
-                    if (text.EndsWith('>'))
-                    {
-                        // tags </i> </b> </u>
-                        if (text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                            text.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                            text.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Post = text.Substring(text.Length - 4) + Post;
-                            text = text.Substring(0, text.Length - 4);
-                        }
-
-                        // tag </font>
-                        if (text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Post = text.Substring(text.Length - 7) + Post;
-                            text = text.Substring(0, text.Length - 7);
-                        }
-
-                        if (text.EndsWith('>'))
-                        {
-                            var lastIndexOfStart = text.LastIndexOf("<");
-                            if (lastIndexOfStart >= 0)
-                            {
-                                var tag = text.Substring(lastIndexOfStart);
-                                tag = tag.TrimStart('<').TrimEnd('>');
-                                if (tag.StartsWith("/c.", StringComparison.Ordinal) && !tag.Contains(' ') && !tag.Contains('\n'))
-                                {
-                                    Post = text.Substring(lastIndexOfStart) + Post;
-                                    text = text.Substring(0, lastIndexOfStart);
-                                }
-                            }
-                        }
-                    }
+                    k = j;
                 }
-                while (text.Length < beginLength);
+                else if (input[j] == '<' && input[k] == '>')
+                {
+                    k = j - 1;
+                }
+                else if (stripEndCharacters.Contains(input[j]))
+                {
+                    k = j - 1;
+                }
+                else if (input[k] != '>')
+                {
+                    break;
+                }
             }
 
-            StrippedText = text;
+            StrippedText = input.Substring(l, k - l + 1);
+            Pre = input.Substring(0, l);
+            Post = input.Substring(k + 1);
         }
 
         private static string GetAndInsertNextId(List<string> replaceIds, List<string> replaceNames, string name, int idName)
