@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     k = j - 1;
                 }
-                else if (stripEndCharacters.Contains(input[j]))
+                else if (input[k] != '>' && stripEndCharacters.Contains(input[j]))
                 {
                     k = j - 1;
                 }
