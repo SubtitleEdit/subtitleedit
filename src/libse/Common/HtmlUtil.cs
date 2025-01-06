@@ -1530,12 +1530,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly HashSet<string> KnownHtmlTags = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "<i>", "<b>", "<u>", "</i>", "</b>", "</u>", "</font>"
+            "<i>", "<b>", "<u>" //, "</i>", "</b>", "</u>", "</font>"
         };
 
         public static bool IsKnownHtmlTag(string tag)
         {
-            return KnownHtmlTags.Contains(tag) || tag.StartsWith("<font ", StringComparison.OrdinalIgnoreCase);
+            return KnownHtmlTags.Contains(tag) ||
+                   tag.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) ||
+                   tag.StartsWith("</");
         }
     }
 }
