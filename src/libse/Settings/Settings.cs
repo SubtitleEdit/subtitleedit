@@ -7908,6 +7908,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPosPlay");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSplitSelectedLineBilingual");
                 if (subNode != null)
                 {
@@ -10201,6 +10207,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndAutoBr", shortcuts.MainTextBoxSplitAtCursorAndAutoBr);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+            textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPosPlay", shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay);
             textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", shortcuts.MainTextBoxSplitSelectedLineBilingual);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDown", shortcuts.MainTextBoxMoveLastWordDown);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", shortcuts.MainTextBoxMoveFirstWordFromNextUp);

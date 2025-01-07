@@ -2145,6 +2145,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SplitLineAtCursorPosition = "Split line at cursor position",
                         SplitLineAtCursorPositionAndAutoBr = "Split line at cursor position and auto-break",
                         SplitLineAtCursorAndWaveformPosition = "Split line at cursor/video position",
+                        SplitLineAtCursorAndWaveformPositionPlay = "Split line at cursor/video position and play",
                         AutoDurationCurrentLine = "Auto duration (current line)",
                         SelectAll = "Select all",
                         InsertFirstLine = "Insert line",

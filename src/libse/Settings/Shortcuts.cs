@@ -285,6 +285,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public string MainTextBoxSplitAtCursorAndVideoPosPlay { get; set; }
         public string MainTextBoxSplitSelectedLineBilingual { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
