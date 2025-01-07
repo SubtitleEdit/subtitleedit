@@ -11672,6 +11672,12 @@ namespace Nikse.SubtitleEdit.Forms
                 ToolStripMenuItemSplitViaWaveformClick(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay == e.KeyData)
+            {
+                ToolStripMenuItemSplitViaWaveformClick(null, null);
+                mediaPlayer.Play();
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainTextBoxSplitSelectedLineBilingual == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
@@ -30176,6 +30182,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPos == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
                 ToolStripMenuItemSplitViaWaveformClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            {
+                ToolStripMenuItemSplitViaWaveformClick(null, null);
+                mediaPlayer.Play();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)

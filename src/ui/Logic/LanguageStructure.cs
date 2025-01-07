@@ -1952,6 +1952,7 @@
                     public string SplitLineAtCursorPosition { get; set; }
                     public string SplitLineAtCursorPositionAndAutoBr { get; set; }
                     public string SplitLineAtCursorAndWaveformPosition { get; set; }
+                    public string SplitLineAtCursorAndWaveformPositionPlay { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
                     public string InsertFirstLine { get; set; }

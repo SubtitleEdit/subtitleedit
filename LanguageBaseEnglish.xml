@@ -1544,6 +1544,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Split line at cursor position and auto-break</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Split line at cursor/video position and play</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
         <InsertFirstLine>Insert line</InsertFirstLine>
