@@ -128,6 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxSplitAtCursor { get; set; }
         public Keys MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public Keys MainTextBoxSplitAtCursorAndVideoPosPlay { get; set; }
         public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }
         public Keys MainTextBoxMoveLastWordDown { get; set; }
         public Keys MainTextBoxMoveFirstWordFromNextUp { get; set; }
@@ -454,6 +455,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndAutoBr = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndAutoBr);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+            MainTextBoxSplitAtCursorAndVideoPosPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay);
             MainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
             MainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             MainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);

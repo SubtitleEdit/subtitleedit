@@ -4981,6 +4981,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SplitLineAtCursorAndWaveformPosition":
                     language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SplitLineAtCursorAndWaveformPositionPlay":
+                    language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPositionPlay = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AutoDurationCurrentLine":
                     language.Main.Menu.ContextMenu.AutoDurationCurrentLine = reader.Value;
                     break;
