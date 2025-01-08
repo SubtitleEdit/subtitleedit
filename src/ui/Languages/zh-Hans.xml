@@ -1540,6 +1540,7 @@ Command line: {1} {2}
         <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>在光标处分割并自动换行</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>在光标/视频位置处分割行并播放</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
         <InsertFirstLine>插入行</InsertFirstLine>
