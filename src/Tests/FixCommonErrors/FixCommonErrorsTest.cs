@@ -3648,9 +3648,9 @@ namespace Tests.FixCommonErrors
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
                 Configuration.Settings.General.DialogStyle = DialogType.DashSecondLineWithoutSpace;
-                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\n-It's this...");
+                InitializeFixCommonErrorsLine(target, $"It is I this illustrious illiteration.{Environment.NewLine}-It's this...");
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("It is I this illustrious illiteration.\r\n-It's this...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual($"It is I this illustrious illiteration.{Environment.NewLine}-It's this...", _subtitle.Paragraphs[0].Text);
             }
         }
 
@@ -3660,9 +3660,9 @@ namespace Tests.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
-                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's super...");
+                InitializeFixCommonErrorsLine(target, $"It is I this illustrious illiteration.{Environment.NewLine}It's super...");
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("It is I this illustrious illiteration.\r\nIt's super...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual($"It is I this illustrious illiteration.{Environment.NewLine}It's super...", _subtitle.Paragraphs[0].Text);
             }
         }
 
