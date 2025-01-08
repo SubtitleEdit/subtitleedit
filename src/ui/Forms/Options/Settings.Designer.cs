@@ -506,6 +506,7 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
+            this.checkBoxWaveformDuplicateTextWhileSplitting = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -3779,6 +3780,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformDuplicateTextWhileSplitting);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonEditShotChangesProfile);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
@@ -6929,11 +6931,22 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
+            // checkBoxWaveformDuplicateTextWhileSplitting
+            // 
+            this.checkBoxWaveformDuplicateTextWhileSplitting.AutoSize = true;
+            this.checkBoxWaveformDuplicateTextWhileSplitting.Location = new System.Drawing.Point(527, 27);
+            this.checkBoxWaveformDuplicateTextWhileSplitting.Name = "checkBoxWaveformDuplicateTextWhileSplitting";
+            this.checkBoxWaveformDuplicateTextWhileSplitting.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxWaveformDuplicateTextWhileSplitting.TabIndex = 35;
+            this.checkBoxWaveformDuplicateTextWhileSplitting.Text = "Duplicate text while splitting";
+            this.checkBoxWaveformDuplicateTextWhileSplitting.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelToolBar);
@@ -6944,7 +6957,6 @@
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
@@ -7569,5 +7581,6 @@
         private System.Windows.Forms.Label labelTBOpenVideo;
         private System.Windows.Forms.PictureBox pictureBoxTBOpenVideo;
         private System.Windows.Forms.CheckBox checkBoxTBOpenVideo;
+        private System.Windows.Forms.CheckBox checkBoxWaveformDuplicateTextWhileSplitting;
     }
 }
