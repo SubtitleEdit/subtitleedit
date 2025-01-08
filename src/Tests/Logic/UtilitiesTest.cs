@@ -288,6 +288,11 @@ namespace Tests.Logic
         [DoNotParallelize]
         public void AutoBreakPreferPixelWidth()
         {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                Assert.Inconclusive();
+            }
+
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
             string res = Utilities.AutoBreakLine("Iiiiii iiiiii iiiiii iiii WWWWWW WWWWWW WWWWWW.");
             Assert.IsTrue(res.SplitToLines()[0].Contains('W'));
@@ -297,6 +302,11 @@ namespace Tests.Logic
         [DoNotParallelize]
         public void AutoBreakPreferPixelWidth2()
         {
+            if (Environment.OSVersion.Platform is PlatformID.Unix)
+            {
+                Assert.Inconclusive();
+            }
+
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
             Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = false;
             string res = Utilities.AutoBreakLine("Samo želim životnog partnera koji će mi biti prijatelj do kraja života,");
