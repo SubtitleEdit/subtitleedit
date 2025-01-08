@@ -4472,7 +4472,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timerAutoContinue
             // 
-            this.timerAutoContinue.Interval = 1000;
+            this.timerAutoContinue.Interval = 300;
             this.timerAutoContinue.Tick += new System.EventHandler(this.TimerAutoContinueTick);
             // 
             // timerWaveform
