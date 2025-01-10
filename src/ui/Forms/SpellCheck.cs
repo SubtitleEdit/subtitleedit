@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SpellCheck : Form, IDoSpell
     {
+        private readonly HashSet<char> _specialCharacters = new HashSet<char> { '\'', '*', '#', '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E', '\u200B', '\uFEFF' };
+
         private List<UndoObject> _undoList = new List<UndoObject>();
         private List<string> _suggestions;
         private string _wordSplitListLanguage;
@@ -954,27 +956,23 @@ namespace Nikse.SubtitleEdit.Forms
                     _postfix = string.Empty;
                     if (_currentWord.Length > 0)
                     {
-                        var trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
-                        var charHit = true;
-                        while (charHit)
+                        int l = 0;
+                        var len = _currentWord.Length;
+
+                        while (l < len && _specialCharacters.Contains(_currentWord[l]))
                         {
-                            charHit = false;
-                            foreach (char c in trimChars)
-                            {
-                                if (_currentWord.StartsWith(c))
-                                {
-                                    _prefix += c;
-                                    _currentWord = _currentWord.Substring(1);
-                                    charHit = true;
-                                }
-                                if (_currentWord.EndsWith(c))
-                                {
-                                    _postfix = c + _postfix;
-                                    _currentWord = _currentWord.Remove(_currentWord.Length - 1);
-                                    charHit = true;
-                                }
-                            }
+                            l++;
                         }
+
+                        int r = _currentWord.Length - 1;
+                        while (r >= 0 && _specialCharacters.Contains(_currentWord[r]))
+                        {
+                            r--;
+                        }
+
+                        _prefix = l > 0 ? _currentWord.Substring(0, l) : string.Empty;
+                        _postfix = len - (r + 1) > 0 ? _currentWord.Substring(r + 1) : string.Empty;
+                        _currentWord = _currentWord.Substring(l, r - l + 1);
                     }
                     string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
                     if (_currentWord.Length < minLength || _currentWord == "&")
@@ -982,7 +980,6 @@ namespace Nikse.SubtitleEdit.Forms
                         // ignore short/empty words and special chars
                     }
                     else if (IsBetweenActiveAssaTags(_words[_wordsIndex].Index, _currentParagraph, _subtitleFormat))
-
                     {
                         // ignore words between {} in ASSA/SSA
                     }
@@ -1275,6 +1272,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentSpellCheckWord.Index += 2;
                                 _currentWord = _currentWord.Trim('\'');
                             }
+
                             if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
                             {
                                 _prefix = string.Empty;
@@ -1282,16 +1280,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentWord = _currentWord.Trim('\'');
                             }
 
-                            if (_postfix != null && _postfix == "'")
-                            {
-                                _currentSpellCheckWord.Text = _currentWord + _postfix;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                            }
-                            else
-                            {
-                                _currentSpellCheckWord.Text = _currentWord;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                            }
+                            _currentSpellCheckWord.Text = _postfix != null && _postfix == "'" ? _currentWord + _postfix : _currentWord;
+                            var progress = string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count);
+                            
+                            Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, progress);
+
                             if (!Visible)
                             {
                                 ShowDialog(_mainWindow);
