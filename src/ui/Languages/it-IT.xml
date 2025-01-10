@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 12.12.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 10.01.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -946,7 +946,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <FixOverlappingDisplayTime>Correggi i tempi di visualizzazione sovrapposti</FixOverlappingDisplayTime>
     <FixShortGap>Correggi il divario breve</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Cosa mi importa.&lt;i&gt; -&gt; &lt;i&gt;Cosa mi importa.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Ehi   tu , laggiù. -&gt; Ehi tu, laggiù.</RemoveUnneededSpacesExample>
+    <RemoveUnneededSpacesExample>Ehi tu , laggiù. -&gt; Ehi tu, laggiù.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Ehi tu!. -&gt; Ehi tu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Ehi.Tu. -&gt; Ehi. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsideLowercaseWordsExample>La terra è piatta. -&gt; La terra è piatta.</FixUppercaseIInsideLowercaseWordsExample>
@@ -1325,7 +1325,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
         <New>&amp;Nuovo</New>
         <Open>&amp;Apri</Open>
         <OpenKeepVideo>Apri (mantieni video)</OpenKeepVideo>
-        <Reopen>Aprire di nuovo il file sottotitoli</Reopen>
+        <Reopen>Apri di nuovo il file sottotitoli</Reopen>
         <Save>Salva</Save>
         <SaveAs>Salva come...</SaveAs>
         <RestoreAutoBackup>Ripristina da backup automatico...</RestoreAutoBackup>
@@ -1543,7 +1543,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
         <Delete>Elimina</Delete>
         <SplitLineAtCursorPosition>Dividi la riga alla posizione del cursore</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Divisione linea alla posizione del cursore e interruzione automatica</SplitLineAtCursorPositionAndAutoBr>
-        <SplitLineAtCursorAndWaveformPosition>Linea divisa alla posizione cursore/video</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPosition>Dividi linea alla posizione cursore/video</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Dividi linea alla posizione cursore/video e riproduci</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Durata automatica (riga attuale)</AutoDurationCurrentLine>
         <SelectAll>Seleziona tutto</SelectAll>
         <InsertFirstLine>Inserisci riga</InsertFirstLine>
@@ -1952,7 +1953,7 @@ Vuoi continuare lo stesso?</PromptInsertSubtitleOverlap>
     <ErrorLoadBinaryZeroes>Questo file contiene zero binari!
 
 Se hai modificato questo file con Subtitle Edit potresti essere in grado di trovare un backup tramite la voce dal menu File - Ripristina backup automatico...</ErrorLoadBinaryZeroes>
-    <ErrorDirectoryDropNotAllowed>Il rilascio della directory non è supportato qui.</ErrorDirectoryDropNotAllowed>
+    <ErrorDirectoryDropNotAllowed>Il rilascio della cartella qui non è supportato.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>I contenuti VobSub criptati non sono supportati.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>I file Blu-ray sup qui non sono supportati.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>I file DVD sup qui non sono supportati.</NoSupportHereDvdSup>
@@ -2044,13 +2045,13 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <OilBarrels>Barili di petrolio</OilBarrels>
     <GallonUS>Galloni (USA)</GallonUS>
     <QuartsUS>Quarti (US)</QuartsUS>
-    <PintsUS>Pinte ​​(US)</PintsUS>
+    <PintsUS>Pinte (US)</PintsUS>
     <FluidOuncesUS>Once fluide (US)</FluidOuncesUS>
     <Bushels>Bushel</Bushels>
     <Pecks>Beccati</Pecks>
     <GallonsUK>Galloni (UK)</GallonsUK>
     <QuartsUK>Quarti (UK)</QuartsUK>
-    <PintsUK>Pinte ​​(UK)</PintsUK>
+    <PintsUK>Pinte (UK)</PintsUK>
     <FluidOuncesUK>Once fluide (UK)</FluidOuncesUK>
     <SquareKilometers>Chilometri quadri</SquareKilometers>
     <SquareMeters>Metri quadri</SquareMeters>
@@ -2849,7 +2850,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <EditCustomContinuationStyle>Modifica stile continuazione personalizzato...</EditCustomContinuationStyle>
     <MinFrameGap>Fotogrammi Minimi</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} fotogrammi con una frequenza fotogrammi {1} con {2} millisecondi.</XFramesAtYFrameRateGivesZMs>
-    <UseXAsNewGap>Vuoi usare  {0} "30" come nuovo intervallo minimo?</UseXAsNewGap>
+    <UseXAsNewGap>Vuoi usare {0} "30" come nuovo intervallo minimo?</UseXAsNewGap>
     <BDOpensIn>Apri BD sup/bdn-xml in</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Modifica</BDOpensInEdit>
