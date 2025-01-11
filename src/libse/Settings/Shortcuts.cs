@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GeneralTakeAutoBackup { get; set; }
         public string GeneralHelp { get; set; }
         public string GeneralFocusTextBox { get; set; }
+        public string GeneralCycleAudioTrack { get; set; }
 
         // File
         public string MainFileNew { get; set; }

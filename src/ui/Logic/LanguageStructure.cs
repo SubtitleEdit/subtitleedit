@@ -2513,6 +2513,7 @@
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
             public string FocusTextBox { get; set; }
+            public string CycleAudioTracks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
             public string ExportBookmarks { get; set; }

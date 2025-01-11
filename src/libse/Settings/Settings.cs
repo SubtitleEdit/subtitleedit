@@ -6713,6 +6713,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.GeneralFocusTextBox = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralCycleAudioTrack");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralCycleAudioTrack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                 {
@@ -10009,6 +10015,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("GeneralTogglePreviewOnVideo", shortcuts.GeneralTogglePreviewOnVideo);
             textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
             textWriter.WriteElementString("GeneralFocusTextBox", shortcuts.GeneralFocusTextBox);
+            textWriter.WriteElementString("GeneralCycleAudioTrack", shortcuts.GeneralCycleAudioTrack);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", shortcuts.MainFileOpenKeepVideo);

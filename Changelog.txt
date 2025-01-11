@@ -1,12 +1,20 @@
 ﻿Subtitle Edit Changelog
 
 4.0.11 (xth March 2025) BETA
+* NEW
+   * Shortcut for "Split line and play" - thx Leon
+   * Shortcut for "Cycle audio track" - thx darnn
 * IMPROVED:
+   * Update Italian translation - thx bovirus
+   * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
+   * Update Chinese translation - thx nkh0472
+   * Update Finnish translation - thx Teijo S
    * Include Whisper CuBlas again
    * Add simple retry for DeepL translate - thx rifatozkancomtr/dante3732
    * Add Icelandic to Gemini - thx dhofverberg
    * Update NLLB API from v2 to v4 - thx chelis10
+   * "Auto continue" is now a little faster - thx Andrebavila 
 * FIXED:
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
@@ -14,6 +22,7 @@
    * Fix for "un-minimize" ocr window - thx GC
    * Fix "Remove text for HI" cmd line - thx Manujito
    * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
+   * Fix RemoveTextForHI webvtt issue - thx Manujito
 
 
 4.0.10 (22nd December 2024)
@@ -383,7 +392,7 @@
    * Update Italian language - thx bovirus
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
-   * Update Finnish translation - thx Teijo
+   * Update Finnish translation - thx Teijo S
    * Update Chinese translation - thx nkh0472
    * Update French translation - thx Pierre
    * Update Bulgarian translation - thx Калин

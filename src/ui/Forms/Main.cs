@@ -17566,6 +17566,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralCycleAudioTrack == e.KeyData)
+            {
+                CycleAudioTracks();
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
             {
                 ClearBookmarks();
@@ -19516,6 +19521,80 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             }
+        }
+
+
+        private void CycleAudioTracks()
+        {
+            //TODO: Use "Index" for both players (or what works with ffmpeg audio extraction)
+
+            var audioTracks = new List<AudioTrack>();
+
+            if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+            {
+                try
+                {
+                    audioTracks = libMpv.AudioTracks;
+                    if (audioTracks.Count <= 1)
+                    {
+                        return;
+                    }
+
+                    var track = audioTracks.FirstOrDefault(p => p.Index == VideoAudioTrackNumber);
+                    var idx = audioTracks.IndexOf(track) + 1;
+                    if (idx < 0 || idx >= audioTracks.Count)
+                    {
+                        idx = 0;
+                    }
+                    var audioTrack = audioTracks[idx];
+                    libMpv.AudioTrackNumber = audioTrack.Index;
+                    VideoAudioTrackNumber = audioTrack.Index;
+                    ShowStatus(audioTrack.ToString());
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            else if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
+            {
+                try
+                {
+                    audioTracks = libVlc.GetAudioTracks();
+                    if (audioTracks.Count <= 1)
+                    {
+                        return;
+                    }
+
+                    var track = audioTracks.FirstOrDefault(p => p.TrackNumber == VideoAudioTrackNumber);
+                    var idx = audioTracks.IndexOf(track) + 1;
+                    if (idx < 0 || idx >= audioTracks.Count)
+                    {
+                        idx = 0;
+                    }
+                    var audioTrack = audioTracks[idx];
+                    libVlc.AudioTrackNumber = audioTrack.TrackNumber; // Index or TrackNumber?
+                    VideoAudioTrackNumber = audioTrack.TrackNumber; // Index or TrackNumber?
+                    ShowStatus(audioTrack.ToString());
+                }
+                catch
+                {
+                    return;
+                }
+            }
+        }
+
+        private AudioTrack CycleAudioTrack(List<AudioTrack> audioTracks)
+        {
+            var track = audioTracks.FirstOrDefault(p => p.Index == VideoAudioTrackNumber);
+            var idx = audioTracks.IndexOf(track) + 1;
+            if (idx < 0 || idx >= audioTracks.Count)
+            {
+                idx = 0;
+            }
+
+            ShowStatus(audioTracks[idx].ToString());
+            return audioTracks[idx];
         }
 
         private void ShowCheckFixTimingViaShotChanges()
@@ -29972,9 +30051,9 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int i = 0; i < audioTracks.Count; i++)
                         {
                             var at = audioTracks[i];
-                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : at.Value, null, ChooseAudioTrack);
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
-                            if (at.Key == VideoAudioTrackNumber)
+                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(at.ToString(), null, ChooseAudioTrack);
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.TrackNumber.ToString(CultureInfo.InvariantCulture);
+                            if (at.TrackNumber == VideoAudioTrackNumber)
                             {
                                 ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
                             }
@@ -30004,9 +30083,8 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int i = 0; i < audioTracks.Count; i++)
                         {
                             var at = audioTracks[i];
-                            var trackText = string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : "Track " + at.Key + " - " + char.ToUpper(at.Value[0]) + at.Value.Substring(1);
-                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(trackText, null, ChooseAudioTrack);
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
+                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(at.ToString(), null, ChooseAudioTrack);
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.TrackNumber.ToString(CultureInfo.InvariantCulture);
                             if (i == VideoAudioTrackNumber)
                             {
                                 ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
