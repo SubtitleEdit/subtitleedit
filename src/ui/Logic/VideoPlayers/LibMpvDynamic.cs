@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -436,8 +437,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override bool IsPlaying => !IsPaused;
 
-        private List<KeyValuePair<int, string>> _audioTrackIds;
-        public List<KeyValuePair<int, string>> AudioTracks
+        private List<AudioTrack> _audioTrackIds;
+        public List<AudioTrack> AudioTracks
         {
             get
             {
@@ -448,13 +449,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (_mpvHandle == IntPtr.Zero)
                 {
-                    return new List<KeyValuePair<int, string>>();
+                    return new List<AudioTrack>();
                 }
 
-                _audioTrackIds = new List<KeyValuePair<int, string>>();
+                _audioTrackIds = new List<AudioTrack>();
                 var lpBuffer = IntPtr.Zero;
                 _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
                 string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
+                var idx = 0;
                 foreach (var json in Json.ReadObjectArray(trackListJson))
                 {
                     var trackType = Json.ReadTag(json, "type");
@@ -463,7 +465,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         var lang = Json.ReadTag(json, "lang");
                         if (int.TryParse(Json.ReadTag(json, "id"), out var id))
                         {
-                            _audioTrackIds.Add(new KeyValuePair<int, string>(id, lang));
+                            _audioTrackIds.Add(new AudioTrack(id, lang, idx));
+                            idx++;  
                         }
                     }
                 }
@@ -494,7 +497,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     return 0;
                 }
 
-                var idx = _audioTrackIds.FindIndex(x => x.Key == id);
+                var audioTrack = _audioTrackIds.FirstOrDefault(x => x.TrackNumber == id);
+                var idx = audioTrack == null ? -1 : _audioTrackIds.IndexOf(audioTrack);
                 var number = AudioTracks.Count > 1 && idx != -1 ? idx : 0;
                 _mpvFree(lpBuffer);
                 return number;
@@ -504,7 +508,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 string id = "1";
                 if (AudioTracks.Count > 1 && value >= 0 && value < _audioTrackIds.Count)
                 {
-                    id = _audioTrackIds[value].Key.ToString();
+                    id = _audioTrackIds[value].TrackNumber.ToString(CultureInfo.InvariantCulture);
                 }
                 DoMpvCommand("set", "aid", id);
             }
