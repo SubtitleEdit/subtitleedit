@@ -2340,6 +2340,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <FocusTextBox>Focus text box</FocusTextBox>
+    <CycleAudioTracks>Cycle audio tracks</CycleAudioTracks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <ExportBookmarks>Export bookmarks...</ExportBookmarks>

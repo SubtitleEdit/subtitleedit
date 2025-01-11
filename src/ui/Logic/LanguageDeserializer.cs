@@ -6316,6 +6316,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/FocusTextBox":
                     language.Settings.FocusTextBox = reader.Value;
                     break;
+                case "Settings/CycleAudioTracks":
+                    language.Settings.CycleAudioTracks = reader.Value;
+                    break;
                 case "Settings/ToggleBookmarksWithComment":
                     language.Settings.ToggleBookmarksWithComment = reader.Value;
                     break;
