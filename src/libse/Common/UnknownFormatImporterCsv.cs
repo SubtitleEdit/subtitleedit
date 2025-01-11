@@ -16,15 +16,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             public bool Play { get; set; }
         }
 
-        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show" };
+        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode" };
         private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide" };
         private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
-        private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog" };
-        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle" };
+        private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog", "dialogue" };
+        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name" };
 
         public Subtitle AutoGuessImport(List<string> lines)
         {
             if (lines == null || lines.Count < 2)
+            {
+                return new Subtitle();
+            }
+
+            if (string.IsNullOrWhiteSpace(lines[0]) || lines[0].Trim() == "Dialogue List,,")
+            { 
+                lines.RemoveAt(0);  
+            }
+
+            if (lines.Count < 2)
             {
                 return new Subtitle();
             }
@@ -41,6 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var subtitle = MakeSubtitle(csvLines);
 
+
             return subtitle;
         }
 
@@ -49,7 +60,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             var isStartTimeFrames = DetectIsFrames(csvLines.Select(p => p.Start).ToList());
             var isEndTimeFrames = DetectIsFrames(csvLines.Select(p => p.End).ToList());
             var isDurationFrames = DetectIsFrames(csvLines.Select(p => p.Duration).ToList());
-
             var subtitle = new Subtitle();
             foreach (var csvLine in csvLines)
             {
@@ -104,6 +114,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
+
+            var isAllEndTimesZero = subtitle.Paragraphs.All(p => Math.Abs(p.EndTime.TotalMilliseconds) < 0.01);
+            if (isAllEndTimesZero)
+            {
+                subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
+            }
 
             return subtitle;
         }
