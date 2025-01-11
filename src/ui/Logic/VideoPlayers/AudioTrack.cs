@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -17,6 +18,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override string ToString()
         {
+            if (Name == null)
+            {
+                return TrackNumber.ToString(CultureInfo.InvariantCulture);
+            }
+
             return $"{TrackNumber}: {Name.CapitalizeFirstLetter()}".TrimEnd(':').TrimEnd();
         }
     }
