@@ -785,6 +785,7 @@
     <Word from="jedana" to="jedna" />
     <Word from="jedns" to="jedna" />
     <Word from="jedbo" to="jedno" />
+    <Word from="jedbom" to="jednom" />
     <Word from="jel" to="je l'" />
     <Word from="jelda" to="jel' da" />
     <Word from="jenako" to="jednako" />
@@ -5306,6 +5307,7 @@
     <RegEx find="bial" replaceWith="bila" />
     <RegEx find="bijasn" replaceWith="bjasn" />
     <RegEx find="bm([io])" replaceWith="bn$1" />
+    <RegEx find="bpc" replaceWith="bac" />
     <RegEx find="bsl" replaceWith="bal" />
     <RegEx find="bqr" replaceWith="bar" />
     <RegEx find="bs([to])" replaceWith="ps$1" />
@@ -5614,6 +5616,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="pfo" replaceWith="pro" />
     <RegEx find="pbo" replaceWith="pno" />
     <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
