@@ -2329,6 +2329,7 @@ Command line: {1} {2}
     <SettingsName>设置</SettingsName>
     <ToggleBookmarks>使用书签</ToggleBookmarks>
     <FocusTextBox>焦点文本框</FocusTextBox>
+    <CycleAudioTracks>循环音轨</CycleAudioTracks>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
     <ExportBookmarks>导出书签...</ExportBookmarks>
