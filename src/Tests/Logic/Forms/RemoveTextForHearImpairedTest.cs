@@ -145,8 +145,8 @@ namespace Tests.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            const string text = "Barry, remember: She cannot\r\nteleport if she cannot see.";
-            const string expected = text;
+            string text = $"Barry, remember: She cannot{Environment.NewLine}teleport if she cannot see.";
+            string expected = text;
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -161,8 +161,8 @@ namespace Tests.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            const string text = "http://subscene.com/u/659433\r\nImproved by: @Ivandrofly";
-            const string expected = text;
+            string text = $"http://subscene.com/u/659433{Environment.NewLine}Improved by: @Ivandrofly";
+            string expected = text;
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -329,8 +329,8 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            const string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
-            const string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
+            string text = $"- Aw, save it. Storm?{Environment.NewLine}- [Storm]\r\nWe're outta here.";
+            string expected = $"- Aw, save it. Storm?{Environment.NewLine}- We're outta here.";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
             Assert.AreEqual(expected, actual);
         }
@@ -364,8 +364,8 @@ namespace Tests.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            const string text = "is the body of a mutant kid\r\non the 6:00 news.";
-            const string expected = "is the body of a mutant kid\r\non the 6:00 news.";
+            string text = $"is the body of a mutant kid{Environment.NewLine}on the 6:00 news.";
+            string expected = $"is the body of a mutant kid{Environment.NewLine}on the 6:00 news.";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
             Assert.AreEqual(expected, actual);
         }

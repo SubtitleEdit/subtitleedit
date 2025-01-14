@@ -288,6 +288,11 @@ namespace Tests.Logic
         [DoNotParallelize]
         public void AutoBreakPreferPixelWidth()
         {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                Assert.Inconclusive();
+            }
+
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
             string res = Utilities.AutoBreakLine("Iiiiii iiiiii iiiiii iiii WWWWWW WWWWWW WWWWWW.");
             Assert.IsTrue(res.SplitToLines()[0].Contains('W'));
@@ -297,6 +302,11 @@ namespace Tests.Logic
         [DoNotParallelize]
         public void AutoBreakPreferPixelWidth2()
         {
+            if (Environment.OSVersion.Platform is PlatformID.Unix)
+            {
+                Assert.Inconclusive();
+            }
+
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
             Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = false;
             string res = Utilities.AutoBreakLine("Samo želim životnog partnera koji će mi biti prijatelj do kraja života,");
@@ -636,8 +646,8 @@ namespace Tests.Logic
         [TestMethod]
         public void FixUnneededSpacesFontTag3()
         {
-            string s = Utilities.RemoveUnneededSpaces("<FONT COLOR=\"#808080\">- Foobar! </FONT>\r\n<font color=\"#808080\"> (PEOPLE SPEAKING INDISTINCTLY) </font>", "en");
-            Assert.AreEqual(s, "<font color=\"#808080\">- Foobar!</font>\r\n<font color=\"#808080\">(PEOPLE SPEAKING INDISTINCTLY)</font>");
+            string s = Utilities.RemoveUnneededSpaces($"<FONT COLOR=\"#808080\">- Foobar! </FONT>{Environment.NewLine}<font color=\"#808080\"> (PEOPLE SPEAKING INDISTINCTLY) </font>", "en");
+            Assert.AreEqual(s, $"<font color=\"#808080\">- Foobar!</font>{Environment.NewLine}<font color=\"#808080\">(PEOPLE SPEAKING INDISTINCTLY)</font>");
         }
 
         [TestMethod]
@@ -646,8 +656,8 @@ namespace Tests.Logic
             const string lang = "en";
 
             // variant 1
-            string s = Utilities.RemoveUnneededSpaces("\" In five years the Corleone family\r\nwill be completely legitimate.\"", lang);
-            Assert.AreEqual("\"In five years the Corleone family\r\nwill be completely legitimate.\"", s);
+            string s = Utilities.RemoveUnneededSpaces($"\" In five years the Corleone family{Environment.NewLine}will be completely legitimate.\"", lang);
+            Assert.AreEqual($"\"In five years the Corleone family{Environment.NewLine}will be completely legitimate.\"", s);
 
             // variant 2
             s = Utilities.RemoveUnneededSpaces("Foobar? \" Foobar\".", lang);

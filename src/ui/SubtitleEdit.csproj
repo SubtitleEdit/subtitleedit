@@ -14,6 +14,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -286,6 +288,7 @@
     <PackageReference Include="ncalc" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NHunspell" />
+    <PackageReference Include="System.Resources.Extensions" />
     <PackageReference Include="System.Security.AccessControl" />
     <PackageReference Include="System.Security.Principal.Windows" />
     <PackageReference Include="Vosk" />

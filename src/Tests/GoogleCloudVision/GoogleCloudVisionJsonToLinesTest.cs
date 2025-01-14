@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
 
 namespace Tests.GoogleCloudVision
@@ -15,7 +16,7 @@ namespace Tests.GoogleCloudVision
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = true;
             var lines = GoogleCloudVisionApi.JsonToStringList("nl", JsonInput1);
             Assert.AreEqual(1, lines.Count);
-            Assert.AreEqual("Wat ben jij aan het doen?\r\n-Ik bouw een marshmallow-hotel.", lines[0]);
+            Assert.AreEqual($"Wat ben jij aan het doen?{Environment.NewLine}-Ik bouw een marshmallow-hotel.", lines[0]);
         }
 
         [TestMethod]
@@ -24,7 +25,7 @@ namespace Tests.GoogleCloudVision
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = true;
             var lines = GoogleCloudVisionApi.JsonToStringList("en", JsonInput2);
             Assert.AreEqual(1, lines.Count);
-            Assert.AreEqual("I've already said what's\r\nnecessary to be said.", lines[0]);
+            Assert.AreEqual($"I've already said what's{Environment.NewLine}necessary to be said.", lines[0]);
         }
     }
 }
