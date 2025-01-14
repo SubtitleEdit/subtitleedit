@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             Error = string.Empty;
         }
 
-        public async Task<string> Ocr(Bitmap bitmap, string language)
+        public string Ocr(Bitmap bitmap, string language)
         {
             var borderedBitmap = AddBorder(bitmap, 20);
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
