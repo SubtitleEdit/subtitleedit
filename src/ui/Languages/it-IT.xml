@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 10.01.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 12.01.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2340,6 +2340,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <SettingsName>Impostazioni</SettingsName>
     <ToggleBookmarks>Attiva/disattiva segnalibri</ToggleBookmarks>
     <FocusTextBox>Casella testo stato attivo</FocusTextBox>
+    <CycleAudioTracks>Scorri tracce audio</CycleAudioTracks>
     <ToggleBookmarksWithComment>Attiva/disattiva segnalibri - Aggiungi commento</ToggleBookmarksWithComment>
     <ClearBookmarks>Azzera segnalibri</ClearBookmarks>
     <ExportBookmarks>Esporta segnalibri...</ExportBookmarks>

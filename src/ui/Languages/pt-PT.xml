@@ -2341,6 +2341,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SettingsName>Definições</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
     <FocusTextBox>Focar quadro de texto</FocusTextBox>
+    <CycleAudioTracks>Percorrer faixas de áudio</CycleAudioTracks>
     <ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
     <ClearBookmarks>Eliminar marcadores</ClearBookmarks>
     <ExportBookmarks>Exportar marcadores...</ExportBookmarks>
