@@ -55,12 +55,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
             this.groupBoxPaddle = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.nikseComboBox1 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.nikseComboBoxPaddleLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
             this.checkBoxTesseractFallback = new System.Windows.Forms.CheckBox();
             this.labelTesseractEngineMode = new System.Windows.Forms.Label();
             this.comboBoxTesseractEngineMode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -184,8 +182,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxPaddle.SuspendLayout();
+            this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxCloudVision.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
@@ -500,8 +498,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxOcrMethod
             // 
-            this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxPaddle);
+            this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxCloudVision);
@@ -544,27 +542,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod.UsePopupWindow = false;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
             // 
-            // GroupBoxTesseractMethod
-            // 
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
-            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
-            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
-            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
-            this.GroupBoxTesseractMethod.TabIndex = 1;
-            this.GroupBoxTesseractMethod.TabStop = false;
-            this.GroupBoxTesseractMethod.Text = "Tesseract";
-            // 
             // groupBoxPaddle
             // 
-            this.groupBoxPaddle.Controls.Add(this.label4);
-            this.groupBoxPaddle.Controls.Add(this.nikseComboBox1);
             this.groupBoxPaddle.Controls.Add(this.label5);
             this.groupBoxPaddle.Controls.Add(this.nikseComboBoxPaddleLanguages);
             this.groupBoxPaddle.Location = new System.Drawing.Point(0, 0);
@@ -573,43 +552,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxPaddle.TabIndex = 8;
             this.groupBoxPaddle.TabStop = false;
             this.groupBoxPaddle.Text = "Paddle OCR";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 50);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Engine mode";
-            // 
-            // nikseComboBox1
-            // 
-            this.nikseComboBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.nikseComboBox1.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.nikseComboBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.nikseComboBox1.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.nikseComboBox1.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.nikseComboBox1.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.nikseComboBox1.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseComboBox1.DropDownHeight = 400;
-            this.nikseComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.nikseComboBox1.DropDownWidth = 195;
-            this.nikseComboBox1.FormattingEnabled = true;
-            this.nikseComboBox1.Items.AddRange(new string[] {
-            "Original Tesseract only (can detect italic)",
-            "Neural nets LSTM only",
-            "Tesseract + LSTM",
-            "Default, based on what is available"});
-            this.nikseComboBox1.Location = new System.Drawing.Point(98, 47);
-            this.nikseComboBox1.MaxLength = 32767;
-            this.nikseComboBox1.Name = "nikseComboBox1";
-            this.nikseComboBox1.SelectedIndex = -1;
-            this.nikseComboBox1.SelectedItem = null;
-            this.nikseComboBox1.SelectedText = "";
-            this.nikseComboBox1.Size = new System.Drawing.Size(195, 21);
-            this.nikseComboBox1.TabIndex = 5;
-            this.nikseComboBox1.UsePopupWindow = false;
             // 
             // label5
             // 
@@ -642,6 +584,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.nikseComboBoxPaddleLanguages.Size = new System.Drawing.Size(195, 21);
             this.nikseComboBoxPaddleLanguages.TabIndex = 1;
             this.nikseComboBoxPaddleLanguages.UsePopupWindow = false;
+            // 
+            // GroupBoxTesseractMethod
+            // 
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
+            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
+            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
+            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
+            this.GroupBoxTesseractMethod.TabIndex = 1;
+            this.GroupBoxTesseractMethod.TabStop = false;
+            this.GroupBoxTesseractMethod.Text = "Tesseract";
             // 
             // checkBoxTesseractFallback
             // 
@@ -2403,10 +2362,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxPaddle.ResumeLayout(false);
             this.groupBoxPaddle.PerformLayout();
+            this.GroupBoxTesseractMethod.ResumeLayout(false);
+            this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxModiMethod.ResumeLayout(false);
             this.groupBoxModiMethod.PerformLayout();
             this.groupBoxCloudVision.ResumeLayout(false);
@@ -2611,8 +2570,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
         private System.Windows.Forms.CheckBox checkBoxSeHandlesTextMerge;
         private System.Windows.Forms.GroupBox groupBoxPaddle;
-        private System.Windows.Forms.Label label4;
-        private NikseComboBox nikseComboBox1;
         private System.Windows.Forms.Label label5;
         private NikseComboBox nikseComboBoxPaddleLanguages;
     }
