@@ -31,6 +31,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -335,13 +336,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract5Version = "5.3.3";
+        private string Tesseract5Version = "5.5.0";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private XmlDocument _bdnXmlDocument;
         private string _bdnFileName;
         private bool _isSon;
+        private IBinaryParagraphList _binaryParagraphList;
 
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private readonly VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
@@ -363,6 +365,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractAsyncIndex;
         private int _tesseractEngineMode = 3;
 
+        private PaddleOcr _paddleOcr;
+
         private bool _okClicked;
         private readonly Dictionary<string, int> _unknownWordsDictionary;
 
@@ -380,6 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodModi = -1;
         private readonly int _ocrMethodNocr = -1;
         private readonly int _ocrMethodCloudVision = -1;
+        private readonly int _ocrMethodPaddle = -1;
 
         private FindReplaceDialogHelper _findHelper;
         private FindDialog _findDialog;
@@ -531,6 +536,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
             _ocrMethodCloudVision = comboBoxOcrMethod.Items.Add(language.OcrViaCloudVision);
+            _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
+
+            _paddleOcr = new PaddleOcr();
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = LanguageSettings.Current.General.Italic;
@@ -1029,6 +1037,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 else if (_ocrMethodIndex == _ocrMethodCloudVision)
                 {
                     text = OcrViaCloudVision(GetSubtitleBitmap(i), i);
+                }
+                else if (_ocrMethodIndex == _ocrMethodPaddle)
+                {
+                    text = OcrViaPaddle(GetSubtitleBitmap(i), i);
                 }
                 else
                 {
@@ -1677,6 +1689,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+            else if (_binaryParagraphList != null)
+            {
+                if (index >= 0)
+                {
+                    returnBmp = _binaryParagraphList.GetSubtitleBitmap(index, crop);
+                }
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
@@ -2211,6 +2230,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binaryParagraphWithPositions != null)
             {
                 return _binaryParagraphWithPositions.Count;
+            }
+
+            if (_binaryParagraphList != null)
+            {
+                return _subtitle.Paragraphs.Count;
             }
 
             return _vobSubMergedPackList.Count;
@@ -4522,6 +4546,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
+            else if (_binaryParagraphList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                SetButtonsEnabledAfterOcrDone();
+                buttonStartOcr.Focus();
+            }
             else
             {
                 ReadyVobSubRip();
@@ -6426,6 +6458,84 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
+        private string OcrViaPaddle(Bitmap bitmap, int listViewIndex)
+        {
+            if (_ocrFixEngine == null)
+            {
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
+            }
+
+            var language = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage2).Code;
+            var line = _paddleOcr.Ocr(bitmap, "en");
+
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+            {
+                var lastLastLine = GetLastLastText(listViewIndex);
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, lastLastLine, null); // TODO: Add abbreviations list
+            }
+
+            if (checkBoxRightToLeft.Checked)
+            {
+                line = ReverseNumberStrings(line);
+            }
+
+            //OCR fix engine
+            string textWithOutFixes = line;
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
+            {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                {
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+                }
+
+                if (checkBoxAutoFixCommonErrors.Checked)
+                {
+                    var lastLastLine = GetLastLastText(listViewIndex);
+                    line = _ocrFixEngine.FixOcrErrors(line, _subtitle, listViewIndex, _lastLine, lastLastLine, true, autoGuessLevel);
+                }
+
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null)
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, autoGuessLevel);
+                }
+
+                if (_ocrFixEngine.Abort)
+                {
+                    ButtonPauseClick(null, null);
+                    _ocrFixEngine.Abort = false;
+
+                    return string.Empty;
+                }
+
+                // Log used word guesses (via word replace list)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
+                {
+                    listBoxLogSuggestions.Items.Add(guess);
+                }
+
+                _ocrFixEngine.AutoGuessesUsed.Clear();
+
+                // Log unknown words guess (found via spelling dictionaries)
+                LogUnknownWords();
+
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
+            }
+
+            if (textWithOutFixes.Trim() != line.Trim())
+            {
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
+            }
+
+            return line;
+        }
+
         private void InitializeNOcrForBatch(string db)
         {
             _ocrMethodIndex = _ocrMethodNocr;
@@ -6623,7 +6733,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (subtitleListView1.SelectedItems.Count > 1)
                     {
-                        if (DateTime.UtcNow.Ticks - _slvSelIdxChangedTicks < 100000)
+                        if (Stopwatch.GetTimestamp() - _slvSelIdxChangedTicks < 100000)
                         {
                             _slvSelIdx = new KeyValuePair<long, int>(_slvSelIdxChangedTicks, subtitleListView1.SelectedItems[0].Index);
                             if (_changeDelayTimer == null)
@@ -6637,10 +6747,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 _changeDelayTimer.Stop();
                                 _changeDelayTimer.Start();
                             }
-                            _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                            _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                             return;
                         }
-                        _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                        _slvSelIdxChangedTicks = Stopwatch.GetTimestamp();
                     }
                     _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 }
@@ -7653,6 +7763,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             LoadOcrFixEngine(threeLetterIsoLanguageName, LanguageString);
+        }
+
+
+        internal void InitializeIBinaryParagraphList(IBinaryParagraphList binaryParagraphList, Subtitle subtitle)
+        {
+            _binaryParagraphList = binaryParagraphList;
+            _subtitle = subtitle;
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            SetButtonsStartOcr();
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
+            SetOcrMethod();
+
+            groupBoxImagePalette.Visible = false;
+
+            Text += "OCR - " + Path.GetFileName(_bdnFileName);
+
+            autoTransparentBackgroundToolStripMenuItem.Visible = false;
+            _bdnXmlSubtitle = null;
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
@@ -9952,6 +10087,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         public bool GetAllowReplaceInOriginal()
         {
             return false;
+        }
+
+        private void VobSubOcr_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
         }
     }
 }

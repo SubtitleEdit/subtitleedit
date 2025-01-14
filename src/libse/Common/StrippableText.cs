@@ -93,6 +93,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                             Post = text.Substring(text.Length - 7) + Post;
                             text = text.Substring(0, text.Length - 7);
                         }
+
+                        if (text.EndsWith('>'))
+                        {
+                            var lastIndexOfStart = text.LastIndexOf("<");
+                            if (lastIndexOfStart >= 0)
+                            {
+                                var tag = text.Substring(lastIndexOfStart);
+                                tag = tag.TrimStart('<').TrimEnd('>');
+                                if (tag.StartsWith("/c.", StringComparison.Ordinal) && !tag.Contains(' ') && !tag.Contains('\n'))
+                                {
+                                    Post = text.Substring(lastIndexOfStart) + Post;
+                                    text = text.Substring(0, lastIndexOfStart);
+                                }
+                            }
+                        }
                     }
                 }
                 while (text.Length < beginLength);

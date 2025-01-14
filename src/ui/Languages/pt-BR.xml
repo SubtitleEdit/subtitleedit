@@ -2,7 +2,7 @@
 <Language Name="Português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>Tradução (Português do Brasil): igorruckert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -1014,6 +1014,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
     <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Predefinição</Preset>
+    <PixelFormat>Formato do pixel</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Ajustar para</TuneFor>
     <AlignRight>Alinhar à direita</AlignRight>
@@ -1447,6 +1448,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com legendas gravadas...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Gerar vídeo com legendas incorporadas adicionadas/removidas...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Gerar vídeo transparente com legendas...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Áudio para texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
@@ -2133,6 +2135,8 @@ Baixar e continuar?</VideoFromUrlRequirements>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
     <CpsLessThan>CPS menor que</CpsLessThan>
     <CpsGreaterThan>CPS maior que</CpsGreaterThan>
+    <LengthLessThan>Tamanho menor que</LengthLessThan>
+    <LengthGreaterThan>Tamanho maior que</LengthGreaterThan>
     <ExactlyOneLine>Exatamente uma linha</ExactlyOneLine>
     <ExactlyTwoLines>Exatamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
@@ -2534,14 +2538,14 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ContinuationStyleCustom>Personalizado</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/comprimento de linha</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Contar todos os caracteres</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar tudo, exceto espaços, somente cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar tudo, exceto espaços, somente CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Contar todos, menos espaços</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Incluir caracteres de composição</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Incluir caracteres de composição, não espaço</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, somente cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Sem espaço ou pontuação, somente CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR (também utilizar regras codificadas)</FixCommonOcrErrorsUseHardcodedRules>
@@ -2686,6 +2690,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformGoToPreviousShotChange>Ir para mudança de cena anterior</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Ir para próxima mudança de cena</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Alternar mudança de cena</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Mover todas as mudanças de cena um quadro para frente</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Mover todas as mudanças de cena um quadro para trás</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Remover/exportar mudanças de cena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automaticamente ajustar início via mudança de volume/cena</WaveformGuessStart>
     <GoBack1Frame>Um quadro para trás</GoBack1Frame>
@@ -2790,6 +2796,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima legenda</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Mover primeira palavra da próxima linha para cima (legenda atual)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Mover texto após a posição do cursor para a próxima legenda e ir para próxima</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Mover a primeira palavra para a legenda anterior</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Mover última palavra da primeira linha para baixo (legenda atual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Seleção para minúsculas</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Seleção para maiúsculas</MainTextBoxSelectionToUpper>
@@ -3014,15 +3021,15 @@ Continuar?</RestoreDefaultSettingsMsg>
     <NumberOfAlignmentTags>Número de marcas de alinhamento: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Tamanho da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tamanho da legenda - máximo: {0}</LineLengthMaximum>
-    <LineLengthAverage>Tamanho da legenda - média: {0:#.###}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Legenda, número de linhas - média: {0:0.0}</LinesPerSubtitleAverage>
+    <LineLengthAverage>Comprimento da legenda - média: {0:#.###}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Legenda, número de linhas - média: {0:0.###}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tamanho linha simples - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tamanho linha simples - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Tamanho linha simples - média: {0:#.###}</SingleLineLengthAverage>
+    <SingleLineLengthAverage>Comprimento de linha única - média: {0:#.###}</SingleLineLengthAverage>
     <SingleLineLengthExceedingMaximum>Comprimento de linha única - excedendo o máximo ({0} caract.): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Largura de linha simples - mínimo: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Largura de linha simples - máximo: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Largura de linha simples - média: {0:#.###} pixels</SingleLineWidthAverage>
+    <SingleLineWidthAverage>Largura de linha única - média: {0:#.###} pixels</SingleLineWidthAverage>
     <SingleLineWidthExceedingMaximum>Comprimento de linha única - excedendo o máximo ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duração - mínimo: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máximo: {0:0.000} segundos</DurationMaximum>
@@ -3133,6 +3140,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Angle>Ângulo</Angle>
     <BoxPerLine>Caixa por linha (usar cor de contorno)</BoxPerLine>
     <BoxMultiLine>Uma caixa (usar cor da sombra)</BoxMultiLine>
+    <BoxPerLineShort>Caixa por linha</BoxPerLineShort>
+    <BoxMultiLineShort>Uma caixa</BoxMultiLineShort>
+    <BoxType>Tipo de caixa</BoxType>
     <DuplicateStyleNames>Nomes de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3171,11 +3181,14 @@ Continuar?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Mesclando faixa de áudio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Gerando fala a partir do texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Revisar clipes de áudio</ReviewAudioClips>
+    <CustomAudioEncoding>Codificação de áudio personalizada</CustomAudioEncoding>
     <ReviewInfo>Revisar e editar/remover clipes de áudio</ReviewInfo>
     <Play>Reproduzir</Play>
     <AutoContinue>Continuar automaticamente</AutoContinue>
     <Regenerate>Regenerar</Regenerate>
     <Speed>Velocidade</Speed>
+    <Stability>Estabilidade</Stability>
+    <Similarity>Similaridade</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempo SMPTE</Title>
@@ -3446,6 +3459,7 @@ Manter as alterações?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Usar valor do cabeçalho X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Mesclar linhas com o mesmo texto ao carregar</MergeLines>
+    <MergeStyleTags>Mesclar tags de estilo</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Estilos do WebVTT</Title>

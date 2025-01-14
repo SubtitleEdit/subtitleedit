@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.10</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -992,10 +992,10 @@ Command line: {1} {2}
     <GenerateWithFfmpegParametersPrompt>生成 - FFmpeg 命令行参数</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>生成带有内嵌字幕的视频</Title>
+    <Title>生成带有硬字幕的视频</Title>
     <InfoAssaOff>注意：支持 ASSA 样式。</InfoAssaOff>
     <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>带有硬字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingOneMinute>剩余时间：1 分钟</TimeRemainingOneMinute>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
@@ -1444,9 +1444,9 @@ Command line: {1} {2}
         <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithBurnedInSub>生成带有硬字幕的视频...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>生成带有内嵌字幕的视频...</GenerateVideoWithEmbeddedSubs>
-        <GenerateTransparentVideoWithSubs>生成带有字幕的透明视频...</GenerateTransparentVideoWithSubs>
+        <GenerateTransparentVideoWithSubs>生成带有硬字幕的透明视频...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
@@ -1540,6 +1540,7 @@ Command line: {1} {2}
         <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>在光标处分割并自动换行</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>在光标/视频位置处分割行并播放</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
         <InsertFirstLine>插入行</InsertFirstLine>
@@ -2321,13 +2322,14 @@ Command line: {1} {2}
     <Find>查找</Find>
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
-    <BurnIn>内嵌字幕</BurnIn>
+    <BurnIn>烧录硬字幕</BurnIn>
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
     <SettingsName>设置</SettingsName>
     <ToggleBookmarks>使用书签</ToggleBookmarks>
     <FocusTextBox>焦点文本框</FocusTextBox>
+    <CycleAudioTracks>循环音轨</CycleAudioTracks>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
     <ExportBookmarks>导出书签...</ExportBookmarks>
@@ -2467,6 +2469,7 @@ Command line: {1} {2}
     <WaveformUseFFmpeg>使用 FFmpeg 提取波形</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>仅使用前置/中置声道（适用于 5.1/7.1声道）</WaveformUseCenterChannelOnly>
     <DownloadX>下载 {0}</DownloadX>
+    <ExtractingX>正在提取 {0}</ExtractingX>
     <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>浏览至VLC便携版安装路径</WaveformBrowseToVLC>
@@ -2784,11 +2787,12 @@ Command line: {1} {2}
     <ListViewListErrors>列出错误</ListViewListErrors>
     <ListViewListSortByX>按{0}排序</ListViewListSortByX>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到下一条字幕，然后转到下一条</MainTextBoxMoveFromCursorToNext>
-    <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxMoveLastWordDown>将前行的最后一个单词移到次行</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>将次行的第一个单词移到前行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至前行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到次行字幕，然后转到次行</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>将行首第一个单词上移至前行行末</MainTextBoxMoveFirstWordToPrev>
+    <MainTextBoxMoveLastWordDownCurrent>将前行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
     <MainTextBoxSelectionToggleCasing>切换所选内容的大小写（首字母大写/大写/小写）</MainTextBoxSelectionToggleCasing>
@@ -2934,7 +2938,10 @@ Command line: {1} {2}
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>在第 {1} 列发现空格问题 ({0})。</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>行尾</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>标点符号前缺失</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+连续</WhiteSpaceCheckconsecutive>
     <ReportPrompt>完整报告请看这里: {0}</ReportPrompt>
     <OpenReportInFolder>在文件夹中打开报告</OpenReportInFolder>
     <FoundXIssues>Netflix 品质检查找到 {0} 个问题</FoundXIssues>
@@ -3176,6 +3183,8 @@ Command line: {1} {2}
     <AutoContinue>自动继续</AutoContinue>
     <Regenerate>重新生成</Regenerate>
     <Speed>速度</Speed>
+    <Stability>稳定性</Stability>
+    <Similarity>相似性</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 时序</Title>

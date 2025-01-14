@@ -7,14 +7,15 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</RepositoryUrl>
+		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
 		<Authors>Nikolaj Olsson</Authors>
 		<PackageIcon>Icon.png</PackageIcon>
+		<IsPackable>true</IsPackable>
 		<RepositoryType>git</RepositoryType>
 		<IncludeContentInPack>true</IncludeContentInPack>
-		<PackageReleaseNotes>SE 4.0.8</PackageReleaseNotes>
+		<PackageReleaseNotes>SE 4.0.10</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageReadmeFile>Readme.md</PackageReadmeFile>
 	</PropertyGroup>
@@ -37,12 +38,7 @@
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
-
-	<Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
-		<Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
-		<Exec Condition="'$(OS)' == 'Unix'" Command="bash $(ProjectDir)../../build_helpers.sh rev $(ConfigurationName)" />
-	</Target>
-
+	
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>

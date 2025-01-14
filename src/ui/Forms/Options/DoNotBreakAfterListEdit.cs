@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -14,7 +15,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class DoNotBreakAfterListEdit : Form
     {
-        private readonly List<string> _languages = new List<string>();
+        public class DoNotBreakDictionary
+        {
+            public string Text { get; set; }
+            public string FileName { get; set; }
+
+            public DoNotBreakDictionary(string text, string fileName)
+            {
+                Text = text;
+                FileName = fileName;
+            }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+
+        private List<DoNotBreakDictionary> _list;
         private List<NoBreakAfterItem> _noBreakAfterList = new List<NoBreakAfterItem>();
 
         public DoNotBreakAfterListEdit()
@@ -39,31 +57,35 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void InitLanguages(string selectTwoLetterCode)
         {
-            var idx = 0;
-            _languages.Clear();
-            comboBoxDictionaries.Items.Clear();
-            foreach (var fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
+            var selectedText = string.Empty;
+            var files = Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml");
+            var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
+            _list = new List<DoNotBreakDictionary>();
+            foreach (var fileName in files)
             {
                 try
                 {
                     var s = Path.GetFileName(fileName);
                     var languageId = s.Substring(0, s.IndexOf('_'));
-                    var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
-                    comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
+                    var ci = cultures.FirstOrDefault(p => p.TwoLetterISOLanguageName == languageId);
+                    if (ci == null)
+                    {
+                        ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
+                    }
+
+                    _list.Add(new DoNotBreakDictionary(ci.EnglishName + " (" + ci.NativeName.CapitalizeFirstLetter() + ")", fileName));
 
                     if (!string.IsNullOrEmpty(selectTwoLetterCode))
                     {
                         if (ci.TwoLetterISOLanguageName == selectTwoLetterCode)
                         {
-                            idx = _languages.Count;
+                            selectedText = _list[_list.Count - 1].Text;
                         }
                     }
                     else if ((Configuration.Settings.WordLists.LastLanguage ?? "en-US").StartsWith(languageId, StringComparison.OrdinalIgnoreCase))
                     {
-                        idx = _languages.Count;
+                        selectedText = _list[_list.Count - 1].Text;
                     }
-
-                    _languages.Add(fileName);
                 }
                 catch
                 {
@@ -71,9 +93,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            if (comboBoxDictionaries.Items.Count > 0 && idx < comboBoxDictionaries.Items.Count)
+            _list = _list.OrderBy(p => p.Text).ToList();
+
+            comboBoxDictionaries.Items.Clear();
+            comboBoxDictionaries.Items.AddRange(_list.Select(p=>p.Text).ToArray());
+            comboBoxDictionaries.Text = selectedText;
+            if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
             {
-                comboBoxDictionaries.SelectedIndex = idx;
+                comboBoxDictionaries.Text = _list.FirstOrDefault(p => p.Text.Contains("English"))?.Text;
+                if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
+                {
+                    comboBoxDictionaries.SelectedIndex = 0;
+                }
             }
         }
 
@@ -92,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 _noBreakAfterList = new List<NoBreakAfterItem>();
                 var doc = new XmlDocument();
-                doc.Load(_languages[idx]);
+                doc.Load(_list[idx].FileName);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
@@ -177,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     }
                     doc.DocumentElement.AppendChild(node);
                 }
-                doc.Save(_languages[idx]);
+                doc.Save(_list[idx].FileName);
             }
             DialogResult = DialogResult.OK;
         }

@@ -132,24 +132,41 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     case "ar": // Arabic
                     case "pt": // Brazilian Portuguese
+                        return DialogType.DashBothLinesWithSpace;
                     case "cs": // Czech
+                        return DialogType.DashBothLinesWithSpace;
                     case "fr": // French
+                        return DialogType.DashBothLinesWithSpace;
                     case "hu": // Hungarian
+                        return DialogType.DashBothLinesWithSpace;
                     case "in": // Indonesian
+                        return DialogType.DashBothLinesWithSpace;
                     case "it": // Italian
+                        return DialogType.DashBothLinesWithSpace;
                     case "ko": // Korean
+                        return DialogType.DashBothLinesWithSpace;
                     case "ms": // Malay
+                        return DialogType.DashBothLinesWithSpace;
                     case "pl": // Polish
+                        return DialogType.DashBothLinesWithSpace;
                     case "ro": // Romanian
+                        return DialogType.DashBothLinesWithSpace;
                     case "ru": // Russian
+                        return DialogType.DashBothLinesWithSpace;
                     case "sk": // Slovak
+                        return DialogType.DashBothLinesWithSpace;
                     case "es": // Spanish
+                        return DialogType.DashBothLinesWithSpace;
                     case "th": // Thai
+                        return DialogType.DashBothLinesWithSpace;
                     case "vi": // Vietnamese
                         return DialogType.DashBothLinesWithSpace;
-                    case "nl": // Dutch
+                    case "nl": // Dutch 
+                        return DialogType.DashSecondLineWithoutSpace;
                     case "fi": // Finnish
+                        return DialogType.DashSecondLineWithoutSpace;
                     case "he": // Hebrew
+                        return DialogType.DashSecondLineWithoutSpace;
                     case "sr": // Serbian
                         return DialogType.DashSecondLineWithoutSpace;
                     case "bg": // Bulgarian 
@@ -290,22 +307,23 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             return new List<INetflixQualityChecker>
             {
-                new NetflixCheckTimedTextFrameRate(),
+                new NetflixCheckBridgeGaps(),
                 new NetflixCheckDialogHyphenSpace(),
+                new NetflixCheckEllipsesNotThreeDots(),
                 new NetflixCheckGlyph(),
+                new NetflixCheckItalics(),
                 new NetflixCheckMaxCps(),
-                new NetflixCheckMaxLineLength(),
                 new NetflixCheckMaxDuration(),
+                new NetflixCheckMaxLineLength(),
                 new NetflixCheckMinDuration(),
                 new NetflixCheckNumberOfLines(),
                 new NetflixCheckNumbersOneToTenSpellOut(),
+                new NetflixCheckShotChange(),
                 new NetflixCheckStartNumberSpellOut(),
                 new NetflixCheckTextForHiUseBrackets(),
+                new NetflixCheckTimedTextFrameRate(),
                 new NetflixCheckTwoFramesGap(),
-                new NetflixCheckBridgeGaps(),
                 new NetflixCheckWhiteSpace(),
-                new NetflixCheckItalics(),
-                new NetflixCheckShotChange()
             };
         }
 
@@ -323,7 +341,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
 
             Records = Records
-                .Where(p=>p != null)
+                .Where(p => p != null)
                 .OrderBy(p => p.OriginalParagraph?.Number ?? 0)
                 .ToList();
         }

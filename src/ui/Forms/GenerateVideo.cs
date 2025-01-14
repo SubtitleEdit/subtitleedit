@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             process.BeginErrorReadLine();
             _totalFrames = (long)Math.Round(float.Parse(comboBoxFrameRate.Text, CultureInfo.CurrentCulture) * (float)numericUpDownDurationMinutes.Value * 60.0f);
             progressBar1.Maximum = (int)_totalFrames;
-            _startTicks = DateTime.UtcNow.Ticks;
+            _startTicks = Stopwatch.GetTimestamp();
             timer1.Start();
             while (!process.HasExited)
             {
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var durationMs = (Stopwatch.GetTimestamp() - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
             var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);

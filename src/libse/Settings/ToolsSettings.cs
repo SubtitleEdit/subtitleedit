@@ -99,6 +99,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
+        public string TextToSpeechMurfApiKey { get; set; }
+        public int TextToSpeechMurfRate { get; set; }
+        public int TextToSpeechMurfPitch { get; set; }
+        public string TextToSpeechMurfVoice { get; set; }
         public string TextToSpeechAzureApiKey { get; set; }
         public string TextToSpeechAzureRegion { get; set; }
         public string TextToSpeechElevenLabsModel { get; set; }
@@ -469,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
-            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v2/";
+            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v4/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
@@ -683,9 +687,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoOutputFileSuffix = "_new";
             GenTransparentVideoExtension = ".mkv";
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
+            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
-            WhisperPurfviewFasterWhisperDefaultCmd = "--standard";
+            WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             WhisperAutoAdjustTimings = true;

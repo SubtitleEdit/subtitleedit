@@ -364,8 +364,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     else
                     {
-                        // Fallback when no shot changes were apparently found: just chain them
-                        newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        // Check if there are really no shot changes in between
+                        var firstShotChangeInBetween = GetFirstShotChangeFrameInBetween(bestLeftOutCueFrameInfo.cueFrame, bestRightInCueFrameInfo.cueFrame);
+                        var lastShotChangeInBetween = GetLastShotChangeFrameInBetween(bestLeftOutCueFrameInfo.cueFrame, bestRightInCueFrameInfo.cueFrame);
+
+                        if (firstShotChangeInBetween != null || lastShotChangeInBetween != null)
+                        {
+                            // There are, so snap to the one that is closest to either of the two cues
+                            AlignCuesAroundClosestShotChange(firstShotChangeInBetween ?? int.MinValue, lastShotChangeInBetween ?? int.MaxValue);
+                        } 
+                        else
+                        {
+                            // Fallback when no shot changes were apparently found: just chain them
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
                     }
                 }
                 else

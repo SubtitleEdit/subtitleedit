@@ -377,7 +377,7 @@
             0,
             0,
             0});
-            this.nikseUpDownStability.Location = new System.Drawing.Point(102, 270);
+            this.nikseUpDownStability.Location = new System.Drawing.Point(102, 298);
             this.nikseUpDownStability.Maximum = new decimal(new int[] {
             100,
             0,
@@ -415,7 +415,7 @@
             0,
             0,
             0});
-            this.nikseUpDownSimilarity.Location = new System.Drawing.Point(102, 299);
+            this.nikseUpDownSimilarity.Location = new System.Drawing.Point(251, 298);
             this.nikseUpDownSimilarity.Maximum = new decimal(new int[] {
             100,
             0,
@@ -441,7 +441,7 @@
             // labelSimilarity
             // 
             this.labelSimilarity.AutoSize = true;
-            this.labelSimilarity.Location = new System.Drawing.Point(14, 305);
+            this.labelSimilarity.Location = new System.Drawing.Point(198, 302);
             this.labelSimilarity.Name = "labelSimilarity";
             this.labelSimilarity.Size = new System.Drawing.Size(47, 13);
             this.labelSimilarity.TabIndex = 99;
@@ -450,7 +450,7 @@
             // labelStability
             // 
             this.labelStability.AutoSize = true;
-            this.labelStability.Location = new System.Drawing.Point(15, 274);
+            this.labelStability.Location = new System.Drawing.Point(15, 302);
             this.labelStability.Name = "labelStability";
             this.labelStability.Size = new System.Drawing.Size(43, 13);
             this.labelStability.TabIndex = 97;
@@ -480,6 +480,7 @@
             this.nikseComboBoxLanguage.Size = new System.Drawing.Size(266, 23);
             this.nikseComboBoxLanguage.TabIndex = 35;
             this.nikseComboBoxLanguage.UsePopupWindow = false;
+            this.nikseComboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxLanguage_SelectedIndexChanged);
             // 
             // nikseComboBoxRegion
             // 
@@ -579,7 +580,7 @@
             this.nikseComboBoxEngine.Size = new System.Drawing.Size(351, 23);
             this.nikseComboBoxEngine.TabIndex = 5;
             this.nikseComboBoxEngine.TabStop = false;
-            this.nikseComboBoxEngine.Text = "nikseComboBox1";
+            this.nikseComboBoxEngine.Text = "nikseComboBoxEngine";
             this.nikseComboBoxEngine.UsePopupWindow = false;
             // 
             // chkVoiceOver

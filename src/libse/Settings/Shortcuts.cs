@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GeneralTakeAutoBackup { get; set; }
         public string GeneralHelp { get; set; }
         public string GeneralFocusTextBox { get; set; }
+        public string GeneralCycleAudioTrack { get; set; }
 
         // File
         public string MainFileNew { get; set; }
@@ -285,12 +286,14 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public string MainTextBoxSplitAtCursorAndVideoPosPlay { get; set; }
         public string MainTextBoxSplitSelectedLineBilingual { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxMoveLastWordDownCurrent { get; set; }
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
+        public string MainTextBoxMoveFirstWordToPrev { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxSelectionToggleCasing { get; set; }
