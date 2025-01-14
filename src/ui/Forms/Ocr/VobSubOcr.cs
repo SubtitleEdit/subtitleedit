@@ -539,6 +539,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
 
             _paddleOcr = new PaddleOcr();
+            nikseComboBoxPaddleLanguages.Items.Clear();
+            foreach (var paddleLanguage in PaddleOcr.GetLanguages())
+            {
+                nikseComboBoxPaddleLanguages.Items.Add(paddleLanguage);
+                if (paddleLanguage.Code == "en")
+                {
+                    nikseComboBoxPaddleLanguages.SelectedIndex = nikseComboBoxPaddleLanguages.Items.Count - 1;
+                }
+            }
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = LanguageSettings.Current.General.Italic;
@@ -1635,7 +1644,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color emphasis2;
 
             var makeTransparent = true;
-            if (_ocrMethodIndex == _ocrMethodCloudVision)
+            if (_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle)
             {
                 // Cloud Vision doesn't like transparent images
                 makeTransparent = false;
@@ -2062,6 +2071,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 returnBmp.Dispose();
                 return nb.GetBitmap();
+            }
+
+            if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                return returnBmp;
             }
 
             var n = new NikseBitmap(returnBmp);
@@ -5154,6 +5168,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 text = OcrViaCloudVision(bmp, i);
             }
+            else if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                text = OcrViaPaddle(bmp, i);
+            }
 
             _lastLine = text;
 
@@ -6465,8 +6483,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            var language = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage2).Code;
-            var line = _paddleOcr.Ocr(bitmap, "en");
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2).Code;
+            var line = _paddleOcr.Ocr(bitmap, language ?? "en");
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
@@ -7311,6 +7329,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ShowOcrMethodGroupBox(groupBoxCloudVision);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "CloudVision";
             }
+            else if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                ShowOcrMethodGroupBox(groupBoxPaddle);
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "PaddleOCR";
+            }
 
             _ocrFixEngine = null;
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7333,6 +7356,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             groupBoxModiMethod.Visible = false;
             groupBoxNOCR.Visible = false;
             groupBoxCloudVision.Visible = false;
+            groupBoxPaddle.Visible = false;
 
             groupBox.Visible = true;
             groupBox.BringToFront();
