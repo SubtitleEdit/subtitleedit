@@ -61,6 +61,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             File.Delete(tempImage);
 
+            if (_textDetectionResults.Count == 0)
+            { 
+                return string.Empty;
+            }
+
             var result = MakeResult(_textDetectionResults);
             return result;
         }
