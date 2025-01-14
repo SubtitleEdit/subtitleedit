@@ -395,6 +395,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void AddAudioToVideoFile(string audioFileName)
         {
+
+            Process addAudioProcess;
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
             {
@@ -415,8 +417,16 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 stereo = true;
             }
+            if (chkVoiceOver.Checked)
+            {
+                addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
 
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+            else
+            {
+                addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+
             addAudioProcess.Start();
             while (!addAudioProcess.HasExited)
             {
@@ -452,7 +462,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private List<FileNameAndSpeedFactor> FixParagraphAudioSpeed(Subtitle subtitle, string overrideFileName)
         {
             var fileNames = new List<FileNameAndSpeedFactor>(subtitle.Paragraphs.Count);
-
+            //if (!checkBox_AdjustAudio.Checked)
+            //{
+            //    return fileNames;
+            //}
             labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
@@ -462,14 +475,23 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Visible = true;
             const string ext = ".wav";
 
+
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 progressBar1.Value = index + 1;
-                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count);
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count, 1.0);
+
                 var p = subtitle.Paragraphs[index];
+                var pFileName = Path.Combine(_waveFolder, index + ".wav");
+
+                if (!checkBox_AdjustAudio.Checked)
+                {
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
+
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
-                var pFileName = Path.Combine(_waveFolder, index + ".wav");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     pFileName = Path.Combine(_waveFolder, overrideFileName);
@@ -524,11 +546,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var waveInfo = UiUtil.GetVideoInfo(outputFileName1);
-                if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
+                if (!checkBox_AdjustAudio.Checked)
                 {
-                    fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
-                    continue;
+                    if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
+                    {
+                        fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
+                        continue;
+                    }
                 }
+
 
                 var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
                 if (divisor <= 0)
@@ -539,11 +565,22 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var factor = (decimal)waveInfo.TotalMilliseconds / divisor;
+
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     outputFileName2 = Path.Combine(_waveFolder, $"{Path.GetFileNameWithoutExtension(overrideFileName)}_{Guid.NewGuid()}{ext}");
                 }
+
+                if (factor <= (decimal)0.8)
+                {
+                    factor = (decimal)0.8;
+                }
+                if (factor >= (decimal)1.5)
+                {
+                    factor = (decimal)1.5;
+                }
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count, (double)factor);
 
                 fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName2, Factor = factor });
                 var mergeProcess = VideoPreviewGenerator.ChangeSpeed(outputFileName1, outputFileName2, (float)factor);
@@ -715,6 +752,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
+            return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName, true);
+        }
+
+        private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName, bool twopass)
+        {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
             if (!Directory.Exists(ttsPath))
             {
@@ -803,13 +845,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
+
+
                 var processPiper = new Process
                 {
                     StartInfo =
                     {
                         WorkingDirectory = piperPath,
                         FileName = Configuration.IsRunningOnWindows ? piperExe : "piper",
-                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav",
+                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav ",    // --rate {1.5} --cuda --sentence_silence 0.5// Put the speed as parameter here also
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
@@ -835,6 +879,76 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var inputFile = Path.Combine(piperPath, "out.wav");
+
+                // ************ CHANGE **************
+                // implement a second pass. take the duration of the generated wav out.wav and
+                // adpat the factor by using the lenght_scale parameter of piper. This will genrate more realistic results than the speed adaption using ffmpeg ;)
+                //
+                if (chkusePiper2Pass.Checked)
+                {
+                    var waveInfo = UiUtil.GetVideoInfo(inputFile);
+
+                    var divisor = (decimal)(p.DurationTotalMilliseconds);
+                    if (divisor <= 0)
+                    {
+                        continue;
+
+                    }
+                    var factor = divisor / (decimal)waveInfo.TotalMilliseconds;
+
+                    File.Delete(inputFile);
+
+                    if (factor <= (decimal)0.5)
+                    {
+                        factor = (decimal)0.5;
+                    }
+                    if (factor >= (decimal)1.5)
+                    {
+                        factor = (decimal)1.5;
+                    }
+
+                    string strFactor = factor.ToString("F2").Replace(",", ".");
+                    var processPiper2 = new Process
+                    {
+                        StartInfo =
+                        {
+                            WorkingDirectory = piperPath,
+                            FileName = Configuration.IsRunningOnWindows ? piperExe : "piper",
+                            Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav --length_scale {strFactor}",    // --rate {1.5} --cuda --sentence_silence 0.5// Put the speed as parameter here also
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardInput = true,
+                        }
+                    };
+
+                    processPiper2.Start();
+                    streamWriter = new StreamWriter(processPiper2.StandardInput.BaseStream, Encoding.UTF8);
+                    text = Utilities.UnbreakLine(p.Text);
+                    streamWriter.Write(text);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+
+                    while (!processPiper2.HasExited)
+                    {
+                        Application.DoEvents();
+                        if (_abort)
+                        {
+                            progressBar1.Visible = false;
+                            labelProgress.Text = string.Empty;
+                            return false;
+                        }
+                    }
+
+                }
+
+                // **********
+
+                //var inputFile1 = Path.Combine(piperPath, "out2.wav");
+
+                //if (!File.Exists(inputFile))
+                //{
+                //    int h = 0;
+                //}
                 File.Move(inputFile, outputFileName);
 
                 progressBar1.Refresh();
@@ -1137,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         }
                     }
 
-                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture); 
+                    var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture);
                     var similarity = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity, 1).ToString(CultureInfo.InvariantCulture);
                     var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity} }} }}";
                     var content = new StringContent(data, Encoding.UTF8);
@@ -2132,7 +2246,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using(var httpClient = new HttpClient())
+                using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
@@ -2493,7 +2607,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             using (var form = new TtsAudioEncoding())
             {
-                 form.ShowDialog(this);
+                form.ShowDialog(this);
             }
         }
 
