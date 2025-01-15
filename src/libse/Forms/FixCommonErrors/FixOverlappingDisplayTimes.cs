@@ -221,39 +221,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
-                    { // merge lines with same time codes
-                        if (callbacks.AllowFix(target, fixAction))
-                        {
-                            prev.Text = prev.Text.Replace(Environment.NewLine, " ");
-                            p.Text = p.Text.Replace(Environment.NewLine, " ");
-
-                            string stripped = HtmlUtil.RemoveHtmlTags(prev.Text).TrimStart();
-                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
-                            {
-                                prev.Text = "- " + prev.Text.TrimStart();
-                            }
-
-                            stripped = HtmlUtil.RemoveHtmlTags(p.Text).TrimStart();
-                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
-                            {
-                                p.Text = "- " + p.Text.TrimStart();
-                            }
-
-                            prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
-                            p.Text = string.Empty;
-                            noOfOverlappingDisplayTimesFixed++;
-                            callbacks.AddFixToListView(target, fixAction, oldCurrent, p.ToString());
-
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                            if (canBeEqual)
-                            {
-                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                            }
-                        }
-                    }
                     else
                     {
                         if (callbacks.AllowFix(p, fixAction))
