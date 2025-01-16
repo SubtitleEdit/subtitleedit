@@ -4,6 +4,7 @@
 * NEW
    * Shortcut for "Split line and play" - thx Leon
    * Shortcut for "Cycle audio track" - thx darnn
+   * Add "Bookmark contains" option to "Modify selection" - thx BlohoJo
 * IMPROVED:
    * Update Italian translation - thx bovirus
    * Update Portuguese translation - thx hugok79
@@ -15,6 +16,7 @@
    * Add Icelandic to Gemini - thx dhofverberg
    * Update NLLB API from v2 to v4 - thx chelis10
    * "Auto continue" is now a little faster - thx Andrebavila 
+   * Handle Unicode zero-width-whitespace in SRT time code - thx GJK
 * FIXED:
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
@@ -23,6 +25,7 @@
    * Fix "Remove text for HI" cmd line - thx Manujito
    * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
    * Fix RemoveTextForHI webvtt issue - thx Manujito
+   * Fix "Fix overlap" issue in "Fix common errors" - thx colemar 
 
 
 4.0.10 (22nd December 2024)
