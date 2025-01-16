@@ -120,6 +120,26 @@ Line 2";
             string expected = "Line 1" + Environment.NewLine + "Line 2";
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void SrtZeroWidthWhitepaceCharInTimeStamp()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+01:05:58,455 --> 01:05:59,260
+Papa? Papa?
+
+2
+01:06:01,725 ​​--> 01:06:03,805
+Es ist einfach, Sie mitzunehmen.";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            string expected = "Papa? Papa?";
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod]
         public void SrtThreeLiner()
         {
