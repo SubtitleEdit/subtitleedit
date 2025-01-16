@@ -17,6 +17,7 @@
    * Update NLLB API from v2 to v4 - thx chelis10
    * "Auto continue" is now a little faster - thx Andrebavila 
    * Handle Unicode zero-width-whitespace in SRT time code - thx GJK
+   * Update Faster Whisper XXL to r245.1
 * FIXED:
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder

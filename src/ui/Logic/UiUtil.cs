@@ -1131,7 +1131,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void InvertCheck(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1141,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void UncheckAll(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1151,7 +1151,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void SelectAll(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1408,6 +1408,28 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 numericUpDown.Value = value;
             }
+        }
+
+        public static bool SkipSingleLetterShortcut(string typeName, KeyEventArgs e)
+        {
+            // do not check for shortcuts if text is being entered and a textbox is focused
+            var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "NikseTextBox", "TextBox", "RichTextBox" };
+            if (textBoxTypes.Contains(typeName) &&
+                ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
+                 (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) ||
+                 e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 ||
+                 e.KeyValue >= 48 && e.KeyValue <= 57 ||
+                 e.KeyCode == Keys.Multiply ||
+                 e.KeyCode == Keys.Add ||
+                 e.KeyCode == Keys.Subtract ||
+                 e.KeyCode == Keys.Divide ||
+                 e.KeyCode == Keys.Space) &&
+                !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
