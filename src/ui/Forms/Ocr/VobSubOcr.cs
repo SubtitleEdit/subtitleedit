@@ -6484,7 +6484,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2).Code;
-            var line = _paddleOcr.Ocr(bitmap, language ?? "en");
+
+            string line;
+            try
+            {
+                line = _paddleOcr.Ocr(bitmap, language ?? "en");
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine +
+                    "Make sure you hve installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
+                    "Read more here: https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html" + Environment.NewLine+ Environment.NewLine +
+                    "Requires Python + pip.");
+
+                ButtonPauseClick(null, null);
+                return string.Empty;
+            }
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
