@@ -2144,6 +2144,7 @@ Download and continue?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
     <Bookmarked>Bookmarked</Bookmarked>
+    <BookmarkContains>Bookmark contains</BookmarkContains>
     <BlankLines>Blank lines</BlankLines>
   </ModifySelection>
   <MultipleReplace>
