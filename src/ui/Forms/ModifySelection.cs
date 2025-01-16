@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls.Adapters;
+using System.CodeDom;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -36,9 +37,10 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionExactlyTwoLines = 15;
         private const int FunctionMoreThanTwoLines = 16;
         private const int FunctionBookmarked = 17;
-        private const int FunctionBlankLines = 18;
-        private const int FunctionStyle = 19;
-        private const int FunctionActor = 20;
+        private const int FunctionBookmarkContains = 18;
+        private const int FunctionBlankLines = 19;
+        private const int FunctionStyle = 20;
+        private const int FunctionActor = 21;
 
         private const string ContainsString = "Contains";
         private const string StartsWith = "Starts with";
@@ -58,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const string ExactlyTwoLines = "Exactly two lines";
         private const string MoreThanTwoLines = "More than two lines";
         private const string Bookmarked = "Bookmarked";
+        private const string BookmarkContains = "Bookmark contains";
         private const string BlankLines = "Blank lines";
         private const string Style = "Style";
         private const string Actor = "Actor";
@@ -113,6 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.ExactlyTwoLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.Bookmarked);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.BookmarkContains);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.BlankLines);
             if (_format.HasStyleSupport)
             {
@@ -177,6 +181,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case Bookmarked:
                     comboBoxRule.SelectedIndex = FunctionBookmarked;
+                    break;
+                case BookmarkContains:
+                    comboBoxRule.SelectedIndex = FunctionBookmarkContains;
                     break;
                 case BlankLines:
                     comboBoxRule.SelectedIndex = FunctionBlankLines;
@@ -273,6 +280,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case FunctionBookmarked:
                     Configuration.Settings.Tools.ModifySelectionRule = Bookmarked;
+                    break;
+                case FunctionBookmarkContains:
+                    Configuration.Settings.Tools.ModifySelectionRule = BookmarkContains;
                     break;
                 case FunctionBlankLines:
                     Configuration.Settings.Tools.ModifySelectionRule = BlankLines;
@@ -494,6 +504,17 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.Bookmark != null)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
+                    else if (comboBoxRule.SelectedIndex == FunctionBookmarkContains) // Bookmark contains
+                    {
+                        if (p.Bookmark != null && !string.IsNullOrEmpty(text))
+                        {
+                            var comparison = checkBoxCaseSensitive.Checked ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                            if (p.Bookmark.Contains(text, comparison))
+                            {
+                                listViewItems.Add(MakeListViewItem(p, i));
+                            }
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionBlankLines) // Select blank lines

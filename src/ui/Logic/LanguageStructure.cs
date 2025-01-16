@@ -2289,6 +2289,7 @@
             public string ExactlyTwoLines { get; set; }
             public string MoreThanTwoLines { get; set; }
             public string Bookmarked { get; set; }
+            public string BookmarkContains { get; set; }
             public string BlankLines { get; set; }
         }
 

@@ -2477,6 +2477,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",
                 Bookmarked = "Bookmarked",
+                BookmarkContains = "Bookmark contains",
                 BlankLines = "Blank lines",
             };
 
