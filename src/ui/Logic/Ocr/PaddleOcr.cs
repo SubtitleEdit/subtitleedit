@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,10 +30,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public string Ocr(Bitmap bitmap, string language, bool useGpu)
         {
+            var detFilePrefix = language;
+            if (language == "german")
+            {
+                detFilePrefix = "en";
+            }
+
+            var recFilePrefix = language;
+            if (language == "german")
+            {
+                recFilePrefix = "en";
+            }   
+
             var borderedBitmap = AddBorder(bitmap, 20);
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
-            var parameters = $"--image_dir \"{tempImage}\" --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{language}\\{language}_PP-OCRv3_det_infer\" --rec_model_dir  \"{_recPath}\\{language}\\{language}_PP-OCRv3_rec_infer\" --cls_model_dir  \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+            var parameters = $"--image_dir \"{tempImage}\" --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{language}\\{detFilePrefix}_PP-OCRv3_det_infer\" --rec_model_dir \"{_recPath}\\{language}\\{recFilePrefix}_PP-OCRv3_rec_infer\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -216,7 +227,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("en", "English"),
                 //new OcrLanguage2("et", "Estonian"),
                 //new OcrLanguage2("fr", "French"),
-                new OcrLanguage2("german", "German"),
+                //new OcrLanguage2("german", "German"),
                 new OcrLanguage2("japan", "Japan"),
                 //new OcrLanguage2("kbd", "Kabardian"),
                 new OcrLanguage2("korean", "Korean"),
