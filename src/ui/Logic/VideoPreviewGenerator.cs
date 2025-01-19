@@ -384,6 +384,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             process.Start();
             process.WaitForExit();
+
+            System.Threading.Thread.Sleep(100);
+
             return Directory.GetFiles(outputFolder, "*.png").OrderBy(p => p).ToArray();
         }
 
