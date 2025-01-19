@@ -7908,6 +7908,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodTesseract5;
             }
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "PaddleOCR" && comboBoxOcrMethod.Items.Count > _ocrMethodPaddle)
+            {
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodPaddle;
+            }
             else
             {
                 comboBoxOcrMethod.SelectedIndex = 0;
