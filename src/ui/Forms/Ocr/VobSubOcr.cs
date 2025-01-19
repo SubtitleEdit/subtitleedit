@@ -539,6 +539,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
 
             _paddleOcr = new PaddleOcr();
+            _paddleOcr.Init();
             nikseComboBoxPaddleLanguages.Items.Clear();
             foreach (var paddleLanguage in PaddleOcr.GetLanguages())
             {
@@ -6488,14 +6489,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string line;
             try
             {
-                line = _paddleOcr.Ocr(bitmap, language ?? "en");
+                line = _paddleOcr.Ocr(bitmap, language ?? "en", checkBoxPaddleOcrUseGpu.Checked);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine +
                     "Make sure you hve installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
                     "Read more here: https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html" + Environment.NewLine+ Environment.NewLine +
-                    "Requires Python + pip.");
+                    "Requires Python + pip." + Environment.NewLine + 
+                    _paddleOcr.Error);
 
                 ButtonPauseClick(null, null);
                 return string.Empty;
