@@ -280,6 +280,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var positionsAndSizes = CalcAllPositionsAndSizes();
             foreach (var posAndSize in positionsAndSizes)
             {
+                if (posAndSize == null)
+                {
+                    continue;
+                }
+
                 // build box + gen preview via mpv
                 var x = posAndSize.Left - (int)numericUpDownPaddingLeft.Value;
                 var right = posAndSize.Right + (int)numericUpDownPaddingRight.Value;
@@ -925,6 +930,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     Application.DoEvents();
                 }
 
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
                 var sub = new Subtitle { Header = _subtitleWithNewHeader.Header };
@@ -956,7 +964,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     System.Threading.Thread.Sleep(100);
                     Application.DoEvents();
+                    progressBar1.Refresh();
                 }
+
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
 
                 var tempImageFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 var images = VideoPreviewGenerator.GetScreenShotsForEachFrame(outputVideoFileName, tempImageFolder);
@@ -966,17 +978,38 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     {
                         var idx = _selectedIndices[index];
                         var bmpFileName = images[index];
+
+                        PositionAndSize positionAndSize;
+
                         using (var bmp = new Bitmap(bmpFileName))
                         {
-                            var nBmp = new NikseBitmap(bmp);
-                            list.Add(new PositionAndSize
+                            if (bmp.Width > 1 && bmp.Height > 1)
                             {
-                                Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                                Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                                Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                                Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                                Id = _subtitleWithNewHeader.Paragraphs[idx].Id,
-                            });
+                                var nBmp = new NikseBitmap(bmp);
+                                positionAndSize = new PositionAndSize
+                                {
+                                    Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                    Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                    Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                    Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                    Id = _subtitleWithNewHeader.Paragraphs[idx].Id,
+                                };
+
+                                if (positionAndSize == null)
+                                {
+                                    positionAndSize = new PositionAndSize
+                                    {
+                                        Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                        Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                        Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                        Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                        Id = _subtitleWithNewHeader.Paragraphs[idx].Id,
+                                    };
+                                }
+
+                                list.Add(positionAndSize);
+                            }
+
                         }
                         try
                         {
