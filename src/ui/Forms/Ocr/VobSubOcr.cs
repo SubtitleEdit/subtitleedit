@@ -4785,7 +4785,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (!Directory.Exists(Configuration.PaddleOcrDirectory))
                 {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR models"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return;
                     }

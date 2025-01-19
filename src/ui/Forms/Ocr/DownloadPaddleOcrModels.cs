@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadPaddleOcrModels : Form
     {
-        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/PaddleOcr291/PaddleOcr3.zip";
+        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/PaddleOcr291/PaddleOcr3_all.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadPaddleOcrModels()
