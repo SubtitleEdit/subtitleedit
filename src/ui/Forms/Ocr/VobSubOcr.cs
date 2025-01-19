@@ -32,6 +32,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
 using System.Diagnostics;
+using Nikse.SubtitleEdit.Forms.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -539,7 +540,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
 
             _paddleOcr = new PaddleOcr();
-            _paddleOcr.Init();
             nikseComboBoxPaddleLanguages.Items.Clear();
             foreach (var paddleLanguage in PaddleOcr.GetLanguages())
             {
@@ -4779,6 +4779,24 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_ocrService == null)
                 {
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
+                }
+            }
+            else if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                if (!Directory.Exists(Configuration.PaddleOcrDirectory))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    using (var form = new DownloadPaddleOcrModels())
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
 

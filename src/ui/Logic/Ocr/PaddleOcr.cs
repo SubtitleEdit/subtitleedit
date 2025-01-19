@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,65 +19,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _clsPath;
         private string _detPath;
         private string _recPath;
-        private string _e2ePath;
-        private string _srPath;
-        private string _tablePath;
-        private string _layoutPath;
 
         public PaddleOcr()
         {
             Error = string.Empty;
-        }
-
-        public void Init()
-        {
-            _paddingOcrPath = Path.Combine(Configuration.DataDirectory, "PaddleOcr");
-            if (!Directory.Exists(_paddingOcrPath))
-            {
-                Directory.CreateDirectory(_paddingOcrPath);
-            }
-
+            _paddingOcrPath = Configuration.PaddleOcrDirectory;
             _clsPath = Path.Combine(_paddingOcrPath, "cls");
-            if (!Directory.Exists(_clsPath))
-            {
-                Directory.CreateDirectory(_clsPath);
-            }
-
             _detPath = Path.Combine(_paddingOcrPath, "det");
-            if (!Directory.Exists(_detPath))
-            {
-                Directory.CreateDirectory(_detPath);
-            }
-
             _recPath = Path.Combine(_paddingOcrPath, "rec");
-            if (!Directory.Exists(_recPath))
-            {
-                Directory.CreateDirectory(_recPath);
-            }
-
-            _e2ePath = Path.Combine(_paddingOcrPath, "e2e");
-            if (!Directory.Exists(_e2ePath))
-            {
-                Directory.CreateDirectory(_e2ePath);
-            }
-
-            _srPath = Path.Combine(_paddingOcrPath, "sr");
-            if (!Directory.Exists(_srPath))
-            {
-                Directory.CreateDirectory(_srPath);
-            }
-
-            _tablePath = Path.Combine(_paddingOcrPath, "table");
-            if (!Directory.Exists(_tablePath))
-            {
-                Directory.CreateDirectory(_tablePath);
-            }
-
-            _layoutPath = Path.Combine(_paddingOcrPath, "layout");
-            if (!Directory.Exists(_layoutPath))
-            {
-                Directory.CreateDirectory(_layoutPath);
-            }
         }
 
         public string Ocr(Bitmap bitmap, string language, bool useGpu)
@@ -84,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var borderedBitmap = AddBorder(bitmap, 20);
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
-            var parameters = $"--image_dir \"{tempImage}\" --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\en\\en_PP-OCRv3_det_infer\" --rec_model_dir  \"{_recPath}\\en\\en_PP-OCRv3_rec_infer\" --cls_model_dir  \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\" --e2e_model_dir  \"{_e2ePath}\" --sr_model_dir  \"{_srPath}\" --table_model_dir  \"{_tablePath}\" --layout_model_dir  \"{_layoutPath}\"";
+            var parameters = $"--image_dir \"{tempImage}\" --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{language}\\{language}_PP-OCRv3_det_infer\" --rec_model_dir  \"{_recPath}\\{language}\\{language}_PP-OCRv3_rec_infer\" --cls_model_dir  \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -257,7 +207,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 //new OcrLanguage2("bs", "Bosnian"),
                 //new OcrLanguage2("bg", "Bulgarian"),
                 new OcrLanguage2("ch", "Chinese and english"),
-                new OcrLanguage2("ch_tra", "Chinese traditional"),
+                //new OcrLanguage2("ch_tra", "Chinese traditional"),
                 //new OcrLanguage2("hr", "Croatian"),
                 //new OcrLanguage2("cs", "Czech"),
                 //new OcrLanguage2("da", "Danish"),
