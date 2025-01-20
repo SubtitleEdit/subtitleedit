@@ -5,7 +5,7 @@
    * Shortcut for "Split line and play" - thx Leon
    * Shortcut for "Cycle audio track" - thx darnn
    * Add "Bookmark contains" option to "Modify selection" - thx BlohoJo
-   * Add basic PaddleOCR support - thx timminator
+   * Add PaddleOCR - thx timminator
 * IMPROVED:
    * Update Italian translation - thx bovirus
    * Update Portuguese translation - thx hugok79

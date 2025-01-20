@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _detPath;
         private string _recPath;
 
-        private List<string> LatinLanguageCodes = new List<string>() 
+        private readonly List<string> LatinLanguageCodes = new List<string>()
         {
             "af",
             "az",
@@ -64,8 +64,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             "french",
             "german"
         };
-        private List<string> ArabicLanguageCodes = new List<string>() { "ar", "fa", "ug", "ur" };
-        private List<string> CyrillicLanguageCodes = new List<string>()
+        private readonly List<string> ArabicLanguageCodes = new List<string>() { "ar", "fa", "ug", "ur" };
+        private readonly List<string> CyrillicLanguageCodes = new List<string>()
         {
             "ru",
             "rs_cyrillic",
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             "tab"
         };
 
-        private List<string> DevanagariLanguageCodes = new List<string>()
+        private readonly List<string> DevanagariLanguageCodes = new List<string>()
         {
             "hi",
             "mr",
@@ -168,7 +168,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
             process.OutputDataReceived += OutputHandler;
             _textDetectionResults.Clear();
-
 
 #pragma warning disable CA1416 // Validate platform compatibility
             process.Start();
@@ -320,8 +319,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("bh", "Bihari"),
                 new OcrLanguage2("bs", "Bosnian"),
                 new OcrLanguage2("bg", "Bulgarian"),
-                new OcrLanguage2("ch", "Chinese and english"),                
-                new OcrLanguage2("chinese_cht", "Chinese traditional"), //new OcrLanguage2("ch_tra", "Chinese traditional"),
+                new OcrLanguage2("ch", "Chinese and English"),
+                new OcrLanguage2("chinese_cht", "Chinese traditional"),
                 new OcrLanguage2("hr", "Croatian"),
                 new OcrLanguage2("cs", "Czech"),
                 new OcrLanguage2("da", "Danish"),
@@ -331,7 +330,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("et", "Estonian"),
                 new OcrLanguage2("fr", "French"),
                 new OcrLanguage2("german", "German"),
-                new OcrLanguage2("japan", "Japan"),
+                new OcrLanguage2("japan", "Japanese"),
                 new OcrLanguage2("kbd", "Kabardian"),
                 new OcrLanguage2("korean", "Korean"),
                 new OcrLanguage2("ku", "Kurdish"),
@@ -355,7 +354,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("pl", "Polish"),
                 new OcrLanguage2("pt", "Portuguese"),
                 new OcrLanguage2("ro", "Romanian"),
-                new OcrLanguage2("ru", "Russia"),
+                new OcrLanguage2("ru", "Russian"),
                 new OcrLanguage2("sa", "Sanskrit"),
                 new OcrLanguage2("rs_cyrillic", "Serbian(cyrillic)"),
                 new OcrLanguage2("rs_latin", "Serbian(latin)"),
@@ -375,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("uz", "Uzbek"),
                 new OcrLanguage2("vi", "Vietnamese"),
                 new OcrLanguage2("cy", "Welsh"),
-            };
+            }.OrderBy(p => p.Name).ToList();
         }
     }
 }
