@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             "french",
             "german"
         };
-        private List<string> ArabicLanguageCodes = new List<string>() { "ar", "fa", "ug", "ur", "sa" };
+        private List<string> ArabicLanguageCodes = new List<string>() { "ar", "fa", "ug", "ur" };
         private List<string> CyrillicLanguageCodes = new List<string>()
         {
             "ru",
@@ -98,7 +98,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             "sck",
             "new",
             "gom",
-            "bgc"
+            "bgc",
+            "sa"
         };
 
         public PaddleOcr()
@@ -355,7 +356,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("pt", "Portuguese"),
                 new OcrLanguage2("ro", "Romanian"),
                 new OcrLanguage2("ru", "Russia"),
-                new OcrLanguage2("sa", "Saudi Arabia"),
+                new OcrLanguage2("sa", "Sanskrit"),
                 new OcrLanguage2("rs_cyrillic", "Serbian(cyrillic)"),
                 new OcrLanguage2("rs_latin", "Serbian(latin)"),
                 new OcrLanguage2("sk", "Slovak"),
