@@ -6503,7 +6503,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2).Code;
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
 
             string line;
             try
@@ -6513,7 +6513,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine +
-                    "Make sure you hve installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
+                    "Make sure you have installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
                     "Read more here: https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html" + Environment.NewLine+ Environment.NewLine +
                     "Requires Python + pip." + Environment.NewLine + 
                     _paddleOcr.Error);
