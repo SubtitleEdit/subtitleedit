@@ -116,11 +116,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var detFilePrefix = language;
             if (language != "en" && language != "ch")
             {
-                detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual";
+                detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
+            }
+            else if (language == "ch")
+            {
+                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
             }
             else
             {
-                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}";
+                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_det_infer";
             }
 
             var recFilePrefix = language;
@@ -148,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var borderedBitmap = AddBorder(bitmap, 20);
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
-            var parameters = $"--image_dir \"{tempImage}\" --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}_PP-OCRv3_det_infer\" --rec_model_dir \"{_recPath}\\{recFilePrefix}_PP-OCRv3_rec_infer\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+            var parameters = $"--image_dir \"{tempImage}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}_PP-OCRv4_rec_infer\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
