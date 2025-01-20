@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadPaddleOcrModels : Form
     {
-        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/PaddleOcr291/PaddleOcr3_all.zip";
+        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/PaddleOcr291/PP-OCRv3.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadPaddleOcrModels()
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (downloadStream.Length == 0)
             {
-                throw new Exception("No content downloaded - missing file or no internet connection!" + Environment.NewLine  + 
+                throw new Exception("No content downloaded - missing file or no internet connection!" + Environment.NewLine +
                                     $"For more info see: {Path.Combine(Configuration.DataDirectory, "error_log.txt")}");
             }
 
