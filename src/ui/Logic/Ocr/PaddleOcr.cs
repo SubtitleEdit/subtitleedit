@@ -130,29 +130,33 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var recFilePrefix = language;
             if (LatinLanguageCodes.Contains(language))
             {
-                recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin";
+                recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin_PP-OCRv3_rec_infer";
             }
             else if (ArabicLanguageCodes.Contains(language))
             {
-                recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic";
+                recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic_PP-OCRv4_rec_infer";
             }
             else if (CyrillicLanguageCodes.Contains(language))
             {
-                recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic";
+                recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic_PP-OCRv3_rec_infer";
             }
             else if (DevanagariLanguageCodes.Contains(language))
             {
-                recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari";
+                recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari_PP-OCRv4_rec_infer";
+            }
+            else if (language == "chinese_cht")
+            {
+                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_rec_infer";
             }
             else
             {
-                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}";
+                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
             }
 
             var borderedBitmap = AddBorder(bitmap, 20);
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
-            var parameters = $"--image_dir \"{tempImage}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}_PP-OCRv4_rec_infer\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+            var parameters = $"--image_dir \"{tempImage}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
