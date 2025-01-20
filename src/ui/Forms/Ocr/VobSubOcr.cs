@@ -540,11 +540,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
 
             _paddleOcr = new PaddleOcr();
+            checkBoxPaddleOcrUseGpu.Checked = Configuration.Settings.VobSubOcr.PaddleOcrUseGpu;
             nikseComboBoxPaddleLanguages.Items.Clear();
             foreach (var paddleLanguage in PaddleOcr.GetLanguages())
             {
                 nikseComboBoxPaddleLanguages.Items.Add(paddleLanguage);
-                if (paddleLanguage.Code == "en")
+                if (paddleLanguage.Code == Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode)
                 {
                     nikseComboBoxPaddleLanguages.SelectedIndex = nikseComboBoxPaddleLanguages.Items.Count - 1;
                 }
@@ -8376,7 +8377,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _tesseractThreadRunner?.Cancel();
             _tesseractAsyncIndex = 10000;
 
-            System.Threading.Thread.Sleep(100);
+            Thread.Sleep(100);
             DisposeImageCompareBitmaps();
 
             Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
@@ -8437,6 +8438,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
                 {
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
+                }
+            }
+
+            if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                Configuration.Settings.VobSubOcr.PaddleOcrUseGpu = checkBoxPaddleOcrUseGpu.Checked;
+                var language = nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2;
+                if (language != null)
+                {
+                    Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode = language.Code;
                 }
             }
 
