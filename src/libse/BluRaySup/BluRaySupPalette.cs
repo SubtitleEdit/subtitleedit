@@ -39,13 +39,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /** Use BT.601 color model instead of BT.709 */
         private readonly bool _useBt601;
 
-        /**
-         * Convert YCBCr color info to RGB
-         * @param y  8 bit luminance
-         * @param cb 8 bit chrominance blue
-         * @param cr 8 bit chrominance red
-         * @return Integer array with red, blue, green component (in this order)
-         */
+        /// <summary>
+        /// Convert YCBCr color info to RGB. 
+        /// </summary>
+        /// <param name="y">8 bit luminance</param>
+        /// <param name="cb">8 bit chrominance blue</param>
+        /// <param name="cr">8 bit chrominance red</param>
+        /// <param name="useBt601">Use BT.601 color model instead of BT.709</param>
+        /// <returns>Integer array with red, green, and blue (in this order)</returns>
         public static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
             var rgb = new int[3];
@@ -84,6 +85,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     rgb[i] = 255;
                 }
             }
+
             return rgb;
         }
 
