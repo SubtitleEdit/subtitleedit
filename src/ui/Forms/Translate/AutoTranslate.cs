@@ -1138,7 +1138,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
-            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseComboBoxUrl.Text))
             {
                 Configuration.Settings.Tools.AutoTranslateDeepLXUrl = nikseComboBoxUrl.Text.Trim();
             }
