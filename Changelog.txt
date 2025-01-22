@@ -28,6 +28,7 @@
    * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
    * Fix RemoveTextForHI webvtt issue - thx Manujito
    * Fix "Fix overlap" issue in "Fix common errors" - thx colemar 
+   * Fix setting deeplx url - thx strong76
 
 
 4.0.10 (22nd December 2024)
