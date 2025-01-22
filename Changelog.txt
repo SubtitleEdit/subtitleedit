@@ -8,7 +8,7 @@
    * Add PaddleOCR - thx timminator
 * IMPROVED:
    * Update Italian translation - thx bovirus
-   * Update Portuguese translation - thx hugok79
+   * Update Portuguese translation - thx hugok79/Blackspirits
    * Update Polish translation - thx admas
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
