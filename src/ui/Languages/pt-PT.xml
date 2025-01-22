@@ -2147,6 +2147,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Exatamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
     <Bookmarked>Marcador</Bookmarked>
+    <BookmarkContains>O marcador contém</BookmarkContains>
     <BlankLines>Linhas em branco</BlankLines>
   </ModifySelection>
   <MultipleReplace>
