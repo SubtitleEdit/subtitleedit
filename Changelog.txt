@@ -12,6 +12,7 @@
    * Update Polish translation - thx admas
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
+   * Update Russian translation - thx elfriob
    * Include Whisper CuBlas again
    * Add simple retry for DeepL translate - thx rifatozkancomtr/dante3732
    * Add Icelandic to Gemini - thx dhofverberg
@@ -19,6 +20,7 @@
    * "Auto continue" is now a little faster - thx Andrebavila 
    * Handle Unicode zero-width-whitespace in SRT time code - thx GJK
    * Update Faster Whisper XXL to r245.1
+   * Add retry for ElevenLabs TTS API calls - thx cvrle77
 * FIXED:
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
@@ -29,6 +31,7 @@
    * Fix RemoveTextForHI webvtt issue - thx Manujito
    * Fix "Fix overlap" issue in "Fix common errors" - thx colemar 
    * Fix setting deeplx url - thx strong76
+   * Fix rounding in format TSV1+TSV2 - thx wegylexy
 
 
 4.0.10 (22nd December 2024)
