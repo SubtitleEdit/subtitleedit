@@ -2221,6 +2221,30 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.GroqModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("DeepSeekUrl");
+            if (subNode != null)
+            {
+                settings.Tools.DeepSeekUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("DeepSeekPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.DeepSeekPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("DeepSeekApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.DeepSeekApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("DeepSeekModel");
+            if (subNode != null)
+            {
+                settings.Tools.DeepSeekModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("OpenRouterUrl");
             if (subNode != null)
             {
@@ -9071,6 +9095,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("GroqPrompt", settings.Tools.GroqPrompt);
                 xmlWriter.WriteElementString("GroqApiKey", settings.Tools.GroqApiKey);
                 xmlWriter.WriteElementString("GroqModel", settings.Tools.GroqModel);
+                xmlWriter.WriteElementString("DeepSeekUrl", settings.Tools.DeepSeekUrl);
+                xmlWriter.WriteElementString("DeepSeekPrompt", settings.Tools.DeepSeekPrompt);
+                xmlWriter.WriteElementString("DeepSeekApiKey", settings.Tools.DeepSeekApiKey);
+                xmlWriter.WriteElementString("DeepSeekModel", settings.Tools.DeepSeekModel);
                 xmlWriter.WriteElementString("OpenRouterUrl", settings.Tools.OpenRouterUrl);
                 xmlWriter.WriteElementString("OpenRouterPrompt", settings.Tools.OpenRouterPrompt);
                 xmlWriter.WriteElementString("OpenRouterApiKey", settings.Tools.OpenRouterApiKey);
