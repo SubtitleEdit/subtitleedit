@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names with specific casing - and specific to Portuguese only -->
+<!-- This list contains names with specific casing - and specific to Portuguese (Brasil) only -->
 <names>
   <blacklist />
   <name>Aarão</name>
@@ -479,9 +479,8 @@
   <name>Armandina</name>
   <name>Armandino</name>
   <name>Armelim</name>
-  <name>Arménia</name>
   <name>Armênia</name>
-  <name>Arménio</name>
+  <name>Armênio</name>
   <name>Armor</name>
   <name>Arneles</name>
   <name>Arom</name>
@@ -1018,7 +1017,6 @@
   <name>Conceição</name>
   <name>Concha</name>
   <name>Conchita</name>
-  <name>Congo-Brazavile</name>
   <name>Congo-Brazzaville</name>
   <name>Congo-Kinshasa</name>
   <name>Congo-Quinxassa</name>
@@ -1880,7 +1878,6 @@
   <name>Genciana</name>
   <name>Genésia</name>
   <name>Genésio</name>
-  <name>Génesis</name>
   <name>Gênesis</name>
   <name>Gentil</name>
   <name>Georgeta</name>
@@ -2191,7 +2188,6 @@
   <name>Idriss</name>
   <name>Idrisse</name>
   <name>Iecatarina</name>
-  <name>Iémen</name>
   <name>Iêmen</name>
   <name>Ieva</name>
   <name>Igelcemina</name>
