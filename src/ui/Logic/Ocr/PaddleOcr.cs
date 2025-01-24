@@ -153,7 +153,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
             }
 
-            var borderedBitmap = AddBorder(bitmap, 20);
+            var borderedBitmapTemp = AddBorder(bitmap, 10, Color.Black);
+            var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
+            borderedBitmapTemp.Dispose();
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
             var parameters = $"--image_dir \"{tempImage}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
@@ -204,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return result;
         }
 
-        public static Bitmap AddBorder(Bitmap originalBitmap, int borderWidth)
+        public static Bitmap AddBorder(Bitmap originalBitmap, int borderWidth, Color borderColor)
         {
             // Calculate new dimensions
             int newWidth = originalBitmap.Width + 2 * borderWidth;
@@ -217,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             using (Graphics graphics = Graphics.FromImage(borderedBitmap))
             {
                 // Fill the entire bitmap with the border color
-                graphics.Clear(Color.Transparent);
+                graphics.Clear(borderColor);
 
                 // Draw the original bitmap onto the new canvas, offset by the border width
                 graphics.DrawImage(originalBitmap, borderWidth, borderWidth);
@@ -258,8 +260,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
 
                         result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
-                        line = new List<PaddleOcrResultParser.TextDetectionResult>();
-                        line.Add(element);
+                        line = new List<PaddleOcrResultParser.TextDetectionResult>
+                        {
+                            element
+                        };
                     }
                     else
                     {
