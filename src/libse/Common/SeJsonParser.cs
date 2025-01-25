@@ -890,6 +890,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                         state.Push(new StateElement(objectName, SeJsonState.Object));
                         i++;
                     }
+                    else if (ch == '[')
+                    {
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement(objectName, SeJsonState.Array));
+                        i++;
+                    }
                     else
                     {
                         if (state.Count > 0)
