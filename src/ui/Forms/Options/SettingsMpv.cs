@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
-            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2024-06-09/libmpv2-" + IntPtr.Size * 8 + ".zip";
+            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2025-01-25/libmpv2-" + IntPtr.Size * 8 + ".zip";
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
