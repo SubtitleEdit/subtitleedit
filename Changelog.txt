@@ -21,6 +21,8 @@
    * Handle Unicode zero-width-whitespace in SRT time code - thx GJK
    * Update Faster Whisper XXL to r245.1
    * Add retry for ElevenLabs TTS API calls - thx cvrle77
+   * Update yt-dlp to 2025.01.15
+   * Update mpv to 2025-01-15
 * FIXED:
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
