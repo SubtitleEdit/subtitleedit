@@ -1546,6 +1546,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
         <SplitLineAtCursorPosition>Dela rad vid markörens position</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Dela rad vid markörens position och autobrytning</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Dela rad vid markörens/videons position</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Del linje på markören/videopositionen och spela</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Auto-längd (nuvarande linje)</AutoDurationCurrentLine>
         <SelectAll>Markera alla</SelectAll>
         <InsertFirstLine>Infoga rad</InsertFirstLine>
@@ -2145,6 +2146,7 @@ Ladda ner och fortsätta?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Exakt två rader</ExactlyTwoLines>
     <MoreThanTwoLines>Mer än två rader</MoreThanTwoLines>
     <Bookmarked>Bokmärkt</Bookmarked>
+    <BookmarkContains>Bokmärket innehåller</BookmarkContains>
     <BlankLines>Tomma linjer</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2341,6 +2343,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <SettingsName>Inställningar</SettingsName>
     <ToggleBookmarks>Växla bokmärken</ToggleBookmarks>
     <FocusTextBox>Fokus textruta</FocusTextBox>
+    <CycleAudioTracks>Cykla ljudspår</CycleAudioTracks>
     <ToggleBookmarksWithComment>Växla bokmärken - lägg till kommentar</ToggleBookmarksWithComment>
     <ClearBookmarks>Rensa bokmärken</ClearBookmarks>
     <ExportBookmarks>Exportera bokmärken...</ExportBookmarks>
@@ -2950,7 +2953,10 @@ Fortsätt?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Ogiltigt tecken {0} hittades i kolumn {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Ogiltigt blankutrymme hittades i kolumn {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Problem med blanksteg ({0}) hittades i kolumn {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>linje slut</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>Saknas före skiljetecken</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ i rad</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Se full rapport här: {0}.</ReportPrompt>
     <OpenReportInFolder>Öppna rapporten i mappen</OpenReportInFolder>
     <FoundXIssues>Netflix kvalitetkontroll hittade {0} problem.</FoundXIssues>
