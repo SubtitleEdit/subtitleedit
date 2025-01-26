@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // Split by line ending chars where period count matches
             var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
             if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index) &&
-                Utilities.CountTagInText(text, '.') == Utilities.CountTagInText(mergedTranslation, '.'))
+                HasAboutSamePeriods(text, mergedTranslation))
             {
                 var idx = 0;
                 foreach (var line in splitResult)
@@ -190,6 +190,46 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             MergeSplitProblems = true;
 
             return linesTranslate;
+        }
+
+        private static bool HasAboutSamePeriods(string source, string translation)
+        {
+            var sourcePeriodCount = Utilities.CountTagInText(source, '.');
+            var translationPeriodCount = Utilities.CountTagInText(translation, '.');
+            if (sourcePeriodCount == translationPeriodCount)
+            {
+                return true;
+            }
+
+            var periodDiff = Math.Abs(sourcePeriodCount - translationPeriodCount);
+            if (periodDiff > 2)
+            {
+                return false;
+            }
+
+            var sourceLines = source.SplitToLines();
+            var translationLines = translation.SplitToLines();
+            if (sourceLines.Count != translationLines.Count)
+            {
+                return false;
+            }
+
+            var goodLengths = true;
+            for (int i = 0; i < sourceLines.Count; i++) 
+            {
+                var line = sourceLines[i];
+                var lineTranslation = translationLines[i];
+                var sourceLength = line.Length;
+                var translationLength = lineTranslation.Length;
+                var diff = Math.Abs(sourceLength - translationLength);
+                if (diff > 10 && diff > sourceLength * 2)
+                {
+                    goodLengths = false;
+                    break;
+                }
+            }
+
+            return goodLengths;
         }
 
         private static string FixPeriodInNumbers(string mergedTranslation)
