@@ -45,12 +45,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public Task<string> Translate(string input, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             string jsonResultString;
 
             try
             {
+                var text = input.Replace("\r'",string.Empty).Trim();
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
                 var result = _httpClient.GetAsync(url).Result;
