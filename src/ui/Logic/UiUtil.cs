@@ -597,6 +597,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             form.AutoScaleMode = AutoScaleMode.Dpi;
             form.Font = GetDefaultFont();
+            form.Icon = Properties.Resources.SEIcon;
         }
 
         public static void FixFonts(Control form, int iterations = 5)
