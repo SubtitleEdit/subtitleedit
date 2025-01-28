@@ -48,7 +48,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var pluginFileName in Directory.GetFiles(PluginsDirectory, "*.*"))
             {
-                if (pluginFileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                if (pluginFileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && 
+                    !pluginFileName.EndsWith("DeeplProTranslate.dll", StringComparison.OrdinalIgnoreCase))
                 {
                     plugins.Add(pluginFileName);
                 }
