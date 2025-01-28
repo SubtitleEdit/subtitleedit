@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.11 (xth March 2025) BETA
+4.0.11 (28th January 2025)
 * NEW
    * Shortcut for "Split line and play" - thx Leon
    * Shortcut for "Cycle audio track" - thx darnn
@@ -24,6 +24,7 @@
    * Update yt-dlp to 2025.01.15
    * Update mpv to 2025-01-15
 * FIXED:
+   * Fix Google Translate V1 API
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
    * Fix ASS color picking bug - thx rRobis
