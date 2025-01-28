@@ -2343,7 +2343,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxPaddleOcrUseGpu.Name = "checkBoxPaddleOcrUseGpu";
             this.checkBoxPaddleOcrUseGpu.Size = new System.Drawing.Size(67, 17);
             this.checkBoxPaddleOcrUseGpu.TabIndex = 2;
-            this.checkBoxPaddleOcrUseGpu.Text = "Use GPU";
+            this.checkBoxPaddleOcrUseGpu.Text = "Use GPU (Only affects GPU version)";
             this.checkBoxPaddleOcrUseGpu.UseVisualStyleBackColor = true;
             // 
             // VobSubOcr

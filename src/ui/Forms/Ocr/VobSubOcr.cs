@@ -339,6 +339,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractOcrAutoFixes;
         private string Tesseract5Version = "5.5.0";
 
+        // Minimum driver version for CUDA 12.3 (PaddleOCR GPU version)
+        private double requiredDriverVersion = 545.84;
+
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private XmlDocument _bdnXmlDocument;
@@ -4784,21 +4787,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_ocrMethodIndex == _ocrMethodPaddle)
             {
-                if (!Directory.Exists(Configuration.PaddleOcrDirectory))
-                {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR models"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                    {
-                        return;
-                    }
-
-                    using (var form = new DownloadPaddleOcrModels())
-                    {
-                        if (form.ShowDialog(this) != DialogResult.OK)
-                        {
-                            return;
-                        }
-                    }
-                }
+                buttonDownloadPaddleOCRModels_Click(sender, e);
             }
 
             progressBar1.Maximum = max;
@@ -6506,21 +6495,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
 
             string line;
-            try
-            {
-                line = _paddleOcr.Ocr(bitmap, language ?? "en", checkBoxPaddleOcrUseGpu.Checked);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine +
-                    "Make sure you have installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
-                    "Read more here: https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html" + Environment.NewLine+ Environment.NewLine +
-                    "Requires Python + pip." + Environment.NewLine + 
-                    _paddleOcr.Error);
-
-                ButtonPauseClick(null, null);
-                return string.Empty;
-            }
+            line = _paddleOcr.Ocr(bitmap, language ?? "ch", checkBoxPaddleOcrUseGpu.Checked);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
@@ -7257,6 +7232,71 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private bool IsNvidiaGpuPresentAndCudaCompatible()
+        {
+            try
+            {
+                // Execute nvidia-smi and capture its output
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "nvidia-smi",
+                        Arguments = "--query-gpu=driver_version --format=csv,noheader",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    }
+                };
+
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    return false; // nvidia-smi command failed
+                }
+
+                string rawOutput = output.Trim();
+
+                // Compare the version strings
+                if (String.Compare(rawOutput, requiredDriverVersion.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal) >= 0)
+                {
+                    return true; // Driver version meets or exceeds the required version
+                }
+                
+                return false;
+            }
+            catch (Exception)
+            {
+                // Handle cases where nvidia-smi is not available or fails
+                return false;
+            }
+        }
+
+        private bool IsExecutableInPath(string executableName)
+        {
+            var pathVariable = Environment.GetEnvironmentVariable("PATH");
+
+            if (string.IsNullOrEmpty(pathVariable))
+                return false;
+
+            var paths = pathVariable.Split(Path.PathSeparator);
+
+            foreach (var path in paths)
+            {
+                var fullPath = Path.Combine(path, executableName);
+                if (File.Exists(fullPath))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
         {
             _abort = true;
@@ -7369,6 +7409,58 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 ShowOcrMethodGroupBox(groupBoxPaddle);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "PaddleOCR";
+                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")) && !IsExecutableInPath("paddleocr.exe"))
+                {
+                    if (IntPtr.Size * 8 == 32)
+                    {
+                        MessageBox.Show("Sorry, PaddleOCR requires a 64-bit processor");
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                    else if (!IsNvidiaGpuPresentAndCudaCompatible())
+                    {
+                        var result = MessageBox.Show(
+                            $"PaddleOCR with GPU is not supported on this system.{Environment.NewLine}" +
+                            $"An NVIDIA graphics card with driver version {requiredDriverVersion.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)} or higher is required.{Environment.NewLine}" +
+                            $"{LanguageSettings.Current.GetTesseractDictionaries.Download} PaddleOCR (CPU version)?",
+                            LanguageSettings.Current.General.Title,
+                            MessageBoxButtons.YesNoCancel);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            using (var form = new DownloadPaddleOCRCPU())
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    buttonDownloadPaddleOCRModels_Click(sender, e);
+                                }
+                            }
+                            _ocrFixEngine = null;
+                            SubtitleListView1SelectedIndexChanged(null, null);
+                            return; // Exit after handling CPU download
+                        }
+                        else if (result == DialogResult.No || result == DialogResult.Cancel)
+                        {
+                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                            return;
+                        }
+                    }
+                    else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} PaddleOCR (CPU and GPU version)?", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var form = new DownloadPaddleOCR())
+                        {
+                            if (form.ShowDialog(this) == DialogResult.OK)
+                            {
+                                buttonDownloadPaddleOCRModels_Click(sender, e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                }
             }
 
             _ocrFixEngine = null;
@@ -8944,6 +9036,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 form.ShowDialog(this);
                 InitializeTesseract(form.ChosenLanguage);
+            }
+        }
+
+        private void buttonDownloadPaddleOCRModels_Click(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "det")) || !Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "cls")) ||!Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "rec")))
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR models"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+            
+                using (var form = new DownloadPaddleOcrModels())
+                {
+                    form.ShowDialog(this);
+                }
             }
         }
 
