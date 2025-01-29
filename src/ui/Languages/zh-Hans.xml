@@ -2135,6 +2135,7 @@ Command line: {1} {2}
     <ExactlyTwoLines>正好两行</ExactlyTwoLines>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
     <Bookmarked>已收藏</Bookmarked>
+    <BookmarkContains>收藏包含</BookmarkContains>
     <BlankLines>空行</BlankLines>
   </ModifySelection>
   <MultipleReplace>
