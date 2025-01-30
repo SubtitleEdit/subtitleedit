@@ -827,6 +827,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 _cancellationTokenSource.Cancel();
                 _breakTranslation = true;
                 buttonTranslate.Enabled = false;
+                buttonStrategy.Enabled = true;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
                 Application.DoEvents();
@@ -858,6 +859,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             SaveSettings(engineType);
 
+            buttonStrategy.Enabled = false;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
@@ -982,6 +984,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+            buttonStrategy.Enabled = true;
             buttonOK.Enabled = true;
             buttonCancel.Enabled = true;
             _breakTranslation = false;
