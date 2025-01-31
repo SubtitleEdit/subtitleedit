@@ -578,8 +578,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Dictionary<int, SpecialCharacter> CyrillicCodes = new Dictionary<int, SpecialCharacter>
         {
-            { 0x09, new SpecialCharacter(" ")},
             { 0x20, new SpecialCharacter(" ")},
+            { 0x09, new SpecialCharacter(" ")},
             { 0x21, new SpecialCharacter("!")},
             { 0x22, new SpecialCharacter("Э")},
             { 0x23, new SpecialCharacter("/")},
