@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 PaddleOCRPath = "paddleocr.exe";
             }
 
-            var process = new Process
+            using (var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -181,40 +181,217 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                 },
-            };
-
-            process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-            process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-            process.OutputDataReceived += OutputHandler;
-            _textDetectionResults.Clear();
+            })
+            {
+                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+                process.OutputDataReceived += OutputHandler;
+                _textDetectionResults.Clear();
 
 #pragma warning disable CA1416 // Validate platform compatibility
-            process.Start();
+                process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
 
-            process.BeginOutputReadLine();
+                process.BeginOutputReadLine();
+                
+                process.WaitForExit();
 
-            process.WaitForExit();
+                borderedBitmap.Dispose();
 
-            borderedBitmap.Dispose();
+                if (process.ExitCode != 0)
+                {
+                    Error = process.StandardError.ReadToEnd();
+                    return string.Empty;
+                }
 
-            if (process.ExitCode != 0)
+                File.Delete(tempImage);
+
+                if (_textDetectionResults.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                var result = MakeResult(_textDetectionResults);
+                return result;
+            }
+        }
+
+        public List<(string filePath, string text)> OcrBatch(List<Bitmap> bitmaps, string language, bool useGpu, Action<int> progressCallback, Func<bool> abortCheck)
+        {
+            var detFilePrefix = language;
+            if (language != "en" && language != "ch")
             {
-                Error = process.StandardError.ReadToEnd();
-                return string.Empty;
+                detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
+            }
+            else if (language == "ch")
+            {
+                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
+            }
+            else
+            {
+                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_det_infer";
             }
 
-            File.Delete(tempImage);
-
-            if (_textDetectionResults.Count == 0)
+            var recFilePrefix = language;
+            if (LatinLanguageCodes.Contains(language))
             {
-                return string.Empty;
+                recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin_PP-OCRv3_rec_infer";
+            }
+            else if (ArabicLanguageCodes.Contains(language))
+            {
+                recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic_PP-OCRv4_rec_infer";
+            }
+            else if (CyrillicLanguageCodes.Contains(language))
+            {
+                recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic_PP-OCRv3_rec_infer";
+            }
+            else if (DevanagariLanguageCodes.Contains(language))
+            {
+                recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari_PP-OCRv4_rec_infer";
+            }
+            else if (language == "chinese_cht")
+            {
+                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_rec_infer";
+            }
+            else
+            {
+                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
             }
 
-            var result = MakeResult(_textDetectionResults);
-            return result;
+            var tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(tempFolder);
+
+            try
+            {
+
+                var imagePaths = new List<string>();
+                int width = bitmaps.Count.ToString().Length; // Determine the number of digits for padding
+
+                for (int i = 0; i < bitmaps.Count; i++)
+                {
+                    var borderedBitmapTemp = AddBorder(bitmaps[i], 10, Color.Black);
+                    var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
+                    borderedBitmapTemp.Dispose();
+
+                    var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i));                    borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    borderedBitmap.Dispose();
+                    imagePaths.Add(imagePath);
+                }
+
+                var parameters = $"--image_dir \"{tempFolder}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+
+                string PaddleOCRPath = null;
+
+                if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
+                {
+                    PaddleOCRPath = Path.GetFullPath(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe"));
+                }
+                else
+                {
+                    PaddleOCRPath = "paddleocr.exe";
+                }
+
+                using (var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = PaddleOCRPath,
+                        Arguments = parameters,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                        StandardOutputEncoding = Encoding.UTF8,
+                    }
+                })
+                {
+                    process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                    process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+
+                    var results = new Dictionary<string, string>();
+                    int currentProgress = 0;
+
+                    process.OutputDataReceived += (sendingProcess, outLine) =>
+                    {
+                        if (string.IsNullOrWhiteSpace(outLine.Data)) return;
+
+                        if (outLine.Data.Contains("ppocr INFO: **********"))
+                        {
+                            currentProgress++;
+                            progressCallback?.Invoke(currentProgress);
+
+                            var fileName = outLine.Data.Split(new[] { "ppocr INFO: **********" }, StringSplitOptions.None)[1].Trim();
+
+                            if (!results.ContainsKey(fileName))
+                            {
+                                results[fileName] = string.Empty;
+                            }
+                        }
+                        else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+                        {
+                            return;
+                        }
+                        else if (outLine.Data.Contains("ppocr INFO:"))
+                        {
+                            if (results.Count > 0)
+                            {
+                                var lastFile = results.Keys.Last();
+
+                                // Regex pattern to extract the text inside quotes
+                                string textPattern = @"['""].*['""]";
+                                var textMatch = Regex.Match(outLine.Data, textPattern);
+
+                                if (textMatch.Success)
+                                {
+                                    string extractedText = textMatch.Value.Trim('\'', '"');
+                                    results[lastFile] += extractedText + Environment.NewLine;
+                                }
+                            }
+                        }
+
+                        if (abortCheck != null && abortCheck.Invoke())
+                        {
+                            try
+                            {
+                                process.CancelOutputRead();
+                                process.Kill(); // Terminate PaddleOCR process
+                                process.WaitForExit(1000);
+                            }
+                            catch (Exception ex)
+                            {
+                                Error = $"Error terminating PaddleOCR: {ex.Message}";
+                            }
+                        }
+                    };
+
+#pragma warning disable CA1416 // Validate platform compatibility
+                    process.Start();
+#pragma warning restore CA1416 // Validate platform compatibility;
+
+                    process.BeginOutputReadLine();
+                    process.WaitForExit();
+
+                    return results
+                        .Select(r => (filePath: r.Key, text: r.Value))
+                        .ToList();
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (Directory.Exists(tempFolder))
+                    {
+                        Directory.Delete(tempFolder, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error = $"An unexpected error occurred during cleanup: {ex.Message}";
+                }
+            }
         }
 
         public static Bitmap AddBorder(Bitmap originalBitmap, int borderWidth, Color borderColor)
@@ -324,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
         }
-
+   
         public static List<OcrLanguage2> GetLanguages()
         {
             return new List<OcrLanguage2>
