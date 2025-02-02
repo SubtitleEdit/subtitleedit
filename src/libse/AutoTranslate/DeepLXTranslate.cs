@@ -82,31 +82,39 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 throw new Exception("Forbidden! " + Environment.NewLine + Environment.NewLine + resultContent);
             }
 
-            var resultList = new List<string>();
-            var parser = new JsonParser();
-            var x = (Dictionary<string, object>)parser.Parse(resultContent);
-            foreach (var k in x.Keys)
+            try
             {
-                if (x[k] is List<object> mainList)
+                var resultList = new List<string>();
+                var parser = new JsonParser();
+                var x = (Dictionary<string, object>)parser.Parse(resultContent);
+                foreach (var k in x.Keys)
                 {
-                    foreach (var mainListItem in mainList)
+                    if (x[k] is List<object> mainList)
                     {
-                        if (mainListItem is Dictionary<string, object> innerDic)
+                        foreach (var mainListItem in mainList)
                         {
-                            foreach (var transItem in innerDic.Keys)
+                            if (mainListItem is Dictionary<string, object> innerDic)
                             {
-                                if (transItem == "text")
+                                foreach (var transItem in innerDic.Keys)
                                 {
-                                    var s = innerDic[transItem].ToString();
-                                    resultList.Add(s);
+                                    if (transItem == "text")
+                                    {
+                                        var s = innerDic[transItem].ToString();
+                                        resultList.Add(s);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+                return Task.FromResult(string.Join(Environment.NewLine, resultList));
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "DeepLXTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
+                throw;
+            }
         }
     }
 }
