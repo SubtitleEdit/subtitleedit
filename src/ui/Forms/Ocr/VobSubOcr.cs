@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
@@ -15,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.Ocr.Tesseract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -28,11 +30,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
-using System.Diagnostics;
-using Nikse.SubtitleEdit.Forms.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -1038,14 +1037,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bool hasPaddleBatchSupport = HasPaddleBatchSupport();
 
             // Collect all remaining bitmaps for PaddleOCR batch processing
-            List<Bitmap> bitmaps = null;
+            List<PaddleOcrInput> paddleOcrInputs = null;
             List<string> paddleResults = null;
 
             if (_ocrMethodIndex == _ocrMethodPaddle && hasPaddleBatchSupport)
             {
-                for (int i = 0; i < max; i++)
+                for (var i = 0; i < max; i++)
                 {
-                    bitmaps.Add(GetSubtitleBitmap(i));
+                    GetSubtitleTime(i, out var startTime, out var endTime);
+                    paddleOcrInputs.Add(new PaddleOcrInput
+                    {
+                        Bitmap = GetSubtitleBitmap(i),
+                        Index = i,
+                        ProgressText = $"{i} / {max}: {startTime} - {endTime}"
+                    });
                 }
 
                 // Outside of background worker before OCRViaPaddleBatch!
@@ -1054,17 +1059,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     comboBoxDictionaries_SelectedIndexChanged(null, null);
                 }
 
-                ManualResetEvent resetEvent = new ManualResetEvent(false);
-                IEnumerable<string> results = null;
-
-                BackgroundWorker worker = new BackgroundWorker();
+                var resetEvent = new ManualResetEvent(false);
+                var worker = new BackgroundWorker();
                 worker.DoWork += (sender, e) =>
                 {
-                    e.Result = OcrViaPaddleBatch(bitmaps, progress =>
+                    OcrViaPaddleBatch(paddleOcrInputs, progress =>
                     {
                         if (ProgressCallback != null)
                         {
-                            var percent = (int)Math.Round(progress * 100.0 / max);
+                            var percent = (int)Math.Round(progress.Index * 100.0 / max);
                             ProgressCallback?.Invoke($"{percent}%");
                         }
                     }, () => _abort);
@@ -1072,7 +1075,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 worker.RunWorkerCompleted += (sender, e) =>
                 {
-                    results = e.Result as IEnumerable<string>;
                     resetEvent.Set();
                 };
 
@@ -1082,11 +1084,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Application.DoEvents();
                 }
-
-                paddleResults = ProcessResultsFromPaddleBatch(results, bitmaps, Enumerable.Range(0, max).ToList());
             };
 
-            for (int i = 0; i < max; i++)
+            for (var i = 0; i < max; i++)
             {
                 _selectedIndex = i;
                 Application.DoEvents();
@@ -5325,19 +5325,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             // Collect the bitmaps to process
-            List<Bitmap> bitmaps = new List<Bitmap>();
+            var paddleInput = new List<PaddleOcrInput>();
             if (selectedIndices != null)
             {
-                foreach (int index in selectedIndices)
+                foreach (var index in selectedIndices)
                 {
-                    bitmaps.Add(ShowSubtitleImage(index));
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    paddleInput.Add(new PaddleOcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
                 }
             }
             else
             {
-                for (int index = i; index < max; index++)
+                for (var index = i; index < max; index++)
                 {
-                    bitmaps.Add(ShowSubtitleImage(index));
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    paddleInput.Add(new PaddleOcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
                 }
             }
 
@@ -5350,24 +5362,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            ManualResetEvent resetEvent = new ManualResetEvent(false);
-            IEnumerable<string> results = null;
-
-            BackgroundWorker worker = new BackgroundWorker();
+            var resetEvent = new ManualResetEvent(false);
+            var worker = new BackgroundWorker();
             worker.DoWork += (sender, e) =>
             {
-                e.Result = OcrViaPaddleBatch(bitmaps, progress =>
+                OcrViaPaddleBatch(paddleInput, progress =>
                 {
                     labelStatus.Invoke(new Action(() =>
                     {
-                        labelStatus.Text = $"Step 1: Performing OCR on image {progress} of {bitmaps.Count}...";
-                        progressBar1.Maximum = bitmaps.Count;
-                        progressBar1.Value = progress;
+                        labelStatus.Text = progress.ProgressText;
+
+                        progressBar1.Maximum = max;
+                        progressBar1.Value = progress.Index;
 
                         if (ProgressCallback != null)
                         {
-                            var percent = (int)Math.Round(progress * 100.0 / bitmaps.Count);
+                            var percent = (int)Math.Round(progress.Index * 100.0 / max);
                             ProgressCallback?.Invoke($"{percent}%");
+                        }
+
+                        subtitleListView1.SetText(progress.Index, progress.Text);
+                        subtitleListView1.EnsureVisible(progress.Index);
+                        subtitleListView1.Items[progress.Index].Selected = true;
+                        subtitleListView1.Items[progress.Index].Focused = true;
+                        if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
+                        {
+                            textBoxCurrentText.Text = progress.Text;
                         }
 
                         labelStatus.Refresh();
@@ -5378,7 +5398,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             worker.RunWorkerCompleted += (sender, e) =>
             {
-                results = e.Result as IEnumerable<string>;
                 resetEvent.Set();
             };
 
@@ -5387,109 +5406,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             while (!resetEvent.WaitOne(100))
             {
                 Application.DoEvents();
-            }
-
-            List<string> paddleResults = ProcessResultsFromPaddleBatch(results, bitmaps, selectedIndices ?? Enumerable.Range(i, max - i).ToList());
-
-            int totalCount = selectedIndices != null ? selectedIndices.Count : max - i;
-
-            // Process each subtitle entry, ensuring index mapping is correct
-            for (int idx = 0; idx < totalCount && idx < paddleResults.Count; idx++)
-            {
-                int originalIndex = selectedIndices != null ? selectedIndices[idx] : i + idx;
-
-                var bmp = ShowSubtitleImage(originalIndex);
-                GetSubtitleTime(originalIndex, out var startTime, out var endTime);
-
-                labelStatus.Text = $"{idx + 1} / {totalCount}: {startTime} - {endTime}";
-                progressBar1.Value = idx + 1;
-
-                if (ProgressCallback != null)
-                {
-                    var percent = (int)Math.Round((idx + 1) * 100.0 / totalCount);
-                    ProgressCallback?.Invoke($"{percent}%");
-                }
-
-                labelStatus.Refresh();
-                progressBar1.Refresh();
-
-                _mainOcrBitmap = bmp;
-
-                int j = originalIndex;
-                subtitleListView1.Items[originalIndex].Selected = true;
-                subtitleListView1.Items[originalIndex].Focused = true;
-                if (j < max - 1)
-                {
-                    j++;
-                }
-                if (j < max - 1)
-                {
-                    j++;
-                }
-
-                if (originalIndex % 3 == 0)
-                {
-                    subtitleListView1.Items[j].EnsureVisible();
-                }
-
-                string text = paddleResults[idx]; // Get batch OCR result for this subtitle
-
-                _lastLine = text;
-
-                text = text.Replace("<i>-</i>", "-")
-                        .Replace("<i>a</i>", "a")
-                        .Replace("<i>.</i>", ".")
-                        .Replace("<i>,</i>", ",")
-                        .Replace("  ", " ")
-                        .Trim();
-
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine)
-                        .Replace(Environment.NewLine + " ", Environment.NewLine);
-
-                // Max allow 2 lines
-                if (_autoBreakLines && Utilities.GetNumberOfLines(text) > 2)
-                {
-                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine)
-                            .Replace(Environment.NewLine + " ", Environment.NewLine)
-                            .RemoveRecursiveLineBreaks();
-
-                    if (Utilities.GetNumberOfLines(text) > 2)
-                    {
-                        text = Utilities.AutoBreakLine(text);
-                    }
-                }
-
-                // Handle DVB subtitles color
-                if (_dvbSubtitles != null && _transportStreamUseColor)
-                {
-                    if (_dvbSubColor[originalIndex] != Color.Transparent)
-                    {
-                        text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor[originalIndex]) + "\">" + text + "</font>";
-                    }
-                }
-
-                text = text.Trim()
-                        .Replace("  ", " ")
-                        .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine)
-                        .Replace("  ", " ")
-                        .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
-                text = SetTopAlign(originalIndex, text);
-
-                Paragraph p = _subtitle.GetParagraphOrDefault(originalIndex);
-                if (p != null)
-                {
-                    p.Text = text;
-                }
-
-                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == originalIndex)
-                {
-                    textBoxCurrentText.Text = text;
-                }
-                else
-                {
-                    subtitleListView1.SetText(originalIndex, text);
-                }
             }
 
             return true;
@@ -6864,16 +6780,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        private List<string> OcrViaPaddleBatch(List<Bitmap> bitmaps, Action<int> progressCallback, Func<bool> abortCheck)
+        public class PaddleOcrInput
         {
-            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
-
-            var results = _paddleOcr.OcrBatch(bitmaps, language, checkBoxPaddleOcrUseGpu.Checked, progressCallback, abortCheck);
-
-            return results.Select(r => r.Item2).ToList();
+            public Bitmap Bitmap { get; set; }
+            public int Index { get; set; }
+            public string Text { get; set; }
+            public string FileName { get; set; }
+            public string ProgressText { get; set; }
         }
 
-        private List<string> ProcessResultsFromPaddleBatch(IEnumerable<string> results, List<Bitmap> bitmaps, List<int> indices)
+        private void OcrViaPaddleBatch(List<PaddleOcrInput> input, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
+        {
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
+            _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, progressCallback, abortCheck);
+        }
+
+        private List<string> ProcessResultsFromPaddleBatch(IEnumerable<string> results, List<PaddleOcrInput> bitmaps, List<int> indices)
         {
             var finalResults = new List<string>();
             int index = 0;
@@ -6917,7 +6839,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _ocrFixEngine.AutoGuessesUsed.Clear();
                         _ocrFixEngine.UnknownWordsFound.Clear();
                         processedText = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(
-                            out wordsNotFound, processedText, subtitleIndex, bitmaps[index],
+                            out wordsNotFound, processedText, subtitleIndex, bitmaps[index].Bitmap,
                             checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked,
                             true, autoGuessLevel);
                     }

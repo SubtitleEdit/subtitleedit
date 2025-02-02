@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Nikse.SubtitleEdit.Forms.Ocr.VobSubOcr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -195,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 #pragma warning restore CA1416 // Validate platform compatibility;
 
                 process.BeginOutputReadLine();
-                
+
                 process.WaitForExit();
 
                 borderedBitmap.Dispose();
@@ -218,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public List<(string filePath, string text)> OcrBatch(List<Bitmap> bitmaps, string language, bool useGpu, Action<int> progressCallback, Func<bool> abortCheck)
+        public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
             var detFilePrefix = language;
             if (language != "en" && language != "ch")
@@ -265,17 +266,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             try
             {
-
                 var imagePaths = new List<string>();
-                int width = bitmaps.Count.ToString().Length; // Determine the number of digits for padding
+                var width = input.Count.ToString().Length; // Determine the number of digits for file name padding
 
-                for (int i = 0; i < bitmaps.Count; i++)
+                for (var i = 0; i < input.Count; i++)
                 {
-                    var borderedBitmapTemp = AddBorder(bitmaps[i], 10, Color.Black);
+                    var borderedBitmapTemp = AddBorder(input[i].Bitmap, 10, Color.Black);
                     var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
                     borderedBitmapTemp.Dispose();
 
-                    var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i));                    borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i)); borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    input[i].FileName = imagePath;
                     borderedBitmap.Dispose();
                     imagePaths.Add(imagePath);
                 }
@@ -311,18 +312,32 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
 
                     var results = new Dictionary<string, string>();
-                    int currentProgress = 0;
+                    var currentProgress = 0;
+                    var oldFileName = string.Empty;
 
                     process.OutputDataReceived += (sendingProcess, outLine) =>
                     {
-                        if (string.IsNullOrWhiteSpace(outLine.Data)) return;
+                        if (string.IsNullOrWhiteSpace(outLine.Data))
+                        {
+                            return;
+                        }
 
                         if (outLine.Data.Contains("ppocr INFO: **********"))
                         {
-                            currentProgress++;
-                            progressCallback?.Invoke(currentProgress);
+                            if (!string.IsNullOrEmpty(oldFileName))
+                            {
+                                var existingInput = input.FirstOrDefault(p => p.FileName == oldFileName);
+                                if (existingInput != null)
+                                {
+                                    existingInput.Text = results[oldFileName].Trim();
+                                    progressCallback?.Invoke(existingInput);
+                                }
+                            }
 
-                            var fileName = outLine.Data.Split(new[] { "ppocr INFO: **********" }, StringSplitOptions.None)[1].Trim();
+                            currentProgress++;
+
+                            var fileName = outLine.Data.Split(new[] { "ppocr INFO: **********" }, StringSplitOptions.None)[1].Trim('*', ' ');
+                            oldFileName = fileName;
 
                             if (!results.ContainsKey(fileName))
                             {
@@ -340,12 +355,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 var lastFile = results.Keys.Last();
 
                                 // Regex pattern to extract the text inside quotes
-                                string textPattern = @"['""].*['""]";
+                                var textPattern = @"['""].*['""]";
                                 var textMatch = Regex.Match(outLine.Data, textPattern);
 
                                 if (textMatch.Success)
                                 {
-                                    string extractedText = textMatch.Value.Trim('\'', '"');
+                                    var extractedText = textMatch.Value.Trim('\'', '"');
                                     results[lastFile] += extractedText + Environment.NewLine;
                                 }
                             }
@@ -373,9 +388,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     process.BeginOutputReadLine();
                     process.WaitForExit();
 
-                    return results
-                        .Select(r => (filePath: r.Key, text: r.Value))
-                        .ToList();
+                    if (!string.IsNullOrEmpty(oldFileName))
+                    {
+                        var existingInput = input.FirstOrDefault(p => p.FileName == oldFileName);
+                        if (existingInput != null)
+                        {
+                            existingInput.Text = results[oldFileName].Trim();
+                            progressCallback?.Invoke(existingInput);
+                        }
+                    }
                 }
             }
             finally
@@ -501,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
         }
-   
+
         public static List<OcrLanguage2> GetLanguages()
         {
             return new List<OcrLanguage2>
