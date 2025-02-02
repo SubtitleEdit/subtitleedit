@@ -50,6 +50,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             const int httpStatusCodeTooManyRequests = 429;
 
+            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "en";
+            }
+            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "pt";
+            }
+            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "zh";
+            }
+
             var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
