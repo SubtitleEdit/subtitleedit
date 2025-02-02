@@ -275,7 +275,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
                     borderedBitmapTemp.Dispose();
 
-                    var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i)); borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i));
+                    borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
                     input[i].FileName = imagePath;
                     borderedBitmap.Dispose();
                     imagePaths.Add(imagePath);
