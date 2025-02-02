@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using System.Threading.Tasks;
@@ -978,7 +979,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private bool GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
             {
                 httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
 
@@ -1027,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private bool GenerateParagraphAudioAllTalk(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
             {
                 httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
 
@@ -1113,7 +1114,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
             {
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
@@ -1255,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
                     var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
@@ -1315,7 +1316,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return false;
             }
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
             {
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "ssml+xml");
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "audio/mpeg");
@@ -2203,7 +2204,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
@@ -2302,7 +2303,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
@@ -2392,7 +2393,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!useCache)
             {
-                using (var httpClient = new HttpClient())
+                using (var httpClient = HttpClientFactory.CreateProxiedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
