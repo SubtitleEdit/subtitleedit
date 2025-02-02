@@ -48,6 +48,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            const int httpStatusCodeTooManyRequests = 429;
+
             var postContent = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("text", text),
@@ -57,16 +59,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(555).Wait();
+                Task.Delay(2555).Wait();
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(1007).Wait();
+                Task.Delay(5307).Wait();
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
