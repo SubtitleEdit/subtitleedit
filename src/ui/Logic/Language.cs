@@ -2477,7 +2477,6 @@ namespace Nikse.SubtitleEdit.Logic
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",
                 Bookmarked = "Bookmarked",
-                BookmarkContains = "Bookmark contains",
                 BlankLines = "Blank lines",
             };
 
@@ -3584,7 +3583,7 @@ can edit in same subtitle file (collaboration)",
                 ActorInfo = "Right-click to assign actor to voice",
                 AddAudioToVideo = "Add audio to video file (new file)",
                 GenerateSpeech = "Generate speech from text",
-                AdjustingSpeedXOfY = "Adjusting speed: {0} / {1}...",
+                AdjustingSpeedXOfY = "Adjusting speed,: {0} / {1} factor {2:F1}...",
                 MergingAudioTrackXOfY = "Merging audio track: {0} / {1}...",
                 GeneratingSpeechFromTextXOfY = "Generating speech from text: {0} / {1}...",
                 ReviewAudioClips = "Review audio clips",
