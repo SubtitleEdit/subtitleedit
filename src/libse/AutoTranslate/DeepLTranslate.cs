@@ -134,33 +134,34 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            const int httpStatusCodeTooManyRequests = 429;
+            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "en";
+            }
+            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "pt";
+            }
+            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "zh";
+            }
 
             var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
             {
-                Task.Delay(2555).Wait();
+                Task.Delay(555).Wait();
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
             {
-                try
-                { 
-                    _client.Dispose();
-                }
-                catch 
-                {
-                    // ignore
-                }
-                Task.Delay(5307).Wait();
-                _client = new HttpClient();
-                _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+                Task.Delay(1007).Wait();
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
@@ -179,6 +180,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             try
             {
+
+
                 var resultList = new List<string>();
                 var parser = new JsonParser();
                 var x = (Dictionary<string, object>)parser.Parse(resultContent);
