@@ -417,10 +417,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 stereo = true;
             }
-            if (chkVoiceOver.Checked)
+            if (chkVoiceOver.Checked)           // added
             {
                 addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-
             }
             else
             {
