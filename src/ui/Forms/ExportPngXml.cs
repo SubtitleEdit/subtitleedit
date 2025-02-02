@@ -1527,6 +1527,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
+                        if (param.Forced)
+                        {
+                            param.P.Forced = true;
+                        }
+
                         vobSubWriter.WriteParagraph(param.P, param.Bitmap, param.Alignment);
                     }
 

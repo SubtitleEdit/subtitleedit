@@ -1,10 +1,46 @@
 ﻿Subtitle Edit Changelog
 
+4.0.11 (xth March 2025) BETA
+* NEW
+   * Shortcut for "Split line and play" - thx Leon
+   * Shortcut for "Cycle audio track" - thx darnn
+* IMPROVED:
+   * Update Italian translation - thx bovirus
+   * Update Portuguese translation - thx hugok79
+   * Update Polish translation - thx admas
+   * Update Chinese translation - thx nkh0472
+   * Update Finnish translation - thx Teijo S
+   * Include Whisper CuBlas again
+   * Add simple retry for DeepL translate - thx rifatozkancomtr/dante3732
+   * Add Icelandic to Gemini - thx dhofverberg
+   * Update NLLB API from v2 to v4 - thx chelis10
+   * "Auto continue" is now a little faster - thx Andrebavila 
+* FIXED:
+   * Make cmd line parameters case insensitive - thx czyrichard
+   * Fix LRC ms start time reading - thx AverageHoarder
+   * Fix ASS color picking bug - thx rRobis
+   * Fix for "un-minimize" ocr window - thx GC
+   * Fix "Remove text for HI" cmd line - thx Manujito
+   * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
+   * Fix RemoveTextForHI webvtt issue - thx Manujito
 
-4.0.9 (xth December 2024) BETA
+
+4.0.10 (22nd December 2024)
+* IMPROVED:
+   * Update Whisper CPP to V1.7.3
+   * More GT languages
+* FIXED:
+   * Fix for 7z unpacking (fix missing dll for portable version) - thx Purfview
+
+
+4.0.9 (19th December 2024)
 * NEW:
    * Add "Move all shot changes" shortcuts - thx acetilo
+   * Add new shortcut "Move first word to previous subtitle" - thx Rychelle
+   * Add Murf TTS - thx David
    * Add DeepLX translate - thx rifatozkancomtr 
+   * Add some auto detect of CSV files with header
+   * Add new "CSV daVinci" subtitle format - thx Jacques
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
@@ -13,8 +49,17 @@
    * Update Polish translation - thx admas
    * Update Italian translation - thx bovirus
    * Update Romanian installer translation - thx mircea
-   * Update Whisper CPP to V1.7.1
+   * Update Dutch translation - thx Flitskikker
+   * Update Whisper XXL to r239.1
+   * Update Whisper XXL in-program 7-zip unpack
+   * Update Whisper CPP to V1.7.2
+   * Update ffmpeg to 7.1
+   * Update Tesseract to 5.5.0
+   * Update yt-dlp to 2024.11.04
+   * Improvements for "Beautify time codes" - thx Flitskikker
+   * Add new options for TTS with ElevenLabs - thx cvrle77
    * Add large-v3-turbo to Whisper OpenAI/CPP
+   * Update Anthropic Claude Sonnet model name to "claude-3-5-sonnet-latest"
    * Minor improvements for color picker - thx MitchSirco/Siamak
    * Fix some wrong OCR (English) corrections - thx Zoltan
    * Add Icelandic language to ChatGPT + Gemini - thx dhofverberg
@@ -24,17 +69,29 @@
    * Add "Intel Quick Sync" for "video burn in" - thx ghostminhtoan
    * Allow save selected lines as subtitle with only 1 row selected - thx Pierrounator
    * Ctrl+A not working in subtitle duration field - thx rRobis
+   * Allow reading Matroska files with ".mp4" extension
+   * Up max byte size for auto-translate server calls to 128K - thx despairTK
+   * Make auto-translate setting resizable + a little larger - thx gjaskula
 * FIXED:
    * Fix for nulling time code after load of sub from mkv
+   * Fix crash in TTS re-generate - thx cvrle77
    * Fix crash while translating subtitles - thx claudemartin
    * Fix issue with OCR/Italic - thx Boulder08/Zoltan
+   * Fix for cmd line convert WebVTT to ASSA - thx aaron-meyers
    * Fix bug in EBU validation
+   * Fix for restoring Whisper window after minimize - thx vimbackground/innerspeakerz 
    * Minor fix for Cavena890 save options
    * Fix possible crash in "Gen transparent subs" when using video from "Program files"
    * Fix wrong dialog info text in FCE
    * Fix for divide by zero in TTS
    * Fix bug in "Change casing" - thx Hlsgs
    * Fix enter in textbox in FCE - thx p1nkyy/Roger
+   * Fix "Dialog styles" for many languags in Netflix quality check - thx Looi
+   * Fix wrong timestamp (rounding) for format "CSV" - thx MariaB99
+   * Fix LRC with milliseconds issue - thx AverageHoarder
+   * Fix crash trying to get subtitles from mp4 - thx nounours18200 
+   * Fix crash in split - thx Leon
+   * Fix for ffprobe and HDR10 - thx warrentc3 
 
 
 4.0.8 (6th September 2024) 
@@ -335,7 +392,7 @@
    * Update Italian language - thx bovirus
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
-   * Update Finnish translation - thx Teijo
+   * Update Finnish translation - thx Teijo S
    * Update Chinese translation - thx nkh0472
    * Update French translation - thx Pierre
    * Update Bulgarian translation - thx Калин

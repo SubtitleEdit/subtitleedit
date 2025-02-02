@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\ui\Logic\Language.cs">
-      <Link>Language.cs</Link>
-    </Compile>
-    <Compile Include="..\ui\Logic\LanguageDeserializer.cs">
-      <Link>LanguageDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="..\ui\Logic\LanguageStructure.cs">
-      <Link>LanguageStructure.cs</Link>
-    </Compile>
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="..\ui\Logic\Language.cs">
+			<Link>Language.cs</Link>
+		</Compile>
+		<Compile Include="..\ui\Logic\LanguageDeserializer.cs">
+			<Link>LanguageDeserializer.cs</Link>
+		</Compile>
+		<Compile Include="..\ui\Logic\LanguageStructure.cs">
+			<Link>LanguageStructure.cs</Link>
+		</Compile>
+	</ItemGroup>
 </Project>

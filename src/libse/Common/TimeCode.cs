@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class TimeCode
     {
-        private static readonly char[] TimeSplitChars = { ':', ',', '.' };
+        public static readonly char[] TimeSplitChars = { ':', ',', '.' };
         public const double BaseUnit = 1000.0; // Base unit of time
 
         public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;

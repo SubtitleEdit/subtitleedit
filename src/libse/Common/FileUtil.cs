@@ -859,6 +859,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static bool IsMatroskaFileFast(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, buffer.Length);
+
+                // 1a 45 df a3
+                return buffer[0] == 0x1a && buffer[1] == 0x45 && buffer[2] == 0xdf && buffer[3] == 0xa3;
+            }
+        }
+
         /// <summary>
         /// Checks if a file is locked by attempting to open it with exclusive read access.
         /// </summary>

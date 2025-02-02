@@ -31,6 +31,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.buttonFromSeCache = new System.Windows.Forms.Button();
             this.textBoxIImport = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonMilliseconds = new System.Windows.Forms.RadioButton();
@@ -82,6 +83,7 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.buttonFromSeCache);
             this.groupBoxImportText.Controls.Add(this.textBoxIImport);
             this.groupBoxImportText.Controls.Add(this.groupBoxTimeCodes);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
@@ -93,12 +95,24 @@
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import shot changes";
             // 
+            // buttonFromSeCache
+            // 
+            this.buttonFromSeCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonFromSeCache.Location = new System.Drawing.Point(30, 21);
+            this.buttonFromSeCache.Name = "buttonFromSeCache";
+            this.buttonFromSeCache.Size = new System.Drawing.Size(153, 23);
+            this.buttonFromSeCache.TabIndex = 7;
+            this.buttonFromSeCache.Text = "From existing cache...";
+            this.buttonFromSeCache.UseVisualStyleBackColor = true;
+            this.buttonFromSeCache.Click += new System.EventHandler(this.buttonFromSeCache_Click);
+            // 
             // textBoxIImport
             // 
             this.textBoxIImport.AllowDrop = true;
             this.textBoxIImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIImport.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxIImport.Location = new System.Drawing.Point(6, 48);
             this.textBoxIImport.MaxLength = 0;
             this.textBoxIImport.Multiline = true;
@@ -181,6 +195,7 @@
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxLog.Location = new System.Drawing.Point(7, 19);
             this.textBoxLog.MaxLength = 0;
             this.textBoxLog.Multiline = true;
@@ -221,6 +236,13 @@
             // 
             // numericUpDownThreshold
             // 
+            this.numericUpDownThreshold.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownThreshold.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownThreshold.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownThreshold.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownThreshold.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownThreshold.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownThreshold.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownThreshold.DecimalPlaces = 2;
             this.numericUpDownThreshold.Increment = new decimal(new int[] {
             1,
@@ -241,6 +263,8 @@
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
             this.numericUpDownThreshold.Size = new System.Drawing.Size(48, 20);
             this.numericUpDownThreshold.TabIndex = 4;
+            this.numericUpDownThreshold.TabStop = false;
+            this.numericUpDownThreshold.ThousandsSeparator = false;
             this.numericUpDownThreshold.Value = new decimal(new int[] {
             4,
             0,
@@ -285,6 +309,7 @@
             this.textBoxGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxGenerate.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxGenerate.Location = new System.Drawing.Point(6, 48);
             this.textBoxGenerate.MaxLength = 0;
             this.textBoxGenerate.Multiline = true;
@@ -375,5 +400,6 @@
         private System.Windows.Forms.Label labelFfmpegThreshold;
         private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.Label labelProgress;
+        private System.Windows.Forms.Button buttonFromSeCache;
     }
 }

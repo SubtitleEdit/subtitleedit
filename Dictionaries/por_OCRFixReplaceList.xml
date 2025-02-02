@@ -6,7 +6,10 @@
     <Word from="acessor" to="assessor" />
     <Word from="acólico" to="acólito" />
     <Word from="açoreano" to="açoriano" />
-    <Word from="actuacao" to="actuação" />
+    <Word from="actor" to="ator" />
+    <Word from="actores" to="atores" />
+    <Word from="actuacao" to="atuação" />
+    <Word from="atuacao" to="atuação" />
     <Word from="acucar" to="açúcar" />
     <Word from="açucar" to="açúcar" />
     <Word from="advinhar" to="adivinhar" />
@@ -21,16 +24,16 @@
     <Word from="analizar" to="analisar" />
     <Word from="andáste" to="andaste" />
     <Word from="anemona" to="anémona" />
-    <Word from="antartico" to="antárctico" />
-    <Word from="antártico" to="antárctico" />
+    <Word from="antartico" to="antártico" />
+    <Word from="antárctico" to="antártico" />
     <Word from="antepôr" to="antepor" />
     <Word from="apárte" to="aparte" />
     <Word from="apiadeiro" to="apeadeiro" />
     <Word from="apiar" to="apear" />
     <Word from="apreciacao" to="apreciação" />
-    <Word from="arctico" to="árctico" />
+    <Word from="arctico" to="ártico" />
+    <Word from="artico" to="ártico" />
     <Word from="arrazar" to="arrasar" />
-    <Word from="ártico" to="árctico" />
     <Word from="artifice" to="artífice" />
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
@@ -63,8 +66,10 @@
     <Word from="camoneano" to="camoniano" />
     <Word from="campião" to="campeão" />
     <Word from="cançacos" to="cansaços" />
-    <Word from="caracter" to="carácter" />
-    <Word from="caractéres" to="caracteres" />
+    <Word from="caracter" to="caráter" />
+    <Word from="carater" to="caráter" />
+    <Word from="caractéres" to="carateres" />
+    <Word from="caratéres" to="carateres" />
     <Word from="catequeze" to="catequese" />
     <Word from="catequisador" to="catequizador" />
     <Word from="catequisar" to="catequizar" />
@@ -106,6 +111,7 @@
     <Word from="despêndio" to="dispêndio" />
     <Word from="desplicência" to="displicência" />
     <Word from="dificulidade" to="dificuldade" />
+    <Word from="director" to="diretor" />
     <Word from="dispender" to="despender" />
     <Word from="dispendio" to="dispêndio" />
     <Word from="distribuido" to="distribuído" />
@@ -227,7 +233,8 @@
     <Word from="lampeão" to="lampião" />
     <Word from="largartixa" to="lagartixa" />
     <Word from="largarto" to="lagarto" />
-    <Word from="lêm" to="lêem" />
+    <Word from="lêm" to="leem" />
+    <Word from="lêem" to="leem" />
     <Word from="leucémia" to="leucemia" />
     <Word from="licensa" to="licença" />
     <Word from="linguísta" to="linguista" />
@@ -262,7 +269,8 @@
     <Word from="nasaias" to="nasais" />
     <Word from="nêle" to="nele" />
     <Word from="nest" to="neste" />
-    <Word from="Nivea" to="Nívea" />
+    <Word from="Nívea" to="Nivea" />
+    <Word from="Nivel" to="Nível" />
     <Word from="nonagessimo" to="nonagésimo" />
     <Word from="nonagéssimo" to="nonagésimo" />
     <Word from="nornal" to="normal" />
@@ -282,8 +290,10 @@
     <Word from="organisar" to="organizar" />
     <Word from="orgão" to="órgão" />
     <Word from="orta" to="horta" />
-    <Word from="ótima" to="óptima" />
-    <Word from="ótimos" to="óptimos" />
+    <Word from="óptima" to="ótima" />
+    <Word from="óptimas" to="ótimas" />
+    <Word from="óptimo" to="ótimo" />
+    <Word from="óptimos" to="ótimos" />
     <Word from="paralização" to="paralisação" />
     <Word from="paralizado" to="paralisado" />
     <Word from="paralizar" to="paralisar" />
@@ -341,7 +351,6 @@
     <Word from="raíz" to="raiz" />
     <Word from="raizes" to="raízes" />
     <Word from="ratato" to="retrato" />
-    <Word from="raúl" to="raul" />
     <Word from="razar" to="rasar" />
     <Word from="rectaguarda" to="retaguarda" />
     <Word from="rédia" to="rédea" />

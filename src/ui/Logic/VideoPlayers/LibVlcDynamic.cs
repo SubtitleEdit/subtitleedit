@@ -550,19 +550,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             public IntPtr PNext { get; set; }
         }
 
-        public List<KeyValuePair<int, string>> GetAudioTracks()
+        public List<AudioTrack> GetAudioTracks()
         {
             int count = _libvlc_audio_get_track_count(_mediaPlayer);
             var trackDescriptionsPointer = _libvlc_audio_get_track_description(_mediaPlayer);
-            var trackDescriptionList = new List<KeyValuePair<int, string>>();
+            var trackDescriptionList = new List<AudioTrack>();
             IntPtr trackDescriptionPointer = trackDescriptionsPointer;
+            var idx = 0;
             while (trackDescriptionPointer != IntPtr.Zero)
             {
                 var trackDescription = (TrackDescription)Marshal.PtrToStructure(trackDescriptionPointer, typeof(TrackDescription));
                 string s = Marshal.PtrToStringAnsi(trackDescription.Name);
                 if (trackDescription.Id != -1) // not disable
                 {
-                    trackDescriptionList.Add(new KeyValuePair<int, string>(trackDescription.Id, s));
+                    trackDescriptionList.Add(new AudioTrack(trackDescription.Id, s, idx));
+                    idx++;
                 }
                 trackDescriptionPointer = trackDescription.PNext;
             }

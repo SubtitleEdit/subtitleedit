@@ -111,6 +111,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             },
             new WhisperModel
             {
+                Name = "large-v3-turbo",
+                Size = "1.6 GB",
+                Urls = MakeUrls("https://huggingface.co/mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/main"),
+                Folder = "faster-whisper-large-v3-turbo",
+            },
+            new WhisperModel
+            {
                 Name = "large-v3",
                 Size = "3.1 GB",
                 Urls = MakeUrls("https://huggingface.co/Systran/faster-whisper-large-v3/resolve/main"),
