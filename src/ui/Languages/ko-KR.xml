@@ -1538,6 +1538,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SplitLineAtCursorPosition>커서 위치에서 줄 분할</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>커서 위치에서 줄 분할 및 자동 줄바꿈</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>커서/비디오 위치에서 줄 분할</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>커서/비디오 위치에서 줄 분할하고 재생</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>표시시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
         <SelectAll>모두 선택</SelectAll>
         <InsertFirstLine>줄 삽입</InsertFirstLine>
@@ -2141,6 +2142,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ExactlyTwoLines>정확히 두 줄</ExactlyTwoLines>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
     <Bookmarked>북마크됨</Bookmarked>
+    <BookmarkContains>북마크에는 다음이 포함됩니다</BookmarkContains>
     <BlankLines>빈 줄</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2337,6 +2339,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SettingsName>환경 설정</SettingsName>
     <ToggleBookmarks>북마크 전환</ToggleBookmarks>
     <FocusTextBox>포커스 텍스트 상자</FocusTextBox>
+    <CycleAudioTracks>오디오 트랙 주기</CycleAudioTracks>
     <ToggleBookmarksWithComment>북마크 - 설명 추가</ToggleBookmarksWithComment>
     <ClearBookmarks>모든 북마크 제거...</ClearBookmarks>
     <ExportBookmarks>북마크 내보내기...</ExportBookmarks>
@@ -2946,7 +2949,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
-    <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>{1} 열에 공백 문제({0})가 있습니다.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>줄 끝</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>앞 구두점 누락</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ 연속</WhiteSpaceCheckconsecutive>
     <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
     <OpenReportInFolder>폴더에서 보고서 열기</OpenReportInFolder>
     <FoundXIssues>넷플릭스 품질 검사에서 {0:#,##0} 문제가 발견되었습니다.</FoundXIssues>
