@@ -16366,7 +16366,8 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.InitialDirectory = dirName;
             var ext = file.Extension.ToLowerInvariant();
 
-            if (ext == ".mkv" || ext == ".mks")
+            if (ext == ".mkv" || ext == ".mks" ||
+                ((ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName)))
             {
                 using (var matroska = new MatroskaFile(fileName))
                 {
