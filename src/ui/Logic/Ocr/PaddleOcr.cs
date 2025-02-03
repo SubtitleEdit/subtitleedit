@@ -249,6 +249,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
+        private object LockObject = new object();
+
         public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
             _log.Clear();
@@ -366,6 +368,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             return;
                         }
 
+                        _log.AppendLine(outLine.Data);
+
                         if (outLine.Data.Contains("ppocr INFO: **********"))
                         {
                             if (!string.IsNullOrEmpty(oldFileName))
@@ -374,7 +378,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (existingInput != null)
                                 {
                                     existingInput.Text = results[oldFileName].Trim();
-                                    progressCallback?.Invoke(existingInput);
+
+                                    lock (LockObject)
+                                    {
+                                        progressCallback?.Invoke(existingInput);
+                                    }
                                 }
                             }
 
@@ -439,7 +447,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         if (existingInput != null)
                         {
                             existingInput.Text = results[oldFileName].Trim();
-                            progressCallback?.Invoke(existingInput);
+
+                            lock (LockObject)
+                            {
+                                progressCallback?.Invoke(existingInput);
+                            }
                         }
                     }
                 }
