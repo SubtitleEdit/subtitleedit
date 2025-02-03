@@ -1038,8 +1038,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             // Collect all remaining bitmaps for PaddleOCR batch processing
             List<PaddleOcrInput> paddleOcrInputs = null;
-            List<string> paddleResults = null;
-
             if (_ocrMethodIndex == _ocrMethodPaddle && hasPaddleBatchSupport)
             {
                 for (var i = 0; i < max; i++)
@@ -1112,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else if (_ocrMethodIndex == _ocrMethodPaddle && hasPaddleBatchSupport)
                 {
-                    text = paddleResults[i];
+                    //text = paddleResults[i];
                 }
                 else if (_ocrMethodIndex == _ocrMethodPaddle && !hasPaddleBatchSupport)
                 {
@@ -5381,13 +5379,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             ProgressCallback?.Invoke($"{percent}%");
                         }
 
-                        subtitleListView1.SetText(progress.Index, progress.Text);
+                        var text = PostFixPaddle(progress);
+                        _subtitle.Paragraphs[progress.Index].Text = text;   
+
+                        subtitleListView1.SetText(progress.Index, text);
                         subtitleListView1.EnsureVisible(progress.Index);
                         subtitleListView1.Items[progress.Index].Selected = true;
                         subtitleListView1.Items[progress.Index].Focused = true;
-                        if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
+                        if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == progress.Index)
                         {
-                            textBoxCurrentText.Text = progress.Text;
+                            textBoxCurrentText.Text = text;
                         }
 
                         labelStatus.Refresh();
@@ -6795,87 +6796,77 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, progressCallback, abortCheck);
         }
 
-        private List<string> ProcessResultsFromPaddleBatch(IEnumerable<string> results, List<PaddleOcrInput> bitmaps, List<int> indices)
+        private string PostFixPaddle(PaddleOcrInput input)
         {
-            var finalResults = new List<string>();
-            int index = 0;
+            string processedText = input.Text;
 
-            foreach (var text in results)
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
-                int subtitleIndex = indices[index]; // Map to correct subtitle index
-                string processedText = text;
-
-                if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                {
-                    var lastLastLine = GetLastLastText(subtitleIndex);
-                    processedText = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(processedText, _lastLine, lastLastLine, null);
-                }
-
-                if (checkBoxRightToLeft.Checked)
-                {
-                    processedText = ReverseNumberStrings(processedText);
-                }
-
-                string textWithoutFixes = processedText;
-
-                if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
-                {
-                    var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
-                    if (checkBoxGuessUnknownWords.Checked)
-                    {
-                        autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
-                    }
-
-                    if (checkBoxAutoFixCommonErrors.Checked)
-                    {
-                        var lastLastLine = GetLastLastText(subtitleIndex);
-                        processedText = _ocrFixEngine.FixOcrErrors(processedText, _subtitle, subtitleIndex, _lastLine, lastLastLine, true, autoGuessLevel);
-                    }
-
-                    int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(processedText, out var correctWords);
-
-                    if (wordsNotFound > 0 || correctWords == 0 || textWithoutFixes != null)
-                    {
-                        _ocrFixEngine.AutoGuessesUsed.Clear();
-                        _ocrFixEngine.UnknownWordsFound.Clear();
-                        processedText = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(
-                            out wordsNotFound, processedText, subtitleIndex, bitmaps[index].Bitmap,
-                            checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked,
-                            true, autoGuessLevel);
-                    }
-
-                    if (_ocrFixEngine.Abort)
-                    {
-                        ButtonPauseClick(null, null);
-                        _ocrFixEngine.Abort = false;
-                        return finalResults; // Return partial results if aborted
-                    }
-
-                    // Log used word guesses
-                    foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
-                    {
-                        listBoxLogSuggestions.Items.Add(guess);
-                    }
-
-                    _ocrFixEngine.AutoGuessesUsed.Clear();
-                    LogUnknownWords();
-
-                    // Correctly color subtitle line
-                    ColorLineByNumberOfUnknownWords(subtitleIndex, wordsNotFound, processedText);
-                }
-
-                if (textWithoutFixes.Trim() != processedText.Trim())
-                {
-                    _tesseractOcrAutoFixes++;
-                    labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
-                    LogOcrFix(subtitleIndex, textWithoutFixes, processedText);
-                }
-
-                finalResults.Add(processedText);
-                index++;
+                var lastLastLine = GetLastLastText(input.Index);
+                processedText = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(processedText, _lastLine, lastLastLine, null);
             }
 
-            return finalResults;
+            if (checkBoxRightToLeft.Checked)
+            {
+                processedText = ReverseNumberStrings(processedText);
+            }
+
+            string textWithoutFixes = processedText;
+
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
+            {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                {
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+                }
+
+                if (checkBoxAutoFixCommonErrors.Checked)
+                {
+                    var lastLastLine = GetLastLastText(input.Index);
+                    processedText = _ocrFixEngine.FixOcrErrors(processedText, _subtitle, input.Index, _lastLine, lastLastLine, true, autoGuessLevel);
+                }
+
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(processedText, out var correctWords);
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithoutFixes != null)
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    processedText = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(
+                        out wordsNotFound, processedText, input.Index, input.Bitmap,
+                        checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked,
+                        true, autoGuessLevel);
+                }
+
+                if (_ocrFixEngine.Abort)
+                {
+                    ButtonPauseClick(null, null);
+                    _ocrFixEngine.Abort = false;
+                    return processedText; // Return partial results if aborted
+                }
+
+                // Log used word guesses
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
+                {
+                    listBoxLogSuggestions.Items.Add(guess);
+                }
+
+                _ocrFixEngine.AutoGuessesUsed.Clear();
+                LogUnknownWords();
+
+                // Correctly color subtitle line
+                ColorLineByNumberOfUnknownWords(input.Index, wordsNotFound, processedText);
+            }
+
+            if (textWithoutFixes.Trim() != processedText.Trim())
+            {
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
+                LogOcrFix(input.Index, textWithoutFixes, processedText);
+            }
+
+            return processedText;
         }
 
         private void InitializeNOcrForBatch(string db)
