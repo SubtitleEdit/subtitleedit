@@ -6843,7 +6843,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     ButtonPauseClick(null, null);
                     _ocrFixEngine.Abort = false;
-                    return processedText; // Return partial results if aborted
+                    
+                    return string.Empty;
                 }
 
                 // Log used word guesses
