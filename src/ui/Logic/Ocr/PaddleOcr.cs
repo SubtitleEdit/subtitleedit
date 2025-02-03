@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _clsPath;
         private string _detPath;
         private string _recPath;
+        private StringBuilder _log = new StringBuilder();
 
         private readonly List<string> LatinLanguageCodes = new List<string>()
         {
@@ -114,6 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public string Ocr(Bitmap bitmap, string language, bool useGpu)
         {
+            _log.Clear();
             var detFilePrefix = language;
             if (language != "en" && language != "ch")
             {
@@ -189,38 +191,67 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
                 process.OutputDataReceived += OutputHandler;
+                process.ErrorDataReceived += (sendingProcess, errorLine) =>
+                {
+                    if (errorLine == null || string.IsNullOrWhiteSpace(errorLine.Data))
+                    {
+                        return;
+                    }
+                    Error = errorLine.Data;
+
+                    _log.AppendLine(errorLine.Data);
+                    SeLogger.Error("PaddleOcrError: " + _log.ToString());
+                };
                 _textDetectionResults.Clear();
 
+                try
+                {
+
 #pragma warning disable CA1416 // Validate platform compatibility
-                process.Start();
+                    process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
 
-                process.BeginOutputReadLine();
+                    process.BeginOutputReadLine();
 
-                process.WaitForExit();
+                    process.WaitForExit();
 
-                borderedBitmap.Dispose();
+                    borderedBitmap.Dispose();
 
-                if (process.ExitCode != 0)
+                    if (process.ExitCode != 0)
+                    {
+                        Error = process.StandardError.ReadToEnd();
+                        return string.Empty;
+                    }
+
+                    try
+                    {
+                        File.Delete(tempImage);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+
+                    if (_textDetectionResults.Count == 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    var result = MakeResult(_textDetectionResults);
+                    return result;
+                }
+                catch (Exception ex)
                 {
-                    Error = process.StandardError.ReadToEnd();
-                    return string.Empty;
+                    SeLogger.Error(ex, "Log: " + _log.ToString());
+                    throw;
                 }
 
-                File.Delete(tempImage);
-
-                if (_textDetectionResults.Count == 0)
-                {
-                    return string.Empty;
-                }
-
-                var result = MakeResult(_textDetectionResults);
-                return result;
             }
         }
 
         public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
+            _log.Clear();
             var detFilePrefix = language;
             if (language != "en" && language != "ch")
             {
@@ -316,6 +347,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     var currentProgress = 0;
                     var oldFileName = string.Empty;
 
+                    process.ErrorDataReceived += (sendingProcess, errorLine) =>
+                    {
+                        if (errorLine == null || string.IsNullOrWhiteSpace(errorLine.Data))
+                        {
+                            return;
+                        }
+                        Error = errorLine.Data;
+
+                        _log.AppendLine(errorLine.Data);
+                        SeLogger.Error("PaddleOcrError: " + _log.ToString());
+
+                    };
                     process.OutputDataReceived += (sendingProcess, outLine) =>
                     {
                         if (string.IsNullOrWhiteSpace(outLine.Data))
@@ -378,6 +421,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             catch (Exception ex)
                             {
                                 Error = $"Error terminating PaddleOCR: {ex.Message}";
+                                SeLogger.Error(ex, "Log: " + _log.ToString());
                             }
                         }
                     };
@@ -399,6 +443,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Log: " + _log.ToString());
+                throw;
             }
             finally
             {
@@ -494,10 +543,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            if (string.IsNullOrWhiteSpace(outLine.Data))
+            if (outLine == null || string.IsNullOrWhiteSpace(outLine.Data))
             {
                 return;
             }
+
+            _log.AppendLine(outLine.Data);
 
             if (!outLine.Data.Contains("ppocr INFO:"))
             {
@@ -510,15 +561,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return;
             }
 
-            var data = arr[1];
-
-            string pattern = @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
-            var match = Regex.Match(data, pattern);
-            if (match.Success)
+            try
             {
-                var parser = new PaddleOcrResultParser();
-                var x = parser.Parse(data);
-                _textDetectionResults.Add(x);
+                var data = arr[1];
+                string pattern = @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
+                var match = Regex.Match(data, pattern);
+                if (match.Success)
+                {
+                    var parser = new PaddleOcrResultParser();
+                    var x = parser.Parse(data);
+                    _textDetectionResults.Add(x);
+                }
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Log: " + _log.ToString());
+                throw;
             }
 
             // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
