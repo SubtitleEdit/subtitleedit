@@ -81,8 +81,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 var match = coordMatches[i];
                 points[i] = new Point(
-                    double.Parse(match.Groups[1].Value),
-                    double.Parse(match.Groups[2].Value)
+                    double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
+                    double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture)
                 );
             }
 
