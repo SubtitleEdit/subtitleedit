@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     public class PaddleOcr
     {
         public string Error { get; set; }
+        public string ProcessStartError { get; set; }
         private List<PaddleOcrResultParser.TextDetectionResult> _textDetectionResults = new List<PaddleOcrResultParser.TextDetectionResult>();
         private string _paddingOcrPath;
         private string _clsPath;
@@ -106,6 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public PaddleOcr()
         {
             Error = string.Empty;
+            ProcessStartError = string.Empty;
             _paddingOcrPath = Configuration.PaddleOcrDirectory;
             _clsPath = Path.Combine(_paddingOcrPath, "cls");
             _detPath = Path.Combine(_paddingOcrPath, "det");
@@ -191,9 +193,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 process.OutputDataReceived += OutputHandler;
                 _textDetectionResults.Clear();
 
+                try
+                {
 #pragma warning disable CA1416 // Validate platform compatibility
-                process.Start();
+                    process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
+                }
+                catch (Exception ex)
+                {
+                    ProcessStartError = ex.Message + Environment.NewLine + ex.StackTrace;
+                    return string.Empty;
+                }
 
                 process.BeginOutputReadLine();
 
@@ -382,9 +392,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     };
 
+                    try
+                    {
 #pragma warning disable CA1416 // Validate platform compatibility
-                    process.Start();
+                        process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
+                    }
+                    catch (Exception ex)
+                    {
+                        ProcessStartError = ex.Message + Environment.NewLine + ex.StackTrace;
+                        return;
+                    }
 
                     process.BeginOutputReadLine();
                     process.WaitForExit();

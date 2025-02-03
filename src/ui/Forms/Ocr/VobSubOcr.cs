@@ -5240,6 +5240,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (_ocrMethodIndex == _ocrMethodPaddle)
             {
                 text = OcrViaPaddle(bmp, i);
+                if (!string.IsNullOrEmpty(_paddleOcr.ProcessStartError))
+                {
+                    MessageBox.Show(_paddleOcr.ProcessStartError);
+                    return true;
+                }
             }
 
             _lastLine = text;
@@ -5407,6 +5412,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             while (!resetEvent.WaitOne(100))
             {
                 Application.DoEvents();
+            }
+
+            if (!string.IsNullOrEmpty(_paddleOcr.ProcessStartError))
+            {
+                MessageBox.Show(_paddleOcr.ProcessStartError);
             }
 
             return true;
