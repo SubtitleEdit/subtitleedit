@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(2555).Wait();
+                Task.Delay(3755).Wait(cancellationToken);
                 postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
@@ -79,17 +79,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                try
-                {
-                    _client.Dispose();
-                }
-                catch
-                {
-                    // ignore
-                }
-                Task.Delay(5307).Wait();
-                _client = new HttpClient();
-                _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+                Task.Delay(7555).Wait(cancellationToken);
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            {
+                Task.Delay(9555).Wait(cancellationToken);
                 postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
@@ -111,9 +109,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 var resultList = new List<string>();
                 var parser = new SeJsonParser();
                 var alternatives = parser.GetArrayElementsByName(resultContent, "alternatives");
-                if (alternatives.Count > 0)
+                var data = parser.GetFirstObject(resultContent, "data");
+
+                if (data == null && alternatives.Count > 0 && alternatives[0] != null)
                 {
-                    var resultText = Json.DecodeJsonText(alternatives[0]);
+                    data = alternatives[0];
+                }
+
+                if (!string.IsNullOrEmpty(data))
+                { 
+                    var resultText = Json.DecodeJsonText(data);
                     var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
                     return Task.FromResult(resultTextWithFixedNewLines.Trim());
                 }
