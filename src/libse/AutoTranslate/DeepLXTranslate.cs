@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -63,15 +65,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 sourceLanguageCode = "zh";
             }
 
-            var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+            var postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+            var result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
             if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
                 Task.Delay(2555).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
@@ -88,8 +90,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Task.Delay(5307).Wait();
                 _client = new HttpClient();
                 _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
@@ -107,30 +109,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             try
             {
                 var resultList = new List<string>();
-                var parser = new JsonParser();
-                var x = (Dictionary<string, object>)parser.Parse(resultContent);
-                foreach (var k in x.Keys)
+                var parser = new SeJsonParser();
+                var alternatives = parser.GetArrayElementsByName(resultContent, "alternatives");
+                if (alternatives.Count > 0)
                 {
-                    if (x[k] is List<object> mainList)
-                    {
-                        foreach (var mainListItem in mainList)
-                        {
-                            if (mainListItem is Dictionary<string, object> innerDic)
-                            {
-                                foreach (var transItem in innerDic.Keys)
-                                {
-                                    if (transItem == "text")
-                                    {
-                                        var s = innerDic[transItem].ToString();
-                                        resultList.Add(s);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    var resultText = Json.DecodeJsonText(alternatives[0]);
+                    var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
+                    return Task.FromResult(resultTextWithFixedNewLines.Trim());
                 }
-
-                return Task.FromResult(string.Join(Environment.NewLine, resultList));
+                else
+                {
+                    SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
+                    return Task.FromResult(string.Empty);
+                }
             }
             catch (Exception ex)
             {
@@ -139,14 +130,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
         }
 
-        private static FormUrlEncodedContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
+        private static StringContent MakeStringContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
-            return new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("text", text),
-                new KeyValuePair<string, string>("target_lang", targetLanguageCode),
-                new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
-            });
+            var input = "{ \"source_lang\": \"" + sourceLanguageCode + "\", \"target_lang\": \"" + targetLanguageCode + "\", \"text\": \"" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var content = new StringContent(input, Encoding.UTF8);
+            return content;
         }
     }
 }
