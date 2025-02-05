@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     public class PaddleOcr
     {
         public string Error { get; set; }
-        private List<PaddleOcrResultParser.TextDetectionResult> _textDetectionResults = new List<PaddleOcrResultParser.TextDetectionResult>();
         private string _paddingOcrPath;
         private string _clsPath;
         private string _detPath;
@@ -117,13 +116,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             _log.Clear();
             var detFilePrefix = language;
-            if (language != "en" && language != "ch")
+            if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
             {
                 detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
             }
             else if (language == "ch")
             {
                 detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
+            }
+            else if (LatinLanguageCodes.Contains(language))
+            {
+                detFilePrefix = $"en{Path.DirectorySeparatorChar}en_PP-OCRv3_det_infer";
             }
             else
             {
@@ -190,7 +193,41 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-                process.OutputDataReceived += OutputHandler;
+
+                var result = string.Empty;
+
+                process.OutputDataReceived += (sendingProcess, outLine) =>
+                {
+                    if (string.IsNullOrWhiteSpace(outLine.Data))
+                    {
+                        return;
+                    }
+
+                    _log.AppendLine(outLine.Data);
+
+                    if (outLine.Data.Contains("ppocr INFO: **********"))
+                    {
+                        return;
+                    }
+                    else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+                    {
+                        result = string.Empty;
+                        return;
+                    }
+                    else if (outLine.Data.Contains("ppocr INFO:"))
+                    {
+                        // Regex pattern to extract the text inside quotes
+                        string textPattern = @"['""].*['""]";
+                        var textMatch = Regex.Match(outLine.Data, textPattern);
+
+                        if (textMatch.Success)
+                        {
+                            string extractedText = textMatch.Value.Trim('\'', '"');
+                            result += extractedText + Environment.NewLine;
+                        }
+                    }
+                };
+
                 process.ErrorDataReceived += (sendingProcess, errorLine) =>
                 {
                     if (errorLine == null || string.IsNullOrWhiteSpace(errorLine.Data))
@@ -202,7 +239,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _log.AppendLine(errorLine.Data);
                     SeLogger.Error("PaddleOcrError: " + _log.ToString());
                 };
-                _textDetectionResults.Clear();
 
                 try
                 {
@@ -232,12 +268,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         // ignore
                     }
 
-                    if (_textDetectionResults.Count == 0)
-                    {
-                        return string.Empty;
-                    }
-
-                    var result = MakeResult(_textDetectionResults);
                     return result;
                 }
                 catch (Exception ex)
@@ -255,13 +285,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             _log.Clear();
             var detFilePrefix = language;
-            if (language != "en" && language != "ch")
+            if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
             {
                 detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
             }
             else if (language == "ch")
             {
                 detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
+            }
+            else if (LatinLanguageCodes.Contains(language))
+            {
+                detFilePrefix = $"en{Path.DirectorySeparatorChar}en_PP-OCRv3_det_infer";
             }
             else
             {
@@ -497,101 +531,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return borderedBitmap;
-        }
-
-        private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
-        {
-            var sb = new StringBuilder();
-            var lines = MakeLines(textDetectionResults);
-            foreach (var line in lines)
-            {
-                var text = string.Join(" ", line.Select(p => p.Text));
-                sb.AppendLine(text);
-            }
-
-            return sb.ToString().Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
-        }
-
-        private List<List<PaddleOcrResultParser.TextDetectionResult>> MakeLines(List<PaddleOcrResultParser.TextDetectionResult> input)
-        {
-            var result = new List<List<PaddleOcrResultParser.TextDetectionResult>>();
-            var heightAverage = input.Average(p => p.BoundingBox.Height);
-            var sorted = input.OrderBy(p => p.BoundingBox.Center.Y);
-            var line = new List<PaddleOcrResultParser.TextDetectionResult>();
-            PaddleOcrResultParser.TextDetectionResult last = null;
-            foreach (var element in sorted)
-            {
-                if (last == null)
-                {
-                    line.Add(element);
-                }
-                else
-                {
-                    if (element.BoundingBox.Center.Y > last.BoundingBox.TopLeft.Y + heightAverage)
-                    {
-
-                        result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
-                        line = new List<PaddleOcrResultParser.TextDetectionResult>
-                        {
-                            element
-                        };
-                    }
-                    else
-                    {
-                        line.Add(element);
-                    }
-                }
-
-                last = element;
-            }
-
-            if (line.Count > 0)
-            {
-                result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
-            }
-
-            return result;
-        }
-
-        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            if (outLine == null || string.IsNullOrWhiteSpace(outLine.Data))
-            {
-                return;
-            }
-
-            _log.AppendLine(outLine.Data);
-
-            if (!outLine.Data.Contains("ppocr INFO:"))
-            {
-                return;
-            }
-
-            var arr = outLine.Data.Split(new[] { "ppocr INFO: " }, StringSplitOptions.None);
-            if (arr.Length != 2)
-            {
-                return;
-            }
-
-            try
-            {
-                var data = arr[1];
-                string pattern = @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
-                var match = Regex.Match(data, pattern);
-                if (match.Success)
-                {
-                    var parser = new PaddleOcrResultParser();
-                    var x = parser.Parse(data);
-                    _textDetectionResults.Add(x);
-                }
-            }
-            catch (Exception ex)
-            {
-                SeLogger.Error(ex, "Log: " + _log.ToString());
-                throw;
-            }
-
-            // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
         }
 
         public static List<OcrLanguage2> GetLanguages()
