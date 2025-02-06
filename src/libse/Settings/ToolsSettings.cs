@@ -77,9 +77,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GroqApiKey { get; set; }
         public string GroqModel { get; set; }
         public string DeepSeekUrl { get; set; }
+        public string AvalAiUrl { get; set; }
         public string DeepSeekPrompt { get; set; }
+        public string AvalAiPrompt { get; set; }
         public string DeepSeekApiKey { get; set; }
         public string DeepSeekModel { get; set; }
+        public string AvalAiApiKey { get; set; }
+        public string AvalAiModel { get; set; }
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -491,6 +495,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DeepSeekUrl = "https://api.deepseek.com/chat/completions";
             DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             DeepSeekModel = DeepSeekTranslate.Models[0];
+            AvalAiUrl = "https://api.avalai.ir/v1/chat/completions";
+            AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            AvalAiModel = AvalAi.Models[0];
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OpenRouterModel = OpenRouterTranslate.Models[0];

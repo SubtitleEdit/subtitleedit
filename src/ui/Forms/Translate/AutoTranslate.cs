@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new AnthropicTranslate(),
                 new GroqTranslate(),
                 new DeepSeekTranslate(),
+                new AvalAi(),
                 new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
@@ -467,6 +468,31 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Items.Clear();
                 comboBoxFormality.Items.AddRange(DeepSeekTranslate.Models);
                 comboBoxFormality.Text = Configuration.Settings.Tools.DeepSeekModel;
+
+                return;
+            }
+
+            if (engineType == typeof(AvalAi))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AvalAiUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AvalAiApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(AvalAi.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.AvalAiModel ;
 
                 return;
             }
@@ -1217,6 +1243,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.DeepSeekApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.DeepSeekModel = comboBoxFormality.Text.Trim();
             }
+
+            if (engineType == typeof(AvalAi) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AvalAiApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.AvalAiModel = comboBoxFormality.Text.Trim();
+            }
+
 
             if (engineType == typeof(OpenRouterTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
