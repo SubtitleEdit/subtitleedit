@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
         public Keys MainGeneralToggleBookmarks { get; set; }
         public Keys MainGeneralFocusTextBox { get; set; }
+        public Keys MainGeneralCycleAudioTrack { get; set; }
         public Keys MainGeneralToggleBookmarksAddComment { get; set; }
         public Keys MainGeneralEditBookmark { get; set; }
         public Keys MainGeneralClearBookmarks { get; set; }
@@ -128,11 +129,13 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxSplitAtCursor { get; set; }
         public Keys MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public Keys MainTextBoxSplitAtCursorAndVideoPosPlay { get; set; }
         public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }
         public Keys MainTextBoxMoveLastWordDown { get; set; }
         public Keys MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public Keys MainTextBoxMoveLastWordDownCurrent { get; set; }
         public Keys MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
+        public Keys MainTextBoxMoveFirstWordToPrev { get; set; }
         public Keys MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public Keys MainTextBoxSelectionToLower { get; set; }
         public Keys MainTextBoxSelectionToUpper { get; set; }
@@ -380,6 +383,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAutoCalcCurrentDurationByMinReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed);
             MainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
             MainGeneralFocusTextBox = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralFocusTextBox);
+            MainGeneralCycleAudioTrack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralCycleAudioTrack);
             MainGeneralToggleBookmarksAddComment = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             MainGeneralEditBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralEditBookmarks);
             MainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
@@ -453,11 +457,13 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndAutoBr = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndAutoBr);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+            MainTextBoxSplitAtCursorAndVideoPosPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay);
             MainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
             MainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             MainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             MainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
             MainTextBoxMoveFromCursorToNextAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
+            MainTextBoxMoveFirstWordToPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordToPrev);
             MainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             MainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             MainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);

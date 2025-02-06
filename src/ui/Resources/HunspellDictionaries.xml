@@ -252,10 +252,10 @@
 		<Description>Brazilian Portuguese Spelling Dictionary 2009 José João de Almeida - Firefox</Description>
 	</Dictionary>
 	<Dictionary>
-		<EnglishName>Portuguese (European Portuguese Dictionary - PRE AO90)</EnglishName>
+		<EnglishName>Portuguese (European Portuguese Dictionary)</EnglishName>
 		<NativeName>Português</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/17990/9/oo3x-pt-pt-preao-16.10.1.2.oxt</DownloadLink>
-		<Description>Corretores Ortográficos para Português de Portugal</Description>
+		<DownloadLink>http://natura.di.uminho.pt/download/sources/Dictionaries/libreoffice/oo3x-pt_PT.oxt</DownloadLink>
+		<Description>Dicionário em versão Acordo Ortográfico para Português de Portugal - LibreOffice</Description>
 	</Dictionary>
 	<Dictionary>
 		<EnglishName>Romanian</EnglishName>

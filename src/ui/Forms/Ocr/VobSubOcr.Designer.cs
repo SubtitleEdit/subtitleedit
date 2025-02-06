@@ -54,6 +54,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
+            this.groupBoxPaddle = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.nikseComboBoxPaddleLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxOcrMethod = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
             this.checkBoxTesseractFallback = new System.Windows.Forms.CheckBox();
@@ -177,8 +180,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.underlineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
+            this.checkBoxPaddleOcrUseGpu = new System.Windows.Forms.CheckBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
+            this.groupBoxPaddle.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxCloudVision.SuspendLayout();
@@ -494,6 +499,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxOcrMethod
             // 
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxPaddle);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
@@ -506,6 +512,50 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod.TabIndex = 0;
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
+            // 
+            // groupBoxPaddle
+            // 
+            this.groupBoxPaddle.Controls.Add(this.checkBoxPaddleOcrUseGpu);
+            this.groupBoxPaddle.Controls.Add(this.label5);
+            this.groupBoxPaddle.Controls.Add(this.nikseComboBoxPaddleLanguages);
+            this.groupBoxPaddle.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPaddle.Name = "groupBoxPaddle";
+            this.groupBoxPaddle.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxPaddle.TabIndex = 8;
+            this.groupBoxPaddle.TabStop = false;
+            this.groupBoxPaddle.Text = "Paddle OCR";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(18, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Language";
+            // 
+            // nikseComboBoxPaddleLanguages
+            // 
+            this.nikseComboBoxPaddleLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxPaddleLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxPaddleLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxPaddleLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxPaddleLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxPaddleLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxPaddleLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxPaddleLanguages.DropDownHeight = 400;
+            this.nikseComboBoxPaddleLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxPaddleLanguages.DropDownWidth = 195;
+            this.nikseComboBoxPaddleLanguages.FormattingEnabled = true;
+            this.nikseComboBoxPaddleLanguages.Location = new System.Drawing.Point(98, 20);
+            this.nikseComboBoxPaddleLanguages.MaxLength = 32767;
+            this.nikseComboBoxPaddleLanguages.Name = "nikseComboBoxPaddleLanguages";
+            this.nikseComboBoxPaddleLanguages.SelectedIndex = -1;
+            this.nikseComboBoxPaddleLanguages.SelectedItem = null;
+            this.nikseComboBoxPaddleLanguages.SelectedText = "";
+            this.nikseComboBoxPaddleLanguages.Size = new System.Drawing.Size(195, 21);
+            this.nikseComboBoxPaddleLanguages.TabIndex = 1;
+            this.nikseComboBoxPaddleLanguages.UsePopupWindow = false;
             // 
             // comboBoxOcrMethod
             // 
@@ -520,7 +570,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOcrMethod.DropDownWidth = 366;
             this.comboBoxOcrMethod.FormattingEnabled = true;
-            this.comboBoxOcrMethod.Items.AddRange(new object[] {
+            this.comboBoxOcrMethod.Items.AddRange(new string[] {
             "OCR via Tesseract",
             "OCR via image compare",
             "OCR via Microsoft MODI",
@@ -586,7 +636,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTesseractEngineMode.DropDownWidth = 195;
             this.comboBoxTesseractEngineMode.FormattingEnabled = true;
-            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
+            this.comboBoxTesseractEngineMode.Items.AddRange(new string[] {
             "Original Tesseract only (can detect italic)",
             "Neural nets LSTM only",
             "Tesseract + LSTM",
@@ -844,7 +894,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxNOcrLineSplitMinHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxNOcrLineSplitMinHeight.DropDownWidth = 103;
             this.comboBoxNOcrLineSplitMinHeight.FormattingEnabled = true;
-            this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new object[] {
+            this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new string[] {
             "Auto",
             "5",
             "6",
@@ -1152,7 +1202,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxLineSplitMinLineHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLineSplitMinLineHeight.DropDownWidth = 121;
             this.comboBoxLineSplitMinLineHeight.FormattingEnabled = true;
-            this.comboBoxLineSplitMinLineHeight.Items.AddRange(new object[] {
+            this.comboBoxLineSplitMinLineHeight.Items.AddRange(new string[] {
             "Auto",
             "5",
             "6",
@@ -2286,6 +2336,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
+            // checkBoxPaddleOcrUseGpu
+            // 
+            this.checkBoxPaddleOcrUseGpu.AutoSize = true;
+            this.checkBoxPaddleOcrUseGpu.Location = new System.Drawing.Point(98, 59);
+            this.checkBoxPaddleOcrUseGpu.Name = "checkBoxPaddleOcrUseGpu";
+            this.checkBoxPaddleOcrUseGpu.Size = new System.Drawing.Size(67, 17);
+            this.checkBoxPaddleOcrUseGpu.TabIndex = 2;
+            this.checkBoxPaddleOcrUseGpu.Text = "Use GPU (Only affects GPU version)";
+            this.checkBoxPaddleOcrUseGpu.UseVisualStyleBackColor = true;
+            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2306,6 +2366,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import/OCR VobSub (sub/idx) subtitle";
+            this.Activated += new System.EventHandler(this.VobSubOcr_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VobSubOcr_FormClosing);
             this.Shown += new System.EventHandler(this.FormVobSubOcr_Shown);
             this.ResizeEnd += new System.EventHandler(this.VobSubOcr_ResizeEnd);
@@ -2313,6 +2374,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
+            this.groupBoxPaddle.ResumeLayout(false);
+            this.groupBoxPaddle.PerformLayout();
             this.GroupBoxTesseractMethod.ResumeLayout(false);
             this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxModiMethod.ResumeLayout(false);
@@ -2518,5 +2581,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Label labelCloudVisionLanguage;
         private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
         private System.Windows.Forms.CheckBox checkBoxSeHandlesTextMerge;
+        private System.Windows.Forms.GroupBox groupBoxPaddle;
+        private System.Windows.Forms.Label label5;
+        private NikseComboBox nikseComboBoxPaddleLanguages;
+        private System.Windows.Forms.CheckBox checkBoxPaddleOcrUseGpu;
     }
 }

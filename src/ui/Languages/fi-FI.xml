@@ -2,8 +2,8 @@
 <Language Name="suomi">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [04-06-2024]</TranslatedBy>
+    <Version>4.0.11</Version>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [09-01-2025]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1021,6 +1021,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <Audio>Ääni</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Esiasetus</Preset>
+    <PixelFormat>Kuvapistemuoto</PixelFormat>
     <Crf>Vakionopeus (CRF)</Crf>
     <TuneFor>Virityksen kohde</TuneFor>
     <AlignRight>Tasaus oikealle</AlignRight>
@@ -1455,6 +1456,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Luo tyhjä video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Luo video kiinteästi upotetullla tekstityksellä...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Luo video lisätyin/poistetuin upotetuin tekstityksin</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Luo läpikuultava video tekstityksin</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Ääni tekstiksi ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Tuo kappaleet videosta</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Luo/tuo kohtauksen vaihtoja</GenerateImportShotChanges>
@@ -2471,6 +2473,7 @@ emmän kuin</LengthGreaterThan>
     <WaveformUseFFmpeg>Käytä purkamisessa FFmpeg-sovellusta</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Käytä vain etukeskikanavaa (5.1/7.1-äänet)</WaveformUseCenterChannelOnly>
     <DownloadX>Lataa {0}</DownloadX>
+    <ExtractingX>Puretaan {0}</ExtractingX>
     <WaveformFFmpegPath>FFmpeg-sovelluksen sijainti</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Selaa FFmpeg-sovelluksen sijainti</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Selaa VLC-sovelluksen sijainti</WaveformBrowseToVLC>
@@ -2686,6 +2689,8 @@ emmän kuin</LengthGreaterThan>
     <WaveformGoToPreviousShotChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Vuorottele seuraavan kohtauksen vaihtoa</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Siirrä kaikkia kohtausten vaihtoja yhdellä kehyksellä eteenpäin</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Siirrä kaikkia kohtausten vaihtoja yhdellä kehyksellä takaisinpäin</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Poista/vie kohtauksen vaihtoja</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Säädä aloitusta kohtauksen vaihtuessa</WaveformGuessStart>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
@@ -2790,6 +2795,7 @@ emmän kuin</LengthGreaterThan>
     <MainTextBoxMoveFirstWordFromNextUp>Siirrä seuraavan tekstityksen ensimmäinen sana edelliselle</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Siirrä ensimmäinen sana seuraavalta riviltä ylös (nykyinen)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Siirrä kohdistimen jälkeinen teksti seuraavaan tekstitykseen ja siirry seuraavaan</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Siirrä ensimmäinen sana edelliseen tekstitykseen</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Siirrä viimeinen sana ensimmäiseltä riviltä toiselle (nykyinen)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Valittu pieniksi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Valittu isoiksi</MainTextBoxSelectionToUpper>
@@ -2936,7 +2942,10 @@ emmän kuin</LengthGreaterThan>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Ei-kelpaava merkki [0] sarakkessa {1}.</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Ei-kelpaava välilyönti sarakkessa {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Pakotettu välilyönti ({0}) sarakkeessa {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>rivin loppu</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>puuttuu ennen välimerkkejä</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ peräkkäin</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Lue koko raportti: {0}.</ReportPrompt>
     <OpenReportInFolder>Avaa raportti kansiossa</OpenReportInFolder>
     <FoundXIssues>Netflix-laaduntarkastuksessa {0} ongelmaa.</FoundXIssues>
@@ -3131,6 +3140,9 @@ emmän kuin</LengthGreaterThan>
     <Angle>Kulma</Angle>
     <BoxPerLine>Laatikko joka riville (reunaviivan värinen)</BoxPerLine>
     <BoxMultiLine>Yksi laatikko (varjostuksen värinen)</BoxMultiLine>
+    <BoxPerLineShort>Laatikko per rivi</BoxPerLineShort>
+    <BoxMultiLineShort>Yksi laatikko</BoxMultiLineShort>
+    <BoxType>Laatikon tyyppi</BoxType>
     <DuplicateStyleNames>Tyylinimien kaksoiskappaleita: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3169,11 +3181,14 @@ emmän kuin</LengthGreaterThan>
     <MergingAudioTrackXOfY>Sulautetaan ääniraitaa: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Muunnetaan tektiä puheeksi: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Ääninäytteiden esikatselu</ReviewAudioClips>
+    <CustomAudioEncoding>Mukautettu äänen koodaus</CustomAudioEncoding>
     <ReviewInfo>Esikatsele ja muokkaa/poista äänipätkiä</ReviewInfo>
     <Play>Toista</Play>
     <AutoContinue>Jatka automaattisesti</AutoContinue>
     <Regenerate>Luo uudelleen</Regenerate>
     <Speed>Nopeus</Speed>
+    <Stability>Vakaus</Stability>
+    <Similarity>Samankaltaisuus</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-aikakoodaus</Title>
@@ -3442,6 +3457,7 @@ emmän kuin</LengthGreaterThan>
   <WebVttProperties>
     <UseXTimeStamp>Käytä X-TIMESTAMP-MAP -otsikkoarvoa</UseXTimeStamp>
     <MergeLines>Yhdistä ladattaessa samansisältöiset rivit</MergeLines>
+    <MergeStyleTags>Yhdistä tyylitunnisteet</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT tyylit</Title>

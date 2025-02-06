@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -227,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var buffer = new byte[4096];
             _bytesWavTotal = new FileInfo(waveFileName).Length;
             _bytesWavRead = 0;
-            _startTicks = DateTime.UtcNow.Ticks;
+            _startTicks = Stopwatch.GetTimestamp();
             timer1.Start();
             using (var source = File.OpenRead(waveFileName))
             {
@@ -325,7 +326,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var durationMs = (Stopwatch.GetTimestamp() - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _bytesWavRead;
             var estimatedTotalMs = msPerFrame * _bytesWavTotal;
             var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);

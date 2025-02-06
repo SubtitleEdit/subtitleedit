@@ -1570,6 +1570,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.GoToNextSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusWaveform));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
             AddNode(generalNode, language.FocusTextBox, nameof(Configuration.Settings.Shortcuts.GeneralFocusTextBox));
+            AddNode(generalNode, language.CycleAudioTracks, nameof(Configuration.Settings.Shortcuts.GeneralCycleAudioTrack));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, LanguageSettings.Current.Bookmarks.EditBookmark, nameof(Configuration.Settings.Shortcuts.GeneralEditBookmarks), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
@@ -1820,12 +1821,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(textBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.SplitLineAtCursorPosition, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
             AddNode(textBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.SplitLineAtCursorPositionAndAutoBr, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndAutoBr));
             AddNode(textBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos));
+            AddNode(textBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPositionPlay, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPosPlay));
             AddNode(textBoxNode, language.SplitSelectedLineBilingual, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual));
             AddNode(textBoxNode, language.MainTextBoxMoveLastWordDown, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
             AddNode(textBoxNode, language.MainTextBoxMoveFirstWordFromNextUp, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
             AddNode(textBoxNode, language.MainTextBoxMoveLastWordDownCurrent, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent));
             AddNode(textBoxNode, language.MainTextBoxMoveFirstWordUpCurrent, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent));
             AddNode(textBoxNode, language.MainTextBoxMoveFromCursorToNext, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext));
+            AddNode(textBoxNode, language.MainTextBoxMoveFirstWordToPrev, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordToPrev));
             AddNode(textBoxNode, language.MainTextBoxSelectionToLower, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
             AddNode(textBoxNode, language.MainTextBoxSelectionToUpper, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
             AddNode(textBoxNode, language.MainTextBoxSelectionToRuby, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToRuby), true);

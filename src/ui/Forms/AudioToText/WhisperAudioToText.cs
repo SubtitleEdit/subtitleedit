@@ -92,7 +92,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
             buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
             SetAdvancedLabel();
-            downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.DownloadFasterWhisperCuda;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
@@ -131,8 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelEngine.Text = LanguageSettings.Current.AudioToText.Engine;
             labelEngine.Left = comboBoxWhisperEngine.Left - labelEngine.Width - 5;
 
-            if ((Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
-                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl
                 && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd))
             {
                 Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
@@ -158,8 +156,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var engines = new List<string> { WhisperChoice.OpenAi };
             if (Configuration.IsRunningOnWindows)
             {
-                engines.Add(WhisperChoice.PurfviewFasterWhisper);
-                engines.Add(WhisperChoice.PurfviewFasterWhisperXXL);
+                engines.Add(WhisperChoice.PurfviewFasterWhisperXxl);
                 engines.Add(WhisperChoice.Cpp);
                 engines.Add(WhisperChoice.CppCuBlas);
                 engines.Add(WhisperChoice.ConstMe);
@@ -213,8 +210,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             comboBoxModels.Items.Clear();
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2 ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 foreach (var model in whisperModel.Models)
                 {
@@ -353,6 +349,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // Check if chosen whisper implementation is installed
             if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
             {
+                if (Configuration.Settings.Tools.WhisperExtraSettings == Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd)
+                {
+                    Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
+                    SetAdvancedLabel();
+                }
+
                 var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.Cpp);
                 if (!File.Exists(fileName))
                 {
@@ -395,8 +397,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
-                comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL)
+            if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 var fileName = WhisperHelper.GetWhisperPathAndFileName(comboBoxWhisperEngine.Text);
                 if (!File.Exists(fileName))
@@ -409,13 +410,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             {
                                 return;
                             }
-                        }
-
-                        if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
-                            !IsFasterWhisperCudaInstalled() &&
-                            IsFasterWhisperCudaSupported())
-                        {
-                            DownloadCudaForWhisperFaster(this);
                         }
                     }
                     else
@@ -560,16 +554,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
                 Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
 
+            UpdateLog();
+            SeLogger.WhisperInfo(textBoxLog.Text);
             if (transcript == null || transcript.Paragraphs.Count == 0)
             {
-                UpdateLog();
-                SeLogger.WhisperInfo(textBoxLog.Text);
                 IncompleteModelName = comboBoxModels.Text;
-            }
-            else
-            {
-                UpdateLog();
-                SeLogger.WhisperInfo(textBoxLog.Text);
             }
 
             timer1.Stop();
@@ -843,7 +832,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             catch
             {
                 var dir = Path.GetDirectoryName(fileName);
-                if (!IsDirectoryWritable(dir))
+                if (!FileUtil.IsDirectoryWritable(dir))
                 {
                     MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
                 }
@@ -852,20 +841,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        public static bool IsDirectoryWritable(string dirPath)
-        {
-            try
-            {
-                using (FileStream fs = File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
-                {
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+
 
         internal static string GetLanguage(string name)
         {
@@ -893,9 +869,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             //Delete invalid preprocessor_config.json file
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperCuda ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 var dir = Path.Combine(WhisperHelper.GetWhisperFolder(), "_models", model.Folder);
                 if (Directory.Exists(dir))
@@ -935,8 +909,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             var inputFile = waveFileName;
             if (!_useCenterChannelOnly &&
-                (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
-                 comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL) &&
+                comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXxl &&
                 (videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
                  videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)) &&
                 _audioTrackNumber <= 0)
@@ -947,7 +920,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var process = GetWhisperProcess(inputFile, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
-            _startTicks = DateTime.UtcNow.Ticks;
+            _startTicks = Stopwatch.GetTimestamp();
             _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
             if (!_batchMode)
@@ -977,8 +950,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 if (_cancel)
                 {
-                    if ((comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
-                         comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL) &&
+                    if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXxl &&
                         KillProcessHelper.AttachConsole((uint)process.Id))
                     {
                         KillProcessHelper.TryToKillProcessViaCtrlC(process);
@@ -1067,8 +1039,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else
             {
-                var rawText = FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8);
-                new WebVTT().LoadSubtitle(sub, rawText, srtFileName);
+                var rawText = FileUtil.ReadAllLinesShared(vttFileName, Encoding.UTF8);
+                new WebVTT().LoadSubtitle(sub, rawText, vttFileName);
                 outputText?.Add($"Loading result from {vttFileName}{Environment.NewLine}");
             }
 
@@ -1591,7 +1563,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var durationMs = (Stopwatch.GetTimestamp() - _startTicks) / 10_000;
 
             labelElapsed.Text = new TimeCode(durationMs).ToShortDisplayString();
             if (_endSeconds <= 0 || _videoInfo == null)
@@ -1834,8 +1806,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
-            else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper ||
-                     whisperChoice == WhisperChoice.PurfviewFasterWhisperXXL)
+            else if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
                 if (File.Exists(targetFile))
@@ -1866,12 +1837,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             {
                                 return;
                             }
-                        }
-
-                        if (whisperChoice == WhisperChoice.PurfviewFasterWhisper &&
-                            !IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported())
-                        {
-                            DownloadCudaForWhisperFaster(this);
                         }
                     }
                 }
@@ -2155,7 +2120,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var oldChoice = Configuration.Settings.Tools.WhisperChoice;
             Configuration.Settings.Tools.WhisperChoice = whisperChoice;
             var fileName = WhisperHelper.GetWhisperPathAndFileName();
-            if (!File.Exists(fileName) || WhisperDownload.IsOld(fileName, WhisperChoice.PurfviewFasterWhisper))
+            if (!File.Exists(fileName))
             {
                 Configuration.Settings.Tools.WhisperChoice = oldChoice;
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
@@ -2170,11 +2135,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         {
                             return;
                         }
-                    }
-
-                    if (!IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported())
-                    {
-                        DownloadCudaForWhisperFaster(this);
                     }
                 }
                 else
@@ -2311,8 +2271,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 WhisperEngineCTranslate2();
             }
-            else if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper ||
-                     comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXXL)
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXxl)
             {
                 WhisperEnginePurfviewFasterWhisper(comboBoxWhisperEngine.Text);
             }
@@ -2328,15 +2287,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         internal static void FixPurfviewWhisperStandardArgument(Label label, string engine)
         {
-            if (engine != WhisperChoice.PurfviewFasterWhisper &&
-                engine != WhisperChoice.PurfviewFasterWhisperXXL &&
+            if (engine != WhisperChoice.PurfviewFasterWhisperXxl &&
                 Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
             {
                 Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--standard", string.Empty).Trim();
+                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--beep_off", string.Empty).Trim();
             }
-            else if ((engine == WhisperChoice.PurfviewFasterWhisper || engine == WhisperChoice.PurfviewFasterWhisperXXL) &&
+            else if (engine == WhisperChoice.PurfviewFasterWhisperXxl &&
                      !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
-                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
+                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard --beep_off")
             {
                 Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
             }
@@ -2378,9 +2337,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 setCPPConstmeModelsFolderToolStripMenuItem.Visible = false;
             }
-
-            downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Visible =
-                buttonGenerate.Enabled && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
 
             downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Visible =
                 buttonGenerate.Enabled && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas;
@@ -2451,7 +2407,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             using (var form = new WhisperAdvanced(comboBoxWhisperEngine.Text))
             {
-                var res = form.ShowDialog(this);
+                form.ShowDialog(this);
                 SetAdvancedLabel();
             }
         }
@@ -2460,83 +2416,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
-            if (labelAdvanced.Right > Width && labelProgress.Font.Size == labelAdvanced.Font.Size)
+            if (labelAdvanced.Right > Width && Math.Abs(labelProgress.Font.Size - labelAdvanced.Font.Size) < 0.01)
             {
                 labelAdvanced.Font = new Font(labelAdvanced.Font.FontFamily, labelAdvanced.Font.Size - 1);
             }
-        }
-
-        private void downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DownloadCudaForWhisperFaster(this);
-        }
-
-        public static void DownloadCudaForWhisperFaster(IWin32Window owner)
-        {
-            if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "cuBLAS and cuDNN libs"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-            {
-                return;
-            }
-
-            var alreadyInstalled = IsFasterWhisperCudaInstalled();
-            if (alreadyInstalled)
-            {
-                if (MessageBox.Show("CUDA is probably already installed - reinstall?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-
-            var downloadTarget = WhisperChoice.PurfviewFasterWhisperCuda;
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
-            {
-                downloadTarget = WhisperChoice.CppCuBlasLib;
-            }
-
-            using (var downloadForm = new WhisperDownload(downloadTarget))
-            {
-                if (downloadForm.ShowDialog(owner) == DialogResult.OK)
-                {
-                }
-            }
-        }
-
-        public static bool IsFasterWhisperCudaSupported()
-        {
-            var w = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.PurfviewFasterWhisper);
-            var process = new Process { StartInfo = new ProcessStartInfo(w, "--checkcuda") { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
-            var whisperFolder = WhisperHelper.GetWhisperFolder(WhisperChoice.PurfviewFasterWhisper);
-            if (!string.IsNullOrEmpty(whisperFolder))
-            {
-                process.StartInfo.WorkingDirectory = whisperFolder;
-            }
-
-            process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.OutputDataReceived += OutputHandlerCheckCuda;
-            process.ErrorDataReceived += OutputHandlerCheckCuda;
-
-            process.Start();
-
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            while (!process.HasExited)
-            {
-                Application.DoEvents();
-            }
-
-            for (var i = 0; i < 100; i++)
-            {
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(2);
-            }
-
-            process.Dispose();
-
-            return CudaSomeDevice == true;
         }
 
         private static void OutputHandlerCheckCuda(object sendingProcess, DataReceivedEventArgs outLine)
@@ -2607,6 +2490,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = form.FixShortDuration;
                 }
             }
+        }
+
+        private void WhisperAudioToText_Activated(object sender, EventArgs e)
+        {
+            BringToFront();
         }
     }
 }

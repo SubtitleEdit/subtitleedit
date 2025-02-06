@@ -4981,6 +4981,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SplitLineAtCursorAndWaveformPosition":
                     language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SplitLineAtCursorAndWaveformPositionPlay":
+                    language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPositionPlay = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AutoDurationCurrentLine":
                     language.Main.Menu.ContextMenu.AutoDurationCurrentLine = reader.Value;
                     break;
@@ -5821,6 +5824,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/Bookmarked":
                     language.ModifySelection.Bookmarked = reader.Value;
                     break;
+                case "ModifySelection/BookmarkContains":
+                    language.ModifySelection.BookmarkContains = reader.Value;
+                    break;
                 case "ModifySelection/BlankLines":
                     language.ModifySelection.BlankLines = reader.Value;
                     break;
@@ -6313,6 +6319,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/FocusTextBox":
                     language.Settings.FocusTextBox = reader.Value;
                     break;
+                case "Settings/CycleAudioTracks":
+                    language.Settings.CycleAudioTracks = reader.Value;
+                    break;
                 case "Settings/ToggleBookmarksWithComment":
                     language.Settings.ToggleBookmarksWithComment = reader.Value;
                     break;
@@ -6729,6 +6738,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/DownloadX":
                     language.Settings.DownloadX = reader.Value;
+                    break;
+                case "Settings/ExtractingX":
+                    language.Settings.ExtractingX = reader.Value;
                     break;
                 case "Settings/WaveformFFmpegPath":
                     language.Settings.WaveformFFmpegPath = reader.Value;
@@ -7690,6 +7702,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxMoveFromCursorToNext":
                     language.Settings.MainTextBoxMoveFromCursorToNext = reader.Value;
                     break;
+                case "Settings/MainTextBoxMoveFirstWordToPrev":
+                    language.Settings.MainTextBoxMoveFirstWordToPrev = reader.Value;
+                    break;
                 case "Settings/MainTextBoxMoveLastWordDownCurrent":
                     language.Settings.MainTextBoxMoveLastWordDownCurrent = reader.Value;
                     break;
@@ -8080,8 +8095,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "NetflixQualityCheck/GlyphCheckReport":
                     language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
                     break;
-                case "NetflixQualityCheck/WhiteSpaceCheckReport":
-                    language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
+                case "NetflixQualityCheck/WhiteSpaceCheckForXReport":
+                    language.NetflixQualityCheck.WhiteSpaceCheckForXReport = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceLineEncding":
+                    language.NetflixQualityCheck.WhiteSpaceLineEncding = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceBeforePunctuation":
+                    language.NetflixQualityCheck.WhiteSpaceBeforePunctuation = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckconsecutive":
+                    language.NetflixQualityCheck.WhiteSpaceCheckconsecutive = reader.Value;
                     break;
                 case "NetflixQualityCheck/ReportPrompt":
                     language.NetflixQualityCheck.ReportPrompt = reader.Value;
@@ -8745,6 +8769,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "TextToSpeech/Speed":
                     language.TextToSpeech.Speed = reader.Value;
+                    break;
+                case "TextToSpeech/Stability":
+                    language.TextToSpeech.Stability = reader.Value;
+                    break;
+                case "TextToSpeech/Similarity":
+                    language.TextToSpeech.Similarity = reader.Value;
                     break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;

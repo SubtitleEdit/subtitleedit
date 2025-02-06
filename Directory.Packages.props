@@ -3,8 +3,9 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="MSTest" Version="3.6.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="8.0.8" />
+    <PackageVersion Include="SevenZipExtractor" Version="1.0.17" />
+    <PackageVersion Include="SharpCompress" Version="0.38.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="9.0.1" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="UTF.Unknown" Version="2.5.1" />
     <PackageVersion Include="zlib.net-mutliplatform" Version="1.0.8" />
@@ -18,7 +19,9 @@
     <PackageVersion Include="System.Security.AccessControl" Version="6.0.1" />
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageVersion Include="Vosk" Version="0.3.38" />
-    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="MSTest" Version="3.7.2" />
   </ItemGroup>
 </Project>

@@ -30,7 +30,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches.Matches);
                 if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches))
                 {
-                    sb.AppendLine("<i>" + GetRawString(lineMatches.Matches) + "</i>");
+                    sb.Append("<i>" + GetRawString(lineMatches.Matches) + "</i>");
+                    sb.Append(lineMatches.Separator);
                 }
                 else if (numberOfItalicLetters == 0 || numberOfLetters > 2 && numberOfItalicLetters < 2)
                 {
@@ -49,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = text.Replace("  ", " ");
             text = text.Replace("<i> ", " <i>");
             text = text.Replace(" </i>", "</i> ");
+            text = text.Replace("</i> <i>", " ");
             text = text.Replace("  ", " ");
 
             return text.Trim();
@@ -65,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 var beforeHasLetter = i > 0 && !Separators.Contains(matches[i - 1].Text);
-                var afterHasLetter = i < matches.Count -1 && !Separators.Contains(matches[i + 1].Text);
+                var afterHasLetter = i < matches.Count - 1 && !Separators.Contains(matches[i + 1].Text);
                 if (beforeHasLetter || afterHasLetter)
                 {
                     continue;
@@ -218,7 +220,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (line.Count > 0)
                     {
                         line.Add(t);
-                        if (index < matches.Count - 1 && matches[index + 1].Text == Environment.NewLine)
+                        if (index < matches.Count - 1 && ":)]".Contains(matches[index + 1].ToString()))
+                        {
+                            continue;
+                        }
+                        else if (index < matches.Count - 1 && matches[index + 1].Text == Environment.NewLine)
                         {
                             result.Add(new SplitItem { Matches = line, Separator = Environment.NewLine });
                             skipNext = true;

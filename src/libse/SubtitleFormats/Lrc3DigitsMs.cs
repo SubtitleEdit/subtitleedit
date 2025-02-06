@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// LRC is a format that synchronizes song lyrics with an audio/video file, [mm:ss.xxx] where mm is minutes, ss is seconds and xx is milliseconds.
     ///
-    /// https://wiki.nicksoft.info/specifications:lrc-file
+    /// https://en.wikipedia.org/wiki/LRC_(file_format)
     ///
     /// Tags:
     ///     [al:''Album where the song is from'']
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
 
-            if (subtitle.Paragraphs.Count > 4)
+            if (subtitle.Paragraphs.Count >= 1)
             {
                 var allStartWithNumber = true;
                 foreach (var p in subtitle.Paragraphs)
@@ -94,16 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
-                var fraction = p.StartTime.Milliseconds;
-                if (fraction >= 100)
-                {
-                    var ms = new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, 0).TotalMilliseconds;
-                    ms += 1000;
-                    p = new Paragraph(p.Text, ms, p.EndTime.TotalMilliseconds);
-                    fraction = 0;
-                }
-
-                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, fraction, text));
+                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, text));
 
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
@@ -146,7 +137,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
-                    var s = line.Substring(1, 8);
+                    var endBracket = line.IndexOf(']'); 
+                    var s = line.Substring(1, endBracket-1);
                     var parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {
@@ -155,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var minutes = int.Parse(parts[0]);
                             var seconds = int.Parse(parts[1]);
                             var milliseconds = int.Parse(parts[2]);
-                            var text = line.Remove(0, 10).Trim().TrimStart(']').Trim();
+                            var text = line.Remove(0, endBracket).Trim().TrimStart(']').Trim();
                             var start = new TimeCode(0, minutes, seconds, milliseconds);
                             var p = new Paragraph(start, new TimeCode(), text);
                             subtitle.Paragraphs.Add(p);
@@ -221,6 +213,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 else if (line.StartsWith("[by:", StringComparison.Ordinal)) // [by:Creator of the LRC file]
+                {
+                    if (subtitle.Paragraphs.Count < 1)
+                    {
+                        header.AppendLine(line);
+                    }
+                }
+                else if (line.StartsWith("[re:", StringComparison.Ordinal)) // editor
+                {
+                    if (subtitle.Paragraphs.Count < 1)
+                    {
+                        header.AppendLine(line);
+                    }
+                }
+                else if (line.StartsWith("[ve:", StringComparison.Ordinal)) // editor version
                 {
                     if (subtitle.Paragraphs.Count < 1)
                     {

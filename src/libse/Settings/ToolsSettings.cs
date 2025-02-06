@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateSeamlessM4TUrl { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
+        public string AutoTranslateDeepLXUrl { get; set; }
         public string AutoTranslatePapagoApiKeyId { get; set; }
         public string AutoTranslatePapagoApiKey { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
@@ -75,6 +76,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GroqPrompt { get; set; }
         public string GroqApiKey { get; set; }
         public string GroqModel { get; set; }
+        public string DeepSeekUrl { get; set; }
+        public string DeepSeekPrompt { get; set; }
+        public string DeepSeekApiKey { get; set; }
+        public string DeepSeekModel { get; set; }
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -98,10 +103,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
+        public string TextToSpeechMurfApiKey { get; set; }
+        public int TextToSpeechMurfRate { get; set; }
+        public int TextToSpeechMurfPitch { get; set; }
+        public string TextToSpeechMurfVoice { get; set; }
         public string TextToSpeechAzureApiKey { get; set; }
         public string TextToSpeechAzureRegion { get; set; }
         public string TextToSpeechElevenLabsModel { get; set; }
         public string TextToSpeechElevenLabsLanguage { get; set; }
+        public double TextToSpeechElevenLabsStability { get; set; }
+        public double TextToSpeechElevenLabsSimilarity { get; set; }
         public bool TextToSpeechPreview { get; set; }
         public bool TextToSpeechCustomAudio { get; set; }
         public bool TextToSpeechCustomAudioStereo { get; set; }
@@ -466,16 +477,20 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
-            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v2/";
+            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v4/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
+            AutoTranslateDeepLUrl = "http://localhost:1188";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             ChatGptModel = ChatGptTranslate.Models[0];
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             GroqModel = GroqTranslate.Models[0];
+            DeepSeekUrl = "https://api.deepseek.com/chat/completions";
+            DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            DeepSeekModel = DeepSeekTranslate.Models[0];
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OpenRouterModel = OpenRouterTranslate.Models[0];
@@ -488,6 +503,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = AnthropicTranslate.Models[0];
             TextToSpeechAzureRegion = "westeurope";
+            TextToSpeechElevenLabsSimilarity = 0.5;
+            TextToSpeechElevenLabsStability = 0.5;
             AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;
@@ -677,9 +694,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoOutputFileSuffix = "_new";
             GenTransparentVideoExtension = ".mkv";
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
+            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
-            WhisperPurfviewFasterWhisperDefaultCmd = "--standard";
+            WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             WhisperAutoAdjustTimings = true;

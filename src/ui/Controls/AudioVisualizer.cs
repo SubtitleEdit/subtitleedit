@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
-            if (TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _lastMouseWheelScroll).TotalSeconds > 0.25)
+            if (TimeSpan.FromTicks(Stopwatch.GetTimestamp() - _lastMouseWheelScroll).TotalSeconds > 0.25)
             { // don't set start position when scrolling with mouse wheel as it will make a bad (jumping back) forward scrolling
                 StartPositionSeconds = startPositionSeconds;
             }
@@ -1287,7 +1287,7 @@ namespace Nikse.SubtitleEdit.Controls
             _firstMove = true;
             if (e.Button == MouseButtons.Left)
             {
-                _buttonDownTimeTicks = DateTime.UtcNow.Ticks;
+                _buttonDownTimeTicks = Stopwatch.GetTimestamp();
 
                 Cursor = Cursors.VSplit;
                 double seconds = RelativeXPositionToSeconds(e.X);
@@ -2313,7 +2313,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Button == MouseButtons.Left && OnSingleClick != null)
             {
                 var diff = Math.Abs(_mouseMoveStartX - e.X);
-                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
+                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(Stopwatch.GetTimestamp() - _buttonDownTimeTicks).TotalSeconds < 0.25)
                 {
                     if (ModifierKeys == Keys.Shift && SelectedParagraph != null)
                     {
@@ -2553,7 +2553,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 StartPositionSeconds += delta / 256.0;
-                _lastMouseWheelScroll = DateTime.UtcNow.Ticks;
+                _lastMouseWheelScroll = Stopwatch.GetTimestamp();
                 if (_currentVideoPositionSeconds < _startPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
                 {
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));

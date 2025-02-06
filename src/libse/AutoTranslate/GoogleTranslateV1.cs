@@ -45,12 +45,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public Task<string> Translate(string input, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             string jsonResultString;
 
             try
             {
+                var text = input.Replace("\r'",string.Empty).Trim();
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
                 var result = _httpClient.GetAsync(url).Result;
@@ -76,6 +77,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new List<TranslationPair>
             {
+                new TranslationPair("AFAR", "aa"),
                 new TranslationPair("AFRIKAANS", "af"),
                 new TranslationPair("ALBANIAN", "sq"),
                 new TranslationPair("AMHARIC", "am"),
@@ -90,7 +92,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("BENGALI", "bn"),
                 new TranslationPair("BHOJPURI", "bho"),
                 new TranslationPair("BOSNIAN", "bs"),
+                new TranslationPair("BRETON", "br"),
                 new TranslationPair("BULGARIAN", "bg"),
+                new TranslationPair("CANTONESE", "yue"),
                 new TranslationPair("CATALAN", "ca"),
                 new TranslationPair("CEBUANO", "ceb"),
                 new TranslationPair("CHICHEWA", "ny"),
@@ -156,6 +160,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("MALAY", "ms"),
                 new TranslationPair("MALAYALAM", "ml"),
                 new TranslationPair("MALTESE", "mt"),
+                new TranslationPair("MANX", "gv"),
                 new TranslationPair("MAORI", "mi"),
                 new TranslationPair("MARATHI", "mr"),
                 new TranslationPair("MEITEILON (MANIPURI)", "mni"),
@@ -163,6 +168,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("MONGOLIAN", "mn"),
                 new TranslationPair("MYANMAR", "my"),
                 new TranslationPair("NEPALI", "ne"),
+                new TranslationPair("NKO", "bm-Nkoo"),
                 new TranslationPair("NORWEGIAN", "no"),
                 new TranslationPair("ODIA", "or"),
                 new TranslationPair("OROMO", "om"),
@@ -172,6 +178,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("PORTUGUESE", "pt-PT"),
                 new TranslationPair("PORTUGUESE (BRAZIL)", "pt"),
                 new TranslationPair("PUNJABI", "pa"),
+                new TranslationPair("PUNJABI (Shahmukhi)", "pa-Arab"),
                 new TranslationPair("QUECHUABI", "qu"),
                 new TranslationPair("ROMANIAN", "ro"),
 //                new TranslationPair("ROMANJI", "romanji"),
@@ -193,12 +200,14 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new TranslationPair("SWAHILI", "sw"),
                 new TranslationPair("SWEDISH", "sv"),
                 new TranslationPair("TAJIK", "tg"),
+                new TranslationPair("TAMAZIGHT", "ber"),
                 new TranslationPair("TAMIL", "ta"),
                 new TranslationPair("TATAR", "tt"),
                 new TranslationPair("TELUGU", "te"),
-                new TranslationPair("TETUM", "tet"), 
+                new TranslationPair("TETUM", "tet"),
                 new TranslationPair("THAI", "th"),
                 new TranslationPair("TIGRINYA", "ti"),
+                new TranslationPair("TOK PISIN", "tpi"),
                 new TranslationPair("TSONGA", "ts"),
                 new TranslationPair("TURKISH", "tr"),
                 new TranslationPair("TWI", "ak"),
@@ -218,54 +227,30 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static List<string> ConvertJsonObjectToStringLines(string result)
         {
-            var sbAll = new StringBuilder();
-            var count = 0;
-            var i = 1;
-            var level = result.StartsWith('[') ? 1 : 0;
-            while (i < result.Length - 1)
+            var parser = new SeJsonParser();
+            var arr = parser.GetArrayElements(result);
+            if (arr.Count == 0)
             {
-                var sb = new StringBuilder();
-                var start = false;
-                for (; i < result.Length - 1; i++)
+                return new List<string>();
+            }
+
+            var sbAll = new StringBuilder();
+            var translateLines = parser.GetArrayElements(arr[0]);
+            foreach (var line in translateLines)
+            {
+                var lineArr = parser.GetArrayElements(line);
+                if (lineArr.Count > 0)
                 {
-                    var c = result[i];
-                    if (start)
+                    var s = lineArr[0].Trim('"');
+                    if (s.EndsWith("\\r\\n", StringComparison.InvariantCulture))
                     {
-                        if (c == '\\' && result[i + 1] == '\\')
-                        {
-                            i++;
-                        }
-                        else if (c == '\\' && result[i + 1] == '"')
-                        {
-                            c = '"';
-                            i++;
-                        }
-                        else if (c == '"')
-                        {
-                            count++;
-                            if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
-                            {
-                                sbAll.Append(" " + sb);
-                            }
-
-                            i++;
-                            break;
-                        }
-
-                        sb.Append(c);
+                        s = s.Remove(s.Length - 4, 4);
                     }
-                    else if (c == '"')
-                    {
-                        start = true;
-                    }
-                    else if (c == '[')
-                    {
-                        level++;
-                    }
-                    else if (c == ']')
-                    {
-                        level--;
-                    }
+                    sbAll.AppendLine(s);
+                }
+                else
+                {
+                    sbAll.AppendLine();
                 }
             }
 

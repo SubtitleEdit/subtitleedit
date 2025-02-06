@@ -196,6 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            ActiveControl = null;
             _changeType = ChangeStyle.MouseMove;
             _selectedPoint = new Point(e.X, e.Y);
             Invalidate();
@@ -223,8 +224,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
         private void ShowHexColorCode(ColorHandler.Argb argb)
         {
+            if (_hexEditOn)
+            {
+                return;
+            }
+
+            _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
+
             if (_showAlpha)
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}{argb.Alpha:X2}";
@@ -233,6 +242,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
+
+            _tbHexCode.TextChanged += TextBoxHexCodeTextChanged;
         }
 
         private void SetHsvLabels(ColorHandler.Hsv hsv)
@@ -487,6 +498,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._pnlBrightness.Size = new System.Drawing.Size(24, 216);
             this._pnlBrightness.TabIndex = 39;
             this._pnlBrightness.Visible = false;
+            this._pnlBrightness.MouseClick += new System.Windows.Forms.MouseEventHandler(this._pnlBrightness_MouseClick);
             // 
             // _lblAlpha2
             // 
@@ -511,7 +523,6 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.TabIndex = 58;
             this._tbHexCode.TextChanged += new System.EventHandler(this.TextBoxHexCodeTextChanged);
             this._tbHexCode.Enter += new System.EventHandler(this.TextBoxHexCodeEnter);
-            this._tbHexCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this._tbHexCode_KeyDown);
             this._tbHexCode.Leave += new System.EventHandler(this.TextBoxHexCodeLeave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
@@ -929,6 +940,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -961,6 +976,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxHexCodeLeave(object sender, EventArgs e)
         {
+            if (_hexEditOn)
+            {
+                _hexEditOn = false;
+                CheckValidHexInput();
+            }
+
             _hexEditOn = false;
             _tbHexCode.BackColor = UiUtil.BackColor;
         }
@@ -1016,6 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PanelColorClick(Control panel)
         {
+            panel.Focus();
             var c = panel.BackColor;
             UpdateRgb($"{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}");
             _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
@@ -1037,25 +1059,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void panelC2_MouseClick(object sender, MouseEventArgs e)
         {
             PanelColorClick(_panelC2);
-
         }
 
         private void panelC3_MouseClick(object sender, MouseEventArgs e)
         {
             PanelColorClick(_panelC3);
-
         }
 
         private void panelC4_MouseClick(object sender, MouseEventArgs e)
         {
             PanelColorClick(_panelC4);
-
         }
 
         private void panelC5_MouseClick(object sender, MouseEventArgs e)
         {
             PanelColorClick(_panelC5);
-
         }
 
         private void panelC6_MouseClick(object sender, MouseEventArgs e)
@@ -1086,16 +1104,9 @@ namespace Nikse.SubtitleEdit.Forms
             _tbHexCode.MaxLength = _showAlpha ? 9 : 7;
         }
 
-        private void _tbHexCode_KeyDown(object sender, KeyEventArgs e)
+        private void _pnlBrightness_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && _hexEditOn)
-            {
-                CheckValidHexInput();
-                if (_tbHexCode.BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
-                {
-                    DialogResult = DialogResult.OK;
-                }
-            }
+
         }
     }
 }

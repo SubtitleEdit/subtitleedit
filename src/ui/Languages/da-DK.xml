@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.11</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -1012,6 +1012,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <Audio>Lyd</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
+    <PixelFormat>Pixel format</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Indstil efter</TuneFor>
     <AlignRight>Juster til højre</AlignRight>
@@ -1539,6 +1540,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
         <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Split linje ved markørposition og auto-bryd</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Split linje ved markør/videoposition og start video</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
@@ -2135,6 +2137,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <ExactlyTwoLines>Præcis to linjer</ExactlyTwoLines>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
     <Bookmarked>Bogmærket</Bookmarked>
+    <BookmarkContains>Bogmærke indeholder</BookmarkContains>
     <BlankLines>Blanke linjer</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2331,6 +2334,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SettingsName>Indstillinger</SettingsName>
     <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
     <FocusTextBox>Fokus tekstboks</FocusTextBox>
+    <CycleAudioTracks>Næste lydspor (loop)</CycleAudioTracks>
     <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
     <ClearBookmarks>Ryd bogmærker</ClearBookmarks>
     <ExportBookmarks>Eksporter bogmærker...</ExportBookmarks>
@@ -2470,6 +2474,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Brug kun forreste centerkanal (til 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Download {0}</DownloadX>
+    <ExtractingX>Udpakker {0}</ExtractingX>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
@@ -2684,6 +2689,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformGoToPreviousShotChange>Gå til forrige sceneændring</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Gå til næste sceneskift</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Toggle sceneskift</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Flyt alle sceneskiftefr en frame frem</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Flyt alle scenesken frame tilbage</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Fjern/eksporter sceneændringer</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Autojuster start via lydstyrke/sceneændring</WaveformGuessStart>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -2789,6 +2796,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Flyt tekst efter markørposition til næste undertekst, og gå til næste</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Flyt første ord til forrige undertekst</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
@@ -2936,7 +2944,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Ugyldigt tegn {0} findes i kolonne {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Ugyldigt mellemrum fundet ved kolonne {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Problem med mellemrum ({0}) fundet i kolonne {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>linjeafslutning</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>mangler inden punktum.</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ i træk</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Se hele rapporten her: {0}.</ReportPrompt>
     <OpenReportInFolder>Åbn rapport i mappen</OpenReportInFolder>
     <FoundXIssues>Netflix kvalitetstjek fundet {0} problemstillinger.</FoundXIssues>
@@ -3131,6 +3142,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Boks pr. Linje (brug konturfarve)</BoxPerLine>
     <BoxMultiLine>En boks (brug skygge farve)</BoxMultiLine>
+    <BoxPerLineShort>Boks pr linje</BoxPerLineShort>
+    <BoxMultiLineShort>Én boks</BoxMultiLineShort>
+    <BoxType>Boks type</BoxType>
     <DuplicateStyleNames>Dublerede stilnavne: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3175,6 +3189,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AutoContinue>Auto-fortsæt</AutoContinue>
     <Regenerate>Regenerer</Regenerate>
     <Speed>Fart</Speed>
+    <Stability>Stabilitet</Stability>
+    <Similarity>Lighed</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
@@ -3443,6 +3459,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
   <WebVttProperties>
     <UseXTimeStamp>Brug X-TIMESTAMP-MAP headerværdi</UseXTimeStamp>
     <MergeLines>Flet linjer med samme tekst ved indlæsning</MergeLines>
+    <MergeStyleTags>Flet stiltags</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT stilarter</Title>

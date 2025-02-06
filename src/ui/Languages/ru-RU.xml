@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.8</Version>
+    <Version>4.0.11</Version>
     <TranslatedBy>Перевод на русский: Leserg | Elheym | elfriob</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile />
@@ -1552,6 +1552,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SplitLineAtCursorPosition>Разделить строку в позиции курсора</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Разделить строку в позиции курсора и автоматически перенести</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Разделить строку в позиции курсора/видео</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Разделить строку в позиции курсора/видео и воспроизвести</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Автопродолжительность (текущая строка)</AutoDurationCurrentLine>
         <SelectAll>Выделить все</SelectAll>
         <InsertFirstLine>Вставить строку</InsertFirstLine>
@@ -1951,9 +1952,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleContainsNegativeDurationsX>Субтитры содержат отрицательную длительность в строке(-ах): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Скорость воспроизведения установлена на {0}%</SetPlayRateX>
     <ErrorLoadIdx>Не удаётся прочитать/изменить файлы .idx. Эти файлы являются частью idx/sub (называемые VobSub) и Subtitle Edit может открыть файл .sub</ErrorLoadIdx>
-    <ErrorLoadRar>Возможно файл является архивом .rar. Subtitle Edit не поддерживает загрузку сжатых файлов</ErrorLoadRar>
-    <ErrorLoadZip>Возможно файл является архивом .zip. Subtitle Edit не поддерживает загрузку сжатых файлов</ErrorLoadZip>
-    <ErrorLoad7Zip>Возможно файл является архивом 7-Zip. Subtitle Edit не поддерживает загрузку сжатых файлов</ErrorLoad7Zip>
+    <ErrorLoadRar>Вероятно, файл является архивом .rar. Subtitle Edit не поддерживает открытие сжатых файлов</ErrorLoadRar>
+    <ErrorLoadZip>Вероятно, файл является архивом .zip. Subtitle Edit не поддерживает открытие сжатых файлов</ErrorLoadZip>
+    <ErrorLoad7Zip>Вероятно, файл является архивом 7-Zip. Subtitle Edit не поддерживает открытие сжатых файлов</ErrorLoad7Zip>
     <ErrorLoadPng>Вероятно, это PNG - файл изображения. Subtitle Edit не поддерживает открытие PNG файлов</ErrorLoadPng>
     <ErrorLoadJpg>Вероятно, это JPG - файл изображения. Subtitle Edit не поддерживает открытие JPG файлов</ErrorLoadJpg>
     <ErrorLoadSrr>Вероятно, это ReScene .srr файл - не файл субтитров</ErrorLoadSrr>
@@ -2152,6 +2153,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ExactlyTwoLines>Ровно две строчки</ExactlyTwoLines>
     <MoreThanTwoLines>Более двух строк</MoreThanTwoLines>
     <Bookmarked>В закладках</Bookmarked>
+    <BookmarkContains>Закладка содержит</BookmarkContains>
     <BlankLines>Пустые строки</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2246,7 +2248,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NonDigit>Не цифры (\D)</NonDigit>
     <AnyCharacter>Все символы (.)</AnyCharacter>
     <AnyWhitespace>Все пробелы (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Не пробельный символ (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Непробельный символ (\S)</NonSpaceCharacter>
     <ZeroOrMore>Ноль или больше (*)</ZeroOrMore>
     <OneOrMore>Один или больше (+)</OneOrMore>
     <InCharacterGroup>Группа символов ([test])</InCharacterGroup>
@@ -2346,9 +2348,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
     <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
-    <ToggleBookmarks>Переключить закладки</ToggleBookmarks>
+    <ToggleBookmarks>Добавить/Удалить закладки</ToggleBookmarks>
     <FocusTextBox>Фокус на текстовом поле</FocusTextBox>
-    <ToggleBookmarksWithComment>Переключить закладки - добавить комментарий</ToggleBookmarksWithComment>
+    <CycleAudioTracks>Зациклить аудиодорожки</CycleAudioTracks>
+    <ToggleBookmarksWithComment>Добавить/Удалить закладки + комментарий</ToggleBookmarksWithComment>
     <ClearBookmarks>Очистить закладки</ClearBookmarks>
     <ExportBookmarks>Экспортировать закладки…</ExportBookmarks>
     <GoToBookmark>Перейти в закладки…</GoToBookmark>
@@ -2487,6 +2490,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Использовать только передний центральный канал (для 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Загрузить {0}</DownloadX>
+    <ExtractingX>Извлечение {0}</ExtractingX>
     <WaveformFFmpegPath>Путь к FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Обзор FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Обзор VLC portable</WaveformBrowseToVLC>
@@ -2805,14 +2809,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewListErrors>Список ошибок</ListViewListErrors>
     <ListViewListSortByX>Сортировать по {0}</ListViewListSortByX>
     <ShowStyleManager>Показать менеджер стилей</ShowStyleManager>
-    <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveLastWordDown>Переместить последнее слово в следующий субтитр</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Извлечь первое слово из следующего субтитра</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Переместить текст за позицию курсора в следующую субтитру и перейдите к следующей</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Переместить первое слово в предыдущий субтитр</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Переместить последнее слово из первой строки вниз (текущий субтитр)</MainTextBoxMoveLastWordDownCurrent>
-    <MainTextBoxSelectionToLower>Уменьшить регистр для выделения</MainTextBoxSelectionToLower>
-    <MainTextBoxSelectionToUpper>Увеличить регистр для выделения</MainTextBoxSelectionToUpper>
-    <MainTextBoxSelectionToggleCasing>Переключение выбора регистра (правильный/верхний/нижний регистр)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToLower>Выделенное строчными буквами</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Выделенное заглавными буквами</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Переключать регистр выделенного (С Заглавной/ВЕРХНИЙ/нижний)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Выбранное в Ruby (Японский)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Автопереключение определения</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоперенос текста</MainTextBoxAutoBreak>
@@ -2956,8 +2961,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <OpenImageBasedSourceFile>Открыть исходный файл на основе изображений…</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckReport>Недопустимых символов {0} найдено в столбце {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Недопустимых пробелов найдено в столбце {0}</WhiteSpaceCheckReport>
+    <GlyphCheckReport>Недопустимый символ {0} обнаружен в столбце {1}</GlyphCheckReport>
+    <WhiteSpaceCheckForXReport>Проблема с пробелами ({0}) обнаружена в столбце {1}</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>окончание строки</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>отсутствует перед знаком препинания</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ подряд</WhiteSpaceCheckconsecutive>
     <ReportPrompt>См. полный отчёт здесь: {0}</ReportPrompt>
     <OpenReportInFolder>Открыть папку с отчётом</OpenReportInFolder>
     <FoundXIssues>Проверка качества Netflix нашла {0} проблем(-ы)</FoundXIssues>
@@ -3199,6 +3207,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoContinue>Автопродолжение</AutoContinue>
     <Regenerate>Регенерировать</Regenerate>
     <Speed>Скорость</Speed>
+    <Stability>Стабильность</Stability>
+    <Similarity>Сходство</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Синхронизация SMPTE</Title>

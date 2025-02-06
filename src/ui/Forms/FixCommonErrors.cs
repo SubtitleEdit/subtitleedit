@@ -610,6 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Select();
 
             AcceptButton = buttonNextFinish;
+            textBoxListViewText.AcceptsReturn = true;
         }
 
         private void FixLargeFonts()
@@ -815,6 +816,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus(false);
+                AcceptButton = buttonFixesApply;
+                buttonFixesApply.Focus();
             }
             Cursor = Cursors.Default;
         }
@@ -895,12 +898,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
                 var typeName = fc.GetType().Name;
-
-                // do not check for shortcuts if text is being entered and a textbox is focused
-                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "NikseTextBox", "TextBox", "RichTextBox" };
-                if (textBoxTypes.Contains(typeName) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) || e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57) &&
-                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
+                
+                if (UiUtil.SkipSingleLetterShortcut(typeName, e))
                 {
                     return;
                 }
@@ -1125,6 +1124,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Visible = true;
             ShowStatus(string.Empty);
             listViewFixes.Items.Clear();
+
+            AcceptButton = buttonNextFinish;
+            buttonNextFinish.Focus();
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -1422,6 +1424,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonFixesApply.Enabled = true;
+
+            if (listViewFixes.Items.Count == 0)
+            {
+                AcceptButton = buttonNextFinish;
+                buttonNextFinish.Focus();
+            }
         }
 
         private void ButtonRefreshFixesClick(object sender, EventArgs e)

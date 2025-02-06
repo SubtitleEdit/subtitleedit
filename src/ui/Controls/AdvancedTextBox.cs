@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     args.SuppressKeyPress = true;
                 }
-                else if (args.KeyData == Keys.Home && (SelectionStart == 0 || SelectionStart > 0 && Text[SelectionStart - 1] == '\n'))
+                else if (args.KeyData == Keys.Home && (SelectionStart == 0 || (SelectionStart > 0 && Text[SelectionStart - 1] == '\n')))
                 {
                     args.SuppressKeyPress = true;
                 }
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     args.SuppressKeyPress = true;
                 }
-                else if (args.KeyData == Keys.End && (SelectionStart >= Text.Length || SelectionStart + 1 < Text.Length && Text[SelectionStart + 1] == '\n'))
+                else if (args.KeyData == Keys.End && (SelectionStart >= Text.Length || (SelectionStart + 1 < Text.Length && Text[SelectionStart + 1] == '\n')))
                 {
                     args.SuppressKeyPress = true;
                 }

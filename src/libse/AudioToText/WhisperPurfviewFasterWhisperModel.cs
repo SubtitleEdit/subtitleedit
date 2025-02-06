@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.IO;
-using static System.Net.WebRequestMethods;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -109,6 +108,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "2.9 GB",
                 Urls = MakeUrls("https://huggingface.co/Systran/faster-whisper-large-v2/resolve/main"),
                 Folder = "faster-whisper-large-v2",
+            },
+            new WhisperModel
+            {
+                Name = "large-v3-turbo",
+                Size = "1.6 GB",
+                Urls = MakeUrls("https://huggingface.co/mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/main"),
+                Folder = "faster-whisper-large-v3-turbo",
             },
             new WhisperModel
             {

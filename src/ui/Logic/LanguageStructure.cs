@@ -1952,6 +1952,7 @@
                     public string SplitLineAtCursorPosition { get; set; }
                     public string SplitLineAtCursorPositionAndAutoBr { get; set; }
                     public string SplitLineAtCursorAndWaveformPosition { get; set; }
+                    public string SplitLineAtCursorAndWaveformPositionPlay { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
                     public string InsertFirstLine { get; set; }
@@ -2288,6 +2289,7 @@
             public string ExactlyTwoLines { get; set; }
             public string MoreThanTwoLines { get; set; }
             public string Bookmarked { get; set; }
+            public string BookmarkContains { get; set; }
             public string BlankLines { get; set; }
         }
 
@@ -2512,6 +2514,7 @@
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
             public string FocusTextBox { get; set; }
+            public string CycleAudioTracks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
             public string ExportBookmarks { get; set; }
@@ -2655,6 +2658,7 @@
             public string WaveformUseFFmpeg { get; set; }
             public string WaveformUseCenterChannelOnly { get; set; }
             public string DownloadX { get; set; }
+            public string ExtractingX { get; set; }
             public string WaveformFFmpegPath { get; set; }
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }
@@ -2978,6 +2982,7 @@
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
             public string MainTextBoxMoveFromCursorToNext { get; set; }
+            public string MainTextBoxMoveFirstWordToPrev { get; set; }
             public string MainTextBoxMoveLastWordDownCurrent { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
@@ -3136,7 +3141,10 @@
         public class NetflixQualityCheck
         {
             public string GlyphCheckReport { get; set; }
-            public string WhiteSpaceCheckReport { get; set; }
+            public string WhiteSpaceCheckForXReport { get; set; }
+            public string WhiteSpaceLineEncding { get; set; }
+            public string WhiteSpaceBeforePunctuation { get; set; }
+            public string WhiteSpaceCheckconsecutive { get; set; }
             public string ReportPrompt { get; set; }
             public string OpenReportInFolder { get; set; }
             public string FoundXIssues { get; set; }
@@ -3398,6 +3406,8 @@
             public string AutoContinue { get; set; }
             public string Regenerate { get; set; }
             public string Speed { get; set; }
+            public string Stability { get; set; }
+            public string Similarity { get; set; }
         }
 
         public class TimedTextSmpteTiming
