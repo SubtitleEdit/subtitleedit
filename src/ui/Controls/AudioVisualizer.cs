@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Controls
 {
