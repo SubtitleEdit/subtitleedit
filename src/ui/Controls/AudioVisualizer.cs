@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -429,9 +431,11 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            const double additionalSeconds = 15.0; // Helps when scrolling
-            var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
-            var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
+            const double additionalEndSeconds = 15.0; // Helps when scrolling
+            const double additionalStartSeconds = 5.0; // This takes up too much real estate when trying to render things
+
+            var startThresholdMilliseconds = (_startPositionSeconds - additionalStartSeconds) * TimeCode.BaseUnit;
+            var endThresholdMilliseconds = (EndPositionSeconds + additionalEndSeconds) * TimeCode.BaseUnit;
             var displayableParagraphs = new List<Paragraph>();
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -446,7 +450,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
                 {
                     displayableParagraphs.Add(p);
-                    if (displayableParagraphs.Count > 99)
+                    if (displayableParagraphs.Count > 199) // Performance
                     {
                         break;
                     }
