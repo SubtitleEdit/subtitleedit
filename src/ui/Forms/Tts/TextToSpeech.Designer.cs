@@ -36,8 +36,6 @@
             this.labelEngine = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.chkVoiceOver = new System.Windows.Forms.CheckBox();
-            this.chkusePiper2Pass = new System.Windows.Forms.CheckBox();
-            this.checkBox_AdjustAudio = new System.Windows.Forms.CheckBox();
             this.nikseUpDownStability = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.nikseUpDownSimilarity = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSimilarity = new Nikse.SubtitleEdit.Controls.NikseLabel();
@@ -129,8 +127,6 @@
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxSettings.Controls.Add(this.chkVoiceOver);
-            this.groupBoxSettings.Controls.Add(this.chkusePiper2Pass);
-            this.groupBoxSettings.Controls.Add(this.checkBox_AdjustAudio);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownStability);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownSimilarity);
             this.groupBoxSettings.Controls.Add(this.labelSimilarity);
@@ -169,28 +165,6 @@
             this.chkVoiceOver.TabIndex = 107;
             this.chkVoiceOver.Text = "Use Voiceover";
             this.chkVoiceOver.UseVisualStyleBackColor = true;
-            // 
-            // chkusePiper2Pass
-            // 
-            this.chkusePiper2Pass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkusePiper2Pass.AutoSize = true;
-            this.chkusePiper2Pass.Location = new System.Drawing.Point(214, 367);
-            this.chkusePiper2Pass.Name = "chkusePiper2Pass";
-            this.chkusePiper2Pass.Size = new System.Drawing.Size(171, 17);
-            this.chkusePiper2Pass.TabIndex = 106;
-            this.chkusePiper2Pass.Text = "2 pass speed correction (piper)";
-            this.chkusePiper2Pass.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_AdjustAudio
-            // 
-            this.checkBox_AdjustAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox_AdjustAudio.AutoSize = true;
-            this.checkBox_AdjustAudio.Location = new System.Drawing.Point(214, 344);
-            this.checkBox_AdjustAudio.Name = "checkBox_AdjustAudio";
-            this.checkBox_AdjustAudio.Size = new System.Drawing.Size(127, 17);
-            this.checkBox_AdjustAudio.TabIndex = 105;
-            this.checkBox_AdjustAudio.Text = "Adapt speed (ffmpeg)";
-            this.checkBox_AdjustAudio.UseVisualStyleBackColor = true;
             // 
             // nikseUpDownStability
             // 
@@ -663,8 +637,6 @@
         private Controls.NikseUpDown nikseUpDownSimilarity;
         private Controls.NikseLabel labelSimilarity;
         private Controls.NikseLabel labelStability;
-        private System.Windows.Forms.CheckBox checkBox_AdjustAudio;
-        private System.Windows.Forms.CheckBox chkusePiper2Pass;
         private System.Windows.Forms.CheckBox chkVoiceOver;
     }
 }
