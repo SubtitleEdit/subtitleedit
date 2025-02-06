@@ -11,8 +11,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class DownloadYouTubeDl : Form
     {
-        public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2024.11.04/yt-dlp.exe";
-        public const string Sha512Hash = "58d62d5265f769a944661b1b7ae4dc7bd521714758989d4fcae6ee23f577bb7b9b5cd38d4cda106646922760c1e7be0761305ba76fd49e0632c6799c27e020af";
+        public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.01.15/yt-dlp.exe";
+        public const string Sha512Hash = "cbb9e381d6e23f56ee21e47aadafb5570f4f01f93faee063d1df6832b1d4a3d1c499c9a510e364ff64339618e72162e183c681777f642f22a29aa7520786d238";
         public bool AutoClose { get; internal set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
 

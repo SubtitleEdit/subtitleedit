@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.10</Version>
+    <Version>4.0.11</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
@@ -1542,6 +1542,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
         <SplitLineAtCursorPosition>Podziel linię w pozycji kursora</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Podziel linię w pozycji kursora i automatycznie przełam linię</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Podziel linię w pozycji kursora/wideo</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Podziel linię w pozycji kursora/wideo i odtwórz</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Automatyczny czas trwania (bieżąca linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
@@ -2141,6 +2142,7 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Dokładnie dwie linie</ExactlyTwoLines>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
     <Bookmarked>Dodano do zakładek</Bookmarked>
+    <BookmarkContains>Zakładka zawiera</BookmarkContains>
     <BlankLines>Puste linie</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2337,6 +2339,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <SettingsName>Ustawienia</SettingsName>
     <ToggleBookmarks>Przełączanie zakładek</ToggleBookmarks>
     <FocusTextBox>Koncentracja na polu tekstowym</FocusTextBox>
+    <CycleAudioTracks>Cykliczne ścieżki audio</CycleAudioTracks>
     <ToggleBookmarksWithComment>Przełączanie zakładek - dodaj komentarz</ToggleBookmarksWithComment>
     <ClearBookmarks>Wyczyść zakładki</ClearBookmarks>
     <ExportBookmarks>Eksportuj zakładki...</ExportBookmarks>
@@ -2946,7 +2949,10 @@ Kontynuować?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Znaleziono nieprawidłowy znak {0} w kolumnie {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>W kolumnie {0} znaleziono nieprawidłową spację.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Znaleziono problem ze spacją ({0}) w kolumnie {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>zakończenie linii</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>brak przed znakiem interpunkcyjnym</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ z rzędu</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Pełny raport można zobaczyć tutaj: {0}.</ReportPrompt>
     <OpenReportInFolder>Otwórz folder z raportem</OpenReportInFolder>
     <FoundXIssues>Kontrola jakości Netflix znalazła {0:#,##0} problemy/ów.</FoundXIssues>

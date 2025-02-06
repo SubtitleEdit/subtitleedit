@@ -12,26 +12,24 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GroqTranslate : IAutoTranslator
+    public class DeepSeekTranslate : IAutoTranslator
     {
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "Groq";
+        public static string StaticName { get; set; } = "DeepSeek";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://groq.com/";
+        public string Url => "https://api.deepseek.com";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 
         /// <summary>
-        /// See https://console.groq.com/docs/models
+        /// See https://api-docs.deepseek.com/
         /// </summary>
         public static string[] Models => new[]
         {
-            "llama-3.3-70b-versatile",
-            "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-            "gemma2-9b-it",
+            "deepseek-reasoner",
+            "deepseek-chat",
         };
 
         public void Initialize()
@@ -40,12 +38,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.GroqUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.DeepSeekUrl.TrimEnd('/'));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GroqApiKey))
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekApiKey))
             {
-                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.GroqApiKey);
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.DeepSeekApiKey);
             }
         }
 
@@ -59,25 +57,20 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return ListLanguages();
         }
 
-        //curl -X POST "https://api.groq.com/openai/v1/chat/completions" \
-        //-H "Authorization: Bearer $GROQ_API_KEY" \
-        //-H "Content-Type: application/json" \
-        //-d '{"messages": [{"role": "user", "content": "Explain the importance of fast language models"}], "model": "llama3-8b-8192"}
-
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.GroqModel;
+            var model = Configuration.Settings.Tools.DeepSeekModel;
             if (string.IsNullOrEmpty(model))
             {
                 model = Models[0];
-                Configuration.Settings.Tools.GroqModel = model;
+                Configuration.Settings.Tools.DeepSeekModel = model;
             }
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GroqPrompt))
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekPrompt))
             {
-                Configuration.Settings.Tools.GroqPrompt = new ToolsSettings().GroqPrompt;
+                Configuration.Settings.Tools.DeepSeekPrompt = new ToolsSettings().DeepSeekPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.GroqPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.DeepSeekPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -87,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("Groq Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("DeepSeek Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 
             result.EnsureSuccessStatusCode();

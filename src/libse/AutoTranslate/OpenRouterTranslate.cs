@@ -28,9 +28,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "meta-llama/llama-3.1-8b-instruct",
-            "openai/gpt-4o-mini",
-            "google/gemma-2-27b-it",
+            "deepseek/deepseek-r1",
+            "google/gemini-2.0-flash-thinking-exp:free",
+            "microsoft/phi-4",
+            "meta-llama/llama-3.3-70b-instruct",
+            "openai/gpt-4o-2024-11-20",
             "anthropic/claude-3.5-sonnet",
         };
 

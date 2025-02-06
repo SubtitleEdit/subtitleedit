@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -48,26 +50,46 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var postContent = new FormUrlEncodedContent(new[]
+            const int httpStatusCodeTooManyRequests = 429;
+
+            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
             {
-                new KeyValuePair<string, string>("text", text),
-                new KeyValuePair<string, string>("target_lang", targetLanguageCode),
-                new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
-            });
-            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                sourceLanguageCode = "en";
+            }
+            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "pt";
+            }
+            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "zh";
+            }
+
+            var postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+            var result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(555).Wait();
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                Task.Delay(3755).Wait(cancellationToken);
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(1007).Wait();
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                Task.Delay(7555).Wait(cancellationToken);
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            {
+                Task.Delay(9555).Wait(cancellationToken);
+                postContent = MakeStringContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
@@ -82,31 +104,42 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 throw new Exception("Forbidden! " + Environment.NewLine + Environment.NewLine + resultContent);
             }
 
-            var resultList = new List<string>();
-            var parser = new JsonParser();
-            var x = (Dictionary<string, object>)parser.Parse(resultContent);
-            foreach (var k in x.Keys)
+            try
             {
-                if (x[k] is List<object> mainList)
+                var resultList = new List<string>();
+                var parser = new SeJsonParser();
+                var alternatives = parser.GetArrayElementsByName(resultContent, "alternatives");
+                var data = parser.GetFirstObject(resultContent, "data");
+
+                if (data == null && alternatives.Count > 0 && alternatives[0] != null)
                 {
-                    foreach (var mainListItem in mainList)
-                    {
-                        if (mainListItem is Dictionary<string, object> innerDic)
-                        {
-                            foreach (var transItem in innerDic.Keys)
-                            {
-                                if (transItem == "text")
-                                {
-                                    var s = innerDic[transItem].ToString();
-                                    resultList.Add(s);
-                                }
-                            }
-                        }
-                    }
+                    data = alternatives[0];
+                }
+
+                if (!string.IsNullOrEmpty(data))
+                { 
+                    var resultText = Json.DecodeJsonText(data);
+                    var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
+                    return Task.FromResult(resultTextWithFixedNewLines.Trim());
+                }
+                else
+                {
+                    SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
+                    return Task.FromResult(string.Empty);
                 }
             }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "DeepLXTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
+                throw;
+            }
+        }
 
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+        private static StringContent MakeStringContent(string text, string sourceLanguageCode, string targetLanguageCode)
+        {
+            var input = "{ \"source_lang\": \"" + sourceLanguageCode + "\", \"target_lang\": \"" + targetLanguageCode + "\", \"text\": \"" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var content = new StringContent(input, Encoding.UTF8);
+            return content;
         }
     }
 }

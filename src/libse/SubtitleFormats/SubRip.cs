@@ -296,11 +296,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
             var line = input.Replace('،', ',')
                 .Replace('', ',')
                 .Replace('¡', ',')
+                .Replace(zeroWidthSpace, ' ') 
+                .Replace(zeroWidthNoBreakSpace, ' ') 
                 .Replace(" -> ", defaultSeparator)
                 .Replace(" —> ", defaultSeparator) // em-dash
                 .Replace(" ——> ", defaultSeparator) // em-dash
@@ -310,7 +314,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace(" - -> ", defaultSeparator)
                 .Replace(" -->> ", defaultSeparator)
                 .Replace(" ---> ", defaultSeparator)
-                .Replace(": ", ":").Trim();
+                .Replace("  ", " ")
+                .Replace(": ", ":")
+                .Replace(" :", ":")
+                .Trim();
 
             // Removed stuff after time codes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
@@ -416,9 +423,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         private static bool IsValidTimeCode(string line)
         {
-            int step = 0;
+            var step = 0;
             var max = line.Length;
-            for (int i = 0; i < max; i++)
+            for (var i = 0; i < max; i++)
             {
                 var ch = line[i];
                 if (char.IsWhiteSpace(ch))
@@ -509,6 +516,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
             }
+
             return true;
         }
     }

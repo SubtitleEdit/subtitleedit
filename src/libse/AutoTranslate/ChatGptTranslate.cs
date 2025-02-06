@@ -28,11 +28,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             "gpt-4o-mini", "o1-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "gpt-4"
         };
 
-        public static string RemovePreamble(string original, string translation)
+        public static string RemovePreamble(string original, string input)
         {
-            if (original.Contains(":"))
+            if (original.Contains(":") && input.IndexOf("<think>") < 0)
             {
-                return translation;
+                return input;
+            }
+
+            var translation = input;
+            var indexOfStartThink = translation.IndexOf("<think>");
+            var indexOfEndThink = translation.IndexOf("</think>");
+            if (indexOfStartThink >= 0 && indexOfEndThink > indexOfStartThink)
+            { 
+                translation = translation.Remove(indexOfStartThink, indexOfEndThink - indexOfStartThink + 8).Trim();
             }
 
             var regex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:");

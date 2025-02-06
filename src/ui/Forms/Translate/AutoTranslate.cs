@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new OllamaTranslate(),
                 new AnthropicTranslate(),
                 new GroqTranslate(),
+                new DeepSeekTranslate(),
                 new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
@@ -445,6 +446,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+            if (engineType == typeof(DeepSeekTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.DeepSeekUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.DeepSeekApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(DeepSeekTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.DeepSeekModel;
+
+                return;
+            }
 
             if (engineType == typeof(OpenRouterTranslate))
             {
@@ -802,6 +827,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 _cancellationTokenSource.Cancel();
                 _breakTranslation = true;
                 buttonTranslate.Enabled = false;
+                buttonStrategy.Enabled = true;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
                 Application.DoEvents();
@@ -833,6 +859,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             SaveSettings(engineType);
 
+            buttonStrategy.Enabled = false;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
@@ -957,6 +984,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+            buttonStrategy.Enabled = true;
             buttonOK.Enabled = true;
             buttonCancel.Enabled = true;
             _breakTranslation = false;
@@ -1138,7 +1166,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
-            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            if (engineType == typeof(DeepLXTranslate) && !string.IsNullOrWhiteSpace(nikseComboBoxUrl.Text))
             {
                 Configuration.Settings.Tools.AutoTranslateDeepLXUrl = nikseComboBoxUrl.Text.Trim();
             }
@@ -1182,6 +1210,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.GroqApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.GroqModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(DeepSeekTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.DeepSeekApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.DeepSeekModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(OpenRouterTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))

@@ -1396,6 +1396,7 @@
     <Word from="niej" to="nije" />
     <Word from="nili" to="niti" />
     <Word from="njie" to="nije" />
+    <Word from="njig" to="njih" />
     <Word from="njem" to="nijem" />
     <Word from="njeme" to="njene" />
     <Word from="Njuz" to="News" />
@@ -5565,6 +5566,7 @@
     <RegEx find="atursk" replaceWith="aturaln" />
     <RegEx find="azuij" replaceWith="azumij" />
     <RegEx find="([pg])asić" replaceWith="$1asit ć" />
+    <RegEx find="oani" replaceWith="osni" />
     <RegEx find="obć" replaceWith="obeć" />
     <RegEx find="obed" replaceWith="objed" />
     <RegEx find="obem" replaceWith="oblem" />
@@ -5840,6 +5842,7 @@
     <RegEx find="vma" replaceWith="vam" />
     <RegEx find="vnif" replaceWith="vnic" />
     <RegEx find="vnr" replaceWith="vne" />
+    <RegEx find="vns" replaceWith="vna" />
     <RegEx find="vnsk" replaceWith="vinsk" />
     <RegEx find="voei" replaceWith="vori" />
     <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
@@ -5847,6 +5850,7 @@
     <RegEx find="vpt" replaceWith="vot" />
     <RegEx find="vqn" replaceWith="van" />
     <RegEx find="vwg" replaceWith="veg" />
+    <RegEx find="vxe" replaceWith="vce" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
     <RegEx find="vrjt" replaceWith="vjet" />

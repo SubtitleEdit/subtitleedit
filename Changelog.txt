@@ -1,21 +1,30 @@
 ﻿Subtitle Edit Changelog
 
-4.0.11 (xth March 2025) BETA
+4.0.11 (28th January 2025)
 * NEW
    * Shortcut for "Split line and play" - thx Leon
    * Shortcut for "Cycle audio track" - thx darnn
+   * Add "Bookmark contains" option to "Modify selection" - thx BlohoJo
+   * Add PaddleOCR - thx timminator
 * IMPROVED:
    * Update Italian translation - thx bovirus
-   * Update Portuguese translation - thx hugok79
+   * Update Portuguese translation - thx hugok79/Blackspirits
    * Update Polish translation - thx admas
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
+   * Update Russian translation - thx elfriob
    * Include Whisper CuBlas again
    * Add simple retry for DeepL translate - thx rifatozkancomtr/dante3732
    * Add Icelandic to Gemini - thx dhofverberg
    * Update NLLB API from v2 to v4 - thx chelis10
    * "Auto continue" is now a little faster - thx Andrebavila 
+   * Handle Unicode zero-width-whitespace in SRT time code - thx GJK
+   * Update Faster Whisper XXL to r245.1
+   * Add retry for ElevenLabs TTS API calls - thx cvrle77
+   * Update yt-dlp to 2025.01.15
+   * Update mpv to 2025-01-15
 * FIXED:
+   * Fix Google Translate V1 API
    * Make cmd line parameters case insensitive - thx czyrichard
    * Fix LRC ms start time reading - thx AverageHoarder
    * Fix ASS color picking bug - thx rRobis
@@ -23,6 +32,9 @@
    * Fix "Remove text for HI" cmd line - thx Manujito
    * Fix for Netflix QC (write-out numbers 1-10) - thx senna2
    * Fix RemoveTextForHI webvtt issue - thx Manujito
+   * Fix "Fix overlap" issue in "Fix common errors" - thx colemar 
+   * Fix setting deeplx url - thx strong76
+   * Fix rounding in format TSV1+TSV2 - thx wegylexy
 
 
 4.0.10 (22nd December 2024)

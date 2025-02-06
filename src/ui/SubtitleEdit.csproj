@@ -77,10 +77,12 @@
     <Compile Update="Controls\SubtitleListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Forms\Ocr\DownloadPaddleOcrModels.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ShotChanges\ImportShotChangesFromSe.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\eleven-labs-voices.zip" />

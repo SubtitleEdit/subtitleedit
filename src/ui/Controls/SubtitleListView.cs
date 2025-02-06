@@ -482,8 +482,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
                 {
-                    var r = rtl 
-                        ? new Rectangle( rect.Width - 21, rect.Y + 3, 16, 16) 
+                    var r = rtl
+                        ? new Rectangle(rect.Width - 21, rect.Y + 3, 16, 16)
                         : new Rectangle(rect.X + 4, rect.Y + 3, 16, 16);
 
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], r);
@@ -1480,143 +1480,150 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SyntaxColorListViewItem(List<Paragraph> paragraphs, int i, Paragraph paragraph, ListViewItem item)
         {
-            if (item.UseItemStyleForSubItems)
+            try
             {
-                item.UseItemStyleForSubItems = false;
-                item.SubItems[ColumnIndexDuration].BackColor = BackColor;
-            }
-            if (ColumnIndexCps >= 0)
-            {
-                item.SubItems[ColumnIndexCps].BackColor = BackColor;
-            }
-            if (ColumnIndexWpm >= 0)
-            {
-                item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
-            }
-            if (ColumnIndexDuration >= 0)
-            {
-                item.SubItems[ColumnIndexDuration].BackColor = BackColor;
-            }
-
-            if (_settings.Tools.ListViewSyntaxColorDurationSmall && !paragraph.StartTime.IsMaxTime)
-            {
-                double charactersPerSecond = paragraph.GetCharactersPerSecond();
-                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                if (item.UseItemStyleForSubItems)
                 {
-                    if (ColumnIndexCps >= 0)
+                    item.UseItemStyleForSubItems = false;
+                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
+                }
+                if (ColumnIndexCps >= 0)
+                {
+                    item.SubItems[ColumnIndexCps].BackColor = BackColor;
+                }
+                if (ColumnIndexWpm >= 0)
+                {
+                    item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
+                }
+                if (ColumnIndexDuration >= 0)
+                {
+                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
+                }
+
+                if (_settings.Tools.ListViewSyntaxColorDurationSmall && !paragraph.StartTime.IsMaxTime)
+                {
+                    double charactersPerSecond = paragraph.GetCharactersPerSecond();
+                    if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
-                        item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        if (ColumnIndexCps >= 0)
+                        {
+                            item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
+                        else if (ColumnIndexDuration >= 0)
+                        {
+                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
                     }
-                    else if (ColumnIndexDuration >= 0)
+                    if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
                     {
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
+                if (_settings.Tools.ListViewSyntaxColorDurationBig &&
+                    paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
+                    ColumnIndexDuration >= 0)
                 {
                     item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
-            }
-            if (_settings.Tools.ListViewSyntaxColorDurationBig &&
-                paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
-                ColumnIndexDuration >= 0)
-            {
-                item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-            }
 
-            if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
-            {
-                var prev = paragraphs[i - 1];
-                if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
+                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
                 {
-                    if (ColumnIndexEnd >= 0)
+                    var prev = paragraphs[i - 1];
+                    if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
                     {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    }
+                        if (ColumnIndexEnd >= 0)
+                        {
+                            Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
 
-                    if (ColumnIndexStart >= 0)
-                    {
-                        item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    }
-                }
-                else
-                {
-                    if (ColumnIndexEnd >= 0)
-                    {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                    }
-
-                    if (ColumnIndexStart >= 0)
-                    {
-                        item.SubItems[ColumnIndexStart].BackColor = BackColor;
-                    }
-                }
-            }
-
-            if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
-            {
-                var next = paragraphs[i + 1];
-                var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
-                item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
-            }
-
-            if (ColumnIndexTextOriginal >= 0 && item.SubItems.Count >= ColumnIndexTextOriginal)
-            {
-                item.SubItems[ColumnIndexTextOriginal].BackColor = BackColor;
-            }
-
-            if (ColumnIndexText >= item.SubItems.Count)
-            {
-                return;
-            }
-
-            if (_settings.Tools.ListViewSyntaxColorLongLines)
-            {
-                var s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                foreach (var line in s.SplitToLines())
-                {
-                    if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        return;
-                    }
-                }
-                var noOfLines = paragraph.NumberOfLines;
-                if (s.CountCharacters(false) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
-                {
-                    if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
-                    {
-                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        if (ColumnIndexStart >= 0)
+                        {
+                            item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
                     }
                     else
                     {
-                        item.SubItems[ColumnIndexText].BackColor = BackColor;
+                        if (ColumnIndexEnd >= 0)
+                        {
+                            Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
+                        }
+
+                        if (ColumnIndexStart >= 0)
+                        {
+                            item.SubItems[ColumnIndexStart].BackColor = BackColor;
+                        }
                     }
                 }
-                else
+
+                if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
                 {
-                    item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    var next = paragraphs[i + 1];
+                    var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                    item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
                 }
-            }
-            if (_settings.Tools.ListViewSyntaxColorWideLines)
-            {
-                string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                foreach (string line in s.SplitToLines())
+
+                if (ColumnIndexTextOriginal >= 0 && item.SubItems.Count >= ColumnIndexTextOriginal)
                 {
-                    if (TextWidth.CalcPixelWidth(line) > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                    item.SubItems[ColumnIndexTextOriginal].BackColor = BackColor;
+                }
+
+                if (ColumnIndexText >= item.SubItems.Count)
+                {
+                    return;
+                }
+
+                if (_settings.Tools.ListViewSyntaxColorLongLines)
+                {
+                    var s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                    foreach (var line in s.SplitToLines())
+                    {
+                        if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        {
+                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            return;
+                        }
+                    }
+                    var noOfLines = paragraph.NumberOfLines;
+                    if (s.CountCharacters(false) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                    {
+                        if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
+                        {
+                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
+                        else
+                        {
+                            item.SubItems[ColumnIndexText].BackColor = BackColor;
+                        }
+                    }
+                    else
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        return;
+                    }
+                }
+                if (_settings.Tools.ListViewSyntaxColorWideLines)
+                {
+                    string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                    foreach (string line in s.SplitToLines())
+                    {
+                        if (TextWidth.CalcPixelWidth(line) > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                        {
+                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            return;
+                        }
+                    }
+                }
+                if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
+                    item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
+                    {
+                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
             }
-            if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
-                item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+            catch
             {
-                if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
-                {
-                    item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                }
+                // ignore
             }
         }
 

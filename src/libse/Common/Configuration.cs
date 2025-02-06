@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
+        public static readonly string PaddleOcrDirectory = DataDirectory + "PaddleOCR";
 
         public static readonly string DefaultLinuxFontName = "DejaVu Serif";
 
@@ -47,7 +48,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var pluginFileName in Directory.GetFiles(PluginsDirectory, "*.*"))
             {
-                if (pluginFileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                if (pluginFileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && 
+                    !pluginFileName.EndsWith("DeeplProTranslate.dll", StringComparison.OrdinalIgnoreCase))
                 {
                     plugins.Add(pluginFileName);
                 }

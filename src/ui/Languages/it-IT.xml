@@ -2,8 +2,8 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 12.01.2025</TranslatedBy>
+    <Version>4.0.11</Version>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.01.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2144,6 +2144,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Esattamente due linee</ExactlyTwoLines>
     <MoreThanTwoLines>Più di due righe</MoreThanTwoLines>
     <Bookmarked>Marcatori</Bookmarked>
+    <BookmarkContains>Il segnalibro contiene</BookmarkContains>
     <BlankLines>Linee vuote</BlankLines>
   </ModifySelection>
   <MultipleReplace>

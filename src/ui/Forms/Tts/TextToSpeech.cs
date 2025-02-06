@@ -17,6 +17,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
@@ -1284,6 +1285,19 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     var content = new StringContent(data, Encoding.UTF8);
                     content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+
+                    if ((int)result.StatusCode == 429)
+                    {
+                        Task.Delay(1753).Wait();
+                        result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    }
+
+                    if ((int)result.StatusCode == 429)
+                    {
+                        Task.Delay(2707).Wait();
+                        result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    }
+
                     var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                     if (!result.IsSuccessStatusCode)

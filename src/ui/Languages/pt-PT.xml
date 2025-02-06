@@ -1,11 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.10</Version>
+    <Version>4.0.11</Version>
     <TranslatedBy>Traduzido para Português de Portugal
 Por Hugo Carvalho (hugok79) e Filipe Mota (BlackSpirits)
-E-mail: mailto:hugokarvalho@hotmail.com / mailto:blackspirits@gmail.com</TranslatedBy>
+E-mail: mailto:hugokarvalho@hotmail.com / mailto:blackspirits@gmail.com
+Antigo tradutor: Marco Barbosa (moob)</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1502,7 +1503,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
         <CheckForUpdates>Verificar se há atualizações...</CheckForUpdates>
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
-        <About>&amp;Acerca</About>
+        <About>&amp;Acerca do Subtitle Edit</About>
       </Help>
       <ToolBar>
         <New>Novo</New>
@@ -2146,6 +2147,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <ExactlyTwoLines>Exatamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
     <Bookmarked>Marcador</Bookmarked>
+    <BookmarkContains>O marcador contém</BookmarkContains>
     <BlankLines>Linhas em branco</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2384,7 +2386,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleCenter>Centralizado</SubtitleCenter>
     <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
-    <SpellChecker>Corrector ortográfico</SpellChecker>
+    <SpellChecker>Corretor ortográfico</SpellChecker>
     <RememberRecentFiles>Mostrar os ficheiros recentes (para reabrir)</RememberRecentFiles>
     <StartWithLastFileLoaded>Iniciar com o último ficheiro ativo</StartWithLastFileLoaded>
     <RememberSelectedLine>Lembrar linha selecionada</RememberSelectedLine>
@@ -2469,7 +2471,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformColor>Cor</WaveformColor>
     <WaveformSelectedColor>Cor selecionada</WaveformSelectedColor>
     <WaveformBackgroundColor>Cor de fundo</WaveformBackgroundColor>
-    <WaveformCursorColor>Cor do Cursor</WaveformCursorColor>
+    <WaveformCursorColor>Cor do cursor</WaveformCursorColor>
     <WaveformTextColor>Cor do texto</WaveformTextColor>
     <WaveformTextFontSize>Tamanho do tipo de letra</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Esvaziar pastas 'Espectrogramas' e 'Formas de onda'</WaveformAndSpectrogramsFolderEmpty>
@@ -2936,7 +2938,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
     <AddXToUserDictionary>Adicionar '{0}' ao dicionário do utilizador</AddXToUserDictionary>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
-    <AutoFixNamesViaSuggestions>Corrigir também nomes através: 'sugestões do corrector'</AutoFixNamesViaSuggestions>
+    <AutoFixNamesViaSuggestions>Corrigir também nomes através: 'sugestões do corretor'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Lembrar "Utilizar sempre" a lista</RememberUseAlwaysList>

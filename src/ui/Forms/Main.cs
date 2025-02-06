@@ -6460,6 +6460,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxSourceKeyDown(object sender, KeyEventArgs e)
         {
+            var typeName = textBoxSource.GetType().Name;
+            if (UiUtil.SkipSingleLetterShortcut(typeName, e))
+            {
+                return;
+            }
+
             ShowSourceLineNumber();
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
@@ -16360,7 +16366,8 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.InitialDirectory = dirName;
             var ext = file.Extension.ToLowerInvariant();
 
-            if (ext == ".mkv" || ext == ".mks")
+            if (ext == ".mkv" || ext == ".mks" ||
+                ((ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName)))
             {
                 using (var matroska = new MatroskaFile(fileName))
                 {
@@ -17044,20 +17051,8 @@ namespace Nikse.SubtitleEdit.Forms
             var fc = UiUtil.FindFocusedControl(this);
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
-                var typeName = fc.GetType().Name;
-
-                // do not check for shortcuts if text is being entered and a textbox is focused
-                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "TextBox", "RichTextBox" };
-                if (textBoxTypes.Contains(typeName) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
-                     (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) ||
-                      e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 ||
-                      e.KeyCode == Keys.Multiply ||
-                      e.KeyCode == Keys.Add ||
-                      e.KeyCode == Keys.Subtract ||
-                      e.KeyCode == Keys.Divide ||
-                      e.KeyValue >= 48 && e.KeyValue <= 57) &&
-                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
+                var typeName = textBoxSource.GetType().Name;
+                if (UiUtil.SkipSingleLetterShortcut(typeName, e))
                 {
                     return;
                 }
@@ -18006,7 +18001,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     if (_shortcuts.VideoPlayPauseToggle == Keys.Space &&
-                        (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused || textBoxSearchWord.Focused))
+                        (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused || textBoxSearchWord.Focused || textBoxSource.Focused ))
                     {
                         return;
                     }
