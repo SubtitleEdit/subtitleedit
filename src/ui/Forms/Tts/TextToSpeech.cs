@@ -424,8 +424,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void AddAudioToVideoFile(string audioFileName)
         {
-
-            Process addAudioProcess;
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
             {
@@ -446,15 +444,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 stereo = true;
             }
-            if (chkVoiceOver.Checked)           // added
-            {
-                addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-            }
-            else
-            {
-                addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-            }
 
+            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             addAudioProcess.Start();
             while (!addAudioProcess.HasExited)
             {
@@ -490,10 +481,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private List<FileNameAndSpeedFactor> FixParagraphAudioSpeed(Subtitle subtitle, string overrideFileName)
         {
             var fileNames = new List<FileNameAndSpeedFactor>(subtitle.Paragraphs.Count);
-            //if (!checkBox_AdjustAudio.Checked)
-            //{
-            //    return fileNames;
-            //}
+
             labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
@@ -503,23 +491,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Visible = true;
             const string ext = ".wav";
 
-
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 progressBar1.Value = index + 1;
-                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count, 1.0);
-
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count);
                 var p = subtitle.Paragraphs[index];
-                var pFileName = Path.Combine(_waveFolder, index + ".wav");
-
-                if (!checkBox_AdjustAudio.Checked)
-                {
-                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
-                    continue;
-                }
-
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
+                var pFileName = Path.Combine(_waveFolder, index + ".wav");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     pFileName = Path.Combine(_waveFolder, overrideFileName);
@@ -574,15 +553,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var waveInfo = UiUtil.GetVideoInfo(outputFileName1);
-                if (!checkBox_AdjustAudio.Checked)
+                if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
                 {
-                    if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
-                    {
-                        fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
-                        continue;
-                    }
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
+                    continue;
                 }
-
 
                 var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
                 if (divisor <= 0)
@@ -593,22 +568,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var factor = (decimal)waveInfo.TotalMilliseconds / divisor;
-
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     outputFileName2 = Path.Combine(_waveFolder, $"{Path.GetFileNameWithoutExtension(overrideFileName)}_{Guid.NewGuid()}{ext}");
                 }
-
-                if (factor <= (decimal)0.8)
-                {
-                    factor = (decimal)0.8;
-                }
-                if (factor >= (decimal)1.5)
-                {
-                    factor = (decimal)1.5;
-                }
-                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count, (double)factor);
 
                 fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName2, Factor = factor });
                 var mergeProcess = VideoPreviewGenerator.ChangeSpeed(outputFileName1, outputFileName2, (float)factor);

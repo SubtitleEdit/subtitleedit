@@ -35,37 +35,35 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelEngine = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
-            this.checkBox_AdjustAudio = new System.Windows.Forms.CheckBox();
+            this.chkusePiper2Pass = new System.Windows.Forms.CheckBox();
+            this.nikseUpDownStability = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.nikseUpDownSimilarity = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelSimilarity = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelStability = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelLanguage = new System.Windows.Forms.Label();
+            this.nikseComboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.linkLabelCustomAudio = new System.Windows.Forms.LinkLabel();
             this.checkBoxAudioEncoding = new System.Windows.Forms.CheckBox();
             this.labelRegion = new System.Windows.Forms.Label();
+            this.nikseComboBoxRegion = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelVoiceCount = new System.Windows.Forms.Label();
             this.checkBoxShowPreview = new System.Windows.Forms.CheckBox();
             this.labelApiKey = new System.Windows.Forms.Label();
+            this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonTestVoice = new System.Windows.Forms.Button();
             this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
             this.labelVoice = new System.Windows.Forms.Label();
+            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.contextMenuStripVoices = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshVoicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.listViewActors = new System.Windows.Forms.ListView();
             this.columnHeaderActor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderVoice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.labelActors = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.chkusePiper2Pass = new System.Windows.Forms.CheckBox();
-            this.nikseUpDownStability = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.nikseUpDownSimilarity = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelSimilarity = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelStability = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.nikseComboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.nikseComboBoxRegion = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.chkVoiceOver = new System.Windows.Forms.CheckBox();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuStripVoices.SuspendLayout();
             this.SuspendLayout();
@@ -128,9 +126,7 @@
             // 
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxSettings.Controls.Add(this.chkVoiceOver);
             this.groupBoxSettings.Controls.Add(this.chkusePiper2Pass);
-            this.groupBoxSettings.Controls.Add(this.checkBox_AdjustAudio);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownStability);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownSimilarity);
             this.groupBoxSettings.Controls.Add(this.labelSimilarity);
@@ -159,203 +155,11 @@
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
             // 
-            // checkBox_AdjustAudio
-            // 
-            this.checkBox_AdjustAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox_AdjustAudio.AutoSize = true;
-            this.checkBox_AdjustAudio.Location = new System.Drawing.Point(214, 344);
-            this.checkBox_AdjustAudio.Name = "checkBox_AdjustAudio";
-            this.checkBox_AdjustAudio.Size = new System.Drawing.Size(127, 17);
-            this.checkBox_AdjustAudio.TabIndex = 105;
-            this.checkBox_AdjustAudio.Text = "Adapt speed (ffmpeg)";
-            this.checkBox_AdjustAudio.UseVisualStyleBackColor = true;
-            // 
-            // labelLanguage
-            // 
-            this.labelLanguage.AutoSize = true;
-            this.labelLanguage.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelLanguage.Location = new System.Drawing.Point(14, 274);
-            this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(55, 13);
-            this.labelLanguage.TabIndex = 36;
-            this.labelLanguage.Text = "Language";
-            // 
-            // linkLabelCustomAudio
-            // 
-            this.linkLabelCustomAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelCustomAudio.AutoSize = true;
-            this.linkLabelCustomAudio.Location = new System.Drawing.Point(47, 408);
-            this.linkLabelCustomAudio.Name = "linkLabelCustomAudio";
-            this.linkLabelCustomAudio.Size = new System.Drawing.Size(45, 13);
-            this.linkLabelCustomAudio.TabIndex = 43;
-            this.linkLabelCustomAudio.TabStop = true;
-            this.linkLabelCustomAudio.Text = "Settings";
-            this.linkLabelCustomAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCustomAudio_LinkClicked);
-            // 
-            // checkBoxAudioEncoding
-            // 
-            this.checkBoxAudioEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxAudioEncoding.AutoSize = true;
-            this.checkBoxAudioEncoding.Location = new System.Drawing.Point(30, 388);
-            this.checkBoxAudioEncoding.Name = "checkBoxAudioEncoding";
-            this.checkBoxAudioEncoding.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxAudioEncoding.TabIndex = 42;
-            this.checkBoxAudioEncoding.Text = "Custom audio encoding";
-            this.checkBoxAudioEncoding.UseVisualStyleBackColor = true;
-            // 
-            // labelRegion
-            // 
-            this.labelRegion.AutoSize = true;
-            this.labelRegion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelRegion.Location = new System.Drawing.Point(14, 245);
-            this.labelRegion.Name = "labelRegion";
-            this.labelRegion.Size = new System.Drawing.Size(41, 13);
-            this.labelRegion.TabIndex = 32;
-            this.labelRegion.Text = "Region";
-            // 
-            // labelVoiceCount
-            // 
-            this.labelVoiceCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVoiceCount.Location = new System.Drawing.Point(172, 83);
-            this.labelVoiceCount.Name = "labelVoiceCount";
-            this.labelVoiceCount.Size = new System.Drawing.Size(196, 23);
-            this.labelVoiceCount.TabIndex = 29;
-            this.labelVoiceCount.Text = "255";
-            this.labelVoiceCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // checkBoxShowPreview
-            // 
-            this.checkBoxShowPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxShowPreview.AutoSize = true;
-            this.checkBoxShowPreview.Checked = true;
-            this.checkBoxShowPreview.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 344);
-            this.checkBoxShowPreview.Name = "checkBoxShowPreview";
-            this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxShowPreview.TabIndex = 40;
-            this.checkBoxShowPreview.Text = "Review audio clips";
-            this.checkBoxShowPreview.UseVisualStyleBackColor = true;
-            // 
-            // labelApiKey
-            // 
-            this.labelApiKey.AutoSize = true;
-            this.labelApiKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelApiKey.Location = new System.Drawing.Point(14, 216);
-            this.labelApiKey.Name = "labelApiKey";
-            this.labelApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelApiKey.TabIndex = 28;
-            this.labelApiKey.Text = "API key";
-            // 
-            // buttonTestVoice
-            // 
-            this.buttonTestVoice.Location = new System.Drawing.Point(17, 141);
-            this.buttonTestVoice.Name = "buttonTestVoice";
-            this.buttonTestVoice.Size = new System.Drawing.Size(150, 23);
-            this.buttonTestVoice.TabIndex = 15;
-            this.buttonTestVoice.Text = "Test voice";
-            this.buttonTestVoice.UseVisualStyleBackColor = true;
-            this.buttonTestVoice.Click += new System.EventHandler(this.buttonTestVoice_Click);
-            // 
-            // checkBoxAddToVideoFile
-            // 
-            this.checkBoxAddToVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxAddToVideoFile.AutoSize = true;
-            this.checkBoxAddToVideoFile.Checked = true;
-            this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 368);
-            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
-            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxAddToVideoFile.TabIndex = 41;
-            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
-            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
-            // 
-            // labelVoice
-            // 
-            this.labelVoice.AutoSize = true;
-            this.labelVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelVoice.Location = new System.Drawing.Point(14, 93);
-            this.labelVoice.Name = "labelVoice";
-            this.labelVoice.Size = new System.Drawing.Size(34, 13);
-            this.labelVoice.TabIndex = 16;
-            this.labelVoice.Text = "Voice";
-            // 
-            // contextMenuStripVoices
-            // 
-            this.contextMenuStripVoices.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshVoicesToolStripMenuItem});
-            this.contextMenuStripVoices.Name = "contextMenuStripVoices";
-            this.contextMenuStripVoices.Size = new System.Drawing.Size(150, 26);
-            this.contextMenuStripVoices.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripVoices_Opening);
-            // 
-            // refreshVoicesToolStripMenuItem
-            // 
-            this.refreshVoicesToolStripMenuItem.Name = "refreshVoicesToolStripMenuItem";
-            this.refreshVoicesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.refreshVoicesToolStripMenuItem.Text = "Refresh voices";
-            this.refreshVoicesToolStripMenuItem.Click += new System.EventHandler(this.refreshVoicesToolStripMenuItem_Click);
-            // 
-            // listViewActors
-            // 
-            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderActor,
-            this.columnHeaderVoice});
-            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
-            this.listViewActors.FullRowSelect = true;
-            this.listViewActors.GridLines = true;
-            this.listViewActors.HideSelection = false;
-            this.listViewActors.Location = new System.Drawing.Point(412, 42);
-            this.listViewActors.Name = "listViewActors";
-            this.listViewActors.Size = new System.Drawing.Size(420, 397);
-            this.listViewActors.TabIndex = 40;
-            this.listViewActors.UseCompatibleStateImageBehavior = false;
-            this.listViewActors.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeaderActor
-            // 
-            this.columnHeaderActor.Text = "Actor";
-            this.columnHeaderActor.Width = 200;
-            // 
-            // columnHeaderVoice
-            // 
-            this.columnHeaderVoice.Text = "Voice";
-            this.columnHeaderVoice.Width = 200;
-            // 
-            // contextMenuStripActors
-            // 
-            this.contextMenuStripActors.Name = "contextMenuStripActors";
-            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
-            // 
-            // labelActors
-            // 
-            this.labelActors.AutoSize = true;
-            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelActors.Location = new System.Drawing.Point(412, 19);
-            this.labelActors.Name = "labelActors";
-            this.labelActors.Size = new System.Drawing.Size(170, 13);
-            this.labelActors.TabIndex = 19;
-            this.labelActors.Text = "Right-click to assign actor to voice";
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(757, 478);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 101;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
             // chkusePiper2Pass
             // 
             this.chkusePiper2Pass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkusePiper2Pass.AutoSize = true;
-            this.chkusePiper2Pass.Location = new System.Drawing.Point(214, 367);
+            this.chkusePiper2Pass.Location = new System.Drawing.Point(214, 344);
             this.chkusePiper2Pass.Name = "chkusePiper2Pass";
             this.chkusePiper2Pass.Size = new System.Drawing.Size(171, 17);
             this.chkusePiper2Pass.TabIndex = 106;
@@ -456,6 +260,16 @@
             this.labelStability.TabIndex = 97;
             this.labelStability.Text = "Stability";
             // 
+            // labelLanguage
+            // 
+            this.labelLanguage.AutoSize = true;
+            this.labelLanguage.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelLanguage.Location = new System.Drawing.Point(14, 274);
+            this.labelLanguage.Name = "labelLanguage";
+            this.labelLanguage.Size = new System.Drawing.Size(55, 13);
+            this.labelLanguage.TabIndex = 36;
+            this.labelLanguage.Text = "Language";
+            // 
             // nikseComboBoxLanguage
             // 
             this.nikseComboBoxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -481,6 +295,39 @@
             this.nikseComboBoxLanguage.TabIndex = 35;
             this.nikseComboBoxLanguage.UsePopupWindow = false;
             this.nikseComboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxLanguage_SelectedIndexChanged);
+            // 
+            // linkLabelCustomAudio
+            // 
+            this.linkLabelCustomAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelCustomAudio.AutoSize = true;
+            this.linkLabelCustomAudio.Location = new System.Drawing.Point(160, 389);
+            this.linkLabelCustomAudio.Name = "linkLabelCustomAudio";
+            this.linkLabelCustomAudio.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelCustomAudio.TabIndex = 43;
+            this.linkLabelCustomAudio.TabStop = true;
+            this.linkLabelCustomAudio.Text = "Settings";
+            this.linkLabelCustomAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCustomAudio_LinkClicked);
+            // 
+            // checkBoxAudioEncoding
+            // 
+            this.checkBoxAudioEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAudioEncoding.AutoSize = true;
+            this.checkBoxAudioEncoding.Location = new System.Drawing.Point(26, 388);
+            this.checkBoxAudioEncoding.Name = "checkBoxAudioEncoding";
+            this.checkBoxAudioEncoding.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAudioEncoding.TabIndex = 42;
+            this.checkBoxAudioEncoding.Text = "Custom audio encoding";
+            this.checkBoxAudioEncoding.UseVisualStyleBackColor = true;
+            // 
+            // labelRegion
+            // 
+            this.labelRegion.AutoSize = true;
+            this.labelRegion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelRegion.Location = new System.Drawing.Point(14, 245);
+            this.labelRegion.Name = "labelRegion";
+            this.labelRegion.Size = new System.Drawing.Size(41, 13);
+            this.labelRegion.TabIndex = 32;
+            this.labelRegion.Text = "Region";
             // 
             // nikseComboBoxRegion
             // 
@@ -508,6 +355,39 @@
             this.nikseComboBoxRegion.UsePopupWindow = false;
             this.nikseComboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxRegion_SelectedIndexChanged);
             // 
+            // labelVoiceCount
+            // 
+            this.labelVoiceCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelVoiceCount.Location = new System.Drawing.Point(172, 83);
+            this.labelVoiceCount.Name = "labelVoiceCount";
+            this.labelVoiceCount.Size = new System.Drawing.Size(196, 23);
+            this.labelVoiceCount.TabIndex = 29;
+            this.labelVoiceCount.Text = "255";
+            this.labelVoiceCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // checkBoxShowPreview
+            // 
+            this.checkBoxShowPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxShowPreview.AutoSize = true;
+            this.checkBoxShowPreview.Checked = true;
+            this.checkBoxShowPreview.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 344);
+            this.checkBoxShowPreview.Name = "checkBoxShowPreview";
+            this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxShowPreview.TabIndex = 40;
+            this.checkBoxShowPreview.Text = "Review audio clips";
+            this.checkBoxShowPreview.UseVisualStyleBackColor = true;
+            // 
+            // labelApiKey
+            // 
+            this.labelApiKey.AutoSize = true;
+            this.labelApiKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelApiKey.Location = new System.Drawing.Point(14, 216);
+            this.labelApiKey.Name = "labelApiKey";
+            this.labelApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelApiKey.TabIndex = 28;
+            this.labelApiKey.Text = "API key";
+            // 
             // nikseTextBoxApiKey
             // 
             this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -529,6 +409,39 @@
             this.TextBoxTest.TabIndex = 20;
             this.TextBoxTest.Text = "Hello, how are you?";
             this.TextBoxTest.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxTest_KeyDown);
+            // 
+            // buttonTestVoice
+            // 
+            this.buttonTestVoice.Location = new System.Drawing.Point(17, 141);
+            this.buttonTestVoice.Name = "buttonTestVoice";
+            this.buttonTestVoice.Size = new System.Drawing.Size(150, 23);
+            this.buttonTestVoice.TabIndex = 15;
+            this.buttonTestVoice.Text = "Test voice";
+            this.buttonTestVoice.UseVisualStyleBackColor = true;
+            this.buttonTestVoice.Click += new System.EventHandler(this.buttonTestVoice_Click);
+            // 
+            // checkBoxAddToVideoFile
+            // 
+            this.checkBoxAddToVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAddToVideoFile.AutoSize = true;
+            this.checkBoxAddToVideoFile.Checked = true;
+            this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 368);
+            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
+            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxAddToVideoFile.TabIndex = 41;
+            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
+            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
+            // 
+            // labelVoice
+            // 
+            this.labelVoice.AutoSize = true;
+            this.labelVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelVoice.Location = new System.Drawing.Point(14, 93);
+            this.labelVoice.Name = "labelVoice";
+            this.labelVoice.Size = new System.Drawing.Size(34, 13);
+            this.labelVoice.TabIndex = 16;
+            this.labelVoice.Text = "Voice";
             // 
             // nikseComboBoxVoice
             // 
@@ -555,6 +468,21 @@
             this.nikseComboBoxVoice.Size = new System.Drawing.Size(351, 23);
             this.nikseComboBoxVoice.TabIndex = 10;
             this.nikseComboBoxVoice.UsePopupWindow = false;
+            // 
+            // contextMenuStripVoices
+            // 
+            this.contextMenuStripVoices.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshVoicesToolStripMenuItem});
+            this.contextMenuStripVoices.Name = "contextMenuStripVoices";
+            this.contextMenuStripVoices.Size = new System.Drawing.Size(150, 26);
+            this.contextMenuStripVoices.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripVoices_Opening);
+            // 
+            // refreshVoicesToolStripMenuItem
+            // 
+            this.refreshVoicesToolStripMenuItem.Name = "refreshVoicesToolStripMenuItem";
+            this.refreshVoicesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.refreshVoicesToolStripMenuItem.Text = "Refresh voices";
+            this.refreshVoicesToolStripMenuItem.Click += new System.EventHandler(this.refreshVoicesToolStripMenuItem_Click);
             // 
             // nikseComboBoxEngine
             // 
@@ -583,16 +511,62 @@
             this.nikseComboBoxEngine.Text = "nikseComboBoxEngine";
             this.nikseComboBoxEngine.UsePopupWindow = false;
             // 
-            // chkVoiceOver
+            // listViewActors
             // 
-            this.chkVoiceOver.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkVoiceOver.AutoSize = true;
-            this.chkVoiceOver.Location = new System.Drawing.Point(214, 390);
-            this.chkVoiceOver.Name = "chkVoiceOver";
-            this.chkVoiceOver.Size = new System.Drawing.Size(93, 17);
-            this.chkVoiceOver.TabIndex = 107;
-            this.chkVoiceOver.Text = "use voiceover";
-            this.chkVoiceOver.UseVisualStyleBackColor = true;
+            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderActor,
+            this.columnHeaderVoice});
+            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
+            this.listViewActors.FullRowSelect = true;
+            this.listViewActors.GridLines = true;
+            this.listViewActors.HideSelection = false;
+            this.listViewActors.Location = new System.Drawing.Point(412, 42);
+            this.listViewActors.Name = "listViewActors";
+            this.listViewActors.Size = new System.Drawing.Size(420, 397);
+            this.listViewActors.TabIndex = 40;
+            this.listViewActors.UseCompatibleStateImageBehavior = false;
+            this.listViewActors.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderActor
+            // 
+            this.columnHeaderActor.Text = "Actor";
+            this.columnHeaderActor.Width = 200;
+            // 
+            // columnHeaderVoice
+            // 
+            this.columnHeaderVoice.Text = "Voice";
+            this.columnHeaderVoice.Width = 200;
+            // 
+            // contextMenuStripActors
+            // 
+            this.contextMenuStripActors.Name = "contextMenuStripActors";
+            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
+            // 
+            // labelActors
+            // 
+            this.labelActors.AutoSize = true;
+            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelActors.Location = new System.Drawing.Point(412, 19);
+            this.labelActors.Name = "labelActors";
+            this.labelActors.Size = new System.Drawing.Size(170, 13);
+            this.labelActors.TabIndex = 19;
+            this.labelActors.Text = "Right-click to assign actor to voice";
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCancel.Location = new System.Drawing.Point(757, 478);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 101;
+            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // TextToSpeech
             // 
@@ -663,8 +637,6 @@
         private Controls.NikseUpDown nikseUpDownSimilarity;
         private Controls.NikseLabel labelSimilarity;
         private Controls.NikseLabel labelStability;
-        private System.Windows.Forms.CheckBox checkBox_AdjustAudio;
         private System.Windows.Forms.CheckBox chkusePiper2Pass;
-        private System.Windows.Forms.CheckBox chkVoiceOver;
     }
 }
