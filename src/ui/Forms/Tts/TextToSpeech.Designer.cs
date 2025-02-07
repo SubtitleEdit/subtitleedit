@@ -161,9 +161,9 @@
             this.chkusePiper2Pass.AutoSize = true;
             this.chkusePiper2Pass.Location = new System.Drawing.Point(214, 344);
             this.chkusePiper2Pass.Name = "chkusePiper2Pass";
-            this.chkusePiper2Pass.Size = new System.Drawing.Size(171, 17);
+            this.chkusePiper2Pass.Size = new System.Drawing.Size(174, 17);
             this.chkusePiper2Pass.TabIndex = 106;
-            this.chkusePiper2Pass.Text = "2 pass speed correction (piper)";
+            this.chkusePiper2Pass.Text = "speed correction (piper 2 pass )";
             this.chkusePiper2Pass.UseVisualStyleBackColor = true;
             // 
             // nikseUpDownStability

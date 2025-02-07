@@ -499,6 +499,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
+
+                if (chkusePiper2Pass.Checked)               // Bypass the ffmpeg speed correction when piper2pass is enabled
+                {
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     pFileName = Path.Combine(_waveFolder, overrideFileName);
@@ -742,12 +748,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelProgress.Text = string.Empty;
         }
 
-        private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
-        {
-            return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName, true);
-        }
+        //private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        //{
+        //    return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName, true);
+        //}
 
-        private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName, bool twopass)
+        private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
             if (!Directory.Exists(ttsPath))
@@ -890,13 +896,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     File.Delete(inputFile);
 
-                    if (factor <= (decimal)0.5)
+                    if (factor <= (decimal)0.7)             // Maybe use paramets in form for that at the moment these limts work great
                     {
-                        factor = (decimal)0.5;
+                        factor = (decimal)0.7;
                     }
-                    if (factor >= (decimal)1.5)
+                    if (factor >= (decimal)1.3)
                     {
-                        factor = (decimal)1.5;
+                        factor = (decimal)1.3;
                     }
 
                     string strFactor = factor.ToString("F2").Replace(",", ".");
