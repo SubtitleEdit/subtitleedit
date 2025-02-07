@@ -90,9 +90,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return linesTranslate;
             }
 
-
-            // Split per number of lines
+            // Split per number of lines - try to merge some lines in translation
             var translatedLines = mergedTranslation.SplitToLines();
+            var originalCount = mergeResult.Text.SplitToLines().Count;
+            if (translatedLines.Count > originalCount)
+            {
+                var temp = MergeSplitTranslation(mergedTranslation.SplitToLines(), mergeResult.Text.SplitToLines(), out var mergeOk);
+                if (mergeOk)
+                {
+                    translatedLines = temp;
+                }   
+            }
+
             if (translatedLines.Count == mergeResult.Text.SplitToLines().Count)
             {
                 var newSub = new Subtitle();
@@ -192,6 +201,82 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return linesTranslate;
         }
 
+        private static List<string> MergeSplitTranslation(List<string> translation, List<string> source, out bool ok)
+        {
+            ok = true;
+            var translationIndex = 0;
+            var sourceIndex = 0;
+            var sb = new StringBuilder();
+            while (translationIndex < translation.Count && sourceIndex < source.Count)
+            {
+                var t = translation[translationIndex].Trim();
+                var s = source[sourceIndex].Trim();
+                var tPunctuations = NumberOfPunctuations(t);
+                var sPunctuations = NumberOfPunctuations(s);
+
+                var endChar = s.Length > 0 ? s[s.Length-1] : ' ';
+                if (".!?".Contains(endChar) && s.IndexOf('?') > 0 && s.IndexOf('?') < s.Length -3 && 
+                    (t.EndsWith('?') || t.EndsWith('!')) && 
+                    t.LastIndexOf('?') == t.IndexOf('?') && t.LastIndexOf('!') == t.IndexOf('!') && 
+                    sourceIndex + 1 < source.Count)
+                {
+                    var next = translation[translationIndex + 1];
+                    if (next.EndsWith(endChar))
+                    {
+                        sb.AppendLine(t + " " + next);
+                        translationIndex++;
+                    }
+                    else
+                    {
+                        sb.AppendLine(t);
+                    }
+                }
+                else if (".!?,".Contains(endChar) && 
+                    sPunctuations > tPunctuations &&
+                    t.Length < s.Length / 1.5  &&
+                    sourceIndex + 1 < source.Count)
+                {
+                    var next = translation[translationIndex + 1];
+                    if (next.EndsWith(endChar))
+                    {
+                        sb.AppendLine(t + " " + next);
+                        translationIndex++;
+                    }
+                    else
+                    {
+                        sb.AppendLine(t);
+                    }
+                }
+                else
+                {
+                    sb.AppendLine(t);
+                }
+                translationIndex++;
+                sourceIndex++;
+            }
+
+            if (translationIndex != translation.Count || sourceIndex != source.Count)
+            {
+                ok = false; 
+            }
+
+            return sb.ToString().Trim().SplitToLines();
+        }
+
+        private static int NumberOfPunctuations(string s)
+        {
+            var count = 0;
+            foreach (var item in s)
+            {
+                if (".!?,".Contains(item))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         private static bool HasAboutSamePeriods(string source, string translation)
         {
             var sourcePeriodCount = Utilities.CountTagInText(source, '.');
@@ -215,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             var goodLengths = true;
-            for (int i = 0; i < sourceLines.Count; i++) 
+            for (int i = 0; i < sourceLines.Count; i++)
             {
                 var line = sourceLines[i];
                 var lineTranslation = translationLines[i];
@@ -530,6 +615,66 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             return lines;
         }
+
+        public static List<string> SplitMultipleLinesCheckDash(MergeResult mergeResult, string translatedText, string language)
+        {
+            var lines = new List<string>();
+            var text = translatedText;
+
+            if (mergeResult.NoSentenceEndingSource)
+            {
+                var sb = new StringBuilder();
+                var translatedLines = text.SplitToLines();
+                foreach (var translatedLine in translatedLines)
+                {
+                    var s = translatedLine.Trim();
+                    if (s == ".")
+                    {
+                        lines.Add(sb.ToString().Trim());
+                        sb.Clear();
+                        continue;
+                    }
+
+                    sb.AppendLine(s);
+                }
+
+                if (sb.Length > 0)
+                {
+                    lines.Add(sb.ToString().Trim());
+                }
+
+                return lines;
+            }
+
+            foreach (var item in mergeResult.MergeResultItems)
+            {
+                if (item.IsEmpty)
+                {
+                    lines.Add(string.Empty);
+                }
+                else if (item.Continuous)
+                {
+                    var part = GetPartFromItem(text, item);
+                    text = text.Remove(0, part.Length).Trim();
+                    var lineRange = SplitContinuous(part, item, language);
+                    lines.AddRange(lineRange);
+                }
+                else
+                {
+                    var part = GetPartFromItem(text, item);
+                    text = text.Remove(0, part.Length).Trim();
+                    lines.Add(part.Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(part) : part);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                return new List<string>();
+            }
+
+            return lines;
+        }
+
 
         private static string GetPartFromItem(string input, MergeResultItem item)
         {
