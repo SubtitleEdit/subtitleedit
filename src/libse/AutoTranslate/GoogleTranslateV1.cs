@@ -264,6 +264,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 res = res.Replace("\\n", "\n");
             }
 
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(" \n", "\n").Trim();
+
             var lines = res.SplitToLines().ToList();
             return lines;
         }
