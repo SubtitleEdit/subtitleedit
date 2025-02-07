@@ -12,24 +12,43 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class DeepSeekTranslate : IAutoTranslator
+    public class AvalAi : IAutoTranslator
     {
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "DeepSeek";
+        public static string StaticName { get; set; } = "AvalAI";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://api.deepseek.com";
+        public string Url => "https://avalai.ir";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 
         /// <summary>
-        /// See https://api-docs.deepseek.com/
+        /// See https://avalai.ir
         /// </summary>
         public static string[] Models => new[]
         {
+            "gpt-4o-mini",
+            "gpt-4o",
+            "o1-mini",
+            "o3-mini",
+            "gemini-2.0-pro-exp-02-05",
+            "gemini-2.0-flash",
+            "gemini-2.0-flash-lite-preview-02-05",
+            "gemini-2.0-flash-thinking-exp-01-21",
+            "gemini-2.0-flash-thinking-exp",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "cohere.command-light-text-v14",
+            "cohere.command-r-v1:0",
             "deepseek-reasoner",
             "deepseek-chat",
+            "anthropic.claude-3-5-sonnet-20240620-v1:0",
+            "anthropic.claude-3-5-haiku-20241022-v1:0",
+            "meta.llama3-1-70b-instruct-v1:0",
+            "meta.llama3-1-405b-instruct-v1:0",
+            "meta.llama3-3-70b-instruct-v1:0",
+            "mistral.mistral-large-2407-v1:0"
         };
 
         public void Initialize()
@@ -38,12 +57,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.DeepSeekUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AvalAiUrl.TrimEnd('/'));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekApiKey))
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AvalAiApiKey))
             {
-                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.DeepSeekApiKey);
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.AvalAiApiKey);
             }
         }
 
@@ -59,20 +78,38 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.DeepSeekModel;
+            var model = Configuration.Settings.Tools.AvalAiModel;
             if (string.IsNullOrEmpty(model))
             {
                 model = Models[0];
-                Configuration.Settings.Tools.DeepSeekModel = model;
+                Configuration.Settings.Tools.AvalAiModel = model;
             }
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekPrompt))
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.AvalAiPrompt))
             {
-                Configuration.Settings.Tools.DeepSeekPrompt = new ToolsSettings().DeepSeekPrompt;
+                Configuration.Settings.Tools.AvalAiPrompt = new ToolsSettings().AvalAiPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.DeepSeekPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
-            //var input = 
+            var prompt = string.Format(Configuration.Settings.Tools.AvalAiPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "";
+            var input2 = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var modelJson = "\"" + model + "\"";
+            var promptJson = "\"" + prompt.Replace("\"", "\\\"") + "\\n\\n" + Json.EncodeJsonText(text.Trim()).Replace("\"", "\\\"") + "\"";
+
+            var input3 = "{" +
+                "\"model\": " + modelJson + "," +
+                "\"prompt\": " + promptJson +
+            "}";
+            if (model.Contains("deep11111111111"))
+            {
+                input = input3;
+                //_httpClient.BaseAddress = new Uri("https://api.avalai.ir/v1/completions/");
+            }
+            else
+            {
+                //_httpClient.BaseAddress =  "https://api.avalai.ir/v1/chat/completions/";
+                //_httpClient.BaseAddress = new Uri("https://api.avalai.ir/v1/chat/completions/");
+                input = input2;
+            }
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
@@ -81,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("DeepSeek Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("AvalAi Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 
             result.EnsureSuccessStatusCode();
