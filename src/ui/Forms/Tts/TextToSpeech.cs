@@ -1175,13 +1175,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     if ((int)result.StatusCode == 429)
                     {
-                        Task.Delay(1753).Wait();
+                        Task.Delay(2753).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
                         result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
                     }
 
                     if ((int)result.StatusCode == 429)
                     {
-                        Task.Delay(2707).Wait();
+                        Task.Delay(5707).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
                         result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
                     }
 
