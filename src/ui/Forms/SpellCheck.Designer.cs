@@ -18,7 +18,6 @@
             this.components = new System.ComponentModel.Container();
             this.buttonAddToDictionary = new System.Windows.Forms.Button();
             this.buttonSkipOnce = new System.Windows.Forms.Button();
-            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -30,9 +29,7 @@
             this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listBoxSuggestions = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.labelFullText = new System.Windows.Forms.Label();
-            this.textBoxWord = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAbort = new System.Windows.Forms.Button();
             this.buttonSkipAll = new System.Windows.Forms.Button();
             this.buttonChange = new System.Windows.Forms.Button();
@@ -42,6 +39,7 @@
             this.buttonAddToNames = new System.Windows.Forms.Button();
             this.groupBoxWordNotFound = new System.Windows.Forms.GroupBox();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
+            this.contextMenuStripSearchEngine = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.buttonUndo = new System.Windows.Forms.Button();
             this.groupBoxSuggestions = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoChangeNames = new System.Windows.Forms.CheckBox();
@@ -49,7 +47,6 @@
             this.groupBoxEditWholeText = new System.Windows.Forms.GroupBox();
             this.buttonSkipText = new System.Windows.Forms.Button();
             this.buttonChangeWholeText = new System.Windows.Forms.Button();
-            this.textBoxWholeText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.pictureBoxBdSup = new System.Windows.Forms.PictureBox();
@@ -58,7 +55,11 @@
             this.labelBookmark = new System.Windows.Forms.Label();
             this.contextMenuStripWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripSearchEngine = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.listBoxSuggestions = new Nikse.SubtitleEdit.Controls.NikseListBox();
+            this.textBoxWord = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxWholeText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.checkBoxUseOnlineDictionary = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -92,18 +93,6 @@
             this.buttonSkipOnce.Click += new System.EventHandler(this.ButtonSkipOnceClick);
             this.buttonSkipOnce.MouseEnter += new System.EventHandler(this.buttonSkipOnce_MouseEnter);
             this.buttonSkipOnce.MouseLeave += new System.EventHandler(this.buttonSkipOnce_MouseLeave);
-            // 
-            // comboBoxDictionaries
-            // 
-            this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(412, 32);
-            this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(249, 21);
-            this.comboBoxDictionaries.TabIndex = 8;
-            this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
             // 
             // labelLanguage
             // 
@@ -192,19 +181,6 @@
             this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
             this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
-            // listBoxSuggestions
-            // 
-            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxSuggestions.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBoxSuggestions.FormattingEnabled = true;
-            this.listBoxSuggestions.ItemHeight = 16;
-            this.listBoxSuggestions.Location = new System.Drawing.Point(6, 46);
-            this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(277, 228);
-            this.listBoxSuggestions.TabIndex = 2;
-            this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
-            // 
             // labelFullText
             // 
             this.labelFullText.AutoSize = true;
@@ -213,14 +189,6 @@
             this.labelFullText.Size = new System.Drawing.Size(46, 13);
             this.labelFullText.TabIndex = 4;
             this.labelFullText.Text = "Full text";
-            // 
-            // textBoxWord
-            // 
-            this.textBoxWord.Location = new System.Drawing.Point(6, 20);
-            this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(374, 21);
-            this.textBoxWord.TabIndex = 0;
-            this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             // 
             // buttonAbort
             // 
@@ -332,6 +300,11 @@
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
             this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
             // 
+            // contextMenuStripSearchEngine
+            // 
+            this.contextMenuStripSearchEngine.Name = "contextMenuStripSearchEngine";
+            this.contextMenuStripSearchEngine.Size = new System.Drawing.Size(61, 4);
+            // 
             // buttonUndo
             // 
             this.buttonUndo.Location = new System.Drawing.Point(6, 192);
@@ -413,15 +386,6 @@
             this.buttonChangeWholeText.UseVisualStyleBackColor = true;
             this.buttonChangeWholeText.Click += new System.EventHandler(this.ButtonChangeWholeTextClick);
             // 
-            // textBoxWholeText
-            // 
-            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
-            this.textBoxWholeText.Multiline = true;
-            this.textBoxWholeText.Name = "textBoxWholeText";
-            this.textBoxWholeText.Size = new System.Drawing.Size(374, 166);
-            this.textBoxWholeText.TabIndex = 31;
-            // 
             // labelActionInfo
             // 
             this.labelActionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -496,10 +460,79 @@
             this.useLargerFontForThisWindowToolStripMenuItem1.Text = "Use larger font for this window";
             this.useLargerFontForThisWindowToolStripMenuItem1.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
-            // contextMenuStripSearchEngine
+            // comboBoxDictionaries
             // 
-            this.contextMenuStripSearchEngine.Name = "contextMenuStripSearchEngine";
-            this.contextMenuStripSearchEngine.Size = new System.Drawing.Size(181, 26);
+            this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDictionaries.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDictionaries.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDictionaries.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDictionaries.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDictionaries.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDictionaries.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDictionaries.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDictionaries.DropDownHeight = 400;
+            this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDictionaries.DropDownWidth = 249;
+            this.comboBoxDictionaries.FormattingEnabled = true;
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(412, 32);
+            this.comboBoxDictionaries.MaxLength = 32767;
+            this.comboBoxDictionaries.Name = "comboBoxDictionaries";
+            this.comboBoxDictionaries.SelectedIndex = -1;
+            this.comboBoxDictionaries.SelectedItem = null;
+            this.comboBoxDictionaries.SelectedText = "";
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(249, 21);
+            this.comboBoxDictionaries.TabIndex = 8;
+            this.comboBoxDictionaries.UsePopupWindow = false;
+            this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
+            // 
+            // listBoxSuggestions
+            // 
+            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBoxSuggestions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBoxSuggestions.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxSuggestions.FormattingEnabled = true;
+            this.listBoxSuggestions.ItemHeight = 16;
+            this.listBoxSuggestions.Location = new System.Drawing.Point(6, 46);
+            this.listBoxSuggestions.Name = "listBoxSuggestions";
+            this.listBoxSuggestions.SelectedIndex = -1;
+            this.listBoxSuggestions.SelectedItem = null;
+            this.listBoxSuggestions.SelectionMode = System.Windows.Forms.SelectionMode.One;
+            this.listBoxSuggestions.Size = new System.Drawing.Size(277, 228);
+            this.listBoxSuggestions.Sorted = false;
+            this.listBoxSuggestions.TabIndex = 2;
+            this.listBoxSuggestions.TopIndex = 0;
+            this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
+            // 
+            // textBoxWord
+            // 
+            this.textBoxWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxWord.Location = new System.Drawing.Point(6, 20);
+            this.textBoxWord.Name = "textBoxWord";
+            this.textBoxWord.Size = new System.Drawing.Size(374, 21);
+            this.textBoxWord.TabIndex = 0;
+            this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
+            // 
+            // textBoxWholeText
+            // 
+            this.textBoxWholeText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
+            this.textBoxWholeText.Multiline = true;
+            this.textBoxWholeText.Name = "textBoxWholeText";
+            this.textBoxWholeText.Size = new System.Drawing.Size(374, 166);
+            this.textBoxWholeText.TabIndex = 31;
+            // 
+            // checkBoxUseOnlineDictionary
+            // 
+            this.checkBoxUseOnlineDictionary.AutoSize = true;
+            this.checkBoxUseOnlineDictionary.Location = new System.Drawing.Point(563, 10);
+            this.checkBoxUseOnlineDictionary.Name = "checkBoxUseOnlineDictionary";
+            this.checkBoxUseOnlineDictionary.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxUseOnlineDictionary.TabIndex = 44;
+            this.checkBoxUseOnlineDictionary.Text = "Query online Dictionary";
+            this.checkBoxUseOnlineDictionary.UseVisualStyleBackColor = true;
             // 
             // SpellCheck
             // 
@@ -507,6 +540,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 427);
             this.ContextMenuStrip = this.contextMenuStripWindow;
+            this.Controls.Add(this.checkBoxUseOnlineDictionary);
             this.Controls.Add(this.panelBookmark);
             this.Controls.Add(this.pictureBoxBookmark);
             this.Controls.Add(this.buttonSpellCheckDownload);
@@ -594,5 +628,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWindow;
         private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripSearchEngine;
+        private System.Windows.Forms.CheckBox checkBoxUseOnlineDictionary;
     }
 }
