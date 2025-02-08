@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         static string showffmpegOutput(string ffmpegOutput)
         {          
-            Match match = Regex.Match(ffmpegOutput, "size=.*?x");
+            Match match = Regex.Match(ffmpegOutput, "size=.*?KiB");
 
             if (match.Success)
             {
