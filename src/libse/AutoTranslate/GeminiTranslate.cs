@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GeminiTranslate : IAutoTranslator
+    public class GeminiTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -190,6 +190,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private static TranslationPair MakePair(string nameCode, string twoLetter)
         {
             return new TranslationPair(nameCode, nameCode, twoLetter);
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

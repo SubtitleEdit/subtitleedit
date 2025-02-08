@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AnthropicTranslate : IAutoTranslator
+    public class AnthropicTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -108,6 +108,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             return outputText.Trim();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AvalAi : IAutoTranslator
+    public class AvalAi : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -144,6 +144,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static List<TranslationPair> ListLanguages()
         {
             return ChatGptTranslate.ListLanguages();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

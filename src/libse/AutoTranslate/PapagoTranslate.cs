@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class PapagoTranslate : IAutoTranslator
+    public class PapagoTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -110,6 +110,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }
