@@ -190,11 +190,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     CreateNoWindow = true,
+                    StandardOutputEncoding = Encoding.UTF8,
                 },
             })
             {
-                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
 
@@ -207,16 +206,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         return;
                     }
 
+                    _log.AppendLine(outLine.Data);
+
                     if (!processingStarted && outLine.Data.Contains("ppocr INFO: **********"))
                     {
                         processingStarted = true;
                         hasErrors = false;
-                        _log.Clear(); 
+                        _log.Clear();
+                        _log.AppendLine(outLine.Data);
                     }
-
-                    _log.AppendLine(outLine.Data);
-
-                    if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+                    else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
                     {
                         result = string.Empty;
                         return;
@@ -404,13 +403,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             return;
                         }
 
+                        _log.AppendLine(outLine.Data);
+
                         if (outLine.Data.Contains("ppocr INFO: **********"))
                         {
                             if (!processingStarted)
                             {
                                 processingStarted = true;
                                 hasErrors = false;
-                                _log.Clear(); 
+                                _log.Clear();
+                                _log.AppendLine(outLine.Data);
                             }
 
                             if (!string.IsNullOrEmpty(oldFileName))
@@ -437,10 +439,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 results[fileName] = string.Empty;
                             }
                         }
-
-                        _log.AppendLine(outLine.Data);
-
-                        if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+                        else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
                         {
                             return;
                         }
