@@ -102,6 +102,7 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
+    <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DLLs\Voikkox64.dll" />
