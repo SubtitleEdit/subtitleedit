@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     public class PaddleOcr
     {
         public string Error { get; set; }
+        private bool hasErrors = false;
+        private bool processingStarted = false;
         private string _paddingOcrPath;
         private string _clsPath;
         private string _detPath;
@@ -115,6 +117,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public string Ocr(Bitmap bitmap, string language, bool useGpu)
         {
             _log.Clear();
+            hasErrors = false;
+            processingStarted = false;
             var detFilePrefix = language;
             if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
             {
@@ -203,13 +207,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         return;
                     }
 
+                    if (!processingStarted && outLine.Data.Contains("ppocr INFO: **********"))
+                    {
+                        processingStarted = true;
+                        hasErrors = false;
+                        _log.Clear(); 
+                    }
+
                     _log.AppendLine(outLine.Data);
 
-                    if (outLine.Data.Contains("ppocr INFO: **********"))
-                    {
-                        return;
-                    }
-                    else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+                    if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
                     {
                         result = string.Empty;
                         return;
@@ -236,8 +243,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                     Error = errorLine.Data;
 
+                    hasErrors = true; 
                     _log.AppendLine(errorLine.Data);
-                    SeLogger.Error("PaddleOcrError: " + _log.ToString());
                 };
 
                 try
@@ -248,14 +255,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 #pragma warning restore CA1416 // Validate platform compatibility;
 
                     process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
 
                     process.WaitForExit();
 
                     borderedBitmap.Dispose();
 
+                    if (hasErrors)
+                    {
+                        SeLogger.Error("PaddleOcrError: " + _log.ToString());
+                    }
+
                     if (process.ExitCode != 0)
                     {
-                        Error = process.StandardError.ReadToEnd();
                         return string.Empty;
                     }
 
@@ -284,6 +296,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
             _log.Clear();
+            hasErrors = false;
+            processingStarted = false;
             var detFilePrefix = language;
             if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
             {
@@ -383,18 +397,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     var currentProgress = 0;
                     var oldFileName = string.Empty;
 
-                    process.ErrorDataReceived += (sendingProcess, errorLine) =>
-                    {
-                        if (errorLine == null || string.IsNullOrWhiteSpace(errorLine.Data))
-                        {
-                            return;
-                        }
-                        Error = errorLine.Data;
-
-                        _log.AppendLine(errorLine.Data);
-                        SeLogger.Error("PaddleOcrError: " + _log.ToString());
-
-                    };
                     process.OutputDataReceived += (sendingProcess, outLine) =>
                     {
                         if (string.IsNullOrWhiteSpace(outLine.Data))
@@ -402,10 +404,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             return;
                         }
 
-                        _log.AppendLine(outLine.Data);
-
                         if (outLine.Data.Contains("ppocr INFO: **********"))
                         {
+                            if (!processingStarted)
+                            {
+                                processingStarted = true;
+                                hasErrors = false;
+                                _log.Clear(); 
+                            }
+
                             if (!string.IsNullOrEmpty(oldFileName))
                             {
                                 var existingInput = input.FirstOrDefault(p => p.FileName == oldFileName);
@@ -430,7 +437,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 results[fileName] = string.Empty;
                             }
                         }
-                        else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
+
+                        _log.AppendLine(outLine.Data);
+
+                        if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
                         {
                             return;
                         }
@@ -468,12 +478,31 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     };
 
+                    process.ErrorDataReceived += (sendingProcess, errorLine) =>
+                    {
+                        if (errorLine == null || string.IsNullOrWhiteSpace(errorLine.Data))
+                        {
+                            return;
+                        }
+                        Error = errorLine.Data;
+
+                        hasErrors = true; 
+                        _log.AppendLine(errorLine.Data);
+                    };
+
 #pragma warning disable CA1416 // Validate platform compatibility
                     process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
 
                     process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
                     process.WaitForExit();
+
+                    if (hasErrors)
+                    {
+                        SeLogger.Error("PaddleOcrError: " + _log.ToString());
+                    }
 
                     if (!string.IsNullOrEmpty(oldFileName))
                     {
