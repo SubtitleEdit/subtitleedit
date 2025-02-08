@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -30,6 +31,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AutoTranslateDeepLXUrl = "http://localhost:1188";
             }
+
             _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLXUrl;
 
             _client = new HttpClient();
@@ -38,31 +40,26 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return new DeepLTranslate().GetSupportedSourceLanguages();
+            return GetDeepLxSpecificTranslationPairs().ToList();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return new DeepLTranslate().GetSupportedTargetLanguages();
+            return GetDeepLxSpecificTranslationPairs().ToList();
+        }
+
+        private IEnumerable<TranslationPair> GetDeepLxSpecificTranslationPairs()
+        {
+            var sc = StringComparison.OrdinalIgnoreCase;
+            return new DeepLTranslate().GetSupportedTargetLanguages()
+                .Where(l => !(l.Code.StartsWith("en", sc) || l.Code.StartsWith("pt", sc) || l.Code.StartsWith("zh", sc)) ||
+                            l.Code.Equals("en-us", sc) || l.Code.Equals("pt-pt", sc) || l.Code.Equals("zh", sc));
         }
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             const int httpStatusCodeTooManyRequests = 429;
-
-            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "en";
-            }
-            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "pt";
-            }
-            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "zh";
-            }
-
+            
             var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
@@ -85,6 +82,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 {
                     // ignore
                 }
+
                 Task.Delay(5307).Wait();
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
