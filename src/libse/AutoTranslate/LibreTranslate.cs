@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class LibreTranslate : IAutoTranslator
+    public class LibreTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -149,6 +149,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }
