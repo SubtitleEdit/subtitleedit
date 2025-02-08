@@ -300,7 +300,7 @@
             // 
             this.linkLabelCustomAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelCustomAudio.AutoSize = true;
-            this.linkLabelCustomAudio.Location = new System.Drawing.Point(163, 390);
+            this.linkLabelCustomAudio.Location = new System.Drawing.Point(163, 389);
             this.linkLabelCustomAudio.Name = "linkLabelCustomAudio";
             this.linkLabelCustomAudio.Size = new System.Drawing.Size(45, 13);
             this.linkLabelCustomAudio.TabIndex = 43;

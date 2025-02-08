@@ -17,6 +17,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
@@ -445,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 stereo = true;
             }
-            if (chkVoiceOver.Checked)           // added
+            if (chkVoiceOver.Checked)          
             {
                 addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             }
@@ -453,18 +454,34 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             }
-
+           
             addAudioProcess.Start();
+
             while (!addAudioProcess.HasExited)
             {
+                string line = addAudioProcess.StandardError.ReadLine();
+                labelProgress.Text = "Writing Audio to Video: " + showffmpegOutput(line);
+             
                 Application.DoEvents();
                 if (_abort)
                 {
+                    addAudioProcess.Kill();         // kill process if abortet
                     break;
                 }
             }
-
             labelProgress.Text = string.Empty;
+        }
+
+        static string showffmpegOutput(string ffmpegOutput)
+        {          
+            Match match = Regex.Match(ffmpegOutput, "size=.*?x");
+
+            if (match.Success)
+            {
+                return match.Value;
+            }
+
+            return string.Empty;
         }
 
         private static void Cleanup(string waveFolder, string resultAudioFile)

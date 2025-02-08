@@ -655,7 +655,6 @@ namespace Nikse.SubtitleEdit.Logic
         //
         public static Process AddVoiceOver(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler dataReceivedHandler = null)
         {
-            // ffmpeg -i original.mkv -i voiceover1.wav -filter_complex "[1:a]asplit=2[sc][mix];[0:a]apad[bg_padded];[bg_padded][sc]sidechaincompress=threshold=0.02:ratio=4:attack=100:release=500[bg];[bg][mix]amerge=inputs=2,pan=stereo|c0<c0+c2|c1<c1+c3[final]" -map 0:v -map [final] -c:v copy -c:a aac -b:a 192k final44.mkv 
             var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : "-c:a copy ";
             var stereoString = stereo == true ? "-ac 2 " : string.Empty;
             int attack = 50;
@@ -678,7 +677,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             };
 
-            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+            //SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 
             return processMakeVideo;
         }
