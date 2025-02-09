@@ -58,10 +58,14 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateSeamlessM4TUrl { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
+        public string AutoTranslateDeepLFormality { get; set; }
         public string AutoTranslateDeepLXUrl { get; set; }
         public string AutoTranslatePapagoApiKeyId { get; set; }
         public string AutoTranslatePapagoApiKey { get; set; }
-        public string AutoTranslateDeepLFormality { get; set; }
+        public string AutoTranslateMistralApiKey { get; set; }
+        public string AutoTranslateMistralUrl { get; set; }
+        public string AutoTranslateMistralModel { get; set; }
+        public string AutoTranslateMistralPrompt { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -77,9 +81,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GroqApiKey { get; set; }
         public string GroqModel { get; set; }
         public string DeepSeekUrl { get; set; }
+        public string AvalAiUrl { get; set; }
         public string DeepSeekPrompt { get; set; }
+        public string AvalAiPrompt { get; set; }
         public string DeepSeekApiKey { get; set; }
         public string DeepSeekModel { get; set; }
+        public string AvalAiApiKey { get; set; }
+        public string AvalAiModel { get; set; }
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -481,7 +489,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
-            AutoTranslateDeepLUrl = "http://localhost:1188";
+            AutoTranslateDeepLXUrl = "http://localhost:1188";
+            AutoTranslateMistralUrl = "https://api.mistral.ai/v1/chat/completions";
+            AutoTranslateMistralModel = MistralTranslate.Models[0];
+            AutoTranslateMistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             ChatGptModel = ChatGptTranslate.Models[0];
@@ -491,6 +502,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DeepSeekUrl = "https://api.deepseek.com/chat/completions";
             DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             DeepSeekModel = DeepSeekTranslate.Models[0];
+            AvalAiUrl = "https://api.avalai.ir/v1/chat/completions";
+            AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            AvalAiModel = AvalAi.Models[0];
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OpenRouterModel = OpenRouterTranslate.Models[0];

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TextToSpeech;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Translate;
-using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
@@ -147,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxAudioEncoding.Text = LanguageSettings.Current.TextToSpeech.CustomAudioEncoding;
             linkLabelCustomAudio.Text = LanguageSettings.Current.Settings.Title;
             linkLabelCustomAudio.Left = checkBoxAudioEncoding.Right;
+            checkBoxVoiceOver.Text = LanguageSettings.Current.TextToSpeech.UseVoiceOver;
             labelStability.Text = LanguageSettings.Current.TextToSpeech.Stability;
             labelSimilarity.Text = LanguageSettings.Current.TextToSpeech.Similarity;
             nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
@@ -424,6 +426,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void AddAudioToVideoFile(string audioFileName)
         {
+            Process addAudioProcess;
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
             {
@@ -445,18 +448,42 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 stereo = true;
             }
 
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            if (checkBoxVoiceOver.Checked)          
+            {
+                addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+            else
+            {
+                addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+           
             addAudioProcess.Start();
+
             while (!addAudioProcess.HasExited)
             {
+                string line = addAudioProcess.StandardError.ReadLine();
+                labelProgress.Text = "Writing Audio to Video: " + showffmpegOutput(line);
+             
                 Application.DoEvents();
                 if (_abort)
                 {
+                    addAudioProcess.Kill();         // kill process if abortet
                     break;
                 }
             }
-
             labelProgress.Text = string.Empty;
+        }
+
+        static string showffmpegOutput(string ffmpegOutput)
+        {          
+            Match match = Regex.Match(ffmpegOutput, "size=.*?KiB");
+
+            if (match.Success)
+            {
+                return match.Value;
+            }
+
+            return string.Empty;
         }
 
         private static void Cleanup(string waveFolder, string resultAudioFile)
@@ -1258,13 +1285,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     if ((int)result.StatusCode == 429)
                     {
-                        Task.Delay(1753).Wait();
+                        Task.Delay(2753).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
                         result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
                     }
 
                     if ((int)result.StatusCode == 429)
                     {
-                        Task.Delay(2707).Wait();
+                        Task.Delay(5707).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
                         result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
                     }
 
@@ -1830,7 +1859,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         if (murfLanguage != null)
                         {
                             nikseComboBoxRegion.Text = murfLanguage.Name;
-                        }   
+                        }
                         nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechMurfVoice;
                     }
                 }

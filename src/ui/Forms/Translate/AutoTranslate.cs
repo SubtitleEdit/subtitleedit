@@ -135,6 +135,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new GeminiTranslate(),
                 new PapagoTranslate(),
                 new DeepLXTranslate(),
+                new MistralTranslate(),
+                new AvalAi(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
             };
@@ -241,6 +243,33 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
                 });
 
+                return;
+            }
+
+            if (engineType == typeof(MistralTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AutoTranslateMistralUrl,
+                });
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Enabled = true;
+                labelFormality.Visible = true;
+
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Enabled = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.Items.AddRange(MistralTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.AutoTranslateMistralModel;
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
                 return;
             }
 
@@ -467,6 +496,31 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Items.Clear();
                 comboBoxFormality.Items.AddRange(DeepSeekTranslate.Models);
                 comboBoxFormality.Text = Configuration.Settings.Tools.DeepSeekModel;
+
+                return;
+            }
+
+            if (engineType == typeof(AvalAi))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AvalAiUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AvalAiApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(AvalAi.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.AvalAiModel ;
 
                 return;
             }
@@ -1188,6 +1242,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.ChatGptModel = comboBoxFormality.Text.Trim();
             }
 
+            if (engineType == typeof(MistralTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateMistralApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.AutoTranslateMistralUrl = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.AutoTranslateMistralModel = comboBoxFormality.Text.Trim();
+            }
+
             if (engineType == typeof(LmStudioTranslate))
             {
                 Configuration.Settings.Tools.LmStudioApiUrl = nikseComboBoxUrl.Text.Trim();
@@ -1217,6 +1278,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.DeepSeekApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.DeepSeekModel = comboBoxFormality.Text.Trim();
             }
+
+            if (engineType == typeof(AvalAi) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AvalAiApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.AvalAiModel = comboBoxFormality.Text.Trim();
+            }
+
 
             if (engineType == typeof(OpenRouterTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {

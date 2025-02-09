@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// Google translate via Google V1 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslateV1 : IAutoTranslator
+    public class GoogleTranslateV1 : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -264,8 +264,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 res = res.Replace("\\n", "\n");
             }
 
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(" \n", "\n").Trim();
+
             var lines = res.SplitToLines().ToList();
             return lines;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

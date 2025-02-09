@@ -1,80 +1,82 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class OpenRouterTranslate : IAutoTranslator, IDisposable
+    /// <summary>
+    /// Mistral AI translator - see https://mistral.ai/en
+    /// </summary>
+    public class MistralTranslate : IAutoTranslator, IDisposable
     {
+        private string _apiKey;
+        private string _apiUrl;
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "OpenRouter";
+        public static string StaticName { get; set; } = "Mistral AI Translate";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://openrouter.ai/";
+        public string Url => "https://mistral.ai";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 
         /// <summary>
-        /// See https://openrouter.ai/docs/models
+        /// See https://docs.mistral.ai/getting-started/models/models_overview/
         /// </summary>
         public static string[] Models => new[]
         {
-            "deepseek/deepseek-r1",
-            "google/gemini-2.0-flash-thinking-exp:free",
-            "microsoft/phi-4",
-            "meta-llama/llama-3.3-70b-instruct",
-            "openai/gpt-4o-2024-11-20",
-            "anthropic/claude-3.5-sonnet",
+            "mistral-small-latest",
+            "open-mistral-nemo",
         };
+
 
         public void Initialize()
         {
-            _httpClient?.Dispose();
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.OpenRouterUrl.TrimEnd('/'));
-            _httpClient.Timeout = TimeSpan.FromMinutes(15);
+            _apiKey = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+            _apiUrl = Configuration.Settings.Tools.AutoTranslateMistralUrl;
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterApiKey))
+            if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_apiUrl))
             {
-                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.OpenRouterApiKey);
+                return;
             }
+
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + _apiKey.Trim());
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return ListLanguages();
+            return ChatGptTranslate.ListLanguages();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return ListLanguages();
+            return ChatGptTranslate.ListLanguages();
         }
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.OpenRouterModel;
+            var model = Configuration.Settings.Tools.AutoTranslateMistralModel;
             if (string.IsNullOrEmpty(model))
             {
                 model = Models[0];
-                Configuration.Settings.Tools.OpenRouterModel = model;
+                Configuration.Settings.Tools.AutoTranslateMistralModel = model;
             }
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterPrompt))
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralPrompt))
             {
-                Configuration.Settings.Tools.OpenRouterPrompt = new ToolsSettings().OpenRouterPrompt;
+                Configuration.Settings.Tools.AutoTranslateMistralPrompt = new ToolsSettings().AutoTranslateMistralPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.OpenRouterPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.AutoTranslateMistralPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -84,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("OpenRouter Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("MistralTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 
             result.EnsureSuccessStatusCode();
@@ -105,11 +107,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             outputText = ChatGptTranslate.FixNewLines(outputText);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             return outputText.Trim();
-        }
-
-        public static List<TranslationPair> ListLanguages()
-        {
-            return ChatGptTranslate.ListLanguages();
         }
 
         public void Dispose()

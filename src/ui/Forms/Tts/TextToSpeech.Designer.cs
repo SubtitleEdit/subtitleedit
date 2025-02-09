@@ -40,6 +40,7 @@
             this.nikseUpDownSimilarity = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSimilarity = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelStability = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.checkBoxVoiceOver = new System.Windows.Forms.CheckBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.nikseComboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.linkLabelCustomAudio = new System.Windows.Forms.LinkLabel();
@@ -127,6 +128,7 @@
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxSettings.Controls.Add(this.chkusePiper2Pass);
+            this.groupBoxSettings.Controls.Add(this.checkBoxVoiceOver);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownStability);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownSimilarity);
             this.groupBoxSettings.Controls.Add(this.labelSimilarity);
@@ -155,6 +157,7 @@
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
             // 
+
             // chkusePiper2Pass
             // 
             this.chkusePiper2Pass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -165,6 +168,198 @@
             this.chkusePiper2Pass.TabIndex = 106;
             this.chkusePiper2Pass.Text = "speed correction (piper 2 pass )";
             this.chkusePiper2Pass.UseVisualStyleBackColor = true;
+            // checkBoxVoiceOver
+            // 
+            this.checkBoxVoiceOver.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxVoiceOver.AutoSize = true;
+            this.checkBoxVoiceOver.Location = new System.Drawing.Point(30, 402);
+            this.checkBoxVoiceOver.Name = "checkBoxVoiceOver";
+            this.checkBoxVoiceOver.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxVoiceOver.TabIndex = 44;
+            this.checkBoxVoiceOver.Text = "Use Voiceover";
+            this.checkBoxVoiceOver.UseVisualStyleBackColor = true;
+            // 
+            // labelLanguage
+            // 
+            this.labelLanguage.AutoSize = true;
+            this.labelLanguage.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelLanguage.Location = new System.Drawing.Point(14, 274);
+            this.labelLanguage.Name = "labelLanguage";
+            this.labelLanguage.Size = new System.Drawing.Size(55, 13);
+            this.labelLanguage.TabIndex = 36;
+            this.labelLanguage.Text = "Language";
+            // 
+            // linkLabelCustomAudio
+            // 
+            this.linkLabelCustomAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelCustomAudio.AutoSize = true;
+            this.linkLabelCustomAudio.Location = new System.Drawing.Point(163, 385);
+            this.linkLabelCustomAudio.Name = "linkLabelCustomAudio";
+            this.linkLabelCustomAudio.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelCustomAudio.TabIndex = 43;
+            this.linkLabelCustomAudio.TabStop = true;
+            this.linkLabelCustomAudio.Text = "Settings";
+            this.linkLabelCustomAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCustomAudio_LinkClicked);
+            // 
+            // checkBoxAudioEncoding
+            // 
+            this.checkBoxAudioEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAudioEncoding.AutoSize = true;
+            this.checkBoxAudioEncoding.Location = new System.Drawing.Point(30, 384);
+            this.checkBoxAudioEncoding.Name = "checkBoxAudioEncoding";
+            this.checkBoxAudioEncoding.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAudioEncoding.TabIndex = 42;
+            this.checkBoxAudioEncoding.Text = "Custom audio encoding";
+            this.checkBoxAudioEncoding.UseVisualStyleBackColor = true;
+            // 
+            // labelRegion
+            // 
+            this.labelRegion.AutoSize = true;
+            this.labelRegion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelRegion.Location = new System.Drawing.Point(14, 245);
+            this.labelRegion.Name = "labelRegion";
+            this.labelRegion.Size = new System.Drawing.Size(41, 13);
+            this.labelRegion.TabIndex = 32;
+            this.labelRegion.Text = "Region";
+            // 
+            // labelVoiceCount
+            // 
+            this.labelVoiceCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelVoiceCount.Location = new System.Drawing.Point(172, 83);
+            this.labelVoiceCount.Name = "labelVoiceCount";
+            this.labelVoiceCount.Size = new System.Drawing.Size(196, 23);
+            this.labelVoiceCount.TabIndex = 29;
+            this.labelVoiceCount.Text = "255";
+            this.labelVoiceCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // checkBoxShowPreview
+            // 
+            this.checkBoxShowPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxShowPreview.AutoSize = true;
+            this.checkBoxShowPreview.Checked = true;
+            this.checkBoxShowPreview.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 340);
+            this.checkBoxShowPreview.Name = "checkBoxShowPreview";
+            this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxShowPreview.TabIndex = 40;
+            this.checkBoxShowPreview.Text = "Review audio clips";
+            this.checkBoxShowPreview.UseVisualStyleBackColor = true;
+            // 
+            // labelApiKey
+            // 
+            this.labelApiKey.AutoSize = true;
+            this.labelApiKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelApiKey.Location = new System.Drawing.Point(14, 216);
+            this.labelApiKey.Name = "labelApiKey";
+            this.labelApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelApiKey.TabIndex = 28;
+            this.labelApiKey.Text = "API key";
+            // 
+            // buttonTestVoice
+            // 
+            this.buttonTestVoice.Location = new System.Drawing.Point(17, 141);
+            this.buttonTestVoice.Name = "buttonTestVoice";
+            this.buttonTestVoice.Size = new System.Drawing.Size(150, 23);
+            this.buttonTestVoice.TabIndex = 15;
+            this.buttonTestVoice.Text = "Test voice";
+            this.buttonTestVoice.UseVisualStyleBackColor = true;
+            this.buttonTestVoice.Click += new System.EventHandler(this.buttonTestVoice_Click);
+            // 
+            // checkBoxAddToVideoFile
+            // 
+            this.checkBoxAddToVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAddToVideoFile.AutoSize = true;
+            this.checkBoxAddToVideoFile.Checked = true;
+            this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 364);
+            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
+            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxAddToVideoFile.TabIndex = 41;
+            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
+            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
+            // 
+            // labelVoice
+            // 
+            this.labelVoice.AutoSize = true;
+            this.labelVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelVoice.Location = new System.Drawing.Point(14, 93);
+            this.labelVoice.Name = "labelVoice";
+            this.labelVoice.Size = new System.Drawing.Size(34, 13);
+            this.labelVoice.TabIndex = 16;
+            this.labelVoice.Text = "Voice";
+            // 
+            // contextMenuStripVoices
+            // 
+            this.contextMenuStripVoices.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshVoicesToolStripMenuItem});
+            this.contextMenuStripVoices.Name = "contextMenuStripVoices";
+            this.contextMenuStripVoices.Size = new System.Drawing.Size(150, 26);
+            this.contextMenuStripVoices.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripVoices_Opening);
+            // 
+            // refreshVoicesToolStripMenuItem
+            // 
+            this.refreshVoicesToolStripMenuItem.Name = "refreshVoicesToolStripMenuItem";
+            this.refreshVoicesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.refreshVoicesToolStripMenuItem.Text = "Refresh voices";
+            this.refreshVoicesToolStripMenuItem.Click += new System.EventHandler(this.refreshVoicesToolStripMenuItem_Click);
+            // 
+            // listViewActors
+            // 
+            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderActor,
+            this.columnHeaderVoice});
+            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
+            this.listViewActors.FullRowSelect = true;
+            this.listViewActors.GridLines = true;
+            this.listViewActors.HideSelection = false;
+            this.listViewActors.Location = new System.Drawing.Point(412, 42);
+            this.listViewActors.Name = "listViewActors";
+            this.listViewActors.Size = new System.Drawing.Size(420, 397);
+            this.listViewActors.TabIndex = 40;
+            this.listViewActors.UseCompatibleStateImageBehavior = false;
+            this.listViewActors.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderActor
+            // 
+            this.columnHeaderActor.Text = "Actor";
+            this.columnHeaderActor.Width = 200;
+            // 
+            // columnHeaderVoice
+            // 
+            this.columnHeaderVoice.Text = "Voice";
+            this.columnHeaderVoice.Width = 200;
+            // 
+            // contextMenuStripActors
+            // 
+            this.contextMenuStripActors.Name = "contextMenuStripActors";
+            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
+            // 
+            // labelActors
+            // 
+            this.labelActors.AutoSize = true;
+            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelActors.Location = new System.Drawing.Point(412, 19);
+            this.labelActors.Name = "labelActors";
+            this.labelActors.Size = new System.Drawing.Size(170, 13);
+            this.labelActors.TabIndex = 19;
+            this.labelActors.Text = "Right-click to assign actor to voice";
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCancel.Location = new System.Drawing.Point(757, 478);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 101;
+            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+
             // 
             // nikseUpDownStability
             // 
@@ -181,7 +376,7 @@
             0,
             0,
             0});
-            this.nikseUpDownStability.Location = new System.Drawing.Point(102, 298);
+            this.nikseUpDownStability.Location = new System.Drawing.Point(102, 296);
             this.nikseUpDownStability.Maximum = new decimal(new int[] {
             100,
             0,
@@ -219,7 +414,7 @@
             0,
             0,
             0});
-            this.nikseUpDownSimilarity.Location = new System.Drawing.Point(251, 298);
+            this.nikseUpDownSimilarity.Location = new System.Drawing.Point(251, 296);
             this.nikseUpDownSimilarity.Maximum = new decimal(new int[] {
             100,
             0,
@@ -245,7 +440,7 @@
             // labelSimilarity
             // 
             this.labelSimilarity.AutoSize = true;
-            this.labelSimilarity.Location = new System.Drawing.Point(198, 302);
+            this.labelSimilarity.Location = new System.Drawing.Point(198, 300);
             this.labelSimilarity.Name = "labelSimilarity";
             this.labelSimilarity.Size = new System.Drawing.Size(47, 13);
             this.labelSimilarity.TabIndex = 99;
@@ -254,7 +449,7 @@
             // labelStability
             // 
             this.labelStability.AutoSize = true;
-            this.labelStability.Location = new System.Drawing.Point(15, 302);
+            this.labelStability.Location = new System.Drawing.Point(15, 300);
             this.labelStability.Name = "labelStability";
             this.labelStability.Size = new System.Drawing.Size(43, 13);
             this.labelStability.TabIndex = 97;
@@ -638,5 +833,7 @@
         private Controls.NikseLabel labelSimilarity;
         private Controls.NikseLabel labelStability;
         private System.Windows.Forms.CheckBox chkusePiper2Pass;
+        private System.Windows.Forms.CheckBox checkBoxVoiceOver;
+
     }
 }

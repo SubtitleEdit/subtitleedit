@@ -87,12 +87,28 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     nikseTextBoxPrompt.Text = new ToolsSettings().DeepSeekPrompt;
                 }
             }
+            else if (_engineType == typeof(AvalAi))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.AvalAiPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().AvalAiPrompt;
+                }
+            }
             else if (_engineType == typeof(OpenRouterTranslate))
             {
                 nikseTextBoxPrompt.Text = Configuration.Settings.Tools.OpenRouterPrompt;
                 if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
                 {
                     nikseTextBoxPrompt.Text = new ToolsSettings().OpenRouterPrompt;
+                }
+            }
+            else if (_engineType == typeof(MistralTranslate))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.AutoTranslateMistralPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().AutoTranslateMistralPrompt;
                 }
             }
             else
@@ -162,9 +178,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.DeepSeekPrompt = nikseTextBoxPrompt.Text;
             }
+            else if (_engineType == typeof(AvalAi))
+            {
+                Configuration.Settings.Tools.AvalAiPrompt = nikseTextBoxPrompt.Text;
+            }
             else if (_engineType == typeof(OpenRouterTranslate))
             {
                 Configuration.Settings.Tools.OpenRouterPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(MistralTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateMistralPrompt = nikseTextBoxPrompt.Text;
             }
 
             if (comboBoxParagraphHandling.SelectedIndex == 1)
