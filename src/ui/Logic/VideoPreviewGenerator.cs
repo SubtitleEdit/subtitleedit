@@ -654,6 +654,37 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
+        // new method for creating a voice over
+        //
+        public static Process AddVoiceOver(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : "-c:a copy ";
+            var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+            int attack = 50;
+            int release = 500;
+            float threshold = 0.01f;
+            string strthreshold = threshold.ToString("F2").Replace(",", ".");
+            int ratio = 5;
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    //Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]asplit=2[sc][mix];[0:a]apad[bg_padded];[bg_padded][sc]sidechaincompress=threshold=0.02:ratio=4:attack=100:release=500[bg];[bg][mix]amerge=inputs=2,pan=stereo|c0<c0+c2|c1<c1+c3[final]\" -map 0:v -map [final] -c:v copy -c:a aac -b:a 192k \"{outputFileName}\"",
+                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]asplit=2[sc][mix];[0:a]apad[bg_padded];[bg_padded][sc]sidechaincompress=threshold={strthreshold}:ratio={ratio}:attack={attack}:release={release}[bg];[bg][mix]amerge=inputs=2,pan=stereo|c0<c0+c2|c1<c1+c3[final]\" -map 0:v -map [final] -c:v copy -c:a aac -b:a 192k \"{outputFileName}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            //SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
         public static Process ConvertFormat(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var processMakeVideo = new Process
