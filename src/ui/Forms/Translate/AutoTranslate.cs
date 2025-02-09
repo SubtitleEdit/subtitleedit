@@ -131,11 +131,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new AnthropicTranslate(),
                 new GroqTranslate(),
                 new DeepSeekTranslate(),
-                new AvalAi(),
                 new OpenRouterTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
                 new DeepLXTranslate(),
+                new MistralTranslate(),
+                new AvalAi(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
             };
@@ -242,6 +243,33 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
                 });
 
+                return;
+            }
+
+            if (engineType == typeof(MistralTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AutoTranslateMistralUrl,
+                });
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Enabled = true;
+                labelFormality.Visible = true;
+
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Enabled = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.Items.AddRange(MistralTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.AutoTranslateMistralModel;
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
                 return;
             }
 
@@ -1212,6 +1240,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.ChatGptUrl = nikseComboBoxUrl.Text.Trim();
                 Configuration.Settings.Tools.ChatGptModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(MistralTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateMistralApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.AutoTranslateMistralUrl = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.AutoTranslateMistralModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(LmStudioTranslate))

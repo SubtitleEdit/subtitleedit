@@ -2335,6 +2335,30 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.AnthropicApiModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AutoTranslateMistralApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMistralApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateMistralModel");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMistralModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateMistralUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMistralUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateMistralPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMistralPrompt = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
             if (subNode != null)
             {
@@ -9114,6 +9138,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
                 xmlWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
                 xmlWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
+                xmlWriter.WriteElementString("AutoTranslateMistralApiKey", settings.Tools.AutoTranslateMistralApiKey);
+                xmlWriter.WriteElementString("AutoTranslateMistralModel", settings.Tools.AutoTranslateMistralModel);
+                xmlWriter.WriteElementString("AutoTranslateMistralUrl", settings.Tools.AutoTranslateMistralUrl);
+                xmlWriter.WriteElementString("AutoTranslateMistralPrompt", settings.Tools.AutoTranslateMistralPrompt);
                 xmlWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
