@@ -2359,6 +2359,24 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.AutoTranslateMistralPrompt = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AvalAiApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AvalAiApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AvalAiPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.AvalAiPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AvalAiModel");
+            if (subNode != null)
+            {
+                settings.Tools.AvalAiModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
             if (subNode != null)
             {
@@ -9142,6 +9160,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AutoTranslateMistralModel", settings.Tools.AutoTranslateMistralModel);
                 xmlWriter.WriteElementString("AutoTranslateMistralUrl", settings.Tools.AutoTranslateMistralUrl);
                 xmlWriter.WriteElementString("AutoTranslateMistralPrompt", settings.Tools.AutoTranslateMistralPrompt);
+                xmlWriter.WriteElementString("AvalAiPrompt", settings.Tools.AvalAiPrompt);
+                xmlWriter.WriteElementString("AvalAiApiKey", settings.Tools.AvalAiApiKey);
+                xmlWriter.WriteElementString("AvalAiModel", settings.Tools.AvalAiModel);
                 xmlWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
