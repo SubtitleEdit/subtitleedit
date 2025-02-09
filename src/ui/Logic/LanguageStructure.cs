@@ -3400,6 +3400,7 @@
             public string GeneratingSpeechFromTextXOfY { get; set; }
             public string ReviewAudioClips { get; set; }
             public string CustomAudioEncoding { get; set; }
+            public string UseVoiceOver { get; set; }
             public string ReviewInfo { get; set; }
             public string Play { get; set; }
             public string AutoContinue { get; set; }

@@ -8755,6 +8755,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "TextToSpeech/CustomAudioEncoding":
                     language.TextToSpeech.CustomAudioEncoding = reader.Value;
                     break;
+                case "TextToSpeech/UseVoiceOver":
+                    language.TextToSpeech.UseVoiceOver = reader.Value;
+                    break;
                 case "TextToSpeech/ReviewInfo":
                     language.TextToSpeech.ReviewInfo = reader.Value;
                     break;
