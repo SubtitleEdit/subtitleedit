@@ -98,7 +98,7 @@ UsePreviousLanguage=no
 
 DefaultDirName={pf}\{#app_name}
 DefaultGroupName={#app_name}
-MinVersion=6.0
+MinVersion=6.1
 LicenseFile=..\LICENSE.txt
 InfoAfterFile=..\Changelog.txt
 SetupIconFile=..\src\ui\Icons\SE.ico
