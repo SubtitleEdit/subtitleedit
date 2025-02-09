@@ -103,6 +103,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     nikseTextBoxPrompt.Text = new ToolsSettings().OpenRouterPrompt;
                 }
             }
+            else if (_engineType == typeof(MistralTranslate))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.AutoTranslateMistralPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().AutoTranslateMistralPrompt;
+                }
+            }
             else
             {
                 labelPrompt.Visible = false;
@@ -177,6 +185,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (_engineType == typeof(OpenRouterTranslate))
             {
                 Configuration.Settings.Tools.OpenRouterPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(MistralTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateMistralPrompt = nikseTextBoxPrompt.Text;
             }
 
             if (comboBoxParagraphHandling.SelectedIndex == 1)
