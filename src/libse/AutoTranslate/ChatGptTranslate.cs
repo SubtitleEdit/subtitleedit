@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class ChatGptTranslate : IAutoTranslator
+    public class ChatGptTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -235,6 +235,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             outputText = outputText.Replace("<br  />", Environment.NewLine);
             outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             return outputText.Trim();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

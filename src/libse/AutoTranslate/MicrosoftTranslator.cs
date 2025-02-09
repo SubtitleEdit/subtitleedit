@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate
     /// </summary>
-    public class MicrosoftTranslator : IAutoTranslator
+    public class MicrosoftTranslator : IAutoTranslator, IDisposable
     {
         public const string SignUpUrl = "https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource";
         public const string GoToUrl = "https://www.bing.com/translator";
@@ -180,6 +180,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 }
             }
             return list;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

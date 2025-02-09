@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// DeepL Pro V2 translator - see https://www.deepl.com/api.html
     /// </summary>
-    public class DeepLTranslate : IAutoTranslator
+    public class DeepLTranslate : IAutoTranslator, IDisposable
     {
         private string _apiKey;
         private string _apiUrl;
@@ -224,6 +224,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
                 new KeyValuePair<string, string>("formality", _formality),
             });
+        }
+
+        public void Dispose()
+        {
+            _client?.Dispose();
         }
     }
 }

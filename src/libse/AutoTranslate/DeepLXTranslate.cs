@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// DeepLX translator - see https://github.com/OwO-Network/DeepLX
     /// </summary>
-    public class DeepLXTranslate : IAutoTranslator
+    public class DeepLXTranslate : IAutoTranslator, IDisposable
     {
         private string _apiUrl;
         private HttpClient _client;
@@ -145,6 +145,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 new KeyValuePair<string, string>("target_lang", targetLanguageCode),
                 new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
             });
+        }
+
+        public void Dispose()
+        {
+            _client?.Dispose();
         }
     }
 }

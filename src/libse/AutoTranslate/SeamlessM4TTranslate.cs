@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class SeamlessM4TTranslate : IAutoTranslator
+    public class SeamlessM4TTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -129,6 +129,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }
