@@ -49,13 +49,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 MakeTranslationPair("Arabic", "ar"),
                 MakeTranslationPair("Bulgarian", "bg"),
-                MakeTranslationPair("Chinese (simplified)", "zh"),
-                MakeTranslationPair("Chinese (traditional)", "zh-hant"),
+                MakeTranslationPair("Chinese", "zh"),
                 MakeTranslationPair("Czech", "cs"),
                 MakeTranslationPair("Danish", "da"),
                 MakeTranslationPair("Dutch", "nl", true),
-                MakeTranslationPair("English (American)", "en-us", true),
-                MakeTranslationPair("English (British)", "en", true),
+                MakeTranslationPair("English", "en", true),
                 MakeTranslationPair("Estonian", "et"),
                 MakeTranslationPair("Finnish", "fi"),
                 MakeTranslationPair("French", "fr", true),
@@ -71,7 +69,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Norwegian (Bokmål)", "nb"),
                 MakeTranslationPair("Polish", "pl", true),
                 MakeTranslationPair("Portuguese", "pt", true),
-                MakeTranslationPair("Portuguese (Brazil)", "pt-br", true),
                 MakeTranslationPair("Romanian", "ro"),
                 MakeTranslationPair("Russian", "ru", true),
                 MakeTranslationPair("Slovak", "sk"),
@@ -134,19 +131,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "en";
-            }
-            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "pt";
-            }
-            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
-            {
-                sourceLanguageCode = "zh";
-            }
-
             var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
