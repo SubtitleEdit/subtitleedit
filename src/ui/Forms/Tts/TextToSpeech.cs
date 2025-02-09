@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
