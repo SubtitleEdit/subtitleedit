@@ -17,6 +17,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -424,6 +425,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void AddAudioToVideoFile(string audioFileName)
         {
+
+            Process addAudioProcess;
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
             {
@@ -444,19 +447,42 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 stereo = true;
             }
-
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            if (chkVoiceOver.Checked)          
+            {
+                addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+            else
+            {
+                addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            }
+           
             addAudioProcess.Start();
+
             while (!addAudioProcess.HasExited)
             {
+                string line = addAudioProcess.StandardError.ReadLine();
+                labelProgress.Text = "Writing Audio to Video: " + showffmpegOutput(line);
+             
                 Application.DoEvents();
                 if (_abort)
                 {
+                    addAudioProcess.Kill();         // kill process if abortet
                     break;
                 }
             }
-
             labelProgress.Text = string.Empty;
+        }
+
+        static string showffmpegOutput(string ffmpegOutput)
+        {          
+            Match match = Regex.Match(ffmpegOutput, "size=.*?KiB");
+
+            if (match.Success)
+            {
+                return match.Value;
+            }
+
+            return string.Empty;
         }
 
         private static void Cleanup(string waveFolder, string resultAudioFile)
@@ -1749,7 +1775,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         if (murfLanguage != null)
                         {
                             nikseComboBoxRegion.Text = murfLanguage.Name;
-                        }   
+                        }
                         nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechMurfVoice;
                     }
                 }
