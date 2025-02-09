@@ -1197,6 +1197,21 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     var content = new StringContent(data, Encoding.UTF8);
                     content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+
+                    if ((int)result.StatusCode == 429)
+                    {
+                        Task.Delay(2753).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
+                        result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    }
+
+                    if ((int)result.StatusCode == 429)
+                    {
+                        Task.Delay(5707).Wait();
+                        content = new StringContent(data, Encoding.UTF8);
+                        result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                    }
+
                     var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                     if (!result.IsSuccessStatusCode)

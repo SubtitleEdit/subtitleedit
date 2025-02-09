@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x558a, new SpecialCharacter("Ū")},
             { 0x758a, new SpecialCharacter("ū")},
 
+            { 0x20, new SpecialCharacter(" ")},
             { 0x09, new SpecialCharacter(" ")},
             { 0x23, new SpecialCharacter("£")},
             { 0x7c, new SpecialCharacter("æ")},
@@ -577,8 +578,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Dictionary<int, SpecialCharacter> CyrillicCodes = new Dictionary<int, SpecialCharacter>
         {
-            { 0x09, new SpecialCharacter(" ")},
             { 0x20, new SpecialCharacter(" ")},
+            { 0x09, new SpecialCharacter(" ")},
             { 0x21, new SpecialCharacter("!")},
             { 0x22, new SpecialCharacter("Э")},
             { 0x23, new SpecialCharacter("/")},

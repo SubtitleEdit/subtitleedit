@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.10</Version>
+    <Version>4.0.11</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -2135,6 +2135,7 @@ Command line: {1} {2}
     <ExactlyTwoLines>正好两行</ExactlyTwoLines>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
     <Bookmarked>已收藏</Bookmarked>
+    <BookmarkContains>收藏包含</BookmarkContains>
     <BlankLines>空行</BlankLines>
   </ModifySelection>
   <MultipleReplace>

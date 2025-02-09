@@ -79,6 +79,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     nikseTextBoxPrompt.Text = new ToolsSettings().GroqPrompt;
                 }
             }
+            else if (_engineType == typeof(DeepSeekTranslate))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.DeepSeekPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().DeepSeekPrompt;
+                }
+            }
+            else if (_engineType == typeof(AvalAi))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.AvalAiPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().AvalAiPrompt;
+                }
+            }
             else if (_engineType == typeof(OpenRouterTranslate))
             {
                 nikseTextBoxPrompt.Text = Configuration.Settings.Tools.OpenRouterPrompt;
@@ -149,6 +165,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (_engineType == typeof(GroqTranslate))
             {
                 Configuration.Settings.Tools.GroqPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(DeepSeekTranslate))
+            {
+                Configuration.Settings.Tools.DeepSeekPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(AvalAi))
+            {
+                Configuration.Settings.Tools.AvalAiPrompt = nikseTextBoxPrompt.Text;
             }
             else if (_engineType == typeof(OpenRouterTranslate))
             {

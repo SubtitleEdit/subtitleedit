@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GroqTranslate : IAutoTranslator
+    public class GroqTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -28,10 +28,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "llama-3.2-1b-preview",
-            "llama-3.2-3b-preview", 
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
             "mixtral-8x7b-32768",
-            "gemma-7b-it",
             "gemma2-9b-it",
         };
 
@@ -114,6 +113,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static List<TranslationPair> ListLanguages()
         {
             return ChatGptTranslate.ListLanguages();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
@@ -15,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.Ocr.Tesseract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -28,10 +30,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
-using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -338,6 +338,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractOcrAutoFixes;
         private string Tesseract5Version = "5.5.0";
 
+        // Minimum driver version for CUDA 12.3 (PaddleOCR GPU version)
+        private static readonly string requiredDriverVersion = "545.84";
+
+        // Last PaddleOCR version that does not support batch mode
+        private static readonly string lastPaddleOcrVersionWithoutBatchMode = "2.9.1";
+
+        // Minimum PaddleOCR version with PP-OCRv4 model support
+        private static readonly string requiredPaddleOcrVersionForPPOCRv4 = "2.7.0";
+
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private XmlDocument _bdnXmlDocument;
@@ -539,11 +548,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
 
             _paddleOcr = new PaddleOcr();
+            checkBoxPaddleOcrUseGpu.Checked = Configuration.Settings.VobSubOcr.PaddleOcrUseGpu;
             nikseComboBoxPaddleLanguages.Items.Clear();
             foreach (var paddleLanguage in PaddleOcr.GetLanguages())
             {
                 nikseComboBoxPaddleLanguages.Items.Add(paddleLanguage);
-                if (paddleLanguage.Code == "en")
+                if (paddleLanguage.Code == Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode)
                 {
                     nikseComboBoxPaddleLanguages.SelectedIndex = nikseComboBoxPaddleLanguages.Items.Count - 1;
                 }
@@ -1023,7 +1033,58 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
-            for (int i = 0; i < max; i++)
+
+            bool hasPaddleBatchSupport = HasPaddleBatchSupport();
+
+            // Collect all remaining bitmaps for PaddleOCR batch processing
+            List<PaddleOcrInput> paddleOcrInputs = null;
+            if (_ocrMethodIndex == _ocrMethodPaddle && hasPaddleBatchSupport)
+            {
+                for (var i = 0; i < max; i++)
+                {
+                    GetSubtitleTime(i, out var startTime, out var endTime);
+                    paddleOcrInputs.Add(new PaddleOcrInput
+                    {
+                        Bitmap = GetSubtitleBitmap(i),
+                        Index = i,
+                        ProgressText = $"{i} / {max}: {startTime} - {endTime}"
+                    });
+                }
+
+                // Outside of background worker before OCRViaPaddleBatch!
+                if (_ocrFixEngine == null)
+                {
+                    comboBoxDictionaries_SelectedIndexChanged(null, null);
+                }
+
+                var resetEvent = new ManualResetEvent(false);
+                var worker = new BackgroundWorker();
+                worker.DoWork += (sender, e) =>
+                {
+                    OcrViaPaddleBatch(paddleOcrInputs, progress =>
+                    {
+                        if (ProgressCallback != null)
+                        {
+                            var percent = (int)Math.Round(progress.Index * 100.0 / max);
+                            ProgressCallback?.Invoke($"{percent}%");
+                        }
+                    }, () => _abort);
+                };
+
+                worker.RunWorkerCompleted += (sender, e) =>
+                {
+                    resetEvent.Set();
+                };
+
+                worker.RunWorkerAsync();
+
+                while (!resetEvent.WaitOne(100))
+                {
+                    Application.DoEvents();
+                }
+            };
+
+            for (var i = 0; i < max; i++)
             {
                 _selectedIndex = i;
                 Application.DoEvents();
@@ -1038,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     ProgressCallback?.Invoke($"{percent}%");
                 }
 
-                string text;
+                string text = string.Empty;
                 if (_ocrMethodIndex == _ocrMethodNocr)
                 {
                     text = OcrViaNOCR(GetSubtitleBitmap(i), i);
@@ -1047,7 +1108,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = OcrViaCloudVision(GetSubtitleBitmap(i), i);
                 }
-                else if (_ocrMethodIndex == _ocrMethodPaddle)
+                else if (_ocrMethodIndex == _ocrMethodPaddle && hasPaddleBatchSupport)
+                {
+                    //text = paddleResults[i];
+                }
+                else if (_ocrMethodIndex == _ocrMethodPaddle && !hasPaddleBatchSupport)
                 {
                     text = OcrViaPaddle(GetSubtitleBitmap(i), i);
                 }
@@ -4780,6 +4845,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
                 }
             }
+            else if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                buttonDownloadPaddleOCRModels_Click(sender, e);
+            }
 
             progressBar1.Maximum = max;
             progressBar1.Value = 0;
@@ -5209,7 +5278,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_abort)
             {
                 // Only overwrite text when empty
-                if (textBoxCurrentText.Text == String.Empty)
+                if (textBoxCurrentText.Text == string.Empty)
                 {
                     textBoxCurrentText.Text = text;
                 }
@@ -5242,6 +5311,105 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return false;
+        }
+
+        private bool MainLoopPaddleBatch(int max, int i, List<int> selectedIndices = null)
+        {
+            if (selectedIndices == null && i >= max)
+            {
+                SetButtonsEnabledAfterOcrDone();
+                _mainOcrRunning = false;
+                return true;
+            }
+
+            // Collect the bitmaps to process
+            var paddleInput = new List<PaddleOcrInput>();
+            if (selectedIndices != null)
+            {
+                foreach (var index in selectedIndices)
+                {
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    paddleInput.Add(new PaddleOcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
+                }
+            }
+            else
+            {
+                for (var index = i; index < max; index++)
+                {
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    paddleInput.Add(new PaddleOcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
+                }
+            }
+
+            labelStatus.Text = $"Starting PaddleOCR... This can take a while...";
+            labelStatus.Refresh();
+
+            // Outside of background worker before OCRViaPaddleBatch!
+            if (_ocrFixEngine == null)
+            {
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
+            }
+
+            var resetEvent = new ManualResetEvent(false);
+            var worker = new BackgroundWorker();
+            worker.DoWork += (sender, e) =>
+            {
+                OcrViaPaddleBatch(paddleInput, progress =>
+                {
+                    labelStatus.Invoke(new Action(() =>
+                    {
+                        labelStatus.Text = progress.ProgressText;
+
+                        progressBar1.Maximum = max;
+                        progressBar1.Value = progress.Index;
+
+                        if (ProgressCallback != null)
+                        {
+                            var percent = (int)Math.Round(progress.Index * 100.0 / max);
+                            ProgressCallback?.Invoke($"{percent}%");
+                        }
+
+                        var text = PostFixPaddle(progress);
+                        _subtitle.Paragraphs[progress.Index].Text = text;   
+
+                        subtitleListView1.SetText(progress.Index, text);
+                        subtitleListView1.EnsureVisible(progress.Index);
+                        subtitleListView1.Items[progress.Index].Selected = true;
+                        subtitleListView1.Items[progress.Index].Focused = true;
+                        if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == progress.Index)
+                        {
+                            textBoxCurrentText.Text = text;
+                        }
+
+                        labelStatus.Refresh();
+                        progressBar1.Refresh();
+                    }));
+                }, () => _abort);
+            };
+
+            worker.RunWorkerCompleted += (sender, e) =>
+            {
+                resetEvent.Set();
+            };
+
+            worker.RunWorkerAsync();
+
+            while (!resetEvent.WaitOne(100))
+            {
+                Application.DoEvents();
+            }
+
+            return true;
         }
 
         private string SetTopAlign(int i, string text)
@@ -5280,10 +5448,67 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return false;
         }
 
+        private bool HasPaddleBatchSupport()
+        {
+            if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
+            {
+                return true; // Standalone version supports batch processing
+            }
+
+            try
+            {
+                using (var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "python",
+                        Arguments = "-m pip show paddleocr",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    }
+                })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        return false;
+                    }
+
+                    foreach (var line in output.Split('\n'))
+                    {
+                        if (line.StartsWith("Version:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string installedVersion = line.Split(':')[1].Trim();
+                            return string.Compare(installedVersion, lastPaddleOcrVersionWithoutBatchMode, StringComparison.Ordinal) > 0;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private void mainOcrTimer_Tick(object sender, EventArgs e)
         {
             _mainOcrTimer.Stop();
-            bool done = _ocrMethodIndex == _ocrMethodTesseract5 || _ocrMethodIndex == _ocrMethodTesseract302 ? MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex) : MainLoop(_mainOcrTimerMax, _mainOcrIndex);
+
+            bool done = _ocrMethodIndex == _ocrMethodTesseract5 || _ocrMethodIndex == _ocrMethodTesseract302
+            ? MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex)
+            : _ocrMethodIndex == _ocrMethodPaddle
+                ? (HasPaddleBatchSupport()
+                    ? MainLoopPaddleBatch(_mainOcrTimerMax, _mainOcrIndex, _mainOcrSelectedIndices)
+                    : MainLoop(_mainOcrTimerMax, _mainOcrIndex))
+                : MainLoop(_mainOcrTimerMax, _mainOcrIndex);
+
             if (done || _abort)
             {
                 SetButtonsEnabledAfterOcrDone();
@@ -6483,23 +6708,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2).Code;
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
 
             string line;
-            try
-            {
-                line = _paddleOcr.Ocr(bitmap, language ?? "en");
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine +
-                    "Make sure you hve installed PaddleOCR" + Environment.NewLine + Environment.NewLine +
-                    "Read more here: https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html" + Environment.NewLine+ Environment.NewLine +
-                    "Requires Python + pip.");
-
-                ButtonPauseClick(null, null);
-                return string.Empty;
-            }
+            line = _paddleOcr.Ocr(bitmap, language ?? "en", checkBoxPaddleOcrUseGpu.Checked);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
@@ -6567,6 +6779,95 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return line;
+        }
+
+        public class PaddleOcrInput
+        {
+            public Bitmap Bitmap { get; set; }
+            public int Index { get; set; }
+            public string Text { get; set; }
+            public string FileName { get; set; }
+            public string ProgressText { get; set; }
+        }
+
+        private void OcrViaPaddleBatch(List<PaddleOcrInput> input, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
+        {
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
+            _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, progressCallback, abortCheck);
+        }
+
+        private string PostFixPaddle(PaddleOcrInput input)
+        {
+            string processedText = input.Text;
+
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+            {
+                var lastLastLine = GetLastLastText(input.Index);
+                processedText = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(processedText, _lastLine, lastLastLine, null);
+            }
+
+            if (checkBoxRightToLeft.Checked)
+            {
+                processedText = ReverseNumberStrings(processedText);
+            }
+
+            string textWithoutFixes = processedText;
+
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
+            {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                {
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+                }
+
+                if (checkBoxAutoFixCommonErrors.Checked)
+                {
+                    var lastLastLine = GetLastLastText(input.Index);
+                    processedText = _ocrFixEngine.FixOcrErrors(processedText, _subtitle, input.Index, _lastLine, lastLastLine, true, autoGuessLevel);
+                }
+
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(processedText, out var correctWords);
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithoutFixes != null)
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    processedText = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(
+                        out wordsNotFound, processedText, input.Index, input.Bitmap,
+                        checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked,
+                        true, autoGuessLevel);
+                }
+
+                if (_ocrFixEngine.Abort)
+                {
+                    ButtonPauseClick(null, null);
+                    _ocrFixEngine.Abort = false;
+                    
+                    return string.Empty;
+                }
+
+                // Log used word guesses
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
+                {
+                    listBoxLogSuggestions.Items.Add(guess);
+                }
+
+                _ocrFixEngine.AutoGuessesUsed.Clear();
+                LogUnknownWords();
+
+                // Correctly color subtitle line
+                ColorLineByNumberOfUnknownWords(input.Index, wordsNotFound, processedText);
+            }
+
+            if (textWithoutFixes.Trim() != processedText.Trim())
+            {
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
+                LogOcrFix(input.Index, textWithoutFixes, processedText);
+            }
+
+            return processedText;
         }
 
         private void InitializeNOcrForBatch(string db)
@@ -7236,6 +7537,114 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private bool IsNvidiaGpuPresentAndCudaCompatible()
+        {
+            try
+            {
+                using (var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "nvidia-smi",
+                        Arguments = "--query-gpu=driver_version --format=csv,noheader",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    }
+                })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        return false;
+                    }
+
+                    string rawOutput = output.Trim();
+                    return string.Compare(rawOutput, requiredDriverVersion, StringComparison.Ordinal) >= 0;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool IsExecutableInPath(string executableName)
+        {
+            var pathVariable = Environment.GetEnvironmentVariable("PATH");
+
+            if (string.IsNullOrEmpty(pathVariable))
+            {
+                return false;
+            }
+
+            var paths = pathVariable.Split(Path.PathSeparator);
+
+            foreach (var path in paths)
+            {
+                var fullPath = Path.Combine(path, executableName);
+                if (File.Exists(fullPath))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool HasPaddlePPOCRv4Support()
+        {
+            if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
+            {
+                return true; // Standalone version supports batch processing
+            }
+
+            try
+            {
+                using (var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "python",
+                        Arguments = "-m pip show paddleocr",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    }
+                })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        return false;
+                    }
+
+                    foreach (var line in output.SplitToLines())
+                    {
+                        if (line.StartsWith("Version:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string installedVersion = line.Split(':')[1].Trim();
+                            return string.Compare(installedVersion, requiredPaddleOcrVersionForPPOCRv4, StringComparison.Ordinal) > 0;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
         {
             _abort = true;
@@ -7348,6 +7757,119 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 ShowOcrMethodGroupBox(groupBoxPaddle);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "PaddleOCR";
+
+                // Check if installed PaddleOCR version supports PP-OCRv4
+                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")) && IsExecutableInPath("paddleocr.exe"))
+                {
+                    if (!HasPaddlePPOCRv4Support())
+                    {
+                        var firstresult = MessageBox.Show(
+                            $"PaddleOCR version {requiredPaddleOcrVersionForPPOCRv4} or higher is required.{Environment.NewLine}{Environment.NewLine}" +
+                            $"Download the Standalone PaddleOCR version.{Environment.NewLine}{Environment.NewLine}" +
+                            string.Format(LanguageSettings.Current.Settings.DownloadX, "PaddleOCR?"),
+                            LanguageSettings.Current.General.Title,
+                            MessageBoxButtons.YesNoCancel);
+
+                        if (firstresult == DialogResult.Yes)
+                        {
+                            if (!IsNvidiaGpuPresentAndCudaCompatible())
+                            {
+                                var secondresult = MessageBox.Show(
+                                    string.Format(LanguageSettings.Current.Settings.DownloadX, "PaddleOCR CPU version?") + Environment.NewLine +
+                                    $"(GPU version requires NVIDIA driver {requiredDriverVersion} or higher)",
+                                    LanguageSettings.Current.General.Title,
+                                    MessageBoxButtons.YesNoCancel);
+
+                                if (secondresult == DialogResult.Yes)
+                                {
+                                    using (var form = new DownloadPaddleOCRCPU())
+                                    {
+                                        if (form.ShowDialog(this) == DialogResult.OK)
+                                        {
+                                            buttonDownloadPaddleOCRModels_Click(sender, e);
+                                        }
+                                    }
+                                    _ocrFixEngine = null;
+                                    SubtitleListView1SelectedIndexChanged(null, null);
+                                    return;
+                                }
+                                else if (secondresult == DialogResult.No || secondresult == DialogResult.Cancel)
+                                {
+                                    comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                                    return;
+                                }
+                            }
+                            using (var form = new DownloadPaddleOCR())
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    buttonDownloadPaddleOCRModels_Click(sender, e);
+                                }
+                            }
+                            _ocrFixEngine = null;
+                            SubtitleListView1SelectedIndexChanged(null, null);
+                            return;
+                        }
+                        else if (firstresult == DialogResult.No || firstresult == DialogResult.Cancel)
+                        {
+                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                            return;
+                        }
+                    }
+                }
+
+                // If no version is installed prompt for download
+                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")) && !IsExecutableInPath("paddleocr.exe"))
+                {
+                    if (IntPtr.Size * 8 == 32)
+                    {
+                        MessageBox.Show("Sorry, PaddleOCR requires a 64-bit processor");
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                    else if (!IsNvidiaGpuPresentAndCudaCompatible())
+                    {
+                        var result = MessageBox.Show(
+                            string.Format(LanguageSettings.Current.Settings.DownloadX, "PaddleOCR CPU version?") + Environment.NewLine +
+                            $"(GPU version requires NVIDIA driver {requiredDriverVersion} or higher)",
+                            LanguageSettings.Current.General.Title,
+                            MessageBoxButtons.YesNoCancel);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            using (var form = new DownloadPaddleOCRCPU())
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    buttonDownloadPaddleOCRModels_Click(sender, e);
+                                }
+                            }
+                            _ocrFixEngine = null;
+                            SubtitleListView1SelectedIndexChanged(null, null);
+                            return;
+                        }
+                        else if (result == DialogResult.No || result == DialogResult.Cancel)
+                        {
+                            comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                            return;
+                        }
+                    }
+                    else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} PaddleOCR?", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var form = new DownloadPaddleOCR())
+                        {
+                            if (form.ShowDialog(this) == DialogResult.OK)
+                            {
+                                buttonDownloadPaddleOCRModels_Click(sender, e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                }
             }
 
             _ocrFixEngine = null;
@@ -7906,6 +8428,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodTesseract5;
             }
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "PaddleOCR" && comboBoxOcrMethod.Items.Count > _ocrMethodPaddle)
+            {
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodPaddle;
+            }
             else
             {
                 comboBoxOcrMethod.SelectedIndex = 0;
@@ -8352,7 +8878,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _tesseractThreadRunner?.Cancel();
             _tesseractAsyncIndex = 10000;
 
-            System.Threading.Thread.Sleep(100);
+            Thread.Sleep(100);
             DisposeImageCompareBitmaps();
 
             Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
@@ -8413,6 +8939,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
                 {
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
+                }
+            }
+
+            if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                Configuration.Settings.VobSubOcr.PaddleOcrUseGpu = checkBoxPaddleOcrUseGpu.Checked;
+                var language = nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2;
+                if (language != null)
+                {
+                    Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode = language.Code;
                 }
             }
 
@@ -8909,6 +9445,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 form.ShowDialog(this);
                 InitializeTesseract(form.ChosenLanguage);
+            }
+        }
+
+        private void buttonDownloadPaddleOCRModels_Click(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "det")) || !Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "cls")) || !Directory.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "rec")))
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Paddle OCR models"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (var form = new DownloadPaddleOcrModels())
+                {
+                    form.ShowDialog(this);
+                }
             }
         }
 

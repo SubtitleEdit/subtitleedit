@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// DeepLX translator - see https://github.com/OwO-Network/DeepLX
     /// </summary>
-    public class DeepLXTranslate : IAutoTranslator
+    public class DeepLXTranslate : IAutoTranslator, IDisposable
     {
         private string _apiUrl;
         private HttpClient _client;
@@ -48,25 +48,45 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var postContent = new FormUrlEncodedContent(new[]
+            const int httpStatusCodeTooManyRequests = 429;
+
+            if (sourceLanguageCode.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
             {
-                new KeyValuePair<string, string>("text", text),
-                new KeyValuePair<string, string>("target_lang", targetLanguageCode),
-                new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
-            });
+                sourceLanguageCode = "en";
+            }
+            else if (sourceLanguageCode.StartsWith("pt", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "pt";
+            }
+            else if (sourceLanguageCode.StartsWith("zh", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sourceLanguageCode = "zh";
+            }
+
+            var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(555).Wait();
+                Task.Delay(2555).Wait();
+                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
             {
-                Task.Delay(1007).Wait();
+                try
+                {
+                    _client.Dispose();
+                }
+                catch
+                {
+                    // ignore
+                }
+                Task.Delay(5307).Wait();
+                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
@@ -82,31 +102,54 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 throw new Exception("Forbidden! " + Environment.NewLine + Environment.NewLine + resultContent);
             }
 
-            var resultList = new List<string>();
-            var parser = new JsonParser();
-            var x = (Dictionary<string, object>)parser.Parse(resultContent);
-            foreach (var k in x.Keys)
+            try
             {
-                if (x[k] is List<object> mainList)
+                var resultList = new List<string>();
+                var parser = new JsonParser();
+                var x = (Dictionary<string, object>)parser.Parse(resultContent);
+                foreach (var k in x.Keys)
                 {
-                    foreach (var mainListItem in mainList)
+                    if (x[k] is List<object> mainList)
                     {
-                        if (mainListItem is Dictionary<string, object> innerDic)
+                        foreach (var mainListItem in mainList)
                         {
-                            foreach (var transItem in innerDic.Keys)
+                            if (mainListItem is Dictionary<string, object> innerDic)
                             {
-                                if (transItem == "text")
+                                foreach (var transItem in innerDic.Keys)
                                 {
-                                    var s = innerDic[transItem].ToString();
-                                    resultList.Add(s);
+                                    if (transItem == "text")
+                                    {
+                                        var s = innerDic[transItem].ToString();
+                                        resultList.Add(s);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+                return Task.FromResult(string.Join(Environment.NewLine, resultList));
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "DeepLXTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
+                throw;
+            }
+        }
+
+        private static FormUrlEncodedContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
+        {
+            return new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("text", text),
+                new KeyValuePair<string, string>("target_lang", targetLanguageCode),
+                new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
+            });
+        }
+
+        public void Dispose()
+        {
+            _client?.Dispose();
         }
     }
 }
