@@ -3191,6 +3191,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Review audio clips</ReviewAudioClips>
     <CustomAudioEncoding>Custom audio encoding</CustomAudioEncoding>
+    <UseVoiceOver>Use voice over</UseVoiceOver>
     <ReviewInfo>Review and edit/remove audio clips</ReviewInfo>
     <Play>Play</Play>
     <AutoContinue>Auto-continue</AutoContinue>
