@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.01.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 10.02.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3190,6 +3190,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <MergingAudioTrackXOfY>Unione traccia audio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generazione parlato dal testo: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Rivedi clip audio</ReviewAudioClips>
+    <UseVoiceOver>Usa voce fuori campo</UseVoiceOver>
     <CustomAudioEncoding>Codifica audio personalizzata</CustomAudioEncoding>
     <ReviewInfo>Rivedi e modifica/rimuovi clip audio</ReviewInfo>
     <Play>Riproduci</Play>
