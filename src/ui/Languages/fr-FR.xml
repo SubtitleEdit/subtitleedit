@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.11</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Jul, 09 2024)</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Feb, 09 2025)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -428,15 +428,15 @@ Peut-être voulez-vous revoir ces cas manuellement pour vous assurer que vos rep
     <Zones>Zones :</Zones>
     <OutCues>Repères sortie</OutCues>
     <ConnectedSubtitles>Sous-titres en ligne</ConnectedSubtitles>
-    <InCueClosest>Repère entrée --&gt; + proche</InCueClosest>
-    <OutCueClosest>Repère sortie --&gt; + proche</OutCueClosest>
+    <InCueClosest>Repère entrée est + proche</InCueClosest>
+    <OutCueClosest>Repère sortie est + proche</OutCueClosest>
     <TreadAsConnected>Traiter "connecté" si l'écart est &lt; que :</TreadAsConnected>
     <Milliseconds>ms</Milliseconds>
     <Chaining>Enchaînements</Chaining>
     <InCueOnShot>Repère d'entrée au changement de plan</InCueOnShot>
     <OutCueOnShot>Repère de sortie au changement de plan</OutCueOnShot>
     <CheckGeneral>Continuer à appliquer les règles générales quand non affectées</CheckGeneral>
-    <MaxGap>Ecart maximum :</MaxGap>
+    <MaxGap>Ecart max. :</MaxGap>
     <ShotChangeBehavior>Si changement de plan entre :</ShotChangeBehavior>
     <DontChain>Ne pas enchaîner</DontChain>
     <ExtendCrossingShotChange>Prolonger au delà du changement de plan</ExtendCrossingShotChange>
@@ -1016,6 +1016,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <Audio>Audio</Audio>
     <Stereo>Stéréo</Stereo>
     <Preset>Préréglage</Preset>
+    <PixelFormat>Format pixel</PixelFormat>
     <Crf>CRF</Crf>
     <TuneFor>Réglé sur</TuneFor>
     <AlignRight>Aligner à droite</AlignRight>
@@ -1344,9 +1345,9 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
         <ImportBluRaySupFile>Importer des sous-titres OCR de Blu-ray (sup)…</ImportBluRaySupFile>
         <ImportBluRaySupFileEdit>Importer et éditer le fichier sous-titre Blu-ray (.sup)…</ImportBluRaySupFileEdit>
         <ImportSubtitleWithManualChosenEncoding>Importer des sous-titres en choisissant l'encodage…</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Importer du texte brut…</ImportText>
-        <ImportImages>Importer des images…</ImportImages>
-        <ImportTimecodes>Importer des horodatages…</ImportTimecodes>
+        <ImportText>Texte brut…</ImportText>
+        <ImportImages>Images…</ImportImages>
+        <ImportTimecodes>Horodatages…</ImportTimecodes>
         <Import>Importer</Import>
         <Export>Exporter sous forme de…</Export>
         <ExportBdnXml>BDN xml/png…</ExportBdnXml>
@@ -1516,7 +1517,8 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
         <BeautifyTimeCodes>Idéaliser les codes horaires</BeautifyTimeCodes>
         <Settings>Paramètres</Settings>
         <Help>Aide</Help>
-        <AssaDraw>Dessiner Advanced Sub Station Alpha</AssaDraw>
+        <Layout>Mise en page</Layout>
+		<AssaDraw>Dessiner Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ajuster la taille des colonnes</SizeAllColumnsToFit>
@@ -1542,6 +1544,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
         <SplitLineAtCursorPosition>Scinder la ligne à la position du curseur</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Scinder la ligne à la position du curseur + auto-coupure</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Scinder la ligne à la position curseur/vidéo</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Scinder la ligne à la position curseur/vidéoScinder la ligne à la position curseur/vidéo et lire</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Durée auto. (ligne actuelle)</AutoDurationCurrentLine>
         <SelectAll>Tout sélectionner</SelectAll>
         <InsertFirstLine>Insérer une ligne</InsertFirstLine>
@@ -2141,6 +2144,7 @@ Télécharger et continuer ??</VideoFromUrlRequirements>
     <ExactlyTwoLines>Exactement 2 lignes</ExactlyTwoLines>
     <MoreThanTwoLines>Plus de 2 lignes</MoreThanTwoLines>
     <Bookmarked>Marqué d'un signet</Bookmarked>
+    <BookmarkContains>Le signet comprend</BookmarkContains>
     <BlankLines>Lignes vierges</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2148,7 +2152,7 @@ Télécharger et continuer ??</VideoFromUrlRequirements>
     <FindWhat>Rechercher :</FindWhat>
     <ReplaceWith>Remplacer par :</ReplaceWith>
     <Normal>Normal</Normal>
-    <CaseSensitive>Respecter la casse</CaseSensitive>
+    <CaseSensitive>Respecte la casse</CaseSensitive>
     <RegularExpression>Expression régulière</RegularExpression>
     <Description>Description</Description>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
@@ -2337,6 +2341,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <SettingsName>Paramètres</SettingsName>
     <ToggleBookmarks>Commuter les signets</ToggleBookmarks>
     <FocusTextBox>Focus sur la boîte de texte</FocusTextBox>
+    <CycleAudioTracks>Séquencer les pistes audio</CycleAudioTracks>
     <ToggleBookmarksWithComment>Commuter les signets - commenter</ToggleBookmarksWithComment>
     <ClearBookmarks>Effacer les signets</ClearBookmarks>
     <ExportBookmarks>Exporter les signets…</ExportBookmarks>
@@ -2410,7 +2415,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <AutoBackupEveryMinute>Chaque minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Chaque 5 min.</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Chaque 15 min.</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Effacer après</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Supprimer après</AutoBackupDeleteAfter>
     <TranslationAutoSuffix>Auto-suffixer par le nom du fichier traduction</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 mois</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} mois</AutoBackupDeleteAfterXMonths>
@@ -2476,17 +2481,18 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WaveformUseFFmpeg>Utiliser FFmpeg pour extraire l'audio</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>N'utiliser que le canal avant central (pour 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Télécharger {0}</DownloadX>
+    <ExtractingX>Extraction de {0}</ExtractingX>
     <WaveformFFmpegPath>Chemin de FFmpeg :</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Rechercher FFmpeg.exe…</WaveformBrowseToFFmpeg>
-    <WaveformBrowseToVLC>Rechercher VLC portable…</WaveformBrowseToVLC>
-    <SubStationAlphaStyle>Style du SSA (SubStation Alpha)</SubStationAlphaStyle>
+    <WaveformBrowseToFFmpeg>Naviguer vers FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToVLC>Naviguer vers VLC portable</WaveformBrowseToVLC>
+    <SubStationAlphaStyle>Style (avancé) du SSA (Sub Station Alpha)</SubStationAlphaStyle>
     <ChooseColor>Choisir couleur</ChooseColor>
     <SsaOutline>Contour</SsaOutline>
     <SsaShadow>Ombre</SsaShadow>
     <SsaOpaqueBox>Boîte opaque</SsaOpaqueBox>
-    <Testing123>Un petit texte 123…</Testing123>
+    <Testing123>Un petit test 123…</Testing123>
     <Language>Langue</Language>
-    <NamesIgnoreLists>Noms/bruits (respecter la casse)</NamesIgnoreLists>
+    <NamesIgnoreLists>Liste noms/ignorés (respecter la casse)</NamesIgnoreLists>
     <AddName>Ajouter un nom</AddName>
     <AddWord>Ajouter un mot</AddWord>
     <Remove>Retirer</Remove>
@@ -2499,7 +2505,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WordAlreadyExists>Le mot existe déjà !</WordAlreadyExists>
     <WordNotFound>Mot introuvable</WordNotFound>
     <RemoveX>Retirer {0} ?</RemoveX>
-    <CannotUpdateNamesOnline>Impossible de mettre à jour "NamesEtc.xml" en ligne !</CannotUpdateNamesOnline>
+    <CannotUpdateNamesOnline>Impossible de mettre à jour "names.xml" en ligne !</CannotUpdateNamesOnline>
     <ProxyServerSettings>Paramètres du serveur proxy</ProxyServerSettings>
     <ProxyAddress>Adresse proxy</ProxyAddress>
     <ProxyAuthentication>Authentification</ProxyAuthentication>
@@ -2511,8 +2517,8 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <NetworkSessionSettings>Paramètres de session réseau</NetworkSessionSettings>
     <NetworkSessionNewSound>Signal sonore d'arrivée d'un nouveau message</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Lire X secondes puis retour avec X =</PlayXSecondsAndBack>
-    <StartSceneIndex>Le plan initial du paragraphe est</StartSceneIndex>
-    <EndSceneIndex>Le plan final du paragraphe est</EndSceneIndex>
+    <StartSceneIndex>Scène initiale du paragraphe est</StartSceneIndex>
+    <EndSceneIndex>Scène finale du paragraphe est</EndSceneIndex>
     <FirstPlusX>Premier + {0}</FirstPlusX>
     <LastMinusX>Dernier - {0}</LastMinusX>
     <FixCommonerrors>Corriger erreurs</FixCommonerrors>
@@ -2690,6 +2696,8 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WaveformGoToPreviousShotChange>Aller au changement de plan précédent</WaveformGoToPreviousShotChange>
     <WaveformGoToNextShotChange>Aller au changement de plan suivant</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Commuter le changement de plan</WaveformToggleShotChange>
+    <WaveformAllShotChangesOneFrameForward>Avancer tous les changements de plan d'une image</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Reculer tous les changements de plan d'une image</WaveformAllShotChangesOneFrameBack>
     <WaveformRemoveOrExportShotChanges>Retirer/Exporter les changements de plan</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Ajuster auto. via changement de volume/plan</WaveformGuessStart>
     <GoBack1Frame>Une image en arrière</GoBack1Frame>
@@ -2794,6 +2802,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Avancer le premier mot du sous-titre suivant</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Monter le premier mot de la ligne suivante (sous-titre en cours)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Déplacer le texte après le curseur au s/titre suivant et aller au suivant</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Déplacer le 1er mot au s/titre précédent</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Descendre le dernier mot de la ligne précédente (sous-titre en cours)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Sélectionner en minuscules</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Sélectionner en majuscules</MainTextBoxSelectionToUpper>
@@ -2942,7 +2951,10 @@ Continuer ?</RestoreDefaultSettingsMsg>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Caractère invalide {0} trouvé à la colonne {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Espace blanc invalide trouvé à la colonne {0}.</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Problème d'espacement ({0}) trouvé à la colonne {1}.</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>fin de ligne</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>manquant avant ponctuation</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>2+ consécutifs</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Consultez le rapport complet ici : {0}.</ReportPrompt>
     <OpenReportInFolder>Ouvrir le rapport du dossier</OpenReportInFolder>
     <FoundXIssues>Le contrôle de qualité Netflix a trouvé {0} problèmes.</FoundXIssues>
@@ -3135,8 +3147,11 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <ScaleY>Echelle Y</ScaleY>
     <Spacing>Espacement</Spacing>
     <Angle>Angle</Angle>
-    <BoxPerLine>Boîte par ligne (avec couleur de contour)</BoxPerLine>
+    <BoxPerLine>Boîte / ligne (avec couleur de contour)</BoxPerLine>
     <BoxMultiLine>Une boîte (avec couleur d'ombre)</BoxMultiLine>
+    <BoxPerLineShort>Boîte / ligne</BoxPerLineShort>
+    <BoxMultiLineShort>Une boîte</BoxMultiLineShort>
+    <BoxType>Type de boîte</BoxType>
     <DuplicateStyleNames>Noms de style en double : {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3181,6 +3196,8 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <AutoContinue>Continuation auto.</AutoContinue>
     <Regenerate>Régénérer</Regenerate>
     <Speed>Vitesse</Speed>
+    <Stability>Stabilité</Stability>
+    <Similarity>Similarité</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Minutage SMPTE</Title>
@@ -3451,6 +3468,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
   <WebVttProperties>
     <UseXTimeStamp>Utiliser la valeur de l'en-tête X-TIMESTAMP-MAP</UseXTimeStamp>
     <MergeLines>Au chargement, fusionner les lignes de même texte</MergeLines>
+    <MergeStyleTags>Fusionner les balises de style</MergeStyleTags>
   </WebVttProperties>
   <WebVttStyleManager>
     <Title>Styles WebVTT</Title>
