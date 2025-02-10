@@ -806,6 +806,7 @@
     <Word from="jošp" to="još" />
     <Word from="jr" to="je" />
     <Word from="jerje" to="jer je" />
+    <Word from="js" to="je" />
     <Word from="jsi" to="jesi" />
     <Word from="Jsi" to="jesi" />
     <Word from="jma" to="ima" />
@@ -1520,6 +1521,7 @@
     <Word from="oduvjek" to="oduvijek" />
     <Word from="Oduvjek" to="Oduvijek" />
     <Word from="oept" to="opet" />
+    <Word from="oet" to="pet" />
     <Word from="og" to="od" />
     <Word from="ogladneo" to="ogladnio" />
     <Word from="ogrev" to="ogrjev" />
@@ -2523,6 +2525,7 @@
     <Word from="stim" to="s tim" />
     <Word from="stojati" to="stajati" />
     <Word from="stovri" to="stvori" />
+    <Word from="stp" to="što" />
     <Word from="stracu" to="starcu" />
     <Word from="streljamo" to="strijeljamo" />
     <Word from="streljati" to="strijeljati" />
