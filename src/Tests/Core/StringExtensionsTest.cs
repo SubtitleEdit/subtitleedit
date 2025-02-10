@@ -458,6 +458,10 @@ namespace Tests.Core
         {
             Assert.IsFalse("Foobar...".HasSentenceEnding());
             Assert.IsFalse("Foobar…".HasSentenceEnding());
+
+            // with formatting
+            Assert.IsFalse("Foobar…</i>".HasSentenceEnding());
+            Assert.IsFalse("Foobar...</font>".HasSentenceEnding());
         }
 
     }
