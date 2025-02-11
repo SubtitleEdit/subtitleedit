@@ -17051,7 +17051,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fc = UiUtil.FindFocusedControl(this);
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
-                var typeName = textBoxSource.GetType().Name;
+                var typeName = fc.GetType().Name;
                 if (UiUtil.SkipSingleLetterShortcut(typeName, e))
                 {
                     return;
