@@ -3179,6 +3179,7 @@ Command line: {1} {2}
     <GeneratingSpeechFromTextXOfY>从文本生成语音：{0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>审阅音频剪辑</ReviewAudioClips>
     <CustomAudioEncoding>自定义音频编码</CustomAudioEncoding>
+    <UseVoiceOver>使用画外音</UseVoiceOver>
     <ReviewInfo>查看和编辑/删除音频剪辑</ReviewInfo>
     <Play>播放</Play>
     <AutoContinue>自动继续</AutoContinue>
