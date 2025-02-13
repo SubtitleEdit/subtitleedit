@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _paragraph.Text += Environment.NewLine;
                         }
 
-                        _paragraph.Text += RemoveBadChars(line).TrimEnd();
+                        _paragraph.Text += line.ReplaceNullWithSpace().TrimEnd();
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(next))
                     {
-                        _paragraph.Text += Environment.NewLine + RemoveBadChars(line).TrimEnd();
+                        _paragraph.Text += Environment.NewLine + line.ReplaceNullWithSpace().TrimEnd();
                     }
                     else
                     {
@@ -281,11 +281,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private bool IsText(string text)
         {
             return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null, false));
-        }
-
-        private static string RemoveBadChars(string line)
-        {
-            return line.Replace('\0', ' ');
         }
 
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)

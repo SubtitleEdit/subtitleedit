@@ -909,5 +909,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u202B", string.Empty) // &rlm;
                 .Replace("\u202A", string.Empty); // &lmr;
         }
+
+        /// <summary>
+        /// Replaces all null characters ('\0') in the input string with space characters (' ').
+        /// </summary>
+        /// <param name="input">The string in which null characters are to be replaced.</param>
+        /// <returns>A new string with all null characters replaced by spaces.</returns>
+        public static string ReplaceNullWithSpace(this string input) => input.Replace('\0', ' ');
     }
 }
