@@ -1035,7 +1035,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var st = new StrippableText(text.Substring(l, r - l + 1));
 
                     // no formattable text in between the tags e.g: ...<i> </i>...
-                    if (string.IsNullOrWhiteSpace(st.StrippedText))
+                    if (string.IsNullOrWhiteSpace(st.StrippedText) &&
+                        (st.OriginalText.EndsWith("</i>") && st.OriginalText.StartsWith("<i>") ||
+                        st.OriginalText.EndsWith("<i>") && st.OriginalText.StartsWith("</i>")))
                     {
                         text = text.Remove(l, r - l + 1);
                         r = l - 1;
