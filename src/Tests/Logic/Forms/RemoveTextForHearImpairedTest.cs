@@ -965,11 +965,10 @@ namespace Tests.Logic.Forms
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
-            target.Settings.RemoveTextBeforeColon = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBeforeColon = true;
             string text = "- I insist." + Environment.NewLine + "<i>- [ Woman Laughing]</i>";
             const string expected = "I insist.";
@@ -997,6 +996,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenParentheses = true;
             target.Settings.RemoveTextBeforeColon = true;
             string text = "WOMAN: A glass of champagne, please." + Environment.NewLine + "- (Laughter)";
             const string expected = "A glass of champagne, please.";
@@ -1082,7 +1082,7 @@ namespace Tests.Logic.Forms
         public void RemoveFirstDashItalics()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             string text = "<i>- A man who wants to make his mark..." + Environment.NewLine + "- [ Coughing]</i>";
             const string expected = "<i>A man who wants to make his mark...</i>";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1115,7 +1115,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveIfTextContains = null;
             target.Settings.RemoveIfOnlyMusicSymbols = false;
             const string text = "<i>♪♪[Ambient Electronic]</i>";
@@ -1311,7 +1311,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiInDialogue1()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             string text = "-[gurgling]" + Environment.NewLine + "-Mom?";
             const string expected = "Mom?";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1322,7 +1322,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiInDialogue2()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             string text = "-[Ronnie laughs]" + Environment.NewLine + "-[sighs] Wow, Ronnie.";
             const string expected = "Wow, Ronnie.";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1333,7 +1333,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiRemoveFontTag()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             const string text = "<font color=\"#808080\">[Whistling]</font> Hallo everybody!";
             const string expected = "Hallo everybody!";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1344,7 +1344,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiRemoveFontTag2()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveIfOnlyMusicSymbols = false;
             const string text = "♪ <font color=\"#000000\">[LIGHT SWITCH CLICKS]</font>";
             const string expected = "♪";
@@ -1356,7 +1356,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiRemoveFontTag3()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             const string text = "Foobar <font color=\"#808080\">[CHAINS RATTLING]</font> Foobar";
             const string expected = "Foobar Foobar";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1377,10 +1377,10 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
             target.Settings.CustomEnd = "♪";
-            target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveIfTextContains = new List<string>();
             target.Settings.RemoveWhereContains = false;
             string text = "<i>- ♪♪[Continues ]</i>" + Environment.NewLine + "- It's pretty strong stuff.";
@@ -1438,11 +1438,10 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiSecondLineItalicAdvanced()
         {
             var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
             target.Settings.CustomEnd = "♪";
-            target.Settings.RemoveTextBetweenBrackets = true;
             Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
             var text = "The meal is ready. Let's go!" + Environment.NewLine + "<i>- [Nick]</i> J. T. Lancer!";
             var expected = "- The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!";
@@ -1474,6 +1473,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiDialogAddDashFirstLine()
         {
             var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
             string text = "RECORDING: <i>Have you lost someone?</i>" + Environment.NewLine + "- What?";
             string expected = "<i>- Have you lost someone?</i>" + Environment.NewLine + "- What?";
             string actual = target.RemoveColon(text);
@@ -1484,6 +1484,7 @@ namespace Tests.Logic.Forms
         public void RemoveTextForHiDialogMusicSymbolsFirstLine()
         {
             var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string actual = target.RemoveColon("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.");
             Assert.AreEqual("- ♪ To defeat ♪" + Environment.NewLine + "- Salute.", actual);
@@ -1504,6 +1505,7 @@ namespace Tests.Logic.Forms
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.RemoveTextBeforeColon = true;
             target.Settings.CustomStart = "♪";
             target.Settings.CustomEnd = "♪";
             string actual = target.RemoveTextFromHearImpaired("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.", _interjectionsLanguageCode);
@@ -1723,6 +1725,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
             string actual = target.RemoveTextFromHearImpaired("KIRK:" + Environment.NewLine + "<i>Captain's log, stardate 1514. 1:</i>", _interjectionsLanguageCode);
             Assert.AreEqual("<i>Captain's log, stardate 1514. 1:</i>", actual);
         }
@@ -1734,6 +1737,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
             string actual = target.RemoveTextFromHearImpaired("KIRK:" + Environment.NewLine + "Captain's log, stardate 1514. 1:", _interjectionsLanguageCode);
             Assert.AreEqual("Captain's log, stardate 1514. 1:", actual);
         }
@@ -1745,6 +1749,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
             string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "<i>--and trespassed into our star systems.</i>", _interjectionsLanguageCode);
             Assert.AreEqual("<i>--and trespassed into our star systems.</i>", actual);
         }
@@ -1756,6 +1761,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
             string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "--and trespassed into our star systems.", _interjectionsLanguageCode);
             Assert.AreEqual("--and trespassed into our star systems.", actual);
         }
@@ -1768,6 +1774,8 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
+
             string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "<i>—and trespassed into our star systems.</i>", _interjectionsLanguageCode);
             Assert.AreEqual("<i>—and trespassed into our star systems.</i>", actual);
         }
@@ -1781,6 +1789,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBeforeColon = true;
             string actual = target.RemoveTextFromHearImpaired("<i> -JOHN: Hvordan går det?</i>" + Environment.NewLine + "<i>-Marry: Det går fint!</i>", _interjectionsLanguageCode);
             Assert.AreEqual("<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>", actual);
         }
@@ -1940,6 +1949,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenParentheses = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             target.Settings.OnlyIfInSeparateLine = true;
             string actual = target.RemoveTextFromHearImpaired("<i>-Era stato avveritito.</i>" + Environment.NewLine + "-(PARLA IN SPANOLO)", _interjectionsLanguageCode);
@@ -1951,6 +1961,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("Senti, [si schiarisce la voce]," + Environment.NewLine + "dille semplicemente che ti e mancata.", _interjectionsLanguageCode);
@@ -1970,7 +1981,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             string actual = target.RemoveTextFromHearImpaired("Spoken text." + Environment.NewLine + "<i>- [hearing impaired text] Spoken text.</i>", _interjectionsLanguageCode);
             Assert.AreEqual("- Spoken text." + Environment.NewLine + "<i>- Spoken text.</i>", actual);
         }
@@ -1980,6 +1991,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             target.Settings.RemoveInterjections = false;
             string actual = target.RemoveTextFromHearImpaired("- [chuckles]" + Environment.NewLine + "- MRS. TRYON: Mr. Wylie!", _interjectionsLanguageCode);
@@ -1991,6 +2003,7 @@ namespace Tests.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
             string actual = target.RemoveTextFromHearImpaired("- [chuckles]" + Environment.NewLine + "- MRS. TRYON: Mr. Wylie!", _interjectionsLanguageCode);
@@ -2005,7 +2018,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBeforeColon = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("[man] Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?", _interjectionsLanguageCode);
             Assert.AreEqual("Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?", actual);
@@ -2031,7 +2044,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBeforeColon = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("- You're weird!" + Environment.NewLine + "- [sigh]", _interjectionsLanguageCode);
             Assert.AreEqual("You're weird!", actual);
@@ -2044,7 +2057,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBeforeColon = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("\u2010 You're weird!" + Environment.NewLine + "\u2010 [sigh]", _interjectionsLanguageCode);
             Assert.AreEqual("You're weird!", actual);
@@ -2135,6 +2148,7 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("What's going on...?! [gasps]", _interjectionsLanguageCode);
@@ -2284,10 +2298,10 @@ namespace Tests.Logic.Forms
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveTextBetweenSquares = true;
             var text = "and that is gonna take..." + Environment.NewLine + "[STAMMERS] ... real deep pockets.";
             var expected = "and that is gonna take..." + Environment.NewLine + "... real deep pockets.";
             var actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
