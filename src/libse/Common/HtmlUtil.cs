@@ -1034,10 +1034,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var st = new StrippableText(text.Substring(l, r - l + 1));
 
+                    var sc = StringComparison.Ordinal;
                     // no formattable text in between the tags e.g: ...<i> </i>...
                     if (string.IsNullOrWhiteSpace(st.StrippedText) &&
-                        (st.OriginalText.EndsWith("</i>") && st.OriginalText.StartsWith("<i>") ||
-                        st.OriginalText.EndsWith("<i>") && st.OriginalText.StartsWith("</i>")))
+                        (st.OriginalText.EndsWith("</i>", sc) && st.OriginalText.StartsWith("<i>", sc) || // foo <i></i> bar => foo bar
+                         st.OriginalText.EndsWith("<i>", sc) && st.OriginalText.StartsWith("</i>", sc))) //  <i>foo</i> <i>bar</i>  => <i>foo bar</i>
                     {
                         text = text.Remove(l, r - l + 1);
                         r = l - 1;
