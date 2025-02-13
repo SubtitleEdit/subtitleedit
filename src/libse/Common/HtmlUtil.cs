@@ -723,16 +723,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = text.Replace(" _@_ ", "_@_");
             text = text.Replace("_@_", " ");
 
-            if (text.Contains(beginTag))
-            {
-                text = text.Replace("<i/>", endTag);
-                text = text.Replace("<I/>", endTag);
-            }
-            else
-            {
-                text = text.Replace("<i/>", string.Empty);
-                text = text.Replace("<I/>", string.Empty);
-            }
+            var replacement = text.Contains(beginTag) ? endTag : string.Empty;
+            text = text.Replace("<i/>", replacement);
+            text = text.Replace("<I/>", replacement);
 
             text = text.Replace("]<i> ", "] <i>");
             text = text.Replace(")<i> ", ") <i>");
@@ -1024,26 +1017,40 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            text = text.Replace("<i></i>", string.Empty);
-            text = text.Replace("</i><i>", string.Empty);
-            if (text.IndexOf('@') < 0)
+            // <i>foo</i><i>bar</i> => <i>foobar</i>
+            // <i>foo</i> <i>bar</i> => <i>foo bar</i>
+            // text = text.Replace("</i><i>", string.Empty); (handle bellow)
+            text = text.Replace("</i> <i>", " ");
+
+            var l = 0;
+            var closeCount = 0;
+            for (var r = 0; r < text.Length; r++)
             {
-                text = text.Replace("</i> <i>", "@");
-                text = text.Replace("<i> </i>", "@");
-                text = text.Replace("<i>  </i>", "@");
-                text = text.Replace("@ ", " ");
-                text = text.Replace("@ ", " ");
-                text = text.Replace(" @", " ");
-                text = text.Replace(" @", " ");
-                text = text.Replace("@", " ");
-            }
-            else
-            {
-                text = text.Replace("</i> <i>", " ");
-                text = text.Replace("<i> </i>", " ");
-                text = text.Replace("<i>  </i>", " ");
-                text = text.Replace("  ", " ");
-                text = text.Replace("  ", " ");
+                if (text[r] == '<' && text[l] != '<')
+                {
+                    l = r;
+                }
+                else if (text[r] == '>' && text[l] == '<' && ++closeCount == 2)
+                {
+                    var st = new StrippableText(text.Substring(l, r - l + 1));
+
+                    // no formattable text in between the tags e.g: ...<i> </i>...
+                    if (string.IsNullOrWhiteSpace(st.StrippedText) &&
+                        st.OriginalText.EndsWith("<i>", StringComparison.Ordinal) &&
+                        st.OriginalText.StartsWith("</i>", StringComparison.Ordinal))
+                    {
+                        text = text.Remove(l, r - l + 1);
+                        r = l - 1;
+                        closeCount = 0;
+                    }
+                    else
+                    {
+                        // start counting from the last found tag
+                        // For example in "<i>Foo</i>    <i>bar</i>" Skip first tag
+                        l = text.LastIndexOf('<', r - 1);
+                        closeCount -= 1;
+                    }
+                }
             }
 
             return preTags + text;

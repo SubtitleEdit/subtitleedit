@@ -516,6 +516,19 @@ namespace Tests.Logic
         }
 
         [TestMethod]
+        [DataRow("Foo<i></i>bar")]
+        [DataRow("Foo<i>    </i>bar")]
+        [DataRow("<i>Foo</i>    <i>bar</i>", "<i>Foobar</i>")]
+        // [DataRow("Foo<b>    </b>bar")]
+        // [DataRow("Foo<u>    </u>bar")]
+        // [DataRow("Foo<font color=\"#808080\"> </font>bar")]
+        // [DataRow("Foo<font color=\"#808080\"></font>bar")]
+        public void FixInvalidItalicEmptyTagTest(string input, string expected = "Foobar")
+        {
+            Assert.AreEqual(expected, HtmlUtil.FixInvalidItalicTags(input));
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
