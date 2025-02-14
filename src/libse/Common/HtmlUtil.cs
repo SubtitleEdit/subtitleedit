@@ -1041,7 +1041,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                          st.OriginalText.EndsWith("<i>", sc) && st.OriginalText.StartsWith("</i>", sc))) //  <i>foo</i> <i>bar</i>  => <i>foo bar</i>
                     {
                         text = text.Remove(l, r - l + 1);
+
+                        // handles foo<i> </i> => foo bar or keeps one space in between
+                        if (st.Pre.Contains(' '))
+                        {
+                            text = text.Insert(l, " ");
+                            l += 2; // 1 for l-1 bellow 1 to compensate r++ in for loop
+                        }
+
                         r = l - 1;
+
                         closeCount = 0;
                     }
                     else

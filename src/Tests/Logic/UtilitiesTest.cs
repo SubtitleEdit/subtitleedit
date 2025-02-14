@@ -517,8 +517,8 @@ namespace Tests.Logic
 
         [TestMethod]
         [DataRow("Foo<i></i>bar")]
-        [DataRow("Foo<i>    </i>bar")]
-        [DataRow("<i>Foo</i>    <i>bar</i>", "<i>Foobar</i>")]
+        [DataRow("Foo<i>    </i>bar", "Foo bar")]
+        [DataRow("<i>Foo</i>    <i>bar</i>", "<i>Foo bar</i>")]
         // [DataRow("Foo<b>    </b>bar")]
         // [DataRow("Foo<u>    </u>bar")]
         // [DataRow("Foo<font color=\"#808080\"> </font>bar")]
