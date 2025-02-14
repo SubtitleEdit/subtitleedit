@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             S1 = AddWordAfter(sbWord.ToString().Trim(), S1);
             S1 = AutoBreakIfNeeded(S1);
             S2 = sbS2.ToString().Trim();
-            S2 = RemoveEmptyTags(S2);
+            S2 = HtmlUtil.RemoveEmptyTags(S2);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
             S1 = string.Join(string.Empty, sbS1.ToString().Trim().ToCharArray().Reverse());
-            S1 = RemoveEmptyTags(S1);
+            S1 = HtmlUtil.RemoveEmptyTags(S1);
             S2 = AddWordBefore(string.Join(string.Empty, sbWord.ToString().Trim().ToCharArray().Reverse()), S2);
             S2 = AutoBreakIfNeeded(S2);
         }
@@ -178,20 +178,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return i >= indexOfFontTag && i <= indexOfEndFontTag;
-        }
-
-        private static string RemoveEmptyTags(string s)
-        {
-            var noTags = HtmlUtil.RemoveHtmlTags(s, true);
-            if (noTags.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            return s
-                .Replace("<i></i>", string.Empty)
-                .Replace("<u></u>", string.Empty)
-                .Replace("<b></b>", string.Empty);
         }
 
         private static string AddWordBefore(string word, string input)
