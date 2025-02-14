@@ -1405,22 +1405,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (Settings.RemoveTextBetweenSquares)
             {
-                text = RemoveTextBetweenTags("[", "]:", text);
                 text = RemoveTextBetweenTags("[", "]", text);
             }
             if (Settings.RemoveTextBetweenBrackets)
             {
-                text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
             if (Settings.RemoveTextBetweenParentheses)
             {
-                text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
             }
             if (Settings.RemoveTextBetweenQuestionMarks)
             {
-                text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
             if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
