@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="SevenZipExtractor" Version="1.0.17" />
     <PackageVersion Include="SharpCompress" Version="0.38.0" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.1" />

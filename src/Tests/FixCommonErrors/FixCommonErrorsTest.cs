@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using NSubstitute;
+using NSubstitute.Extensions;
 
 namespace Tests.FixCommonErrors
 {
@@ -1421,6 +1424,33 @@ namespace Tests.FixCommonErrors
             s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
             s.Paragraphs.Add(new Paragraph("I wasn't sure if somebody lived in there...", 1000, 3000));
             new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
+        }
+
+        [TestMethod]
+        public void FixMissingPeriodsAtEndOfLineNoPeriodForNameTest()
+        {
+            var context = Substitute.For<IFixCallbacks>();
+            context.Configure().IsName(Arg.Is("Bill Gates")).Returns(true);
+            context.Configure().AllowFix(Arg.Any<Paragraph>(), Arg.Any<string>()).Returns(true);
+
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("Bill Gates wasn't sure if somebody lived in there...", 1000, 3000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, context);
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
+        }
+
+        [TestMethod]
+        public void FixMissingPeriodsAtEndOfLineNoPeriodForTitleTest()
+        {
+            var context = Substitute.For<IFixCallbacks>();
+            context.Configure().AllowFix(Arg.Any<Paragraph>(), Arg.Any<string>()).Returns(true);
+
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("Mr. Bill Gates wasn't sure if somebody lived in there...", 1000, 3000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, context);
             Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
         }
 

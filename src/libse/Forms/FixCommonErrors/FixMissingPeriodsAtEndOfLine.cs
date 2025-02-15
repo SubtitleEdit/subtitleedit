@@ -76,29 +76,29 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
-                        if (isNextClose && !IsKnownUppercasePrefix(nextText, callbacks))
+                        if (callbacks.AllowFix(p, fixAction) && isNextClose && !IsKnownUppercasePrefix(nextText, callbacks))
                         {
                             //test to see if the first word of the next line is a name
-                            if (callbacks.AllowFix(p, fixAction))
-                            {
-                                string oldText = p.Text;
-                                if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
-                                {
-                                    if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
-                                    {
-                                        AddPeriod(p, tempNoHtml);
-                                    }
-                                }
-                                else
-                                {
-                                    AddPeriod(p, tempNoHtml);
-                                }
+                            string oldText = p.Text;
+                            AddPeriod(p, tempNoHtml);
 
-                                if (p.Text != oldText)
-                                {
-                                    missingPeriodsAtEndOfLine++;
-                                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                }
+                            // ATTENTION: `next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000` is already handled with isNextClose
+                            // if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
+                            // {
+                            //     if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
+                            //     {
+                            //         AddPeriod(p, tempNoHtml);
+                            //     }
+                            // }
+                            // else
+                            // {
+                            //     AddPeriod(p, tempNoHtml);
+                            // }
+
+                            if (p.Text != oldText)
+                            {
+                                missingPeriodsAtEndOfLine++;
+                                callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
                     }
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         /// <returns>True if the text is a known uppercase prefix, otherwise false.</returns>
         private bool IsKnownUppercasePrefix(string text, IFixCallbacks context)
         {
-            // known pronoun
+            // known pronouns
             // don't end the sentence if the next word is an I word as they're always capped.
             if (text.StartsWith("I ", StringComparison.Ordinal) || text.StartsWith("I'", StringComparison.Ordinal))
             {
@@ -243,19 +243,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // Bill Gates
             var nameSegmentCount = 0;
             var len = text.Length;
-            for (int r = 0; r < len + 1 && nameSegmentCount < 2; r++)
+            for (int i = 0; i < len + 1 && nameSegmentCount < 2; i++)
             {
                 // when an entire text is a name
-                if (r == len)
+                if (i == len)
                 {
                     return context.IsName(text);
                 }
 
                 // handles both single word and multiple word name
-                if (char.IsWhiteSpace(text[r]))
+                if (char.IsWhiteSpace(text[i]))
                 {
                     nameSegmentCount++;
-                    if (context.IsName(text.Substring(0, r)))
+                    if (context.IsName(text.Substring(0, i)))
                     {
                         return true;
                     }
