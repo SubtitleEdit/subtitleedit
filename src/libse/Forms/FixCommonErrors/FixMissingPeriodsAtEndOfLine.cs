@@ -83,19 +83,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             string oldText = p.Text;
                             AddPeriod(p, tempNoHtml);
 
-                            // ATTENTION: `next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000` is already handled with isNextClose
-                            // if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
-                            // {
-                            //     if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
-                            //     {
-                            //         AddPeriod(p, tempNoHtml);
-                            //     }
-                            // }
-                            // else
-                            // {
-                            //     AddPeriod(p, tempNoHtml);
-                            // }
-
                             if (p.Text != oldText)
                             {
                                 missingPeriodsAtEndOfLine++;

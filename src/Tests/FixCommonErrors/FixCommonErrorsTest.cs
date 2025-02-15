@@ -1440,6 +1440,20 @@ namespace Tests.FixCommonErrors
             new FixMissingPeriodsAtEndOfLine().Fix(s, context);
             Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
         }
+        
+        [TestMethod]
+        public void FixMissingPeriodsAtEndOfLinePeriodNextNotCloseForNameTest()
+        {
+            var context = Substitute.For<IFixCallbacks>();
+            context.Configure().IsName(Arg.Is("Bill Gates")).Returns(true);
+            context.Configure().AllowFix(Arg.Any<Paragraph>(), Arg.Any<string>()).Returns(true);
+
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("Bill Gates wasn't sure if somebody lived in there...", 3000, 3000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, context);
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and.");
+        }
 
         [TestMethod]
         public void FixMissingPeriodsAtEndOfLineNoPeriodForTitleTest()
