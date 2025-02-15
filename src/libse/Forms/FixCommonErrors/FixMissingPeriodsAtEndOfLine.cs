@@ -76,7 +76,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
-                        if (callbacks.AllowFix(p, fixAction) && isNextClose && !IsKnownUppercasePrefix(nextText, callbacks))
+                        if (callbacks.AllowFix(p, fixAction) &&
+                            (!isNextClose || !IsKnownUppercasePrefix(nextText, callbacks)))
                         {
                             //test to see if the first word of the next line is a name
                             string oldText = p.Text;
@@ -235,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             // known title
-            if (_titles.Any(title => text.StartsWith(title, StringComparison.OrdinalIgnoreCase)))
+            if (_titles.Any(title => text.StartsWith(title, StringComparison.Ordinal)))
             {
                 return true;
             }
