@@ -76,14 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
-                        //don't end the sentence if the next word is an I word as they're always capped.
-                        var isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
-                                                                        nextText.StartsWith("I'", StringComparison.Ordinal));
-
-                        var isNextCloseAndStartsWithTitle = isNextClose && (nextText.StartsWith("Mr. ", StringComparison.Ordinal) ||
-                                                                            nextText.StartsWith("Dr. ", StringComparison.Ordinal));
-
-                        if (!isNextCloseAndStartsWithI && !isNextCloseAndStartsWithTitle)
+                        if (isNextClose && !IsKnownUppercasePrefix(nextText, callbacks))
                         {
                             //test to see if the first word of the next line is a name
                             if (callbacks.AllowFix(p, fixAction))
@@ -221,6 +214,55 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
+        }
+
+        private readonly string[] _titles = { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
+
+        /// <summary>
+        /// Determines whether the given text is a known uppercase prefix that should not result in
+        /// adding a period at the end of a line.
+        /// </summary>
+        /// <param name="text">The text to check if it is a known uppercase prefix.</param>
+        /// <param name="context">The context providing callbacks for additional operations such as checking if a word is a name.</param>
+        /// <returns>True if the text is a known uppercase prefix, otherwise false.</returns>
+        private bool IsKnownUppercasePrefix(string text, IFixCallbacks context)
+        {
+            // known pronoun
+            // don't end the sentence if the next word is an I word as they're always capped.
+            if (text.StartsWith("I ", StringComparison.Ordinal) || text.StartsWith("I'", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            // known title
+            if (_titles.Any(title => text.StartsWith(title, StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+
+            // Bill Gates
+            var nameSegmentCount = 0;
+            var len = text.Length;
+            for (int r = 0; r < len + 1 && nameSegmentCount < 2; r++)
+            {
+                // when an entire text is a name
+                if (r == len)
+                {
+                    return context.IsName(text);
+                }
+
+                // handles both single word and multiple word name
+                if (char.IsWhiteSpace(text[r]))
+                {
+                    nameSegmentCount++;
+                    if (context.IsName(text.Substring(0, r)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
