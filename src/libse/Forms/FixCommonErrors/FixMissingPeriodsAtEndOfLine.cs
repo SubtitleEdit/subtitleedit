@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 
+        private static readonly string[] UrlPrefixes = { "http://", "https://", "www." };
+
         private static bool IsOneLineUrl(string s)
         {
             if (s.Contains(' ') || s.Contains(Environment.NewLine))
@@ -22,17 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return false;
             }
 
-            if (s.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (s.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (s.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            if (UrlPrefixes.Any(prefix => s.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }
