@@ -212,6 +212,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Slovenian","sl"),
                MakePair("Spanish","es"),
                MakePair("Swedish","sv"),
+               MakePair("Tatar","tt"),
                MakePair("Turkish","tr"),
                MakePair("Ukrainian","uk"),
                MakePair("Uyghur","ug"),
