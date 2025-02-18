@@ -50,13 +50,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            const int httpStatusCodeTooManyRequests = 429;
-
             var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
             var result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            if (ShouldRetry(result, resultContent))
             {
                 Task.Delay(2555).Wait(cancellationToken);
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
@@ -64,9 +62,17 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable || (int)result.StatusCode == httpStatusCodeTooManyRequests)
+            if (ShouldRetry(result, resultContent))
             {
                 Task.Delay(5307).Wait(cancellationToken);
+                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
+            if (ShouldRetry(result, resultContent))
+            {
+                Task.Delay(7307).Wait(cancellationToken);
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
@@ -104,6 +110,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 SeLogger.Error(ex, "DeepLXTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
                 throw;
             }
+        }
+
+        private bool ShouldRetry(HttpResponseMessage result, string resultContent)
+        {
+            const int httpStatusCodeTooManyRequests = 429;
+
+            return result.StatusCode == HttpStatusCode.ServiceUnavailable ||
+                   (int)result.StatusCode == httpStatusCodeTooManyRequests ||
+                   (result != null && resultContent.Contains("<head><title>429 Too Many Requests</title></head>", StringComparison.Ordinal));
         }
 
         private static StringContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
