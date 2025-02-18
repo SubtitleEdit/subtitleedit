@@ -86,7 +86,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 MakeTranslationPair("Arabic", "ar"),
                 MakeTranslationPair("Bulgarian", "bg"),
-                MakeTranslationPair("Chinese", "zh"),
+                MakeTranslationPair("Chinese (simplified)", "zh-hans"),
+                MakeTranslationPair("Chinese (traditional)", "zh-hant"),
                 MakeTranslationPair("Czech", "cs"),
                 MakeTranslationPair("Danish", "da"),
                 MakeTranslationPair("Dutch", "nl", true),
