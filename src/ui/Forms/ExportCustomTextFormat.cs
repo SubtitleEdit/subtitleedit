@@ -365,7 +365,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (timeCodeTemplate.EndsWith("ss.ff", StringComparison.Ordinal))
             {
-                d = $"{duration.Seconds:00}.{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
+                if (duration.Minutes > 0 && timeCodeTemplate.EndsWith("mm:ss.ff"))
+                {
+                    d = $"{duration.Minutes:00}:{duration.Seconds:00}.{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
+                }
+                else
+                {
+                    d = $"{duration.Seconds:00}.{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
+                }
             }
             else if (timeCodeTemplate.EndsWith("ss:ff", StringComparison.Ordinal))
             {
@@ -389,7 +396,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (timeCodeTemplate.EndsWith("ss,zzz", StringComparison.Ordinal))
             {
-                d = $"{duration.Seconds:00},{duration.Milliseconds:000}";
+                if (duration.Minutes > 0 && timeCodeTemplate.EndsWith("mm:ss,zzz"))
+                {
+                    d = $"{duration.Minutes:00}:{duration.Seconds:00},{duration.Milliseconds:000}";
+                }
+                else
+                {
+                    d = $"{duration.Seconds:00},{duration.Milliseconds:000}";
+                }
             }
             else if (timeCodeTemplate.EndsWith("ss;zzz", StringComparison.Ordinal))
             {
@@ -405,7 +419,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (timeCodeTemplate.EndsWith("ss,zz", StringComparison.Ordinal))
             {
-                d = $"{duration.Seconds:00},{Math.Round(duration.Milliseconds / 10.0):00}";
+                if (duration.Minutes > 0 && timeCodeTemplate.EndsWith("mm:ss,zz"))
+                {
+                    d = $"{duration.Minutes:00}:{duration.Seconds:00},{Math.Round(duration.Milliseconds / 10.0):00}";
+                }
+                else
+                {
+                    d = $"{duration.Seconds:00},{Math.Round(duration.Milliseconds / 10.0):00}";
+                }
             }
             else if (timeCodeTemplate.EndsWith("ss;zz", StringComparison.Ordinal))
             {
