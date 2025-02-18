@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     action = Convert;
                 }
-                else if (firstArgument == "/help" || firstArgument == "-help" || firstArgument == "/?" || firstArgument == "-?")
+                else if (firstArgument == "-h" || firstArgument == "/help" || firstArgument == "-help" || firstArgument == "--help" || firstArgument == "/?" || firstArgument == "-?")
                 {
                     action = Help;
                 }
