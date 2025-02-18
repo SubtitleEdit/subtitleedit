@@ -11584,6 +11584,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 return;
             }
+            else if (_shortcuts.MainTextBoxInsertUnicodeSymbol == e.KeyData)
+            {
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => InsertUnicodeSymbol(textBoxListViewText));
+                e.SuppressKeyPress = true;
+                return;
+            }
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
@@ -11858,6 +11864,20 @@ namespace Nikse.SubtitleEdit.Forms
             _lastTextKeyDownTicks = Stopwatch.GetTimestamp();
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private void InsertUnicodeSymbol(SETextBox textBox)
+        {
+            var contextMenu = new ContextMenuStrip();
+
+            foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                contextMenu.Items.Add(s, null, InsertUnicodeGlyph);
+            }
+
+            UiUtil.FixFonts(contextMenu);
+
+            contextMenu.Show(textBox, new Point(0, 0)); 
         }
 
         private ListBox DoIntellisense(SETextBox tb, ListBox intellisenseListBox)
@@ -30197,6 +30217,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.MainTextBoxAssaRemoveTag));
                 AssaTagHelper.RemoveTagAtCursor(textBoxListViewTextOriginal);
+                e.SuppressKeyPress = true;
+                return;
+            }
+            else if (_shortcuts.MainTextBoxInsertUnicodeSymbol == e.KeyData)
+            {
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => InsertUnicodeSymbol(textBoxListViewTextOriginal));
                 e.SuppressKeyPress = true;
                 return;
             }
