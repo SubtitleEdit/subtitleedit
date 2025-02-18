@@ -605,9 +605,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
+        private void EnableGroupBoxInputFiles(bool enabled)
+        {
+
+            buttonAddFile.Enabled = enabled;
+            buttonRemoveFile.Enabled = enabled;
+            buttonClear.Enabled = enabled;
+        }
+
         private void GenerateBatch()
         {
-            groupBoxInputFiles.Enabled = false;
+            EnableGroupBoxInputFiles(false);
             _batchFileNumber = 0;
             var errors = new StringBuilder();
             var errorCount = 0;
@@ -618,6 +626,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var videoFileName = lvi.Text;
                 listViewInputFiles.SelectedIndices.Clear();
                 lvi.Selected = true;
+                lvi.EnsureVisible();
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
@@ -652,7 +661,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         DialogResult = DialogResult.Cancel;
                     }
 
-                    groupBoxInputFiles.Enabled = true;
+                    EnableGroupBoxInputFiles(true);
                     return;
                 }
 
@@ -704,7 +713,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var fileList = Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, _outputBatchFileNames);
             MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList, Text, MessageBoxButtons.OK);
 
-            groupBoxInputFiles.Enabled = true;
+            EnableGroupBoxInputFiles(true);
             buttonGenerate.Enabled = true;
             buttonDownload.Enabled = true;
             buttonBatchMode.Enabled = true;
@@ -1685,7 +1694,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             if (_batchMode)
             {
-                groupBoxInputFiles.Enabled = true;
+                EnableGroupBoxInputFiles(true);
                 Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 470;
                 listViewInputFiles.Visible = true;
                 buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
@@ -1696,7 +1705,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else
             {
-                groupBoxInputFiles.Enabled = false;
+                EnableGroupBoxInputFiles(false);
                 var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 110;
                 MinimumSize = new Size(MinimumSize.Width, h - 10);
                 Height = h;
@@ -1880,7 +1889,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
         {
-            if (!buttonGenerate.Visible)
+            if (!buttonGenerate.Visible || buttonAddFile.Enabled == false)
             {
                 e.Effect = DragDropEffects.None;
                 return;
@@ -1932,6 +1941,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void listViewInputFiles_KeyDown(object sender, KeyEventArgs e)
         {
+            if (buttonAddFile.Enabled == false)
+            {
+                return;
+            }
+
             if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
                 e.SuppressKeyPress = true;
