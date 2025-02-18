@@ -1837,6 +1837,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(textBoxNode, language.MainTextBoxDictate, nameof(Configuration.Settings.Shortcuts.MainTextBoxRecord));
             AddNode(textBoxNode, language.MainTextBoxAssaIntellisense, nameof(Configuration.Settings.Shortcuts.MainTextBoxAssaIntellisense));
             AddNode(textBoxNode, language.MainTextBoxAssaRemoveTag, nameof(Configuration.Settings.Shortcuts.MainTextBoxAssaRemoveTag));
+            AddNode(textBoxNode, LanguageSettings.Current.Main.Menu.Edit.InsertUnicodeSymbol, nameof(Configuration.Settings.Shortcuts.MainTextBoxInsertUnicodeSymbol));
             _shortcuts.Nodes.Add(textBoxNode);
 
             var translateNode = new ShortcutNode(LanguageSettings.Current.Main.VideoControls.Translate);

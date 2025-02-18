@@ -367,6 +367,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainTextBoxUnbreakNoSpace { get; set; }
         public string MainTextBoxAssaIntellisense { get; set; }
         public string MainTextBoxAssaRemoveTag { get; set; }
+        public string MainTextBoxInsertUnicodeSymbol { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }

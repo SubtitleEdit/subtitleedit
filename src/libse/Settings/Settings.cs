@@ -8448,6 +8448,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxAssaRemoveTag = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxInsertUnicodeSymbol");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxInsertUnicodeSymbol = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
                 {
@@ -10369,6 +10375,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainTextBoxAssaIntellisense", shortcuts.MainTextBoxAssaIntellisense);
             textWriter.WriteElementString("MainTextBoxAssaRemoveTag", shortcuts.MainTextBoxAssaRemoveTag);
+            textWriter.WriteElementString("MainTextBoxInsertUnicodeSymbol", shortcuts.MainTextBoxInsertUnicodeSymbol);
             textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
