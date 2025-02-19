@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Cantonese","zh"),
                MakePair("Catalan","ca"),
                MakePair("Chhattisgarhi",""),
-               MakePair("Chinese (Simplified)", "zho_Hans"),
+               MakePair("Chinese (Simplified)", "zho-Hans"),
                MakePair("Chinese (Traditional)","zh-Hant"),
                MakePair("Croatian","hr"),
                MakePair("Czech","cs"),

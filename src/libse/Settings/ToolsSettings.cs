@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int AutoTranslateMaxBytes { get; set; }
         public string AutoTranslateStrategy { get; set; }
         public string GeminiProApiKey { get; set; }
+        public string GeminiModel { get; set; }
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
@@ -516,6 +517,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = AnthropicTranslate.Models[0];
+            GeminiModel = GeminiTranslate.Models[0];
             TextToSpeechAzureRegion = "westeurope";
             TextToSpeechElevenLabsSimilarity = 0.5;
             TextToSpeechElevenLabsStability = 0.5;

@@ -22,13 +22,20 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 
+        /// <summary>
+        /// See https://??
+        /// </summary>
+        public static string[] Models => new[]
+        {
+            "gemini-pro",
+        };
+
         public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent");
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiProApiKey))
             {
@@ -54,6 +61,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             SeLogger.Error("GeminiTranslate calling with: " + input);
 
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel))
+            {
+                Configuration.Settings.Tools.GeminiModel = Models[0];
+            }
+            var model = Configuration.Settings.Tools.GeminiModel;
+
+            _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
@@ -110,7 +124,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Cantonese","zh"),
                MakePair("Catalan","ca"),
                MakePair("Chhattisgarhi",""),
-               MakePair("Chinese","zh"),
+               MakePair("Chinese (Simplified)", "zho-Hans"),
+               MakePair("Chinese (Traditional)","zh-Hant"),
                MakePair("Croatian","hr"),
                MakePair("Czech","cs"),
                MakePair("Danish","da"),
