@@ -1,5 +1,29 @@
 ﻿Subtitle Edit Changelog
 
+4.0.12 (xth April 2025) BETA
+* NEW
+   * Add Mistral AI translate
+   * Add AvalAI translate - thx JJHACKER
+   * Add "Chinese traditional" for DeepL - thx rdr44b 
+   * Add voice-over for TTS - thx Chris-656
+   * Add new shortcut for "Insert unicode symbol" to main text box - thx davidgaryesp
+   * Add gemini-2.0-flash model (and allow custom model name) - thx yawoo
+* IMPROVED:
+   * Update Korean translation - thx domddol
+   * Update Greek translation - thx PMitsakis
+   * Update Chinese translation - thx nkh0472
+   * Update Polish translation - thx admas
+   * Update French translation - thx Pierre
+   * Update Italian translation - thx bovirus
+   * Minor improvements for PaddleOCR - thx timminator/Codling
+   * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
+* FIXED:
+   * Fix space character in PAC
+   * Fix for LRC with MS parsing - thx AverageHoarder
+   * Fix crash in TTS retry - thx cvrle77
+   * Fix custom format duration > 1 min -thx bangwb
+
+
 4.0.11 (28th January 2025)
 * NEW
    * Shortcut for "Split line and play" - thx Leon
