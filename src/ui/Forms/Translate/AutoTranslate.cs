@@ -561,6 +561,16 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.AddRange(GeminiTranslate.Models);
+                comboBoxFormality.Text = Configuration.Settings.Tools.GeminiModel;
+
                 return;
             }
 
@@ -1295,6 +1305,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(GeminiTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.GeminiProApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.GeminiModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(PapagoTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
