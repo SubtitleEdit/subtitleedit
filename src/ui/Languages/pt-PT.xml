@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -3194,6 +3194,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <GeneratingSpeechFromTextXOfY>A gerar voz a partir de texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Rever clipes de áudio</ReviewAudioClips>
     <CustomAudioEncoding>Codificação áudio personalizada</CustomAudioEncoding>
+    <UseVoiceOver>Utilizar locução</UseVoiceOver>
     <ReviewInfo>Rever e editar/remover clipes de áudio</ReviewInfo>
     <Play>Reproduzir</Play>
     <AutoContinue>Continuar automaticamente</AutoContinue>
