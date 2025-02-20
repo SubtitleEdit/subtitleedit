@@ -15,7 +15,8 @@
    * Update Polish translation - thx admas
    * Update French translation - thx Pierre
    * Update Italian translation - thx bovirus
-   * Minor improvements for PaddleOCR - thx timminator/Codling
+   * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
+   * Add standalone PaddleOCR (no Python required) - thx timminator
    * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
 * FIXED:
    * Fix space character in PAC
