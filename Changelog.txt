@@ -18,11 +18,12 @@
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
    * Add standalone PaddleOCR (no Python required) - thx timminator
    * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
+   * Minor improvements for "spell check"
 * FIXED:
    * Fix space character in PAC
    * Fix for LRC with MS parsing - thx AverageHoarder
    * Fix crash in TTS retry - thx cvrle77
-   * Fix custom format duration > 1 min -thx bangwb
+   * Fix custom format duration > 1 min - thx bangwb
 
 
 4.0.11 (28th January 2025)
