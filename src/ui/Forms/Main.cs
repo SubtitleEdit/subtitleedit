@@ -51,6 +51,7 @@ using Nikse.SubtitleEdit.Forms.Tts;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
+using static Nikse.SubtitleEdit.Controls.AudioVisualizer;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -90,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _listViewOriginalTextTicks = -1;
         private bool _listViewMouseDown;
         private long _sourceTextTicks = -1;
-
+        private Paragraph _currentSelectedParagraph;
         private int _videoAudioTrackNumber = -1;
 
         public int VideoAudioTrackNumber
@@ -457,6 +458,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 audioVisualizer.ShowWaveform = Configuration.Settings.General.ShowWaveform;
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
+                audioVisualizer.OnTextUpdated += AudioVisualizer_OnTextUpdated;
                 //panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 //trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
 
@@ -659,6 +661,17 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
                 SeLogger.Error(exception, "Main constructor");
+            }
+        }
+
+        private void AudioVisualizer_OnTextUpdated(object sender, ParagraphEventArgs e)
+        {
+            // Update the text in the SETextBox
+            // Check if the updated paragraph is the currently selected paragraph
+            if (_currentSelectedParagraph != null && e.Paragraph != null && _currentSelectedParagraph.Id == e.Paragraph.Id)
+            {
+                // Update the text in the SETextBox
+                textBoxListViewText.Text = e.Paragraph.Text;
             }
         }
 
@@ -11040,6 +11053,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             StopAutoDuration();
 
+            // Update the current selected paragraph
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                var selectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                _currentSelectedParagraph = _subtitle.GetParagraphOrDefault(selectedIndex);
+            }
+            else
+            {
+                _currentSelectedParagraph = null;
+            }
             if (_listViewMouseDown)
             {
                 return;
@@ -12298,7 +12321,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        lines = s.SplitToLines();
+                        if (Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting)
+                        {
+                            lines.Add(s);
+                        } else
+                        {
+                            lines = s.SplitToLines();
+                        }
+
                         if (lines.Count == 1)
                         {
                             s = Utilities.AutoBreakLine(currentParagraph.Text, 3, 20, language);
@@ -12412,8 +12442,8 @@ namespace Nikse.SubtitleEdit.Forms
                         newParagraph.Text = ContinuationUtilities.ConvertBackForArabic(newParagraph.Text);
                     }
                 }
-
-                FixSplitItalicTagAndAssa(currentParagraph, newParagraph);
+                if (!Configuration.Settings.VideoControls.WaveformDuplicateTextWhileSplitting)
+                    FixSplitItalicTagAndAssa(currentParagraph, newParagraph);
                 FixSplitFontTag(currentParagraph, newParagraph);
                 FixSplitBoxTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
@@ -13981,7 +14011,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox).
                 _forceClose = true;
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Application.Exit());
             }

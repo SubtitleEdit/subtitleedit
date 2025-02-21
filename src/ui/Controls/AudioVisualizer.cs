@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using System.Text.RegularExpressions;
+using System.IO;
 using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -101,6 +103,15 @@ namespace Nikse.SubtitleEdit.Controls
         private SpectrogramData _spectrogram;
         private const int SpectrogramDisplayHeight = 128;
 
+        // Karaoke Values
+        private int _selectedLineIndex = -1;
+        private Paragraph _selectedParagraph;
+        private int _initialMouseX;
+
+        private bool _directionChanged = false;
+        private double _accumulatedDelta = 0;
+        private int _lastValidMouseX;
+
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
         public event ParagraphEventHandler OnParagraphRightClicked;
@@ -111,6 +122,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event ParagraphEventHandler OnStartTimeChanged;
         public event ParagraphEventHandler OnTimeChangedAndOffsetRest;
 
+        public event EventHandler<ParagraphEventArgs> OnTextUpdated;
         public event ParagraphEventHandler OnSingleClick;
         public event ParagraphEventHandler OnDoubleClickNonParagraph;
         public event EventHandler OnPause;
@@ -430,9 +442,11 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            const double additionalSeconds = 15.0; // Helps when scrolling
-            var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
-            var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
+            const double additionalEndSeconds = 15.0; // Helps when scrolling
+            const double additionalStartSeconds = 5.0; // This takes up too much real estate when trying to render things
+
+            var startThresholdMilliseconds = (_startPositionSeconds - additionalStartSeconds) * TimeCode.BaseUnit;
+            var endThresholdMilliseconds = (EndPositionSeconds + additionalEndSeconds) * TimeCode.BaseUnit;
             var displayableParagraphs = new List<Paragraph>();
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -447,7 +461,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
                 {
                     displayableParagraphs.Add(p);
-                    if (displayableParagraphs.Count > 99)
+                    if (displayableParagraphs.Count > 199) // Performance
                     {
                         break;
                     }
@@ -1006,6 +1020,63 @@ namespace Nikse.SubtitleEdit.Controls
                 graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, graphics.VisibleClipBounds.Height);
             }
 
+            //show lines that indicate a karaoke change when using ytkt
+            if (Regex.IsMatch(paragraph.Text, @"^\{\s*[^}]*\\ytkt"))
+            {
+                MatchCollection kValues = Regex.Matches(paragraph.Text, @"\\k(\d+)");
+                float passedMS = 0;
+
+                using (var pen = new Pen(new SolidBrush(Color.FromArgb(175, 233, 233, 10))) { DashStyle = DashStyle.Dash, Width = 2 })
+                {
+                    var time = _startPositionSeconds;
+
+                    //get the k's and the time
+                    foreach (Match value in kValues)
+                    {
+                        //ms * 10
+                        float ms = Int32.Parse(value.Groups[1].Value);
+                        passedMS += SecondsToXPosition(ms / 100);
+                        //drawLine pen,
+                        if ((currentRegionLeft + passedMS) < (currentRegionRight - 1))
+
+                            graphics.DrawLine(pen,
+                            currentRegionLeft + passedMS, 0,
+                            currentRegionLeft + passedMS, graphics.VisibleClipBounds.Height);
+                    }
+                }
+
+            }
+
+            //now for \t
+            if (Regex.IsMatch(paragraph.Text, @"\\t\((.*?)\)"))
+            {
+                MatchCollection kValues = Regex.Matches(paragraph.Text, @"\\t\((.*?)\)");
+                float passedMS = 0;
+
+                using (var pen = new Pen(new SolidBrush(Color.FromArgb(175, 90, 90, 200))) { DashStyle = DashStyle.Dash, Width = 2 })
+                {
+                    var time = _startPositionSeconds;
+
+                    foreach (Match value in kValues)
+                    {
+
+                        string arguments = value.Groups[1].Value;
+                        string[] values = arguments.Split(',');
+                        if (Int32.TryParse(values[0], out int result))
+                        {
+                            float ms = result;
+                            float region = SecondsToXPosition(ms / 1000);
+                            if ((currentRegionLeft + region) < (currentRegionRight - 1))
+                                graphics.DrawLine(pen,
+                                    currentRegionLeft + region, 0,
+                                    currentRegionLeft + region, graphics.VisibleClipBounds.Height);
+
+                        }
+                    }
+                }
+
+            }
+
             using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, TextBold ? FontStyle.Bold : FontStyle.Regular))
             using (var textBrush = new SolidBrush(TextColor))
             using (var outlineBrush = new SolidBrush(Color.Black))
@@ -1183,6 +1254,26 @@ namespace Nikse.SubtitleEdit.Controls
             return (double)index / _wavePeaks.SampleRate;
         }
 
+        private List<int> GetLinePositionsForParagraph(Paragraph paragraph)
+        {
+            var linePositions = new List<int>();
+
+            if (Regex.IsMatch(paragraph.Text, @"^\{\s*[^}]*\\ytkt"))
+            {
+                MatchCollection kValues = Regex.Matches(paragraph.Text, @"\\k(\d+)");
+                float passedMS = 0;
+                foreach (Match value in kValues)
+                {
+                    float ms = Int32.Parse(value.Groups[1].Value);
+                    passedMS += SecondsToXPosition(ms / 100);
+                    linePositions.Add(SecondsToXPosition(paragraph.StartTime.TotalSeconds - _startPositionSeconds) + (int)passedMS);
+                }
+            }
+
+            return linePositions;
+        }
+
+
         private void WaveformMouseDown(object sender, MouseEventArgs e)
         {
             if (_wavePeaks == null)
@@ -1201,6 +1292,22 @@ namespace Nikse.SubtitleEdit.Controls
                 Cursor = Cursors.VSplit;
                 double seconds = RelativeXPositionToSeconds(e.X);
                 var milliseconds = (int)(seconds * TimeCode.BaseUnit);
+
+                foreach (var paragraph in _displayableParagraphs)
+                {
+                    var linePositions = GetLinePositionsForParagraph(paragraph);
+                    for (int i = 0; i < linePositions.Count; i++)
+                    {
+                        if (IsKaraokeLineHit(e.X, linePositions[i]))
+                        {
+                            _selectedLineIndex = i;
+                            _selectedParagraph = paragraph;
+                            _initialMouseX = e.X;
+                            Cursor = Cursors.VSplit;
+                            return;
+                        }
+                    }
+                }
 
                 if (SetParagraphBorderHit(milliseconds, NewSelectionParagraph))
                 {
@@ -1556,10 +1663,113 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool AllowMovePrevOrNext => _gapAtStart >= 0 && _gapAtStart < 500 && ModifierKeys == Keys.Alt;
 
+
+        private List<int> GetLinePositions()
+        {
+            var linePositions = new List<int>();
+
+            // Add positions for karaoke lines
+            foreach (var paragraph in _displayableParagraphs)
+            {
+                if (Regex.IsMatch(paragraph.Text, @"^\{\s*[^}]*\\ytkt"))
+                {
+                    MatchCollection kValues = Regex.Matches(paragraph.Text, @"\\k(\d+)");
+                    float passedMS = 0;
+                    foreach (Match value in kValues)
+                    {
+                        float ms = Int32.Parse(value.Groups[1].Value);
+                        passedMS += SecondsToXPosition(ms / 100);
+                        linePositions.Add(SecondsToXPosition(paragraph.StartTime.TotalSeconds - _startPositionSeconds) + (int)passedMS);
+                    }
+                }
+            }
+
+            return linePositions;
+        }
+
+
+        private bool IsKaraokeLineHit(int mouseX, int lineX)
+        {
+            const int hitboxSize = 5;
+            return Math.Abs(mouseX - lineX) <= hitboxSize;
+        }
+
+        private void AdjustKaraokeValues(Paragraph paragraph, int lineIndex, int deltaX, ref double accumulatedDelta)
+        {
+            if (Regex.IsMatch(paragraph.Text, @"^\{\s*[^}]*\\ytkt"))
+            {
+                MatchCollection kValues = Regex.Matches(paragraph.Text, @"\\k(\d+)");
+                if (lineIndex < 0 || lineIndex >= kValues.Count - 1)
+                {
+                    return;
+                }
+
+                int firstKValue = Int32.Parse(kValues[lineIndex].Groups[1].Value);
+                int secondKValue = Int32.Parse(kValues[lineIndex + 1].Groups[1].Value);
+
+                // Convert deltaX to seconds and then to 10 ms units
+                double deltaSeconds = (double)deltaX / (_wavePeaks.SampleRate * _zoomFactor);
+                accumulatedDelta += deltaSeconds * 1000; // Convert seconds to milliseconds and accumulate
+
+                // Apply changes only if accumulated delta exceeds 10 ms
+                if (Math.Abs(accumulatedDelta) >= 10)
+                {
+                    int deltaK = (int)(accumulatedDelta / 10); // Convert milliseconds to 10 ms units
+                    accumulatedDelta -= deltaK * 10; // Reduce accumulated delta by the applied amount
+
+                    // Adjust only the two relevant \k values
+                    firstKValue = Math.Max(0, firstKValue + deltaK);
+                    secondKValue = Math.Max(0, secondKValue - deltaK);
+                    if (firstKValue <= 1 || secondKValue <= 1)
+                    {
+                        return;
+                    }
+
+                    // Update the paragraph text with the new \k values
+                    string newText = paragraph.Text;
+                    newText = newText.Substring(0, kValues[lineIndex].Index) +
+                              $"\\k{firstKValue}" +
+                              newText.Substring(kValues[lineIndex].Index + kValues[lineIndex].Length, kValues[lineIndex + 1].Index - (kValues[lineIndex].Index + kValues[lineIndex].Length)) +
+                              $"\\k{secondKValue}" +
+                              newText.Substring(kValues[lineIndex + 1].Index + kValues[lineIndex + 1].Length);
+
+                    paragraph.Text = newText;
+
+
+                    // Raise the OnTextUpdated event
+                    OnTextUpdated?.Invoke(this, new ParagraphEventArgs(paragraph));
+                }
+            }
+        }
+
         private void WaveformMouseMove(object sender, MouseEventArgs e)
         {
             if (_wavePeaks == null)
             {
+                return;
+            }
+
+            // AdjustKaraokeValues
+            if (e.Button == MouseButtons.Left && _selectedLineIndex != -1 && _selectedParagraph != null)
+            {
+                int deltaX = e.X - _initialMouseX;
+
+                // Check if the direction has changed
+                if ((deltaX > 0 && _accumulatedDelta < 0) || (deltaX < 0 && _accumulatedDelta > 0))
+                {
+                    _directionChanged = true;
+                    _accumulatedDelta = 0; // Reset the accumulated delta when direction changes
+                }
+
+                // Only adjust values if the direction has not changed or the cursor crosses the last valid position
+                if (!_directionChanged || (deltaX > 0 && e.X >= _lastValidMouseX) || (deltaX < 0 && e.X <= _lastValidMouseX))
+                {
+                    AdjustKaraokeValues(_selectedParagraph, _selectedLineIndex, deltaX, ref _accumulatedDelta);
+                    _lastValidMouseX = e.X; // Update the last valid mouse position
+                    _directionChanged = false; // Reset the direction changed flag
+                }
+                _initialMouseX = e.X;
+                Invalidate();
                 return;
             }
 
@@ -1604,13 +1814,25 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var seconds = RelativeXPositionToSeconds(e.X);
                 var milliseconds = (int)(seconds * TimeCode.BaseUnit);
+                bool isOverLine = false;
+                foreach (var lineX in GetLinePositions())
+                {
+                    if (IsKaraokeLineHit(e.X, lineX))
+                    {
+                        isOverLine = true;
+                        break;
+                    }
+                }
 
                 if (IsParagraphBorderHit(milliseconds, NewSelectionParagraph))
                 {
                     Cursor = Cursors.VSplit;
                 }
-                else if (IsParagraphBorderHit(milliseconds, SelectedParagraph) ||
-                         IsParagraphBorderHit(milliseconds, _displayableParagraphs))
+                else if (IsParagraphBorderHit(milliseconds, SelectedParagraph) || IsParagraphBorderHit(milliseconds, _displayableParagraphs))
+                {
+                    Cursor = Cursors.VSplit;
+                }
+                else if (isOverLine)
                 {
                     Cursor = Cursors.VSplit;
                 }
@@ -1978,6 +2200,10 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Button == MouseButtons.Left)
             {
+                _selectedLineIndex = -1;
+                _selectedParagraph = null;
+                Cursor = Cursors.Default;
+
                 if (_mouseDown)
                 {
                     if (_mouseDownParagraph != null)
