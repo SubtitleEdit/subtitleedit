@@ -33985,7 +33985,7 @@ namespace Nikse.SubtitleEdit.Forms
             var chaps = new List<MatroskaChapter>();
             using (var matroska = new MatroskaFile(_videoFileName))
             {
-                chaps = await Task.Run(() => matroska.GetChapters());
+                chaps = await matroska.GetChaptersAsync();
             }
 
             if (chaps?.Count > 0)
@@ -37108,7 +37108,7 @@ namespace Nikse.SubtitleEdit.Forms
             });
         }
 
-        private void videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
@@ -37166,7 +37166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mkvParser.IsValid)
                 {
                     sb.AppendLine($"Container: Matroska (mkv/webm)");
-                    var chapters = mkvParser.GetChapters();
+                    var chapters = await mkvParser.GetChaptersAsync();
                     if (chapters.Count > 0)
                     {
                         sb.AppendLine($" - Chapters: {chapters.Count}");
