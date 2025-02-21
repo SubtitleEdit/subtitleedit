@@ -1933,9 +1933,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonResetDefault_Click(null, null);
         }
 
-        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        private void HandleListViewKeyEvents(object sender, KeyEventArgs e)
         {
-            var items = listView1.Items;
+            var items = ((ListView)sender).Items;
             if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
                 foreach (ListViewItem item in items)
@@ -1960,39 +1960,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     item.Checked = !item.Checked;
                 }
-                e.SuppressKeyPress = true;
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void listViewFixes_KeyDown(object sender, KeyEventArgs e)
-        {
-            var items = listViewFixes.Items;
-            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = true;
-                    item.Selected = true;
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = false;
-                    item.Selected = false;
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = !item.Checked;
-                }
-                e.SuppressKeyPress = true;
                 e.SuppressKeyPress = true;
             }
         }
