@@ -210,7 +210,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.descendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.netflixQualityCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemBeautifyTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
@@ -1880,15 +1879,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemMergeLinesWithSameTimeCodes,
             this.toolStripMenuItemAutoSplitLongLines,
             this.toolStripMenuItemSortBy,
-            this.listErrorsToolStripMenuItem,
             this.netflixQualityCheckToolStripMenuItem,
-            this.toolStripSeparator27,
             this.toolStripMenuItemBeautifyTimeCodes,
             this.toolStripSeparator22,
             this.toolStripMenuItemMakeEmptyFromCurrent,
             this.toolStripMenuItemBatchConvert,
             this.generateDatetimeInfoFromVideoToolStripMenuItem,
             this.toolStripMenuItemMeasurementConverter,
+            this.listErrorsToolStripMenuItem,
             this.toolStripSeparator3,
             this.splitToolStripMenuItem,
             this.appendTextVisuallyToolStripMenuItem,
@@ -2145,11 +2143,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.netflixQualityCheckToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
             this.netflixQualityCheckToolStripMenuItem.Text = "Netflix quality check";
             this.netflixQualityCheckToolStripMenuItem.Click += new System.EventHandler(this.NetflixGlyphCheckToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator27
-            // 
-            this.toolStripSeparator27.Name = "toolStripSeparator27";
-            this.toolStripSeparator27.Size = new System.Drawing.Size(335, 6);
             // 
             // toolStripMenuItemBeautifyTimeCodes
             // 
@@ -2923,63 +2916,63 @@ namespace Nikse.SubtitleEdit.Forms
             // columnDeleteTextOnlyToolStripMenuItem
             // 
             this.columnDeleteTextOnlyToolStripMenuItem.Name = "columnDeleteTextOnlyToolStripMenuItem";
-            this.columnDeleteTextOnlyToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.columnDeleteTextOnlyToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.columnDeleteTextOnlyToolStripMenuItem.Text = "Delete text";
             this.columnDeleteTextOnlyToolStripMenuItem.Click += new System.EventHandler(this.ColumnDeleteTextOnlyToolStripMenuItemClick);
             // 
             // toolStripMenuItemColumnDeleteText
             // 
             this.toolStripMenuItemColumnDeleteText.Name = "toolStripMenuItemColumnDeleteText";
-            this.toolStripMenuItemColumnDeleteText.Size = new System.Drawing.Size(314, 22);
+            this.toolStripMenuItemColumnDeleteText.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemColumnDeleteText.Text = "Delete text and shift text cells up";
             this.toolStripMenuItemColumnDeleteText.Click += new System.EventHandler(this.DeleteAndShiftCellsUpToolStripMenuItemClick);
             // 
             // ShiftTextCellsDownToolStripMenuItem
             // 
             this.ShiftTextCellsDownToolStripMenuItem.Name = "ShiftTextCellsDownToolStripMenuItem";
-            this.ShiftTextCellsDownToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.ShiftTextCellsDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.ShiftTextCellsDownToolStripMenuItem.Text = "Insert and shift text cells down";
             this.ShiftTextCellsDownToolStripMenuItem.Click += new System.EventHandler(this.ShiftTextCellsDownToolStripMenuItem_Click);
             // 
             // toolStripMenuItemInsertTextFromSub
             // 
             this.toolStripMenuItemInsertTextFromSub.Name = "toolStripMenuItemInsertTextFromSub";
-            this.toolStripMenuItemInsertTextFromSub.Size = new System.Drawing.Size(314, 22);
+            this.toolStripMenuItemInsertTextFromSub.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemInsertTextFromSub.Text = "Insert text from subtitle and shift cells down...";
             this.toolStripMenuItemInsertTextFromSub.Click += new System.EventHandler(this.ToolStripMenuItemInsertTextFromSubClick);
             // 
             // toolStripMenuItemColumnImportText
             // 
             this.toolStripMenuItemColumnImportText.Name = "toolStripMenuItemColumnImportText";
-            this.toolStripMenuItemColumnImportText.Size = new System.Drawing.Size(314, 22);
+            this.toolStripMenuItemColumnImportText.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemColumnImportText.Text = "Import text and shift text cells down...";
             this.toolStripMenuItemColumnImportText.Click += new System.EventHandler(this.ToolStripMenuItemColumnImportTextClick);
             // 
             // toolStripMenuItemPasteSpecial
             // 
             this.toolStripMenuItemPasteSpecial.Name = "toolStripMenuItemPasteSpecial";
-            this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(314, 22);
+            this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemPasteSpecial.Text = "Paste from clipboard...";
             this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.ToolStripMenuItemPasteSpecialClick);
             // 
             // copyOriginalTextToCurrentToolStripMenuItem
             // 
             this.copyOriginalTextToCurrentToolStripMenuItem.Name = "copyOriginalTextToCurrentToolStripMenuItem";
-            this.copyOriginalTextToCurrentToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.copyOriginalTextToCurrentToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.copyOriginalTextToCurrentToolStripMenuItem.Text = "Copy original text to current";
             this.copyOriginalTextToCurrentToolStripMenuItem.Click += new System.EventHandler(this.CopyOriginalTextToCurrentToolStripMenuItemClick);
             // 
             // moveTextUpToolStripMenuItem
             // 
             this.moveTextUpToolStripMenuItem.Name = "moveTextUpToolStripMenuItem";
-            this.moveTextUpToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.moveTextUpToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.moveTextUpToolStripMenuItem.Text = "Move text up";
             this.moveTextUpToolStripMenuItem.Click += new System.EventHandler(this.MoveTextUpToolStripMenuItemClick);
             // 
             // moveTextDownToolStripMenuItem
             // 
             this.moveTextDownToolStripMenuItem.Name = "moveTextDownToolStripMenuItem";
-            this.moveTextDownToolStripMenuItem.Size = new System.Drawing.Size(314, 22);
+            this.moveTextDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.moveTextDownToolStripMenuItem.Text = "Move text down";
             this.moveTextDownToolStripMenuItem.Click += new System.EventHandler(this.MoveTextDownToolStripMenuItemClick);
             // 
@@ -4979,7 +4972,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertUnicodeCharactersToolStripMenuItem,
             this.insertUnicodeControlCharactersToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 612);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(273, 612);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.ContextMenuStripTextBoxListViewClosing);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
@@ -4988,13 +4981,13 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripSeparatorSpellCheckSuggestions
             // 
             this.toolStripSeparatorSpellCheckSuggestions.Name = "toolStripSeparatorSpellCheckSuggestions";
-            this.toolStripSeparatorSpellCheckSuggestions.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorSpellCheckSuggestions.Size = new System.Drawing.Size(269, 6);
             this.toolStripSeparatorSpellCheckSuggestions.Visible = false;
             // 
             // toolStripMenuItemSpellCheckSkipOnce
             // 
             this.toolStripMenuItemSpellCheckSkipOnce.Name = "toolStripMenuItemSpellCheckSkipOnce";
-            this.toolStripMenuItemSpellCheckSkipOnce.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckSkipOnce.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSpellCheckSkipOnce.Text = "Skip once";
             this.toolStripMenuItemSpellCheckSkipOnce.Visible = false;
             this.toolStripMenuItemSpellCheckSkipOnce.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckSkipOnceClick);
@@ -5002,7 +4995,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemSpellCheckSkipAll
             // 
             this.toolStripMenuItemSpellCheckSkipAll.Name = "toolStripMenuItemSpellCheckSkipAll";
-            this.toolStripMenuItemSpellCheckSkipAll.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckSkipAll.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSpellCheckSkipAll.Text = "Skip all";
             this.toolStripMenuItemSpellCheckSkipAll.Visible = false;
             this.toolStripMenuItemSpellCheckSkipAll.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckSkipAllClick);
@@ -5010,7 +5003,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemSpellCheckAddToDictionary
             // 
             this.toolStripMenuItemSpellCheckAddToDictionary.Name = "toolStripMenuItemSpellCheckAddToDictionary";
-            this.toolStripMenuItemSpellCheckAddToDictionary.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToDictionary.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSpellCheckAddToDictionary.Text = "Add to dictionary";
             this.toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
             this.toolStripMenuItemSpellCheckAddToDictionary.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckAddToDictionaryClick);
@@ -5018,7 +5011,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemSpellCheckAddToNames
             // 
             this.toolStripMenuItemSpellCheckAddToNames.Name = "toolStripMenuItemSpellCheckAddToNames";
-            this.toolStripMenuItemSpellCheckAddToNames.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToNames.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSpellCheckAddToNames.Text = "Add to names";
             this.toolStripMenuItemSpellCheckAddToNames.Visible = false;
             this.toolStripMenuItemSpellCheckAddToNames.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckAddToNamesClick);
@@ -5026,25 +5019,25 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripSeparatorSpellCheck
             // 
             this.toolStripSeparatorSpellCheck.Name = "toolStripSeparatorSpellCheck";
-            this.toolStripSeparatorSpellCheck.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorSpellCheck.Size = new System.Drawing.Size(269, 6);
             this.toolStripSeparatorSpellCheck.Visible = false;
             // 
             // toolStripMenuItemWebVttVoice
             // 
             this.toolStripMenuItemWebVttVoice.Name = "toolStripMenuItemWebVttVoice";
-            this.toolStripMenuItemWebVttVoice.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemWebVttVoice.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemWebVttVoice.Text = "WebVTT voice";
             // 
             // toolStripSeparatorWebVTT
             // 
             this.toolStripSeparatorWebVTT.Name = "toolStripSeparatorWebVTT";
-            this.toolStripSeparatorWebVTT.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorWebVTT.Size = new System.Drawing.Size(269, 6);
             // 
             // cutToolStripMenuItem1
             // 
             this.cutToolStripMenuItem1.Name = "cutToolStripMenuItem1";
             this.cutToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.cutToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.cutToolStripMenuItem1.Text = "Cut";
             this.cutToolStripMenuItem1.Click += new System.EventHandler(this.CutToolStripMenuItemClick);
             // 
@@ -5052,7 +5045,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
             this.copyToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.copyToolStripMenuItem1.Text = "Copy";
             this.copyToolStripMenuItem1.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
             // 
@@ -5060,95 +5053,95 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.pasteToolStripMenuItem1.Name = "pasteToolStripMenuItem1";
             this.pasteToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.pasteToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.pasteToolStripMenuItem1.Text = "Paste";
             this.pasteToolStripMenuItem1.Click += new System.EventHandler(this.PasteToolStripMenuItemClick);
             // 
             // deleteToolStripMenuItem1
             // 
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.deleteToolStripMenuItem1.Text = "Delete";
             this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
             // 
             // toolStripMenuItemSplitViaWaveform
             // 
             this.toolStripMenuItemSplitViaWaveform.Name = "toolStripMenuItemSplitViaWaveform";
-            this.toolStripMenuItemSplitViaWaveform.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSplitViaWaveform.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSplitViaWaveform.Text = "Split text at cursor/waveform position";
             this.toolStripMenuItemSplitViaWaveform.Click += new System.EventHandler(this.ToolStripMenuItemSplitViaWaveformClick);
             // 
             // toolStripMenuItemSplitTextAtCursor
             // 
             this.toolStripMenuItemSplitTextAtCursor.Name = "toolStripMenuItemSplitTextAtCursor";
-            this.toolStripMenuItemSplitTextAtCursor.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSplitTextAtCursor.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemSplitTextAtCursor.Text = "Split text at cursor position";
             this.toolStripMenuItemSplitTextAtCursor.Click += new System.EventHandler(this.ToolStripMenuItemSplitTextAtCursorClick);
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(269, 6);
             // 
             // selectAllToolStripMenuItem1
             // 
             this.selectAllToolStripMenuItem1.Name = "selectAllToolStripMenuItem1";
             this.selectAllToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.selectAllToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.selectAllToolStripMenuItem1.Text = "Select all";
             this.selectAllToolStripMenuItem1.Click += new System.EventHandler(this.SelectAllToolStripMenuItemClick);
             // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(269, 6);
             // 
             // normalToolStripMenuItem1
             // 
             this.normalToolStripMenuItem1.Name = "normalToolStripMenuItem1";
-            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.normalToolStripMenuItem1.Text = "Normal";
             this.normalToolStripMenuItem1.Click += new System.EventHandler(this.NormalToolStripMenuItem1Click);
             // 
             // boldToolStripMenuItem1
             // 
             this.boldToolStripMenuItem1.Name = "boldToolStripMenuItem1";
-            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.boldToolStripMenuItem1.Text = "Bold";
             this.boldToolStripMenuItem1.Click += new System.EventHandler(this.BoldToolStripMenuItem1Click);
             // 
             // italicToolStripMenuItem1
             // 
             this.italicToolStripMenuItem1.Name = "italicToolStripMenuItem1";
-            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.italicToolStripMenuItem1.Text = "Italic";
             this.italicToolStripMenuItem1.Click += new System.EventHandler(this.ItalicToolStripMenuItem1Click);
             // 
             // boxToolStripMenuItem1
             // 
             this.boxToolStripMenuItem1.Name = "boxToolStripMenuItem1";
-            this.boxToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.boxToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.boxToolStripMenuItem1.Text = "Box";
             this.boxToolStripMenuItem1.Click += new System.EventHandler(this.BoxToolStripMenuItem1Click);
             // 
             // underlineToolStripMenuItem1
             // 
             this.underlineToolStripMenuItem1.Name = "underlineToolStripMenuItem1";
-            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.underlineToolStripMenuItem1.Text = "Underline";
             this.underlineToolStripMenuItem1.Click += new System.EventHandler(this.UnderlineToolStripMenuItem1Click);
             // 
             // colorToolStripMenuItem1
             // 
             this.colorToolStripMenuItem1.Name = "colorToolStripMenuItem1";
-            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
+            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(272, 22);
             this.colorToolStripMenuItem1.Text = "Color...";
             this.colorToolStripMenuItem1.Click += new System.EventHandler(this.ColorToolStripMenuItem1Click);
             // 
             // toolStripMenuItemHorizontalDigits
             // 
             this.toolStripMenuItemHorizontalDigits.Name = "toolStripMenuItemHorizontalDigits";
-            this.toolStripMenuItemHorizontalDigits.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemHorizontalDigits.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemHorizontalDigits.Text = "Horizontal digits";
             this.toolStripMenuItemHorizontalDigits.Click += new System.EventHandler(this.ToolStripMenuItemHorizontalDigitsClick);
             // 
@@ -5166,7 +5159,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.boutenautooutsideToolStripMenuItem,
             this.boutenautoToolStripMenuItem});
             this.toolStripMenuItemBouten.Name = "toolStripMenuItemBouten";
-            this.toolStripMenuItemBouten.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemBouten.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemBouten.Text = "Bouten";
             // 
             // boutendotbeforeToolStripMenuItem
@@ -5242,40 +5235,40 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemRuby
             // 
             this.toolStripMenuItemRuby.Name = "toolStripMenuItemRuby";
-            this.toolStripMenuItemRuby.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemRuby.Size = new System.Drawing.Size(272, 22);
             this.toolStripMenuItemRuby.Text = "Ruby...";
             this.toolStripMenuItemRuby.Click += new System.EventHandler(this.ToolStripMenuItemRubyClick);
             // 
             // fontNameToolStripMenuItem
             // 
             this.fontNameToolStripMenuItem.Name = "fontNameToolStripMenuItem";
-            this.fontNameToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.fontNameToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.fontNameToolStripMenuItem.Text = "Font name...";
             this.fontNameToolStripMenuItem.Click += new System.EventHandler(this.FontNameToolStripMenuItemClick);
             // 
             // superscriptToolStripMenuItem
             // 
             this.superscriptToolStripMenuItem.Name = "superscriptToolStripMenuItem";
-            this.superscriptToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.superscriptToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.superscriptToolStripMenuItem.Text = "Superscript";
             this.superscriptToolStripMenuItem.Click += new System.EventHandler(this.SuperscriptToolStripMenuItemClick);
             // 
             // subscriptToolStripMenuItem
             // 
             this.subscriptToolStripMenuItem.Name = "subscriptToolStripMenuItem";
-            this.subscriptToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.subscriptToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.subscriptToolStripMenuItem.Text = "Subscript";
             this.subscriptToolStripMenuItem.Click += new System.EventHandler(this.SubscriptToolStripMenuItemClick);
             // 
             // toolStripSeparatorInsertUnicode
             // 
             this.toolStripSeparatorInsertUnicode.Name = "toolStripSeparatorInsertUnicode";
-            this.toolStripSeparatorInsertUnicode.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorInsertUnicode.Size = new System.Drawing.Size(269, 6);
             // 
             // insertUnicodeCharactersToolStripMenuItem
             // 
             this.insertUnicodeCharactersToolStripMenuItem.Name = "insertUnicodeCharactersToolStripMenuItem";
-            this.insertUnicodeCharactersToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.insertUnicodeCharactersToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.insertUnicodeCharactersToolStripMenuItem.Text = "Insert Unicode characters";
             // 
             // insertUnicodeControlCharactersToolStripMenuItem
@@ -5288,7 +5281,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.startOfLefttorightOverrideLROToolStripMenuItem1,
             this.startOfRighttoleftOverrideRLOToolStripMenuItem1});
             this.insertUnicodeControlCharactersToolStripMenuItem.Name = "insertUnicodeControlCharactersToolStripMenuItem";
-            this.insertUnicodeControlCharactersToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.insertUnicodeControlCharactersToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.insertUnicodeControlCharactersToolStripMenuItem.Text = "Insert Unicode control characters";
             // 
             // lefttorightMarkLRMToolStripMenuItem
@@ -6490,7 +6483,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonBeautifyTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem mergeSentencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
         private System.Windows.Forms.ToolStripMenuItem breaksplitLongLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectedLines;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoBreakLines;
