@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
         }
 
-        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
+        private static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
         {
             var defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultSourceLanguageCode))
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
-            // Set target language to something different than source language
+            // Set target language to something different from source language
             if (uiCultureTargetLanguage == defaultSourceLanguage && defaultSourceLanguage == "en")
             {
                 uiCultureTargetLanguage = "es";

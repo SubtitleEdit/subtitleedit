@@ -20,16 +20,18 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public event EventHandler DropDownClosed;
 
-        public ToolStripNikseComboBox(Control c) : base(c)
+        public ToolStripNikseComboBox()
+            : this(CreateControlInstance())
         {
-            Init();
         }
 
-        public ToolStripNikseComboBox()
-            : base(ToolStripNikseComboBox.CreateControlInstance())
+        public ToolStripNikseComboBox(Control c) : this(c, string.Empty)
         {
-            Init();
         }
+
+        public ToolStripNikseComboBox(Control c, string name) : base(c, name) => Init();
+
+        private static Control CreateControlInstance() => new ToolStripNikseComboBoxControl();
 
         private void Init()
         {
@@ -75,16 +77,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Invalidate();
             };
-        }
-
-        public ToolStripNikseComboBox(Control c, string name) : base(c, name)
-        {
-            Init();
-        }
-
-        private static Control CreateControlInstance()
-        {
-            return new ToolStripNikseComboBoxControl();
         }
 
         protected override Size DefaultSize => new Size(100, 22);
@@ -187,14 +179,8 @@ namespace Nikse.SubtitleEdit.Controls
             public ToolStripNikseComboBox Owner { get; set; }
         }
 
-        public void BeginUpdate()
-        {
-            ComboBox?.BeginUpdate();
-        }
+        public void BeginUpdate() => ComboBox?.BeginUpdate();
 
-        public void EndUpdate()
-        {
-            ComboBox?.EndUpdate();
-        }
+        public void EndUpdate() => ComboBox?.EndUpdate();
     }
 }
