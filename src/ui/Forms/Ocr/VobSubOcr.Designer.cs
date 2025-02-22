@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.groupBoxPaddle = new System.Windows.Forms.GroupBox();
+            this.checkBoxPaddleOcrUseGpu = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.nikseComboBoxPaddleLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxOcrMethod = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -180,7 +181,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.underlineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.checkBoxPaddleOcrUseGpu = new System.Windows.Forms.CheckBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxPaddle.SuspendLayout();
@@ -524,6 +524,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxPaddle.TabIndex = 8;
             this.groupBoxPaddle.TabStop = false;
             this.groupBoxPaddle.Text = "Paddle OCR";
+            // 
+            // checkBoxPaddleOcrUseGpu
+            // 
+            this.checkBoxPaddleOcrUseGpu.AutoSize = true;
+            this.checkBoxPaddleOcrUseGpu.Location = new System.Drawing.Point(98, 59);
+            this.checkBoxPaddleOcrUseGpu.Name = "checkBoxPaddleOcrUseGpu";
+            this.checkBoxPaddleOcrUseGpu.Size = new System.Drawing.Size(198, 17);
+            this.checkBoxPaddleOcrUseGpu.TabIndex = 2;
+            this.checkBoxPaddleOcrUseGpu.Text = "Use GPU (Only affects GPU version)";
+            this.checkBoxPaddleOcrUseGpu.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -1427,9 +1437,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOCRControls.Controls.Add(this.numericUpDownStartNumber);
             this.groupBoxOCRControls.Controls.Add(this.buttonPause);
             this.groupBoxOCRControls.Controls.Add(this.buttonStartOcr);
-            this.groupBoxOCRControls.Location = new System.Drawing.Point(368, 207);
+            this.groupBoxOCRControls.Location = new System.Drawing.Point(368, 214);
             this.groupBoxOCRControls.Name = "groupBoxOCRControls";
-            this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 84);
+            this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 77);
             this.groupBoxOCRControls.TabIndex = 2;
             this.groupBoxOCRControls.TabStop = false;
             this.groupBoxOCRControls.Text = "OCR Start/stop";
@@ -2319,7 +2329,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.subtitleListView1.Location = new System.Drawing.Point(8, 21);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(631, 183);
+            this.subtitleListView1.Size = new System.Drawing.Size(647, 183);
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
@@ -2335,16 +2345,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // checkBoxPaddleOcrUseGpu
-            // 
-            this.checkBoxPaddleOcrUseGpu.AutoSize = true;
-            this.checkBoxPaddleOcrUseGpu.Location = new System.Drawing.Point(98, 59);
-            this.checkBoxPaddleOcrUseGpu.Name = "checkBoxPaddleOcrUseGpu";
-            this.checkBoxPaddleOcrUseGpu.Size = new System.Drawing.Size(67, 17);
-            this.checkBoxPaddleOcrUseGpu.TabIndex = 2;
-            this.checkBoxPaddleOcrUseGpu.Text = "Use GPU (Only affects GPU version)";
-            this.checkBoxPaddleOcrUseGpu.UseVisualStyleBackColor = true;
             // 
             // VobSubOcr
             // 
