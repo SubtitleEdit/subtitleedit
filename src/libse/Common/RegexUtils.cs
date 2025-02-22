@@ -14,13 +14,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static class DanishLetterI
         {
-            public static readonly Regex RegExIDag = new Regex(@"\bidag\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIGaar = new Regex(@"\bigår\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIMorgen = new Regex(@"\bimorgen\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIAlt = new Regex(@"\bialt\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIGang = new Regex(@"\bigang\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIStand = new Regex(@"\bistand\b", RegexOptions.Compiled);
-            public static readonly Regex RegExIOevrigt = new Regex(@"\biøvrigt\b", RegexOptions.Compiled);
+            public static readonly Regex DanishLetterIRegex = new Regex(@"\bi(dag|går|morgen|alt|gang|stand|øvrigt)\b", RegexOptions.Compiled);
 
             private static readonly IList<Regex> RegexList;
 
