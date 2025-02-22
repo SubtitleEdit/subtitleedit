@@ -1082,7 +1082,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Application.DoEvents();
                 }
-            };
+            }
+            ;
 
             for (var i = 0; i < max; i++)
             {
@@ -5380,7 +5381,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         var text = PostFixPaddle(progress);
-                        _subtitle.Paragraphs[progress.Index].Text = text;   
+                        _subtitle.Paragraphs[progress.Index].Text = text;
 
                         subtitleListView1.SetText(progress.Index, text);
                         subtitleListView1.EnsureVisible(progress.Index);
@@ -6843,7 +6844,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     ButtonPauseClick(null, null);
                     _ocrFixEngine.Abort = false;
-                    
+
                     return string.Empty;
                 }
 
@@ -6865,6 +6866,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
                 LogOcrFix(input.Index, textWithoutFixes, processedText);
+            }
+
+            // max allow 2 lines
+            if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(processedText) > 2)
+            {
+                processedText = processedText.Replace(" " + Environment.NewLine, Environment.NewLine);
+                processedText = processedText.Replace(Environment.NewLine + " ", Environment.NewLine);
+                processedText = processedText.RemoveRecursiveLineBreaks();
+
+                if (Utilities.GetNumberOfLines(processedText) > 2)
+                {
+                    processedText = Utilities.AutoBreakLine(processedText);
+                }
             }
 
             return processedText;
