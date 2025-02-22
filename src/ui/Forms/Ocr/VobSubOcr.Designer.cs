@@ -1439,7 +1439,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOCRControls.Controls.Add(this.buttonStartOcr);
             this.groupBoxOCRControls.Location = new System.Drawing.Point(368, 214);
             this.groupBoxOCRControls.Name = "groupBoxOCRControls";
-            this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 77);
+            this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 79);
             this.groupBoxOCRControls.TabIndex = 2;
             this.groupBoxOCRControls.TabStop = false;
             this.groupBoxOCRControls.Text = "OCR Start/stop";
@@ -1447,7 +1447,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // labelStartFrom
             // 
             this.labelStartFrom.AutoSize = true;
-            this.labelStartFrom.Location = new System.Drawing.Point(120, 26);
+            this.labelStartFrom.Location = new System.Drawing.Point(120, 22);
             this.labelStartFrom.Name = "labelStartFrom";
             this.labelStartFrom.Size = new System.Drawing.Size(127, 13);
             this.labelStartFrom.TabIndex = 1;
@@ -1468,7 +1468,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0,
             0});
-            this.numericUpDownStartNumber.Location = new System.Drawing.Point(123, 47);
+            this.numericUpDownStartNumber.Location = new System.Drawing.Point(123, 43);
             this.numericUpDownStartNumber.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -1493,7 +1493,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // buttonPause
             // 
             this.buttonPause.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPause.Location = new System.Drawing.Point(11, 52);
+            this.buttonPause.Location = new System.Drawing.Point(11, 48);
             this.buttonPause.Name = "buttonPause";
             this.buttonPause.Size = new System.Drawing.Size(105, 23);
             this.buttonPause.TabIndex = 2;
@@ -1505,7 +1505,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonStartOcr.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartOcr.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStartOcr.Location = new System.Drawing.Point(11, 24);
+            this.buttonStartOcr.Location = new System.Drawing.Point(11, 20);
             this.buttonStartOcr.Name = "buttonStartOcr";
             this.buttonStartOcr.Size = new System.Drawing.Size(105, 23);
             this.buttonStartOcr.TabIndex = 0;
@@ -2135,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.checkBoxShowOnlyForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxShowOnlyForced.AutoSize = true;
-            this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(369, 313);
+            this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(369, 312);
             this.checkBoxShowOnlyForced.Name = "checkBoxShowOnlyForced";
             this.checkBoxShowOnlyForced.Size = new System.Drawing.Size(152, 17);
             this.checkBoxShowOnlyForced.TabIndex = 4;
@@ -2211,7 +2211,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText.SelectedText = "";
             this.textBoxCurrentText.SelectionLength = 0;
             this.textBoxCurrentText.SelectionStart = 0;
-            this.textBoxCurrentText.Size = new System.Drawing.Size(354, 77);
+            this.textBoxCurrentText.Size = new System.Drawing.Size(354, 79);
             this.textBoxCurrentText.TabIndex = 1;
             this.textBoxCurrentText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxCurrentText.UseSystemPasswordChar = false;
