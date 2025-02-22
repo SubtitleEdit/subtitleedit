@@ -127,12 +127,11 @@ namespace Nikse.SubtitleEdit.Forms
             var minLength = MinimumLength;
             Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleAutoBreak;
 
-
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (var p in _paragraphs)
             {
-                if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
+                if (p.Text.CountCharacters(true) > minLength || p.Text.Contains(Environment.NewLine))
                 {
                     var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, _language);
                     if (text != p.Text)
@@ -159,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength)
+                if (p.Text.Contains(Environment.NewLine) && p.Text.CountCharacters(true) > minLength)
                 {
                     var text = Utilities.UnbreakLine(p.Text);
                     if (text != p.Text)
