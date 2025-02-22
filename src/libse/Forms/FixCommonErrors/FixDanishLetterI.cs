@@ -21,29 +21,32 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var oldText = text;
 
                 // Make sure text contains lower: 'i'.
-                if (callbacks.AllowFix(p, Language.FixDanishLetterI) && RegexUtils.LittleIRegex.IsMatch(text))
+                if (callbacks.AllowFix(p, Language.FixDanishLetterI))
                 {
-                    foreach (var regex in RegexUtils.DanishLetterI.DanishCompiledRegexList)
+                    if (RegexUtils.LittleIRegex.IsMatch(text))
                     {
-                        var match = regex.Match(text);
-                        while (match.Success)
+                        foreach (var regex in RegexUtils.DanishLetterI.DanishCompiledRegexList)
                         {
-                            // Get lower 'i' index from matched value.
-                            var iIdx = RegexUtils.LittleIRegex.Match(match.Value).Index;
-                            // Remove 'i' from given index and insert new uppwercase 'I'.
-                            var temp = match.Value.Remove(iIdx, 1).Insert(iIdx, "I");
-
-                            var index = match.Index;
-                            if (index + match.Value.Length >= text.Length)
+                            var match = regex.Match(text);
+                            while (match.Success)
                             {
-                                text = text.Substring(0, index) + temp;
-                            }
-                            else
-                            {
-                                text = text.Substring(0, index) + temp + text.Substring(index + match.Value.Length);
-                            }
+                                // Get lower 'i' index from matched value.
+                                var iIdx = RegexUtils.LittleIRegex.Match(match.Value).Index;
+                                // Remove 'i' from given index and insert new uppwercase 'I'.
+                                var temp = match.Value.Remove(iIdx, 1).Insert(iIdx, "I");
 
-                            match = match.NextMatch();
+                                var index = match.Index;
+                                if (index + match.Value.Length >= text.Length)
+                                {
+                                    text = text.Substring(0, index) + temp;
+                                }
+                                else
+                                {
+                                    text = text.Substring(0, index) + temp + text.Substring(index + match.Value.Length);
+                                }
+
+                                match = match.NextMatch();
+                            }
                         }
                     }
 
