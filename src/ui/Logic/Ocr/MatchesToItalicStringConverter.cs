@@ -23,6 +23,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return string.Empty;
             }
 
+            if (matches.Count(p => p.Italic) == 0)
+            {
+                return GetRawString(matches);
+            }
+
             var sb = new StringBuilder();
             foreach (var lineMatches in SplitMatchesToLineParts(matches))
             {
