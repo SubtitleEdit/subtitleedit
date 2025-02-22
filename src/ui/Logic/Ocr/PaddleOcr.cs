@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class PaddleOcr
     {
-        public string Error { get; set; }
+        private List<PaddleOcrResultParser.TextDetectionResult> _textDetectionResults = new List<PaddleOcrResultParser.TextDetectionResult>(); public string Error { get; set; }
         private bool hasErrors = false;
         private bool processingStarted = false;
         private string _paddingOcrPath;
@@ -222,15 +222,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                     else if (outLine.Data.Contains("ppocr INFO:"))
                     {
-                        // Regex pattern to extract the text inside quotes
-                        string textPattern = @"['""].*['""]";
-                        var textMatch = Regex.Match(outLine.Data, textPattern);
-
-                        if (textMatch.Success)
-                        {
-                            string extractedText = textMatch.Value.Trim('\'', '"');
-                            result += extractedText + Environment.NewLine;
-                        }
+                        SaveText(outLine);
                     }
                 };
 
@@ -242,9 +234,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                     Error = errorLine.Data;
 
-                    hasErrors = true; 
+                    hasErrors = true;
                     _log.AppendLine(errorLine.Data);
                 };
+
+                _textDetectionResults.Clear();
 
                 try
                 {
@@ -279,6 +273,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         // ignore
                     }
 
+                    if (_textDetectionResults.Count == 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    result = MakeResult(_textDetectionResults);
                     return result;
                 }
                 catch (Exception ex)
@@ -287,6 +287,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     throw;
                 }
 
+            }
+        }
+
+        private void SaveText(DataReceivedEventArgs outLine)
+        {
+            // Note: It's *very* important to keep the box positions
+            //       as they are used to determine the line breaking/order of the text
+            var pattern = @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
+            var match = Regex.Match(outLine.Data, pattern);
+            if (match.Success)
+            {
+                var parser = new PaddleOcrResultParser();
+                var x = parser.Parse(outLine.Data);
+                _textDetectionResults.Add(x);
             }
         }
 
@@ -422,6 +436,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 {
                                     existingInput.Text = results[oldFileName].Trim();
 
+                                    var result = string.Empty;
+                                    if (_textDetectionResults.Count > 0)
+                                    {
+                                        result = MakeResult(_textDetectionResults);
+                                    }
+
+                                    existingInput.Text = result;
+                                    _textDetectionResults.Clear();
+
                                     lock (LockObject)
                                     {
                                         progressCallback?.Invoke(existingInput);
@@ -448,16 +471,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             if (results.Count > 0)
                             {
                                 var lastFile = results.Keys.Last();
-
-                                // Regex pattern to extract the text inside quotes
-                                var textPattern = @"['""].*['""]";
-                                var textMatch = Regex.Match(outLine.Data, textPattern);
-
-                                if (textMatch.Success)
-                                {
-                                    var extractedText = textMatch.Value.Trim('\'', '"');
-                                    results[lastFile] += extractedText + Environment.NewLine;
-                                }
+                                SaveText(outLine);
                             }
                         }
 
@@ -485,7 +499,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                         Error = errorLine.Data;
 
-                        hasErrors = true; 
+                        hasErrors = true;
                         _log.AppendLine(errorLine.Data);
                     };
 
@@ -509,6 +523,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         if (existingInput != null)
                         {
                             existingInput.Text = results[oldFileName].Trim();
+
+                            var result = string.Empty;
+                            if (_textDetectionResults.Count > 0)
+                            {
+                                result = MakeResult(_textDetectionResults);
+                            }
+
+                            existingInput.Text = result;
+                            _textDetectionResults.Clear();
 
                             lock (LockObject)
                             {
@@ -559,6 +582,60 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return borderedBitmap;
+        }
+
+        private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
+        {
+            var sb = new StringBuilder();
+            var lines = MakeLines(textDetectionResults);
+            foreach (var line in lines)
+            {
+                var text = string.Join(" ", line.Select(p => p.Text));
+                sb.AppendLine(text);
+            }
+
+            return sb.ToString().Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
+        }
+
+        private List<List<PaddleOcrResultParser.TextDetectionResult>> MakeLines(List<PaddleOcrResultParser.TextDetectionResult> input)
+        {
+            var result = new List<List<PaddleOcrResultParser.TextDetectionResult>>();
+            var heightAverage = input.Average(p => p.BoundingBox.Height);
+            var sorted = input.OrderBy(p => p.BoundingBox.Center.Y);
+            var line = new List<PaddleOcrResultParser.TextDetectionResult>();
+            PaddleOcrResultParser.TextDetectionResult last = null;
+            foreach (var element in sorted)
+            {
+                if (last == null)
+                {
+                    line.Add(element);
+                }
+                else
+                {
+                    if (element.BoundingBox.Center.Y > last.BoundingBox.TopLeft.Y + heightAverage)
+                    {
+
+                        result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
+                        line = new List<PaddleOcrResultParser.TextDetectionResult>
+                        {
+                            element
+                        };
+                    }
+                    else
+                    {
+                        line.Add(element);
+                    }
+                }
+
+                last = element;
+            }
+
+            if (line.Count > 0)
+            {
+                result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
+            }
+
+            return result;
         }
 
         public static List<OcrLanguage2> GetLanguages()

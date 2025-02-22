@@ -23,12 +23,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return string.Empty;
             }
 
+            if (matches.Count(p => p.Italic) == 0)
+            {
+                return GetRawString(matches);
+            }
+
             var sb = new StringBuilder();
             foreach (var lineMatches in SplitMatchesToLineParts(matches))
             {
                 var numberOfLetters = GetNumberOfLetters(lineMatches.Matches);
                 var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches.Matches);
-                if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches))
+                if (numberOfItalicLetters > 0 && (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches)))
                 {
                     sb.Append("<i>" + GetRawString(lineMatches.Matches) + "</i>");
                     sb.Append(lineMatches.Separator);
@@ -47,6 +52,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             var text = sb.ToString().TrimEnd().Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
+            text = text.Replace("<i>\"</i>", "\"");
+            text = text.Replace("<i>'</i>", "'");
             text = text.Replace("  ", " ");
             text = text.Replace("<i> ", " <i>");
             text = text.Replace(" </i>", "</i> ");
@@ -217,7 +224,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 else if (t.Text == ":" || t.Text == ")" || t.Text == "]")
                 {
-                    if (line.Count > 0)
+                    if (index < matches.Count - 1 && matches[index + 1].Text == "\"")
+                    {
+                        line.Add(t);
+                    }
+                    else if (line.Count > 0)
                     {
                         line.Add(t);
                         if (index < matches.Count - 1 && ":)]".Contains(matches[index + 1].ToString()))
