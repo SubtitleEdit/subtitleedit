@@ -42,6 +42,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-goog-api-key", Configuration.Settings.Tools.GeminiProApiKey);
             }
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel))
+            {
+                Configuration.Settings.Tools.GeminiModel = Models[0];
+            }
+            var model = Configuration.Settings.Tools.GeminiModel;
+            _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -62,13 +69,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             SeLogger.Error("GeminiTranslate calling with: " + input);
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel))
-            {
-                Configuration.Settings.Tools.GeminiModel = Models[0];
-            }
-            var model = Configuration.Settings.Tools.GeminiModel;
-
-            _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
