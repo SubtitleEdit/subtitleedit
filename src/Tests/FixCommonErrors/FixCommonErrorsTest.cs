@@ -2708,6 +2708,28 @@ namespace Tests.FixCommonErrors
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(expectedOutput, p.Text);
         }
+        
+        [TestMethod]
+        public void DanishCompiledRegexListTest()
+        {
+            const string expectedOutput = ", er I alle";
+            var p = new Paragraph(", er i alle", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(expectedOutput, p.Text);
+        }
+        
+        [TestMethod]
+        public void FixDanishLetterIRegex()
+        {
+            const string expectedOutput = "i dag; i morgen; i alt; i øvrigt;";
+            var p = new Paragraph("idag; imorgen; ialt; iøvrigt;", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(expectedOutput, p.Text);
+        }
 
         #endregion
 
