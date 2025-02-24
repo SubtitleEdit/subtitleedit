@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -61,7 +62,24 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonCopySourceTextToClipboard_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_sourceBlock.TargetText);
+            try
+            {
+                Clipboard.SetText(_sourceBlock.TargetText);
+            }
+            catch
+            {
+                Thread.Sleep(51);
+                try
+                {
+                    Clipboard.SetText(_sourceBlock.TargetText);
+                }
+                catch
+                {
+                    Thread.Sleep(317);
+                    Clipboard.SetText(_sourceBlock.TargetText);
+                }
+            }
+
             buttonCopySourceTextToClipboard.Font = new Font(Font.FontFamily.Name, buttonCopySourceTextToClipboard.Font.Size, FontStyle.Regular);
         }
 
