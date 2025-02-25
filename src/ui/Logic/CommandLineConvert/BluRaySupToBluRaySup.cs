@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class BluRaySupToBluRaySup
     {
-        public static void ConvertFromBluRaySupToBluRaySup(string fileName, List<BluRaySupParser.PcsData> sub, Point? resolution)
+        public static void ConvertFromBluRaySupToBluRaySup(string fileName, List<BluRaySupParser.PcsData> sub, Point? resolution, bool forcedOnly)
         {
             var screenWidth = 1920;
             var screenHeight = 1080;
@@ -22,9 +22,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             var bottomMargin = (int)Math.Round(screenHeight * 4.0 / 100.0);
             using (var binarySubtitleFile = new FileStream(fileName, FileMode.Create))
             {
-                for (int index = 0; index < sub.Count; index++)
+                var counter = 0;
+                for (var index = 0; index < sub.Count; index++)
                 {
                     var p = sub[index];
+                    if (forcedOnly && !p.IsForced)
+                    {
+                        continue;
+                    }
+
                     var brSub = new BluRaySupPicture
                     {
                         StartTime = (long)Math.Round(p.StartTimeCode.TotalMilliseconds, MidpointRounding.AwayFromZero) ,
@@ -32,8 +38,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         Width = screenWidth,
                         Height = screenHeight,
                         IsForced = p.IsForced,
-                        CompositionNumber = (index + 1) * 2,
+                        CompositionNumber = (counter + 1) * 2,
                     };
+                    counter++;
                     var bitmap = p.GetBitmap();
                     var pos = p.GetPosition();
                     var overridePos = new Point(pos.Left, pos.Top);

@@ -606,7 +606,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                             var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(newFileName) + Path.GetExtension(newFileName), ".sup", outputFolder, overwrite, targetFileName);
                                                             converted++;
                                                             _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                                                            BluRaySupToBluRaySup.ConvertFromBluRaySupToBluRaySup(outputFileName, bluRaySubtitles, resolution);
+                                                            BluRaySupToBluRaySup.ConvertFromBluRaySupToBluRaySup(outputFileName, bluRaySubtitles, resolution, forcedOnly);
                                                             _stdOutWriter?.WriteLine(" done.");
                                                         }
                                                         else
@@ -985,10 +985,31 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<string> actions, bool forcedOnly, string ocrEngine, string ocrDb, Point? resolution, int? renumber, double? adjustDurationMs)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
-
             _stdOutWriter?.WriteLine($"Loading subtitles from file \"{fileName}\"");
             var log = new StringBuilder();
             var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+
+            if (string.Equals(targetFormat.RemoveChar(' '), BatchConvert.BluRaySubtitle.RemoveChar(' '), StringComparison.InvariantCultureIgnoreCase) &&
+                actions.Count == 0)
+            {
+                // adjust offset
+                if (offset.Ticks != 0)
+                {
+                    foreach (var x in bluRaySubtitles)
+                    {
+                        x.StartTime += (long)Math.Round(offset.TotalMilliseconds * 90.0);
+                        x.EndTime += (long)Math.Round(offset.TotalMilliseconds * 90.0);
+                    }
+                }
+
+                var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + Path.GetExtension(fileName), ".sup", outputFolder, overwrite, targetFileName);
+                converted++;
+                _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                BluRaySupToBluRaySup.ConvertFromBluRaySupToBluRaySup(outputFileName, bluRaySubtitles, resolution, forcedOnly);
+                _stdOutWriter?.WriteLine(" done.");
+                return;
+            }
+
             Subtitle sub;
             using (var vobSubOcr = new VobSubOcr())
             {
