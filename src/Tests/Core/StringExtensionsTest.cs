@@ -453,5 +453,16 @@ namespace Tests.Core
             Assert.IsTrue("foobar;".HasSentenceEnding(greekCultureTwoLetter));
         }
 
+        [TestMethod]
+        public void HasSentenceEndingEllipsesTest()
+        {
+            Assert.IsFalse("Foobar...".HasSentenceEnding());
+            Assert.IsFalse("Foobar…".HasSentenceEnding());
+
+            // with formatting
+            Assert.IsFalse("Foobar…</i>".HasSentenceEnding());
+            Assert.IsFalse("Foobar...</font>".HasSentenceEnding());
+        }
+
     }
 }
