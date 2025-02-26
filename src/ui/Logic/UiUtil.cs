@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -1021,7 +1022,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void SelectWordAtCaret(TextBox textBox)
+        public static void SelectWordAtCaret(ISubtitleEditTextBox textBox)
         {
             var text = textBox.Text;
             var endIndex = textBox.SelectionStart;

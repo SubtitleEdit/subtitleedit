@@ -1,16 +1,17 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
-using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
     /// TextBox with drag and drop and double click selects current word.
     /// </summary>
-    public sealed class SimpleTextBox : TextBox
+    public sealed class SimpleTextBox : TextBox, ISubtitleEditTextBox
+    
     {
         private string _dragText = string.Empty;
         private int _dragStartFrom;
