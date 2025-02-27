@@ -1374,6 +1374,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static string RemoveFontName(string input)
         {
+            if (input is null)
+            {
+                return null;
+            }
+            
             if (!input.Contains("<font", StringComparison.OrdinalIgnoreCase))
             {
                 var x = input;
