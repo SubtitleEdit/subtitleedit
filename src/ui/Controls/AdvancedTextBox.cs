@@ -10,13 +10,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
     /// RichTextBox with syntax highlighting and spell check.
     /// </summary>
-    public sealed class AdvancedTextBox : RichTextBox, IDoSpell
+    public sealed class AdvancedTextBox : RichTextBox, IDoSpell, ISubtitleEditTextBox
     {
         private bool _checkRtfChange = true;
         private int _mouseMoveSelectionLength;
@@ -525,33 +526,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (m.Msg == WM_LBUTTONDBLCLK)
             {
-                var text = Text;
-                var posStart = SelectionStart;
-                if (posStart >= 0 && posStart < text.Length && char.IsLetterOrDigit(text[posStart]))
-                {
-                    var posEnd = posStart;
-                    while (posStart > 0 && char.IsLetterOrDigit(text[posStart - 1]))
-                    {
-                        posStart--;
-                    }
-
-                    while (posEnd < text.Length && char.IsLetterOrDigit(text[posEnd]))
-                    {
-                        posEnd++;
-                    }
-
-                    if (posEnd < text.Length && text[posEnd] == '\r')
-                    {
-                        posEnd++;
-                    }
-
-                    var length = posEnd - posStart;
-                    if (length > 0)
-                    {
-                        SelectionStart = posStart;
-                        SelectionLength = length;
-                    }
-                }
+                UiUtil.SelectWordAtCaret(this);
             }
             else
             {
