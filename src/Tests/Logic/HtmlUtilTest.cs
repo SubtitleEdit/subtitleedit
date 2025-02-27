@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System.Drawing;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Tests.Logic
 {
@@ -39,6 +40,12 @@ namespace Tests.Logic
         }
 
         [TestMethod]
+        public void GetColorFromStringInvalid()
+        {
+            Assert.AreEqual(Color.White, HtmlUtil.GetColorFromString("invalidColorString"));
+        }
+
+        [TestMethod]
         public void RemoveFontName1()
         {
             var c = HtmlUtil.RemoveFontName(@"{\fnVerdena}Hallo!");
@@ -69,6 +76,27 @@ namespace Tests.Logic
         }
 
         [TestMethod]
+        public void RemoveFontNameNoFont()
+        {
+            var c = HtmlUtil.RemoveFontName("Hallo!");
+            Assert.AreEqual("Hallo!", c);
+        }
+
+        [TestMethod]
+        public void RemoveFontNameEmpty()
+        {
+            var c = HtmlUtil.RemoveFontName(string.Empty);
+            Assert.AreEqual(string.Empty, c);
+        }
+
+        [TestMethod]
+        public void RemoveFontNameNull()
+        {
+            var c = HtmlUtil.RemoveFontName(null);
+            Assert.IsNull(c);
+        }
+
+        [TestMethod]
         public void IsTextFormattableFalse()
         {
             Assert.IsFalse(HtmlUtil.IsTextFormattable("<i></i>"));
@@ -83,6 +111,18 @@ namespace Tests.Logic
             Assert.IsTrue(HtmlUtil.IsTextFormattable("<u>1</u>"));
             Assert.IsTrue(HtmlUtil.IsTextFormattable("<i>A</i>"));
             Assert.IsTrue(HtmlUtil.IsTextFormattable("</i")); // invalid closing tag
+        }
+
+        [TestMethod]
+        public void IsTextFormattableEmpty()
+        {
+            Assert.IsFalse(HtmlUtil.IsTextFormattable(string.Empty));
+        }
+
+        [TestMethod]
+        public void IsTextFormattableNull()
+        {
+            Assert.IsFalse(HtmlUtil.IsTextFormattable(null));
         }
     }
 }
