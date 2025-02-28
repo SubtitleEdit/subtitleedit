@@ -31273,13 +31273,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
-                toolStripSeparator22.Visible = true;
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = !SubtitleListview1.IsOriginalTextColumnVisible;
                 toolStripMenuItemShowOriginalInPreview.Checked = Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable;
             }
             else
             {
-                toolStripSeparator22.Visible = false;
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
