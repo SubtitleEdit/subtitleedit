@@ -15,6 +15,7 @@
    * Update Polish translation - thx admas
    * Update French translation - thx Pierre
    * Update Italian translation - thx bovirus
+   * Update Portuguese translation - thx hugok79
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
    * Add standalone PaddleOCR (no Python required) - thx timminator
    * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
