@@ -455,6 +455,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int AudioToTextLineMaxCharsCn { get; set; }
         public int BreakLinesLongerThan { get; set; }
         public int UnbreakLinesLongerThan { get; set; }
+        public bool ConvertActorColorAdd { get; set; }
+        public Color ConvertActorColor { get; set; }
+        public bool ConvertActorCasing { get; set; }
 
         public ToolsSettings()
         {

@@ -4444,6 +4444,25 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.UnbreakLinesLongerThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("ChangeActorColorAdd");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertActorColorAdd = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ChangeActorColorAdd");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertActorColor = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ChangeActorCasing");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertActorCasing = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -9511,6 +9530,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("UnbreakLinesLongerThan", settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("BreakLinesLongerThan", settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChangeActorColorAdd", settings.Tools.ConvertActorColorAdd.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("ChangeActorColor", ToHtml(settings.Tools.ConvertActorColor));
+                xmlWriter.WriteElementString("ChangeActorCasing", settings.Tools.ConvertActorCasing.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

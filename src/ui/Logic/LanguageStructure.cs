@@ -529,6 +529,16 @@
             public string GoToBookmark { get; set; }
         }
 
+        public class ConvertActor
+        {
+            public string Title { get; set; }
+            public string ConvertActorFrom { get; set; }
+            public string ConvertActorTo { get; set; }
+            public string InlineActorViaX { get; set; }
+            public string NumberOfConversionsX { get; set; }
+
+        }
+
         public class ChangeCasing
         {
             public string Title { get; set; }
@@ -1798,6 +1808,7 @@
                     public string StartNumberingFrom { get; set; }
                     public string RemoveTextForHearingImpaired { get; set; }
                     public string ConvertColorsToDialog { get; set; }
+                    public string ConvertActors { get; set; }
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
                     public string ChangeSpeedInPercent { get; set; }
