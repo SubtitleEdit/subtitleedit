@@ -1576,6 +1576,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "CompareSubtitles/CannotCompareWithImageBasedSubtitles":
                     language.CompareSubtitles.CannotCompareWithImageBasedSubtitles = reader.Value;
                     break;
+                case "ConvertActor/Title":
+                    language.ConvertActor.Title = reader.Value;
+                    break;
+                case "ConvertActor/ConvertActorFrom":
+                    language.ConvertActor.ConvertActorFrom = reader.Value;
+                    break;
+                case "ConvertActor/ConvertActorTo":
+                    language.ConvertActor.ConvertActorTo = reader.Value;
+                    break;
+                case "ConvertActor/InlineActorViaX":
+                    language.ConvertActor.InlineActorViaX = reader.Value;
+                    break;
+                case "ConvertActor/NumberOfConversionsX":
+                    language.ConvertActor.NumberOfConversionsX = reader.Value;
+                    break;
                 case "ConvertColorsToDialog/Title":
                     language.ConvertColorsToDialog.Title = reader.Value;
                     break;
@@ -4611,6 +4626,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Tools/ConvertColorsToDialog":
                     language.Main.Menu.Tools.ConvertColorsToDialog = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ConvertActors":
+                    language.Main.Menu.Tools.ConvertActors = reader.Value;
                     break;
                 case "Main/Menu/Tools/ChangeCasing":
                     language.Main.Menu.Tools.ChangeCasing = reader.Value;
