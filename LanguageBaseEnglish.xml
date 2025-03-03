@@ -607,6 +607,13 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image-based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Convert actors</Title>
+    <ConvertActorFrom>Change actor from</ConvertActorFrom>
+    <ConvertActorTo>Change actor to</ConvertActorTo>
+    <InlineActorViaX>Inline actor via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Number of actor convertions: {0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Convert colors to dialog</Title>
     <RemoveColorTags>Remove color tags</RemoveColorTags>
@@ -1403,6 +1410,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
         <StartNumberingFrom>Renumber...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remove text for hearing impaired...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Convert colors to dialog...</ConvertColorsToDialog>
+        <ConvertActors>Convert actors...</ConvertActors>
         <ChangeCasing>Change casing...</ChangeCasing>
         <ChangeFrameRate>Change frame rate...</ChangeFrameRate>
         <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
