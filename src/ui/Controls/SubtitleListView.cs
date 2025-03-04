@@ -623,7 +623,7 @@ namespace Nikse.SubtitleEdit.Controls
             var numberIdx = GetColumnIndex(SubtitleColumn.Number);
             if (numberIdx >= 0)
             {
-                SetColumnWidthRetry(numberIdx, 50, 2);
+                SetColumnWidthRetry(numberIdx, 50);
             }
 
             var startIdx = GetColumnIndex(SubtitleColumn.Start);
@@ -658,37 +658,37 @@ namespace Nikse.SubtitleEdit.Controls
             var cpsIdx = GetColumnIndex(SubtitleColumn.CharactersPerSeconds);
             if (cpsIdx >= 0)
             {
-                SetColumnWidthRetry(cpsIdx, 60, 2);
+                SetColumnWidthRetry(cpsIdx, 60);
             }
 
             var wpmIdx = GetColumnIndex(SubtitleColumn.WordsPerMinute);
             if (wpmIdx >= 0)
             {
-                SetColumnWidthRetry(wpmIdx, 65, 2);
+                SetColumnWidthRetry(wpmIdx, 65);
             }
 
             var gapIdx = GetColumnIndex(SubtitleColumn.Gap);
             if (gapIdx >= 0)
             {
-                SetColumnWidthRetry(gapIdx, 60, 2);
+                SetColumnWidthRetry(gapIdx, 60);
             }
 
             var actorIdx = GetColumnIndex(SubtitleColumn.Actor);
             if (actorIdx >= 0)
             {
-                SetColumnWidthRetry(actorIdx, 80, 2);
+                SetColumnWidthRetry(actorIdx, 80);
             }
 
             var regionIdx = GetColumnIndex(SubtitleColumn.Region);
             if (regionIdx >= 0)
             {
-                SetColumnWidthRetry(regionIdx, 60, 2);
+                SetColumnWidthRetry(regionIdx, 60);
             }
 
             var extraIdx = GetColumnIndex(SubtitleColumn.Extra);
             if (extraIdx >= 0)
             {
-                SetColumnWidthRetry(extraIdx, 120, 2);
+                SetColumnWidthRetry(extraIdx, 120);
             }
 
             int w = 0;
@@ -705,9 +705,9 @@ namespace Nikse.SubtitleEdit.Controls
             if (ColumnIndexTextOriginal >= 0)
             {
                 lengthAvailable /= 2;
-                SetColumnWidthRetry(ColumnIndexTextOriginal, lengthAvailable, 3);
+                SetColumnWidthRetry(ColumnIndexTextOriginal, lengthAvailable);
             }
-            SetColumnWidthRetry(ColumnIndexText, lengthAvailable, 3);
+            SetColumnWidthRetry(ColumnIndexText, lengthAvailable);
             SubtitleListViewLastColumnFill(this, null);
         }
 
@@ -798,8 +798,8 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         cw = 120;
                     }
-                    
-                    SetColumnWidthRetry(index, cw, 3);
+
+                    SetColumnWidthRetry(index, cw);
                 }
                 if (column != SubtitleColumn.Text && column != SubtitleColumn.TextOriginal)
                 {
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexCps, 65, 2);
+                SetColumnWidthRetry(ColumnIndexCps, 65);
                 AutoSizeAllColumns(null);
             }
         }
@@ -1059,7 +1059,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexWpm, 70, 2);
+                SetColumnWidthRetry(ColumnIndexWpm, 70);
                 AutoSizeAllColumns(null);
             }
         }
@@ -1100,7 +1100,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexGap, 80, 2);
+                SetColumnWidthRetry(ColumnIndexGap, 80);
                 AutoSizeAllColumns(null);
             }
         }
@@ -1146,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexActor, 80, 2);
+                SetColumnWidthRetry(ColumnIndexActor, 80);
                 AutoSizeAllColumns(null);
             }
             else
@@ -1201,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexRegion, 80, 2);
+                SetColumnWidthRetry(ColumnIndexRegion, 80);
                 AutoSizeAllColumns(null);
             }
         }
@@ -2381,25 +2381,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetColumnWidthRetry(int columnIndex, int width, int repeatCount = 3)
+        private void SetColumnWidthRetry(int columnIndex, int width)
         {
-            BeginUpdate();
-            for (int i = 0; i < repeatCount; i++)
-            {
-                Columns[columnIndex].Width = width;
-                if (Columns[columnIndex].Width == width)
-                {
-                    break;
-                }
-#if DEBUG
-                else
-                {
-                    Debug.Assert(width == Columns[columnIndex].Width, "Column width is not equal to expected width.");
-                }
-#endif
-            }
-
-            EndUpdate();
+            Columns[columnIndex].Width = width;
+            Columns[columnIndex].Width = width;
         }
     }
 }
