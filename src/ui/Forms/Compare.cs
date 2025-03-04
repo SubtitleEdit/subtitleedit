@@ -1,5 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -9,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static System.Resources.ResXFileRef;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -217,10 +221,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static Subtitle LoadSubtitle(string fileName)
+        private Subtitle LoadSubtitle(string fileName)
         {
             // EBU STL does not support eg drop frame, so we override the loading frame rate
             Ebu.OverrideReadFrameRate = Configuration.Settings.General.DefaultFrameRate;
+
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            if ((ext == ".mkv" || ext == ".mks" || ext == ".mp4" || ext == ".mov" || ext == ".m4v" || ext == ".wmv") && FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
+            {
+                return ImportSubtitleFromMatroskaFile(fileName);
+            }
+
+            var fileInfo = new FileInfo(fileName);
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf") && fileInfo.Length > 2000 || ext == ".m4s")
+            {
+                if (!new IsmtDfxp().IsMine(null, fileName))
+                {
+                    return ImportSubtitleFromMp4(fileName);
+                }
+            }
 
             var subtitle = new Subtitle();
             var format = subtitle.LoadSubtitle(fileName, out _, null);
@@ -237,6 +256,118 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Ebu.OverrideReadFrameRate = 0;
+            return subtitle;
+        }
+
+        private Subtitle ImportSubtitleFromMatroskaFile(string fileName)
+        {
+            using (var matroska = new MatroskaFile(fileName))
+            {
+                if (!matroska.IsValid)
+                {
+                    return new Subtitle();
+                }
+
+                var subtitleList = matroska.GetTracks(true);
+                if (subtitleList.Count == 0)
+                {
+                    return new Subtitle();
+                }
+
+                if (subtitleList.Count > 1)
+                {
+                    using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
+                    {
+                        subtitleChooser.Initialize(subtitleList);
+                        if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                        {
+                            return LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska);
+                        }
+                    }
+                }
+                else
+                {
+                    return LoadMatroskaSubtitle(subtitleList[0], matroska);
+                }
+            }
+
+            return new Subtitle();
+        }
+
+        private Subtitle LoadMatroskaSubtitle(MatroskaTrackInfo matroskaTrackInfo, MatroskaFile matroska)
+        {
+            if (matroskaTrackInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Subtitle();
+            }
+
+            if (matroskaTrackInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Subtitle();
+            }
+
+            if (matroskaTrackInfo.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+            {
+                var sub2 = matroska.GetSubtitle(matroskaTrackInfo.TrackNumber, null);
+                var subtitle2 = new Subtitle();
+                Utilities.LoadMatroskaTextSubtitle(matroskaTrackInfo, matroska, sub2, _subtitle2);
+                Utilities.ParseMatroskaTextSt(matroskaTrackInfo, sub2, subtitle2);
+                return subtitle2;
+            }
+
+            if (matroskaTrackInfo.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Subtitle();
+            }
+
+            var sub = matroska.GetSubtitle(matroskaTrackInfo.TrackNumber, null);
+            var subtitle = new Subtitle();
+            var format = Utilities.LoadMatroskaTextSubtitle(matroskaTrackInfo, matroska, sub, subtitle);
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        private Subtitle ImportSubtitleFromMp4(string fileName)
+        {
+            var mp4Parser = new MP4Parser(fileName);
+            var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks().Where(t => !t.Mdia.IsVobSubSubtitle).ToList();
+            if (mp4SubtitleTracks.Count == 0)
+            {
+                if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+                {
+                    return mp4Parser.VttcSubtitle;
+                }
+
+                if (mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0)
+                {
+                    return mp4Parser.TrunCea608Subtitle;
+                }
+
+                return new Subtitle();
+            }
+            else if (mp4SubtitleTracks.Count == 1)
+            {
+                return LoadMp4Subtitle(fileName, mp4SubtitleTracks[0]);
+            }
+            else
+            {
+                using (var subtitleChooser = new MatroskaSubtitleChooser("mp4"))
+                {
+                    subtitleChooser.Initialize(mp4SubtitleTracks);
+                    if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                    {
+                        return LoadMp4Subtitle(fileName, mp4SubtitleTracks[subtitleChooser.SelectedIndex]);
+                    }
+                }
+
+                return new Subtitle();
+            }
+        }
+
+        private Subtitle LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack)
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.AddRange(mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs());
             return subtitle;
         }
 
@@ -515,7 +646,7 @@ namespace Nikse.SubtitleEdit.Forms
                 t1 = RemoveWhitespace(t1);
                 t2 = RemoveWhitespace(t2);
             }
-            
+
             if (checkBoxIgnoreLineBreaks.Checked)
             {
                 t1 = t1.Replace(Environment.NewLine, " ");
