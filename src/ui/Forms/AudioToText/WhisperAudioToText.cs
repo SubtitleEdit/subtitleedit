@@ -1735,7 +1735,27 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             });
         }
 
+        public class WhisperEngine
+        {
+            public string Name { get; set; }
+
+            public override string ToString() => Name;
+        }
+
+        private IEnumerable<WhisperEngine> GetWhisperEngines()
+        {
+            yield return new WhisperEngine { Name = WhisperChoice.OpenAi };
+            yield return new WhisperEngine { Name = WhisperChoice.Cpp };
+            yield return new WhisperEngine { Name = WhisperChoice.CppCuBlas };
+            yield return new WhisperEngine { Name = WhisperChoice.WhisperX };
+            yield return new WhisperEngine { Name = WhisperChoice.ConstMe };
+            yield return new WhisperEngine { Name = WhisperChoice.CTranslate2 };
+            yield return new WhisperEngine { Name = WhisperChoice.StableTs };
+            yield return new WhisperEngine { Name = WhisperChoice.PurfviewFasterWhisperXxl };
+        }
+
         private bool _checkedInstalledAndVersion;
+
         private void CheckIfInstalledAndVersion(string whisperChoice)
         {
             if (_checkedInstalledAndVersion)
@@ -1744,143 +1764,41 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             _checkedInstalledAndVersion = true;
+            var whisperEngine = GetWhisperEngines().FirstOrDefault(engine => engine.Name == whisperChoice);
 
-            if (whisperChoice == WhisperChoice.Cpp)
+            // the selected engine is not available
+            if (whisperEngine is null)
             {
-                var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
-                if (File.Exists(targetFile))
-                {
-                    if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
-                    {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                        {
-                            using (var downloadForm = new WhisperDownload(whisperChoice))
-                            {
-                                if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                                {
-                                    Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                    {
-                        using (var downloadForm = new WhisperDownload(whisperChoice))
-                        {
-                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                            {
-                                return;
-                            }
-                        }
-                    }
-                }
+                return;
             }
-            else if (whisperChoice == WhisperChoice.CppCuBlas)
+
+            // ReSharper disable once PossibleNullReferenceException
+            var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperEngine.Name);
+            var isInstalled = File.Exists(targetFile);
+
+            var title = string.Format(LanguageSettings.Current.Settings.DownloadX, whisperEngine.Name);
+            if (isInstalled)
             {
-                var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
-                if (File.Exists(targetFile))
+                // installed, ignore update
+                if (Configuration.Settings.Tools.WhisperIgnoreVersion || !WhisperDownload.IsOldVersion(targetFile, whisperChoice))
                 {
-                    if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
-                    {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP cuBLASS (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                        {
-                            using (var downloadForm = new WhisperDownload(whisperChoice))
-                            {
-                                if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                                {
-                                    Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
+                    return;
                 }
-                else
-                {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP cuBLASS"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                    {
-                        using (var downloadForm = new WhisperDownload(whisperChoice))
-                        {
-                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                            {
-                                return;
-                            }
-                        }
-                    }
-                }
+
+                // installed, update available
+                title = string.Format(LanguageSettings.Current.Settings.DownloadX, $"{whisperEngine.Name} (Update)");
             }
-            else if (whisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
+
+            // not installed, download
+            if (MessageBox.Show(title, "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
-                var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
-                if (File.Exists(targetFile))
+                using (var downloadForm = new WhisperDownload(whisperChoice))
                 {
-                    if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
+                    if (downloadForm.ShowDialog(this) != DialogResult.OK)
                     {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice + " (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        if (isInstalled)
                         {
-                            using (var downloadForm = new WhisperDownload(whisperChoice))
-                            {
-                                if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                                {
-                                    Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                    {
-                        using (var downloadForm = new WhisperDownload(whisperChoice))
-                        {
-                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                            {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (whisperChoice == WhisperChoice.ConstMe)
-            {
-                var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
-                if (File.Exists(targetFile))
-                {
-                    if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
-                    {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper Const-me (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                        {
-                            using (var downloadForm = new WhisperDownload(whisperChoice))
-                            {
-                                if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                                {
-                                    Configuration.Settings.Tools.WhisperIgnoreVersion = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper Const-me"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                    {
-                        using (var downloadForm = new WhisperDownload(whisperChoice))
-                        {
-                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
-                            {
-                                return;
-                            }
+                            Configuration.Settings.Tools.WhisperIgnoreVersion = true;
                         }
                     }
                 }
