@@ -977,7 +977,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns.Add(new ColumnHeader { Text = title, Width = 120 });
                 }
                 UpdateColumnIndexes();
-                SetColumnWidthRetry(ColumnIndexExtra, 20);
+                SetColumnWidthRetry(ColumnIndexExtra, 120);
                 AutoSizeAllColumns(null);
             }
             else
