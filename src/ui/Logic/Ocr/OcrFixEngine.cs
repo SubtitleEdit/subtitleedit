@@ -1843,7 +1843,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         _ocrFixReplaceList.AddWordOrPartial(word, _spellCheck.Word);
                         if (!word.Contains(' '))
                         {
-                            _spellCheckWordLists?.UseAlwaysListAdd(word, _spellCheck.Word);
+                            _spellCheckWordLists?.AddToUseAlwaysList(word, _spellCheck.Word);
                         }
                     }
                     catch (Exception exception)

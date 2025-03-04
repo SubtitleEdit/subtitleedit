@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!_changeAllDictionary.ContainsKey(_currentWord))
                     {
                         _changeAllDictionary.Add(_currentWord, ChangeWord);
-                        _spellCheckWordLists.UseAlwaysListAdd(_currentWord, ChangeWord);
+                        _spellCheckWordLists.AddToUseAlwaysList(_currentWord, ChangeWord);
                     }
                     _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, -1);
                     break;
@@ -1725,7 +1725,7 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.ChangeAll:
                         _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         _changeAllDictionary.Remove(undo.CurrentWord);
-                        _spellCheckWordLists.UseAlwaysListRemove(undo.CurrentWord);
+                        _spellCheckWordLists.RemoveFromUseAlwaysList(undo.CurrentWord);
                         break;
                     case SpellCheckAction.Skip:
                         break;
