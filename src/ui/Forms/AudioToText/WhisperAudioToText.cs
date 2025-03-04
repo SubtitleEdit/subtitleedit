@@ -1735,7 +1735,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             });
         }
 
-        public class WhisperEngine
+        private class WhisperEngine
         {
             public string Name { get; set; }
 
