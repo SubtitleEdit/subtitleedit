@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 10.02.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 04.03.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -607,6 +607,13 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Impossibile confrontare sottotitoli basati su immagini</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Converti attori</Title>
+    <ConvertActorFrom>Modifica attore da</ConvertActorFrom>
+    <ConvertActorTo>Modifica attore in</ConvertActorTo>
+    <InlineActorViaX>Attore in linea via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Numero conversioni attore: {0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Converti i colori in dialogo</Title>
     <RemoveColorTags>Rimuovi i tag colore</RemoveColorTags>
@@ -1403,6 +1410,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
         <StartNumberingFrom>Inizia numerazione da...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Elimina testo per non udenti...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Converti i colori in dialogo...</ConvertColorsToDialog>
+        <ConvertActors>Converti attori...</ConvertActors>
         <ChangeCasing>Cambia MAIUSCOLE/minuscole...</ChangeCasing>
         <ChangeFrameRate>Cambia frequenza fotogramma...</ChangeFrameRate>
         <ChangeSpeedInPercent>Cambia velocità in percentuale...</ChangeSpeedInPercent>
