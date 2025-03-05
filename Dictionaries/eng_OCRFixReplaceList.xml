@@ -2795,6 +2795,10 @@
 		<Word from="0rjoins" to="or joins" />
 		<Word from="0ther" to="other" />
 		<Word from="0kay" to="okay" />
+		<Word from="Mclntyre" to="McIntyre" />
+		<Word from="Ifi" to="If I" />
+		<Word from="Isjust" to="Is just" />
+		<Word from="Ofmaking" to="Of making" />		
 	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->
