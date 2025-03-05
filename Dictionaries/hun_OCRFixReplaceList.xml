@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
-  <WholeWords />
+  <WholeWords>
+    <Word from="ajövőnk" to="a jövőnk" />
+    <Word from="akkorjó" to="akkor jó" />
+    <Word from="Akkorjó" to="Akkor jó" />
+    <Word from="káris" to="kár is" />
+    <Word from="Káris" to="Kár is" />
+    <Word from="kétszeris" to="kétszer is" />
+    <Word from="tegyéljégre" to="tegyél jégre" />
+  </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
   <WholeLines />
