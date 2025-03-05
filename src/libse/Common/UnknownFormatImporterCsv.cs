@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             if (string.IsNullOrWhiteSpace(lines[0]) || lines[0].Trim() == "Dialogue List,,")
-            { 
-                lines.RemoveAt(0);  
+            {
+                lines.RemoveAt(0);
             }
 
             if (lines.Count < 2)
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var separator = DetectSeparator(lines);
 
-            var headers = lines[0].ToLowerInvariant().Split(separator).ToList();
+            var headers = lines[0].RemoveChar('"').ToLowerInvariant().Split(separator).ToList();
             if (!HasValidHeader(headers))
             {
                 return new Subtitle();
@@ -51,7 +51,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var subtitle = MakeSubtitle(csvLines);
 
-
             return subtitle;
         }
 
@@ -60,6 +59,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var isStartTimeFrames = DetectIsFrames(csvLines.Select(p => p.Start).ToList());
             var isEndTimeFrames = DetectIsFrames(csvLines.Select(p => p.End).ToList());
             var isDurationFrames = DetectIsFrames(csvLines.Select(p => p.Duration).ToList());
+            FixStartTimeWithoutMs(csvLines, isStartTimeFrames);
+
             var subtitle = new Subtitle();
             foreach (var csvLine in csvLines)
             {
@@ -122,6 +123,53 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return subtitle;
+        }
+
+        private void FixStartTimeWithoutMs(List<CsvLine> csvLines, bool isStartTimeFrames)
+        {
+            var isEndTimeNull = csvLines.All(p => string.IsNullOrEmpty(p.End));
+            if (isStartTimeFrames || !isEndTimeNull)
+            {
+                return;
+            }
+
+            var isStartTimeThreePart = csvLines.All(p => p.Start != null && p.Start.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries).Length == 3);
+            if (!isStartTimeThreePart)
+            {
+                return;
+            }
+
+            var lengthsOfLastTimePart = csvLines.Select(p => p.Start.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries).Last().Length).ToList();
+            if (!lengthsOfLastTimePart.All(p => p == 2))
+            {
+                return;
+            }
+
+            var startGaps = GetGaps(csvLines.Select(p => p.Start).ToArray());
+            var avarageStartGap = startGaps.Sum() / startGaps.Length;
+            var avarageTextLength = csvLines.Select(p => p.Text.Length).Sum() / csvLines.Count;
+            if (avarageStartGap >= 500 || avarageTextLength <= 90)
+            {
+                return;
+            }
+
+            foreach (var line in csvLines)
+            {
+                line.Start += ":000";
+            }
+        }
+
+        private double[] GetGaps(string[] strings)
+        {
+            var gaps = new List<double>();
+            for (var i = 1; i < strings.Length; i++)
+            {
+                var start = TimeCode.ParseToMilliseconds(strings[i - 1]);
+                var end = TimeCode.ParseToMilliseconds(strings[i]);
+                gaps.Add(end - start);
+            }
+
+            return gaps.ToArray();
         }
 
         private bool DetectIsFrames(List<string> toList)
@@ -260,7 +308,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            return hits >= 3;
+            return hits >= 2;
         }
 
         private static char DetectSeparator(List<string> lines)
