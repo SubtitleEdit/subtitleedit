@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.Plugins
             var date = element.Element(nameof(PluginInfoItem.Date))?.Value;
             var url = element.Element(nameof(PluginInfoItem.Url))?.Value;
 
-            return new PluginInfoItem { Name = name, Description = description, Version = version, Date = date, Url = url };
+            return new PluginInfoItem { Text = name, Name = name, Description = description, Version = version, Date = date, Url = url };
         }
     }
 }
