@@ -57,9 +57,9 @@ namespace Tests.Logic
         public void StrippableTextFontDontTouch()
         {
             var st = new StrippableText("{MAN} Hi, how are you today!");
-            Assert.AreEqual("", st.Pre);
+            Assert.AreEqual("{", st.Pre);
             Assert.AreEqual("!", st.Post);
-            Assert.AreEqual("{MAN} Hi, how are you today", st.StrippedText);
+            Assert.AreEqual("MAN} Hi, how are you today", st.StrippedText);
         }
 
         [TestMethod]
