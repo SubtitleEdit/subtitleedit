@@ -40,8 +40,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             var textNoSpace = text.RemoveChar(' ');
-            return Regex.IsMatch(textNoSpace, "-.*[/?/.!]-[A-Z]") ||
-                   Regex.IsMatch(textNoSpace, "-.*[/?/.!]<i>-[A-Z]");
+            return Regex.IsMatch(textNoSpace, "-.*[?.!]-[A-Z]") ||
+                   Regex.IsMatch(textNoSpace, "-.*[?.!]<i>-[A-Z]");
         }
     }
 }
