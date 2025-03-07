@@ -792,10 +792,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 {
                     continue;
                 }
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName);
+
+                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName)?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
                 {
-                    installedLanguages.Add(iso639.ToLowerInvariant());
+                    installedLanguages.Add(iso639);
                 }
             }
 
