@@ -2,12 +2,13 @@
 
 4.0.12 (xth April 2025) BETA
 * NEW
+   * Add tool for converting actors between e.g. ASSA/inline
    * Add Mistral AI translate
    * Add AvalAI translate - thx JJHACKER
    * Add "Chinese traditional" for DeepL - thx rdr44b 
    * Add voice-over for TTS - thx Chris-656
    * Add new shortcut for "Insert unicode symbol" to main text box - thx davidgaryesp
-   * Add gemini-2.0-flash model (and allow custom model name) - thx yawoo
+   * Add "gemini-2.0-flash" model (and allow custom model name) - thx yawoo
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Greek translation - thx PMitsakis
@@ -16,10 +17,15 @@
    * Update French translation - thx Pierre
    * Update Italian translation - thx bovirus
    * Update Portuguese translation - thx hugok79
+   * Update Brazilian Portuguese translation - thx igorruckert
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
    * Add standalone PaddleOCR (no Python required) - thx timminator
    * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
    * Minor improvements for "spell check"
+   * Some additions to dictionaries - thx Zoltán
+   * Minor improvements for CSV importer - thx Louie
+   * Allow to load MP4/MKV in file compare - thx FireEmerald
+   * Add CMD line SUP to SUP (without OCR) - thx AYColumbia
 * FIXED:
    * Fix space character in PAC
    * Fix for LRC with MS parsing - thx AverageHoarder
