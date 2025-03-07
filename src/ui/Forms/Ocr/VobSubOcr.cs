@@ -342,10 +342,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private static readonly string requiredDriverVersion = "545.84";
 
         // Last PaddleOCR version that does not support batch mode
-        private static readonly string lastPaddleOcrVersionWithoutBatchMode = "2.9.1";
+        private static readonly Version lastPaddleOcrVersionWithoutBatchMode = new Version(2, 9, 1);
 
         // Minimum PaddleOCR version with PP-OCRv4 model support
-        private static readonly string requiredPaddleOcrVersionForPPOCRv4 = "2.7.0";
+        private static readonly Version requiredPaddleOcrVersionForPPOCRv4 = new Version(2, 7, 0);
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -5484,8 +5484,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         if (line.StartsWith("Version:", StringComparison.OrdinalIgnoreCase))
                         {
-                            string installedVersion = line.Split(':')[1].Trim();
-                            return string.Compare(installedVersion, lastPaddleOcrVersionWithoutBatchMode, StringComparison.Ordinal) > 0;
+                            string installedVersionString = line.Split(':')[1].Trim();
+                            if (Version.TryParse(installedVersionString, out Version installedVersion))
+                            {
+                                return installedVersion > lastPaddleOcrVersionWithoutBatchMode;
+                            }
                         }
                     }
 
@@ -7645,8 +7648,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         if (line.StartsWith("Version:", StringComparison.OrdinalIgnoreCase))
                         {
-                            string installedVersion = line.Split(':')[1].Trim();
-                            return string.Compare(installedVersion, requiredPaddleOcrVersionForPPOCRv4, StringComparison.Ordinal) > 0;
+                            string installedVersionString = line.Split(':')[1].Trim();
+                            if (Version.TryParse(installedVersionString, out Version installedVersion))
+                            {
+                                return installedVersion >= requiredPaddleOcrVersionForPPOCRv4;
+                            }
                         }
                     }
 
