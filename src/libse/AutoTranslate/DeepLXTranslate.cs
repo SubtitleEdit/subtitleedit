@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
         }
 
-        private bool ShouldRetry(HttpResponseMessage result, string resultContent)
+        public static bool ShouldRetry(HttpResponseMessage result, string resultContent)
         {
             const int httpStatusCodeTooManyRequests = 429;
 
