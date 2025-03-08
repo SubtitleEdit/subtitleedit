@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (DeepLXTranslate.ShouldRetry(result, resultContent))
             {
                 Task.Delay(555).Wait();
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
@@ -144,9 +144,17 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 resultContent = result.Content.ReadAsStringAsync().Result;
             }
 
-            if (result.StatusCode == HttpStatusCode.ServiceUnavailable)
+            if (DeepLXTranslate.ShouldRetry(result, resultContent))
             {
-                Task.Delay(1007).Wait();
+                Task.Delay(3007).Wait();
+                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
+                resultContent = result.Content.ReadAsStringAsync().Result;
+            }
+
+            if (DeepLXTranslate.ShouldRetry(result, resultContent))
+            {
+                Task.Delay(7013).Wait();
                 postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
                 resultContent = result.Content.ReadAsStringAsync().Result;
