@@ -130,34 +130,30 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new TranslationPair(name, code, hasFormality);
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-            var resultContent = result.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage result = null;
+            var resultContent = string.Empty;
 
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
+            int[] retryDelays = { 555, 3007, 7013, 0 };
+            for (var i = 0; i < retryDelays.Length; i++)
             {
-                Task.Delay(555).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                int delay = retryDelays[i];
+                using (var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode))
+                {
+                    result = await _client.PostAsync("/v2/translate", postContent, cancellationToken).ConfigureAwait(false);
+                }
 
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
-            {
-                Task.Delay(3007).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
-            {
-                Task.Delay(7013).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
+                if (i + 1 < retryDelays.Length && DeepLXTranslate.ShouldRetry(result, resultContent))
+                {
+                    await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             if (!result.IsSuccessStatusCode)
@@ -173,8 +169,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             try
             {
-
-
                 var resultList = new List<string>();
                 var parser = new JsonParser();
                 var x = (Dictionary<string, object>)parser.Parse(resultContent);
@@ -199,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     }
                 }
 
-                return Task.FromResult(string.Join(Environment.NewLine, resultList));
+                return string.Join(Environment.NewLine, resultList);
             }
             catch (Exception ex)
             {
