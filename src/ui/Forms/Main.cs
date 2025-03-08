@@ -37263,8 +37263,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     Cursor = Cursors.WaitCursor;
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Tools.ConvertActors.Trim('.'))));
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(form.Subtitle.Paragraphs);
                     SaveSubtitleListviewIndices();
-                    MakeHistoryForUndo(_language.BeforeConvertingColorsToDialog);
                     ShowStatus(_language.ConvertedColorsToDialog);
                     UpdateSourceView();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
