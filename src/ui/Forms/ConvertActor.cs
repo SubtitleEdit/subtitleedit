@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ConvertActor : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
+        public Subtitle Subtitle { get; set; }
         private SubtitleFormat _subtitleFormat;
         private bool _loading = true;
         private List<FixListItem> _fixItems;
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, SubtitleFormat subtitleFormat)
         {
-            _subtitle = subtitle;
+            Subtitle = new Subtitle(subtitle, false);
             _subtitleFormat = subtitleFormat;
 
             Text = LanguageSettings.Current.ConvertActor.Title;
@@ -97,12 +97,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
-            if (_subtitle == null || _loading)
+            if (Subtitle == null || _loading)
             {
                 return;
             }
 
-            ConvertActors(new Subtitle(_subtitle, false), out var numberOfConversions, true);
+            ConvertActors(new Subtitle(Subtitle, false), out var numberOfConversions, true);
             NumberOfActorConversions = numberOfConversions;
 
             groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.ConvertActor.NumberOfConversionsX, NumberOfActorConversions);
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
                     continue;
                 }
 
-                foreach (var p in _subtitle.Paragraphs)
+                foreach (var p in Subtitle.Paragraphs)
                 {
                     if (p.Id == fixItem.Paragraph.Id)
                     {

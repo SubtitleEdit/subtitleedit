@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Drawing;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -58,78 +59,64 @@ namespace Nikse.SubtitleEdit.Core.Common
             return p.Text;
         }
 
-        private static string SetColor(SubtitleFormat format, Color color, string actor)
-        {
-            if (format.FriendlyName == AdvancedSubStationAlpha.NameOfFormat)
-            {
-                actor = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(color, "c") + "}" + actor + "{\\c}";
-            }
-            else
-            {
-                actor = "<font color=\"" + Settings.Settings.ToHtml(color) + "\">" + actor + "</font>";
-            }
-
-            return actor;
-        }
-
         public string FixActorsFromBeforeColon(Paragraph p, char ch, int? changeCasing, Color? color)
         {
-            var startIdx = p.Text.IndexOf(ch);
-            while (startIdx > 0)
+            var sb = new StringBuilder();
+            foreach (var line in p.Text.SplitToLines())
             {
-                var actor = p.Text.Substring(0, startIdx).Trim();
-                if (changeCasing.HasValue)
+                var s = line.Trim();    
+                var startIdx = line.IndexOf(ch);
+                if (startIdx > 0)
                 {
-                    actor = SetCasing(_subtitleFormat, changeCasing, actor);
+                    var actor = s.Substring(0, startIdx).Trim(' ', '-', '"');
+                    if (changeCasing.HasValue)
+                    {
+                        actor = SetCasing(_subtitleFormat, changeCasing, actor);
+                    }
+
+                    if (ToSquare)
+                    {
+                        actor = "[" + actor + "]";
+                    }
+                    else if (ToParentheses)
+                    {
+                        actor = "(" + actor + ")";
+                    }
+                    else if (ToColon)
+                    {
+                        actor = actor + ":";
+                    }
+                    else if (ToActor)
+                    {
+                    }
+
+                    if (color.HasValue && !ToActor)
+                    {
+                        SetColor(_subtitleFormat, color.Value, actor);
+                    }
+
+                    if (ToSquare)
+                    {
+                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
+                    }
+                    else if (ToParentheses)
+                    {
+                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
+                    }
+                    else if (ToColon)
+                    {
+                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
+                    }
+                    else if (ToActor)
+                    {
+                        s = s.Substring(startIdx + 1);
+                    }
                 }
 
-                if (ToSquare)
-                {
-                    actor = "[" + actor + "]";
-                }
-                else if (ToParentheses)
-                {
-                    actor = "(" + actor + ")";
-                }
-                else if (ToColon)
-                {
-                    actor = actor + ":";
-                }
-                else if (ToActor)
-                {
-                }
-
-                if (color.HasValue && !ToActor)
-                {
-                    SetColor(_subtitleFormat, color.Value, actor);
-                }
-
-                if (ToSquare)
-                {
-                    p.Text = actor + " " + p.Text.Substring(startIdx + 1).TrimStart(' ');
-                }
-                else if (ToParentheses)
-                {
-                    p.Text = actor + " " + p.Text.Substring(startIdx + 1).TrimStart(' ');
-                }
-                else if (ToColon)
-                {
-                    p.Text = actor + " " + p.Text.Substring(startIdx + 1).TrimStart(' ');
-                }
-                else if (ToActor)
-                {
-                    p.Text = p.Text.Substring(startIdx + 1);
-                }
-
-                if (startIdx + 1 >= p.Text.Length)
-                {
-                    break;
-                }
-
-                startIdx = p.Text.IndexOf(ch, startIdx + 1);
+                sb.AppendLine(s);
             }
 
-            return p.Text;
+            return sb.ToString().Trim();
         }
 
         public string FixActors(Paragraph p, char start, char end, int? changeCasing, Color? color)
@@ -143,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     break;
                 }
 
-                var actor = p.Text.Substring(startIdx + 1, endIdx - startIdx - 1);
+                var actor = p.Text.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
                 if (changeCasing.HasValue)
                 {
                     actor = SetCasing(_subtitleFormat, changeCasing, actor);
@@ -224,6 +211,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case ProperCase:
                     actor = actor.ToProperCase(format);
                     break;
+            }
+
+            return actor;
+        }
+
+        private static string SetColor(SubtitleFormat format, Color color, string actor)
+        {
+            if (format.FriendlyName == AdvancedSubStationAlpha.NameOfFormat)
+            {
+                actor = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(color, "c") + "}" + actor + "{\\c}";
+            }
+            else
+            {
+                actor = "<font color=\"" + Settings.Settings.ToHtml(color) + "\">" + actor + "</font>";
             }
 
             return actor;

@@ -2,7 +2,7 @@
 
 4.0.12 (xth April 2025) BETA
 * NEW
-   * Add tool for converting actors between e.g. ASSA/inline
+   * Add tool for converting actors between ASSA/brackets/parentheses/colon
    * Add Mistral AI translate
    * Add AvalAI translate - thx JJHACKER
    * Add "Chinese traditional" for DeepL - thx rdr44b 
