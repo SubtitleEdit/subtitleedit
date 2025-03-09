@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (var i = 0; i < count; i++)
             {
                 var paragraph = subtitle.Paragraphs[i];
-                var noTag = HtmlUtil.RemoveHtmlTags(paragraph.Text);
+                var noTag = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                 if (Utilities.CountTagInText(noTag, '"') == 1 && noTag.StartsWith('"'))
                 {
                     var section = new Section { Paragraphs = new List<Paragraph> { paragraph } };
