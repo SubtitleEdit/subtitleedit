@@ -130,34 +130,23 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new TranslationPair(name, code, hasFormality);
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-            var result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-            var resultContent = result.Content.ReadAsStringAsync().Result;
-
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
+            int[] retryDelays = { 555, 3007, 7013 };
+            HttpResponseMessage result = null;
+            string resultContent = null;
+            for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
-                Task.Delay(555).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                result = await _client.PostAsync("/v2/translate", postContent, cancellationToken);
+                resultContent = await result.Content.ReadAsStringAsync();
 
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
-            {
-                Task.Delay(3007).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                if (!ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
+                {
+                    break;
+                }
 
-            if (DeepLXTranslate.ShouldRetry(result, resultContent))
-            {
-                Task.Delay(7013).Wait();
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/v2/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
+                await Task.Delay(retryDelays[attempt], cancellationToken);
             }
 
             if (!result.IsSuccessStatusCode)
@@ -173,8 +162,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             try
             {
-
-
                 var resultList = new List<string>();
                 var parser = new JsonParser();
                 var x = (Dictionary<string, object>)parser.Parse(resultContent);
@@ -199,13 +186,22 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     }
                 }
 
-                return Task.FromResult(string.Join(Environment.NewLine, resultList));
+                return string.Join(Environment.NewLine, resultList);
             }
             catch (Exception ex)
             {
                 SeLogger.Error(ex, "DeepLTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
                 throw;
             }
+        }
+
+        public static bool ShouldRetry(HttpResponseMessage result, string resultContent)
+        {
+            const int httpStatusCodeTooManyRequests = 429;
+
+            return result.StatusCode == HttpStatusCode.ServiceUnavailable ||
+                   (int)result.StatusCode == httpStatusCodeTooManyRequests ||
+                   (result != null && resultContent.Contains("<head><title>429 Too Many Requests</title></head>", StringComparison.Ordinal));
         }
 
         private FormUrlEncodedContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
