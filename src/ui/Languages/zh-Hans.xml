@@ -604,6 +604,13 @@ Command line: {1} {2}
     <OnlyLookForDifferencesInText>仅查找差异文本</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>无法比较基于图像的字幕</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>转换演员</Title>
+    <ConvertActorFrom>更改演员从</ConvertActorFrom>
+    <ConvertActorTo>更改演员为</ConvertActorTo>
+    <InlineActorViaX>内联演员通过{0}</InlineActorViaX>
+    <NumberOfConversionsX>演员转换的数量：{0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>将颜色转换为对话框</Title>
     <RemoveColorTags>去除颜色标签</RemoveColorTags>
@@ -1399,6 +1406,7 @@ Command line: {1} {2}
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>将颜色转换为对话框...</ConvertColorsToDialog>
+        <ConvertActors>转换演员...</ConvertActors>
         <ChangeCasing>更改大小写...</ChangeCasing>
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
