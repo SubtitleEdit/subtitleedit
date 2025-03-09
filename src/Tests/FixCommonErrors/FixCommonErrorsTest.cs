@@ -2830,6 +2830,25 @@ namespace Tests.FixCommonErrors
             Assert.AreEqual("Zero stars.\"", s.Paragraphs[3].Text);
         }
 
+        [TestMethod]
+        public void AddMissingQuotesSpanMultipleParagraphsTest()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("Commander, what's that on the wall?", 1000, 2000));
+            s.Paragraphs.Add(new Paragraph("\"Three things cannot be long hidden:", 3000, 4000));
+            s.Paragraphs.Add(new Paragraph("the sun, the moon and the truth.", 2000, 5000));
+            s.Paragraphs.Add(new Paragraph("Levi Kane.\"", 5000, 6000));
+            s.Paragraphs.Add(new Paragraph("Buddha.", 7000, 8000));
+            s.Paragraphs.Add(new Paragraph("What the hell was that?", 9000, 10000));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+
+            Assert.AreEqual("\"Three things cannot be long hidden:", s.Paragraphs[1].Text);
+            Assert.AreEqual("the sun, the moon and the truth.", s.Paragraphs[2].Text);
+            Assert.AreEqual("Levi Kane.\"", s.Paragraphs[3].Text);
+            Assert.AreEqual("Buddha.", s.Paragraphs[4].Text);
+            Assert.AreEqual("What the hell was that?", s.Paragraphs[5].Text);
+        }
+
         #endregion
 
         #region Fix continuation style
