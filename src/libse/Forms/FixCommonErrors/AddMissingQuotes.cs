@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -13,6 +15,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
+            var sections = CreateSections(subtitle);
+            
             string fixAction = Language.AddMissingQuote;
             int noOfFixes = 0;
             var skipTo = -1;
@@ -24,6 +28,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 var p = subtitle.Paragraphs[i];
+
+                // this paragraph is part of a section or quote that span through multiple lines
+                if (sections.Contains(p))
+                {
+                    continue;
+                }
+
                 string oldText = p.Text;
                 p.Text = FixDifferentQuotes(p.Text); //TODO: extract to own rule
 
@@ -258,6 +269,55 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return text;
+        }
+
+        private SectionCollection CreateSections(Subtitle subtitle)
+        {
+            var count = subtitle.Paragraphs.Count;
+            var sections = new SectionCollection();
+            char[] trimChars = { '.', '!', '?' };
+            for (var i = 0; i < count; i++)
+            {
+                var paragraph = subtitle.Paragraphs[i];
+                var noTag = HtmlUtil.RemoveHtmlTags(paragraph.Text);
+                if (Utilities.CountTagInText(noTag, '"') == 1 && noTag.StartsWith('"'))
+                {
+                    var section = new Section { Paragraphs = new List<Paragraph> { paragraph } };
+                    for (var r = i + 1; r < count; r++)
+                    {
+                        var nextTextNoTag = HtmlUtil.RemoveHtmlTags(subtitle.Paragraphs[r].Text);
+                        section.Paragraphs.Add(subtitle.Paragraphs[r]);
+                        if (nextTextNoTag.TrimEnd(trimChars).EndsWith('"'))
+                        {
+                            sections.Add(section);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return sections;
+        }
+
+        private class Section
+        {
+            public List<Paragraph> Paragraphs { get; set; } = new List<Paragraph>();
+
+            public bool Contains(Paragraph p)
+            {
+                var first = Paragraphs.First();
+                var last = Paragraphs.Last();
+                return p.Number >= first.Number && p.Number <= last.Number;
+            }
+        }
+
+        private class SectionCollection
+        {
+            private readonly List<Section> _sections = new List<Section>();
+
+            public void Add(Section section) => _sections.Add(section);
+
+            public bool Contains(Paragraph p) => _sections.Any(section => section.Contains(p));
         }
     }
 }
