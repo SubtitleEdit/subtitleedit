@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -48,34 +47,23 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new DeepLTranslate().GetSupportedTargetLanguages();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-            var result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
-            var resultContent = result.Content.ReadAsStringAsync().Result;
-
-            if (ShouldRetry(result, resultContent))
+            int[] retryDelays = { 555, 3007, 7013 };
+            HttpResponseMessage result = null;
+            string resultContent = null;
+            for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
-                Task.Delay(2555).Wait(cancellationToken);
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                result = await _client.PostAsync("/translate", postContent, cancellationToken);
+                resultContent = await result.Content.ReadAsStringAsync();
 
-            if (ShouldRetry(result, resultContent))
-            {
-                Task.Delay(5307).Wait(cancellationToken);
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
-            }
+                if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
+                {
+                    break;
+                }
 
-            if (ShouldRetry(result, resultContent))
-            {
-                Task.Delay(7307).Wait(cancellationToken);
-                postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = _client.PostAsync("/translate", postContent, cancellationToken).Result;
-                resultContent = result.Content.ReadAsStringAsync().Result;
+                await Task.Delay(retryDelays[attempt], cancellationToken);
             }
 
             if (!result.IsSuccessStatusCode)
@@ -97,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 {
                     var resultText = Json.DecodeJsonText(data);
                     var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
-                    return Task.FromResult(resultTextWithFixedNewLines.Trim());
+                    return resultTextWithFixedNewLines.Trim();
                 }
                 else
                 {
@@ -110,15 +98,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 SeLogger.Error(ex, "DeepLXTranslate.Translate: " + ex.Message + Environment.NewLine + resultContent);
                 throw;
             }
-        }
-
-        public static bool ShouldRetry(HttpResponseMessage result, string resultContent)
-        {
-            const int httpStatusCodeTooManyRequests = 429;
-
-            return result.StatusCode == HttpStatusCode.ServiceUnavailable ||
-                   (int)result.StatusCode == httpStatusCodeTooManyRequests ||
-                   (result != null && resultContent.Contains("<head><title>429 Too Many Requests</title></head>", StringComparison.Ordinal));
         }
 
         private static StringContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
