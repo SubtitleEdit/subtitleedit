@@ -858,6 +858,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexHtmlColor = new Regex("<font color=\"[a-z]*\">", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor2 = new Regex("<font color=[a-z]*>", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor3 = new Regex("<font color=\"#[ABCDEFabcdef\\d]*\">", RegexOptions.Compiled);
+        private static readonly Regex RegexHtmlColor4 = new Regex("<font color=\"[A-Za-z]*\">", RegexOptions.Compiled);
 
         private static string ColorHtmlToWebVtt(string text)
         {
@@ -894,6 +895,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
                 match = RegexHtmlColor3.Match(res);
             }
+
+            match = RegexHtmlColor4.Match(res);
+            while (match.Success)
+            {
+                var colorName = match.Value.Substring(13, match.Value.Length - 15);
+                var color = Color.FromName(colorName);
+                if (color.IsKnownColor)
+                {
+                    var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
+                    var fontString = "<c" + tag + ">";
+                    var closeColor = GetCloseColor(tag);
+                    if (closeColor != null)
+                    {
+                        fontString = "<c." + closeColor + ">";
+                    }
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    match = RegexHtmlColor3.Match(res);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+
             return res;
         }
 
