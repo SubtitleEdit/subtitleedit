@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBoxFormality.Items.Clear();
                 comboBoxFormality.Items.AddRange(AvalAi.Models);
-                comboBoxFormality.Text = Configuration.Settings.Tools.AvalAiModel ;
+                comboBoxFormality.Text = Configuration.Settings.Tools.AvalAiModel;
 
                 return;
             }
@@ -786,16 +786,24 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var installedLanguages = new List<string>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
             {
-                var layoutName = language.LayoutName;
-                // related to https://github.com/SubtitleEdit/subtitleedit/issues/8084
-                if (string.IsNullOrEmpty(layoutName))
+                try
                 {
-                    continue;
+                    var layoutName = language.LayoutName;
+                    // related to https://github.com/SubtitleEdit/subtitleedit/issues/8084
+                    if (string.IsNullOrEmpty(layoutName))
+                    {
+                        continue;
+                    }
+                    var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName);
+                    if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
+                    {
+                        installedLanguages.Add(iso639.ToLowerInvariant());
+                    }
                 }
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName);
-                if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
+                catch (Exception ex)
                 {
-                    installedLanguages.Add(iso639.ToLowerInvariant());
+                    SeLogger.Error(ex);
+                    // log and ignore   
                 }
             }
 
@@ -1133,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Error);
             }
-            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && 
+            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) &&
                      _autoTranslator.Error != null &&
                      _autoTranslator.Error.Contains("Wrong endpoint. Use https://api-free.deepl.com"))
             {
