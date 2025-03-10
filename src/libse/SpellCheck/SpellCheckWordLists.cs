@@ -161,12 +161,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             return Path.Combine(_dictionaryFolder, _languageName + "_UseAlways.xml");
         }
 
-        public void UseAlwaysListAdd(string newKey, string newValue)
+        public void AddToUseAlwaysList(string newKey, string newValue)
         {
             SaveUseAlwaysList(newKey, newValue);
         }
 
-        public void UseAlwaysListRemove(string key)
+        public void RemoveFromUseAlwaysList(string key)
         {
             SaveUseAlwaysList(null, null, key);
         }
