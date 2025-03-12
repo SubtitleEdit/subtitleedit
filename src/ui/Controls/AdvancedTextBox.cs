@@ -704,33 +704,17 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 string prefix = string.Empty;
-                string postfix = string.Empty;
                 if (currentWordText.RemoveControlCharacters().Trim().Length >= minLength)
                 {
-                    if (currentWordText.Length > 0)
+                    const string trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
+                    int l = 0;
+                    int len = currentWordText.Length;
+                    while (l < len && trimChars.Contains(currentWordText[l]))
                     {
-                        const string trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
-                        var charHit = true;
-                        while (charHit)
-                        {
-                            charHit = false;
-                            foreach (var c in trimChars)
-                            {
-                                if (currentWordText.StartsWith(c))
-                                {
-                                    prefix += c;
-                                    currentWordText = currentWordText.Substring(1);
-                                    charHit = true;
-                                }
-                                if (currentWordText.EndsWith(c))
-                                {
-                                    postfix = c + postfix;
-                                    currentWordText = currentWordText.Remove(currentWordText.Length - 1);
-                                    charHit = true;
-                                }
-                            }
-                        }
+                        l++;
                     }
+                    prefix = currentWordText.Substring(0, l);
+                    currentWordText = currentWordText.Substring(l);
                 }
 
                 if (prefix == "'" && currentWordText.Length >= 1 && (DoSpell(prefix + currentWordText) || _spellCheckWordLists.HasUserWord(prefix + currentWordText)))
