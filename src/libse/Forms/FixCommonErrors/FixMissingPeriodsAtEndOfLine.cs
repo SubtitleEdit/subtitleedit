@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 
+        private static readonly string[] UrlPrefixes = { "http://", "https://", "www." };
+
         private static bool IsOneLineUrl(string s)
         {
             if (s.Contains(' ') || s.Contains(Environment.NewLine))
@@ -22,17 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return false;
             }
 
-            if (s.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (s.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (s.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            if (UrlPrefixes.Any(prefix => s.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }
@@ -84,36 +76,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
-                        //don't end the sentence if the next word is an I word as they're always capped.
-                        var isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
-                                                                        nextText.StartsWith("I'", StringComparison.Ordinal));
-
-                        var isNextCloseAndStartsWithTitle = isNextClose && (nextText.StartsWith("Mr. ", StringComparison.Ordinal) ||
-                                                                            nextText.StartsWith("Dr. ", StringComparison.Ordinal));
-
-                        if (!isNextCloseAndStartsWithI && !isNextCloseAndStartsWithTitle)
+                        if (callbacks.AllowFix(p, fixAction) &&
+                            (!isNextClose || !IsKnownUppercasePrefix(nextText, callbacks)))
                         {
                             //test to see if the first word of the next line is a name
-                            if (callbacks.AllowFix(p, fixAction))
-                            {
-                                string oldText = p.Text;
-                                if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
-                                {
-                                    if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
-                                    {
-                                        AddPeriod(p, tempNoHtml);
-                                    }
-                                }
-                                else
-                                {
-                                    AddPeriod(p, tempNoHtml);
-                                }
+                            string oldText = p.Text;
+                            AddPeriod(p, tempNoHtml);
 
-                                if (p.Text != oldText)
-                                {
-                                    missingPeriodsAtEndOfLine++;
-                                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                }
+                            if (p.Text != oldText)
+                            {
+                                missingPeriodsAtEndOfLine++;
+                                callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
                     }
@@ -229,6 +202,55 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
+        }
+
+        private readonly string[] _titles = { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
+
+        /// <summary>
+        /// Determines whether the given text is a known uppercase prefix that should not result in
+        /// adding a period at the end of a line.
+        /// </summary>
+        /// <param name="text">The text to check if it is a known uppercase prefix.</param>
+        /// <param name="context">The context providing callbacks for additional operations such as checking if a word is a name.</param>
+        /// <returns>True if the text is a known uppercase prefix, otherwise false.</returns>
+        private bool IsKnownUppercasePrefix(string text, IFixCallbacks context)
+        {
+            // known pronouns
+            // don't end the sentence if the next word is an I word as they're always capped.
+            if (text.StartsWith("I ", StringComparison.Ordinal) || text.StartsWith("I'", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            // known title
+            if (_titles.Any(title => text.StartsWith(title, StringComparison.Ordinal)))
+            {
+                return true;
+            }
+
+            // Bill Gates
+            var nameSegmentCount = 0;
+            var len = text.Length;
+            for (int i = 0; i < len + 1 && nameSegmentCount < 2; i++)
+            {
+                // when an entire text is a name
+                if (i == len)
+                {
+                    return context.IsName(text);
+                }
+
+                // handles both single word and multiple word name
+                if (char.IsWhiteSpace(text[i]))
+                {
+                    nameSegmentCount++;
+                    if (context.IsName(text.Substring(0, i)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
