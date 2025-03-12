@@ -817,15 +817,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static bool ShouldRemoveNarrator(string pre, string language)
         {
-            if (pre.Length > 30 || pre.IndexOfAny(new[] { "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (pre.Length > 30 || pre.IndexOfAny(new[] { "http", "https", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return false;
             }
 
             if (language == "en" && pre.Length > 15 && pre.IndexOfAny(new[]
                 {
-                    "Previously on",
-                    "Improved by",
+                    "previously on",
+                    "improved by",
                     " is ",
                     " are ",
                     " were ",
@@ -838,7 +838,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     " said ",
                     " do ",
                     " want ",
-                    "That's "
+                    "that's "
                 }, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return false;
