@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         match = regexRemoveCTags.Match(text, start);
                     }
 
-                    text = RemoveTag("v", text);
+                    text = VoiceToNarrator(text);
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("span", text);
@@ -692,6 +692,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.Text = text;
                 }
             }
+        }
+
+        private string VoiceToNarrator(string text)
+        {
+            var voiceIdx = text.IndexOf("<v ", StringComparison.OrdinalIgnoreCase);
+            while (voiceIdx >= 0)
+            {
+                var voiceEndIdx = text.IndexOf(">", voiceIdx + 3, StringComparison.OrdinalIgnoreCase);
+                if (voiceEndIdx < 0)
+                {
+                    break;
+                }
+
+                // voice no tag
+                string voice = text.Substring(voiceIdx + 2, voiceEndIdx - (voiceIdx + 2)).Trim();
+                text = text.Remove(voiceIdx, voiceEndIdx - voiceIdx + 1);
+
+                // remove empty voice
+                if (voice.Length != 0)
+                {
+                    text = text.Insert(voiceIdx, voice + ": ");
+                }
+
+                voiceIdx = text.IndexOf("<v ", voiceIdx, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return text;
         }
 
         /// <summary>
