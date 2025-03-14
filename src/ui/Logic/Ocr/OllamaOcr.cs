@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class OllamaOcr
+    public class OllamaOcr : IDisposable
     {
         private readonly HttpClient _httpClient;
 
@@ -82,6 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 bitmap.Save(memoryStream, ImageFormat.Png);
                 return Convert.ToBase64String(memoryStream.ToArray());
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose(); 
         }
     }
 }

@@ -54,6 +54,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
+            this.groupBoxOllama = new System.Windows.Forms.GroupBox();
+            this.nikseComboBoxOllamaModel = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelOllamaModel = new System.Windows.Forms.Label();
+            this.labelLanguageOllama = new System.Windows.Forms.Label();
+            this.nikseComboBoxOllamaLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxPaddle = new System.Windows.Forms.GroupBox();
             this.checkBoxPaddleOcrUseGpu = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -183,6 +188,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
+            this.groupBoxOllama.SuspendLayout();
             this.groupBoxPaddle.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
@@ -499,6 +505,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxOcrMethod
             // 
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxOllama);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxPaddle);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
@@ -513,12 +520,90 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
             // 
+            // groupBoxOllama
+            // 
+            this.groupBoxOllama.Controls.Add(this.nikseComboBoxOllamaModel);
+            this.groupBoxOllama.Controls.Add(this.labelOllamaModel);
+            this.groupBoxOllama.Controls.Add(this.labelLanguageOllama);
+            this.groupBoxOllama.Controls.Add(this.nikseComboBoxOllamaLanguages);
+            this.groupBoxOllama.Location = new System.Drawing.Point(0, 41);
+            this.groupBoxOllama.Name = "groupBoxOllama";
+            this.groupBoxOllama.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxOllama.TabIndex = 9;
+            this.groupBoxOllama.TabStop = false;
+            this.groupBoxOllama.Text = "Ollama Vision";
+            // 
+            // nikseComboBoxOllamaModel
+            // 
+            this.nikseComboBoxOllamaModel.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxOllamaModel.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxOllamaModel.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxOllamaModel.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxOllamaModel.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxOllamaModel.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxOllamaModel.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxOllamaModel.DropDownHeight = 400;
+            this.nikseComboBoxOllamaModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.nikseComboBoxOllamaModel.DropDownWidth = 195;
+            this.nikseComboBoxOllamaModel.FormattingEnabled = true;
+            this.nikseComboBoxOllamaModel.Location = new System.Drawing.Point(98, 55);
+            this.nikseComboBoxOllamaModel.MaxLength = 32767;
+            this.nikseComboBoxOllamaModel.Name = "nikseComboBoxOllamaModel";
+            this.nikseComboBoxOllamaModel.SelectedIndex = -1;
+            this.nikseComboBoxOllamaModel.SelectedItem = null;
+            this.nikseComboBoxOllamaModel.SelectedText = "";
+            this.nikseComboBoxOllamaModel.Size = new System.Drawing.Size(195, 21);
+            this.nikseComboBoxOllamaModel.TabIndex = 3;
+            this.nikseComboBoxOllamaModel.TabStop = false;
+            this.nikseComboBoxOllamaModel.UsePopupWindow = false;
+            // 
+            // labelOllamaModel
+            // 
+            this.labelOllamaModel.AutoSize = true;
+            this.labelOllamaModel.Location = new System.Drawing.Point(18, 61);
+            this.labelOllamaModel.Name = "labelOllamaModel";
+            this.labelOllamaModel.Size = new System.Drawing.Size(35, 13);
+            this.labelOllamaModel.TabIndex = 2;
+            this.labelOllamaModel.Text = "Model";
+            // 
+            // labelLanguageOllama
+            // 
+            this.labelLanguageOllama.AutoSize = true;
+            this.labelLanguageOllama.Location = new System.Drawing.Point(18, 22);
+            this.labelLanguageOllama.Name = "labelLanguageOllama";
+            this.labelLanguageOllama.Size = new System.Drawing.Size(54, 13);
+            this.labelLanguageOllama.TabIndex = 0;
+            this.labelLanguageOllama.Text = "Language";
+            // 
+            // nikseComboBoxOllamaLanguages
+            // 
+            this.nikseComboBoxOllamaLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxOllamaLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxOllamaLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxOllamaLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxOllamaLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxOllamaLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxOllamaLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxOllamaLanguages.DropDownHeight = 400;
+            this.nikseComboBoxOllamaLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxOllamaLanguages.DropDownWidth = 195;
+            this.nikseComboBoxOllamaLanguages.FormattingEnabled = true;
+            this.nikseComboBoxOllamaLanguages.Location = new System.Drawing.Point(98, 20);
+            this.nikseComboBoxOllamaLanguages.MaxLength = 32767;
+            this.nikseComboBoxOllamaLanguages.Name = "nikseComboBoxOllamaLanguages";
+            this.nikseComboBoxOllamaLanguages.SelectedIndex = -1;
+            this.nikseComboBoxOllamaLanguages.SelectedItem = null;
+            this.nikseComboBoxOllamaLanguages.SelectedText = "";
+            this.nikseComboBoxOllamaLanguages.Size = new System.Drawing.Size(195, 21);
+            this.nikseComboBoxOllamaLanguages.TabIndex = 1;
+            this.nikseComboBoxOllamaLanguages.UsePopupWindow = false;
+            // 
             // groupBoxPaddle
             // 
             this.groupBoxPaddle.Controls.Add(this.checkBoxPaddleOcrUseGpu);
             this.groupBoxPaddle.Controls.Add(this.label5);
             this.groupBoxPaddle.Controls.Add(this.nikseComboBoxPaddleLanguages);
-            this.groupBoxPaddle.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPaddle.Location = new System.Drawing.Point(0, 37);
             this.groupBoxPaddle.Name = "groupBoxPaddle";
             this.groupBoxPaddle.Size = new System.Drawing.Size(366, 131);
             this.groupBoxPaddle.TabIndex = 8;
@@ -2374,6 +2459,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
+            this.groupBoxOllama.ResumeLayout(false);
+            this.groupBoxOllama.PerformLayout();
             this.groupBoxPaddle.ResumeLayout(false);
             this.groupBoxPaddle.PerformLayout();
             this.GroupBoxTesseractMethod.ResumeLayout(false);
@@ -2585,5 +2672,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Label label5;
         private NikseComboBox nikseComboBoxPaddleLanguages;
         private System.Windows.Forms.CheckBox checkBoxPaddleOcrUseGpu;
+        private System.Windows.Forms.GroupBox groupBoxOllama;
+        private NikseComboBox nikseComboBoxOllamaModel;
+        private System.Windows.Forms.Label labelOllamaModel;
+        private System.Windows.Forms.Label labelLanguageOllama;
+        private NikseComboBox nikseComboBoxOllamaLanguages;
     }
 }

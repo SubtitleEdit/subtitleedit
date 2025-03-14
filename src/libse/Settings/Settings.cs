@@ -5898,6 +5898,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VobSubOcr.CloudVisionSendOriginalImages = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("OllamaLanguage");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.OllamaLanguage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaModel");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.OllamaModel = subNode.InnerText;
+            }
+
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
                 var group = new MultipleSearchAndReplaceGroup

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -376,6 +377,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private PaddleOcr _paddleOcr;
 
+        private OllamaOcr _ollamaOcr;
+        private string _ollamaModel;
+        private string _ollamaLanguage;
+
         private bool _okClicked;
         private readonly Dictionary<string, int> _unknownWordsDictionary;
 
@@ -394,6 +399,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodNocr = -1;
         private readonly int _ocrMethodCloudVision = -1;
         private readonly int _ocrMethodPaddle = -1;
+        private readonly int _ocrMethodOllama = -1;
 
         private FindReplaceDialogHelper _findHelper;
         private FindDialog _findDialog;
@@ -512,6 +518,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             italicToolStripMenuItem1.Text = LanguageSettings.Current.General.Italic;
             underlineToolStripMenuItem1.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Underline;
 
+            labelLanguageOllama.Text = language.Language;
+            labelOllamaModel.Text = LanguageSettings.Current.AudioToText.Model;
+
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
@@ -546,6 +555,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
             _ocrMethodCloudVision = comboBoxOcrMethod.Items.Add(language.OcrViaCloudVision);
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
+            _ocrMethodOllama = comboBoxOcrMethod.Items.Add("Ollama Vision");
 
             _paddleOcr = new PaddleOcr();
             checkBoxPaddleOcrUseGpu.Checked = Configuration.Settings.VobSubOcr.PaddleOcrUseGpu;
@@ -1083,7 +1093,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Application.DoEvents();
                 }
             }
-            ;
 
             for (var i = 0; i < max; i++)
             {
@@ -1710,7 +1719,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color emphasis2;
 
             var makeTransparent = true;
-            if (_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle)
+            if (_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama)
             {
                 // Cloud Vision doesn't like transparent images
                 makeTransparent = false;
@@ -2139,7 +2148,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return nb.GetBitmap();
             }
 
-            if (_ocrMethodIndex == _ocrMethodPaddle)
+            if (_ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama)
             {
                 return returnBmp;
             }
@@ -4850,6 +4859,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 buttonDownloadPaddleOCRModels_Click(sender, e);
             }
+            else if (_ocrMethodIndex == _ocrMethodOllama)
+            {
+                _ollamaLanguage = nikseComboBoxOllamaLanguages.Text;
+                _ollamaModel = nikseComboBoxOllamaModel.Text;
+
+                if (string.IsNullOrWhiteSpace(_ollamaLanguage))
+                {
+                    MessageBox.Show("No Ollama language selected!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(_ollamaModel))
+                {
+                    MessageBox.Show("No Ollama model selected!");
+                    return;
+                }
+            }
 
             progressBar1.Maximum = max;
             progressBar1.Value = 0;
@@ -5242,6 +5268,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 text = OcrViaPaddle(bmp, i);
             }
+            else if (_ocrMethodIndex == _ocrMethodOllama)
+            {
+                text = OcrViaOllama(bmp, i);
+            }
 
             _lastLine = text;
 
@@ -5534,7 +5564,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             for (var i = 0; i < 100; i++)
                             {
-                                System.Threading.Thread.Sleep(25);
+                                Thread.Sleep(25);
                                 _tesseractThreadRunner.CheckQueue();
                                 if (_tesseractThreadRunner.Count == 0)
                                 {
@@ -6704,6 +6734,87 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             return line;
         }
+
+        private string OcrViaOllama(Bitmap bitmap, int listViewIndex)
+        {
+            if (_ocrFixEngine == null)
+            {
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
+            }
+
+            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
+
+            string line;
+            line = _ollamaOcr.Ocr(bitmap, _ollamaModel, _ollamaLanguage, _cancellationToken).Result;
+
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+            {
+                var lastLastLine = GetLastLastText(listViewIndex);
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, lastLastLine, null); // TODO: Add abbreviations list
+            }
+
+            if (checkBoxRightToLeft.Checked)
+            {
+                line = ReverseNumberStrings(line);
+            }
+
+            //OCR fix engine
+            string textWithOutFixes = line;
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
+            {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                {
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+                }
+
+                if (checkBoxAutoFixCommonErrors.Checked)
+                {
+                    var lastLastLine = GetLastLastText(listViewIndex);
+                    line = _ocrFixEngine.FixOcrErrors(line, _subtitle, listViewIndex, _lastLine, lastLastLine, true, autoGuessLevel);
+                }
+
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null)
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, autoGuessLevel);
+                }
+
+                if (_ocrFixEngine.Abort)
+                {
+                    ButtonPauseClick(null, null);
+                    _ocrFixEngine.Abort = false;
+
+                    return string.Empty;
+                }
+
+                // Log used word guesses (via word replace list)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
+                {
+                    listBoxLogSuggestions.Items.Add(guess);
+                }
+
+                _ocrFixEngine.AutoGuessesUsed.Clear();
+
+                // Log unknown words guess (found via spelling dictionaries)
+                LogUnknownWords();
+
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
+            }
+
+            if (textWithOutFixes.Trim() != line.Trim())
+            {
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
+            }
+
+            return line;
+        }
+
 
         private string OcrViaPaddle(Bitmap bitmap, int listViewIndex)
         {
@@ -7891,6 +8002,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+            else if (_ocrMethodIndex == _ocrMethodOllama)
+            {
+                if (nikseComboBoxOllamaLanguages.Items.Count == 0)
+                {
+                    foreach (var language in ChatGptTranslate.ListLanguages())
+                    {
+                        nikseComboBoxOllamaLanguages.Items.Add(language);
+                        if (language.Name == Configuration.Settings.VobSubOcr.OllamaLanguage)
+                        {
+                            nikseComboBoxOllamaLanguages.SelectedIndex = nikseComboBoxOllamaLanguages.Items.Count - 1;
+                        }
+                    }
+
+                    if (nikseComboBoxOllamaLanguages.SelectedIndex == -1)
+                    {
+                        nikseComboBoxOllamaLanguages.Text = "English";
+                    }
+                }
+
+                ShowOcrMethodGroupBox(groupBoxOllama);
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "Ollama";
+
+                _ollamaOcr?.Dispose();
+                _ollamaOcr = new OllamaOcr();
+            }
 
             _ocrFixEngine = null;
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7914,6 +8050,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             groupBoxNOCR.Visible = false;
             groupBoxCloudVision.Visible = false;
             groupBoxPaddle.Visible = false;
+            groupBoxOllama.Visible = false;
 
             groupBox.Visible = true;
             groupBox.BringToFront();
@@ -8452,6 +8589,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodPaddle;
             }
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "OllamaOCR" && comboBoxOcrMethod.Items.Count > _ocrMethodOllama)
+            {
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodOllama;
+            }
             else
             {
                 comboBoxOcrMethod.SelectedIndex = 0;
@@ -8970,6 +9111,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode = language.Code;
                 }
+            }
+
+            if (_ocrMethodIndex == _ocrMethodPaddle)
+            {
+                Configuration.Settings.VobSubOcr.OllamaLanguage = nikseComboBoxOllamaLanguages.Text;
+                Configuration.Settings.VobSubOcr.OllamaModel = nikseComboBoxOllamaModel.Text;
             }
 
             if (!e.Cancel)
