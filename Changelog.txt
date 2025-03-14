@@ -17,6 +17,7 @@
    * Update French translation - thx Pierre
    * Update Italian translation - thx bovirus
    * Update Portuguese translation - thx hugok79
+   * Update Czech translation - thx Matěj
    * Update Brazilian Portuguese translation - thx igorruckert
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
    * Add standalone PaddleOCR (no Python required) - thx timminator
@@ -31,6 +32,7 @@
    * Fix for LRC with MS parsing - thx AverageHoarder
    * Fix crash in TTS retry - thx cvrle77
    * Fix custom format duration > 1 min - thx bangwb
+   * Fix WebVTT conversion of color-name to color - thx mbas-rtbf
 
 
 4.0.11 (28th January 2025)
