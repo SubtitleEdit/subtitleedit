@@ -42,12 +42,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             : r;
 
                         string s = text.Substring(l, r - l).Trim();
-                        double startTimeMilliseconds = splitParagraphs.Count == 0
-                            ? p.StartTime.TotalMilliseconds
-                            : splitParagraphs.Last().EndTime.TotalMilliseconds + 1; //+ Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
-                        // We reach the end, but the amount of string is too small for a new paragraph.
-                        // Add to the previous paragraph
+                        // We reach the end, but the amount of string is too small for a new paragraph, so we add it to the previous paragraph
                         if (s.Length < singleLineMaxChars && r == text.Length)
                         {
                             var lastParagraph = splitParagraphs.Last();
@@ -56,6 +52,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else
                         {
+                            // calculate start time in milliseconds for the new paragraph
+                            double startTimeMilliseconds = splitParagraphs.Count == 0
+                                ? p.StartTime.TotalMilliseconds
+                                : splitParagraphs.Last().EndTime.TotalMilliseconds + 1; //+ Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+
                             double endTime = startTimeMilliseconds + (s.Length / charsPerSecond * TimeCode.BaseUnit);
                             splitParagraphs.Add(new Paragraph(Utilities.AutoBreakLine(s), startTimeMilliseconds, endTime)
                             {
