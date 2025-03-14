@@ -32,12 +32,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 var modelJson = "\"model\": \"" + model + "\",";
 
-                var prompt = string.Format("Get the text (use '\\n' for new line) from this image in {0}. Return only the text - no commnts or notes. For new line, use '\\n'.", language);
-                var input = "{ " + modelJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + ToPngBase64String(bitmap) + "\"] } ] }";
+                var prompt = $"Get the text (use '\\n' for new line) from this image in {language}. Return only the text - no commnts or notes. For new line, use '\\n'.";
+                var input = "{ " + modelJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + Utilities.PngToBase64String(bitmap) + "\"] } ] }";
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = await _httpClient.PostAsync("http://localhost:11434/api/chat", content, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = await _httpClient.PostAsync("http://localhost:11434/api/chat", content, cancellationToken).ConfigureAwait(false);
+                var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                content.Dispose();
                 var json = Encoding.UTF8.GetString(bytes).Trim();
                 if (!result.IsSuccessStatusCode)
                 {
@@ -75,18 +76,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        private string ToPngBase64String(Bitmap bitmap)
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                bitmap.Save(memoryStream, ImageFormat.Png);
-                return Convert.ToBase64String(memoryStream.ToArray());
-            }
-        }
-
         public void Dispose()
         {
-            _httpClient?.Dispose(); 
+            _httpClient?.Dispose();
         }
     }
 }
