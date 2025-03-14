@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool MissingSpacesTicked { get; set; }
         public bool AddMissingQuotesTicked { get; set; }
         public bool Fix3PlusLinesTicked { get; set; }
+        public bool Split3PlusLinesIntoMultiParagraphs { get; set; }
         public bool FixHyphensTicked { get; set; }
         public bool FixHyphensRemoveSingleLineTicked { get; set; }
         public bool UppercaseIInsideLowercaseWordTicked { get; set; }
