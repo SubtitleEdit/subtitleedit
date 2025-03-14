@@ -138,6 +138,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (Fix3PlusLinesTicked)
             {
                 sb.Append(nameof(Fix3PlusLinesTicked) + ";");
+            }  
+            
+            if (Split3PlusLinesIntoMultiParagraphs)
+            {
+                sb.Append(nameof(Split3PlusLinesIntoMultiParagraphs) + ";");
             }
 
             if (FixHyphensTicked)
@@ -277,6 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             MissingSpacesTicked = hashSet.Contains(nameof(MissingSpacesTicked));
             AddMissingQuotesTicked = hashSet.Contains(nameof(AddMissingQuotesTicked));
             Fix3PlusLinesTicked = hashSet.Contains(nameof(Fix3PlusLinesTicked));
+            Split3PlusLinesIntoMultiParagraphs = hashSet.Contains(nameof(Split3PlusLinesIntoMultiParagraphs));
             FixHyphensTicked = hashSet.Contains(nameof(FixHyphensTicked));
             FixHyphensRemoveSingleLineTicked = hashSet.Contains(nameof(FixHyphensRemoveSingleLineTicked));
             UppercaseIInsideLowercaseWordTicked = hashSet.Contains(nameof(UppercaseIInsideLowercaseWordTicked));

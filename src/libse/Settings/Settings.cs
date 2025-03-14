@@ -5204,6 +5204,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
             {
                 settings.CommonErrors.Fix3PlusLinesTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
+            
+            subNode = node.SelectSingleNode("Split3PlusLinesIntoMultiParagraphs");
+            if (subNode != null)
+            {
+                settings.CommonErrors.Split3PlusLinesIntoMultiParagraphs = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
 
             subNode = node.SelectSingleNode("FixHyphensTicked");
             if (subNode != null)
