@@ -6744,8 +6744,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
 
-            string line;
-            line = _ollamaOcr.Ocr(bitmap, _ollamaModel, _ollamaLanguage, _cancellationToken).Result;
+            var line = _ollamaOcr.Ocr(bitmap, _ollamaModel, _ollamaLanguage, _cancellationToken)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
@@ -8021,6 +8023,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
+                nikseComboBoxOllamaModel.Text = Configuration.Settings.VobSubOcr.OllamaModel;
+
                 ShowOcrMethodGroupBox(groupBoxOllama);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Ollama";
 
@@ -8589,7 +8593,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodPaddle;
             }
-            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "OllamaOCR" && comboBoxOcrMethod.Items.Count > _ocrMethodOllama)
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "Ollama" && comboBoxOcrMethod.Items.Count > _ocrMethodOllama)
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodOllama;
             }
@@ -9113,7 +9117,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            if (_ocrMethodIndex == _ocrMethodPaddle)
+            if (_ocrMethodIndex == _ocrMethodOllama)
             {
                 Configuration.Settings.VobSubOcr.OllamaLanguage = nikseComboBoxOllamaLanguages.Text;
                 Configuration.Settings.VobSubOcr.OllamaModel = nikseComboBoxOllamaModel.Text;
