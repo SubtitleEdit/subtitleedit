@@ -414,6 +414,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem( string.Format(_language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, () => new FixHyphensInDialog().Fix(Subtitle, this), ce.FixHyphensTicked),
                 new FixItem( _language.RemoveHyphensSingleLine, "- Foobar. -> Foobar.", () => new FixHyphensRemoveDashSingleLine().Fix(Subtitle, this), ce.FixHyphensRemoveSingleLineTicked),
                 new FixItem(_language.Fix3PlusLines, "Foo</br>bar</br>baz! -> Foo bar baz!", () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
+                new FixItem(_language.Split3PlusLinesIntoMultiParagraphs, "Foo</br>bar</br>baz! -> p1; p2; p2", () => new Fix3PlusLinesToParagraphs().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
                 new FixItem( string.Format(_language.FixContinuationStyleX, UiUtil.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle
@@ -605,6 +606,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWords;
             RemoveSpaceBetweenNumbers.Language.RemoveSpaceBetweenNumber = LanguageSettings.Current.FixCommonErrors.RemoveSpaceBetweenNumber;
             NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
+            Fix3PlusLinesToParagraphs.Language.Split3PlusLinesIntoMultiParagraphs = LanguageSettings.Current.FixCommonErrors.Split3PlusLinesIntoMultiParagraphs;
 
             FixLargeFonts();
             listView1.Select();
