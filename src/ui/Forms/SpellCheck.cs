@@ -654,9 +654,12 @@ namespace Nikse.SubtitleEdit.Forms
             _hunspell = Hunspell.GetHunspell(dictionary);
         }
 
+        private readonly FreeDictionaryClient _freeDictionaryClient = new FreeDictionaryClient();
+
         public bool DoSpell(string word)
         {
-            return _hunspell.Spell(word);
+            return _hunspell.Spell(word) ||
+                   (checkBoxUseOnlineDictionary.Checked && _freeDictionaryClient.ExistsAsync(word).Result);
         }
 
         public List<string> DoSuggest(string word)
