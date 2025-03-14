@@ -9844,6 +9844,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);
                 xmlWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
                 xmlWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("OllamaLanguage", settings.VobSubOcr.OllamaLanguage);
+                xmlWriter.WriteElementString("OllamaModel", settings.VobSubOcr.OllamaModel);
 
                 xmlWriter.WriteEndElement();
 
