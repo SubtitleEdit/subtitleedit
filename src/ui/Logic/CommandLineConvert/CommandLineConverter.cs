@@ -927,7 +927,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (count > 0)
             {
                 _stdOutWriter.WriteLine();
-                _stdOutWriter.WriteLine($"{converted} file(s) converted in {sw.Elapsed}");
+                _stdOutWriter.WriteLine($"{converted} file(s) converted in {sw.Elapsed.Hours:00}:{sw.Elapsed.Minutes:00}:{sw.Elapsed.Seconds:00}.{sw.Elapsed.Milliseconds:000}");
                 _stdOutWriter.WriteLine();
             }
 
