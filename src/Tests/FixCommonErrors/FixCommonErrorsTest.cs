@@ -2663,6 +2663,20 @@ namespace Tests.FixCommonErrors
 
         #endregion
 
+        #region Fix3PlusLinesToParagraphs
+
+        [TestMethod]
+        public void Fix3PlusLinesToParagraphsTest()
+        {
+            string[] lines = { "The Adventure of...", "The Invisible Army?", "The League of Furies?", "The Monstrous Regiment?" };
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(String.Join(Environment.NewLine, lines), 0, 10000));
+            new Fix3PlusLinesToParagraphs().Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual(2, sub.Paragraphs[0].NumberOfLines);
+        }
+
+        #endregion
+
         #region Fix Danish letter "i"
 
         [TestMethod]
@@ -2708,7 +2722,7 @@ namespace Tests.FixCommonErrors
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(expectedOutput, p.Text);
         }
-        
+
         [TestMethod]
         public void DanishCompiledRegexListTest()
         {
@@ -2719,7 +2733,7 @@ namespace Tests.FixCommonErrors
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(expectedOutput, p.Text);
         }
-        
+
         [TestMethod]
         public void FixDanishLetterIRegex()
         {
