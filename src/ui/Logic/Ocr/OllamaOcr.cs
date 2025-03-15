@@ -45,8 +45,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     return _parser.GetAllTagsByNameAsStrings(json, "model");
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                SeLogger.Error(ex, "Error getting models from Ollama");
                 return Enumerable.Empty<string>();
             }
         }
