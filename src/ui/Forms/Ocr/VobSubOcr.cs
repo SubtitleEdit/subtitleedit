@@ -5200,7 +5200,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Application.DoEvents();
         }
 
-        private bool MainLoop(int max, int i)
+        private async Task<bool> MainLoop(int max, int i)
         {
             if (i >= max)
             {
@@ -5270,7 +5270,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_ocrMethodIndex == _ocrMethodOllama)
             {
-                text = OcrViaOllama(bmp, i);
+                text = await OcrViaOllama(bmp, i);
             }
 
             _lastLine = text;
@@ -5531,17 +5531,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void mainOcrTimer_Tick(object sender, EventArgs e)
+        private async void mainOcrTimer_Tick(object sender, EventArgs e)
         {
             _mainOcrTimer.Stop();
 
             bool done = _ocrMethodIndex == _ocrMethodTesseract5 || _ocrMethodIndex == _ocrMethodTesseract302
-            ? MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex)
-            : _ocrMethodIndex == _ocrMethodPaddle
-                ? (HasPaddleBatchSupport()
-                    ? MainLoopPaddleBatch(_mainOcrTimerMax, _mainOcrIndex, _mainOcrSelectedIndices)
-                    : MainLoop(_mainOcrTimerMax, _mainOcrIndex))
-                : MainLoop(_mainOcrTimerMax, _mainOcrIndex);
+                ? MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex)
+                : _ocrMethodIndex == _ocrMethodPaddle
+                    ? (HasPaddleBatchSupport()
+                        ? MainLoopPaddleBatch(_mainOcrTimerMax, _mainOcrIndex, _mainOcrSelectedIndices)
+                        : await MainLoop(_mainOcrTimerMax, _mainOcrIndex))
+                    : await MainLoop(_mainOcrTimerMax, _mainOcrIndex);
 
             if (done || _abort)
             {
@@ -6735,19 +6735,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        private string OcrViaOllama(Bitmap bitmap, int listViewIndex)
+        private async Task<string> OcrViaOllama(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
             {
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code;
-
-            var line = _ollamaOcr.Ocr(bitmap, _ollamaModel, _ollamaLanguage, _cancellationToken)
-            .ConfigureAwait(false)
-            .GetAwaiter()
-            .GetResult();
+            var line = await _ollamaOcr.Ocr(bitmap, _ollamaModel, _ollamaLanguage, _cancellationToken);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
             {
