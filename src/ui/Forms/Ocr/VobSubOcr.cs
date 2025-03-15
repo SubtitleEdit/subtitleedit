@@ -7989,6 +7989,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _ollamaOcr = new OllamaOcr();
 
                 var models = await _ollamaOcr.GetModels();
+                nikseComboBoxOllamaModel.Items.Clear();
                 nikseComboBoxOllamaModel.Items.AddRange(models.ToArray());
                 
                 if (nikseComboBoxOllamaLanguages.Items.Count == 0)
