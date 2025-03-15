@@ -1726,15 +1726,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 var parser = new SeJsonParser();
                 var resultJson = Encoding.UTF8.GetString(bytes);
                 var names = parser.GetAllTagsByNameAsStrings(resultJson, "name");
-                var models = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
-                foreach (var name in names.OrderByDescending(name => name))
-                {
-                    if (!models.Contains(name))
-                    {
-                        models.Insert(0, name);
-                    }
-                }
-
+                var models = names.OrderBy(name => name).ToList();
                 Configuration.Settings.Tools.OllamaModels = string.Join(",", models);
                 return models;
             }
