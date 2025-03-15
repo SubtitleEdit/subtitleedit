@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     public class OllamaOcr : IDisposable
     {
         private readonly HttpClient _httpClient;
+        private readonly SeJsonParser _parser;
 
         public string Error { get; set; }
 
@@ -24,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.Timeout = TimeSpan.FromMinutes(25);
+            _parser = new SeJsonParser();
         }
 
         public async Task<string> Ocr(Bitmap bitmap, string model, string language, CancellationToken cancellationToken)
@@ -48,8 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 result.EnsureSuccessStatusCode();
 
-                var parser = new SeJsonParser();
-                var outputTexts = parser.GetAllTagsByNameAsStrings(json, "content");
+                var outputTexts = _parser.GetAllTagsByNameAsStrings(json, "content");
                 var resultText = string.Join(string.Empty, outputTexts).Trim();
 
                 // sanitize
@@ -76,9 +77,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
-        }
+        public void Dispose() => _httpClient?.Dispose();
     }
 }
