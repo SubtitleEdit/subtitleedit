@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     public class OllamaOcr : IDisposable
     {
         private readonly HttpClient _httpClient;
+        private readonly SeJsonParser _parser;
 
         public string Error { get; set; }
 
@@ -24,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.Timeout = TimeSpan.FromMinutes(25);
+            _parser = new SeJsonParser();
         }
 
         public async Task<string> Ocr(Bitmap bitmap, string model, string language, CancellationToken cancellationToken)
@@ -32,12 +34,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 var modelJson = "\"model\": \"" + model + "\",";
 
-                var prompt = string.Format("Get the text (use '\\n' for new line) from this image in {0}. Return only the text - no commnts or notes. For new line, use '\\n'.", language);
-                var input = "{ " + modelJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + ToPngBase64String(bitmap) + "\"] } ] }";
+                var prompt = $"Get the text (use '\\n' for new line) from this image in {language}. Return only the text - no commnts or notes. For new line, use '\\n'.";
+                var input = "{ " + modelJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + Utilities.PngToBase64String(bitmap) + "\"] } ] }";
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = await _httpClient.PostAsync("http://localhost:11434/api/chat", content, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = await _httpClient.PostAsync("http://localhost:11434/api/chat", content, cancellationToken).ConfigureAwait(false);
+                var bytes = await result.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                content.Dispose();
                 var json = Encoding.UTF8.GetString(bytes).Trim();
                 if (!result.IsSuccessStatusCode)
                 {
@@ -47,8 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 result.EnsureSuccessStatusCode();
 
-                var parser = new SeJsonParser();
-                var outputTexts = parser.GetAllTagsByNameAsStrings(json, "content");
+                var outputTexts = _parser.GetAllTagsByNameAsStrings(json, "content");
                 var resultText = string.Join(string.Empty, outputTexts).Trim();
 
                 // sanitize
@@ -75,18 +77,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        private string ToPngBase64String(Bitmap bitmap)
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                bitmap.Save(memoryStream, ImageFormat.Png);
-                return Convert.ToBase64String(memoryStream.ToArray());
-            }
-        }
-
-        public void Dispose()
-        {
-            _httpClient?.Dispose(); 
-        }
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

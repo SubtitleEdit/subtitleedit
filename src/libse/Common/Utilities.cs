@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -3312,6 +3313,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(object value)
         {
             throw new NotImplementedException();
+        }
+
+        public static string PngToBase64String(Bitmap bitmap)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                bitmap.Save(memoryStream, ImageFormat.Png);
+                return Convert.ToBase64String(memoryStream.ToArray());
+            }
         }
     }
 }
