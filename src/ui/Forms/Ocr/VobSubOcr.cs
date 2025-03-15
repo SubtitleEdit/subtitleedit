@@ -5279,19 +5279,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             text = text.Replace("<i>a</i>", "a");
             text = text.Replace("<i>.</i>", ".");
             text = text.Replace("<i>,</i>", ",");
-            text = text.Replace("  ", " ");
+            text = text.FixExtraSpaces();
             text = text.Trim();
-
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             // max allow 2 lines
             if (_autoBreakLines && Utilities.GetNumberOfLines(text) > 2)
             {
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
                 text = text.RemoveRecursiveLineBreaks();
-
                 if (Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = Utilities.AutoBreakLine(text);
@@ -5319,11 +5313,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return true;
             }
 
-            text = text.Trim();
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             text = SetTopAlign(i, text);
 
             Paragraph p = _subtitle.GetParagraphOrDefault(i);
@@ -5382,10 +5371,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            labelStatus.Text = $"Starting PaddleOCR... This can take a while...";
+            labelStatus.Text = "Starting PaddleOCR... This can take a while...";
             labelStatus.Refresh();
 
-            // Outside of background worker before OCRViaPaddleBatch!
+            // Outside background worker before OCRViaPaddleBatch!
             if (_ocrFixEngine == null)
             {
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
