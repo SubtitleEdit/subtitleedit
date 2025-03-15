@@ -1718,12 +1718,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color emphasis1;
             Color emphasis2;
 
-            var makeTransparent = true;
-            if (_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama)
-            {
-                // Cloud Vision doesn't like transparent images
-                makeTransparent = false;
-            }
+            bool makeTransparent = !(_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama);
 
             if (_mp4List != null)
             {
@@ -7762,7 +7757,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
         {
             _abort = true;
             _binaryOcrDb = null;
@@ -7990,6 +7985,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_ocrMethodIndex == _ocrMethodOllama)
             {
+                _ollamaOcr?.Dispose();
+                _ollamaOcr = new OllamaOcr();
+
+                var models = await _ollamaOcr.GetModels();
+                nikseComboBoxOllamaModel.Items.AddRange(models.ToArray());
+                
                 if (nikseComboBoxOllamaLanguages.Items.Count == 0)
                 {
                     foreach (var language in ChatGptTranslate.ListLanguages())
@@ -8005,15 +8006,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         nikseComboBoxOllamaLanguages.Text = "English";
                     }
+                    
                 }
 
                 nikseComboBoxOllamaModel.Text = Configuration.Settings.VobSubOcr.OllamaModel;
 
                 ShowOcrMethodGroupBox(groupBoxOllama);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Ollama";
-
-                _ollamaOcr?.Dispose();
-                _ollamaOcr = new OllamaOcr();
             }
 
             _ocrFixEngine = null;
