@@ -1009,6 +1009,7 @@
             public string XMissingQuotesAdded { get; set; }
             public string Fix3PlusLine { get; set; }
             public string Fix3PlusLines { get; set; }
+            public string Split3PlusLinesIntoMultiParagraphs { get; set; }
             public string Analysing { get; set; }
             public string NothingToFix { get; set; }
             public string FixesFoundX { get; set; }

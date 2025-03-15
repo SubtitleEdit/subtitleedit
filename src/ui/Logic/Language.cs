@@ -1188,6 +1188,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XMissingQuotesAdded = "Missing quotes added: {0}",
                 Fix3PlusLine = "Fix subtitle with more than two lines",
                 Fix3PlusLines = "Fix subtitles with more than two lines",
+                Split3PlusLinesIntoMultiParagraphs = "Split 3+ lines into multiple paragraphs",
                 Analysing = "Analyzing...",
                 NothingToFix = "Nothing to fix :)",
                 FixesFoundX = "Fixes found: {0}",
