@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
@@ -88,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             textBoxSourceText.Text = paragraph.Text;
         }
 
-        private void GoogleOrMicrosoftTranslate_Shown(object sender, EventArgs e)
+        private async void GoogleOrMicrosoftTranslate_Shown(object sender, EventArgs e)
         {
             _googleTranslationService = new GoogleTranslateV1();
             _googleTranslationService.Initialize();
@@ -99,10 +100,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             InitLanguageComboBoxes();
 
             Refresh();
-            Translate();
+            await Translate();
         }
 
-        private void Translate()
+        private async Task Translate()
         {
             Cursor = Cursors.WaitCursor;
             try
@@ -117,12 +118,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                     if (_googleTranslationService != null)
                     {
-                        buttonGoogle.Text = _googleTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None).Result;
+                        buttonGoogle.Text = await _googleTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None);
                     }
                     if (_microsoftTranslationService != null)
                     {
-                        var result = _microsoftTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None).Result;
-                        buttonMicrosoft.Text = result;
+                        buttonMicrosoft.Text = await _microsoftTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None);
                     }
                 }
             }
@@ -132,10 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        private void buttonTranslate_Click(object sender, EventArgs e)
-        {
-            Translate();
-        }
+        private async void buttonTranslate_Click(object sender, EventArgs e) => await Translate();
 
         private void buttonGoogle_Click(object sender, EventArgs e)
         {
