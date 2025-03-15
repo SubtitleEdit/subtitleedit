@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -26,6 +28,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.Timeout = TimeSpan.FromMinutes(25);
             _parser = new SeJsonParser();
+        }
+
+        public async Task<IEnumerable<string>> GetModels()
+        {
+            var response = await _httpClient.GetAsync("http://localhost:11434/api/tags").ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return _parser.GetAllTagsByNameAsStrings(json, "model");
         }
 
         public async Task<string> Ocr(Bitmap bitmap, string model, string language, CancellationToken cancellationToken)

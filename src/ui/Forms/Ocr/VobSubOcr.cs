@@ -1718,12 +1718,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color emphasis1;
             Color emphasis2;
 
-            var makeTransparent = true;
-            if (_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama)
-            {
-                // Cloud Vision doesn't like transparent images
-                makeTransparent = false;
-            }
+            bool makeTransparent = !(_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama);
 
             if (_mp4List != null)
             {
@@ -5279,19 +5274,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             text = text.Replace("<i>a</i>", "a");
             text = text.Replace("<i>.</i>", ".");
             text = text.Replace("<i>,</i>", ",");
-            text = text.Replace("  ", " ");
+            text = text.FixExtraSpaces();
             text = text.Trim();
-
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             // max allow 2 lines
             if (_autoBreakLines && Utilities.GetNumberOfLines(text) > 2)
             {
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
                 text = text.RemoveRecursiveLineBreaks();
-
                 if (Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = Utilities.AutoBreakLine(text);
@@ -5319,11 +5308,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return true;
             }
 
-            text = text.Trim();
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             text = SetTopAlign(i, text);
 
             Paragraph p = _subtitle.GetParagraphOrDefault(i);
@@ -5382,10 +5366,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            labelStatus.Text = $"Starting PaddleOCR... This can take a while...";
+            labelStatus.Text = "Starting PaddleOCR... This can take a while...";
             labelStatus.Refresh();
 
-            // Outside of background worker before OCRViaPaddleBatch!
+            // Outside background worker before OCRViaPaddleBatch!
             if (_ocrFixEngine == null)
             {
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
@@ -7773,7 +7757,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
         {
             _abort = true;
             _binaryOcrDb = null;
@@ -8001,6 +7985,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_ocrMethodIndex == _ocrMethodOllama)
             {
+                _ollamaOcr?.Dispose();
+                _ollamaOcr = new OllamaOcr();
+
+                var models = await _ollamaOcr.GetModels();
+                nikseComboBoxOllamaModel.Items.Clear();
+                nikseComboBoxOllamaModel.Items.AddRange(models.ToArray());
+                
                 if (nikseComboBoxOllamaLanguages.Items.Count == 0)
                 {
                     foreach (var language in ChatGptTranslate.ListLanguages())
@@ -8016,15 +8007,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         nikseComboBoxOllamaLanguages.Text = "English";
                     }
+                    
                 }
 
                 nikseComboBoxOllamaModel.Text = Configuration.Settings.VobSubOcr.OllamaModel;
 
                 ShowOcrMethodGroupBox(groupBoxOllama);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Ollama";
-
-                _ollamaOcr?.Dispose();
-                _ollamaOcr = new OllamaOcr();
             }
 
             _ocrFixEngine = null;
