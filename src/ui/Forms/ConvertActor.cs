@@ -4,11 +4,8 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-
-//TODO:
-//--------
-// - ASSA actor in two lines
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -84,12 +81,12 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxCasing.SelectedIndex = 0;
         }
 
-        private ListViewItem MakeListViewItem(Paragraph p, int lineNumber, string newText, string oldText, bool isNext)
+        private ListViewItem MakeListViewItem(Paragraph p, bool selected, int lineNumber, string newText, string oldText, bool isNext)
         {
             var fixItem = new FixListItem { Checked = true, Paragraph = p, IsNext = isNext };
             _fixItems.Add(fixItem);
 
-            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = selected };
             item.SubItems.Add(lineNumber.ToString());
             item.SubItems.Add(UiUtil.GetListViewTextFromString(oldText));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
@@ -127,8 +124,9 @@ namespace Nikse.SubtitleEdit.Forms
             Paragraph p = null;
             var lineNumbers = new List<int>();
             var listViewItems = new List<ListViewItem>();
+            var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);   
 
-            var converter = new ActorConverter(_subtitleFormat);
+            var converter = new ActorConverter(_subtitleFormat, languageCode);
 
             var from = nikseComboBoxConvertFrom.SelectedText;
             var to = nikseComboBoxConvertTo.SelectedText;
@@ -151,40 +149,50 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fromSquare && Contains(p.Text, '[', ']'))
                 {
                     var result = converter.FixActors(p, '[', ']', changeCasing, color);
+                    if (result.Skip)
+                    {
+                        continue;
+                    }
+
                     p.Text = result.Paragraph.Text;
                     p.Actor = result.Paragraph.Actor;
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
+                    listViewItems.Add(MakeListViewItem(p, result.Selected, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
 
                     if (converter.ToActor && result.NextParagraph != null)
                     {
-                        listViewItems.Add(MakeListViewItem(result.NextParagraph, p.Number, result.NextParagraph.Text, oldText, true));
+                        listViewItems.Add(MakeListViewItem(result.NextParagraph, result.Selected, p.Number, result.NextParagraph.Text, oldText, true));
                     }
                 }
                 else if (fromParentheses && Contains(p.Text, '(', ')'))
                 {
                     var result = converter.FixActors(p, '(', ')', changeCasing, color);
+                    if (result.Skip)
+                    {
+                        continue;
+                    }
+
                     p.Text = result.Paragraph.Text;
                     p.Actor = result.Paragraph.Actor;
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
+                    listViewItems.Add(MakeListViewItem(p, result.Selected, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
 
                     if (converter.ToActor && result.NextParagraph != null)
                     {
-                        listViewItems.Add(MakeListViewItem(result.NextParagraph, p.Number, result.NextParagraph.Text, oldText, true));
+                        listViewItems.Add(MakeListViewItem(result.NextParagraph, result.Selected, p.Number, result.NextParagraph.Text, oldText, true));
                     }
                 }
                 else if (fromColon && p.Text.Contains(':'))
                 {
                     var result = converter.FixActorsFromBeforeColon(p, ':', changeCasing, color);
                     p.Text = result;
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
+                    listViewItems.Add(MakeListViewItem(p, true, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
                 }
                 else if (fromActor && !string.IsNullOrEmpty(p.Actor))
                 {
                     p.Text = converter.FixActorsFromActor(p, changeCasing, color);
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
+                    listViewItems.Add(MakeListViewItem(p, true, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
                 }
                 else

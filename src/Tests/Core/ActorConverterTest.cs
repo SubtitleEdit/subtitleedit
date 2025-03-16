@@ -10,7 +10,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToSquare()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -23,7 +23,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToSquareUppercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -36,7 +36,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParentheses()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -49,7 +49,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParenthesesWithSecondLineNoActor()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -62,7 +62,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParenthesesWithSecondLine()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -75,7 +75,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParenthesesUppercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -88,7 +88,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParenthesesLowercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -101,7 +101,7 @@ namespace Tests.Core
         [TestMethod]
         public void ParenthesesToSquareLowercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -114,7 +114,7 @@ namespace Tests.Core
         [TestMethod]
         public void ColorToParenthesesLowercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -127,7 +127,7 @@ namespace Tests.Core
         [TestMethod]
         public void FromActorToSquare()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -140,7 +140,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToActorUppercase()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToActor = true,
             };
@@ -154,7 +154,7 @@ namespace Tests.Core
         [TestMethod]
         public void ColonDialogToSquare1()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -167,7 +167,7 @@ namespace Tests.Core
         [TestMethod]
         public void ColonDialogToSquare2()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToSquare = true,
             };
@@ -180,7 +180,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToParenthesesDialog()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToParentheses = true,
             };
@@ -193,7 +193,7 @@ namespace Tests.Core
         [TestMethod]
         public void SquareToActor()
         {
-            var c = new ActorConverter(new SubRip())
+            var c = new ActorConverter(new SubRip(), "en")
             {
                 ToActor = true,
             };

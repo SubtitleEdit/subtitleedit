@@ -1,6 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -13,6 +16,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public const int ProperCase = 3;
 
         private SubtitleFormat _subtitleFormat;
+        private string _languageCode;
+
+        private NameList _namesList;
+        private List<string> _nameListInclMulti;
 
         public bool ToSquare { get; set; }
         public bool ToParentheses { get; set; }
@@ -20,9 +27,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool ToActor { get; set; }
 
 
-        public ActorConverter(SubtitleFormat subtitleFormat)
+        public ActorConverter(SubtitleFormat subtitleFormat, string languageCode)
         {
             _subtitleFormat = subtitleFormat;
+            _languageCode = languageCode;
+            _namesList =  new NameList(Configuration.DictionariesDirectory, languageCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _nameListInclMulti = _namesList.GetAllNames();
         }
 
         public string FixActorsFromActor(Paragraph p, int? changeCasing, Color? color)
@@ -127,11 +137,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var lines = p.Text.SplitToLines();
             if (lines.Count > 2)
             {
-                return new ActorConverterResult { Paragraph = paragraph };
+                return new ActorConverterResult { Paragraph = paragraph, Skip = true };
             }
 
             var lineIdx = 0;
             p.Text = string.Empty;
+            var selectFix = true;
             foreach (var line in lines)
             {
                 var s = line;
@@ -145,6 +156,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
 
                     var actor = s.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
+                    selectFix = IsActor(actor);
                     if (changeCasing.HasValue)
                     {
                         actor = SetCasing(_subtitleFormat, changeCasing, actor);
@@ -218,6 +230,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 Paragraph = p,
                 NextParagraph = nextParagraph,
+                Selected = selectFix,
             };
         }
 
@@ -254,6 +267,54 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return actor;
+        }
+
+        private bool IsActor(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
+
+            var words = s.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length == 0)
+            {
+                return false;
+            }
+
+            if (_nameListInclMulti.Contains(s, StringComparer.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            foreach (var word in words)
+            {
+                if (word.Length < 2)
+                {
+                    return false;
+                }
+
+                if (word.Any(c => char.IsDigit(c) || (!char.IsLetter(c) && c != '-' && c != '\'')))
+                {
+                    return false;
+                }
+
+                if (_languageCode == "en")
+                {
+                    var commonTitles = new[] { "Mr.", "Mrs.", "Dr.",  };  
+                    if (commonTitles.Contains(word))
+                    {
+                        continue;
+                    }
+                }
+
+                if (!_nameListInclMulti.Contains(word, StringComparer.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
