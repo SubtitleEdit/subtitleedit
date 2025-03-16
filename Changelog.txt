@@ -26,7 +26,7 @@
    * Minor improvements for "spell check"
    * Some additions to dictionaries - thx Zoltán
    * Minor improvements for CSV importer - thx Louie
-   * Allow to load MP4/MKV in file compare - thx FireEmerald
+   * Allow loading subtitle from MP4/MKV in file compare - thx FireEmerald
    * Add CMD line SUP to SUP (without OCR) - thx AYColumbia
 * FIXED:
    * Fix space character in PAC
