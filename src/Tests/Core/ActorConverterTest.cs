@@ -47,6 +47,32 @@ namespace Tests.Core
         }
 
         [TestMethod]
+        public void SquareToParenthesesWithSecondLineNoActor()
+        {
+            var c = new ActorConverter(new SubRip())
+            {
+                ToParentheses = true,
+            };
+
+            var p = new Paragraph() { Text = "[Joe] How are you?" + Environment.NewLine + "Are you okay?" };
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("(Joe) How are you?" + Environment.NewLine + "Are you okay?", result.Paragraph.Text);
+        }
+
+        [TestMethod]
+        public void SquareToParenthesesWithSecondLine()
+        {
+            var c = new ActorConverter(new SubRip())
+            {
+                ToParentheses = true,
+            };
+
+            var p = new Paragraph() { Text = "How are you?" + Environment.NewLine + "[Joe] Are you okay?" };
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("How are you?" + Environment.NewLine + "(Joe) Are you okay?", result.Paragraph.Text);
+        }
+
+        [TestMethod]
         public void SquareToParenthesesUppercase()
         {
             var c = new ActorConverter(new SubRip())
