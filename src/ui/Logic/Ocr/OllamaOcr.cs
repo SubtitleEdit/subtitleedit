@@ -32,15 +32,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public async Task<IEnumerable<string>> GetModels()
         {
-            var response = await _httpClient.GetAsync("http://localhost:11434/api/tags").ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
+                using (var response = await _httpClient.GetAsync("http://localhost:11434/api/tags").ConfigureAwait(false))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return Enumerable.Empty<string>();
+                    }
+
+                    var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return _parser.GetAllTagsByNameAsStrings(json, "model");
+                }
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error getting models from Ollama");
                 return Enumerable.Empty<string>();
             }
-
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return _parser.GetAllTagsByNameAsStrings(json, "model");
         }
 
         public async Task<string> Ocr(Bitmap bitmap, string model, string language, CancellationToken cancellationToken)
