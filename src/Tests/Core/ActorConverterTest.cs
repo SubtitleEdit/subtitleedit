@@ -183,7 +183,7 @@ namespace Tests.Core
             Assert.AreEqual("Jane", result.NextParagraph.Actor);
             Assert.AreEqual(p.StartTime.TotalMilliseconds, result.NextParagraph.StartTime.TotalMilliseconds);
             Assert.AreEqual(p.EndTime.TotalMilliseconds, result.NextParagraph.EndTime.TotalMilliseconds);
-            Assert.AreEqual(p.Style, result.NextParagraph.Actor);
+            Assert.AreEqual(p.Style, result.NextParagraph.Style);
             Assert.AreNotEqual(p.Id, result.NextParagraph.Id);
         }
     }
