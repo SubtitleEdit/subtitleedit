@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var lineIdx = 0;
+            p.Text = string.Empty;
             foreach (var line in lines)
             {
                 var s = line;
@@ -196,16 +197,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if (lineIdx == 1 && ToActor)
                     {
                         nextParagraph = new Paragraph(p);
-                        nextParagraph.Text = s;
+                        nextParagraph.Text = s.Trim();
                         nextParagraph.Actor = actor;
                     }
                     else if (lineIdx == 1)
                     {
-                        p.Text += Environment.NewLine + s;
+                        p.Text += Environment.NewLine + s.Trim();
                     }
 
-                    lineIdx++;
                 }
+                else
+                {
+                    p.Text = (p.Text + Environment.NewLine + s).Trim();
+                }
+
+                lineIdx++;
             }
 
             return new ActorConverterResult
