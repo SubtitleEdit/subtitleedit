@@ -16,8 +16,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', null, null);
-            Assert.AreEqual("[Joe] How are you?", text);
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("[Joe] How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -29,8 +29,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
-            Assert.AreEqual("[JOE] How are you?", text);
+            var result = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
+            Assert.AreEqual("[JOE] How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -42,8 +42,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', null, null);
-            Assert.AreEqual("(Joe) How are you?", text);
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("(Joe) How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -55,8 +55,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
-            Assert.AreEqual("(JOE) How are you?", text);
+            var result = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
+            Assert.AreEqual("(JOE) How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -68,8 +68,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', ActorConverter.LowerCase, null);
-            Assert.AreEqual("(joe) How are you?", text);
+            var result = c.FixActors(p, '[', ']', ActorConverter.LowerCase, null);
+            Assert.AreEqual("(joe) How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -81,8 +81,8 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "(JOE) How are you?" };
-            var text = c.FixActors(p, '(', ')', ActorConverter.NormalCase, null);
-            Assert.AreEqual("[Joe] How are you?", text);
+            var result = c.FixActors(p, '(', ')', ActorConverter.NormalCase, null);
+            Assert.AreEqual("[Joe] How are you?", result.Paragraph.Text);
         }
 
         [TestMethod]
@@ -120,9 +120,9 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" };
-            var text = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
-            Assert.AreEqual("How are you?", text);
-            Assert.AreEqual("JOE", p.Actor);
+            var result = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
+            Assert.AreEqual("How are you?", result.Paragraph.Text);
+            Assert.AreEqual("JOE", result.Paragraph.Actor);
         }
 
         [TestMethod]
@@ -160,8 +160,31 @@ namespace Tests.Core
             };
 
             var p = new Paragraph() { Text = "[Joe] How are you?" + Environment.NewLine + "[Jane] I am fine." };
-            var text = c.FixActors(p, '[', ']', null, null);
-            Assert.AreEqual("(Joe) How are you?" + Environment.NewLine + "(Jane) I am fine.", text);
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("(Joe) How are you?" + Environment.NewLine + "(Jane) I am fine.", result.Paragraph.Text);
+        }
+
+        [TestMethod]
+        public void SquareToActor()
+        {
+            var c = new ActorConverter(new SubRip())
+            {
+                ToActor = true,
+            };
+
+            var p = new Paragraph() { Text = "[Joe] How are you?" + Environment.NewLine + "[Jane] I am fine." };
+            p.StartTime.TotalMilliseconds = 1000;
+            p.EndTime.TotalMilliseconds = 2000;
+            p.Style = "style";
+            var result = c.FixActors(p, '[', ']', null, null);
+            Assert.AreEqual("How are you?", result.Paragraph.Text);
+            Assert.AreEqual("Joe", result.Paragraph.Actor);
+            Assert.AreEqual("I am fine.", result.NextParagraph.Text);
+            Assert.AreEqual("Jane", result.NextParagraph.Actor);
+            Assert.AreEqual(p.StartTime.TotalMilliseconds, result.NextParagraph.StartTime.TotalMilliseconds);
+            Assert.AreEqual(p.EndTime.TotalMilliseconds, result.NextParagraph.EndTime.TotalMilliseconds);
+            Assert.AreEqual(p.Style, result.NextParagraph.Actor);
+            Assert.AreNotEqual(p.Id, result.NextParagraph.Id);
         }
     }
 }
