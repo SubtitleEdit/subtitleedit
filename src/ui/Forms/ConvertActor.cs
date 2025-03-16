@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public Paragraph Paragraph { get; set; }
             public bool Checked { get; set; }
+            public bool IsNext { get; set; }
         }
 
         public int NumberOfActorConversions { get; private set; }
@@ -83,9 +84,9 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxCasing.SelectedIndex = 0;
         }
 
-        private ListViewItem MakeListViewItem(Paragraph p, int lineNumber, string newText, string oldText)
+        private ListViewItem MakeListViewItem(Paragraph p, int lineNumber, string newText, string oldText, bool isNext)
         {
-            var fixItem = new FixListItem { Checked = true, Paragraph = p };
+            var fixItem = new FixListItem { Checked = true, Paragraph = p, IsNext = isNext };
             _fixItems.Add(fixItem);
 
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
@@ -142,7 +143,6 @@ namespace Nikse.SubtitleEdit.Forms
             var changeCasing = checkBoxChangeCasing.Checked ? nikseComboBoxCasing.SelectedIndex : (int?)null;
             var color = checkBoxColor.Checked ? panelColor.BackColor : (Color?)null;
 
-
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 p = subtitle.Paragraphs[i];
@@ -150,26 +150,41 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (fromSquare && Contains(p.Text, '[', ']'))
                 {
-                    p.Text = converter.FixActors(p, '[', ']', changeCasing, color);
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText));
+                    var result = converter.FixActors(p, '[', ']', changeCasing, color);
+                    p.Text = result.Paragraph.Text;
+                    p.Actor = result.Paragraph.Actor;
+                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
+
+                    if (converter.ToActor && result.NextParagraph != null)
+                    {
+                        listViewItems.Add(MakeListViewItem(result.NextParagraph, p.Number, result.NextParagraph.Text, oldText, true));
+                    }
                 }
                 else if (fromParentheses && Contains(p.Text, '(', ')'))
                 {
-                    p.Text = converter.FixActors(p, '(', ')', changeCasing, color);
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText));
+                    var result = converter.FixActors(p, '(', ')', changeCasing, color);
+                    p.Text = result.Paragraph.Text;
+                    p.Actor = result.Paragraph.Actor;
+                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
+
+                    if (converter.ToActor && result.NextParagraph != null)
+                    {
+                        listViewItems.Add(MakeListViewItem(result.NextParagraph, p.Number, result.NextParagraph.Text, oldText, true));
+                    }
                 }
                 else if (fromColon && p.Text.Contains(':'))
                 {
-                    p.Text = converter.FixActorsFromBeforeColon(p, ':', changeCasing, color);
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText));
+                    var result = converter.FixActorsFromBeforeColon(p, ':', changeCasing, color);
+                    p.Text = result;
+                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
                 }
                 else if (fromActor && !string.IsNullOrEmpty(p.Actor))
                 {
                     p.Text = converter.FixActorsFromActor(p, changeCasing, color);
-                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText));
+                    listViewItems.Add(MakeListViewItem(p, p.Number, p.Text, oldText, false));
                     numberOfConversions++;
                 }
                 else
@@ -221,18 +236,27 @@ namespace Nikse.SubtitleEdit.Forms
                     continue;
                 }
 
-                foreach (var p in Subtitle.Paragraphs)
+                if (fixItem.IsNext)
                 {
-                    if (p.Id == fixItem.Paragraph.Id)
+                    Subtitle.InsertParagraphInCorrectTimeOrder(fixItem.Paragraph);
+                }
+                else
+                {
+                    foreach (var p in Subtitle.Paragraphs)
                     {
-                        p.Text = fixItem.Paragraph.Text;
-                        p.Actor = fixItem.Paragraph.Actor;
-                        p.Style = fixItem.Paragraph.Style;
-                        p.Extra = fixItem.Paragraph.Extra;
-                        break;
+                        if (p.Id == fixItem.Paragraph.Id)
+                        {
+                            p.Text = fixItem.Paragraph.Text;
+                            p.Actor = fixItem.Paragraph.Actor;
+                            p.Style = fixItem.Paragraph.Style;
+                            p.Extra = fixItem.Paragraph.Extra;
+                            break;
+                        }
                     }
                 }
             }
+
+            Subtitle.Renumber();
 
             DialogResult = DialogResult.OK;
         }

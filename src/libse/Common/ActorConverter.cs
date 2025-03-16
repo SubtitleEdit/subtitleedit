@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Drawing;
 using System.Text;
 
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var sb = new StringBuilder();
             foreach (var line in p.Text.SplitToLines())
             {
-                var s = line.Trim();    
+                var s = line.Trim();
                 var startIdx = line.IndexOf(ch);
                 if (startIdx > 0)
                 {
@@ -119,80 +120,99 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Trim();
         }
 
-        public string FixActors(Paragraph p, char start, char end, int? changeCasing, Color? color)
+        public ActorConverterResult FixActors(Paragraph paragraph, char start, char end, int? changeCasing, Color? color)
         {
-            var startIdx = p.Text.IndexOf(start);
-            var endIdx = p.Text.IndexOf(end);
-            while (startIdx != -1 && endIdx != -1)
+            var p = new Paragraph(paragraph, false);
+            Paragraph nextParagraph = null;
+            var lines = p.Text.SplitToLines();
+            if (lines.Count > 2)
             {
-                if (endIdx < startIdx)
-                {
-                    break;
-                }
-
-                var actor = p.Text.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
-                if (changeCasing.HasValue)
-                {
-                    actor = SetCasing(_subtitleFormat, changeCasing, actor);
-                }
-
-                if (ToSquare)
-                {
-                    actor = "[" + actor + "]";
-                }
-                else if (ToParentheses)
-                {
-                    actor = "(" + actor + ")";
-                }
-                else if (ToColon)
-                {
-                    actor = actor + ":";
-                }
-                else if (ToActor)
-                {
-                    p.Text = p.Text.Substring(0, startIdx) + p.Text.Substring(endIdx + 1).Trim();
-                }
-
-                if (color.HasValue && !ToActor)
-                {
-                    actor = SetColor(_subtitleFormat, color.Value, actor);
-                }
-
-                if (ToSquare)
-                {
-                    p.Text = p.Text.Substring(0, startIdx) + actor + " " + p.Text.Substring(endIdx + 1).TrimStart(' ');
-                }
-                else if (ToParentheses)
-                {
-                    p.Text = p.Text.Substring(0, startIdx) + actor + " " + p.Text.Substring(endIdx + 1).TrimStart(' ');
-                }
-                else if (ToColon)
-                {
-                    p.Text = p.Text.Substring(0, startIdx) + actor + " " + p.Text.Substring(endIdx + 1).TrimStart(' ');
-                }
-                else if (ToActor)
-                {
-                    p.Actor = actor;
-                }
-
-                if (endIdx + 1 >= p.Text.Length)
-                {
-                    break;
-                }
-
-                if (startIdx + actor.Length >= p.Text.Length)
-                {
-                    break;
-                }
-                startIdx = p.Text.IndexOf(start, startIdx + actor.Length);
-                if (startIdx == -1)
-                {
-                    break;
-                }
-                endIdx = p.Text.IndexOf(end, startIdx);
+                return new ActorConverterResult { Paragraph = paragraph };
             }
 
-            return p.Text;
+            var lineIdx = 0;
+            foreach (var line in lines)
+            {
+                var s = line;
+                var startIdx = s.IndexOf(start);
+                var endIdx = s.IndexOf(end);
+                if (startIdx != -1 && endIdx != -1)
+                {
+                    if (endIdx < startIdx)
+                    {
+                        break;
+                    }
+
+                    var actor = s.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
+                    if (changeCasing.HasValue)
+                    {
+                        actor = SetCasing(_subtitleFormat, changeCasing, actor);
+                    }
+
+                    if (ToSquare)
+                    {
+                        actor = "[" + actor + "]";
+                    }
+                    else if (ToParentheses)
+                    {
+                        actor = "(" + actor + ")";
+                    }
+                    else if (ToColon)
+                    {
+                        actor = actor + ":";
+                    }
+                    else if (ToActor)
+                    {
+                        s = s.Substring(0, startIdx) + s.Substring(endIdx + 1).Trim();
+                    }
+
+                    if (color.HasValue && !ToActor)
+                    {
+                        actor = SetColor(_subtitleFormat, color.Value, actor);
+                    }
+
+                    if (ToSquare)
+                    {
+                        s = s.Substring(0, startIdx) + actor + " " + s.Substring(endIdx + 1).TrimStart(' ');
+                    }
+                    else if (ToParentheses)
+                    {
+                        s = s.Substring(0, startIdx) + actor + " " + s.Substring(endIdx + 1).TrimStart(' ');
+                    }
+                    else if (ToColon)
+                    {
+                        s = s.Substring(0, startIdx) + actor + " " + s.Substring(endIdx + 1).TrimStart(' ');
+                    }
+
+                    if (lineIdx == 0)
+                    {
+                        if (ToActor)
+                        {
+                            p.Actor = actor;
+                        }
+
+                        p.Text = s;
+                    }
+                    else if (lineIdx == 1 && ToActor)
+                    {
+                        nextParagraph = new Paragraph(p);
+                        nextParagraph.Text = s;
+                        nextParagraph.Actor = actor;
+                    }
+                    else if (lineIdx == 1)
+                    {
+                        p.Text += Environment.NewLine + s;
+                    }
+
+                    lineIdx++;
+                }
+            }
+
+            return new ActorConverterResult
+            {
+                Paragraph = p,
+                NextParagraph = nextParagraph,
+            };
         }
 
         private static string SetCasing(SubtitleFormat format, int? changeCasing, string actor)
