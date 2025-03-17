@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class OpenRouterTranslate : IAutoTranslator, IDisposable
+    public class OpenRouterTranslate : ILlmTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -107,6 +107,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             outputText = ChatGptTranslate.FixNewLines(outputText);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             return outputText.Trim();
+        }
+
+        public Task<IEnumerable<string>> GetModelsAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public static List<TranslationPair> ListLanguages()

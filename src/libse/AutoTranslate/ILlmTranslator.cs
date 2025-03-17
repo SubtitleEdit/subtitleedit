@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public interface ILlmTranslator
+    public interface ILlmTranslator : IAutoTranslator
     {
         Task<IEnumerable<string>> GetModelsAsync();
     }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GeminiTranslate : IAutoTranslator, IDisposable, ILlmTranslator
+    public class GeminiTranslate : IDisposable, ILlmTranslator
     {
         private HttpClient _httpClient;
 

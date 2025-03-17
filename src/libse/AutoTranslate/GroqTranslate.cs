@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GroqTranslate : IAutoTranslator, IDisposable, ILlmTranslator
+    public class GroqTranslate : IDisposable, ILlmTranslator
     {
         private HttpClient _httpClient;
         private SeJsonParser _parser;
