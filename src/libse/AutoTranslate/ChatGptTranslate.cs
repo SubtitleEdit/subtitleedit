@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class ChatGptTranslate : ILlmTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "ChatGPT";
         public override string ToString() => StaticName;
@@ -125,9 +127,28 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return outputText.Trim();
         }
 
-        public Task<IEnumerable<string>> GetModelsAsync()
+        public async Task<IEnumerable<string>> GetModelsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync("https://api.openai.com/v1/models").ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return Enumerable.Empty<string>();
+                }
+
+                // https://console.groq.com/docs/api-reference#models-list
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return _parser.GetAllTagsByNameAsStrings(json, "id");
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error("Fetching models from OpenAI failed: " + e.Message);
+            }
+
+            // return fallback models
+            return Models;
         }
 
         public static List<TranslationPair> ListLanguages()
