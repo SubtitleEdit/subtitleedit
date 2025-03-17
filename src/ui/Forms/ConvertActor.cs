@@ -64,14 +64,29 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxConvertFrom.Items.Add(string.Format(LanguageSettings.Current.ConvertActor.InlineActorViaX, "()"));
             nikseComboBoxConvertFrom.Items.Add(string.Format(LanguageSettings.Current.ConvertActor.InlineActorViaX, ":"));
             nikseComboBoxConvertFrom.Items.Add(LanguageSettings.Current.General.Actor);
-            nikseComboBoxConvertFrom.SelectedIndex = 0;
+            if (_subtitleFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
+            {
+                nikseComboBoxConvertFrom.SelectedIndex = 3;
+            }
+            else
+            {
+                nikseComboBoxConvertFrom.SelectedIndex = 0;
+            }
+
 
             nikseComboBoxConvertTo.Items.Clear();
             nikseComboBoxConvertTo.Items.Add(string.Format(LanguageSettings.Current.ConvertActor.InlineActorViaX, "[]"));
             nikseComboBoxConvertTo.Items.Add(string.Format(LanguageSettings.Current.ConvertActor.InlineActorViaX, "()"));
             nikseComboBoxConvertTo.Items.Add(string.Format(LanguageSettings.Current.ConvertActor.InlineActorViaX, ":"));
             nikseComboBoxConvertTo.Items.Add(LanguageSettings.Current.General.Actor);
-            nikseComboBoxConvertTo.SelectedIndex = 0;
+            if (nikseComboBoxConvertFrom.SelectedIndex == 0)
+            {
+                nikseComboBoxConvertTo.SelectedIndex = 1;
+            }
+            else
+            {
+                nikseComboBoxConvertTo.SelectedIndex = 0;
+            }
 
             nikseComboBoxCasing.Items.Clear();
             nikseComboBoxCasing.Items.Add(LanguageSettings.Current.ChangeCasing.NormalCasing);
@@ -86,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fixItem = new FixListItem { Checked = true, Paragraph = p, IsNext = isNext };
             _fixItems.Add(fixItem);
 
-            var item = new ListViewItem(string.Empty) { Tag = p, Checked = selected };
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = selected || !checkBoxOnlyNames.Checked };
             item.SubItems.Add(lineNumber.ToString());
             item.SubItems.Add(UiUtil.GetListViewTextFromString(oldText));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
@@ -380,6 +395,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void nikseComboBoxCasing_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void checkBoxOnlyNames_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }

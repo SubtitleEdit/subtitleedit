@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             _subtitleFormat = subtitleFormat;
             _languageCode = languageCode;
-            _namesList =  new NameList(Configuration.DictionariesDirectory, languageCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _namesList = new NameList(Configuration.DictionariesDirectory, languageCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _nameListInclMulti = _namesList.GetAllNames();
         }
 
@@ -299,13 +299,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                if (_languageCode == "en")
+                var commonTitles = new[] { "Mr.", "Mrs.", "Dr.", };
+                if (commonTitles.Contains(word))
                 {
-                    var commonTitles = new[] { "Mr.", "Mrs.", "Dr.",  };  
-                    if (commonTitles.Contains(word))
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 if (!_nameListInclMulti.Contains(word, StringComparer.OrdinalIgnoreCase))
