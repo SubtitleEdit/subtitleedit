@@ -63,10 +63,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return ListLanguages();
         }
 
-        public Task<IEnumerable<string>> GetModelsAsync()
-        {
-            return Task.FromResult<IEnumerable<string>>(Models);
-        }
+        public Task<IEnumerable<string>> GetModelsAsync() => Task.FromResult<IEnumerable<string>>(Models);
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
