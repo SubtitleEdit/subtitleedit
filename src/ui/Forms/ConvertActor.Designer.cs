@@ -49,6 +49,7 @@
             this.buttonColor = new System.Windows.Forms.Button();
             this.checkBoxChangeCasing = new System.Windows.Forms.CheckBox();
             this.nikseComboBoxCasing = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.checkBoxOnlyNames = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -64,10 +65,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 100);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 115);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(1028, 586);
-            this.groupBoxLinesFound.TabIndex = 45;
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(1028, 571);
+            this.groupBoxLinesFound.TabIndex = 8;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
             // 
@@ -87,7 +88,7 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 19);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(1013, 553);
+            this.listViewFixes.Size = new System.Drawing.Size(1013, 538);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -137,7 +138,7 @@
             this.buttonOK.Location = new System.Drawing.Point(884, 692);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 41;
+            this.buttonOK.TabIndex = 9;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -150,7 +151,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(965, 692);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 42;
+            this.buttonCancel.TabIndex = 10;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
@@ -163,7 +164,7 @@
             this.checkBoxColor.Location = new System.Drawing.Point(302, 21);
             this.checkBoxColor.Name = "checkBoxColor";
             this.checkBoxColor.Size = new System.Drawing.Size(68, 17);
-            this.checkBoxColor.TabIndex = 47;
+            this.checkBoxColor.TabIndex = 2;
             this.checkBoxColor.Text = "Set color";
             this.checkBoxColor.UseVisualStyleBackColor = true;
             this.checkBoxColor.CheckedChanged += new System.EventHandler(this.checkBoxFixIncrementing_CheckedChanged);
@@ -201,7 +202,7 @@
             this.nikseComboBoxConvertFrom.SelectedItem = null;
             this.nikseComboBoxConvertFrom.SelectedText = "";
             this.nikseComboBoxConvertFrom.Size = new System.Drawing.Size(152, 23);
-            this.nikseComboBoxConvertFrom.TabIndex = 50;
+            this.nikseComboBoxConvertFrom.TabIndex = 0;
             this.nikseComboBoxConvertFrom.UsePopupWindow = false;
             this.nikseComboBoxConvertFrom.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxConvertFrom_SelectedIndexChanged);
             // 
@@ -229,7 +230,7 @@
             this.nikseComboBoxConvertTo.SelectedItem = null;
             this.nikseComboBoxConvertTo.SelectedText = "";
             this.nikseComboBoxConvertTo.Size = new System.Drawing.Size(152, 23);
-            this.nikseComboBoxConvertTo.TabIndex = 51;
+            this.nikseComboBoxConvertTo.TabIndex = 1;
             this.nikseComboBoxConvertTo.UsePopupWindow = false;
             this.nikseComboBoxConvertTo.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxConvertTo_SelectedIndexChanged);
             // 
@@ -248,7 +249,7 @@
             this.panelColor.Location = new System.Drawing.Point(481, 20);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 21);
-            this.panelColor.TabIndex = 53;
+            this.panelColor.TabIndex = 4;
             this.panelColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelColor_MouseClick);
             // 
             // buttonColor
@@ -256,7 +257,7 @@
             this.buttonColor.Location = new System.Drawing.Point(386, 17);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(89, 23);
-            this.buttonColor.TabIndex = 54;
+            this.buttonColor.TabIndex = 3;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -269,7 +270,7 @@
             this.checkBoxChangeCasing.Location = new System.Drawing.Point(302, 56);
             this.checkBoxChangeCasing.Name = "checkBoxChangeCasing";
             this.checkBoxChangeCasing.Size = new System.Drawing.Size(97, 17);
-            this.checkBoxChangeCasing.TabIndex = 55;
+            this.checkBoxChangeCasing.TabIndex = 5;
             this.checkBoxChangeCasing.Text = "Change casing";
             this.checkBoxChangeCasing.UseVisualStyleBackColor = true;
             this.checkBoxChangeCasing.CheckedChanged += new System.EventHandler(this.checkBoxChangeCasing_CheckedChanged);
@@ -299,15 +300,27 @@
             this.nikseComboBoxCasing.SelectedItem = null;
             this.nikseComboBoxCasing.SelectedText = "";
             this.nikseComboBoxCasing.Size = new System.Drawing.Size(219, 23);
-            this.nikseComboBoxCasing.TabIndex = 56;
+            this.nikseComboBoxCasing.TabIndex = 6;
             this.nikseComboBoxCasing.UsePopupWindow = false;
             this.nikseComboBoxCasing.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxCasing_SelectedIndexChanged);
+            // 
+            // checkBoxOnlyNames
+            // 
+            this.checkBoxOnlyNames.AutoSize = true;
+            this.checkBoxOnlyNames.Location = new System.Drawing.Point(302, 88);
+            this.checkBoxOnlyNames.Name = "checkBoxOnlyNames";
+            this.checkBoxOnlyNames.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxOnlyNames.TabIndex = 7;
+            this.checkBoxOnlyNames.Text = "Only check names";
+            this.checkBoxOnlyNames.UseVisualStyleBackColor = true;
+            this.checkBoxOnlyNames.CheckedChanged += new System.EventHandler(this.checkBoxOnlyNames_CheckedChanged);
             // 
             // ConvertActor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1052, 725);
+            this.Controls.Add(this.checkBoxOnlyNames);
             this.Controls.Add(this.nikseComboBoxCasing);
             this.Controls.Add(this.checkBoxChangeCasing);
             this.Controls.Add(this.panelColor);
@@ -361,5 +374,6 @@
         private System.Windows.Forms.CheckBox checkBoxChangeCasing;
         private Controls.NikseComboBox nikseComboBoxCasing;
         private System.Windows.Forms.ColumnHeader columnHeaderAfter;
+        private System.Windows.Forms.CheckBox checkBoxOnlyNames;
     }
 }
