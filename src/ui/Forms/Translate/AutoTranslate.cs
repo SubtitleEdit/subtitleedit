@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             };
 
             nikseComboBoxEngine.Items.Clear();
-            nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
+            nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLastName))
             {
@@ -752,12 +752,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
                 }
 
-                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name).ToArray<object>());
+                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name));
             }
 
             if (!languagesFilled)
             {
-                comboBox.Items.AddRange(languages.OrderBy(p => p.Name).ToArray<object>());
+                comboBox.Items.AddRange(languages.OrderBy(p => p.Name));
             }
 
             comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
@@ -1393,7 +1393,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private IAutoTranslator GetCurrentEngine()
         {
-            return _autoTranslatorEngines.First(p => p.Name == nikseComboBoxEngine.Text);
+            return (IAutoTranslator)nikseComboBoxEngine.SelectedItem;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
