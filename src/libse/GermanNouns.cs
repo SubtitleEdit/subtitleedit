@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         private readonly List<string> _germanNouns;
         private readonly Dictionary<Regex, string> _regularExpressionList;
+        private readonly FixCasing _fixCasing;
 
         public GermanNouns()
         {
@@ -26,6 +27,7 @@ namespace Nikse.SubtitleEdit.Core
                 { new Regex(@"\bDas essen\b", RegexOptions.Compiled), "Das Essen" },
                 { new Regex(@"\bdas essen\b", RegexOptions.Compiled), "das Essen" }
             };
+            _fixCasing = new FixCasing("de-DE");
         }
 
         public string UppercaseNouns(string text)
@@ -33,10 +35,9 @@ namespace Nikse.SubtitleEdit.Core
             var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
             if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
             {
-                var st = new StrippableText(text);
+                text = _fixCasing.Fix(text, _germanNouns, true, false, false, string.Empty);
 
-                st.FixCasing(_germanNouns, true, false, false, string.Empty);
-                
+                var st = new StrippableText(text);
                 foreach (var regex in _regularExpressionList.Keys)
                 {
                     st.StrippedText = regex.Replace(st.StrippedText, _regularExpressionList[regex]);

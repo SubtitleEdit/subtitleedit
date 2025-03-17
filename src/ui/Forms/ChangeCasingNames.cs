@@ -103,6 +103,9 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
+            
+            var fixCasing = new FixCasing(_language);
+
             foreach (var p in _subtitle.Paragraphs)
             {
                 string text = p.Text;
@@ -115,17 +118,18 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLowerInvariant())
                         {
-                            var st = new StrippableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                            text = st.MergedString;
+                            // st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                            text = fixCasing.Fix(text, new List<string> { name }, true, false, false, string.Empty);
                         }
                     }
                 }
+
                 if (text != p.Text)
                 {
                     AddToPreviewListView(p, text);
                 }
             }
+
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
             Cursor = Cursors.Default;
