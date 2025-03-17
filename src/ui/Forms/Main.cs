@@ -19569,7 +19569,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    return;
                 }
             }
             else if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
@@ -19595,7 +19594,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    return;
                 }
             }
         }
@@ -19619,7 +19617,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
-                    return;
                 }
             }
         }
@@ -33049,8 +33046,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.SubtitleSettings.NuendoCharacterListFile = form.CharacterListFile;
                     }
                 }
-
-                return;
             }
         }
 
@@ -36479,7 +36474,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.X > 72 && e.X <= (122 + textBoxListViewText.Height) && !textBoxListViewText.Enabled)
             {
                 InsertLineToolStripMenuItemClick(null, null);
-                return;
             }
         }
 
@@ -37243,7 +37237,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
-                    return;
                 }
             }
         }

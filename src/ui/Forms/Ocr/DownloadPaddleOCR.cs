@@ -57,7 +57,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 }
                 CompleteDownload(_tempFileName);
-                return;
             }
             catch (Exception exception)
             {
