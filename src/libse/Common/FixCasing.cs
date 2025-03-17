@@ -260,9 +260,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // first all to lower
                     text = text.ToLowercaseButKeepTags().Trim();
                     text = text.FixExtraSpaces();
-                    var st = new StrippableText(text);
-                    Fix(text, nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a separate option)
-                    text = st.MergedString;
+                    text = Fix(text, nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a separate option)
                 }
             }
             else if (FixMakeUppercase)
