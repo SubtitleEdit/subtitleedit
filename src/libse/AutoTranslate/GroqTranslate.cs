@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,12 +13,14 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GroqTranslate : IAutoTranslator, IDisposable
+    public class GroqTranslate : IAutoTranslator, IDisposable, ILlmTranslator
     {
         private HttpClient _httpClient;
+        private SeJsonParser _parser;
 
         public static string StaticName { get; set; } = "Groq";
         public override string ToString() => StaticName;
+
         public string Name => StaticName;
         public string Url => "https://groq.com/";
         public string Error { get; set; }
@@ -47,6 +50,31 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.GroqApiKey);
             }
+            _parser = new SeJsonParser();
+        }
+
+        public async Task<IEnumerable<string>> GetModelsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("https://api.groq.com/openai/v1/models").ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return Enumerable.Empty<string>();
+                }
+
+                // https://console.groq.com/docs/api-reference#models-list
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return _parser.GetAllTagsByNameAsStrings(json, "id");
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error("Fetching models from Groq failed: " + e.Message);
+            }
+
+            // return fallback models
+            return Models;
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -92,8 +120,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
-            var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "content");
+            var resultText = _parser.GetFirstObject(json, "content");
             if (resultText == null)
             {
                 return string.Empty;

@@ -11,12 +11,13 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GeminiTranslate : IAutoTranslator, IDisposable
+    public class GeminiTranslate : IAutoTranslator, IDisposable, ILlmTranslator
     {
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Google Gemini";
         public override string ToString() => StaticName;
+
         public string Name => StaticName;
         public string Url => "https://deepmind.google/technologies/gemini/";
         public string Error { get; set; }
@@ -47,6 +48,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.GeminiModel = Models[0];
             }
+
             var model = Configuration.Settings.Tools.GeminiModel;
             _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
         }
@@ -59,6 +61,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
             return ListLanguages();
+        }
+
+        public Task<IEnumerable<string>> GetModelsAsync()
+        {
+            return Task.FromResult<IEnumerable<string>>(Models);
         }
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
