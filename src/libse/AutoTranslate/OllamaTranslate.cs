@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class OllamaTranslate : ILlmTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "Ollama (local LLM)";
         public override string ToString() => StaticName;
@@ -57,6 +59,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().OllamaPrompt;
             }
+
             var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
@@ -90,14 +93,28 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return outputText.Trim();
         }
 
-        public Task<IEnumerable<string>> GetModelsAsync()
+        public async Task<IEnumerable<string>> GetModelsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync("http://localhost:11434/api/tags").ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return Enumerable.Empty<string>();
+                }
+
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return _parser.GetAllTagsByNameAsStrings(json, "model");
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error("Fetching models from Mistral failed: " + e.Message);
+            }
+
+            return Enumerable.Empty<string>();
         }
 
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
-        }
+        public void Dispose() => _httpClient?.Dispose();
     }
 }
