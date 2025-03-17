@@ -118,7 +118,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLowerInvariant())
                         {
-                            // st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
                             text = fixCasing.Fix(text, new List<string> { name }, true, false, false, string.Empty);
                         }
                     }
