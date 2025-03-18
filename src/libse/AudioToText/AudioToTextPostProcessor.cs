@@ -592,15 +592,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             var lastLine = string.Empty;
+            var fixCasing = new FixCasing(language);
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 var text = paragraph.Text;
                 var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
                 if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
-                    var st = new StrippableText(text);
-                    st.FixCasing(nameListInclMulti, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
-                    paragraph.Text = st.MergedString;
+                    paragraph.Text = fixCasing.Fix(text, nameListInclMulti, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
                 }
 
                 lastLine = text;
