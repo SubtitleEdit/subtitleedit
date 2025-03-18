@@ -78,8 +78,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var s = input;
             for (var i = s.Length - 1; i >= 0; i--)
             {
-                var ch = s[i];
-                if (i - 1 >= 0 && s[i - 1] == comma && IsSentenceEndingChar(ch))
+                if (i - 1 >= 0 && s[i - 1] == comma && IsSentenceEndingChar(s[i]))
                 {
                     var k = i;
 
@@ -88,11 +87,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         i--;
                     } while (i - 1 >= 0 && s[i - 1] == comma);
 
-                    // remove commas
-                    if (k - i > 0)
-                    {
-                        s = s.Remove(i, k - i);
-                    }
+                    s = s.Remove(i, k - i);
                 }
             }
 
