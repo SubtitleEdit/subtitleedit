@@ -296,12 +296,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private class SubtitleEdit : DictionaryProvider
         {
-            private readonly List<DictionaryItem> _dictionaryItems = new List<DictionaryItem>();
+            private readonly IReadOnlyCollection<DictionaryItem> _dictionaryItems;
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz";
 
             public SubtitleEdit()
             {
                 Name = "Subtitle Edit";
+                _dictionaryItems = LoadDictionariesFromResource(XmlResourceName);
             }
 
             public override IEnumerable<DictionaryItem> GetDictionaryItems()
@@ -309,11 +310,12 @@ namespace Nikse.SubtitleEdit.Forms
                 throw new NotImplementedException();
             }
 
-            private void LoadDictionaryList(string xmlResourceName)
+            private IReadOnlyCollection<DictionaryItem> LoadDictionariesFromResource(string xmlResourceName)
             {
                 var asm = System.Reflection.Assembly.GetExecutingAssembly();
                 var stream = asm.GetManifestResourceStream(xmlResourceName);
 
+                var dictionaryItems = new List<DictionaryItem>();
                 if (stream != null)
                 {
                     var doc = new XmlDocument();
@@ -360,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (useAllLanguages || IsInLanguageFilter(englishName, nativeName, languageFilter))
                             {
-                                _dictionaryItems.Add(item);
+                                dictionaryItems.Add(item);
                             }
                         }
                     }
@@ -374,6 +376,8 @@ namespace Nikse.SubtitleEdit.Forms
                     // comboBoxDictionaries.EndUpdate();
                     // comboBoxDictionaries.SelectedIndex = 0;
                 }
+
+                return dictionaryItems;
             }
 
             private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
