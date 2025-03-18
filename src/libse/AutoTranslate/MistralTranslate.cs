@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,11 +16,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// Mistral AI translator - see https://mistral.ai/en
     /// </summary>
-    public class MistralTranslate : IAutoTranslator, IDisposable
+    public class MistralTranslate : IAutoTranslator, IDisposable, ILlmTranslator
     {
         private string _apiKey;
         private string _apiUrl;
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "Mistral AI Translate";
         public override string ToString() => StaticName;
@@ -36,7 +38,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             "mistral-small-latest",
             "open-mistral-nemo",
         };
-
 
         public void Initialize()
         {
@@ -63,6 +64,29 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return ChatGptTranslate.ListLanguages();
         }
 
+        public async Task<IEnumerable<string>> GetModelsAsync()
+        {
+            try
+            {
+                // https://docs.mistral.ai/api/#tag/models
+                var response = await _httpClient.GetAsync("https://api.mistral.ai/v1/models").ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return Enumerable.Empty<string>();
+                }
+
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return _parser.GetAllTagsByNameAsStrings(json, "object");
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error("Fetching models from Mistral failed: " + e.Message);
+            }
+
+            return Models;
+        }
+
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var model = Configuration.Settings.Tools.AutoTranslateMistralModel;
@@ -76,6 +100,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AutoTranslateMistralPrompt = new ToolsSettings().AutoTranslateMistralPrompt;
             }
+
             var prompt = string.Format(Configuration.Settings.Tools.AutoTranslateMistralPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
