@@ -1527,5 +1527,20 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="ch">The character to check.</param>
         /// <returns>True if the character is a start tag symbol; otherwise, false.</returns>
         public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
+
+        public static string RemoveEmptyTags(string s)
+        {
+            var noTags = RemoveHtmlTags(s, true);
+            if (noTags.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            return s
+                .Replace("<i></i>", string.Empty)
+                .Replace("<u></u>", string.Empty)
+                .Replace("<b></b>", string.Empty);
+        }
+
     }
 }
