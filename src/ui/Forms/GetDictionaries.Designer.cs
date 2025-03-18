@@ -37,13 +37,15 @@
             this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.buttonDownloadAll = new System.Windows.Forms.Button();
+            this.labelProviders = new System.Windows.Forms.Label();
+            this.comboBoxProviders = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(356, 159);
+            this.buttonOK.Location = new System.Drawing.Point(356, 212);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(104, 23);
             this.buttonOK.TabIndex = 20;
@@ -55,14 +57,14 @@
             this.labelDescription2.AutoSize = true;
             this.labelDescription2.Location = new System.Drawing.Point(30, 34);
             this.labelDescription2.Name = "labelDescription2";
-            this.labelDescription2.Size = new System.Drawing.Size(263, 13);
+            this.labelDescription2.Size = new System.Drawing.Size(257, 13);
             this.labelDescription2.TabIndex = 1;
             this.labelDescription2.Text = "uses the spell checking dictionaries from LibreOffice.";
             // 
             // linkLabelOpenDictionaryFolder
             // 
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(30, 164);
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(34, 199);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
             this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 15;
@@ -83,18 +85,32 @@
             // 
             this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDictionaries.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDictionaries.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDictionaries.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDictionaries.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDictionaries.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDictionaries.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDictionaries.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDictionaries.DropDownHeight = 400;
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDictionaries.DropDownWidth = 317;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(33, 98);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(33, 152);
+            this.comboBoxDictionaries.MaxLength = 32767;
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
+            this.comboBoxDictionaries.SelectedIndex = -1;
+            this.comboBoxDictionaries.SelectedItem = null;
+            this.comboBoxDictionaries.SelectedText = "";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(317, 21);
             this.comboBoxDictionaries.TabIndex = 0;
+            this.comboBoxDictionaries.UsePopupWindow = false;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
             // buttonDownload
             // 
             this.buttonDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDownload.Location = new System.Drawing.Point(356, 97);
+            this.buttonDownload.Location = new System.Drawing.Point(356, 150);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(104, 25);
             this.buttonDownload.TabIndex = 10;
@@ -105,7 +121,7 @@
             // labelChooseLanguageAndClickDownload
             // 
             this.labelChooseLanguageAndClickDownload.AutoSize = true;
-            this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(30, 79);
+            this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(30, 133);
             this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
             this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(207, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 11;
@@ -114,7 +130,7 @@
             // labelPleaseWait
             // 
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(30, 126);
+            this.labelPleaseWait.Location = new System.Drawing.Point(30, 180);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(73, 13);
             this.labelPleaseWait.TabIndex = 12;
@@ -124,7 +140,7 @@
             // 
             this.buttonDownloadAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDownloadAll.BackColor = System.Drawing.Color.Yellow;
-            this.buttonDownloadAll.Location = new System.Drawing.Point(296, 54);
+            this.buttonDownloadAll.Location = new System.Drawing.Point(296, 107);
             this.buttonDownloadAll.Name = "buttonDownloadAll";
             this.buttonDownloadAll.Size = new System.Drawing.Size(164, 25);
             this.buttonDownloadAll.TabIndex = 21;
@@ -133,11 +149,30 @@
             this.buttonDownloadAll.Visible = false;
             this.buttonDownloadAll.Click += new System.EventHandler(this.buttonDownloadAll_Click);
             // 
+            // labelProviders
+            // 
+            this.labelProviders.AutoSize = true;
+            this.labelProviders.Location = new System.Drawing.Point(30, 67);
+            this.labelProviders.Name = "labelProviders";
+            this.labelProviders.Size = new System.Drawing.Size(56, 13);
+            this.labelProviders.TabIndex = 22;
+            this.labelProviders.Text = "Providers:";
+            // 
+            // comboBoxProviders
+            // 
+            this.comboBoxProviders.FormattingEnabled = true;
+            this.comboBoxProviders.Location = new System.Drawing.Point(33, 93);
+            this.comboBoxProviders.Name = "comboBoxProviders";
+            this.comboBoxProviders.Size = new System.Drawing.Size(166, 21);
+            this.comboBoxProviders.TabIndex = 23;
+            // 
             // GetDictionaries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 195);
+            this.ClientSize = new System.Drawing.Size(472, 248);
+            this.Controls.Add(this.comboBoxProviders);
+            this.Controls.Add(this.labelProviders);
             this.Controls.Add(this.buttonDownloadAll);
             this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.labelPleaseWait);
@@ -173,5 +208,7 @@
         private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Button buttonDownloadAll;
+        private System.Windows.Forms.Label labelProviders;
+        private System.Windows.Forms.ComboBox comboBoxProviders;
     }
 }

@@ -299,7 +299,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
-    <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\TtsMurfVoices.zip" />

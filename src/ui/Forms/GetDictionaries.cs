@@ -27,13 +27,13 @@ namespace Nikse.SubtitleEdit.Forms
             public override string ToString() => DisplayText;
         }
 
-        private string _xmlName;
-        private string _downloadLink;
+    
         private int _testAllIndex = -1;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public string SelectedEnglishName { get; private set; }
         public string LastDownload { get; private set; }
+
 
         public GetDictionaries()
         {
@@ -51,100 +51,15 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
 
             comboBoxDictionaries.UsePopupWindow = true;
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
+
+            comboBoxProviders.Items.Add(new SubtitleEdit());
+            comboBoxProviders.Items.Add(new WooormGithub());
+
             FixLargeFonts();
             _cancellationTokenSource = new CancellationTokenSource();
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif
-        }
-
-        private void LoadDictionaryList(string xmlResourceName)
-        {
-            _xmlName = xmlResourceName;
-            var asm = System.Reflection.Assembly.GetExecutingAssembly();
-            var stream = asm.GetManifestResourceStream(_xmlName);
-            if (stream != null)
-            {
-                var dictionaryItems = new List<DictionaryItem>();
-                var doc = new XmlDocument();
-                using (var zip = new GZipStream(stream, CompressionMode.Decompress))
-                using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
-                {
-                    doc.Load(reader);
-                }
-
-                var languageFilter = new List<CultureInfo>();
-                var useAllLanguages = string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages);
-                if (!useAllLanguages)
-                {
-                    languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
-                }
-
-                var allDictionaryItems = new List<DictionaryItem>();
-                comboBoxDictionaries.BeginUpdate();
-                comboBoxDictionaries.Items.Clear();
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
-                {
-                    var englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    var nativeName = node.SelectSingleNode("NativeName").InnerText;
-                    var downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
-
-                    var description = string.Empty;
-                    if (node.SelectSingleNode("Description") != null)
-                    {
-                        description = node.SelectSingleNode("Description").InnerText;
-                    }
-
-                    if (!string.IsNullOrEmpty(downloadLink))
-                    {
-                        var item = new DictionaryItem
-                        {
-                            EnglishName = englishName,
-                            NativeName = nativeName,
-                            Description = description,
-                            DownloadLink = downloadLink,
-                            DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
-                        };
-
-                        allDictionaryItems.Add(item);
-
-                        if (useAllLanguages || IsInLanguageFilter(englishName, nativeName, languageFilter))
-                        {
-                            dictionaryItems.Add(item);
-                        }
-                    }
-                }
-
-                comboBoxDictionaries.Items.AddRange(dictionaryItems.Count == 0 ? allDictionaryItems : dictionaryItems);
-                if (dictionaryItems.Count > 0)
-                {
-                    comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
-                }
-
-                comboBoxDictionaries.EndUpdate();
-                comboBoxDictionaries.SelectedIndex = 0;
-            }
-        }
-
-        private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
-        {
-            foreach (var cultureInfo in languageFilter)
-            {
-                if (!string.IsNullOrEmpty(englishName) &&
-                    cultureInfo.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-
-                if (!string.IsNullOrEmpty(nativeName) &&
-                    cultureInfo.NativeName.Contains(nativeName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void FixLargeFonts()
@@ -184,7 +99,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonDownload_Click(object sender, EventArgs e)
         {
             var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
-            _downloadLink = item.DownloadLink;
             SelectedEnglishName = item.EnglishName;
             try
             {
@@ -199,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
-                    var downloadTask = httpClient.DownloadAsync(_downloadLink, downloadStream, new Progress<float>((progress) =>
+                    var downloadTask = httpClient.DownloadAsync(item.DownloadLink, downloadStream, new Progress<float>((progress) =>
                     {
                         var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                         labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
@@ -228,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownloadAll.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show($"Unable to download {_downloadLink}!" + Environment.NewLine + Environment.NewLine +
+                MessageBox.Show($"Unable to download {item.DownloadLink}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
                 DialogResult = DialogResult.Cancel;
             }
@@ -339,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
+                // LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
                 return;
             }
 
@@ -368,8 +282,140 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+                // LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+            }
+        }
+
+        private abstract class DictionaryProvider
+        {
+            public string Name { get; set; }
+            public abstract IEnumerable<DictionaryItem> GetDictionaryItems();
+
+            public override string ToString() => Name;
+        }
+
+        private class SubtitleEdit : DictionaryProvider
+        {
+            private readonly List<DictionaryItem> _dictionaryItems = new List<DictionaryItem>();
+            private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz";
+
+            public SubtitleEdit()
+            {
+                Name = "Subtitle Edit";
+            }
+
+            public override IEnumerable<DictionaryItem> GetDictionaryItems()
+            {
+                throw new NotImplementedException();
+            }
+
+            private void LoadDictionaryList(string xmlResourceName)
+            {
+                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var stream = asm.GetManifestResourceStream(xmlResourceName);
+
+                if (stream != null)
+                {
+                    var doc = new XmlDocument();
+                    using (var zip = new GZipStream(stream, CompressionMode.Decompress))
+                    using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
+                    {
+                        doc.Load(reader);
+                    }
+
+                    var languageFilter = new List<CultureInfo>();
+                    var useAllLanguages = string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages);
+                    if (!useAllLanguages)
+                    {
+                        languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
+                    }
+
+                    // var allDictionaryItems = new List<DictionaryItem>();
+                    // comboBoxDictionaries.BeginUpdate();
+                    // comboBoxDictionaries.Items.Clear();
+                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
+                    {
+                        var englishName = node.SelectSingleNode("EnglishName").InnerText;
+                        var nativeName = node.SelectSingleNode("NativeName").InnerText;
+                        var downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
+
+                        var description = string.Empty;
+                        if (node.SelectSingleNode("Description") != null)
+                        {
+                            description = node.SelectSingleNode("Description").InnerText;
+                        }
+
+                        if (!string.IsNullOrEmpty(downloadLink))
+                        {
+                            var item = new DictionaryItem
+                            {
+                                EnglishName = englishName,
+                                NativeName = nativeName,
+                                Description = description,
+                                DownloadLink = downloadLink,
+                                DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
+                            };
+
+                            // allDictionaryItems.Add(item);
+
+                            if (useAllLanguages || IsInLanguageFilter(englishName, nativeName, languageFilter))
+                            {
+                                _dictionaryItems.Add(item);
+                            }
+                        }
+                    }
+
+                    // comboBoxDictionaries.Items.AddRange(dictionaryItems.Count == 0 ? allDictionaryItems : dictionaryItems);
+                    // if (dictionaryItems.Count > 0)
+                    // {
+                    //     comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+                    // }
+                    //
+                    // comboBoxDictionaries.EndUpdate();
+                    // comboBoxDictionaries.SelectedIndex = 0;
+                }
+            }
+
+            private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
+            {
+                foreach (var cultureInfo in languageFilter)
+                {
+                    if (!string.IsNullOrEmpty(englishName) &&
+                        cultureInfo.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+
+                    if (!string.IsNullOrEmpty(nativeName) &&
+                        cultureInfo.NativeName.Contains(nativeName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            
+        }
+
+        private class WooormGithub : DictionaryProvider
+        {
+            private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml";
+            public WooormGithub() => Name = "Wooorm's Github";
+
+            public override IEnumerable<DictionaryItem> GetDictionaryItems()
+            {
+                throw new NotImplementedException();
             }
         }
     }
+
+
+
+    /*
+        var sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml"), System.Text.Encoding.UTF8);
+        var content = sr.ReadToEnd();
+     */
+    
 }
