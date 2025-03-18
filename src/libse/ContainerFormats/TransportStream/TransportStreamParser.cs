@@ -256,14 +256,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (pes.ObjectDataList.Count > 0)
                     {
                         var sub = new TransportStreamSubtitle { StartMilliseconds = pes.PresentationTimestampToMilliseconds(), Pes = pes };
-                        if (i + 1 < list.Count && list[i + 1].PresentationTimestampToMilliseconds() > 25)
+                        if (i + 1 < list.Count)
                         {
-                            sub.EndMilliseconds = list[i + 1].PresentationTimestampToMilliseconds() - 25;
+                            var ndx = i + 1;
+                            while (ndx < list.Count)
+                            {
+                                var entry = list[ndx]; ndx++;
+                                if (entry.SubtitleSegments.Count == 0) continue;
+
+                                //we need EndOfDisplaySegment to stop the subtitle. In other case we can get Stuffing or something else
+                                if (!entry.SubtitleSegments.Any(p => p.SegmentType == SubtitleSegment.EndOfDisplaySetSegment)) continue;
+
+
+                                sub.EndMilliseconds = entry.PresentationTimestampToMilliseconds() ;
+                                break;
+                            }
+
                         }
+
+
                         if (sub.EndMilliseconds < sub.StartMilliseconds || sub.EndMilliseconds - sub.StartMilliseconds > (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                         {
                             sub.EndMilliseconds = sub.StartMilliseconds + (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         }
+
 
                         if (offset <= (long)sub.StartMilliseconds || offset < 0)
                         {
