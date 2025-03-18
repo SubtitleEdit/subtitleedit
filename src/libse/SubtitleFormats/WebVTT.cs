@@ -863,48 +863,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ColorHtmlToWebVtt(string text)
         {
             var res = text.Replace("</font>", "</c>");
-            var match = RegexHtmlColor.Match(res);
-            while (match.Success)
-            {
-                var fontString = "<c." + match.Value.Substring(13, match.Value.Length - 15) + ">";
-                fontString = fontString.Trim('"').Trim('\'');
-                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                match = RegexHtmlColor.Match(res);
-            }
 
-            match = RegexHtmlColor2.Match(res);
-            while (match.Success)
+            for (var i = 0; i < 2; i++)
             {
-                var fontString = "<c." + match.Value.Substring(12, match.Value.Length - 13) + ">";
-                fontString = fontString.Trim('"').Trim('\'');
-                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                match = RegexHtmlColor2.Match(res);
-            }
-
-            match = RegexHtmlColor3.Match(res);
-            while (match.Success)
-            {
-                var tag = match.Value.Substring(14, match.Value.Length - 16);
-                var fontString = "<c.color" + tag + ">";
-                var closeColor = GetCloseColor(tag);
-                if (closeColor != null)
+                var match = RegexHtmlColor.Match(res);
+                while (match.Success)
                 {
-                    fontString = "<c." + closeColor + ">";
+                    var fontString = "<c." + match.Value.Substring(13, match.Value.Length - 15) + ">";
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    match = RegexHtmlColor.Match(res);
                 }
-                fontString = fontString.Trim('"').Trim('\'');
-                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                match = RegexHtmlColor3.Match(res);
-            }
 
-            match = RegexHtmlColor4.Match(res);
-            while (match.Success)
-            {
-                var colorName = match.Value.Substring(13, match.Value.Length - 15);
-                var color = Color.FromName(colorName);
-                if (color.IsKnownColor)
+                match = RegexHtmlColor2.Match(res);
+                while (match.Success)
                 {
-                    var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
-                    var fontString = "<c" + tag + ">";
+                    var fontString = "<c." + match.Value.Substring(12, match.Value.Length - 13) + ">";
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    match = RegexHtmlColor2.Match(res);
+                }
+
+                match = RegexHtmlColor3.Match(res);
+                while (match.Success)
+                {
+                    var tag = match.Value.Substring(14, match.Value.Length - 16);
+                    var fontString = "<c.color" + tag + ">";
                     var closeColor = GetCloseColor(tag);
                     if (closeColor != null)
                     {
@@ -914,12 +898,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
                     match = RegexHtmlColor3.Match(res);
                 }
-                else
+
+                match = RegexHtmlColor4.Match(res);
+                while (match.Success)
                 {
-                    break;
+                    var colorName = match.Value.Substring(13, match.Value.Length - 15);
+                    var color = Color.FromName(colorName);
+                    if (color.IsKnownColor)
+                    {
+                        var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
+                        var fontString = "<c" + tag + ">";
+                        var closeColor = GetCloseColor(tag);
+                        if (closeColor != null)
+                        {
+                            fontString = "<c." + closeColor + ">";
+                        }
+                        fontString = fontString.Trim('"').Trim('\'');
+                        res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                        match = RegexHtmlColor4.Match(res);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
-
 
             return res;
         }
@@ -928,7 +931,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             try
             {
-                var c = ColorTranslator.FromHtml("#" + tag.Trim('#'));
+                var c = ColorTranslator.FromHtml("#" + tag.Trim('#', '.'));
                 const int maxDiff = 25;
                 foreach (var kvp in DefaultColorClasses)
                 {
