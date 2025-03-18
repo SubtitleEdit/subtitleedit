@@ -803,7 +803,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-
             var charAtIndex = value[checkIndex];
             // handles when sentence ending char is adjacent with html/assa closing tags e.g: </i>, </font>, {\\i0}...
             while (charAtIndex == '>' || charAtIndex == '}')
@@ -838,6 +837,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 // foobar—
                 return checkIndex > 0 && char.IsLetter(value[checkIndex - 1]);
+            }
+
+            // verify ellipses
+            if (charAtIndex == '…')
+            {
+                return false;
+            }
+
+            var l = checkIndex;
+            while (value[l] == '.')
+            {
+                l--;
+
+                // [...] 
+                if (checkIndex - l + 1 == 3)
+                {
+                    return false;
+                }
             }
 
             // evaluate culture type

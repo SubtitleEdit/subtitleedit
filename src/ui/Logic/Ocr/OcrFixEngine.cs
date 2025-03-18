@@ -575,7 +575,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = FixCommonOcrLineErrors(sb.ToString(), subtitle, index, prevLine, lastLastLine);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                text = FixLowercaseIToUppercaseI(text, prevLine);
+                text = CapitalizeInitialI(text, prevLine);
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     var oldText = text;
@@ -898,7 +898,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return text;
         }
 
-        private string FixLowercaseIToUppercaseI(string input, string lastLine)
+        private string CapitalizeInitialI(string input, string previousLine)
         {
             var sb = new StringBuilder();
             var lines = input.SplitToLines();
@@ -908,27 +908,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 if (i > 0)
                 {
-                    lastLine = lines[i - 1];
+                    previousLine = lines[i - 1];
                 }
 
-                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
+                previousLine = HtmlUtil.RemoveHtmlTags(previousLine);
 
-                if (string.IsNullOrEmpty(lastLine) ||
-                    lastLine.EndsWith('.') ||
-                    lastLine.EndsWith('!') ||
-                    lastLine.EndsWith('?'))
+                if (string.IsNullOrEmpty(previousLine) || previousLine.HasSentenceEnding())
                 {
                     var st = new StrippableText(l);
-                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
+                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('('))
                     {
-                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
+                        if (string.IsNullOrEmpty(previousLine) || !EndsWithAbbreviation(previousLine, _abbreviationList))
                         {
                             l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
                         }
                     }
                 }
+
                 sb.AppendLine(l);
             }
+
             return sb.ToString().TrimEnd('\r', '\n');
         }
 
