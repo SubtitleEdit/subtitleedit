@@ -3,7 +3,7 @@
 4.0.12 (xth April 2025) BETA
 * NEW
    * Add tool for converting actors between ASSA/brackets/parentheses/colon
-   * Add OCR via Ollama vision models like "granite3.2-vision"
+   * Add OCR via Ollama vision models like "granite3.2-vision" or "gemma3"
    * Add Mistral AI translate
    * Add AvalAI translate - thx JJHACKER
    * Add "Chinese traditional" for DeepL - thx rdr44b 

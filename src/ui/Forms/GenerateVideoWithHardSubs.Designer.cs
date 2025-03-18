@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 615);
+            this.progressBar1.Location = new System.Drawing.Point(12, 616);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(603, 11);
             this.progressBar1.TabIndex = 22;
@@ -1588,142 +1588,142 @@ namespace Nikse.SubtitleEdit.Forms
             this.aAspectRatio916270480ToolStripMenuItem,
             this.bAspectRatio916180270ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(368, 412);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(370, 412);
             this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
             // 
             // useSourceResolutionToolStripMenuItem
             // 
             this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
-            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.useSourceResolutionToolStripMenuItem.Text = "Use source resolution";
             this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(364, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(366, 6);
             // 
             // x2160ToolStripMenuItem
             // 
             this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
-            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.x2160ToolStripMenuItem.Text = "4K DCI - Aspect Ratio 16∶9 - (4096x2160)";
             this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // uHD3840x2160ToolStripMenuItem
             // 
             this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
-            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.uHD3840x2160ToolStripMenuItem.Text = "4K UHD - Aspect Ratio 16∶9 - (3840x2160)";
             this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // k2048x1080ToolStripMenuItem
             // 
             this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
-            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.k2048x1080ToolStripMenuItem.Text = "2K WQHD - Aspect Ratio 16∶9 - (2560x1440)";
             this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KScope2048x858ToolStripMenuItem
             // 
             this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
-            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.dCI2KScope2048x858ToolStripMenuItem.Text = "2K DCI - Aspect Ratio 16∶9 - (2048x1080)";
             this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KFlat1998x1080ToolStripMenuItem
             // 
             this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "Full HD 1080p - Aspect Ratio 16∶9 - (1920x1080)";
             this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1920x1080ToolStripMenuItem
             // 
             this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
-            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.p1920x1080ToolStripMenuItem.Text = "HD 720p - Aspect Ratio 16∶9 - (1280x720)";
             this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x1080ToolStripMenuItem
             // 
             this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
-            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.x1080ToolStripMenuItem.Text = "540p - Aspect Ratio 16∶9 - (960x540)";
             this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1280x720ToolStripMenuItem
             // 
             this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
-            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.p1280x720ToolStripMenuItem.Text = "SD PAL - Aspect Ratio 4:3 - (720x576)";
             this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x720ToolStripMenuItem
             // 
             this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
-            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.x720ToolStripMenuItem.Text = "SD NTSC - Aspect Ratio 3:2 - (720x480)";
             this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p848x480ToolStripMenuItem
             // 
             this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
-            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.p848x480ToolStripMenuItem.Text = "VGA - Aspect Ratio 4:3 - (640x480)";
             this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // pAL720x576ToolStripMenuItem
             // 
             this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
-            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.pAL720x576ToolStripMenuItem.Text = "360p - Aspect Ratio 16∶9 - (640x360)";
             this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(364, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(366, 6);
             // 
             // youTubeShortsTikTok10801920ToolStripMenuItem
             // 
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Name = "youTubeShortsTikTok10801920ToolStripMenuItem";
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (1080x1920)";
             this.youTubeShortsTikTok10801920ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem
             // 
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Name = "youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem";
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (720x1280)";
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // aAspectRatio916540960ToolStripMenuItem
             // 
             this.aAspectRatio916540960ToolStripMenuItem.Name = "aAspectRatio916540960ToolStripMenuItem";
-            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.aAspectRatio916540960ToolStripMenuItem.Text = "1/2 A - Aspect Ratio 9∶16 - (540x960)";
             this.aAspectRatio916540960ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // bAspectRatio916360540ToolStripMenuItem
             // 
             this.bAspectRatio916360540ToolStripMenuItem.Name = "bAspectRatio916360540ToolStripMenuItem";
-            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.bAspectRatio916360540ToolStripMenuItem.Text = "1/2 B - Aspect Ratio 9∶16 - (360x540)";
             this.bAspectRatio916360540ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // aAspectRatio916270480ToolStripMenuItem
             // 
             this.aAspectRatio916270480ToolStripMenuItem.Name = "aAspectRatio916270480ToolStripMenuItem";
-            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.aAspectRatio916270480ToolStripMenuItem.Text = "1/4 A - Aspect Ratio 9∶16 - (270x480)";
             this.aAspectRatio916270480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // bAspectRatio916180270ToolStripMenuItem
             // 
             this.bAspectRatio916180270ToolStripMenuItem.Name = "bAspectRatio916180270ToolStripMenuItem";
-            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(369, 22);
             this.bAspectRatio916180270ToolStripMenuItem.Text = "1/4 B - Aspect Ratio 9∶16 - (180x270)";
             this.bAspectRatio916180270ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
@@ -1753,7 +1753,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPass.AutoSize = true;
-            this.labelPass.Location = new System.Drawing.Point(564, 599);
+            this.labelPass.Location = new System.Drawing.Point(564, 598);
             this.labelPass.Name = "labelPass";
             this.labelPass.Size = new System.Drawing.Size(51, 13);
             this.labelPass.TabIndex = 47;
@@ -1763,7 +1763,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 629);
+            this.labelProgress.Location = new System.Drawing.Point(12, 630);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 29;
@@ -1773,7 +1773,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 599);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 598);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
