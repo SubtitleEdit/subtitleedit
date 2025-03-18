@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                comboBoxDictionaries.Items.AddRange(nameList.Count == 0 ? nameListAll.ToArray<object>() : nameList.ToArray<object>());
+                comboBoxDictionaries.Items.AddRange(nameList.Count == 0 ? nameListAll : nameList);
                 if (comboBoxDictionaries.Items.Count > 0)
                 {
                     comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
