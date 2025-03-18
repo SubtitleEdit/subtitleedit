@@ -262,24 +262,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             while (ndx < list.Count)
                             {
                                 var entry = list[ndx]; ndx++;
-                                if (entry.SubtitleSegments.Count == 0) continue;
+                                if (entry.SubtitleSegments.Count == 0)
+                                {
+                                    continue;
+                                }
 
-                                //we need EndOfDisplaySegment to stop the subtitle. In other case we can get Stuffing or something else
-                                if (!entry.SubtitleSegments.Any(p => p.SegmentType == SubtitleSegment.EndOfDisplaySetSegment)) continue;
+                                // We need EndOfDisplaySegment to stop the subtitle. In other case we can get Stuffing or something else
+                                if (!entry.SubtitleSegments.Any(p => p.SegmentType == SubtitleSegment.EndOfDisplaySetSegment))
+                                {
+                                    continue;
+                                }
 
-
-                                sub.EndMilliseconds = entry.PresentationTimestampToMilliseconds() ;
+                                sub.EndMilliseconds = entry.PresentationTimestampToMilliseconds();
                                 break;
                             }
-
                         }
-
 
                         if (sub.EndMilliseconds < sub.StartMilliseconds || sub.EndMilliseconds - sub.StartMilliseconds > (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                         {
                             sub.EndMilliseconds = sub.StartMilliseconds + (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         }
-
 
                         if (offset <= (long)sub.StartMilliseconds || offset < 0)
                         {
