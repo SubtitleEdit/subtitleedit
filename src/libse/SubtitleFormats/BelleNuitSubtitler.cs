@@ -232,7 +232,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (RegexFileNum.IsMatch(line))
                 {
-                    continue; // skip Belle-Nuit's numbering lines ("/file 0001")
                 }
                 else if (paragraph != null)
                 {

@@ -218,7 +218,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     else if (outLine.Data.Contains("ppocr WARNING: No text found in image"))
                     {
                         result = string.Empty;
-                        return;
                     }
                     else if (outLine.Data.Contains("ppocr INFO:"))
                     {
