@@ -9,6 +9,7 @@
         public const int ObjectDataSegment = 0x13;
         public const int DisplayDefinitionSegment = 0x14;
         public const int EndOfDisplaySetSegment = 0x80;
+        public const int StuffingSegment = 0xFF;
 
         public int SyncByte { get; set; }
         public int SegmentType { get; set; }
@@ -62,6 +63,8 @@
                     break;
                 case DisplayDefinitionSegment:
                     DisplayDefinition = new DisplayDefinitionSegment(buffer, index + 6);
+                    break;           
+                case StuffingSegment:                    
                     break;
                 case EndOfDisplaySetSegment:
                     break;
@@ -80,6 +83,7 @@
                     case ObjectDataSegment: return "Object data segment";
                     case DisplayDefinitionSegment: return "Display definition segment";
                     case EndOfDisplaySetSegment: return "End of display set segment";
+                    case StuffingSegment: return "Stuffing segment";
                     default: return "Unknown";
                 }
             }
