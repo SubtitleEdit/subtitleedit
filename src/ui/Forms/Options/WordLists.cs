@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     }
                 }
 
-                comboBoxWordListLanguage.Items.AddRange(list.Count == 0 ? listAll.ToArray<object>() : list.ToArray<object>());
+                comboBoxWordListLanguage.Items.AddRange(list.Count == 0 ? listAll : list);
                 
                 if (list.Count > 0)
                 {

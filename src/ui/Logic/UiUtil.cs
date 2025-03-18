@@ -801,7 +801,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
-            comboBox.Items.AddRange(formatNames.ToArray<object>());
+            comboBox.Items.AddRange(formatNames);
             comboBox.SelectedIndex = selectedIndex;
             comboBox.EndUpdate();
         }
@@ -854,7 +854,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
             }
-            comboBox.Items.AddRange(encList.ToArray<object>());
+            comboBox.Items.AddRange(encList);
             if (selectedItem == null)
             {
                 comboBox.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 if DefaultEncoding is not found

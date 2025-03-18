@@ -40,8 +40,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
             dataGridView1.Columns.Clear();
-            var row1 = Configuration.Settings.Tools.OcrAddLetterRow1.Split(';').ToArray<object>();
-            var row2 = Configuration.Settings.Tools.OcrAddLetterRow2.Split(';').ToArray<object>();
+            var row1 = Configuration.Settings.Tools.OcrAddLetterRow1.Split(';');
+            var row2 = Configuration.Settings.Tools.OcrAddLetterRow2.Split(';');
             for (int i = 0; i < Math.Max(row1.Length, row2.Length); i++)
             {
                 dataGridView1.Columns.Add(string.Empty, string.Empty);
