@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -26,16 +27,15 @@ namespace Nikse.SubtitleEdit.Forms
             public string NativeName { get; set; }
             public string Description { get; set; }
 
-            // public string DownloadLink { get; set; }
-
             public List<string> Urls { get; set; }
 
             public string DisplayText { get; set; }
-            
+
             public override string ToString() => DisplayText;
+
+            public Task DownloadAsync(DictionaryDownloadHandler downloadHandler) => downloadHandler.DownloadAsync(this);
         }
 
-    
         private int _testAllIndex = -1;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxDictionaries.UsePopupWindow = true;
 
-            comboBoxProviders.Items.Add(new SubtitleEdit());
+            comboBoxProviders.Items.Add(new SubtitleEditProvider());
             comboBoxProviders.Items.Add(new WooormGithub());
 
             comboBoxProviders.SelectedIndexChanged += ComboBoxProvidersOnSelectedIndexChanged;
@@ -319,20 +319,24 @@ namespace Nikse.SubtitleEdit.Forms
         private abstract class DictionaryProvider
         {
             public string Name { get; set; }
+
             public abstract IEnumerable<DictionaryItem> GetDictionaryItems();
+
+            public DictionaryDownloadHandler DictionaryDownloadHandler { get; protected set; }
 
             public override string ToString() => Name;
         }
 
-        private class SubtitleEdit : DictionaryProvider
+        private class SubtitleEditProvider : DictionaryProvider
         {
             private readonly IReadOnlyCollection<DictionaryItem> _dictionaryItems;
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz";
 
-            public SubtitleEdit()
+            public SubtitleEditProvider(Form parentForm = null)
             {
                 Name = "Subtitle Edit";
                 _dictionaryItems = LoadDictionariesFromResource(XmlResourceName);
+                DictionaryDownloadHandler = new SeHandler(parentForm);
             }
 
             public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
@@ -343,6 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var stream = asm.GetManifestResourceStream(xmlResourceName);
 
                 var dictionaryItems = new List<DictionaryItem>();
+                var allDictionaryItems = new List<DictionaryItem>();
                 if (stream != null)
                 {
                     var doc = new XmlDocument();
@@ -359,7 +364,6 @@ namespace Nikse.SubtitleEdit.Forms
                         languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
                     }
 
-                    // var allDictionaryItems = new List<DictionaryItem>();
                     // comboBoxDictionaries.BeginUpdate();
                     // comboBoxDictionaries.Items.Clear();
                     foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
@@ -385,7 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
                             };
 
-                            // allDictionaryItems.Add(item);
+                            allDictionaryItems.Add(item);
 
                             if (useAllLanguages || IsInLanguageFilter(englishName, nativeName, languageFilter))
                             {
@@ -404,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // comboBoxDictionaries.SelectedIndex = 0;
                 }
 
-                return dictionaryItems;
+                return dictionaryItems.Count == 0 ? allDictionaryItems : dictionaryItems;
             }
 
             private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
@@ -432,11 +436,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml";
             private readonly IList<DictionaryItem> _dictionaryItems;
-
+            
             public WooormGithub()
             {
                 Name = "Wooorm's Github";
                 _dictionaryItems = LoadDictionaryInfoFromResource(XmlResourceName);
+                DictionaryDownloadHandler = new WoormHandler();
             }
 
             private List<DictionaryItem> LoadDictionaryInfoFromResource(string resourceName)
@@ -459,6 +464,7 @@ namespace Nikse.SubtitleEdit.Forms
                         NativeName = ci.NativeName,
                         DisplayText = ci.DisplayName,
                         Urls = GenerateUrls(xElement.Element("Url").Value),
+                        Description = string.Empty,
                     });
                 }
 
@@ -481,5 +487,33 @@ namespace Nikse.SubtitleEdit.Forms
 
             public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
         }
+
+        private abstract class DictionaryDownloadHandler
+        {
+            public abstract Task DownloadAsync(DictionaryItem dictionaryItem);
+        }
+
+        private class SeHandler : DictionaryDownloadHandler
+        {
+            private readonly Form _parentForm;
+
+            public SeHandler(Form parentForm)
+            {
+                _parentForm = parentForm;
+            }
+            public override Task DownloadAsync(DictionaryItem dictionaryItem)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class WoormHandler : DictionaryDownloadHandler
+        {
+            public override Task DownloadAsync(DictionaryItem dictionaryItem)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 }
