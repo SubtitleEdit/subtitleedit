@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.Http
                         // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
                         var relativeProgress = new Progress<long>(totalBytes => progress.Report((float)totalBytes / contentLength.Value));
                         // Use extension method to report progress while downloading
-                        await CopyToAsync(downloadStream, destination, 81920, relativeProgress, cancellationToken);
+                        await CopyToAsync(downloadStream, destination, 81920, relativeProgress, cancellationToken).ConfigureAwait(false);
                         progress.Report(1);
                     }
                 }

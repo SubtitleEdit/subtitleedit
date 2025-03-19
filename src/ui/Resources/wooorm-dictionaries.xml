@@ -2,452 +2,452 @@
 <dictionaries>
   <dictionary>
     <name>Bulgarian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/bg/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/bg/</url>
     <culture>bg</culture>
   </dictionary>
   <dictionary>
     <name>Breton</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/br/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/br/</url>
     <culture>br</culture>
   </dictionary>
   <dictionary>
     <name>Catalan</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ca/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ca/</url>
     <culture>ca</culture>
   </dictionary>
   <dictionary>
     <name>Czech</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/cs/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/cs/</url>
     <culture>cs</culture>
   </dictionary>
   <dictionary>
     <name>Welsh</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/cy/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/cy/</url>
     <culture>cy</culture>
   </dictionary>
   <dictionary>
     <name>Danish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/da/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/da/</url>
     <culture>da</culture>
   </dictionary>
   <dictionary>
     <name>German</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/de/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/de/</url>
     <culture>de</culture>
   </dictionary>
   <dictionary>
     <name>German (Austria)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/de-AT/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/de-AT/</url>
     <culture>de-AT</culture>
   </dictionary>
   <dictionary>
     <name>German (Switzerland)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/de-CH/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/de-CH/</url>
     <culture>de-CH</culture>
   </dictionary>
   <dictionary>
     <name>Greek</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/el/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/el/</url>
     <culture>el</culture>
   </dictionary>
   <dictionary>
     <name>English</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/en/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/en/</url>
     <culture>en</culture>
   </dictionary>
   <dictionary>
     <name>English (Australia)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/en-AU/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/en-AU/</url>
     <culture>en-AU</culture>
   </dictionary>
   <dictionary>
     <name>English (Canada)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/en-CA/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/en-CA/</url>
     <culture>en-CA</culture>
   </dictionary>
   <dictionary>
     <name>English (United Kingdom)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/en-GB/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/en-GB/</url>
     <culture>en-GB</culture>
   </dictionary>
   <dictionary>
     <name>English (South Africa)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/en-ZA/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/en-ZA/</url>
     <culture>en-ZA</culture>
   </dictionary>
   <dictionary>
     <name>Esperanto</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/eo/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/eo/</url>
     <culture>eo</culture>
   </dictionary>
   <dictionary>
     <name>Spanish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es/</url>
     <culture>es</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Argentina)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-AR/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-AR/</url>
     <culture>es-AR</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Bolivia)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-BO/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-BO/</url>
     <culture>es-BO</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Chile)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-CL/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-CL/</url>
     <culture>es-CL</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Colombia)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-CO/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-CO/</url>
     <culture>es-CO</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Costa Rica)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-CR/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-CR/</url>
     <culture>es-CR</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Cuba)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-CU/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-CU/</url>
     <culture>es-CU</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Dominican Republic)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-DO/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-DO/</url>
     <culture>es-DO</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Ecuador)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-EC/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-EC/</url>
     <culture>es-EC</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Guatemala)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-GT/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-GT/</url>
     <culture>es-GT</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Honduras)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-HN/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-HN/</url>
     <culture>es-HN</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Mexico)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-MX/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-MX/</url>
     <culture>es-MX</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Nicaragua)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-NI/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-NI/</url>
     <culture>es-NI</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Panama)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-PA/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-PA/</url>
     <culture>es-PA</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Peru)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-PE/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-PE/</url>
     <culture>es-PE</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Philippines)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-PH/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-PH/</url>
     <culture>es-PH</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Puerto Rico)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-PR/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-PR/</url>
     <culture>es-PR</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Paraguay)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-PY/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-PY/</url>
     <culture>es-PY</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (El Salvador)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-SV/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-SV/</url>
     <culture>es-SV</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (United States)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-US/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-US/</url>
     <culture>es-US</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Uruguay)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-UY/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-UY/</url>
     <culture>es-UY</culture>
   </dictionary>
   <dictionary>
     <name>Spanish (Venezuela)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/es-VE/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/es-VE/</url>
     <culture>es-VE</culture>
   </dictionary>
   <dictionary>
     <name>Estonian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/et/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/et/</url>
     <culture>et</culture>
   </dictionary>
   <dictionary>
     <name>Basque</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/eu/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/eu/</url>
     <culture>eu</culture>
   </dictionary>
   <dictionary>
     <name>Persian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/fa/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/fa/</url>
     <culture>fa</culture>
   </dictionary>
   <dictionary>
     <name>Faroese</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/fo/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/fo/</url>
     <culture>fo</culture>
   </dictionary>
   <dictionary>
     <name>French</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/fr/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/fr/</url>
     <culture>fr</culture>
   </dictionary>
   <dictionary>
     <name>Friulian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/fur/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/fur/</url>
     <culture>fur</culture>
   </dictionary>
   <dictionary>
     <name>Western Frisian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/fy/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/fy/</url>
     <culture>fy</culture>
   </dictionary>
   <dictionary>
     <name>Irish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ga/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ga/</url>
     <culture>ga</culture>
   </dictionary>
   <dictionary>
     <name>Scottish Gaelic</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/gd/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/gd/</url>
     <culture>gd</culture>
   </dictionary>
   <dictionary>
     <name>Galician</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/gl/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/gl/</url>
     <culture>gl</culture>
   </dictionary>
   <dictionary>
     <name>Hebrew</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/he/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/he/</url>
     <culture>he</culture>
   </dictionary>
   <dictionary>
     <name>Croatian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/hr/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hr/</url>
     <culture>hr</culture>
   </dictionary>
   <dictionary>
     <name>Hungarian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/hu/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hu/</url>
     <culture>hu</culture>
   </dictionary>
   <dictionary>
     <name>Armenian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/hy/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hy/</url>
     <culture>hy</culture>
   </dictionary>
   <dictionary>
     <name>hyw</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/hyw/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hyw/</url>
     <culture>hyw</culture>
   </dictionary>
   <dictionary>
     <name>Interlingua</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ia/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ia/</url>
     <culture>ia</culture>
   </dictionary>
   <dictionary>
     <name>Interlingue</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ie/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ie/</url>
     <culture>ie</culture>
   </dictionary>
   <dictionary>
     <name>Icelandic</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/is/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/is/</url>
     <culture>is</culture>
   </dictionary>
   <dictionary>
     <name>Italian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/it/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/it/</url>
     <culture>it</culture>
   </dictionary>
   <dictionary>
     <name>Georgian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ka/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ka/</url>
     <culture>ka</culture>
   </dictionary>
   <dictionary>
     <name>Korean</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ko/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ko/</url>
     <culture>ko</culture>
   </dictionary>
   <dictionary>
     <name>Latin</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/la/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/la/</url>
     <culture>la</culture>
   </dictionary>
   <dictionary>
     <name>Luxembourgish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/lb/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/lb/</url>
     <culture>lb</culture>
   </dictionary>
   <dictionary>
     <name>Lithuanian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/lt/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/lt/</url>
     <culture>lt</culture>
   </dictionary>
   <dictionary>
     <name>Latgalian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ltg/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ltg/</url>
     <culture>ltg</culture>
   </dictionary>
   <dictionary>
     <name>Latvian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/lv/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/lv/</url>
     <culture>lv</culture>
   </dictionary>
   <dictionary>
     <name>Macedonian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/mk/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/mk/</url>
     <culture>mk</culture>
   </dictionary>
   <dictionary>
     <name>Mongolian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/mn/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/mn/</url>
     <culture>mn</culture>
   </dictionary>
   <dictionary>
     <name>Norwegian Bokmål</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/nb/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/nb/</url>
     <culture>nb</culture>
   </dictionary>
   <dictionary>
     <name>Low German</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/nds/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/nds/</url>
     <culture>nds</culture>
   </dictionary>
   <dictionary>
     <name>Nepali</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ne/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ne/</url>
     <culture>ne</culture>
   </dictionary>
   <dictionary>
     <name>Dutch</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/nl/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/nl/</url>
     <culture>nl</culture>
   </dictionary>
   <dictionary>
     <name>Norwegian Nynorsk</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/nn/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/nn/</url>
     <culture>nn</culture>
   </dictionary>
   <dictionary>
     <name>Occitan</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/oc/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/oc/</url>
     <culture>oc</culture>
   </dictionary>
   <dictionary>
     <name>Polish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/pl/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/pl/</url>
     <culture>pl</culture>
   </dictionary>
   <dictionary>
     <name>Portuguese</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/pt/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/pt/</url>
     <culture>pt</culture>
   </dictionary>
   <dictionary>
     <name>Portuguese (Portugal)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/pt-PT/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/pt-PT/</url>
     <culture>pt-PT</culture>
   </dictionary>
   <dictionary>
     <name>Romanian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ro/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ro/</url>
     <culture>ro</culture>
   </dictionary>
   <dictionary>
     <name>Russian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/ru/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/ru/</url>
     <culture>ru</culture>
   </dictionary>
   <dictionary>
     <name>Kinyarwanda</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/rw/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/rw/</url>
     <culture>rw</culture>
   </dictionary>
   <dictionary>
     <name>Slovak</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sk/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sk/</url>
     <culture>sk</culture>
   </dictionary>
   <dictionary>
     <name>Slovenian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sl/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sl/</url>
     <culture>sl</culture>
   </dictionary>
   <dictionary>
     <name>Serbian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sr/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sr/</url>
     <culture>sr</culture>
   </dictionary>
   <dictionary>
     <name>Serbian (Latin)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sr-Latn/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sr-Latn/</url>
     <culture>sr-Latn</culture>
   </dictionary>
   <dictionary>
     <name>Swedish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sv/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sv/</url>
     <culture>sv</culture>
   </dictionary>
   <dictionary>
     <name>Swedish (Finland)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/sv-FI/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/sv-FI/</url>
     <culture>sv-FI</culture>
   </dictionary>
   <dictionary>
     <name>Turkmen</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/tk/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/tk/</url>
     <culture>tk</culture>
   </dictionary>
   <dictionary>
     <name>Klingon</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/tlh/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/tlh/</url>
     <culture>tlh</culture>
   </dictionary>
   <dictionary>
     <name>Klingon (Latin)</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/tlh-Latn/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/tlh-Latn/</url>
     <culture>tlh-Latn</culture>
   </dictionary>
   <dictionary>
     <name>Turkish</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/tr/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/tr/</url>
     <culture>tr</culture>
   </dictionary>
   <dictionary>
     <name>Ukrainian</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/uk/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/uk/</url>
     <culture>uk</culture>
   </dictionary>
   <dictionary>
     <name>Vietnamese</name>
-    <url>https://github.com/wooorm/dictionaries/tree/main/dictionaries/vi/</url>
+    <url>https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/vi/</url>
     <culture>vi</culture>
   </dictionary>
 </dictionaries>

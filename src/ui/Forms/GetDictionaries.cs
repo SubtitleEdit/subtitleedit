@@ -9,7 +9,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,22 +25,22 @@ namespace Nikse.SubtitleEdit.Forms
             public string EnglishName { get; set; }
             public string NativeName { get; set; }
             public string Description { get; set; }
+            
+            public CultureInfo CultureInfo { get; set; }
 
             public List<string> Urls { get; set; }
 
             public string DisplayText { get; set; }
 
             public override string ToString() => DisplayText;
-
-            public Task DownloadAsync(DictionaryDownloadHandler downloadHandler) => downloadHandler.DownloadAsync(this);
         }
 
         private int _testAllIndex = -1;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public string SelectedEnglishName { get; private set; }
+        
         public string LastDownload { get; private set; }
-
 
         public GetDictionaries()
         {
@@ -119,10 +118,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.OpenFolder(dictionaryFolder);
         }
 
-        private void buttonDownload_Click(object sender, EventArgs e)
+        private async void buttonDownload_Click(object sender, EventArgs e)
         {
-            var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
-            SelectedEnglishName = item.EnglishName;
+            var selectedDictionaryItem = (DictionaryItem)comboBoxDictionaries.SelectedItem;
+            var provider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+            SelectedEnglishName = selectedDictionaryItem.EnglishName;
             string downloadingUrl = string.Empty;
             try
             {
@@ -134,35 +134,27 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                var progressReport = new Progress<float>((progress) =>
                 {
-                    foreach (var url in item.Urls)
-                    {
-                        downloadingUrl = url;
-                        using (var downloadStream = new MemoryStream())
-                        {
-                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
-                            {
-                                var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                            }), _cancellationTokenSource.Token);
+                    var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                });
 
-                            while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                            {
-                                Application.DoEvents();
-                            }
+                await provider.DownloadAsync(selectedDictionaryItem, progressReport, _cancellationTokenSource.Token);
 
-                            if (downloadTask.IsCanceled)
-                            {
-                                DialogResult = DialogResult.Cancel;
-                                labelPleaseWait.Refresh();
-                                return;
-                            }
-
-                            CompleteDownload(downloadStream);
-                        }
-                    }
+                Cursor = Cursors.Default;
+                labelPleaseWait.Text = string.Empty;
+                buttonOK.Enabled = true;
+                buttonDownload.Enabled = true;
+                buttonDownloadAll.Enabled = true;
+                comboBoxDictionaries.Enabled = true;
+                if (_testAllIndex >= 0)
+                {
+                    DownloadNext();
+                    return;
                 }
+                
+                MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, selectedDictionaryItem));
             }
             catch (Exception exception)
             {
@@ -175,99 +167,6 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show($"Unable to download {downloadingUrl}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
                 DialogResult = DialogResult.Cancel;
-            }
-        }
-
-        private void CompleteDownload(MemoryStream downloadStream)
-        {
-            if (downloadStream.Length == 0)
-            {
-                throw new Exception("No content downloaded - missing file or no internet connection!");
-            }
-
-            Cursor = Cursors.Default;
-
-            var dictionaryFolder = Utilities.DictionaryFolder;
-            if (!Directory.Exists(dictionaryFolder))
-            {
-                Directory.CreateDirectory(dictionaryFolder);
-            }
-
-            var index = comboBoxDictionaries.SelectedIndex;
-
-            using (var zip = ZipExtractor.Open(downloadStream))
-            {
-                var dir = zip.ReadCentralDir();
-                // Extract dic/aff files in dictionary folder
-                var found = false;
-                ExtractDic(dictionaryFolder, zip, dir, ref found);
-
-                if (!found) // check zip inside zip
-                {
-                    foreach (var entry in dir)
-                    {
-                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-                        {
-                            using (var innerMs = new MemoryStream())
-                            {
-                                zip.ExtractFile(entry, innerMs);
-                                var innerZip = ZipExtractor.Open(innerMs);
-                                var innerDir = innerZip.ReadCentralDir();
-                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
-                            }
-                        }
-                    }
-                }
-            }
-
-            Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            buttonDownloadAll.Enabled = true;
-            comboBoxDictionaries.Enabled = true;
-            if (_testAllIndex >= 0)
-            {
-                DownloadNext();
-                return;
-            }
-
-            MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
-        }
-
-        private void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
-        {
-            foreach (var entry in dir)
-            {
-                if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
-                {
-                    var fileName = Path.GetFileName(entry.FilenameInZip);
-
-                    // French fix
-                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
-                    {
-                        fileName = fileName.Replace("fr-moderne", "fr_FR");
-                    }
-
-                    // German fix
-                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
-                    {
-                        fileName = fileName.Replace("de_DE_frami", "de_DE");
-                    }
-
-                    // Russian fix
-                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
-                    {
-                        fileName = fileName.Replace("russian-aot", "ru_RU");
-                    }
-
-                    var path = Path.Combine(dictionaryFolder, fileName);
-                    zip.ExtractFile(entry, path);
-
-                    found = true;
-
-                    LastDownload = fileName;
-                }
             }
         }
 
@@ -316,15 +215,68 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private class DictionaryStreamSaveContext
+        {
+            public Stream Content { get; set; }
+            public DictionaryItem DictionaryItem { get; set; }
+            public string Url { get; set; }
+        }
+
         private abstract class DictionaryProvider
         {
             public string Name { get; set; }
 
             public abstract IEnumerable<DictionaryItem> GetDictionaryItems();
 
-            public DictionaryDownloadHandler DictionaryDownloadHandler { get; protected set; }
+            public abstract Task DownloadAllAsync();
+
+            public async Task DownloadAsync(DictionaryItem dictionaryItem, IProgress<float> progress = null, CancellationToken cancellationToken = default)
+            {
+                // reusable context
+                var context = new DictionaryStreamSaveContext();
+                foreach (var url in dictionaryItem.Urls)
+                {
+                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    using (var downloadStream = new MemoryStream())
+                    {
+                        await httpClient.DownloadAsync(url, downloadStream, progress, cancellationToken).ConfigureAwait(false);
+
+                        context.Url = url;
+                        context.Content = downloadStream;
+                        context.DictionaryItem = dictionaryItem;
+
+                        await SaveDictionaryFromStream(context).ConfigureAwait(false);
+
+                        // var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                        // {
+                        //     var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        //     labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                        // }), _cancellationTokenSource.Token);
+
+                        // if (downloadTask.IsCanceled)
+                        // {
+                        //     DialogResult = DialogResult.Cancel;
+                        //     labelPleaseWait.Refresh();
+                        //     return;
+                        // }
+                    }
+                }
+            }
 
             public override string ToString() => Name;
+
+            protected abstract Task SaveDictionaryFromStream(DictionaryStreamSaveContext context);
+
+            protected string EnsureDictionaryFolderCreated()
+            {
+                var dictionaryFolder = Utilities.DictionaryFolder;
+                if (!Directory.Exists(dictionaryFolder))
+                {
+                    Directory.CreateDirectory(dictionaryFolder);
+                }
+
+                return dictionaryFolder;
+            }
         }
 
         private class SubtitleEditProvider : DictionaryProvider
@@ -332,14 +284,98 @@ namespace Nikse.SubtitleEdit.Forms
             private readonly IReadOnlyCollection<DictionaryItem> _dictionaryItems;
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz";
 
-            public SubtitleEditProvider(Form parentForm = null)
+            public SubtitleEditProvider()
             {
                 Name = "Subtitle Edit";
                 _dictionaryItems = LoadDictionariesFromResource(XmlResourceName);
-                DictionaryDownloadHandler = new SeHandler(parentForm);
             }
 
             public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
+
+            public override Task DownloadAllAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override async Task SaveDictionaryFromStream(DictionaryStreamSaveContext context)
+            {
+                var stream = context.Content;
+                if (stream.Length == 0)
+                {
+                    throw new Exception("No content downloaded - missing file or no internet connection!");
+                }
+
+                // Cursor = Cursors.Default;
+
+                var dictionaryFolder = EnsureDictionaryFolderCreated();
+
+                // var index = comboBoxDictionaries.SelectedIndex;
+
+                await Task.Run(() =>
+                {
+                    using (var zip = ZipExtractor.Open(stream))
+                    {
+                        var dir = zip.ReadCentralDir();
+                        // Extract dic/aff files in dictionary folder
+                        var found = false;
+                        ExtractDic(dictionaryFolder, zip, dir, ref found);
+
+                        if (!found) // check zip inside zip
+                        {
+                            foreach (var entry in dir)
+                            {
+                                if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    using (var innerMs = new MemoryStream())
+                                    {
+                                        zip.ExtractFile(entry, innerMs);
+                                        var innerZip = ZipExtractor.Open(innerMs);
+                                        var innerDir = innerZip.ReadCentralDir();
+                                        ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }).ConfigureAwait(false);
+            }
+
+            private void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
+            {
+                foreach (var entry in dir)
+                {
+                    if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var fileName = Path.GetFileName(entry.FilenameInZip);
+
+                        // French fix
+                        if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
+                        {
+                            fileName = fileName.Replace("fr-moderne", "fr_FR");
+                        }
+
+                        // German fix
+                        if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
+                        {
+                            fileName = fileName.Replace("de_DE_frami", "de_DE");
+                        }
+
+                        // Russian fix
+                        if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
+                        {
+                            fileName = fileName.Replace("russian-aot", "ru_RU");
+                        }
+
+                        var path = Path.Combine(dictionaryFolder, fileName);
+                        zip.ExtractFile(entry, path);
+
+                        found = true;
+
+                        // todo: fix me!
+                        // LastDownload = fileName;
+                    }
+                }
+            }
 
             private IReadOnlyCollection<DictionaryItem> LoadDictionariesFromResource(string xmlResourceName)
             {
@@ -436,12 +472,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml";
             private readonly IList<DictionaryItem> _dictionaryItems;
-            
+
             public WooormGithub()
             {
                 Name = "Wooorm's Github";
                 _dictionaryItems = LoadDictionaryInfoFromResource(XmlResourceName);
-                DictionaryDownloadHandler = new WoormHandler();
             }
 
             private List<DictionaryItem> LoadDictionaryInfoFromResource(string resourceName)
@@ -465,6 +500,8 @@ namespace Nikse.SubtitleEdit.Forms
                         DisplayText = ci.DisplayName,
                         Urls = GenerateUrls(xElement.Element("url").Value),
                         Description = string.Empty,
+
+                        CultureInfo = ci,
                     });
                 }
 
@@ -486,34 +523,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
-        }
 
-        private abstract class DictionaryDownloadHandler
-        {
-            public abstract Task DownloadAsync(DictionaryItem dictionaryItem);
-        }
-
-        private class SeHandler : DictionaryDownloadHandler
-        {
-            private readonly Form _parentForm;
-
-            public SeHandler(Form parentForm)
-            {
-                _parentForm = parentForm;
-            }
-            public override Task DownloadAsync(DictionaryItem dictionaryItem)
+            public override Task DownloadAllAsync()
             {
                 throw new NotImplementedException();
             }
-        }
 
-        private class WoormHandler : DictionaryDownloadHandler
-        {
-            public override Task DownloadAsync(DictionaryItem dictionaryItem)
+            protected override async Task SaveDictionaryFromStream(DictionaryStreamSaveContext context)
             {
-                throw new NotImplementedException();
+                // https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/cs/index.dic
+                // https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/cs/index.aff
+                var dictionaryFolder = EnsureDictionaryFolderCreated();
+                // todo: how to tell which url is being download to gen the extension accordingly 
+                var uri = new Uri(context.Url);
+                var extension = Path.GetExtension(uri.AbsolutePath);
+                var outputFileName = Path.Combine(dictionaryFolder, $"{context.DictionaryItem.CultureInfo.Name}{extension}");
+
+                context.Content.Position = 0;
+                using (FileStream fileStream = File.OpenWrite(outputFileName))
+                {
+                    await context.Content.CopyToAsync(fileStream).ConfigureAwait(false);
+                }
             }
         }
-
     }
 }
