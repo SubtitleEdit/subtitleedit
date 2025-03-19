@@ -463,7 +463,7 @@ namespace Nikse.SubtitleEdit.Forms
                         EnglishName = name,
                         NativeName = ci.NativeName,
                         DisplayText = ci.DisplayName,
-                        Urls = GenerateUrls(xElement.Element("Url").Value),
+                        Urls = GenerateUrls(xElement.Element("url").Value),
                         Description = string.Empty,
                     });
                 }
