@@ -8,9 +8,12 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Security.Policy;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -22,8 +25,13 @@ namespace Nikse.SubtitleEdit.Forms
             public string EnglishName { get; set; }
             public string NativeName { get; set; }
             public string Description { get; set; }
-            public string DownloadLink { get; set; }
+
+            // public string DownloadLink { get; set; }
+
+            public List<string> Urls { get; set; }
+
             public string DisplayText { get; set; }
+            
             public override string ToString() => DisplayText;
         }
 
@@ -55,11 +63,26 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxProviders.Items.Add(new SubtitleEdit());
             comboBoxProviders.Items.Add(new WooormGithub());
 
+            comboBoxProviders.SelectedIndexChanged += ComboBoxProvidersOnSelectedIndexChanged;
+
+            // subtitle edit provider is the default
+            comboBoxProviders.SelectedIndex = 0;
+
             FixLargeFonts();
             _cancellationTokenSource = new CancellationTokenSource();
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif
+        }
+
+        private void ComboBoxProvidersOnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var provider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+
+            comboBoxDictionaries.BeginUpdate();
+            comboBoxDictionaries.Items.Clear();
+            comboBoxDictionaries.Items.AddRange(provider.GetDictionaryItems());
+            comboBoxDictionaries.EndUpdate();
         }
 
         private void FixLargeFonts()
@@ -100,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
             SelectedEnglishName = item.EnglishName;
+            string downloadingUrl = string.Empty;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -111,27 +135,33 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
-                using (var downloadStream = new MemoryStream())
                 {
-                    var downloadTask = httpClient.DownloadAsync(item.DownloadLink, downloadStream, new Progress<float>((progress) =>
+                    foreach (var url in item.Urls)
                     {
-                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                    }), _cancellationTokenSource.Token);
+                        downloadingUrl = url;
+                        using (var downloadStream = new MemoryStream())
+                        {
+                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                            {
+                                var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                            }), _cancellationTokenSource.Token);
 
-                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                    {
-                        Application.DoEvents();
+                            while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                            {
+                                Application.DoEvents();
+                            }
+
+                            if (downloadTask.IsCanceled)
+                            {
+                                DialogResult = DialogResult.Cancel;
+                                labelPleaseWait.Refresh();
+                                return;
+                            }
+
+                            CompleteDownload(downloadStream);
+                        }
                     }
-
-                    if (downloadTask.IsCanceled)
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        labelPleaseWait.Refresh();
-                        return;
-                    }
-
-                    CompleteDownload(downloadStream);
                 }
             }
             catch (Exception exception)
@@ -142,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownloadAll.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show($"Unable to download {item.DownloadLink}!" + Environment.NewLine + Environment.NewLine +
+                MessageBox.Show($"Unable to download {downloadingUrl}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
                 DialogResult = DialogResult.Cancel;
             }
@@ -305,14 +335,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _dictionaryItems = LoadDictionariesFromResource(XmlResourceName);
             }
 
-            public override IEnumerable<DictionaryItem> GetDictionaryItems()
-            {
-                throw new NotImplementedException();
-            }
+            public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
 
             private IReadOnlyCollection<DictionaryItem> LoadDictionariesFromResource(string xmlResourceName)
             {
-                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var asm = Assembly.GetExecutingAssembly();
                 var stream = asm.GetManifestResourceStream(xmlResourceName);
 
                 var dictionaryItems = new List<DictionaryItem>();
@@ -354,7 +381,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 EnglishName = englishName,
                                 NativeName = nativeName,
                                 Description = description,
-                                DownloadLink = downloadLink,
+                                Urls = new List<string>() { downloadLink },
                                 DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
                             };
 
@@ -399,27 +426,60 @@ namespace Nikse.SubtitleEdit.Forms
 
                 return false;
             }
-
-            
         }
 
         private class WooormGithub : DictionaryProvider
         {
             private const string XmlResourceName = "Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml";
-            public WooormGithub() => Name = "Wooorm's Github";
+            private readonly IList<DictionaryItem> _dictionaryItems;
 
-            public override IEnumerable<DictionaryItem> GetDictionaryItems()
+            public WooormGithub()
             {
-                throw new NotImplementedException();
+                Name = "Wooorm's Github";
+                _dictionaryItems = LoadDictionaryInfoFromResource(XmlResourceName);
             }
+
+            private List<DictionaryItem> LoadDictionaryInfoFromResource(string resourceName)
+            {
+                // ReSharper disable AssignNullToNotNullAttribute
+                // ReSharper disable PossibleNullReferenceException
+
+                var sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName), System.Text.Encoding.UTF8);
+                var xmlContent = sr.ReadToEnd();
+
+                var xDocument = XDocument.Parse(xmlContent);
+                var result = new List<DictionaryItem>();
+                foreach (XElement xElement in xDocument.Root.Elements("dictionary"))
+                {
+                    var name = xElement.Element("name").Value;
+                    var ci = new CultureInfo(xElement.Element("culture").Value);
+                    result.Add(new DictionaryItem()
+                    {
+                        EnglishName = name,
+                        NativeName = ci.NativeName,
+                        DisplayText = ci.DisplayName,
+                        Urls = GenerateUrls(xElement.Element("Url").Value),
+                    });
+                }
+
+                return result;
+            }
+
+            private List<string> GenerateUrls(string url)
+            {
+                if (!url.EndsWith('/'))
+                {
+                    url += "/";
+                }
+
+                return new List<string>
+                {
+                    string.Concat(url, "index.dic"),
+                    string.Concat(url, "index.aff")
+                };
+            }
+
+            public override IEnumerable<DictionaryItem> GetDictionaryItems() => _dictionaryItems;
         }
     }
-
-
-
-    /*
-        var sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Nikse.SubtitleEdit.Resources.wooorm-dictionaries.xml"), System.Text.Encoding.UTF8);
-        var content = sr.ReadToEnd();
-     */
-    
 }
