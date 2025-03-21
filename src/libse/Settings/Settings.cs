@@ -5555,6 +5555,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VideoControls.WaveformChaptersColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
+            subNode = node.SelectSingleNode("WaveformDuplicateTextWhileSplitting");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformDuplicateTextWhileSplitting = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformTextSize");
             if (subNode != null)
             {
@@ -9783,6 +9789,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("WaveformCursorColor", settings.VideoControls.WaveformCursorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformChaptersColor", settings.VideoControls.WaveformChaptersColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WaveformDuplicateTextWhileSplitting", settings.VideoControls.WaveformDuplicateTextWhileSplitting.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
                 xmlWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
