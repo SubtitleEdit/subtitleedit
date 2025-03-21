@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
         {
             var s = input.TrimStart('-', ' ');
-            if (s.Length < 10 || !char.IsDigit(s[0]))
+            if (s.Length < 10 || !CharUtils.IsDigit(s[0]))
             {
                 return false;
             }
@@ -435,7 +435,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (step == 0 || step == 2 || step == 4 || step == 9 || step == 11) // start numbers
                 {
-                    if (ch == '-' || char.IsDigit(ch))
+                    if (ch == '-' || CharUtils.IsDigit(ch))
                     {
                         step++;
                     }
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (step == 1 || step == 3 || step == 10 || step == 12) // number
                 {
-                    if (char.IsDigit(ch))
+                    if (CharUtils.IsDigit(ch))
                     {
                         // ok
                     }
@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (step == 5 || step == 13) // seconds
                 {
-                    if (char.IsDigit(ch))
+                    if (CharUtils.IsDigit(ch))
                     {
                         // ok
                     }
@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (step == 6 || step == 14) // milliseconds
                 {
-                    if (char.IsDigit(ch))
+                    if (CharUtils.IsDigit(ch))
                     {
                         // ok
                     }
