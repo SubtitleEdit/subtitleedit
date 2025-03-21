@@ -722,6 +722,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = text.Replace(" _@_", "_@_");
             text = text.Replace(" _@_ ", "_@_");
             text = text.Replace("_@_", " ");
+            text = text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
 
             if (text.Contains(beginTag))
             {
@@ -965,7 +966,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                             var pre = text.Substring(0, idx + 1).TrimStart();
                             var tempText = text.Remove(0, idx + 1); 
                             
-                            if (!tempText.StartsWith(']') && !tempText.StartsWith(')'))
+                            if (!tempText.StartsWith(']') && 
+                                !tempText.StartsWith(')') &&
+                                !tempText.StartsWith(Environment.NewLine) &&
+                                !tempText.StartsWith("</i>" + Environment.NewLine))
                             {
                                 text = tempText;
                                 text = FixInvalidItalicTags(text).Trim();
