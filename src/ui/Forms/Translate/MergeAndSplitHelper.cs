@@ -56,8 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 if (!noSentenceEndingSource)
                 {
-                    noSentenceEndingSource = true;
-                    mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
+                    mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource: true, noSentenceEndingTarget);
                     mergeCount = mergeResult.ParagraphCount;
                     text = mergeResult.Text;
                 }
@@ -342,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var inputBlank = string.IsNullOrWhiteSpace(sourceSubtitle.Paragraphs[i + index].Text);
                 var outputBlank = string.IsNullOrWhiteSpace(newSub.Paragraphs[i].Text);
-                if (inputBlank || outputBlank && (inputBlank != outputBlank))
+                if (inputBlank || outputBlank)
                 {
                     return false;
                 }
@@ -357,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var inputBlank = string.IsNullOrWhiteSpace(tempSubtitle.Paragraphs[i + index].Text);
                 var outputBlank = string.IsNullOrWhiteSpace(splitResult[i]);
-                if (inputBlank || outputBlank && (inputBlank != outputBlank))
+                if (inputBlank || outputBlank)
                 {
                     return false;
                 }
@@ -717,14 +716,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     // test using character count for percentage
                     var totalCharLength = item.Paragraphs[0].Text.Length + item.Paragraphs[1].Text.Length;
                     var pctCharLength1 = item.Paragraphs[0].Text.Length * 100.0 / totalCharLength;
-                    var pctCharLength2 = item.Paragraphs[1].Text.Length * 100.0 / totalCharLength;
-                    var pctCharArr = GetTwoPartsByPct(text, pctCharLength1, pctCharLength2);
+                    var pctCharArr = GetTwoPartsByPct(text, pctCharLength1);
 
                     // test using duration for percentage
                     var totalDurationLength = item.Paragraphs[0].DurationTotalMilliseconds + item.Paragraphs[1].DurationTotalMilliseconds + 1;
                     var pctDurationLength1 = item.Paragraphs[0].DurationTotalMilliseconds * 100.0 / totalDurationLength;
-                    var pctDurationLength2 = item.Paragraphs[1].DurationTotalMilliseconds * 100.0 / totalDurationLength;
-                    var pctDurationArr = GetTwoPartsByPct(text, pctDurationLength1, pctDurationLength2);
+                    var pctDurationArr = GetTwoPartsByPct(text, pctDurationLength1);
 
 
                     // use best match of the three arrays considering line separator, adherence to chars/sec
@@ -792,7 +789,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return TextSplit.SplitMulti(text, count, language);
         }
 
-        private static string[] GetTwoPartsByPct(string text, double pctCharLength1, double pctCharLength2)
+        private static string[] GetTwoPartsByPct(string text, double pctCharLength1)
         {
             var idx = (int)Math.Round(text.Length * pctCharLength1 / 100.0, MidpointRounding.AwayFromZero);
             for (var i = 0; i < idx; i++)
