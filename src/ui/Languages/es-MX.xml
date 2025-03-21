@@ -1036,7 +1036,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <ToggleDefault>Alternar predeterminado</ToggleDefault>
     <Default>Predeterminado</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generado con subtítulos incrustados</XGeneratedWithEmbeddedSubs>
-    <DeleteInputVideo>Eliminar el archivo de vídeo de entrada después de "Generar"</DeleteInputVideo>
+    <DeleteInputVideo>Eliminar el archivo de video de entrada después de "Generar"</DeleteInputVideo>
     <OutputFileNameSettings>Configuración del nombre de archivo de salida...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
@@ -2426,7 +2426,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SplitBehavior>Comportamiento de la división</SplitBehavior>
     <SplitBehaviorPrevious>Añadir intervalo a la izquierda del punto de división (enfocar a la derecha)</SplitBehaviorPrevious>
     <SplitBehaviorHalf>Añadir intervalo al centro del punto de división (enfocar a la izquierda)</SplitBehaviorHalf>
-    <SplitBehaviorNext>Añadir intervalo a la derecha del punto de división ( enfocar a la izquierda)</SplitBehaviorNext>
+    <SplitBehaviorNext>Añadir intervalo a la derecha del punto de división (enfocar a la izquierda)</SplitBehaviorNext>
     <VideoEngine>Motor del reproductor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en la carpeta system32</DirectShowDescription>
@@ -3021,7 +3021,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <LineLengthMinimum>Longitud del subtítulo - mínima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Longitud del subtítulo - máxima: {0}</LineLengthMaximum>
     <LineLengthAverage>Longitud del subtítulo - promedio: {0:#.###}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Subtitulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>Subtítulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longitud de una sola línea - mínima: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longitud de una sola línea - máxima: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0:#.###} Duración</SingleLineLengthAverage>
