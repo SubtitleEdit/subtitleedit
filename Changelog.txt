@@ -34,6 +34,9 @@
    * Fix crash in TTS retry - thx cvrle77
    * Fix custom format duration > 1 min - thx bangwb
    * Fix WebVTT conversion of color-name to color - thx mbas-rtbf
+   * Fix unwanted removal of space after colon in format EBU
+   * Fix duration in DVB subs, support for stuffing type - thx stanislavpetkov
+
 
 
 4.0.11 (28th January 2025)
