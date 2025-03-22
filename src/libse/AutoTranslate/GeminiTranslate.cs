@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
@@ -28,6 +29,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string[] Models => new[]
         {
             "gemini-2.0-flash",
+            "gemini-2.0-flash-lite",
             "gemini-pro",
         };
 
@@ -47,6 +49,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.GeminiModel = Models[0];
             }
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiPrompt))
+            {
+                Configuration.Settings.Tools.GeminiPrompt = new ToolsSettings().GeminiPrompt;
+            }
+
             var model = Configuration.Settings.Tools.GeminiModel;
             _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
         }
@@ -63,7 +71,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
+            var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -2399,6 +2399,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (subNode != null)
             {
                 settings.Tools.GeminiProApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GeminiPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.GeminiPrompt = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TextToSpeechEngine");
@@ -9204,6 +9210,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
                 xmlWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
+                xmlWriter.WriteElementString("GeminiPrompt", settings.Tools.GeminiPrompt);
                 xmlWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
                 xmlWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 xmlWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
