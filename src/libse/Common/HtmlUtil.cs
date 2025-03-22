@@ -1003,6 +1003,32 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            if (noOfLines == 2 && italicBeginTagCount == 0 && italicEndTagCount == 4)
+            {
+                var lines = text.SplitToLines();
+                if (lines.Count == 2 &&
+                    lines[0].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture) &&
+                    lines[1].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture))
+                {
+                    var s1 = lines[0].Replace("</i>", string.Empty);
+                    var s2 = lines[1].Replace("</i>", string.Empty);
+                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                }
+            }
+
+            if (noOfLines == 2 && italicBeginTagCount == 4 && italicEndTagCount == 0)
+            {
+                var lines = text.SplitToLines();
+                if (lines.Count == 2 &&
+                    lines[0].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture) &&
+                    lines[1].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture))
+                {
+                    var s1 = lines[0].Replace("<i>", string.Empty);
+                    var s2 = lines[1].Replace("<i>", string.Empty);
+                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                }
+            }
+
             if (noOfLines == 3)
             {
                 var lines = text.SplitToLines();

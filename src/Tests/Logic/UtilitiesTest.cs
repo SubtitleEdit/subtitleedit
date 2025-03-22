@@ -524,6 +524,22 @@ namespace Tests.Logic
         }
 
         [TestMethod]
+        public void FixInvalidItalicAllEndTags()
+        {
+            var s1 = "</i>Line1.</i>" + Environment.NewLine + "</i>Line2.</i>";
+            var s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual("<i>Line1.</i>" + Environment.NewLine + "<i>Line2.</i>", s2);
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicAllStartTags()
+        {
+            var s1 = "<i>Line1.<i>" + Environment.NewLine + "<i>Line2.<i>";
+            var s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual("<i>Line1.</i>" + Environment.NewLine + "<i>Line2.</i>", s2);
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
