@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
@@ -111,6 +111,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     nikseTextBoxPrompt.Text = new ToolsSettings().AutoTranslateMistralPrompt;
                 }
             }
+            else if (_engineType == typeof(GeminiTranslate))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.GeminiPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().GeminiPrompt;
+                }
+            }
             else
             {
                 labelPrompt.Visible = false;
@@ -189,6 +197,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (_engineType == typeof(MistralTranslate))
             {
                 Configuration.Settings.Tools.AutoTranslateMistralPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(GeminiTranslate))
+            {
+                Configuration.Settings.Tools.GeminiPrompt = nikseTextBoxPrompt.Text;
             }
 
             if (comboBoxParagraphHandling.SelectedIndex == 1)
