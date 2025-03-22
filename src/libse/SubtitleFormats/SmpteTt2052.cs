@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 style.InnerText = "basic";
                 paragraph.Attributes.Append(style);
 
-                XmlAttribute textAlign = xml.CreateAttribute("textAlign");
+                XmlAttribute textAlign = xml.CreateAttribute("tts", "textAlign", "http://www.w3.org/ns/10/ttml#style");
                 textAlign.InnerText = "center";
                 paragraph.Attributes.Append(textAlign);
 
