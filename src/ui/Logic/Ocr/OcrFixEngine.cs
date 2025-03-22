@@ -1436,14 +1436,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var trimmed = word.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،', '؟', '»');
                         if (trimmed != word)
                         {
-                            if (_spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(trimmed))
-                            {
-                                correct = true;
-                            }
-                            else
-                            {
-                                correct = DoSpell(trimmed);
-                            }
+                            correct = _spellCheckWordLists?.HasUserWord(trimmed) == true || DoSpell(trimmed);
                         }
                     }
 
@@ -1453,22 +1446,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var dashedWord = GetDashedWordBefore(word, line, words, i);
                         if (!string.IsNullOrEmpty(dashedWord))
                         {
-                            correct = IsWordKnownOrNumber(dashedWord, line);
-                            if (!correct)
-                            {
-                                correct = DoSpell(dashedWord);
-                            }
+                            correct = IsWordKnownOrNumber(dashedWord, line) || DoSpell(dashedWord);
                         }
                         if (!correct)
                         {
                             dashedWord = GetDashedWordAfter(word, line, words, i);
                             if (!string.IsNullOrEmpty(dashedWord))
                             {
-                                correct = IsWordKnownOrNumber(dashedWord, line);
-                                if (!correct)
-                                {
-                                    correct = DoSpell(dashedWord);
-                                }
+                                correct = IsWordKnownOrNumber(dashedWord, line) || DoSpell(dashedWord);
                             }
                         }
 
