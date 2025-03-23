@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class SeamlessM4TTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "SeamlessM4T";
         public override string ToString() => StaticName;
@@ -70,9 +71,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
-            var parser = new SeJsonParser();
-            var textOutput = parser.GetFirstObject(json, "text_output");
-            var resultText = parser.GetFirstObject(textOutput, "title");
+            var textOutput = _parser.GetFirstObject(json, "text_output");
+            var resultText = _parser.GetFirstObject(textOutput, "title");
             if (resultText == null)
             {
                 return string.Empty;

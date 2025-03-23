@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class GoogleTranslateV1 : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "Google Translate V1 API";
         public override string ToString() => StaticName;
@@ -225,20 +226,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             };
         }
 
-        private static List<string> ConvertJsonObjectToStringLines(string result)
+        private List<string> ConvertJsonObjectToStringLines(string result)
         {
-            var parser = new SeJsonParser();
-            var arr = parser.GetArrayElements(result);
+            var arr = _parser.GetArrayElements(result);
             if (arr.Count == 0)
             {
                 return new List<string>();
             }
 
             var sbAll = new StringBuilder();
-            var translateLines = parser.GetArrayElements(arr[0]);
+            var translateLines = _parser.GetArrayElements(arr[0]);
             foreach (var line in translateLines)
             {
-                var lineArr = parser.GetArrayElements(line);
+                var lineArr = _parser.GetArrayElements(line);
                 if (lineArr.Count > 0)
                 {
                     var s = lineArr[0].Trim('"');

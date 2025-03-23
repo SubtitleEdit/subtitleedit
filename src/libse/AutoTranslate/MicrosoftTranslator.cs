@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// </summary>
     public class MicrosoftTranslator : IAutoTranslator, IDisposable
     {
+        private readonly JsonParser _parser = new JsonParser();
         public const string SignUpUrl = "https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource";
         public const string GoToUrl = "https://www.bing.com/translator";
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
@@ -80,7 +81,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = httpClient.PostAsync(url, content).Result;
-            var parser = new JsonParser();
             var jsonResult = result.Content.ReadAsStringAsync().Result;
 
             if (!result.IsSuccessStatusCode)
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 throw new Exception("An error occurred during translate:" + Environment.NewLine + Environment.NewLine + jsonResult);
             }
 
-            var x = (List<object>)parser.Parse(jsonResult);
+            var x = (List<object>)_parser.Parse(jsonResult);
             foreach (var xElement in x)
             {
                 var dict = (Dictionary<string, object>)xElement;

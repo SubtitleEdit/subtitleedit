@@ -15,7 +15,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class AnthropicTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
-
+        private readonly SeJsonParser _parser = new SeJsonParser();
+        
         public static string StaticName { get; set; } = "Anthropic Claude";
         public override string ToString() => StaticName;
 
@@ -92,8 +93,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             SeLogger.Error($"{StaticName}: debug json: " + json);
 
-            var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "text");
+            var resultText = _parser.GetFirstObject(json, "text");
             if (resultText == null)
             {
                 return string.Empty;

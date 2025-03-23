@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private string _apiKey;
         private IDownloader _httpClient;
+        private readonly JsonParser _parser = new JsonParser();
 
         public static string StaticName { get; set; } = "Google Translate V2 API";
         public override string ToString() => StaticName;
@@ -103,8 +104,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             var resultList = new List<string>();
-            var parser = new JsonParser();
-            var x = (Dictionary<string, object>)parser.Parse(content);
+            var x = (Dictionary<string, object>)_parser.Parse(content);
             foreach (var k in x.Keys)
             {
                 if (x[k] is Dictionary<string, object> v)

@@ -16,7 +16,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class ChatGptTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
-
+        private readonly SeJsonParser _parser = new SeJsonParser();
+        
         public static string StaticName { get; set; } = "ChatGPT";
         public override string ToString() => StaticName;
         public string Name => StaticName;
@@ -107,8 +108,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
-            var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "content");
+            var resultText = _parser.GetFirstObject(json, "content");
             if (resultText == null)
             {
                 return string.Empty;

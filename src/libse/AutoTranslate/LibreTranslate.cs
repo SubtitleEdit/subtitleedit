@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class LibreTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "LibreTranslate";
         public override string ToString() => StaticName;
@@ -68,8 +69,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 SeLogger.Error("LibreTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
             result.EnsureSuccessStatusCode();
-            var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "translatedText");
+            var resultText = _parser.GetFirstObject(json, "translatedText");
             if (resultText == null)
             {
                 return string.Empty;

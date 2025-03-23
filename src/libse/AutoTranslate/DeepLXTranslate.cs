@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private string _apiUrl;
         private HttpClient _client;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "DeepLX translate";
         public override string ToString() => StaticName;
@@ -73,8 +74,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             try
             {
-                var parser = new SeJsonParser();
-                var alternatives = parser.GetArrayElementsByName(resultContent, "alternatives");
+                var alternatives = _parser.GetArrayElementsByName(resultContent, "alternatives");
                 var data = string.Empty;
                 if (alternatives.Count > 0 && alternatives[0] != null)
                 {

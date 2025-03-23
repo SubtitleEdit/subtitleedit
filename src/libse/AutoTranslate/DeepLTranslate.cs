@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private string _apiUrl;
         private string _formality;
         private HttpClient _client;
+        private readonly JsonParser _parser = new JsonParser();
 
         public static string StaticName { get; set; } = "DeepL V2 translate";
         public override string ToString() => StaticName;
@@ -163,8 +164,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             try
             {
                 var resultList = new List<string>();
-                var parser = new JsonParser();
-                var x = (Dictionary<string, object>)parser.Parse(resultContent);
+                var x = (Dictionary<string, object>)_parser.Parse(resultContent);
                 foreach (var k in x.Keys)
                 {
                     if (x[k] is List<object> mainList)

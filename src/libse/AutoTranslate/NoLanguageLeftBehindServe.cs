@@ -15,7 +15,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class NoLanguageLeftBehindServe : IAutoTranslator, IDisposable
     {
         private IDownloader _httpClient;
-        
+        private readonly SeJsonParser _parser = new SeJsonParser();
+
         public static string StaticName { get; set; } = "thammegowda-nllb-serve";
         public override string ToString() => StaticName;
         public string Name => StaticName;
@@ -61,8 +62,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
-            var parser = new SeJsonParser();
-            var arr = parser.GetArrayElementsByName(json, "translation");
+            var arr = _parser.GetArrayElementsByName(json, "translation");
             if (arr == null || arr.Count == 0)
             {
                 return string.Empty;

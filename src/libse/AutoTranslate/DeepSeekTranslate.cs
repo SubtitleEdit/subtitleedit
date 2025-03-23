@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class DeepSeekTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
+        private readonly SeJsonParser _parser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "DeepSeek";
         public override string ToString() => StaticName;
@@ -99,8 +100,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
-            var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(resultContent, "content");
+            var resultText = _parser.GetFirstObject(resultContent, "content");
             if (resultText == null)
             {
                 return string.Empty;
