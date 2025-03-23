@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var s1 = lines[0].Replace("</i>", string.Empty);
                     var s2 = lines[1].Replace("</i>", string.Empty);
-                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                    text = "<i>" + s1.Trim() + Environment.NewLine + s2.Trim() + "</i>";
                 }
             }
 
