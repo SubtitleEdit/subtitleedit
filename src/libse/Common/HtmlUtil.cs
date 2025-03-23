@@ -1007,7 +1007,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var lines = text.SplitToLines();
                 if (lines.Count == 2 &&
-                    lines[0].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture) &&
+                    lines[0].StartsWith("</i>", StringComparison.InvariantCulture) && lines[0].EndsWith("</i>", StringComparison.InvariantCulture) &&
                     lines[1].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture))
                 {
                     var s1 = lines[0].Replace("</i>", string.Empty);
