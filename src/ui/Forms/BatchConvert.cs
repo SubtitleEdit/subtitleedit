@@ -123,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
         private PreprocessingSettings _preprocessingSettings;
         private IAutoTranslator _autoTranslator;
         private readonly List<IAutoTranslator> _autoTranslatorEngines;
+        private Dictionary<string, Subtitle> _cache;
 
         private string _ocrEngine = "Tesseract";
         private string _ocrLanguage = "en";
@@ -135,6 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
             Icon = (Icon)icon.Clone();
             DoubleBuffered = true;
 
+            _cache = new Dictionary<string, Subtitle>();
             _cancellationTokenSource = new CancellationTokenSource();
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
@@ -848,7 +850,11 @@ namespace Nikse.SubtitleEdit.Forms
                         !((ext == ".mkv" || ext == ".mks") && FileUtil.IsMatroskaFile(fileName)) &&
                         ext != ".mp4" && ext != ".mv4" && ext != ".m4s")
                     {
-                        format = sub.LoadSubtitle(fileName, out _, null);
+                        format = sub.LoadSubtitle(fileName, out var sub2, null);
+                        if (format != null && !_cache.ContainsKey(fileName) && _cache.Count < 100)
+                        {
+                            _cache.Add(fileName, sub);
+                        }
 
                         if (format == null)
                         {
@@ -858,6 +864,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     f.LoadSubtitle(sub, null, fileName);
                                     format = f;
+
+                                    if (!_cache.ContainsKey(fileName) && _cache.Count < 100)
+                                    {
+                                        _cache.Add(fileName, sub);
+                                    }
+
                                     break;
                                 }
                             }
@@ -873,6 +885,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     f.LoadSubtitle(sub, lines, fileName);
                                     format = f;
+
+                                    if (!_cache.ContainsKey(fileName) && _cache.Count < 100)
+                                    {
+                                        _cache.Add(fileName, sub);
+                                    }
+
                                     break;
                                 }
                             }
@@ -1310,7 +1328,15 @@ namespace Nikse.SubtitleEdit.Forms
                     var fi = new FileInfo(fileName);
                     if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) && !FileUtil.IsMatroskaFile(fileName))
                     {
-                        fromFormat = sub.LoadSubtitle(fileName, out _, null);
+                        if (_cache.TryGetValue(fileName, out var sub2))
+                        {
+                            sub = sub2;
+                            fromFormat = sub.OriginalFormat;
+                        }
+                        else
+                        {
+                            fromFormat = sub.LoadSubtitle(fileName, out _, null);
+                        }
 
                         if (fromFormat == null)
                         {
