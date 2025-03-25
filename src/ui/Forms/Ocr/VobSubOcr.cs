@@ -8587,16 +8587,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void StartOcrFromDelayed()
+        internal async Task StartOcrFromDelayed()
         {
             if (_lastAdditions.Count > 0)
             {
                 var last = _lastAdditions[_lastAdditions.Count - 1];
                 numericUpDownStartNumber.Value = last.Index + 1;
-
-                // Simulate a click on ButtonStartOcr in 200ms.
-                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
-                Utilities.TaskDelay(200).ContinueWith(_ => ButtonStartOcrClick(null, null), uiContext);
+                await Task.Delay(200, CancellationToken.None);
+                ButtonStartOcrClick(null, null);
             }
         }
 
