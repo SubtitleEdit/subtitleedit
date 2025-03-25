@@ -411,5 +411,34 @@ namespace Tests.Logic
 
             Assert.AreEqual("- That's it!" + Environment.NewLine + "- ..sped to victory.", result);
         }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void TestPartialColors()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("-Yes. <font color=\"red\">Red</font>.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, true, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- Yes." + Environment.NewLine + "- Red.", result);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void TestPartialColorsThreeLines()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("-Yes. <font color=\"red\">Red</font>." + Environment.NewLine +
+                                                                              "- No.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, true, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- Yes." + Environment.NewLine + "- Red." + Environment.NewLine + "- No.", result);
+        }
     }
 }
