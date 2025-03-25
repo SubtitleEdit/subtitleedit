@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonLastEdit_Click(object sender, EventArgs e)
+        private async void buttonLastEdit_Click(object sender, EventArgs e)
         {
             if (_additions.Count > 0)
             {
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (result == DialogResult.OK)
                 {
                     _additions.RemoveAt(_additions.Count - 1);
-                    _vobSubForm.StartOcrFromDelayed();
+                    await _vobSubForm.StartOcrFromDelayed();
                     DialogResult = DialogResult.Abort;
                 }
             }
