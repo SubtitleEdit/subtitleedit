@@ -5944,6 +5944,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.UpdateMpvStyle();
             }
 
+            mediaPlayer.ShowPlayerLogo();
+
             if (oldUseCenterChannelOnly != Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
                 !string.IsNullOrEmpty(_videoFileName) &&
                 !VideoFileNameIsUrl &&

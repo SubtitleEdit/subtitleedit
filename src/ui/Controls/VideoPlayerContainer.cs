@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Settings;
+using System.Drawing.Imaging;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -92,6 +93,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 DeleteTempMpvFileName();
                 VideoPlayerContainerResize(this, null);
+                ShowPlayerLogo();
             }
         }
 
@@ -149,6 +151,8 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
+
+        private Bitmap _playerIcon;
 
         public MatroskaChapter[] Chapters { get; set; }
 
@@ -262,6 +266,55 @@ namespace Nikse.SubtitleEdit.Controls
 
             _labelTimeCode.Click += LabelTimeCodeClick;
             _loading = false;
+
+            ShowPlayerLogo();
+            PanelPlayer.Paint += PanelPlayerPaint;
+        }
+
+        public void ShowPlayerLogo()
+        {
+            var path = Path.Combine(Configuration.BaseDirectory, "icons", $"{Configuration.Settings.General.VideoPlayer.ToLowerInvariant()}.png");
+            if (!File.Exists(path))
+            {
+                _playerIcon = new Bitmap(1, 1);
+                return;
+            }
+
+            _playerIcon = new Bitmap(path);
+
+            if (_videoPlayer == null)
+            {
+                PanelPlayer.Dock = DockStyle.Fill;
+                PanelPlayer.Visible = true;
+                PanelPlayer.BringToFront();
+            }
+        }
+
+        private void PanelPlayerPaint(object sender, PaintEventArgs e)
+        {
+            if (_videoPlayer != null)
+            {
+                return;
+            }
+
+            Image img = _playerIcon;
+
+            var left = (Width / 2) - (img.Width / 2);
+            var top = (Height / 2) - (img.Height / 2);
+
+            float opacity = 0.4f; // Adjust opacity (0.0 = fully transparent, 1.0 = fully opaque)
+
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.Matrix33 = opacity; // Set the alpha channel (transparency)
+
+            ImageAttributes attributes = new ImageAttributes();
+            attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            // Draw the image with the modified opacity
+            e.Graphics.DrawImage(img,
+                                 new Rectangle(left, top, img.Width, img.Height),
+                                 0, 0, img.Width, img.Height,
+                                 GraphicsUnit.Pixel, attributes);
         }
 
         private bool _showDuration = true;
@@ -1132,7 +1185,7 @@ namespace Nikse.SubtitleEdit.Controls
             ResizeTimeCode();
 
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
-            DeleteTempMpvFileName();
+            DeleteTempMpvFileName();            
         }
 
         private void ResizeTimeCode()
@@ -2117,7 +2170,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void PauseAndDisposePlayer()
         {
-            PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
             Chapters = Array.Empty<MatroskaChapter>();
@@ -2133,6 +2185,7 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.BringToFront();
             PanelPlayer.MouseDown += PanelPlayerMouseDown;
             VideoPlayerContainerResize(this, null);
+            PanelPlayer.Paint += PanelPlayerPaint;
 
             DeleteTempMpvFileName();
             _retryCount = 3;
