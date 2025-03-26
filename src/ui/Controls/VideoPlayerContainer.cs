@@ -284,7 +284,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_videoPlayer == null)
             {
-                PanelPlayer.Dock = DockStyle.Fill;
                 PanelPlayer.Visible = true;
                 PanelPlayer.BringToFront();
             }
