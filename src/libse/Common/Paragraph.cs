@@ -135,16 +135,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (double)Text.CountCharacters(true) / DurationTotalSeconds;
         }
 
-        public double GetCharactersPerSecond(double numberOfCharacters)
-        {
-            if (DurationTotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return numberOfCharacters / DurationTotalSeconds;
-        }
-
         public double GetCharactersPerSecond(ICalcLength calc)
         {
             if (DurationTotalMilliseconds < 1)
