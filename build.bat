@@ -226,6 +226,7 @@ COPY /Y /V "..\..\..\..\..\Dictionaries\*.*"          "temp_zip\Dictionaries\"
 COPY /Y /V "..\..\..\..\..\Ocr\*.*"                   "temp_zip\Ocr\"
 XCOPY /Y /V "..\..\..\..\..\Tesseract302\*.*"         "temp_zip\Tesseract302\" /S
 COPY /Y /V "..\..\..\..\..\Icons\*.ico"               "temp_zip\Icons\"
+COPY /Y /V "..\..\..\..\..\Icons\*.png"               "temp_zip\Icons\"
 COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\*.png"               "temp_zip\Icons\DefaultTheme"
 COPY /Y /V "..\..\..\..\..\Icons\DefaultTheme\VideoPlayer\*.png"               "temp_zip\Icons\DefaultTheme\VideoPlayer"
 COPY /Y /V "..\..\..\..\..\Icons\DarkTheme\*.png"               "temp_zip\Icons\DarkTheme"

@@ -22,6 +22,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Czech translation - thx Matěj
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update yt-dlp to 2025.03.26
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
    * Add standalone PaddleOCR (no Python required) - thx timminator
    * Make Whisper file list scrollable + auto scroll current item - thx RazyRo
