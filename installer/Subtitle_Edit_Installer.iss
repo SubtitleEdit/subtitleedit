@@ -261,6 +261,7 @@ Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;        
 Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 
+Source: ..\Icons\*.png;                            DestDir: {userappdata}\Subtitle Edit\Icons;              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\DarkTheme\*.png;                  DestDir: {userappdata}\Subtitle Edit\Icons\DarkTheme;    Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\DefaultTheme\*.png;               DestDir: {userappdata}\Subtitle Edit\Icons\DefaultTheme; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\Legacy\*.png;                     DestDir: {userappdata}\Subtitle Edit\Icons\Legacy;       Flags: ignoreversion onlyifdoesntexist; Components: main
