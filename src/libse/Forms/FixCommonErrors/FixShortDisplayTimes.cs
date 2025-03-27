@@ -70,8 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     var temp = new Paragraph(p);
-                    var numberOfCharacters = (double)temp.Text.CountCharacters(true);
-                    while (temp.GetCharactersPerSecond(numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    while (temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         temp.EndTime.TotalMilliseconds++;
                     }
