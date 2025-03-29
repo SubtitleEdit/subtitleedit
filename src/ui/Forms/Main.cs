@@ -24964,6 +24964,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoInfo.Width = labelVideoInfo.Parent.Width - labelVideoInfo.Left - 10;
 
             pictureBoxBookmark.Left = numericUpDownDuration.Right - pictureBoxBookmark.Width + 4;
+            mediaPlayer.Refresh();
         }
 
         private void FixRightToLeftDependingOnLanguage()
