@@ -1,19 +1,29 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Settings;
-using System.Drawing.Imaging;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
+        public class DoubleBufferedPanel : Panel
+        {
+            public DoubleBufferedPanel()
+            {
+                this.DoubleBuffered = true;
+                this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+                this.UpdateStyles();
+            }
+        }
+
         public class RichTextBoxViewOnly : RichTextBox
         {
             public RichTextBoxViewOnly()
@@ -48,7 +58,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnEmptyPlayerClicked;
         public event EventHandler OnPlayerClicked;
 
-        public Panel PanelPlayer { get; private set; }
+        public DoubleBufferedPanel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
@@ -298,8 +308,18 @@ namespace Nikse.SubtitleEdit.Controls
 
             Image img = _playerIcon;
 
-            var left = (Width / 2) - (img.Width / 2);
-            var top = (Height / 2) - (img.Height / 2);
+            var w = img.Width;
+            var h = img.Height;
+
+            if (PanelPlayer.Height < h)
+            {
+                w -= h - (PanelPlayer.Height);
+                h = PanelPlayer.Height;
+            }
+
+            var left = (PanelPlayer.Width / 2) - (w / 2);
+            var top = (PanelPlayer.Height / 2) - (h / 2);
+         
 
             float opacity = 0.4f; // Adjust opacity (0.0 = fully transparent, 1.0 = fully opaque)
 
@@ -309,9 +329,19 @@ namespace Nikse.SubtitleEdit.Controls
             ImageAttributes attributes = new ImageAttributes();
             attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
+            var offset = 30;
+            if (PanelPlayer.Height <= top + offset + h)
+            {
+                offset -= (top + offset + h) - PanelPlayer.Height;
+                if (offset < 0)
+                {
+                    offset = 0;
+                }
+            }
+
             // Draw the image with the modified opacity
             e.Graphics.DrawImage(img,
-                                 new Rectangle(left, top, img.Width, img.Height),
+                                 new Rectangle(left, top + offset, w, h),
                                  0, 0, img.Width, img.Height,
                                  GraphicsUnit.Pixel, attributes);
         }
@@ -740,7 +770,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakePlayerPanel()
         {
-            PanelPlayer = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0 };
+            PanelPlayer = new DoubleBufferedPanel { BackColor = _backgroundColor, Left = 0, Top = 0 };
             return PanelPlayer;
         }
 
@@ -1184,7 +1214,7 @@ namespace Nikse.SubtitleEdit.Controls
             ResizeTimeCode();
 
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
-            DeleteTempMpvFileName();            
+            DeleteTempMpvFileName();
         }
 
         private void ResizeTimeCode()
