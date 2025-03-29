@@ -438,6 +438,15 @@ namespace Nikse.SubtitleEdit.Forms
                     InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
                 })
                 {
+                    if (nikseComboBoxVideoExtension.Text == ".mkv")
+                    {
+                        saveDialog.Filter = "Matroska|*.mkv|WebM|MP4|*.mp4|*.webm|mov|*.mov";
+                    }
+                    else if (nikseComboBoxVideoExtension.Text == ".mov")
+                    {
+                        saveDialog.Filter = "mov|*.mov|Matroska|*.mkv|WebM|MP4|*.mp4|*.webm";
+                    }
+
                     if (saveDialog.ShowDialog(this) != DialogResult.OK)
                     {
                         buttonGenerate.Enabled = true;
@@ -658,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
                 fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
             }
 
-            return fileName.Replace(".", "_") + ".mp4";
+            return fileName.Replace(".", "_") + nikseComboBoxVideoExtension.Text;
         }
 
         private bool ConvertVideo(bool oldFontSizeEnabled, Subtitle subtitle)
@@ -1250,7 +1259,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     FileUtil.WriteAllText(assaTempFileName, format.ToText(subtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
                 }
-                catch 
+                catch
                 {
                     // might be a write protected folder, so we try the temp folder
                     assaTempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(assaTempFileName));
