@@ -41,6 +41,7 @@
    * Fix unwanted removal of space after colon in format EBU
    * Fix duration in DVB subs, support for stuffing type - thx stanislavpetkov
    * Fix namespace for textAlign attribute in "SMPTE-TT 2052" - thx palemieux
+   * Use chosen video extension in "Gen video with transparent subs" - thx Leon
 
 
 4.0.11 (28th January 2025)
