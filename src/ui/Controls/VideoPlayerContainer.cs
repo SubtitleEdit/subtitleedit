@@ -18,9 +18,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             public DoubleBufferedPanel()
             {
-                this.DoubleBuffered = true;
-                this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-                this.UpdateStyles();
+                DoubleBuffered = true;
+                SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                         ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.UserPaint, true);
+                UpdateStyles();
             }
         }
 
