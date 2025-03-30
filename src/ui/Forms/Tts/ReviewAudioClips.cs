@@ -266,26 +266,33 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return;
             }
 
+            _abortPlay = true;
+            Application.DoEvents();
             buttonStop_Click(null, null);
 
-            var idx = listViewAudioClips.SelectedItems[0].Index;
-            using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
             {
-                var dr = form.ShowDialog(this);
-                if (dr != DialogResult.OK)
+                var idx = listViewAudioClips.SelectedItems[0].Index;
+                using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx, _engine))
                 {
-                    return;
-                }
+                    buttonStop_Click(null, null);
 
-                listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
+                    var dr = form.ShowDialog(this);
+                    if (dr != DialogResult.OK)
+                    {
+                        return;
+                    }
 
-                if (form.FileNameAndSpeedFactor != null)
-                {
-                    _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
-                    _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
-                    listViewAudioClips.Items[idx].SubItems[4].Text = $"{(form.FileNameAndSpeedFactor.Factor * 100.0m):0.#}%";
+                    listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
+
+                    if (form.FileNameAndSpeedFactor != null)
+                    {
+                        _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
+                        _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
+                        listViewAudioClips.Items[idx].SubItems[4].Text = $"{(form.FileNameAndSpeedFactor.Factor * 100.0m):0.#}%";
+                    }
                 }
-            }
+            });
         }
 
         private void exportListAsCsvToolStripMenuItem_Click(object sender, EventArgs e)
