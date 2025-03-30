@@ -113,10 +113,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void SetupDataReceiveHandler(DataReceivedEventHandler dataReceivedHandler, Process processMakeVideo)
         {
+            processMakeVideo.StartInfo.RedirectStandardOutput = true;
+            processMakeVideo.StartInfo.RedirectStandardError = true;
+
             if (dataReceivedHandler != null)
             {
-                processMakeVideo.StartInfo.RedirectStandardOutput = true;
-                processMakeVideo.StartInfo.RedirectStandardError = true;
                 processMakeVideo.OutputDataReceived += dataReceivedHandler;
                 processMakeVideo.ErrorDataReceived += dataReceivedHandler;
             }
