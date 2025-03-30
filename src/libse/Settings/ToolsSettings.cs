@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
             GenVideoOutputFileSuffix = "_new";
-            GenTransparentVideoExtension = ".mkv";
+            GenTransparentVideoExtension = ".mov";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;

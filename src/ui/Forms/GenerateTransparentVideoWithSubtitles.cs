@@ -111,10 +111,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOpaqueBoxStyle.Enabled = false;
 
             nikseComboBoxVideoExtension.Items.Clear();
+            nikseComboBoxVideoExtension.Items.Add(".mov");
             nikseComboBoxVideoExtension.Items.Add(".mkv");
             nikseComboBoxVideoExtension.Items.Add(".mp4");
             nikseComboBoxVideoExtension.Items.Add(".webm");
-            nikseComboBoxVideoExtension.Items.Add(".mov");
             nikseComboBoxVideoExtension.Text = Configuration.Settings.Tools.GenTransparentVideoExtension;
 
             progressBar1.Visible = false;
@@ -433,18 +433,22 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var saveDialog = new SaveFileDialog
                 {
                     FileName = SuggestNewVideoFileName(),
-                    Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov",
+                    Filter = "mov|*.mov|MP4|*.mp4|Matroska|*.mkv|WebM|*.webm",
                     AddExtension = true,
                     InitialDirectory = string.IsNullOrEmpty(_assaSubtitle.FileName) ? string.Empty : Path.GetDirectoryName(_assaSubtitle.FileName),
                 })
                 {
-                    if (nikseComboBoxVideoExtension.Text == ".mkv")
+                    if (nikseComboBoxVideoExtension.Text == ".mp4")
                     {
-                        saveDialog.Filter = "Matroska|*.mkv|WebM|MP4|*.mp4|*.webm|mov|*.mov";
+                        saveDialog.Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm|mov|*.mov";
                     }
-                    else if (nikseComboBoxVideoExtension.Text == ".mov")
+                    else if (nikseComboBoxVideoExtension.Text == ".mkv")
                     {
-                        saveDialog.Filter = "mov|*.mov|Matroska|*.mkv|WebM|MP4|*.mp4|*.webm";
+                        saveDialog.Filter = "Matroska|*.mkv|MP4|*.mp4|WebM|*.webm|mov|*.mov";
+                    }
+                    else if (nikseComboBoxVideoExtension.Text == ".webm")
+                    {
+                        saveDialog.Filter = "WebM|*.webm|mov|*.mov|Matroska|*.mkv|MP4|*.mp4";
                     }
 
                     if (saveDialog.ShowDialog(this) != DialogResult.OK)
