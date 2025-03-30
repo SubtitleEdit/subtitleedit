@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private LibMpvDynamic _libMpv;
         private Timer _mpvDoneTimer;
         private TextToSpeech.TextToSpeechEngine _engine;
+        System.Media.SoundPlayer _soundPlayer;
 
         public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames, TextToSpeech.TextToSpeechEngine engine)
         {
@@ -83,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            _libMpv?.Stop();
+            Stop();
             for (var index = 0; index < listViewAudioClips.Items.Count; index++)
             {
                 if (!listViewAudioClips.Items[index].Checked)
@@ -93,6 +94,20 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             DialogResult = DialogResult.OK;
+        }
+
+        private void Stop()
+        {
+            try
+            {
+                _mpvDoneTimer?.Stop();
+                _libMpv?.Stop();
+                _soundPlayer?.Stop();
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private void VoicePreviewList_Load(object sender, EventArgs e)
@@ -156,8 +171,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
             else
             {
-                using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
+                using (System.Media.SoundPlayer soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
+                    _soundPlayer = soundPlayer;
                     soundPlayer.PlaySync();
                 }
 
@@ -206,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return;
             }
 
-            _libMpv?.Stop();
+            Stop();
             buttonPlay.Enabled = false;
             _playing = true;
             _abortPlay = false;
@@ -216,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            _libMpv?.Stop();
+            Stop();
             _abortPlay = true;
             _playing = false;
             buttonPlay.Enabled = true;
