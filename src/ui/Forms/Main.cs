@@ -36618,7 +36618,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (form.IncompleteModel)
                     {
-                        MessageBox.Show($"Model incomplete.{Environment.NewLine}" +
+                        MessageBox.Show(this, $"Model incomplete.{Environment.NewLine}" +
                                         $"Please re-download model: {form.IncompleteModelName}", MessageBoxIcon.Error);
                     }
                     else if (form.UnknownArgument)
@@ -36630,7 +36630,7 @@ namespace Nikse.SubtitleEdit.Forms
                             extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
                         extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + "View the log file `whisper_log.txt`?";
-                        var r = MessageBox.Show($"Whisper reported unknown argument'" + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        var r = MessageBox.Show(this, $"Whisper reported unknown argument'" + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
                         if (r == DialogResult.Yes)
                         {
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
@@ -36645,7 +36645,7 @@ namespace Nikse.SubtitleEdit.Forms
                             extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
                         extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + string.Format(LanguageSettings.Current.General.ViewX, "`whisper_log.txt`?");
-                        var r = MessageBox.Show(LanguageSettings.Current.AudioToText.NoTextFound + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        var r = MessageBox.Show(this, LanguageSettings.Current.AudioToText.NoTextFound + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
                         if (r == DialogResult.Yes)
                         {
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());

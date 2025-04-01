@@ -466,14 +466,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (VideoFileName.Equals(_inputVideoFileName, StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Input video file name and output file name cannot be the same.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Input video file name and output file name cannot be the same.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var isMp4 = VideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
             if (isMp4 && _softSubs.Any(p => p.SubtitleFormat == "S_HDMV/PGS"))
             {
-                MessageBox.Show("Cannot embed S_HDMV/PGS in MP4", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Cannot embed S_HDMV/PGS in MP4", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show($"Cannot overwrite video file {VideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"Cannot overwrite video file {VideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     buttonGenerate.Enabled = true;
                     return;
                 }
@@ -513,7 +513,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
             {
                 SeLogger.Error(Environment.NewLine + "Generate embedded video failed: " + Environment.NewLine + _log);
-                MessageBox.Show("Generate embedded video failed" + Environment.NewLine +
+                MessageBox.Show(this, "Generate embedded video failed" + Environment.NewLine +
                                 "For more info see the error log: " + SeLogger.ErrorFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 buttonGenerate.Enabled = true;
                 groupBoxSettings.Enabled = true;
@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (inputFileInfo.Length > 5_000_000 && outputFileInfo.Length < 9_000)
             {
                 SeLogger.Error(Environment.NewLine + "Generate embedded video file very small: " + Environment.NewLine + _log);
-                MessageBox.Show("Generate embedded video seems very small - it probably failed!" + Environment.NewLine +
+                MessageBox.Show(this, "Generate embedded video seems very small - it probably failed!" + Environment.NewLine +
                                 "For more info see the error log: " + SeLogger.ErrorFile, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 buttonGenerate.Enabled = true;
                 groupBoxSettings.Enabled = true;
@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show($"Cannot delete input video file {_inputVideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this,$"Cannot delete input video file {_inputVideoFileName} - probably in use!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
