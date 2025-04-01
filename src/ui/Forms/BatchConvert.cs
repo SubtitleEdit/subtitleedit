@@ -739,6 +739,7 @@ namespace Nikse.SubtitleEdit.Forms
             { // only add local APIs
                 new LibreTranslate(),
                 new OllamaTranslate(),
+                new LmStudioTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
             };
@@ -2039,6 +2040,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (_autoTranslator.Name == OllamaTranslate.StaticName && !string.IsNullOrEmpty(nikseComboBoxTranslateModel.Text))
             {
                 Configuration.Settings.Tools.OllamaModel = nikseComboBoxTranslateModel.Text;
+            }
+
+
+            if (_autoTranslator.Name == LmStudioTranslate.StaticName && !string.IsNullOrEmpty(nikseComboBoxTranslateModel.Text))
+            {
+                Configuration.Settings.Tools.LmStudioModel = nikseComboBoxTranslateModel.Text;
             }
 
             _autoTranslator.Initialize();
@@ -4313,6 +4320,18 @@ namespace Nikse.SubtitleEdit.Forms
                     nikseComboBoxTranslateModel.Items.Add(model);
                 }
                 nikseComboBoxTranslateModel.Text = Configuration.Settings.Tools.OllamaModel;
+                nikseLabelModel.Visible = true;
+                nikseComboBoxTranslateModel.Visible = true;
+            }
+            else if (_autoTranslator.Name == LmStudioTranslate.StaticName)
+            {
+                var models = Configuration.Settings.Tools.LmStudioModel.Split(',').ToList();
+                nikseComboBoxTranslateModel.Items.Clear();
+                foreach (var model in models)
+                {
+                    nikseComboBoxTranslateModel.Items.Add(model);
+                }
+                nikseComboBoxTranslateModel.Text = Configuration.Settings.Tools.LmStudioModel;
                 nikseLabelModel.Visible = true;
                 nikseComboBoxTranslateModel.Visible = true;
             }
