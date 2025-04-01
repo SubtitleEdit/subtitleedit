@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var dir = Path.GetDirectoryName(fileName);
                 if (!FileUtil.IsDirectoryWritable(dir))
                 {
-                    MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
                 }
 
                 throw;

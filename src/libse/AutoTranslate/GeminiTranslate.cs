@@ -71,30 +71,37 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
-            var content = new StringContent(input, Encoding.UTF8);
-            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            int[] retryDelays = { 555, 3007, 7013 };
+            HttpResponseMessage result = null;
+            string resultContent = null;
+            for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
+            {
+                var content = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+                resultContent = await result.Content.ReadAsStringAsync();
 
-            SeLogger.Error("GeminiTranslate calling with: " + input);
+                if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
+                {
+                    break;
+                }
 
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
-            var json = Encoding.UTF8.GetString(bytes).Trim();
+                await Task.Delay(retryDelays[attempt], cancellationToken);
+            }
+
             if (!result.IsSuccessStatusCode)
             {
-                Error = json;
-                SeLogger.Error("GeminiTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                Error = resultContent;
+                SeLogger.Error("GeminiTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + resultContent);
             }
             else
             {
-                SeLogger.Error("GeminiTranslate response: (Status code=" + result.StatusCode + ")" + Environment.NewLine + json);
+                SeLogger.Error("GeminiTranslate response: (Status code=" + result.StatusCode + ")" + Environment.NewLine + resultContent);
             }
 
             result.EnsureSuccessStatusCode();
 
             var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "text");
+            var resultText = parser.GetFirstObject(resultContent, "text");
             if (resultText == null)
             {
                 return string.Empty;
@@ -112,6 +119,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             return outputText;
+        }
+
+        private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
+        {
+            var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
+            var content = new StringContent(input, Encoding.UTF8);
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            return content;
         }
 
         private static List<TranslationPair> ListLanguages()
