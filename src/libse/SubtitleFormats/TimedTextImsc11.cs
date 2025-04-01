@@ -28,15 +28,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
       <style xml:id='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default'/>
     </styling>
     <layout>
-      <region xml:id='region.topLeft' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='before' tts:textAlign='start'/>
-      <region xml:id='region.topCenter' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='center'  tts:textAlign='center'/>
-      <region xml:id='region.topRight' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='after'  tts:textAlign='end'/>
+      <region xml:id='region.topLeft' tts:origin='10% 10%' tts:extent='80% 20%' tts:displayAlign='before' tts:textAlign='start'/>
+      <region xml:id='region.topCenter' tts:origin='10% 10%' tts:extent='80% 20%' tts:displayAlign='center' tts:textAlign='center'/>
+      <region xml:id='region.topRight' tts:origin='10% 10%' tts:extent='80% 20%' tts:displayAlign='after' tts:textAlign='end'/>
       <region xml:id='region.centerLeft' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='before' tts:textAlign='start'/>
-      <region xml:id='region.centerCenter' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='center'  tts:textAlign='center'/>
-      <region xml:id='region.centerRight' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='after'  tts:textAlign='end'/>
-      <region xml:id='region.bottomLeft' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='before'  tts:textAlign='start'/>
-      <region xml:id='region.bottomCenter' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='center'  tts:textAlign='center'/>
-      <region xml:id='region.bottomRight' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='after'  tts:textAlign='end'/>
+      <region xml:id='region.centerCenter' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='center' tts:textAlign='center'/>
+      <region xml:id='region.centerRight' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='after' tts:textAlign='end'/>
+      <region xml:id='region.bottomLeft' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='before' tts:textAlign='start'/>
+      <region xml:id='region.bottomCenter' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='center' tts:textAlign='center'/>
+      <region xml:id='region.bottomRight' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='after' tts:textAlign='end'/>
     </layout>
   </head>
   <body>
