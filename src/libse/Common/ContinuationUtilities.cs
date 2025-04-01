@@ -1203,7 +1203,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static Tuple<string, string> MergeHelper(string input, string nextInput, ContinuationProfile profile, string language)
+        public static Tuple<string, string> MergeHelper(string input, string nextInput, ContinuationProfile profile, string language, bool? addComma = null)
         {
             // Convert for Arabic
             if (language == "ar")
@@ -1224,7 +1224,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 && (!Dashes.Contains(nextTextWithDash[0]) || Dashes.Contains(nextTextWithDash[0]) && nextTextWithDash.IndexOf(nextTextWithDash[0], 1) != -1))
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
-                var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
+                var doAddComma = addComma ?? StartsWithConjunction(newNextText, language);
+                var newText = RemoveSuffix(input, profile, doAddComma);
 
                 input = newText;
                 nextInput = newNextText;
