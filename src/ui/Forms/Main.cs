@@ -13287,7 +13287,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (continuationStyle != ContinuationStyle.None && !insertDash)
                 {
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                    var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                    var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle), false);
                     currentParagraph.Text = mergeResult.Item1;
                     nextParagraph.Text = mergeResult.Item2;
                 }
@@ -13302,7 +13302,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (continuationStyle != ContinuationStyle.None && !insertDash)
                         {
                             var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                            var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
+                            var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal), false);
                             original.Text = mergeResult.Item1;
                             originalNext.Text = mergeResult.Item2;
                         }
