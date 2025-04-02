@@ -63,6 +63,16 @@ namespace Nikse.SubtitleEdit.Core.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] cyan_to_orange_Image {
+            get {
+                object obj = ResourceManager.GetObject("cyan_to_orange.Image", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Heat_Image {
             get {
                 object obj = ResourceManager.GetObject("Heat.Image", resourceCulture);

@@ -28384,6 +28384,25 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.CurrentPosition = trackBarWaveformPosition.Value;
         }
 
+        private void TrackBarSpectrogramOpacityValueChanged(object sender, EventArgs e)
+        {
+
+            System.Windows.Forms.TrackBar trackBar = (System.Windows.Forms.TrackBar)sender;
+            int middleValue = 256; // get the middle value.
+            int threshold = 50; // Adjust this threshold as needed
+
+            // Check if the change is significant enough
+            if (Math.Abs(trackBar.Value - middleValue) < threshold)
+            {
+                // Snap back to the middle value
+                trackBar.Value = middleValue;
+            }
+
+            audioVisualizer.SpectrogramAlpha = (float)Math.Min(trackBarSpectrogramOpacity.Value, 255) / 255;
+            audioVisualizer.WaveformAlpha = Math.Min(512 - trackBarSpectrogramOpacity.Value, 255);
+
+        }
+
         private void ButtonCustomUrl_Click(object sender, EventArgs e)
         {
             RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
