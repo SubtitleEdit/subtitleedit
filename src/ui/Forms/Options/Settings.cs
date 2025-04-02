@@ -46,6 +46,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly bool _loading;
         private string _defaultLanguages;
 
+
+        private String[] spectrogramAppearances = { "OneColorGradient", "Classic", "Heat" };
+
+        private int getSpectrogramAppearanceIndex(string name)
+        { 
+            for (int i = 0; i < spectrogramAppearances.Length; i++)
+                if (spectrogramAppearances[i] == name) return i;
+            return -1;
+        }
+
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
         internal class ComboBoxLanguage
@@ -771,6 +781,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxSpectrogramAppearance.Items.Clear();
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
+            comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramHeat);
             labelWaveformTextSize.Text = language.WaveformTextFontSize;
             comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
             checkBoxWaveformTextBold.Text = language.SubtitleBold;
@@ -1186,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelWaveformTextColor.BackColor = Configuration.Settings.VideoControls.WaveformTextColor;
             panelWaveformCursorColor.BackColor = Configuration.Settings.VideoControls.WaveformCursorColor;
             checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
-            comboBoxSpectrogramAppearance.SelectedIndex = Configuration.Settings.VideoControls.SpectrogramAppearance == "OneColorGradient" ? 0 : 1;
+            comboBoxSpectrogramAppearance.SelectedIndex = getSpectrogramAppearanceIndex(Configuration.Settings.VideoControls.SpectrogramAppearance);
             comboBoxWaveformTextSize.Text = Configuration.Settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture);
             checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
@@ -2438,8 +2449,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.VideoControls.WaveformTextColor = panelWaveformTextColor.BackColor;
             Configuration.Settings.VideoControls.WaveformCursorColor = panelWaveformCursorColor.BackColor;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
-            Configuration.Settings.VideoControls.SpectrogramAppearance = comboBoxSpectrogramAppearance.SelectedIndex == 0 ? "OneColorGradient" : "Classic";
-
+            Configuration.Settings.VideoControls.SpectrogramAppearance = spectrogramAppearances[comboBoxSpectrogramAppearance.SelectedIndex];
             Configuration.Settings.VideoControls.WaveformTextSize = int.Parse(comboBoxWaveformTextSize.Text);
             Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
