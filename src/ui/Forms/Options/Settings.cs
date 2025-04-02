@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private string _defaultLanguages;
 
 
-        private String[] spectrogramAppearances = { "OneColorGradient", "Classic", "Heat" };
+        private String[] spectrogramAppearances = { "OneColorGradient", "Classic", "Heat", "Cyan to Orange" };
 
         private int getSpectrogramAppearanceIndex(string name)
         { 
@@ -782,6 +782,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramHeat);
+            comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramCyanToOrange);
             labelWaveformTextSize.Text = language.WaveformTextFontSize;
             comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
             checkBoxWaveformTextBold.Text = language.SubtitleBold;
