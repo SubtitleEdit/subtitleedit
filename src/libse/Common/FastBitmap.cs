@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -112,6 +113,44 @@ namespace Nikse.SubtitleEdit.Core.Common
             _workingBitmap.UnlockBits(_bitmapData);
             _bitmapData = null;
             _pBase = null;
+        }
+
+        public static PixelData[] ConvertByteArrayToPixelData(byte[] byteArray)
+        {
+            if (byteArray == null || byteArray.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(byteArray), "Byte array cannot be null or empty.");
+            }
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream(byteArray))
+                {
+                    using (Bitmap bitmap = new Bitmap(ms))
+                    {
+                        int sampleCount = 256;
+                        PixelData[] pixelData = new PixelData[sampleCount];
+
+                        int imageWidth = bitmap.Width;
+
+                        for (int i = 0; i < sampleCount; i++)
+                        {
+                            int pixelX = (int)((double)i / (sampleCount - 1) * (imageWidth - 1));
+                            pixelX = Math.Max(0, Math.Min(pixelX, imageWidth - 1));
+
+                            Color sampledColor = bitmap.GetPixel(pixelX, 0); // Sample from the first row.
+                            pixelData[i] = new PixelData(sampledColor);
+                        }
+
+                        return pixelData;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error converting byte array to PixelData: {ex.Message}");
+                return null; // Handle the error as needed.
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -912,6 +913,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             private const double RaisedCosineWindowScale = 0.5;
             private const int MagnitudeIndexRange = 256;
 
+
             private readonly int _nfft;
             private readonly MagnitudeToIndexMapper _mapper;
             private readonly RealFFT _fft;
@@ -920,6 +922,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             private readonly double[] _window;
             private readonly double[] _magnitude1;
             private readonly double[] _magnitude2;
+
 
             public static string GetSpectrogramFolder(string videoFileName, int trackNumber = 0)
             {
@@ -1045,6 +1048,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, MagnitudeIndexRange));
                     }
+                }
+                else if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Heat")
+                {
+                    palette = FastBitmap.ConvertByteArrayToPixelData(Properties.Resources.Heat_Image);
                 }
                 else
                 {
