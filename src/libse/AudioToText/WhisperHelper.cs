@@ -346,19 +346,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             if (Configuration.IsRunningOnWindows)
             {
-                if (whisperChoice == WhisperChoice.Cpp)
-                {
-                    return "main.exe";
-                }
-
-                if (whisperChoice == WhisperChoice.CppCuBlas)
+                if (whisperChoice == WhisperChoice.Cpp || whisperChoice == WhisperChoice.CppCuBlas)
                 {
                     return "whisper-cli.exe";
-                }
-
-                if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
-                {
-                    return "main.exe";
                 }
 
                 if (whisperChoice == WhisperChoice.WhisperX)
