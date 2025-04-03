@@ -1056,6 +1056,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             text = text.Replace("<i></i>", string.Empty);
             text = text.Replace("</i><i>", string.Empty);
+            text = text.Replace($"<i>{Environment.NewLine}</i>", Environment.NewLine);
             if (text.IndexOf('@') < 0)
             {
                 text = text.Replace("</i> <i>", "@");
