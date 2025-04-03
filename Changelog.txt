@@ -22,6 +22,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Czech translation - thx Matěj
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Whisper CPP to 1.7.5
    * Update ffmpeg to 2025-03-31
    * Update yt-dlp to 2025-03-26
    * Improvements (speed and fixes) for PaddleOCR - thx timminator/Codling
@@ -44,6 +45,8 @@
    * Fix duration in DVB subs, support for stuffing type - thx stanislavpetkov
    * Fix namespace for textAlign attribute in "SMPTE-TT 2052" - thx palemieux
    * Use chosen video extension in "Gen video with transparent subs" - thx Leon
+   * Do not add comma when merging lines - thx uckthis
+   * Fix issue with italic in DCinema interop - thx MartinaBerger
 
 
 4.0.11 (28th January 2025)
