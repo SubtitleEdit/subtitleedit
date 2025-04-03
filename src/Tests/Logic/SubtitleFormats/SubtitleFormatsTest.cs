@@ -885,6 +885,18 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(text.Contains(" Italic=\"yes\"") && text.Contains(" Color=\"FFFF0000\""));
         }
 
+        [TestMethod]
+        public void DcinemaInteropItalicAndItalicOff()
+        {
+            var raw = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<DCSubtitle Version=\"1.0\">\r\n<SubtitleID>c1134f81-b1c0-4ec8-bed7-65ccee1495ba</SubtitleID>\r\n<MovieTitle>ItalicTest</MovieTitle>\r\n<ReelNumber>1</ReelNumber>\r\n<Language>de</Language>\r\n<LoadFont Id=\"Font1\" URI=\"arial.ttf\" />\r\n<Font Id=\"Font1\" Italic=\"yes\" Effect=\"border\">\r\n<Subtitle SpotNumber=\"1\" TimeIn=\"00:04:09:031\" TimeOut=\"00:04:10:052\" FadeUpTime=\"0\" FadeDownTime=\"0\">\r\n    <Text VAlign=\"bottom\" VPosition=\"8.00\"><Font Italic=\"no\">Spot1 regualar</Font> </Text>\r\n</Subtitle>\r\n<Subtitle SpotNumber=\"2\" TimeIn=\"00:04:12:072\" TimeOut=\"00:04:14:072\" FadeUpTime=\"0\" FadeDownTime=\"0\">\r\n    <Text VAlign=\"bottom\" VPosition=\"14.00\"><Font Italic=\"no\">Spot2 regular</Font> </Text>\r\n    <Text VAlign=\"bottom\" VPosition=\"8.00\"><Font Italic=\"no\">Spot2 regualar</Font> </Text>\r\n</Subtitle>\r\n<Subtitle SpotNumber=\"3\" TimeIn=\"00:04:46:187\" TimeOut=\"00:04:49:187\" FadeUpTime=\"0\" FadeDownTime=\"0\">\r\n    <Text VAlign=\"bottom\" VPosition=\"8.00\">Spot3 italic</Text>\r\n</Subtitle>\r\n</Font>\r\n</DCSubtitle>";
+            var target = new DCinemaInterop();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);          
+            Assert.AreEqual("Spot1 regualar", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual($"Spot2 regular{Environment.NewLine}Spot2 regualar", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("<i>Spot3 italic</i>", subtitle.Paragraphs[2].Text);
+        }
+
         #endregion DCinema interop (.xml)
 
         #region MicroDVD

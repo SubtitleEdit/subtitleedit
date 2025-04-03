@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -689,6 +691,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
+                    var parentItalic = node.ParentNode.Name == "Font" &&
+                                       node.ParentNode.Attributes["Italic"] != null &&
+                                       node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase);
+
                     var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
                     var vAlignment = string.Empty;
@@ -825,6 +831,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                     }
+                                    else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
+                                        innerInnerNode.Attributes["Italic"].InnerText.Equals("no", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (innerInnerNode.Attributes["Color"] != null)
+                                        {
+                                            pText.Append("<non-italic><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font></non-italic>");
+                                        }
+                                        else
+                                        {
+                                            pText.Append("<non-italic>" + innerInnerNode.InnerText + "</non-italic>");
+                                        }
+                                    }
                                     else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Weight"] != null &&
                                         innerInnerNode.Attributes["Weight"].InnerText.Equals("bold", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -947,8 +965,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var start = node.Attributes["TimeIn"].InnerText;
                     var end = node.Attributes["TimeOut"].InnerText;
 
-                    if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase) &&
-                        !text.Contains("<i>"))
+                    if (parentItalic && !text.Contains("<i>"))
                     {
                         if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6)
                         {
@@ -959,6 +976,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = "<i>" + text + "</i>";
                         }
                     }
+
+                    text = FixInvalidItalicTags(text);
 
                     if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Weight"] != null && node.ParentNode.Attributes["Weight"].InnerText.Equals("bold", StringComparison.OrdinalIgnoreCase) &&
                         !text.Contains("<b>"))
@@ -992,6 +1011,85 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        public static string FixInvalidItalicTags(string input)
+        {
+            if (!input.Contains("<i>") && !input.Contains("<non-italic"))
+            {
+                return input;
+            }
+
+            if (input.Contains("<i>") && !input.Contains("<non-italic"))
+            {
+                return input;
+            }
+
+            if (!input.Contains("<i>") && input.Contains("<non-italic"))
+            {
+                return input.Replace("<non-italic>", string.Empty)
+                            .Replace("</non-italic>", string.Empty);
+            }
+
+            var output = new StringBuilder(input.Length);
+            var isItalic = false;
+            var isSkipping = false;
+            var tempTag = "";
+
+            for (var i = 0; i < input.Length; i++)
+            {
+                char c = input[i];
+
+                if (c == '<')
+                {
+                    tempTag = "<";
+                    isSkipping = true;
+                }
+                else if (c == '>')
+                {
+                    tempTag += ">";
+                    isSkipping = false;
+
+                    if (tempTag == "<i>")
+                    {
+                        isItalic = true;
+                        output.Append(tempTag);
+                    }
+                    else if (tempTag == "</i>")
+                    {
+                        isItalic = false;
+                        output.Append(tempTag);
+                    }
+                    else if (tempTag == "<non-italic>")
+                    {
+                        if (isItalic)
+                        {
+                            output.Append("</i>"); // Close italics
+                            isItalic = false;
+                        }
+                    }
+                    else if (tempTag == "</non-italic>")
+                    {
+                        if (!isItalic)
+                        {
+                            output.Append("<i>"); // Reopen italics
+                            isItalic = true;
+                        }
+                    }
+                }
+                else if (isSkipping)
+                {
+                    tempTag += c;
+                }
+                else
+                {
+                    output.Append(c); // Append non-tag characters
+                }
+            }
+
+            var result = output.ToString();
+            result = HtmlUtil.FixInvalidItalicTags(result);
+            return result;
+        }
+
         internal static string GetColorStringFromDCinema(string s)
         {
             if (string.IsNullOrWhiteSpace(s))
@@ -1001,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (s.Length == 8)
             {
-                return "#" + s.Remove(0,2) + s.Substring(0, 2); // move alpha back
+                return "#" + s.Remove(0, 2) + s.Substring(0, 2); // move alpha back
             }
 
             var hex = s.TrimStart('#');
