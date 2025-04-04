@@ -86,6 +86,11 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.wordcountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.totalwordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.totalwordsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -121,6 +126,7 @@
             // textBoxFileExtension
             // 
             this.textBoxFileExtension.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFileExtension.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFileExtension.Location = new System.Drawing.Point(87, 418);
             this.textBoxFileExtension.Name = "textBoxFileExtension";
             this.textBoxFileExtension.Size = new System.Drawing.Size(75, 20);
@@ -138,6 +144,7 @@
             // 
             // textBoxName
             // 
+            this.textBoxName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxName.Location = new System.Drawing.Point(49, 30);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(313, 20);
@@ -155,35 +162,54 @@
             // comboBoxNewLine
             // 
             this.comboBoxNewLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxNewLine.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxNewLine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxNewLine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxNewLine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxNewLine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxNewLine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxNewLine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxNewLine.DropDownHeight = 400;
+            this.comboBoxNewLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxNewLine.DropDownWidth = 121;
             this.comboBoxNewLine.FormattingEnabled = true;
-            this.comboBoxNewLine.Items.AddRange(new object[] {
-            "[Do not modify]",
-            "||",
-            "[Only newline (hex char 0xd)]"});
             this.comboBoxNewLine.Location = new System.Drawing.Point(241, 292);
+            this.comboBoxNewLine.MaxLength = 32767;
             this.comboBoxNewLine.Name = "comboBoxNewLine";
+            this.comboBoxNewLine.SelectedIndex = -1;
+            this.comboBoxNewLine.SelectedItem = null;
+            this.comboBoxNewLine.SelectedText = "";
             this.comboBoxNewLine.Size = new System.Drawing.Size(121, 21);
             this.comboBoxNewLine.TabIndex = 9;
+            this.comboBoxNewLine.TabStop = false;
+            this.comboBoxNewLine.UsePopupWindow = false;
             this.comboBoxNewLine.SelectedIndexChanged += new System.EventHandler(this.comboBoxNewLine_SelectedIndexChanged);
             this.comboBoxNewLine.TextChanged += new System.EventHandler(this.comboBoxNewLine_TextChanged);
             // 
             // comboBoxTimeCode
             // 
             this.comboBoxTimeCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxTimeCode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTimeCode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTimeCode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTimeCode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTimeCode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTimeCode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTimeCode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTimeCode.DropDownHeight = 400;
+            this.comboBoxTimeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxTimeCode.DropDownWidth = 92;
             this.comboBoxTimeCode.FormattingEnabled = true;
-            this.comboBoxTimeCode.Items.AddRange(new object[] {
-            "hh:mm:ss,zzz",
-            "hh:mm:ss.ff",
-            "h:mm:ss,zzz",
-            "h:mm:ss,zz",
-            "ff",
-            "zzz",
-            "ss",
-            "ss,zz"});
             this.comboBoxTimeCode.Location = new System.Drawing.Point(69, 292);
+            this.comboBoxTimeCode.MaxLength = 32767;
             this.comboBoxTimeCode.Name = "comboBoxTimeCode";
+            this.comboBoxTimeCode.SelectedIndex = -1;
+            this.comboBoxTimeCode.SelectedItem = null;
+            this.comboBoxTimeCode.SelectedText = "";
             this.comboBoxTimeCode.Size = new System.Drawing.Size(92, 21);
             this.comboBoxTimeCode.TabIndex = 7;
+            this.comboBoxTimeCode.TabStop = false;
+            this.comboBoxTimeCode.UsePopupWindow = false;
             this.comboBoxTimeCode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTimeCode_SelectedIndexChanged);
             this.comboBoxTimeCode.TextChanged += new System.EventHandler(this.comboBoxTimeCode_TextChanged);
             // 
@@ -211,6 +237,7 @@
             // 
             this.textBoxFooter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxFooter.ContextMenuStrip = this.contextMenuStripFooter;
+            this.textBoxFooter.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFooter.Location = new System.Drawing.Point(6, 339);
             this.textBoxFooter.Multiline = true;
             this.textBoxFooter.Name = "textBoxFooter";
@@ -223,52 +250,56 @@
             this.contextMenuStripFooter.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem3,
             this.toolStripMenuItem4,
+            this.wordcountToolStripMenuItem1,
+            this.toolStripMenuItem11,
+            this.totalwordsToolStripMenuItem,
             this.toolStripMenuItem5,
             this.mediafilenameToolStripMenuItem2,
             this.toolStripMenuItem9,
             this.mediafilenamewithextToolStripMenuItem});
             this.contextMenuStripFooter.Name = "contextMenuStrip1";
-            this.contextMenuStripFooter.Size = new System.Drawing.Size(221, 136);
+            this.contextMenuStripFooter.Size = new System.Drawing.Size(220, 202);
+            this.contextMenuStripFooter.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFooter_Opening);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem3.Text = "{title}";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertTagFooter);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem4.Text = "{#lines}";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertTagFooter);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem5.Text = "{tab}";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertTagFooter);
             // 
             // mediafilenameToolStripMenuItem2
             // 
             this.mediafilenameToolStripMenuItem2.Name = "mediafilenameToolStripMenuItem2";
-            this.mediafilenameToolStripMenuItem2.Size = new System.Drawing.Size(220, 22);
+            this.mediafilenameToolStripMenuItem2.Size = new System.Drawing.Size(219, 22);
             this.mediafilenameToolStripMenuItem2.Text = "{media-file-name}";
             this.mediafilenameToolStripMenuItem2.Click += new System.EventHandler(this.InsertTagFooter);
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem9.Text = "{media-file-name-full}";
             this.toolStripMenuItem9.Click += new System.EventHandler(this.InsertTagFooter);
             // 
             // mediafilenamewithextToolStripMenuItem
             // 
             this.mediafilenamewithextToolStripMenuItem.Name = "mediafilenamewithextToolStripMenuItem";
-            this.mediafilenamewithextToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.mediafilenamewithextToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.mediafilenamewithextToolStripMenuItem.Text = "{media-file-name-with-ext}";
             this.mediafilenamewithextToolStripMenuItem.Click += new System.EventHandler(this.InsertTagFooter);
             // 
@@ -296,6 +327,7 @@
             this.textBoxParagraph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxParagraph.ContextMenuStrip = this.contextMenuStripParagraph;
+            this.textBoxParagraph.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxParagraph.Location = new System.Drawing.Point(6, 175);
             this.textBoxParagraph.Multiline = true;
             this.textBoxParagraph.Name = "textBoxParagraph";
@@ -331,7 +363,7 @@
             this.toolStripMenuItem6,
             this.mediafilenamefullToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(230, 532);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(230, 510);
             this.contextMenuStripParagraph.Text = "{text-length-br1}";
             // 
             // insertHHMMSSMSToolStripMenuItem
@@ -507,6 +539,7 @@
             // textBoxHeader
             // 
             this.textBoxHeader.ContextMenuStrip = this.contextMenuStripHeader;
+            this.textBoxHeader.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxHeader.Location = new System.Drawing.Point(6, 80);
             this.textBoxHeader.Multiline = true;
             this.textBoxHeader.Name = "textBoxHeader";
@@ -519,52 +552,54 @@
             this.contextMenuStripHeader.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
+            this.toolStripMenuItem10,
+            this.totalwordsToolStripMenuItem1,
             this.toolStripMenuItem7,
             this.mediafilenameToolStripMenuItem1,
             this.toolStripMenuItem8,
             this.mediafilenamefullToolStripMenuItem1});
             this.contextMenuStripHeader.Name = "contextMenuStrip1";
-            this.contextMenuStripHeader.Size = new System.Drawing.Size(221, 136);
+            this.contextMenuStripHeader.Size = new System.Drawing.Size(220, 180);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem1.Text = "{title}";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.InsertTagHeader);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem2.Text = "{#lines}";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.InsertTagHeader);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem7.Text = "{tab}";
             this.toolStripMenuItem7.Click += new System.EventHandler(this.InsertTagHeader);
             // 
             // mediafilenameToolStripMenuItem1
             // 
             this.mediafilenameToolStripMenuItem1.Name = "mediafilenameToolStripMenuItem1";
-            this.mediafilenameToolStripMenuItem1.Size = new System.Drawing.Size(220, 22);
+            this.mediafilenameToolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
             this.mediafilenameToolStripMenuItem1.Text = "{media-file-name}";
             this.mediafilenameToolStripMenuItem1.Click += new System.EventHandler(this.InsertTagHeader);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(220, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem8.Text = "{media-file-name-full}";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.InsertTagHeader);
             // 
             // mediafilenamefullToolStripMenuItem1
             // 
             this.mediafilenamefullToolStripMenuItem1.Name = "mediafilenamefullToolStripMenuItem1";
-            this.mediafilenamefullToolStripMenuItem1.Size = new System.Drawing.Size(220, 22);
+            this.mediafilenamefullToolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
             this.mediafilenamefullToolStripMenuItem1.Text = "{media-file-name-with-ext}";
             this.mediafilenamefullToolStripMenuItem1.Click += new System.EventHandler(this.InsertTagHeader);
             // 
@@ -608,12 +643,46 @@
             // textBoxPreview
             // 
             this.textBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxPreview.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.Size = new System.Drawing.Size(404, 432);
             this.textBoxPreview.TabIndex = 0;
+            // 
+            // wordcountToolStripMenuItem1
+            // 
+            this.wordcountToolStripMenuItem1.Name = "wordcountToolStripMenuItem1";
+            this.wordcountToolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
+            this.wordcountToolStripMenuItem1.Text = "{#words}";
+            // 
+            // totalwordsToolStripMenuItem
+            // 
+            this.totalwordsToolStripMenuItem.Name = "totalwordsToolStripMenuItem";
+            this.totalwordsToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.totalwordsToolStripMenuItem.Text = "{#total-characters}";
+            this.totalwordsToolStripMenuItem.Click += new System.EventHandler(this.InsertTagFooter);
+            // 
+            // totalwordsToolStripMenuItem1
+            // 
+            this.totalwordsToolStripMenuItem1.Name = "totalwordsToolStripMenuItem1";
+            this.totalwordsToolStripMenuItem1.Size = new System.Drawing.Size(219, 22);
+            this.totalwordsToolStripMenuItem1.Text = "{#total-characters}";
+            this.totalwordsToolStripMenuItem1.Click += new System.EventHandler(this.InsertTagHeader);
+            // 
+            // toolStripMenuItem10
+            // 
+            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(219, 22);
+            this.toolStripMenuItem10.Text = "{#total-words}";
+            this.toolStripMenuItem10.Click += new System.EventHandler(this.InsertTagHeader);
+            // 
+            // toolStripMenuItem11
+            // 
+            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(219, 22);
+            this.toolStripMenuItem11.Text = "{#total-words}";
             // 
             // ExportCustomTextFormat
             // 
@@ -704,5 +773,10 @@
         private System.Windows.Forms.ToolStripMenuItem mediafilenamewithextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actorcolonspaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actorupperbracketscolonspaceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wordcountToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem totalwordsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem totalwordsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
     }
 }
