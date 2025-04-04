@@ -820,6 +820,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                     }
+                                    else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
+                                        innerInnerNode.Attributes["Italic"].InnerText.Equals("no", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (innerInnerNode.Attributes["Color"] != null)
+                                        {
+                                            pText.Append("<non-italic><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font></non-italic>");
+                                        }
+                                        else
+                                        {
+                                            pText.Append("<non-italic>" + innerInnerNode.InnerText + "</non-italic>");
+                                        }
+                                    }
                                     else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Weight"] != null &&
                                         innerInnerNode.Attributes["Weight"].InnerText.Equals("bold", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -902,6 +914,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = "<b>" + text + "</b>";
                         }
                     }
+
+                    text = DCinemaInterop.FixInvalidItalicTags(text);
 
                     subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
                 }
