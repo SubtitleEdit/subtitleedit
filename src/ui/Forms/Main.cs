@@ -12279,8 +12279,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (Configuration.Settings.General.SplitRemovesDashes)
                         {
-                            currentParagraph.Text = DialogSplitMerge.RemoveStartDash(currentParagraph.Text);
-                            newParagraph.Text = DialogSplitMerge.RemoveStartDash(newParagraph.Text);
+                            if (!dialogHelper.IsDialog(currentParagraph.Text.SplitToLines()))
+                            {
+                                currentParagraph.Text = DialogSplitMerge.RemoveStartDash(currentParagraph.Text);
+                                newParagraph.Text = DialogSplitMerge.RemoveStartDash(newParagraph.Text);
+                            }
                         }
                     }
                     else
@@ -12480,8 +12483,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('…') || l0Trimmed.EndsWith('؟')))
                             {
-                                originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
-                                originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
+                                if (!dialogHelper.IsDialog(originalCurrent.Text.SplitToLines()))
+                                {
+                                    originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
+                                    originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
+                                }
                             }
 
                             lines.Clear();
@@ -12506,8 +12512,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (Configuration.Settings.General.SplitRemovesDashes)
                             {
-                                a = DialogSplitMerge.RemoveStartDash(a);
-                                b = DialogSplitMerge.RemoveStartDash(b);
+                                if (!dialogHelper.IsDialog(a.SplitToLines()))
+                                {
+                                    a = DialogSplitMerge.RemoveStartDash(a);
+                                    b = DialogSplitMerge.RemoveStartDash(b);
+                                }
                             }
 
                             lines[0] = a;
@@ -12563,8 +12572,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('…') || l0Trimmed.EndsWith('؟')))
                             {
-                                a = DialogSplitMerge.RemoveStartDash(a);
-                                b = DialogSplitMerge.RemoveStartDash(b);
+                                if (!dialogHelper.IsDialog(a.SplitToLines()))
+                                {
+                                    a = DialogSplitMerge.RemoveStartDash(a);
+                                    b = DialogSplitMerge.RemoveStartDash(b);
+                                }
                             }
 
                             lines[0] = a;
