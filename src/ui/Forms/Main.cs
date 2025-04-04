@@ -5667,7 +5667,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_converted && _subtitle.OriginalFormat == newFormat && File.Exists(_fileName))
                 {
                     _converted = false;
-                };
+                }
+                ;
 
                 _formatManuallyChanged = _converted;
             }
@@ -11880,7 +11881,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.FixFonts(contextMenu);
 
-            contextMenu.Show(textBox, new Point(0, 0)); 
+            contextMenu.Show(textBox, new Point(0, 0));
         }
 
         private ListBox DoIntellisense(SETextBox tb, ListBox intellisenseListBox)
@@ -12195,6 +12196,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
             int? originalTextIndex = null;
             if (textBoxListViewTextOriginal.Focused)
             {
@@ -12239,8 +12241,11 @@ namespace Nikse.SubtitleEdit.Forms
                     string aTrimmed = HtmlUtil.RemoveHtmlTags(a).TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
                     if (Configuration.Settings.General.SplitRemovesDashes && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('…') || aTrimmed.EndsWith('؟')))
                     {
-                        a = DialogSplitMerge.RemoveStartDash(a);
-                        b = DialogSplitMerge.RemoveStartDash(b);
+                        if (!dialogHelper.IsDialog(a.SplitToLines()))
+                        {
+                            a = DialogSplitMerge.RemoveStartDash(a);
+                            b = DialogSplitMerge.RemoveStartDash(b);
+                        }
                     }
 
                     currentParagraph.Text = a.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? Utilities.AutoBreakLine(a, language) : a;
@@ -18024,7 +18029,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     if (_shortcuts.VideoPlayPauseToggle == Keys.Space &&
-                        (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused || textBoxSearchWord.Focused || textBoxSource.Focused ))
+                        (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused || textBoxSearchWord.Focused || textBoxSource.Focused))
                     {
                         return;
                     }
