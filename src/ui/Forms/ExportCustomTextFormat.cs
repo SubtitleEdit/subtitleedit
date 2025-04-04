@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -340,9 +341,39 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{media-file-name}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileNameWithoutExtension(videoFileName));
             template = template.Replace("{media-file-name-with-ext}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileName(videoFileName));
             template = template.Replace("{#lines}", subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture));
+            if (template.Contains("{#total-words}"))
+            {
+                template = template.Replace("{#total-words}", CalculateTotalWords(subtitle.Paragraphs).ToString(CultureInfo.InvariantCulture));
+            }
+            if (template.Contains("{#total-characters}"))
+            {
+                template = template.Replace("{#total-characters}", CalculateTotalCharacters(subtitle.Paragraphs).ToString(CultureInfo.InvariantCulture));
+            }
 
             template = template.Replace("{tab}", "\t");
             return template;
+        }
+
+        private static int CalculateTotalWords(List<Paragraph> paragraphs)
+        {
+            var wordCount = 0;
+            foreach (var p in paragraphs)
+            {
+                wordCount += p.Text.CountWords();
+            }
+
+            return wordCount;
+        }
+
+        private static int CalculateTotalCharacters(List<Paragraph> paragraphs)
+        {
+            decimal characterCount = 0;
+            foreach (var p in paragraphs)
+            {
+                characterCount += p.Text.CountCharacters(false);
+            }
+
+            return (int)characterCount;
         }
 
         internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
@@ -574,6 +605,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return list;
+        }
+
+        private void contextMenuStripFooter_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
