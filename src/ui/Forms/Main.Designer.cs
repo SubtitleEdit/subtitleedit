@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -370,7 +371,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripVideoFileName = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.videoInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.trackBarSpectrogramOpacity = new System.Windows.Forms.TrackBar();
             this.trackBarWaveformPosition = new System.Windows.Forms.TrackBar();
             this.panelWaveformControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
@@ -594,7 +594,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             this.contextMenuStripVideoFileName.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarSpectrogramOpacity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
             this.panelWaveformControls.SuspendLayout();
             this.toolStripWaveControls.SuspendLayout();
@@ -3452,29 +3451,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             // 
-            // trackBarSpectrogramOpacity
-            // 
-            this.trackBarSpectrogramOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarSpectrogramOpacity.AutoSize = false;
-            this.trackBarSpectrogramOpacity.Location = new System.Drawing.Point(692, 267);
-            this.trackBarSpectrogramOpacity.Maximum = 511;
-            this.trackBarSpectrogramOpacity.Tag = this.trackBarSpectrogramOpacity.Maximum / 2;
-            this.trackBarSpectrogramOpacity.Name = "trackBarSpectrogramOpacity";
-            this.trackBarSpectrogramOpacity.Size = new System.Drawing.Size(100, 20);
-            this.trackBarSpectrogramOpacity.TabIndex = 11;
-            this.trackBarSpectrogramOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarSpectrogramOpacity.Value = 256;
-            this.trackBarSpectrogramOpacity.ValueChanged += new System.EventHandler(this.TrackBarSpectrogramOpacityValueChanged);
-            // 
             // trackBarWaveformPosition
             // 
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
-            this.trackBarWaveformPosition.Location = new System.Drawing.Point(748, 267);
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(692, 267);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
-            this.trackBarWaveformPosition.Size = new System.Drawing.Size(223, 20);
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(279, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.TrackBarWaveformPositionValueChanged);
@@ -3486,7 +3471,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelWaveformControls.Controls.Add(this.toolStripWaveControls);
             this.panelWaveformControls.Location = new System.Drawing.Point(474, 265);
             this.panelWaveformControls.Name = "panelWaveformControls";
-            this.panelWaveformControls.Size = new System.Drawing.Size(300, 30);
+            this.panelWaveformControls.Size = new System.Drawing.Size(212, 30);
             this.panelWaveformControls.TabIndex = 10;
             // 
             // toolStripWaveControls
@@ -3502,8 +3487,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause,
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
-            this.toolStripSplitButtonPlayRate,
-            new ToolStripControlHost(this.trackBarSpectrogramOpacity)});
+            this.toolStripSplitButtonPlayRate });
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
             this.toolStripWaveControls.Size = new System.Drawing.Size(261, 29);
@@ -5982,7 +5966,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
             this.contextMenuStripVideoFileName.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarSpectrogramOpacity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).EndInit();
             this.panelWaveformControls.ResumeLayout(false);
             this.panelWaveformControls.PerformLayout();
@@ -6226,7 +6209,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonLayout;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
-        private Controls.AudioVisualizer audioVisualizer;
+        public Controls.AudioVisualizer audioVisualizer;
         private System.Windows.Forms.Timer timerWaveform;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveform;
         private System.Windows.Forms.ToolStripMenuItem addParagraphHereToolStripMenuItem;
@@ -6577,6 +6560,5 @@ namespace Nikse.SubtitleEdit.Forms
         private ToolStripMenuItem insertNewSubtitleHereToolStripMenuItem;
         private ToolStripMenuItem generaeTransparentVideoWithSubtitleToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemConvertActors;
-        private System.Windows.Forms.TrackBar trackBarSpectrogramOpacity;
     }
 }

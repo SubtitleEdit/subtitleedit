@@ -2667,6 +2667,7 @@
             public string SpectrogramClassic { get; set; }
             public string SpectrogramHeat { get; set; }
             public string SpectrogramCyanToOrange { get; set; }
+            public string SpectrogramWaveformOpacity { get; set; }
             public string WaveformUseFFmpeg { get; set; }
             public string WaveformUseCenterChannelOnly { get; set; }
             public string DownloadX { get; set; }

@@ -455,6 +455,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                setSpectrogramWaveformOpacity(Configuration.Settings.VideoControls.SpectrogramWaveformOpacity);
                 audioVisualizer.ShowWaveform = Configuration.Settings.General.ShowWaveform;
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
                 //panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
@@ -5767,7 +5768,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldUseDarkBackColor = Configuration.Settings.General.DarkThemeBackColor;
             var oldDarkThemeShowListViewGridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
             var resetApplied = false;
-            using (var settings = new Options.Settings())
+            using (var settings = new Options.Settings(this))
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonVideoOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image, toolStripButtonBurnIn.Image,
@@ -25571,6 +25572,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public void setSpectrogramWaveformOpacity(int opacity)
+        {
+            this.audioVisualizer.SpectrogramAlpha = (float)Math.Min(opacity, 255) / 255;
+            this.audioVisualizer.WaveformAlpha = Math.Min(512 - opacity, 255);
+        }
+
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
         {
             var tc = new TimeCode(adjustMilliseconds);
@@ -28384,24 +28391,6 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.CurrentPosition = trackBarWaveformPosition.Value;
         }
 
-        private void TrackBarSpectrogramOpacityValueChanged(object sender, EventArgs e)
-        {
-
-            System.Windows.Forms.TrackBar trackBar = (System.Windows.Forms.TrackBar)sender;
-            int middleValue = 256; // get the middle value.
-            int threshold = 50; // Adjust this threshold as needed
-
-            // Check if the change is significant enough
-            if (Math.Abs(trackBar.Value - middleValue) < threshold)
-            {
-                // Snap back to the middle value
-                trackBar.Value = middleValue;
-            }
-
-            audioVisualizer.SpectrogramAlpha = (float)Math.Min(trackBarSpectrogramOpacity.Value, 255) / 255;
-            audioVisualizer.WaveformAlpha = Math.Min(512 - trackBarSpectrogramOpacity.Value, 255);
-
-        }
 
         private void ButtonCustomUrl_Click(object sender, EventArgs e)
         {
