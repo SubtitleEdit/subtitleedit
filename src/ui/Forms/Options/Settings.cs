@@ -49,12 +49,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private string _defaultLanguages;
 
 
-        private String[] spectrogramAppearances = { "OneColorGradient", "Classic", "Heat", "Cyan to Orange" };
+        private string[] spectrogramAppearances = { "OneColorGradient", "Classic", "Heat", "Cyan to orange" };
 
         private int getSpectrogramAppearanceIndex(string name)
         { 
-            for (int i = 0; i < spectrogramAppearances.Length; i++)
-                if (spectrogramAppearances[i] == name) return i;
+            for (var i = 0; i < spectrogramAppearances.Length; i++)
+            {
+                if (spectrogramAppearances[i] == name)
+                {
+                    return i;
+                }
+            }
+
             return -1;
         }
 
@@ -2052,10 +2058,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void TrackBarSpectrogramOpacityValueChanged(object sender, EventArgs e)
         {
-
-            System.Windows.Forms.TrackBar trackBar = (System.Windows.Forms.TrackBar)sender;
-            int middleValue = 256; // get the middle value.
-            int threshold = 50; // Adjust this threshold as needed
+            TrackBar trackBar = (TrackBar)sender;
+            var middleValue = 256; // get the middle value.
+            var threshold = 50; // Adjust this threshold as needed
 
             // Check if the change is significant enough
             if (Math.Abs(trackBar.Value - middleValue) < threshold)
@@ -2063,8 +2068,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 // Snap back to the middle value
                 trackBar.Value = middleValue;
             }
-            _main.setSpectrogramWaveformOpacity(trackBar.Value);
 
+            _main.setSpectrogramWaveformOpacity(trackBar.Value);
         }
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
@@ -3093,7 +3098,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = _oldListViewShowCps;
             Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = _oldListViewShowWpm;
             Configuration.Settings.VideoControls.SpectrogramWaveformOpacity = _oldSpectrogramWaveformOpacity;
-            this._main.setSpectrogramWaveformOpacity(_oldSpectrogramWaveformOpacity);
+            _main.setSpectrogramWaveformOpacity(_oldSpectrogramWaveformOpacity);
 
             DialogResult = DialogResult.Cancel;
         }

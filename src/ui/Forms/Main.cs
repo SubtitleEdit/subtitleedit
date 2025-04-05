@@ -25591,8 +25591,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void setSpectrogramWaveformOpacity(int opacity)
         {
-            this.audioVisualizer.SpectrogramAlpha = (float)Math.Min(opacity, 255) / 255;
-            this.audioVisualizer.WaveformAlpha = Math.Min(512 - opacity, 255);
+            audioVisualizer.SpectrogramAlpha = (float)Math.Min(opacity, 255) / 255;
+            audioVisualizer.WaveformAlpha = Math.Min(512 - opacity, 255);
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
@@ -28407,7 +28407,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             mediaPlayer.CurrentPosition = trackBarWaveformPosition.Value;
         }
-
 
         private void ButtonCustomUrl_Click(object sender, EventArgs e)
         {
