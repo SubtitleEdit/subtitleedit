@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _list = _list.OrderBy(p => p.Text).ToList();
 
             comboBoxDictionaries.Items.Clear();
-            comboBoxDictionaries.Items.AddRange(_list.Select(p=>p.Text));
+            comboBoxDictionaries.Items.AddItems(_list.Select(p=>p.Text));
             comboBoxDictionaries.Text = selectedText;
             if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
             {

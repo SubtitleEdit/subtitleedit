@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
             }
-            comboBoxMeasureFontName.Items.AddRange(comboBoxSubtitleFontList);
+            comboBoxMeasureFontName.Items.AddItems(comboBoxSubtitleFontList);
             comboBoxMeasureFontName.SelectedIndex = comboBoxSubtitleFontIndex;
             comboBoxMeasureFontName.EndUpdate();
 
