@@ -6148,6 +6148,8 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
             audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
+
+            RefreshTextBoxes();
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls(string message)
@@ -24983,6 +24985,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             pictureBoxBookmark.Left = numericUpDownDuration.Right - pictureBoxBookmark.Width + 4;
             mediaPlayer.Refresh();
+
+            RefreshTextBoxes();
+        }
+
+        private void RefreshTextBoxes()
+        {
+            textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+            textBoxListViewText.ScrollBars = RichTextBoxScrollBars.Both;
+            textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+            textBoxListViewTextOriginal.ScrollBars = RichTextBoxScrollBars.Both;
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(textBoxListViewText);
+                DarkTheme.SetDarkTheme(textBoxListViewTextOriginal);
+            }
         }
 
         private void FixRightToLeftDependingOnLanguage()
