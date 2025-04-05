@@ -6748,6 +6748,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SpectrogramClassic":
                     language.Settings.SpectrogramClassic = reader.Value;
                     break;
+                case "Settings/SpectrogramHeat":
+                    language.Settings.SpectrogramHeat = reader.Value;
+                    break;
+                case "Settings/SpectrogramCyanToOrange":
+                    language.Settings.SpectrogramCyanToOrange = reader.Value;
+                    break;
+                case "Settings/SpectrogramWaveformOpacity":
+                    language.Settings.SpectrogramWaveformOpacity = reader.Value;
+                    break;
                 case "Settings/WaveformUseFFmpeg":
                     language.Settings.WaveformUseFFmpeg = reader.Value;
                     break;

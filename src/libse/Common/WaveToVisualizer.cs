@@ -1046,6 +1046,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                         palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, MagnitudeIndexRange));
                     }
                 }
+                else if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Heat")
+                {
+                    palette = FastBitmap.ConvertByteArrayToPixelData(Properties.Resources.Heat_Image);
+                }
+                else if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Cyan to Orange")
+                {
+                    palette = FastBitmap.ConvertByteArrayToPixelData(Properties.Resources.cyan_to_orange_Image);
+                }
                 else
                 {
                     var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,

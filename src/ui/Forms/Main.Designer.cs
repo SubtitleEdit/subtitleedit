@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -3390,12 +3391,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
             this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
+            this.audioVisualizer.SpectrogramAlpha = 1F;
             this.audioVisualizer.StartPositionSeconds = 0D;
             this.audioVisualizer.TabIndex = 6;
             this.audioVisualizer.TextBold = true;
             this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
             this.audioVisualizer.TextSize = 9F;
             this.audioVisualizer.VerticalZoomFactor = 1D;
+            this.audioVisualizer.WaveformAlpha = 255;
             this.audioVisualizer.WaveformNotLoadedText = "Click to add waveform";
             this.audioVisualizer.WavePeaks = null;
             this.audioVisualizer.ZoomFactor = 1D;
@@ -3484,10 +3487,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause,
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
-            this.toolStripSplitButtonPlayRate});
+            this.toolStripSplitButtonPlayRate });
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(204, 29);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(261, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -6206,7 +6209,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonLayout;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
-        private Controls.AudioVisualizer audioVisualizer;
+        public Controls.AudioVisualizer audioVisualizer;
         private System.Windows.Forms.Timer timerWaveform;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveform;
         private System.Windows.Forms.ToolStripMenuItem addParagraphHereToolStripMenuItem;
