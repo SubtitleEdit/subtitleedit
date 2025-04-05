@@ -124,21 +124,21 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             try
             {
-                using (MemoryStream ms = new MemoryStream(byteArray))
+                using (var ms = new MemoryStream(byteArray))
                 {
-                    using (Bitmap bitmap = new Bitmap(ms))
+                    using (var bitmap = new Bitmap(ms))
                     {
-                        int sampleCount = 256;
-                        PixelData[] pixelData = new PixelData[sampleCount];
+                        var sampleCount = 256;
+                        var pixelData = new PixelData[sampleCount];
 
-                        int imageWidth = bitmap.Width;
+                        var imageWidth = bitmap.Width;
 
-                        for (int i = 0; i < sampleCount; i++)
+                        for (var i = 0; i < sampleCount; i++)
                         {
-                            int pixelX = (int)((double)i / (sampleCount - 1) * (imageWidth - 1));
+                            var pixelX = (int)((double)i / (sampleCount - 1) * (imageWidth - 1));
                             pixelX = Math.Max(0, Math.Min(pixelX, imageWidth - 1));
 
-                            Color sampledColor = bitmap.GetPixel(pixelX, 0); // Sample from the first row.
+                            var sampledColor = bitmap.GetPixel(pixelX, 0); // Sample from the first row.
                             pixelData[i] = new PixelData(sampledColor);
                         }
 

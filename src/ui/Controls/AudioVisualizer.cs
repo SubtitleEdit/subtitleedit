@@ -884,7 +884,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (Focused)
             {
-                using (var p = new Pen( SelectedColor))
+                using (var p = new Pen(SelectedColor))
                 {
                     graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }

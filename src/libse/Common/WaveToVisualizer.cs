@@ -1050,7 +1050,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     palette = FastBitmap.ConvertByteArrayToPixelData(Properties.Resources.Heat_Image);
                 }
-                else if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Cyan to Orange")
+                else if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Cyan to orange")
                 {
                     palette = FastBitmap.ConvertByteArrayToPixelData(Properties.Resources.cyan_to_orange_Image);
                 }
