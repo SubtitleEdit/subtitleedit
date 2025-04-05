@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public int MaxCharacters => 1500;
 
         /// <summary>
-        /// See https://??
+        /// See https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models 
         /// </summary>
         public static string[] Models => new[]
         {
