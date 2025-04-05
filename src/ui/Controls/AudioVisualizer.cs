@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_showWaveform)
                 {
                     using (var penNormal = new Pen(Color.FromArgb(this.WaveformAlpha, Color)))
-                    using (var penSelected = new Pen(SelectedColor)) // selected paragraph
+                    using (var penSelected = new Pen(Color.FromArgb(this.WaveformAlpha, SelectedColor))) // selected paragraph
                     {
                         var isSelectedHelper = new IsSelectedHelper(_allSelectedParagraphs, _wavePeaks.SampleRate);
                         var baseHeight = (int)(_wavePeaks.HighestPeak / _verticalZoomFactor);
@@ -884,7 +884,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (Focused)
             {
-                using (var p = new Pen(SelectedColor))
+                using (var p = new Pen( SelectedColor))
                 {
                     graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
