@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             "gemini-2.0-flash",
             "gemini-2.0-flash-lite",
-            "gemini-pro",
         };
 
         public void Initialize()
