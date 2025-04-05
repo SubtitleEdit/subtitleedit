@@ -2,6 +2,7 @@
 
 4.0.12 (xth April 2025) BETA
 * NEW
+   * New spectrogram appearances + merge spectrogram/waveform - thx taylanunver
    * Add tool for converting actors between ASSA/brackets/parentheses/colon
    * Add OCR via Ollama vision models like "granite3.2-vision" or "gemma3"
    * Add Mistral AI translate
@@ -35,6 +36,7 @@
    * Add CMD line SUP to SUP (without OCR) - thx AYColumbia
    * Improve "Fix invalid italics" - thx uckthis
    * Improve translaparent subtitles for Vegas Pro - thx zzzzzz9125/Hintsmth
+   * Add total-words + total-chars to custom format header/footer - thx Jorge
 * FIXED:
    * Fix space character in PAC
    * Fix for LRC with MS parsing - thx AverageHoarder
@@ -46,7 +48,8 @@
    * Fix namespace for textAlign attribute in "SMPTE-TT 2052" - thx palemieux
    * Use chosen video extension in "Gen video with transparent subs" - thx Leon
    * Do not add comma when merging lines - thx uckthis
-   * Fix issue with italic in DCinema interop - thx MartinaBerger
+   * Fix issue with italic in DCinema formats - thx MartinaBerger
+   * Fix for split line with dialog - thx Yanngo
 
 
 4.0.11 (28th January 2025)
