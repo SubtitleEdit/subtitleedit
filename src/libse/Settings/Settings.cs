@@ -5609,6 +5609,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("SpectrogramWaveformOpacity");
+            if (subNode != null)
+            {
+                settings.VideoControls.SpectrogramWaveformOpacity = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformMinimumSampleRate");
             if (subNode != null)
             {
@@ -9797,6 +9803,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformLabelShowCodec", settings.VideoControls.WaveformLabelShowCodec.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
+                xmlWriter.WriteElementString("SpectrogramWaveformOpacity", settings.VideoControls.SpectrogramWaveformOpacity.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));

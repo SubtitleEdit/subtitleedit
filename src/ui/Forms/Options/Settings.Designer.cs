@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Forms.Options
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
+
+namespace Nikse.SubtitleEdit.Forms.Options
 {
     sealed partial class Settings
     {
@@ -233,6 +236,8 @@
             this.groupBoxSpectrogram = new System.Windows.Forms.GroupBox();
             this.labelSpectrogramAppearance = new System.Windows.Forms.Label();
             this.comboBoxSpectrogramAppearance = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelSpectrogramOpacity = new System.Windows.Forms.Label();
+            this.trackBarSpectrogramOpacity = new System.Windows.Forms.TrackBar();
             this.checkBoxGenerateSpectrogram = new System.Windows.Forms.CheckBox();
             this.groupBoxSpectrogramClean = new System.Windows.Forms.GroupBox();
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
@@ -3691,6 +3696,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.comboBoxSpectrogramAppearance);
+            this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramOpacity);
+            this.groupBoxSpectrogram.Controls.Add(this.trackBarSpectrogramOpacity);
             this.groupBoxSpectrogram.Controls.Add(this.checkBoxGenerateSpectrogram);
             this.groupBoxSpectrogram.Location = new System.Drawing.Point(0, 293);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
@@ -3702,7 +3709,7 @@
             // labelSpectrogramAppearance
             // 
             this.labelSpectrogramAppearance.AutoSize = true;
-            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 52);
+            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 45);
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
             this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
             this.labelSpectrogramAppearance.TabIndex = 1;
@@ -3724,7 +3731,7 @@
             this.comboBoxSpectrogramAppearance.Items.AddRange(new string[] {
             "Classic",
             "Use waveform color (one color gradient)"});
-            this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 70);
+            this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 63);
             this.comboBoxSpectrogramAppearance.MaxLength = 32767;
             this.comboBoxSpectrogramAppearance.Name = "comboBoxSpectrogramAppearance";
             this.comboBoxSpectrogramAppearance.SelectedIndex = -1;
@@ -3733,6 +3740,27 @@
             this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(325, 21);
             this.comboBoxSpectrogramAppearance.TabIndex = 2;
             this.comboBoxSpectrogramAppearance.UsePopupWindow = false;
+            // 
+            // labelSpectrogramOpacity
+            // 
+            this.labelSpectrogramOpacity.AutoSize = true;
+            this.labelSpectrogramOpacity.Location = new System.Drawing.Point(10, 95);
+            this.labelSpectrogramOpacity.Name = "labelSpectrogramAppearance";
+            this.labelSpectrogramOpacity.Size = new System.Drawing.Size(164, 13);
+            this.labelSpectrogramOpacity.TabIndex = 1;
+            //
+            // trackBarSpectrogramOpacity
+            //
+            this.trackBarSpectrogramOpacity.AutoSize = false;
+            this.trackBarSpectrogramOpacity.Location = new System.Drawing.Point(190, 94);
+            this.trackBarSpectrogramOpacity.Name = "trackBarSpectrogramAppearance";
+            this.trackBarSpectrogramOpacity.Size = new System.Drawing.Size(175, 20);
+            this.trackBarSpectrogramOpacity.Maximum = 511;
+            this.trackBarSpectrogramOpacity.Tag = 256;
+            this.trackBarSpectrogramOpacity.Value = Configuration.Settings.VideoControls.SpectrogramWaveformOpacity;
+            this.trackBarSpectrogramOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarSpectrogramOpacity.TabIndex = 1;
+            this.trackBarSpectrogramOpacity.ValueChanged += new System.EventHandler(this.TrackBarSpectrogramOpacityValueChanged);
             // 
             // checkBoxGenerateSpectrogram
             // 
@@ -7234,6 +7262,8 @@
         private System.Windows.Forms.CheckBox checkBoxGenerateSpectrogram;
         private System.Windows.Forms.Label labelSpectrogramAppearance;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSpectrogramAppearance;
+        private System.Windows.Forms.Label labelSpectrogramOpacity;
+        private System.Windows.Forms.TrackBar trackBarSpectrogramOpacity;
         private System.Windows.Forms.CheckBox checkBoxReverseMouseWheelScrollDirection;
         private System.Windows.Forms.Label labelMaxDuration;
         private System.Windows.Forms.Label labelMinDuration;
