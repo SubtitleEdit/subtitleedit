@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             list.Sort();
             comboBoxTexts.Items.Clear();
-            comboBoxTexts.Items.AddRange(list);
+            comboBoxTexts.Items.AddItems(list);
         }
 
         private void VobSubNOcrEdit_KeyDown(object sender, KeyEventArgs e)

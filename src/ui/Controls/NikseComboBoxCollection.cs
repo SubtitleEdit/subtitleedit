@@ -18,7 +18,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public List<object> ToList() => _items;
 
-        public void AddRange<T>(IEnumerable<T> items) where T : class => _items.AddRange(items);
+        public void AddItems<T>(IEnumerable<T> items) where T : class => _items.AddRange(items);
+
+        // Winforms designer code
+        public void AddRange(object[] items) => _items.AddRange(items);
 
         public IEnumerator GetEnumerator()
         {

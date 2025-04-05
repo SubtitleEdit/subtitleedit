@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
 
             comboBoxFontName.Items.Clear();
-            comboBoxFontName.Items.AddRange(fontNames);
+            comboBoxFontName.Items.AddItems(fontNames);
             labelInfo.Text = string.Empty;
 
             Text = LanguageSettings.Current.WebVttStyleManager.Title;

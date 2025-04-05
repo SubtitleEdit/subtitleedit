@@ -175,47 +175,47 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (cat == l.Length)
             {
-                comboBoxTo.Items.AddRange(_length);
+                comboBoxTo.Items.AddItems(_length);
             }
             else if (cat == l.Mass)
             {
-                comboBoxTo.Items.AddRange(_mass);
+                comboBoxTo.Items.AddItems(_mass);
             }
             else if (cat == l.Volume)
             {
-                comboBoxTo.Items.AddRange(_volume);
+                comboBoxTo.Items.AddItems(_volume);
             }
             else if (cat == l.Area)
             {
-                comboBoxTo.Items.AddRange(_area);
+                comboBoxTo.Items.AddItems(_area);
             }
             else if (cat == l.Time)
             {
-                comboBoxTo.Items.AddRange(_time);
+                comboBoxTo.Items.AddItems(_time);
             }
             else if (cat == l.Temperature)
             {
-                comboBoxTo.Items.AddRange(_temperature);
+                comboBoxTo.Items.AddItems(_temperature);
             }
             else if (cat == l.Velocity)
             {
-                comboBoxTo.Items.AddRange(_velocity);
+                comboBoxTo.Items.AddItems(_velocity);
             }
             else if (cat == l.Force)
             {
-                comboBoxTo.Items.AddRange(_force);
+                comboBoxTo.Items.AddItems(_force);
             }
             else if (cat == l.Energy)
             {
-                comboBoxTo.Items.AddRange(_energy);
+                comboBoxTo.Items.AddItems(_energy);
             }
             else if (cat == l.Power)
             {
-                comboBoxTo.Items.AddRange(_power);
+                comboBoxTo.Items.AddItems(_power);
             }
             else if (cat == l.Pressure)
             {
-                comboBoxTo.Items.AddRange(_pressure);
+                comboBoxTo.Items.AddItems(_pressure);
             }
             comboBoxTo.Items.Remove(text);
 
@@ -4817,47 +4817,47 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (cat == l.Length)
             {
-                comboBoxFrom.Items.AddRange(_length);
+                comboBoxFrom.Items.AddItems(_length);
             }
             else if (cat == l.Mass)
             {
-                comboBoxFrom.Items.AddRange(_mass);
+                comboBoxFrom.Items.AddItems(_mass);
             }
             else if (cat == l.Volume)
             {
-                comboBoxFrom.Items.AddRange(_volume);
+                comboBoxFrom.Items.AddItems(_volume);
             }
             else if (cat == l.Area)
             {
-                comboBoxFrom.Items.AddRange(_area);
+                comboBoxFrom.Items.AddItems(_area);
             }
             else if (cat == l.Time)
             {
-                comboBoxFrom.Items.AddRange(_time);
+                comboBoxFrom.Items.AddItems(_time);
             }
             else if (cat == l.Temperature)
             {
-                comboBoxFrom.Items.AddRange(_temperature);
+                comboBoxFrom.Items.AddItems(_temperature);
             }
             else if (cat == l.Velocity)
             {
-                comboBoxFrom.Items.AddRange(_velocity);
+                comboBoxFrom.Items.AddItems(_velocity);
             }
             else if (cat == l.Force)
             {
-                comboBoxFrom.Items.AddRange(_force);
+                comboBoxFrom.Items.AddItems(_force);
             }
             else if (cat == l.Energy)
             {
-                comboBoxFrom.Items.AddRange(_energy);
+                comboBoxFrom.Items.AddItems(_energy);
             }
             else if (cat == l.Power)
             {
-                comboBoxFrom.Items.AddRange(_power);
+                comboBoxFrom.Items.AddItems(_power);
             }
             else if (cat == l.Pressure)
             {
-                comboBoxFrom.Items.AddRange(_pressure);
+                comboBoxFrom.Items.AddItems(_pressure);
             }
 
             if (comboBoxFrom.Items.Count > 0)

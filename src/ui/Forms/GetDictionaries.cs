@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                comboBoxDictionaries.Items.AddRange(dictionaryItems.Count == 0 ? allDictionaryItems : dictionaryItems);
+                comboBoxDictionaries.Items.AddItems(dictionaryItems.Count == 0 ? allDictionaryItems : dictionaryItems);
                 if (dictionaryItems.Count > 0)
                 {
                     comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);

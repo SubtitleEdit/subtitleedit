@@ -2008,7 +2008,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
 
-                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name));
+                comboBox.Items.AddItems(languagesToAdd.OrderBy(p => p.Name));
 
                 var lang = languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
                 comboBox.Text = lang != null ? lang.ToString() : "English";
@@ -2016,7 +2016,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!languagesFilled)
             {
-                comboBox.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name));
+                comboBox.Items.AddItems(WhisperLanguage.Languages.OrderBy(p => p.Name));
                 var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
                 comboBox.Text = lang != null ? lang.ToString() : "English";
             }

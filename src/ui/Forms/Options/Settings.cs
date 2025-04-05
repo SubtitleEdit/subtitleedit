@@ -366,8 +366,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
             }
-            comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList);
-            comboBoxVideoPlayerPreviewFontName.Items.AddRange(comboBoxSubtitleFontList);
+            comboBoxSubtitleFont.Items.AddItems(comboBoxSubtitleFontList);
+            comboBoxVideoPlayerPreviewFontName.Items.AddItems(comboBoxSubtitleFontList);
             comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFontIndex;
             comboBoxVideoPlayerPreviewFontName.SelectedIndex = comboBoxVideoPlayerPreviewFontIndex;
             comboBoxSubtitleFont.EndUpdate();
@@ -1097,7 +1097,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 comboBoxMergeShortLineLengthList.Add(i.ToString(CultureInfo.InvariantCulture));
             }
-            comboBoxMergeShortLineLength.Items.AddRange(comboBoxMergeShortLineLengthList);
+            comboBoxMergeShortLineLength.Items.AddItems(comboBoxMergeShortLineLengthList);
             comboBoxMergeShortLineLength.SelectedIndex = 0;
             var selMatch = gs.MergeLinesShorterThan.ToString();
             for (int i = 0; i < comboBoxMergeShortLineLength.Items.Count; i++)

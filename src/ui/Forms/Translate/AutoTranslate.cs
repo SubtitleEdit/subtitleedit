@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             };
 
             nikseComboBoxEngine.Items.Clear();
-            nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines);
+            nikseComboBoxEngine.Items.AddItems(_autoTranslatorEngines);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLastName))
             {
@@ -752,12 +752,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
                 }
 
-                comboBox.Items.AddRange(languagesToAdd.OrderBy(p => p.Name));
+                comboBox.Items.AddItems(languagesToAdd.OrderBy(p => p.Name));
             }
 
             if (!languagesFilled)
             {
-                comboBox.Items.AddRange(languages.OrderBy(p => p.Name));
+                comboBox.Items.AddItems(languages.OrderBy(p => p.Name));
             }
 
             comboBox.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);

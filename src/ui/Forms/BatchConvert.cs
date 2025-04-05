@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new NoLanguageLeftBehindApi(),
             };
             nikseComboBoxEngine.Items.Clear();
-            nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name));
+            nikseComboBoxEngine.Items.AddItems(_autoTranslatorEngines.Select(p => p.Name));
             nikseComboBoxEngine.SelectedIndex = 0;
             nikseComboBoxEngine.Text = Configuration.Settings.Tools.BatchConvertTranslateEngine;
             var targetLanguageIsoCode = AutoTranslate.EvaluateDefaultTargetLanguageCode(CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
