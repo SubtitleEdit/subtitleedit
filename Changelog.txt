@@ -2,6 +2,7 @@
 
 4.0.12 (xth April 2025) BETA
 * NEW
+   * Add read support for "OOONA json" format - thx Alfonso
    * New spectrogram appearances + merge spectrogram/waveform - thx taylanunver
    * Add tool for converting actors between ASSA/brackets/parentheses/colon
    * Add OCR via Ollama vision models like "granite3.2-vision" or "gemma3"
