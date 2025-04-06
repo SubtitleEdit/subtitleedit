@@ -526,6 +526,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                 if (unconsumedArguments.Count > 0)
                 {
+                    errors++;
                     foreach (var argument in unconsumedArguments)
                     {
                         if (argument.StartsWith('/') || argument.StartsWith('-'))
@@ -712,13 +713,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     }
                                     else
                                     {
-                                        _stdOutWriter.WriteLine($"No subtitle tracks in Matroska file '{fileName}'.");
+                                        errors++;
+                                        _stdOutWriter.WriteLine($"ERROR: No subtitle tracks in Matroska file '{fileName}'.");
                                         done = true;
                                     }
                                 }
                                 else
                                 {
-                                    _stdOutWriter.WriteLine($"Invalid Matroska file '{fileName}'!");
+                                    errors++;
+                                    _stdOutWriter.WriteLine($"ERROR: Invalid Matroska file '{fileName}'!");
                                     done = true;
                                 }
                             }
@@ -887,11 +890,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         {
                             if (IsFileLengthOkForTextSubtitle(fileName, fileInfo))
                             {
-                                _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file format unknown!");
+                                errors++;
+                                _stdOutWriter.WriteLine($"ERROR: {fileName}: {targetFormat} - input file format unknown!");
                             }
                             else
                             {
-                                _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file too large!");
+                                errors++;
+                                _stdOutWriter.WriteLine($"ERROR: {fileName}: {targetFormat} - input file too large!");
                             }
                         }
                         else if (!done)
@@ -904,7 +909,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     }
                     else
                     {
-                        _stdOutWriter.WriteLine($"{count}: {fileName} - file not found!");
+                        _stdOutWriter.WriteLine($"ERROR: {count}: {fileName} - file not found!");
                         errors++;
                     }
                 }
@@ -918,7 +923,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
                 else
                 {
-                    _stdOutWriter.WriteLine("Try 'SubtitleEdit /?' or 'SubtitleEdit -?' for more information.");
+                    _stdOutWriter.WriteLine("ERROR: Try 'SubtitleEdit /?' or 'SubtitleEdit -?' for more information.");
                 }
                 _stdOutWriter.WriteLine();
                 errors++;
