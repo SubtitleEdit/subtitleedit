@@ -526,6 +526,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
+
+                if (chkusePiper2Pass.Checked)               // Bypass the ffmpeg speed correction when piper2pass is enabled
+                {
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     pFileName = Path.Combine(_waveFolder, overrideFileName);
@@ -769,6 +775,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelProgress.Text = string.Empty;
         }
 
+        //private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        //{
+        //    return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName, true);
+        //}
+
         private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
@@ -814,7 +825,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
-                if (string.IsNullOrWhiteSpace(p.Text))
+                if (string.IsNullOrWhiteSpace(p.Text))              // p.Duration.TotalMilliseconds available for translation
                 {
                     continue;
                 }
@@ -859,13 +870,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
+
+
                 var processPiper = new Process
                 {
                     StartInfo =
                     {
                         WorkingDirectory = piperPath,
                         FileName = Configuration.IsRunningOnWindows ? piperExe : "piper",
-                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav",
+                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav ",    // --rate {1.5} --cuda --sentence_silence 0.5// Put the speed as parameter here also
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
@@ -891,6 +904,76 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var inputFile = Path.Combine(piperPath, "out.wav");
+
+                // ************ CHANGE **************
+                // implement a second pass. take the duration of the generated wav out.wav and
+                // adpat the factor by using the lenght_scale parameter of piper. This will genrate more realistic results than the speed adaption using ffmpeg ;)
+                //
+                if (chkusePiper2Pass.Checked)
+                {
+                    var waveInfo = UiUtil.GetVideoInfo(inputFile);
+
+                    var divisor = (decimal)(p.DurationTotalMilliseconds);
+                    if (divisor <= 0)
+                    {
+                        continue;
+
+                    }
+                    var factor = divisor / (decimal)waveInfo.TotalMilliseconds;
+
+                    File.Delete(inputFile);
+
+                    if (factor <= (decimal)0.7)             // Maybe use paramets in form for that at the moment these limts work great
+                    {
+                        factor = (decimal)0.7;
+                    }
+                    if (factor >= (decimal)1.3)
+                    {
+                        factor = (decimal)1.3;
+                    }
+
+                    string strFactor = factor.ToString("F2").Replace(",", ".");
+                    var processPiper2 = new Process
+                    {
+                        StartInfo =
+                        {
+                            WorkingDirectory = piperPath,
+                            FileName = Configuration.IsRunningOnWindows ? piperExe : "piper",
+                            Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav --length_scale {strFactor}",    // --rate {1.5} --cuda --sentence_silence 0.5// Put the speed as parameter here also
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardInput = true,
+                        }
+                    };
+
+                    processPiper2.Start();
+                    streamWriter = new StreamWriter(processPiper2.StandardInput.BaseStream, Encoding.UTF8);
+                    text = Utilities.UnbreakLine(p.Text);
+                    streamWriter.Write(text);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+
+                    while (!processPiper2.HasExited)
+                    {
+                        Application.DoEvents();
+                        if (_abort)
+                        {
+                            progressBar1.Visible = false;
+                            labelProgress.Text = string.Empty;
+                            return false;
+                        }
+                    }
+
+                }
+
+                // **********
+
+                //var inputFile1 = Path.Combine(piperPath, "out2.wav");
+
+                //if (!File.Exists(inputFile))
+                //{
+                //    int h = 0;
+                //}
                 File.Move(inputFile, outputFileName);
 
                 progressBar1.Refresh();
