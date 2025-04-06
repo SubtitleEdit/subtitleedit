@@ -37,5 +37,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void TtsAudioEncoding_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }
