@@ -94,7 +94,7 @@
             this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAudioEnc.DropDownWidth = 121;
             this.comboBoxAudioEnc.FormattingEnabled = true;
-            this.comboBoxAudioEnc.Items.AddRange(new string[] {
+            this.comboBoxAudioEnc.Items.AddRange(new object[] {
             "copy",
             "aac",
             "ac3",
@@ -132,6 +132,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TtsAudioEncoding";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TtsAudioEncoding_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

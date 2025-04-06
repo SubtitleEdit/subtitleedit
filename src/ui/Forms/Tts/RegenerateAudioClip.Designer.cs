@@ -269,6 +269,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Regenerate audio clip";
             this.Shown += new System.EventHandler(this.RegenerateAudioClip_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RegenerateAudioClip_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

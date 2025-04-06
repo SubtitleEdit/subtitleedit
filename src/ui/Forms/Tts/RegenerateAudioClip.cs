@@ -180,5 +180,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 _libMpv = new LibMpvDynamic();
             }
         }
+
+        private void RegenerateAudioClip_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                buttonCancel_Click(sender, e);
+            }
+        }
     }
 }
