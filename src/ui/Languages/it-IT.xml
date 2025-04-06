@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 04.03.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.04.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2486,6 +2486,9 @@ stesso file di sottotitolo (collaborazione)</Information>
     <SpectrogramAppearance>Apparenza spettrogramma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Sfumatura di colore</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classico</SpectrogramClassic>
+    <SpectrogramHeat>Calore</SpectrogramHeat>
+    <SpectrogramCyanToOrange>Da ciano a arancione</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Opacità spettrogramma/forma d'onda:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>Usa FFMPEG per l'estrazione dell'audio</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Usa solo il canale centrale anteriore (per 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
