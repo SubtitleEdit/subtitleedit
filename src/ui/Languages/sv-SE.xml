@@ -609,6 +609,13 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <OnlyLookForDifferencesInText>Leta endast efter skillnader i texten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan inte jämföra med bildbaserade undertexter</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Konvertera skådespelare</Title>
+    <ConvertActorFrom>Ändra skådespelare från</ConvertActorFrom>
+    <ConvertActorTo>Ändra skådespelare till</ConvertActorTo>
+    <InlineActorViaX>Inline skådespelare via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Antal skådespelare omvandlingar: {0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Konvertera färger till dialog</Title>
     <RemoveColorTags>Ta bort färgetiketter</RemoveColorTags>
@@ -1405,6 +1412,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
         <StartNumberingFrom>Omnumrera...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Ta bort text för hörselskadade...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Konvertera färger till dialog...</ConvertColorsToDialog>
+        <ConvertActors>Konvertera skådespelare...</ConvertActors>
         <ChangeCasing>Ändra skiftläge...</ChangeCasing>
         <ChangeFrameRate>Ändra bildhastighet...</ChangeFrameRate>
         <ChangeSpeedInPercent>Ändrad hastighet (procent)...</ChangeSpeedInPercent>
@@ -2480,7 +2488,10 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <SpectrogramAppearance>Spektrogramutseende</SpectrogramAppearance>
     <SpectrogramOneColorGradient>En färgövertoning</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
-    <WaveformUseFFmpeg>Använd FFmpeg för ljudextraktion</WaveformUseFFmpeg>
+    <SpectrogramHeat>Värme</SpectrogramHeat>
+    <SpectrogramCyanToOrange>Cyan till orange</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Spektrogram/vågform opacitet:</SpectrogramWaveformOpacity>
+    <WaveformUseFFmpeg>Använd FFMPEG för våguttag</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Använd endast främre mittkanal (för 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Ladda ned {0}</DownloadX>
     <ExtractingX>Extraherar {0}</ExtractingX>
@@ -3194,6 +3205,7 @@ och N bryter</WrapStyle2>
     <GeneratingSpeechFromTextXOfY>Genererar tal från text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Granska ljudklipp</ReviewAudioClips>
     <CustomAudioEncoding>Anpassad ljudkodning</CustomAudioEncoding>
+    <UseVoiceOver>Använd voice over</UseVoiceOver>
     <ReviewInfo>Granska och redigera/ta bort ljudklipp</ReviewInfo>
     <Play>Spela</Play>
     <AutoContinue>Auto-fortsätt</AutoContinue>
