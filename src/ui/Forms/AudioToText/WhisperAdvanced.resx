@@ -543,10 +543,8 @@ optional arguments:
   </data>
   <data name="nikseTextBox1.Text" xml:space="preserve">
     <value>[--device DEVICE] [--output_dir OUTPUT_DIR]
-[--output_format [{json,lrc,txt,text,vtt,srt,tsv,all} ...]]
 [--compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}]
-[--verbose VERBOSE]
-[--task {transcribe,translate}]
+[--verbose VERBOSE] [--task {transcribe,translate}]
 [--language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}]
 [--language_detection_threshold LANGUAGE_DETECTION_THRESHOLD]
 [--language_detection_segments LANGUAGE_DETECTION_SEGMENTS]
@@ -557,8 +555,7 @@ optional arguments:
 [--no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE]
 [--suppress_blank SUPPRESS_BLANK]
 [--suppress_tokens SUPPRESS_TOKENS]
-[--initial_prompt INITIAL_PROMPT]
-[--prefix PREFIX]
+[--initial_prompt INITIAL_PROMPT] [--prefix PREFIX]
 [--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT]
 [--prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE]
 [--without_timestamps WITHOUT_TIMESTAMPS]
@@ -586,13 +583,13 @@ optional arguments:
 [--hallucination_silence_th_temp {0.0,0.2,0.5,0.8,1.0}]
 [--clip_timestamps CLIP_TIMESTAMPS]
 [--max_new_tokens MAX_NEW_TOKENS]
-[--chunk_length CHUNK_LENGTH]
-[--hotwords HOTWORDS] [--batched]
-[--batch_size BATCH_SIZE]
+[--chunk_length CHUNK_LENGTH] [--hotwords HOTWORDS]
+[--batched] [--batch_size BATCH_SIZE]
 [--multilingual MULTILINGUAL]
-[--batch_recursive] [--beep_off] [--skip]
-[--checkcuda] [--print_progress] [--postfix]
-[--check_files] [--alt_writer_off]
+[--model_preload MODEL_PRELOAD] [--batch_recursive]
+[--beep_off] [--skip] [--checkcuda]
+[--print_progress] [--postfix] [--check_files]
+[--alt_writer_off]
 [--ignore_dupe_prompt IGNORE_DUPE_PROMPT]
 [--hallucinations_list_off] [--v3_offsets_off]
 [--reprompt REPROMPT]
@@ -607,21 +604,21 @@ optional arguments:
 [--max_line_count MAX_LINE_COUNT]
 [--min_dist_to_end {0,4,5,6,7,8,9,10,11,12}]
 [--ff_dump] [--ff_track {1,2,3,4,5,6}] [--ff_fc]
-[--ff_mp3] [--ff_sync] [--ff_rnndn_sh]
-[--ff_rnndn_xiph] [--ff_fftdn [0 - 97]]
-[--ff_tempo [0.5 - 2.0]] [--ff_gate]
-[--ff_speechnorm] [--ff_loudnorm]
+[--ff_lc] [--ff_invert] [--ff_mp3] [--ff_sync]
+[--ff_rnndn_sh] [--ff_rnndn_xiph]
+[--ff_fftdn [0 - 97]] [--ff_tempo [0.5 - 2.0]]
+[--ff_gate] [--ff_speechnorm] [--ff_loudnorm]
 [--ff_silence_suppress noise duration]
 [--ff_lowhighpass] [--ff_mdx_kim2]
-[--mdx_chunk MDX_CHUNK]
-[--mdx_device MDX_DEVICE]
+[--mdx_chunk MDX_CHUNK] [--mdx_device MDX_DEVICE]
 [--diarize {pyannote_v3.0,pyannote_v3.1,reverb_v1,reverb_v2}]
 [--diarize_device DIARIZE_DEVICE]
-[--diarize_threads DIARIZE_THREADS]
-[--diarize_dump] [--speaker SPEAKER]
-[--num_speakers NUM_SPEAKERS]
+[--diarize_threads DIARIZE_THREADS] [--diarize_dump]
+[--speaker SPEAKER] [--num_speakers NUM_SPEAKERS]
 [--min_speakers MIN_SPEAKERS]
 [--max_speakers MAX_SPEAKERS]
+[--diarize_ff DIARIZE_FF] [--return_embeddings]
+[--diarize_only]
 
 options:
   -h, --help            show this help message and exit
@@ -831,6 +828,13 @@ options:
   --multilingual MULTILINGUAL
                         Perform language detection on every segment. (default:
                         False)
+  --model_preload MODEL_PRELOAD
+                        True: faster-whisper model is preloaded before
+                        iteration on audio, but interferes with '--
+                        ff_mdx_kim2' model. False: Runs inside iteration after
+                        '--ff...' filters. None: automatic, it's default,
+                        False if 'ff_mdx_kim2' or 'diarize_only' is enabled.
+                        (default: None)
   --batch_recursive, -br
                         Enables recursive batch files processing. Note: If set
                         then it changes defaults of --output_dir. (default:
@@ -884,8 +888,8 @@ options:
                         hallucinations, not missing sentences, positive effect
                         with --multilingual. (default: False)
   --japanese {blend,kanji,hiragana,katakana}, -ja {blend,kanji,hiragana,katakana}
-                        This option may stear Japanese output to have a more
-                        prefered writing style. (default: blend)
+                        This option may steer Japanese output to have a more
+                        preferred writing style. (default: blend)
   --one_word {0,1,2}    0) Disabled. 1) Outputs srt and vtt subtitles with one
                         word per line. 2) As '1', plus removes whitespace and
                         ensures &gt;= 50ms for sub lines. Note: VAD may slightly
@@ -936,6 +940,13 @@ options:
                         track. (default: 1)
   --ff_fc               Selects only front-center channel (FC) to process.
                         (default: False)
+  --ff_lc               Selects only a left channel to process. Useful if
+                        audio contains inverted polarity content, for example
+                        a narration. (default: False)
+  --ff_invert           Inverts polarity a left channel and mix audio to mono,
+                        to keep inverted polarity content and delete same
+                        signal in the channels. Useful if audio contains
+                        inverted polarity content. (default: False)
   --ff_mp3              Audio filter: Conversion to MP3 and back. (default:
                         False)
   --ff_sync             Audio filter: Stretch/squeeze samples to the given
@@ -993,7 +1004,8 @@ options:
                         a second device then set 'cuda:1'. (default: cpu)
   --diarize_threads DIARIZE_THREADS
                         Automatic by default. (default: 0)
-  --diarize_dump        Dump diarization output to a file. (default: False)
+  --diarize_dump        Dump diarization output to a file. Note: No need to
+                        set when'--diarize_only'. (default: False)
   --speaker SPEAKER     Diarization: To replace 'SPEAKER' string with your own
                         word. (default: SPEAKER)
   --num_speakers NUM_SPEAKERS
@@ -1004,6 +1016,18 @@ options:
                         when `num_speakers` is provided. (default: None)
   --max_speakers MAX_SPEAKERS
                         Diarization: Maximum number of speakers. Has no effect
-                        when `num_speakers` is provided. (default: None)</value>
+                        when `num_speakers` is provided. (default: None)
+  --diarize_ff DIARIZE_FF
+                        True: diarize after '--ff_...' audio filters, but runs
+                        inside iteration and interferes with FW model if '--
+                        model_preload' is True. False: diarize all files
+                        before anything else. None: automatic, it's default,
+                        True if any 'ff' filter is enabled. (default: None)
+  --return_embeddings, -embeddings
+                        Dump diarization embeddings to the files. Get a one
+                        embedding per speaker. (default: False)
+  --diarize_only        Use if you want to do diarizations without
+                        transcription. Note: No need to set '--diarize_dump'.
+                        (default: False)</value>
   </data>
 </root>
