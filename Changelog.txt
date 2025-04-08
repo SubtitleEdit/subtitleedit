@@ -24,6 +24,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Czech translation - thx Matěj
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Faster-Whisper-XXL to r245.2 - thx Purfview
    * Update Whisper CPP to 1.7.5
    * Update ffmpeg to 2025-03-31
    * Update yt-dlp to 2025-03-26
