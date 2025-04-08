@@ -3,9 +3,9 @@
 4.0.12 (xth April 2025) BETA
 * NEW
    * Add read support for "OOONA json" format - thx Alfonso
-   * New spectrogram appearances + merge spectrogram/waveform - thx taylanunver
+   * New spectrogram themes + merge spectrogram/waveform UI - thx taylanunver
    * Add tool for converting actors between ASSA/brackets/parentheses/colon
-   * Add OCR via Ollama vision models like "granite3.2-vision" or "gemma3"
+   * Add OCR via Ollama vision models (granite3.2-vision, gemma3, mistral-small3.1)
    * Add Mistral AI translate
    * Add AvalAI translate - thx JJHACKER
    * Add "Chinese traditional" for DeepL - thx rdr44b 
@@ -38,6 +38,7 @@
    * Improve "Fix invalid italics" - thx uckthis
    * Improve translaparent subtitles for Vegas Pro - thx zzzzzz9125/Hintsmth
    * Add total-words + total-chars to custom format header/footer - thx Jorge
+   * More consistent error msg in cmd line convert - thx xylographe/Hlsgs 
 * FIXED:
    * Fix space character in PAC
    * Fix for LRC with MS parsing - thx AverageHoarder
