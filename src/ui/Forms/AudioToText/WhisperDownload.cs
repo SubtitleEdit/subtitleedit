@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "a4681b139c93d7b4b6cefbb4d72de175b3980a4c6052499ca9db473e817659479d2ef8096dfd0c50876194671b09b25985f6db56450b6b5f8a4117851cfd9f1f",
         };
 
-        private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r245.1_windows.7z";
+        private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r245.2_windows.7z";
         private const string DownloadUrlPurfviewFasterWhisperXxlWin7 = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r192.3.4_windows.7z";
         //          private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-172/test.7z";
 
@@ -526,6 +526,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var oldHashes = new List<string>
                 {
                     "f2f1567245dce34552ba630a22e17d1c05e8eb2d3f952392d4befcde18723905caa94303cfc86e4de7b6ee2f5e4bb1eb60dd2154afbb02239ef7a6f6fc38aedd",
+                    "780463ef74240955523a468c716280c3001de68db7f508c3379831ab9fffb9dec2735e8cdb5642c3f8260a311b94cfab2a4da6be9a2ec58538927f3e1d3b40f1",
                 };
 
                 return oldHashes.Contains(hash);
