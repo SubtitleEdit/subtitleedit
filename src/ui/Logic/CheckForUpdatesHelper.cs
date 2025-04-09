@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Forms;
@@ -93,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        public void CheckForUpdates(bool manualCheck)
+        public async Task CheckForUpdates(bool manualCheck)
         {
             ManualCheck = manualCheck;
 
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
+                    _changeLog = await httpClient.GetStringAsync(ChangeLogUrl).ConfigureAwait(false);
                 }
 
                 var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
