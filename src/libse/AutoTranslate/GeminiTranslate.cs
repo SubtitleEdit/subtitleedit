@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,14 +15,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
     public class GeminiTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
-
         public static string StaticName { get; set; } = "Google Gemini";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://deepmind.google/technologies/gemini/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
+
+        private HttpClient _httpClient;
+        private string _baseUrl;
+
 
         /// <summary>
         /// See https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models 
@@ -30,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             "gemini-2.0-flash",
             "gemini-2.0-flash-lite",
+            "gemini-1.5-pro",
         };
 
         public void Initialize()
@@ -54,8 +58,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.GeminiPrompt = new ToolsSettings().GeminiPrompt;
             }
 
-            var model = Configuration.Settings.Tools.GeminiModel;
-            _httpClient.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent");
+            _baseUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{Configuration.Settings.Tools.GeminiModel}:generateContent";
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -73,10 +76,28 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             int[] retryDelays = { 555, 3007, 7013 };
             HttpResponseMessage result = null;
             string resultContent = null;
+            var switchedBaseUrl = false;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var content = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+                result = await _httpClient.PostAsync(_baseUrl, content, cancellationToken);
+
+                if (result.StatusCode == System.Net.HttpStatusCode.NotFound && !switchedBaseUrl)
+                {
+                    if (_baseUrl.Contains("v1beta"))
+                    {
+                        _baseUrl = $"https://generativelanguage.googleapis.com/v1/models/{Configuration.Settings.Tools.GeminiModel}:generateContent";
+                        switchedBaseUrl = true;
+                    }
+                    else
+                    {
+                        _baseUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{Configuration.Settings.Tools.GeminiModel}:generateContent";
+                        switchedBaseUrl = true;
+                    }
+
+                    continue;
+                }
+
                 resultContent = await result.Content.ReadAsStringAsync();
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
@@ -90,11 +111,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             if (!result.IsSuccessStatusCode)
             {
                 Error = resultContent;
-                SeLogger.Error("GeminiTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + resultContent);
-            }
-            else
-            {
-                SeLogger.Error("GeminiTranslate response: (Status code=" + result.StatusCode + ")" + Environment.NewLine + resultContent);
+                SeLogger.Error($"GeminiTranslate failed calling API at {_baseUrl}: Status code={result.StatusCode}{Environment.NewLine}{resultContent}");
             }
 
             result.EnsureSuccessStatusCode();
