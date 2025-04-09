@@ -40,6 +40,7 @@
    * Improve translaparent subtitles for Vegas Pro - thx zzzzzz9125/Hintsmth
    * Add total-words + total-chars to custom format header/footer - thx Jorge
    * More consistent error msg in cmd line convert - thx xylographe/Hlsgs 
+   * Add Brazilian Portuguese for LibreTranslate - thx erickcomcek
 * FIXED:
    * Fix space character in PAC
    * Fix for LRC with MS parsing - thx AverageHoarder
