@@ -95,8 +95,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "bn",
                 "bg",
                 "ca",
-                "zh",
-                "zt",
                 "cs",
                 "da",
                 "nl",
@@ -122,6 +120,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "fa",
                 "pl",
                 "pt",
+                "pt-BR",
                 "ro",
                 "ru",
                 "sr",
@@ -135,6 +134,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "ur",
                 "uk",
                 "vi",
+                "zh-Hant",
+                "zh-Hans"
             };
 
             var result = new List<TranslationPair>();
@@ -145,6 +146,22 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 if (culture != null)
                 {
                     result.Add(new TranslationPair(culture.EnglishName, code, code));
+                }
+                else if (code == "pt-BR")
+                {
+                    result.Add(new TranslationPair("Portuguese (Brazilian)", code, "pt"));
+                }
+                else if (code == "zh-Hant")
+                {
+                    result.Add(new TranslationPair("Chinese (traditional)", code, "zh"));
+                }
+                else if (code == "zh-Hans")
+                {
+                    result.Add(new TranslationPair("Chinese (Simplified)", code, "zh"));
+                }
+                else if (code == "tl")
+                {
+                    result.Add(new TranslationPair("Tagalog", code, code));
                 }
             }
 
