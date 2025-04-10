@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadPaddleOCR : Form
     {
-        public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v.1.0.0/PaddleOCR-GPU-v1.0.0.7z";
+        public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v.1.0.0/PaddleOCR-GPU-v1.0.0-CUDA-11.8.7z";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         private string _tempFileName;
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            Extract7Zip(downloadStream, dictionaryFolder, "PaddleOCR-GPU-v1.0.0");
+            Extract7Zip(downloadStream, dictionaryFolder, "PaddleOCR-GPU-v1.0.0-CUDA-11.8");
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;

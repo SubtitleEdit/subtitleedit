@@ -339,8 +339,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractOcrAutoFixes;
         private string Tesseract5Version = "5.5.0";
 
-        // Minimum driver version for CUDA 12.3 (PaddleOCR GPU version)
-        private static readonly string requiredDriverVersion = "545.84";
+        // Minimum driver version for CUDA 11.8 (PaddleOCR GPU version)
+        private static readonly string requiredDriverVersion = "522.25";
 
         // Last PaddleOCR version that does not support batch mode
         private static readonly Version lastPaddleOcrVersionWithoutBatchMode = new Version(2, 9, 1);
