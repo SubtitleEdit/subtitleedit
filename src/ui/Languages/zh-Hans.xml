@@ -2350,7 +2350,7 @@ Command line: {1} {2}
     <DuplicateLine>创建副本行</DuplicateLine>
     <ToggleView>切换表格/源视图</ToggleView>
     <ToggleMode>切换翻译/创建/调整模式</ToggleMode>
-    <TogglePreviewOnVideo>切换视频预览</TogglePreviewOnVideo>
+    <TogglePreviewOnVideo>切换字幕预览方式</TogglePreviewOnVideo>
     <Help>帮助</Help>
     <FontInUi>用户界面字体</FontInUi>
     <Appearance>外观</Appearance>
