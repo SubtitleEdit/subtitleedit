@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertActorFrom = "Change actor from",
                 ConvertActorTo = "Change actor to",
                 InlineActorViaX = "Inline actor via {0}",
-                NumberOfConversionsX = "Number of actor convertions: {0}",
+                NumberOfConversionsX = "Number of actor conversions: {0}",
             };
 
             ConvertColorsToDialog = new LanguageStructure.ConvertColorsToDialog
