@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 stereo = true;
             }
 
-            if (checkBoxVoiceOver.Checked)          
+            if (checkBoxVoiceOver.Checked)
             {
                 addAudioProcess = VideoPreviewGenerator.AddVoiceOver(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             }
@@ -456,14 +456,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
             }
-           
+
             addAudioProcess.Start();
 
             while (!addAudioProcess.HasExited)
             {
                 string line = addAudioProcess.StandardError.ReadLine();
                 labelProgress.Text = "Writing Audio to Video: " + showffmpegOutput(line);
-             
+
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -475,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         }
 
         static string showffmpegOutput(string ffmpegOutput)
-        {          
+        {
             Match match = Regex.Match(ffmpegOutput, "size=.*?KiB");
 
             if (match.Success)
