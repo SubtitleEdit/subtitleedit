@@ -1733,6 +1733,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 CheckIfInstalledAndVersion(Configuration.Settings.Tools.WhisperChoice);
             });
+
+            AudioToText_ResizeEnd(null, null);
         }
 
         private bool _checkedInstalledAndVersion;
@@ -1937,6 +1939,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void AudioToText_ResizeEnd(object sender, EventArgs e)
         {
             listViewInputFiles.AutoSizeLastColumn();
+            labelElapsed.Left = progressBar1.Width - labelElapsed.Width + 10;
         }
 
         private void listViewInputFiles_KeyDown(object sender, KeyEventArgs e)

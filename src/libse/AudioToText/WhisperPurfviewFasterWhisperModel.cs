@@ -155,6 +155,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             new WhisperModel
             {
+                Name = "distil-large-v3.5",
+                Size = "1.5 GB English",
+                Urls = MakeUrls("https://huggingface.co/Purfview/faster-distil-whisper-large-v3.5/resolve/main"),
+                Folder = "faster-distil-whisper-large-v3.5",
+            },
+
+            new WhisperModel
+            {
                 Name = "tiny.nb",
                 Size = "151 MB Norwegian",
                 Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-tiny/resolve/main"),
