@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             LastBinaryImageCompareDb = "Latin+Latin";
             BinaryAutoDetectBestDb = true;
             PaddleOcrLanguageCode = "en";
-            PaddleOcrUseGpu = false;
+            PaddleOcrUseGpu = true;
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
             UnfocusedAttentionPlaySoundCount = 1;
