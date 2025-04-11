@@ -113,11 +113,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void SetupDataReceiveHandler(DataReceivedEventHandler dataReceivedHandler, Process processMakeVideo)
         {
-            processMakeVideo.StartInfo.RedirectStandardOutput = true;
-            processMakeVideo.StartInfo.RedirectStandardError = true;
-
             if (dataReceivedHandler != null)
             {
+                processMakeVideo.StartInfo.RedirectStandardOutput = true;
+                processMakeVideo.StartInfo.RedirectStandardError = true;
+
                 processMakeVideo.OutputDataReceived += dataReceivedHandler;
                 processMakeVideo.ErrorDataReceived += dataReceivedHandler;
             }
@@ -645,6 +645,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     FileName = GetFfmpegLocation(),
                     Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
