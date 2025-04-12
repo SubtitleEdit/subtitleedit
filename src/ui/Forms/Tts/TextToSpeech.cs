@@ -835,7 +835,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
-                var modelFileName = Path.Combine(piperPath, voice.ModelShort);
+                var modelFileName = Path.Combine(piperPath, FixInvalidFileNameCharacters(voice.ModelShort));
                 if (!File.Exists(modelFileName))
                 {
                     using (var form = new PiperDownload("Piper TextToSpeech voice: " + voice.Voice) { AutoClose = true, ModelUrl = voice.Model, ModelFileName = modelFileName, PiperPath = piperPath })
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
-                var configFileName = Path.Combine(piperPath, voice.ConfigShort);
+                var configFileName = Path.Combine(piperPath, FixInvalidFileNameCharacters(voice.ConfigShort));
                 if (!File.Exists(configFileName))
                 {
                     using (var form = new PiperDownload("Piper TextToSpeech voice config: " + voice.Voice) { AutoClose = true, ModelUrl = voice.Config, ModelFileName = configFileName, PiperPath = piperPath })
@@ -865,7 +865,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     {
                         WorkingDirectory = piperPath,
                         FileName = Configuration.IsRunningOnWindows ? piperExe : "piper",
-                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav",
+                        Arguments = $"-m \"{FixInvalidFileNameCharacters(voice.ModelShort)}\" -c \"{FixInvalidFileNameCharacters(voice.ConfigShort)}\" -f out.wav",
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
@@ -903,6 +903,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelProgress.Text = string.Empty;
 
             return true;
+        }
+
+        private string FixInvalidFileNameCharacters(string s)
+        {
+            return s.Replace("ã", "a");
         }
 
         private bool GenerateParagraphAudioTortoiseTts(Subtitle subtitle, bool showProgressBar, string overrideFileName)
