@@ -601,6 +601,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <OnlyLookForDifferencesInText>변경된 텍스트에 색칠</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>이미지 기반 자막과는 비교할 수 없습니다!</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>배우 변환</Title>
+    <ConvertActorFrom>다음을 변경</ConvertActorFrom>
+    <ConvertActorTo>다음과 같이 변경</ConvertActorTo>
+    <InlineActorViaX>{0}로 배우 인라인</InlineActorViaX>
+    <NumberOfConversionsX>배우 변환 수 : {0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>색상을 대화 상자로 변환</Title>
     <RemoveColorTags>색상 태그 제거</RemoveColorTags>
@@ -1396,6 +1403,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <StartNumberingFrom>자막 시작 번호 다시 매기기</StartNumberingFrom>
         <RemoveTextForHearingImpaired>청각 장애인용 텍스트 삭제...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>색상을 대화 상자로 변환...</ConvertColorsToDialog>
+        <ConvertActors>배우 변환...</ConvertActors>
         <ChangeCasing>대/소문자 바꾸기</ChangeCasing>
         <ChangeFrameRate>프레임 속도 변경...</ChangeFrameRate>
         <ChangeSpeedInPercent>비율로 속도 조정...</ChangeSpeedInPercent>
@@ -2476,6 +2484,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SpectrogramAppearance>스펙트로그램의 모양</SpectrogramAppearance>
     <SpectrogramOneColorGradient>단색 그라데이션</SpectrogramOneColorGradient>
     <SpectrogramClassic>클래식</SpectrogramClassic>
+    <SpectrogramHeat>온도</SpectrogramHeat>
+    <SpectrogramCyanToOrange>청록색에서 주황색으로</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>스펙트로그램/파형 불투명도:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>파형 추출을 위해 FFmpeg 사용</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>전면 중앙 채널만 사용 (5.1/7.1용)</WaveformUseCenterChannelOnly>
     <DownloadX>{0} 다운로드</DownloadX>
@@ -3190,6 +3201,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GeneratingSpeechFromTextXOfY>텍스트에서 음성 생성: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>오디오 클립 검토</ReviewAudioClips>
     <CustomAudioEncoding>사용자 지정 오디오 인코딩</CustomAudioEncoding>
+    <UseVoiceOver>보이스오버 사용</UseVoiceOver>
     <ReviewInfo>오디오 클립 검토 및 편집/제거</ReviewInfo>
     <Play>재생</Play>
     <AutoContinue>자동 계속</AutoContinue>
