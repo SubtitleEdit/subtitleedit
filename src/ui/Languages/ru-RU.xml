@@ -613,6 +613,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyLookForDifferencesInText>Показывать только текстовые отличия</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Невозможно сравнить изображение с субтитрами</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Преобразование актёров</Title>
+    <ConvertActorFrom>Сменить актёра с</ConvertActorFrom>
+    <ConvertActorTo>Сменить актёра на</ConvertActorTo>
+    <InlineActorViaX>Встраивание через {0}</InlineActorViaX>
+    <NumberOfConversionsX>Количество конверсий актёров: {0}</NumberOfConversionsX>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Преобразование цветов в диалог</Title>
     <RemoveColorTags>Удалить теги цветов</RemoveColorTags>
@@ -1411,6 +1418,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <StartNumberingFrom>Перенумеровать строки…</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Удалить текст для слабослышащих…</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Преобразование цветов в диалог…</ConvertColorsToDialog>
+        <ConvertActors>Преобразование актёров…</ConvertActors>
         <ChangeCasing>Изменить регистр…</ChangeCasing>
         <ChangeFrameRate>Изменить частоту кадров…</ChangeFrameRate>
         <ChangeSpeedInPercent>Изменить скорость (в %)…</ChangeSpeedInPercent>
@@ -2487,6 +2495,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpectrogramAppearance>Вид спектрограммы</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Градиентная заливка одним цветом</SpectrogramOneColorGradient>
     <SpectrogramClassic>Классический</SpectrogramClassic>
+    <SpectrogramHeat>Тепловой</SpectrogramHeat>
+    <SpectrogramCyanToOrange>От цианового к оранжевому</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Непрозрачность:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Использовать только передний центральный канал (для 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Загрузить {0}</DownloadX>
@@ -3202,6 +3213,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GeneratingSpeechFromTextXOfY>Создание речи из текста: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Просмотр аудиоклипов</ReviewAudioClips>
     <CustomAudioEncoding>Пользовательское кодирование звука</CustomAudioEncoding>
+    <UseVoiceOver>Закадровый голос</UseVoiceOver>
     <ReviewInfo>Просмотр и редактирование/удаление аудиоклипов</ReviewInfo>
     <Play>Воспроизвести</Play>
     <AutoContinue>Автопродолжение</AutoContinue>
@@ -3488,7 +3500,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Стили WebVTT</Title>
   </WebVttStyleManager>
   <WhisperAdvanced>
-    <Title>Whisper продвинутый - дополнительные аргументы командной строки</Title>
+    <Title>Продвинутый Whisper - дополнительные аргументы командной строки</Title>
     <CommandLineArguments>Дополнительные параметры командной строки Whisper:</CommandLineArguments>
     <Info>Примечание: различные реализации Whisper отличаются параметрами командной строки!</Info>
     <Standard>Стандарт</Standard>
