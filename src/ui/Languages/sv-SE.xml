@@ -615,6 +615,8 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <ConvertActorTo>Ändra skådespelare till</ConvertActorTo>
     <InlineActorViaX>Inline skådespelare via {0}</InlineActorViaX>
     <NumberOfConversionsX>Antal skådespelare omvandlingar: {0}</NumberOfConversionsX>
+    <SetColor>Färg</SetColor>
+    <OnlyNames>Endast namn</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Konvertera färger till dialog</Title>
