@@ -536,7 +536,8 @@
             public string ConvertActorTo { get; set; }
             public string InlineActorViaX { get; set; }
             public string NumberOfConversionsX { get; set; }
-
+            public string SetColor { get; set; }
+            public string OnlyNames { get; set; }
         }
 
         public class ChangeCasing

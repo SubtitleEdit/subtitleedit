@@ -834,6 +834,8 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertActorTo = "Change actor to",
                 InlineActorViaX = "Inline actor via {0}",
                 NumberOfConversionsX = "Number of actor conversions: {0}",
+                SetColor = "Set color",
+                OnlyNames = "Only names",
             };
 
             ConvertColorsToDialog = new LanguageStructure.ConvertColorsToDialog

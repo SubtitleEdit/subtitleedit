@@ -1591,6 +1591,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ConvertActor/NumberOfConversionsX":
                     language.ConvertActor.NumberOfConversionsX = reader.Value;
                     break;
+                case "ConvertActor/SetColor":
+                    language.ConvertActor.SetColor = reader.Value;
+                    break;
+                case "ConvertActor/OnlyNames":
+                    language.ConvertActor.OnlyNames = reader.Value;
+                    break;
                 case "ConvertColorsToDialog/Title":
                     language.ConvertColorsToDialog.Title = reader.Value;
                     break;

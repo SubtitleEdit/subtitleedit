@@ -613,6 +613,8 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <ConvertActorTo>Change actor to</ConvertActorTo>
     <InlineActorViaX>Inline actor via {0}</InlineActorViaX>
     <NumberOfConversionsX>Number of actor conversions: {0}</NumberOfConversionsX>
+    <SetColor>Set color</SetColor>
+    <OnlyNames>Only names</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Convert colors to dialog</Title>
