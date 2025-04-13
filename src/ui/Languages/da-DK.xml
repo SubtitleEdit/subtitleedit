@@ -609,6 +609,8 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <ConvertActorTo>Skift skuespiller til</ConvertActorTo>
     <InlineActorViaX>Inline skuespiller via {0}</InlineActorViaX>
     <NumberOfConversionsX>Antal skuespillerkonverteringer: {0}</NumberOfConversionsX>
+    <SetColor>Indstil farve</SetColor>
+    <OnlyNames>Kun navne</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Konverter farver til dialog</Title>
