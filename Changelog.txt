@@ -24,6 +24,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Czech translation - thx Matěj
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Russian translation - thx elfriob
    * Update Faster-Whisper-XXL to r245.4 - thx Purfview
    * Update Whisper CPP to 1.7.5
    * Update ffmpeg to 2025-03-31
@@ -54,6 +55,7 @@
    * Do not add comma when merging lines - thx uckthis
    * Fix issue with italic in DCinema formats - thx MartinaBerger
    * Fix for split line with dialog - thx Yanngo
+   * Fix for char "ã" in Piper TTS model/config
 
 
 4.0.11 (28th January 2025)
