@@ -542,7 +542,7 @@ optional arguments:
   --ff_lowhighpass      Audio filter: Pass 50Hz - 7800 band. sinc + afir. (default: False)</value>
   </data>
   <data name="nikseTextBox1.Text" xml:space="preserve">
-    <value>Faster-Whisper-XXL r245.3
+    <value>Faster-Whisper-XXL r245.4
 
 [--device DEVICE] [--output_dir OUTPUT_DIR]
 [--compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}]
