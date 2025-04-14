@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public double TotalLength => Lines.Sum(p => p.Length);
         public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
 
-        private static readonly Graphics Graphics = Graphics.FromHwnd(IntPtr.Zero);
+        private static Graphics Graphics; 
         private static readonly Font DefaultFont = SystemFonts.DefaultFont;
         private static readonly object GdiLock = new object();
 
@@ -30,6 +30,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 try
                 {
+                    if (Graphics == null)
+                    {
+                        Graphics = Graphics.FromHwnd(IntPtr.Zero);
+                    }
                     return Graphics.MeasureString(text, DefaultFont).Width;
                 }
                 catch
