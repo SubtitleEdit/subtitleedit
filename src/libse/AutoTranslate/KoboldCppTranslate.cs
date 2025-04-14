@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "KoboldCpp (local LLM)";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://github.com/LostRuins/koboldcpp";
+        public string Url => "https://github.com/LostRuins/koboldcpp/releases";
         public string Error { get; set; }
         public int MaxCharacters => 1000;
 
