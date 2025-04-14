@@ -62,7 +62,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(429, 283);
+            this.buttonCancel.Location = new System.Drawing.Point(674, 379);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 101;
@@ -74,7 +74,7 @@
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(348, 283);
+            this.buttonOk.Location = new System.Drawing.Point(593, 379);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 100;
@@ -148,7 +148,7 @@
             this.nikseTextBoxPrompt.Multiline = true;
             this.nikseTextBoxPrompt.Name = "nikseTextBoxPrompt";
             this.nikseTextBoxPrompt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(482, 101);
+            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(727, 197);
             this.nikseTextBoxPrompt.TabIndex = 40;
             // 
             // nikseUpDownMaxBytes
@@ -216,7 +216,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 318);
+            this.ClientSize = new System.Drawing.Size(761, 414);
             this.Controls.Add(this.labelDelay);
             this.Controls.Add(this.nikseUpDownDelay);
             this.Controls.Add(this.nikseTextBoxPrompt);

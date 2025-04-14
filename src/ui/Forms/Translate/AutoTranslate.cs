@@ -123,11 +123,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new GoogleTranslateV2(),
                 new MicrosoftTranslator(),
                 new DeepLTranslate(),
+                new OllamaTranslate(),
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
                 new LmStudioTranslate(),
-                new OllamaTranslate(),
+                new KoboldCppTranslate(),
                 new AnthropicTranslate(),
                 new GroqTranslate(),
                 new DeepSeekTranslate(),
@@ -386,6 +387,21 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 FillUrls(new List<string>
                 {
                     Configuration.Settings.Tools.LmStudioApiUrl.TrimEnd('/'),
+                });
+
+                return;
+            }
+
+            if (engineType == typeof(KoboldCppTranslate))
+            {
+                if (string.IsNullOrEmpty(Configuration.Settings.Tools.KoboldCppUrl))
+                {
+                    Configuration.Settings.Tools.KoboldCppUrl = "http://localhost:5001/api/generate/";
+                }
+
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.KoboldCppUrl.TrimEnd('/'),
                 });
 
                 return;
@@ -1196,6 +1212,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     engineType == typeof(NoLanguageLeftBehindServe) ||
                     engineType == typeof(LibreTranslate) ||
                     engineType == typeof(LmStudioTranslate) ||
+                    engineType == typeof(KoboldCppTranslate) ||
                     engineType == typeof(OllamaTranslate))
                 {
                     var err = string.IsNullOrEmpty(_autoTranslator.Error) ? string.Empty : _autoTranslator.Error + Environment.NewLine;
@@ -1271,6 +1288,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.LmStudioApiUrl = nikseComboBoxUrl.Text.Trim();
                 Configuration.Settings.Tools.LmStudioModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(KoboldCppTranslate))
+            {
+                Configuration.Settings.Tools.KoboldCppUrl = nikseComboBoxUrl.Text.Trim();
             }
 
             if (engineType == typeof(OllamaTranslate))

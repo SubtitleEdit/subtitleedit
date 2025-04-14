@@ -2311,6 +2311,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.OllamaPrompt = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("KoboldCppUrl");
+            if (subNode != null)
+            {
+                settings.Tools.KoboldCppUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("KoboldCppPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.KoboldCppPrompt = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AnthropicApiUrl");
             if (subNode != null)
             {
@@ -9202,6 +9214,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
                 xmlWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
                 xmlWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);
+                xmlWriter.WriteElementString("KoboldCppUrl", settings.Tools.KoboldCppUrl);
+                xmlWriter.WriteElementString("KoboldCppPrompt", settings.Tools.KoboldCppPrompt);
                 xmlWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
                 xmlWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
                 xmlWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);

@@ -63,6 +63,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     nikseTextBoxPrompt.Text = new ToolsSettings().LmStudioPrompt;
                 }
             }
+            else if (_engineType == typeof(KoboldCppTranslate))
+            {
+                nikseTextBoxPrompt.Text = Configuration.Settings.Tools.KoboldCppPrompt;
+                if (string.IsNullOrWhiteSpace(nikseTextBoxPrompt.Text))
+                {
+                    nikseTextBoxPrompt.Text = new ToolsSettings().KoboldCppPrompt;
+                }
+            }
             else if (_engineType == typeof(AnthropicTranslate))
             {
                 nikseTextBoxPrompt.Text = Configuration.Settings.Tools.AnthropicPrompt;
@@ -173,6 +181,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (_engineType == typeof(LmStudioTranslate))
             {
                 Configuration.Settings.Tools.LmStudioPrompt = nikseTextBoxPrompt.Text;
+            }
+            else if (_engineType == typeof(KoboldCppTranslate))
+            {
+                Configuration.Settings.Tools.KoboldCppPrompt = nikseTextBoxPrompt.Text;
             }
             else if (_engineType == typeof(AnthropicTranslate))
             {

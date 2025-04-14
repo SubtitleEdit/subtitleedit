@@ -12,30 +12,16 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AnthropicTranslate : IAutoTranslator, IDisposable
+    public class KoboldCppTranslate : IAutoTranslator, IDisposable
     {
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "Anthropic Claude";
+        public static string StaticName { get; set; } = "KoboldCpp (local LLM)";
         public override string ToString() => StaticName;
-
         public string Name => StaticName;
-        public string Url => "https://www.anthropic.com/";
+        public string Url => "https://github.com/LostRuins/koboldcpp";
         public string Error { get; set; }
-        public int MaxCharacters => 900;
-
-        /// <summary>
-        /// See https://docs.anthropic.com/en/docs/about-claude/models
-        /// </summary>
-        public static string[] Models => new[]
-        {
-            "claude-3-7-sonnet-latest",
-            "claude-3-5-sonnet-latest",
-            "claude-3-5-haiku-latest", 
-            "claude-3-opus-20240229", 
-            "claude-3-sonnet-20240229", 
-            "claude-3-haiku-20240307"
-        };
+        public int MaxCharacters => 1000;
 
         public void Initialize()
         {
@@ -43,13 +29,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("anthropic-version", "2023-06-01");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AnthropicApiUrl.TrimEnd('/'));
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AnthropicApiKey))
-            {
-                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", Configuration.Settings.Tools.AnthropicApiKey);
-            }
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.KoboldCppUrl.TrimEnd('/'));
+            _httpClient.Timeout = TimeSpan.FromMinutes(25);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -64,36 +45,35 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.AnthropicApiModel;
-            if (string.IsNullOrEmpty(model))
-            {
-                model = Models[0];
-                Configuration.Settings.Tools.AnthropicApiModel = model;
-            }
+            //            var model = Configuration.Settings.Tools.KoboldCppModel;
+            var modelJson = string.Empty;
+            //if (!string.IsNullOrEmpty(model))
+            //{
+            //    modelJson = "\"model\": \"" + model + "\",";
+            //    Configuration.Settings.Tools.OllamaModel = model;
+            //}
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.AnthropicPrompt))
+            if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.KoboldCppPrompt))
             {
-                Configuration.Settings.Tools.AnthropicPrompt = new ToolsSettings().AnthropicPrompt;
+                Configuration.Settings.Tools.KoboldCppPrompt = new ToolsSettings().KoboldCppPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.AnthropicPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var prompt = string.Format(Configuration.Settings.Tools.KoboldCppPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("Anthropic Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("Error calling + " + StaticName + ": Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 
             result.EnsureSuccessStatusCode();
 
-            SeLogger.Error($"{StaticName}: debug json: " + json);
-
             var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "text");
+            var resultText = parser.GetFirstObject(json, "response");
             if (resultText == null)
             {
                 return string.Empty;
@@ -105,8 +85,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            outputText = ChatGptTranslate.FixNewLines(outputText);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();

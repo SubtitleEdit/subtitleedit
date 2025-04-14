@@ -99,7 +99,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OllamaModels { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
-
+        public string KoboldCppUrl { get; set; }
+        public string KoboldCppPrompt { get; set; }
         public string AnthropicApiUrl { get; set; }
         public string AnthropicPrompt { get; set; }
         public string AnthropicApiKey { get; set; }
@@ -518,6 +519,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
             OllamaModel = "llama3.2";
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
+            KoboldCppUrl = "http://localhost:5001/api/generate/";
+            KoboldCppPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = AnthropicTranslate.Models[0];
