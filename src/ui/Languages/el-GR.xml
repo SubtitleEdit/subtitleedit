@@ -600,6 +600,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertActorTo>Αλλαγή ηθοποιού σε</ConvertActorTo>
     <InlineActorViaX>Εισαγωγή ηθοποιού μέσω {0}</InlineActorViaX>
     <NumberOfConversionsX>Αριθμός μετατροπών ηθοποιών: {0}</NumberOfConversionsX>
+    <SetColor>Ορισμός χρώματος</SetColor>
+    <OnlyNames>Μονο ονόματα</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Μετατροπή χρωμάτων σε παύλες διαλόγου</Title>
