@@ -7,6 +7,7 @@
    * Add tool for converting actors between ASSA/brackets/parentheses/colon
    * Add OCR via Ollama vision models (granite3.2-vision, gemma3, mistral-small3.1)
    * Add Mistral AI translate
+   * Add KoboldCpp AI translate - thx Oplay66
    * Add AvalAI translate - thx JJHACKER
    * Add "Chinese traditional" for DeepL - thx rdr44b 
    * Add voice-over for TTS - thx Chris-656

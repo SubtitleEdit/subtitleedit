@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
     public class ChatGptTranslate : IAutoTranslator, IDisposable
     {
+        private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
+
         private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "ChatGPT";
@@ -122,6 +125,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             outputText = FixNewLines(outputText);
             outputText = RemovePreamble(text, outputText);
+            outputText = DecodeUnicodeEscapes(outputText);   
             return outputText.Trim();
         }
 
@@ -230,6 +234,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private static TranslationPair MakePair(string nameCode, string twoLetter)
         {
             return new TranslationPair(nameCode, nameCode, twoLetter);
+        }
+
+        internal static string DecodeUnicodeEscapes(string input)
+        {
+            try
+            {
+                return UnicodeRegex.Replace(input, match =>
+                 char.ConvertFromUtf32(int.Parse(match.Groups[1].Value, System.Globalization.NumberStyles.HexNumber)));
+            }
+            catch
+            {
+                return input;
+            }
         }
 
         internal static string FixNewLines(string outputText)
