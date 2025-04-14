@@ -610,6 +610,8 @@ Command line: {1} {2}
     <ConvertActorTo>更改演员为</ConvertActorTo>
     <InlineActorViaX>内联演员通过{0}</InlineActorViaX>
     <NumberOfConversionsX>演员转换的数量：{0}</NumberOfConversionsX>
+    <SetColor>设置颜色</SetColor>
+    <OnlyNames>仅名称</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>将颜色转换为对话框</Title>
