@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             checkBoxColor.Text = LanguageSettings.Current.ConvertActor.SetColor;
+            buttonColor.Text = LanguageSettings.Current.DCinemaProperties.FontColor;
             checkBoxChangeCasing.Text = LanguageSettings.Current.ChangeCasing.Title;
             checkBoxOnlyNames.Text = LanguageSettings.Current.ConvertActor.OnlyNames;
 
