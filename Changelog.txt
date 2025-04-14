@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.12 (xth April 2025) BETA
+4.0.12 (14th April 2025)
 * NEW
    * Add read support for "OOONA json" format - thx Alfonso
    * New spectrogram themes + merge spectrogram/waveform UI - thx taylanunver
