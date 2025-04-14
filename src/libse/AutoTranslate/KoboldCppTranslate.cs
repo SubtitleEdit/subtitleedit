@@ -53,12 +53,18 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             //    Configuration.Settings.Tools.OllamaModel = model;
             //}
 
+            var temperatureJson = string.Empty;
+            if (Configuration.Settings.Tools.KoboldCppTemperature >= 0 && Configuration.Settings.Tools.KoboldCppTemperature < 2)
+            {
+                temperatureJson = "\"temperature\": " + Configuration.Settings.Tools.KoboldCppTemperature.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + ",";
+            }
+
             if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.KoboldCppPrompt))
             {
                 Configuration.Settings.Tools.KoboldCppPrompt = new ToolsSettings().KoboldCppPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.KoboldCppPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            var input = "{ " + modelJson + temperatureJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);

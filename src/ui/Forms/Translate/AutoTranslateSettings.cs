@@ -39,6 +39,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             nikseUpDownDelay.Left = labelDelay.Right + 4;
             nikseUpDownMaxBytes.Left = labelMaxBytes.Right + 4;
 
+            labelTemperature.Visible = false;
+            nikseUpDownTemperature.Visible = false;
+            nikseUpDownTemperature.Left = labelTemperature.Right + 4;
+
             if (_engineType == typeof(ChatGptTranslate))
             {
                 nikseTextBoxPrompt.Text = Configuration.Settings.Tools.ChatGptPrompt;
@@ -70,6 +74,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 {
                     nikseTextBoxPrompt.Text = new ToolsSettings().KoboldCppPrompt;
                 }
+
+                labelTemperature.Visible = true;
+                nikseUpDownTemperature.Visible = true;
+                if (Configuration.Settings.Tools.KoboldCppTemperature < 0.0m || Configuration.Settings.Tools.KoboldCppTemperature > 1.5m)
+                {
+                    Configuration.Settings.Tools.KoboldCppTemperature = new ToolsSettings().KoboldCppTemperature;
+                }
+                nikseUpDownTemperature.Value = Configuration.Settings.Tools.KoboldCppTemperature;
             }
             else if (_engineType == typeof(AnthropicTranslate))
             {
@@ -185,6 +197,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             else if (_engineType == typeof(KoboldCppTranslate))
             {
                 Configuration.Settings.Tools.KoboldCppPrompt = nikseTextBoxPrompt.Text;
+                Configuration.Settings.Tools.KoboldCppTemperature = (decimal)nikseUpDownTemperature.Value;
             }
             else if (_engineType == typeof(AnthropicTranslate))
             {

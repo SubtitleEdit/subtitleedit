@@ -34,6 +34,8 @@
             this.buttonOk = new System.Windows.Forms.Button();
             this.labelPrompt = new System.Windows.Forms.Label();
             this.labelDelay = new System.Windows.Forms.Label();
+            this.labelTemperature = new System.Windows.Forms.Label();
+            this.nikseUpDownTemperature = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.nikseUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.nikseTextBoxPrompt = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseUpDownMaxBytes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -52,7 +54,7 @@
             // labelMaxBytes
             // 
             this.labelMaxBytes.AutoSize = true;
-            this.labelMaxBytes.Location = new System.Drawing.Point(18, 109);
+            this.labelMaxBytes.Location = new System.Drawing.Point(18, 96);
             this.labelMaxBytes.Name = "labelMaxBytes";
             this.labelMaxBytes.Size = new System.Drawing.Size(183, 13);
             this.labelMaxBytes.TabIndex = 94;
@@ -62,7 +64,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(674, 379);
+            this.buttonCancel.Location = new System.Drawing.Point(716, 431);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 101;
@@ -74,7 +76,7 @@
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(593, 379);
+            this.buttonOk.Location = new System.Drawing.Point(635, 431);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 100;
@@ -85,7 +87,7 @@
             // labelPrompt
             // 
             this.labelPrompt.AutoSize = true;
-            this.labelPrompt.Location = new System.Drawing.Point(19, 149);
+            this.labelPrompt.Location = new System.Drawing.Point(18, 184);
             this.labelPrompt.Name = "labelPrompt";
             this.labelPrompt.Size = new System.Drawing.Size(102, 13);
             this.labelPrompt.TabIndex = 98;
@@ -94,11 +96,58 @@
             // labelDelay
             // 
             this.labelDelay.AutoSize = true;
-            this.labelDelay.Location = new System.Drawing.Point(19, 67);
+            this.labelDelay.Location = new System.Drawing.Point(19, 62);
             this.labelDelay.Name = "labelDelay";
             this.labelDelay.Size = new System.Drawing.Size(179, 13);
             this.labelDelay.TabIndex = 101;
             this.labelDelay.Text = "Delay seconds after each server call";
+            // 
+            // labelTemperature
+            // 
+            this.labelTemperature.AutoSize = true;
+            this.labelTemperature.Location = new System.Drawing.Point(18, 131);
+            this.labelTemperature.Name = "labelTemperature";
+            this.labelTemperature.Size = new System.Drawing.Size(67, 13);
+            this.labelTemperature.TabIndex = 103;
+            this.labelTemperature.Text = "Temperature";
+            // 
+            // nikseUpDownTemperature
+            // 
+            this.nikseUpDownTemperature.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseUpDownTemperature.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseUpDownTemperature.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseUpDownTemperature.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseUpDownTemperature.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseUpDownTemperature.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseUpDownTemperature.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseUpDownTemperature.DecimalPlaces = 1;
+            this.nikseUpDownTemperature.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.nikseUpDownTemperature.Location = new System.Drawing.Point(217, 127);
+            this.nikseUpDownTemperature.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.nikseUpDownTemperature.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.nikseUpDownTemperature.Name = "nikseUpDownTemperature";
+            this.nikseUpDownTemperature.Size = new System.Drawing.Size(75, 23);
+            this.nikseUpDownTemperature.TabIndex = 102;
+            this.nikseUpDownTemperature.TabStop = false;
+            this.nikseUpDownTemperature.Text = "nikseUpDownTemperature";
+            this.nikseUpDownTemperature.ThousandsSeparator = false;
+            this.nikseUpDownTemperature.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // nikseUpDownDelay
             // 
@@ -115,7 +164,7 @@
             0,
             0,
             0});
-            this.nikseUpDownDelay.Location = new System.Drawing.Point(222, 62);
+            this.nikseUpDownDelay.Location = new System.Drawing.Point(222, 57);
             this.nikseUpDownDelay.Maximum = new decimal(new int[] {
             100,
             0,
@@ -144,11 +193,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nikseTextBoxPrompt.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxPrompt.Location = new System.Drawing.Point(22, 166);
+            this.nikseTextBoxPrompt.Location = new System.Drawing.Point(22, 202);
             this.nikseTextBoxPrompt.Multiline = true;
             this.nikseTextBoxPrompt.Name = "nikseTextBoxPrompt";
             this.nikseTextBoxPrompt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(727, 197);
+            this.nikseTextBoxPrompt.Size = new System.Drawing.Size(769, 213);
             this.nikseTextBoxPrompt.TabIndex = 40;
             // 
             // nikseUpDownMaxBytes
@@ -166,7 +215,7 @@
             0,
             0,
             0});
-            this.nikseUpDownMaxBytes.Location = new System.Drawing.Point(217, 105);
+            this.nikseUpDownMaxBytes.Location = new System.Drawing.Point(217, 92);
             this.nikseUpDownMaxBytes.Maximum = new decimal(new int[] {
             128000,
             0,
@@ -216,7 +265,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(761, 414);
+            this.ClientSize = new System.Drawing.Size(803, 466);
+            this.Controls.Add(this.nikseUpDownTemperature);
+            this.Controls.Add(this.labelTemperature);
             this.Controls.Add(this.labelDelay);
             this.Controls.Add(this.nikseUpDownDelay);
             this.Controls.Add(this.nikseTextBoxPrompt);
@@ -254,5 +305,7 @@
         private Controls.NikseTextBox nikseTextBoxPrompt;
         private Controls.NikseUpDown nikseUpDownDelay;
         private System.Windows.Forms.Label labelDelay;
+        private Controls.NikseUpDown nikseUpDownTemperature;
+        private System.Windows.Forms.Label labelTemperature;
     }
 }
