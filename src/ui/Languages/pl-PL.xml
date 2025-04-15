@@ -605,6 +605,15 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <OnlyLookForDifferencesInText>Szukaj tylko różnic w tekście</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nie można porównać z napisami opartymi na obrazach</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Konwersja aktorów</Title>
+    <ConvertActorFrom>Zmień z</ConvertActorFrom>
+    <ConvertActorTo>Zmień na</ConvertActorTo>
+    <InlineActorViaX>Aktor w linii za pomocą {0}</InlineActorViaX>
+    <NumberOfConversionsX>Liczba konwersji aktorów: {0}</NumberOfConversionsX>
+    <SetColor>Ustaw kolor</SetColor>
+    <OnlyNames>Tylko nazwiska</OnlyNames>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Konwersja kolorów do dialogów</Title>
     <RemoveColorTags>Usuń tagi kolorów</RemoveColorTags>
@@ -1401,6 +1410,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
         <StartNumberingFrom>Zmień numerację...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Usuń tekst dla osób niedosłyszących...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Konwertuj kolory do dialogów...</ConvertColorsToDialog>
+        <ConvertActors>Konwertuj aktorów...</ConvertActors>
         <ChangeCasing>Zmień pisownię...</ChangeCasing>
         <ChangeFrameRate>Zmień liczbę klatek na sekundę...</ChangeFrameRate>
         <ChangeSpeedInPercent>Zmień szybkość (procentowo)...</ChangeSpeedInPercent>
@@ -2476,6 +2486,9 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <SpectrogramAppearance>Wygląd spektrogramu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
+    <SpectrogramHeat>Ognisty</SpectrogramHeat>
+    <SpectrogramCyanToOrange>Od cyjanu do pomarańczowego</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Nieprzezroczystość spektrogramu/wykresu falowego:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>Użyj FFmpeg do wyodrębnienia wykresu falowego</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Użyj tylko przedniego kanału centralnego (dla 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Pobierz {0}</DownloadX>
@@ -3189,6 +3202,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <GeneratingSpeechFromTextXOfY>Generowanie mowy z tekstu: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Przegląd klipów audio</ReviewAudioClips>
     <CustomAudioEncoding>Niestandardowe kodowanie audio</CustomAudioEncoding>
+    <UseVoiceOver>Użyj głosu</UseVoiceOver>
     <ReviewInfo>Przegląd i edycja/usuwanie klipów audio</ReviewInfo>
     <Play>Odtwarzaj</Play>
     <AutoContinue>Auto-kontynuacja</AutoContinue>
