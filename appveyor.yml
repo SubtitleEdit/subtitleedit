@@ -8,6 +8,9 @@ platform:
 configuration:
   - Release
 
+before_build:
+  - nuget restore SubtitleEdit.sln
+
 build_script:
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
