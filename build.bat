@@ -10,7 +10,7 @@ IF /I "%~1" == "-help"  GOTO ShowHelp
 IF /I "%~1" == "--help" GOTO ShowHelp
 IF /I "%~1" == "/?"     GOTO ShowHelp
 IF /I "%~1" == "-?"     GOTO ShowHelp
-
+.dll
 ECHO Getting latest changes...
 git pull
 ECHO.
@@ -209,6 +209,7 @@ COPY /Y /V "NHunspell.dll"                         "temp_zip\"
 COPY /Y /V "UtfUnknown.dll"                        "temp_zip\"
 COPY /Y /V "Vosk.dll"                              "temp_zip\"
 COPY /Y /V "NCalc.dll"                             "temp_zip\"
+COPY /Y /V "SkiaSharp.dll"                         "temp_zip\"
 MD "temp_zip\x86"
 MD "temp_zip\x64"
 COPY /Y /V "x86\7zxa.dll"                          "temp_zip\x86\"
