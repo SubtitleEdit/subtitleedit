@@ -326,6 +326,8 @@ Source: {#bindir}\NCalc.dll;                       DestDir: {app};              
 Source: {#bindir}\SkiaSharp.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\x86\7zxa.dll;                    DestDir: {app}\x86;                                Flags: ignoreversion; Components: main
 Source: {#bindir}\x64\7zxa.dll;                    DestDir: {app}\x64;                                Flags: ignoreversion; Components: main
+Source: {#bindir}\x86\libSkiaSharp.dll;            DestDir: {app}\x86;                                Flags: ignoreversion; Components: main
+Source: {#bindir}\x64\libSkiaSharp.dll;            DestDir: {app}\x64;                                Flags: ignoreversion; Components: main
 Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -371,6 +373,8 @@ Type: files;      Name: {app}\NCalc.dll;                              Check: IsU
 Type: files;      Name: {app}\SkiaSharp.dll;                          Check: IsUpgrade()
 Type: files;      Name: {app}\x86\7zxa.dll;                           Check: IsUpgrade()
 Type: files;      Name: {app}\x64\7zxa.dll;                           Check: IsUpgrade()
+Type: files;      Name: {app}\x86\libSkiaSharp.dll;                   Check: IsUpgrade()
+Type: files;      Name: {app}\x64\libSkiaSharp.dll;                   Check: IsUpgrade()
 Type: files;      Name: {app}\System.Memory.dll;                      Check: IsUpgrade()
 Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
