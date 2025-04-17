@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "fa",
                 "pl",
                 "pt",
-                //"pt-BR",
+                "pb",//"pt-BR",
                 "ro",
                 "ru",
                 "sr",
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "uk",
                 "vi",
                 "zh",
-                //"zh-Hant",
+                "zt", //"zh-Hant",
                 //"zh-Hans"
             };
 
@@ -144,25 +144,30 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             foreach (var code in languageCodes)
             {
                 var culture = cultures.FirstOrDefault(p => p.TwoLetterISOLanguageName == code);
-                if (culture != null)
-                {
-                    result.Add(new TranslationPair(culture.EnglishName, code, code));
-                }
-                else if (code == "pt-BR")
+               
+                if (code == "pt-BR" || code == "pb")
                 {
                     result.Add(new TranslationPair("Portuguese (Brazilian)", code, "pt"));
                 }
-                else if (code == "zh-Hant")
+                else if (code == "zh-Hant" || code == "zt")
                 {
                     result.Add(new TranslationPair("Chinese (traditional)", code, "zh"));
                 }
-                else if (code == "zh-Hans")
+                else if (code == "zh-Hans" || code == "zh")
                 {
                     result.Add(new TranslationPair("Chinese (Simplified)", code, "zh"));
                 }
                 else if (code == "tl")
                 {
                     result.Add(new TranslationPair("Tagalog", code, code));
+                }
+                else if (culture != null)
+                {
+                    result.Add(new TranslationPair(culture.EnglishName, code, code));
+                }
+                else
+                {
+                    result.Add(new TranslationPair(code, code, code));
                 }
             }
 
