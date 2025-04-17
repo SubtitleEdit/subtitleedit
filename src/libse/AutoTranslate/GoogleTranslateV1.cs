@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
             _httpClient.BaseAddress = new Uri("https://translate.googleapis.com/");
+            
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

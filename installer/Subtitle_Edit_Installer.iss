@@ -323,6 +323,7 @@ Source: {#bindir}\NHunspell.dll;                   DestDir: {app};              
 Source: {#bindir}\UtfUnknown.dll;                  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Vosk.dll;                        DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NCalc.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\SkiaSharp.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\x86\7zxa.dll;                    DestDir: {app}\x86;                                Flags: ignoreversion; Components: main
 Source: {#bindir}\x64\7zxa.dll;                    DestDir: {app}\x64;                                Flags: ignoreversion; Components: main
 Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -367,6 +368,7 @@ Type: files;      Name: {app}\NHunspell.dll;                          Check: IsU
 Type: files;      Name: {app}\UtfUnknown.dll;                         Check: IsUpgrade()
 Type: files;      Name: {app}\Vosk.dll;                               Check: IsUpgrade()
 Type: files;      Name: {app}\NCalc.dll;                              Check: IsUpgrade()
+Type: files;      Name: {app}\SkiaSharp.dll;                          Check: IsUpgrade()
 Type: files;      Name: {app}\x86\7zxa.dll;                           Check: IsUpgrade()
 Type: files;      Name: {app}\x64\7zxa.dll;                           Check: IsUpgrade()
 Type: files;      Name: {app}\System.Memory.dll;                      Check: IsUpgrade()
