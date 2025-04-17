@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "fa",
                 "pl",
                 "pt",
-                "pt-BR",
+                //"pt-BR",
                 "ro",
                 "ru",
                 "sr",
@@ -134,8 +134,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "ur",
                 "uk",
                 "vi",
-                "zh-Hant",
-                "zh-Hans"
+                "zh",
+                //"zh-Hant",
+                //"zh-Hans"
             };
 
             var result = new List<TranslationPair>();
