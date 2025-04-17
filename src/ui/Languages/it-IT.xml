@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.12</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.04.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.04.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -613,6 +613,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <ConvertActorTo>Modifica attore in</ConvertActorTo>
     <InlineActorViaX>Attore in linea via {0}</InlineActorViaX>
     <NumberOfConversionsX>Numero conversioni attore: {0}</NumberOfConversionsX>
+    <SetColor>Imposta colore</SetColor>
+    <OnlyNames>Solo nomi</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Converti i colori in dialogo</Title>
