@@ -703,6 +703,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ConvertVideo(bool oldFontSizeEnabled, string videoFileName, Subtitle subtitle)
         {
+            subtitle = new Subtitle(subtitle, false);
+
             if (File.Exists(VideoFileName))
             {
                 try
