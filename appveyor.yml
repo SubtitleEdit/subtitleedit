@@ -11,8 +11,25 @@ configuration:
 build_script:
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
-debug_step:
-  - ps: Get-ChildItem "src\Tests\bin\%CONFIGURATION%" -Recurse
+test_script_pre:
+  # List output directory contents (for debugging)
+  - ps: |
+      Write-Host "Files in test output directory:"
+      Get-ChildItem "src\Tests\bin\$env:CONFIGURATION" -Recurse | Select-Object FullName
+
+  # Auto-detect and copy libSkiaSharp.dll to test bin directory
+  - ps: |
+      $target = "src\Tests\bin\$env:CONFIGURATION"
+      $dlls = Get-ChildItem -Recurse -Filter libSkiaSharp.dll src
+      if ($dlls.Count -eq 0) {
+        Write-Host "libSkiaSharp.dll not found anywhere under src"
+      } else {
+        foreach ($dll in $dlls) {
+          Write-Host "Found: $($dll.FullName)"
+          Copy-Item $dll.FullName $target -Force
+          Write-Host "Copied to $target"
+        }
+      }
 
 test_script:
   - vstest.console "src\Tests\bin\%CONFIGURATION%\Tests.dll" /logger:Appveyor
