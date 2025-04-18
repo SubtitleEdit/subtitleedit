@@ -12,7 +12,7 @@ build_script:
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 debug_step:
- - ps: Get-ChildItem "src\Tests\bin\%CONFIGURATION%" -Recurse
+  - ps: Get-ChildItem "src\Tests\bin\%CONFIGURATION%" -Recurse
 
 test_script:
   - vstest.console "src\Tests\bin\%CONFIGURATION%\Tests.dll" /logger:Appveyor
