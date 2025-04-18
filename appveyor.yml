@@ -1,4 +1,4 @@
-version: "{build}"
+﻿version: "{build}"
 
 image: Visual Studio 2022
 
@@ -12,22 +12,28 @@ build_script:
   - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 test_script_pre:
-  # List output directory contents (for debugging)
   - ps: |
-      Write-Host "Files in test output directory:"
-      Get-ChildItem "src\Tests\bin\$env:CONFIGURATION" -Recurse | Select-Object FullName
+      Write-Host "=== 📁 Listing test output directory ==="
+      Get-ChildItem "src\Tests\bin\$env:CONFIGURATION" -Recurse | ForEach-Object {
+        Write-Host $_.FullName
+      }
 
-  # Auto-detect and copy libSkiaSharp.dll to test bin directory
+  # Try to find and copy libSkiaSharp.dll
   - ps: |
+      Write-Host "=== 🔍 Searching for libSkiaSharp.dll under /src ==="
       $target = "src\Tests\bin\$env:CONFIGURATION"
-      $dlls = Get-ChildItem -Recurse -Filter libSkiaSharp.dll src
+      $dlls = Get-ChildItem -Recurse -Filter libSkiaSharp.dll src -ErrorAction SilentlyContinue
+
       if ($dlls.Count -eq 0) {
-        Write-Host "libSkiaSharp.dll not found anywhere under src"
+        Write-Host "❌ libSkiaSharp.dll not found under 'src'."
+        Get-ChildItem -Recurse -Filter *.dll src | ForEach-Object {
+          Write-Host "📦 Found other DLL: $($_.FullName)"
+        }
       } else {
         foreach ($dll in $dlls) {
-          Write-Host "Found: $($dll.FullName)"
+          Write-Host "✅ Found: $($dll.FullName)"
           Copy-Item $dll.FullName $target -Force
-          Write-Host "Copied to $target"
+          Write-Host "📥 Copied to $target"
         }
       }
 
