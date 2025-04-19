@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public SKBitmap GetBitmap()
         {
-            return SubPicture.GetBitmap(Palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, true);
+            return SubPicture.GetBitmap(Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, true);
         }
 
         public SKSize GetScreenSize()

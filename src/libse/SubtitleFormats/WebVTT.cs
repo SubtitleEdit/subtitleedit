@@ -904,7 +904,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var colorName = match.Value.Substring(13, match.Value.Length - 15);
                     var color = Color.FromName(colorName);
-                    if (SKColors.IsKnownColor)
+                    if (color.IsKnownColor)
                     {
                         var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
                         var fontString = "<c" + tag + ">";

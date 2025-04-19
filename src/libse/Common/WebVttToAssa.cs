@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Secondary = style.ShadowColor ?? defaultStyle.Secondary,
                 };
 
-                if (newStyle.Outline.A == 0 && style.BackgroundColor.HasValue)
+                if (newStyle.Outline.Alpha == 0 && style.BackgroundColor.HasValue)
                 {
                     newStyle.Background = newStyle.Outline;
                 }

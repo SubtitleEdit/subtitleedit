@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (var kvp in ColorDictionary)
                 {
                     var cd = HtmlUtil.GetColorFromString("#" + kvp.Value);
-                    int difference = Math.Abs(Math.Abs(cd.R - color.R) + Math.Abs(cd.G - color.G) + Math.Abs(cd.B - color.B));
+                    int difference = Math.Abs(Math.Abs(cd.Red - color.Red) + Math.Abs(cd.Green - color.Green) + Math.Abs(cd.Blue - color.Blue));
                     if (difference < minDiff)
                     {
                         minDiffColor = kvp.Key;

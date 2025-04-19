@@ -416,10 +416,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //  0.793266 0.793391 0.793221 1
 
-            var r = (double)fontColor.R / byte.MaxValue;
-            var g = (double)fontColor.G / byte.MaxValue;
-            var b = (double)fontColor.B / byte.MaxValue;
-            var a = (double)fontColor.A / byte.MaxValue;
+            var r = (double)fontColor.Red / byte.MaxValue;
+            var g = (double)fontColor.Green / byte.MaxValue;
+            var b = (double)fontColor.Blue / byte.MaxValue;
+            var a = (double)fontColor.Alpha / byte.MaxValue;
             var result = $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
             return result;
         }

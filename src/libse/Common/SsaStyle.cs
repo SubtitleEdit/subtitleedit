@@ -352,20 +352,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "primarycolour")
                 {
-                    result.Primary = AdvancedSubStationAlpha.GetSsaColor(v, Color.White);
+                    result.Primary = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.White);
                 }
                 else if (f == "secondarycolour")
                 {
-                    result.Secondary = AdvancedSubStationAlpha.GetSsaColor(v, Color.Yellow);
+                    result.Secondary = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Yellow);
                 }
                 else if (f == "tertiarycolour")
                 {
-                    result.Tertiary = AdvancedSubStationAlpha.GetSsaColor(v, Color.Yellow);
+                    result.Tertiary = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Yellow);
                 }
                 else if (f == "backcolour")
                 {
-                    result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, Color.Black);
-                    result.Background = AdvancedSubStationAlpha.GetSsaColor(v, Color.Black);
+                    result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Black);
+                    result.Background = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Black);
                 }
                 else if (f == "bold")
                 {

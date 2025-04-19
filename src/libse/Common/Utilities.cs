@@ -1909,7 +1909,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     s = s.Substring(1, 6);
                     var color = SKColor.Parse("#" + s);
-                    return new SKColor(SKColors.Red, color.Green, color.Blue, (byte)alpha);
+                    return new SKColor(color.Red, color.Green, color.Blue, (byte)alpha);
                 }
                 return SKColor.Parse(s);
             }

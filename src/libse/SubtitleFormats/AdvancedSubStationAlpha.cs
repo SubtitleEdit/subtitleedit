@@ -1097,7 +1097,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     if (tag.Contains("color"))
                     {
                         var c = HtmlUtil.GetColorFromString(subTag);
-                        subTag = (c.B.ToString("X2") + c.G.ToString("X2") + c.R.ToString("X2")).ToLowerInvariant(); // use bbggrr
+                        subTag = (c.Blue.ToString("X2") + c.Green.ToString("X2") + c.Red.ToString("X2")).ToLowerInvariant(); // use bbggrr
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
                     if (start < text.Length)

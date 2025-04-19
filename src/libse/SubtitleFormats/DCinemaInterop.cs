@@ -1139,7 +1139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string ColorToHexWithTransparency(SKColor c)
         {
-            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.Alpha:x2}{c.Red:x2}{c.Green:x2}{c.Blue:x2}";
         }
     }
 }

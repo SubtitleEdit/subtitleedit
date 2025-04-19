@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 FontName = "Lucida Sans",
                 FontSize = 36,
                 FontFace = "Regular",
-                FontColor = Color.WhiteSmoke,
+                FontColor = SKColors.WhiteSmoke,
                 Alignment = "center",
                 Baseline = 29,
                 Width = 1980,

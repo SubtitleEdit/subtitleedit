@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 if (y < height && x < width)
                 {
-                    if (c.A > 0)
+                    if (c.Alpha > 0)
                     {
                         return new Position(x, y);
                     }

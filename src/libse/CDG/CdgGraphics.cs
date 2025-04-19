@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 
@@ -21,10 +22,10 @@ namespace Nikse.SubtitleEdit.Core.CDG
         private const int TileWidth = 6;
 
         private readonly Packet[] _packets;
-        private readonly int[] _colorTable = new int[ColorTableSize];
+        private readonly uint[] _colorTable = new uint[ColorTableSize];
         private readonly byte[,] _pixelColors = new byte[FullHeight, FullWidth];
 
-        private int _borderColorIndex;
+        private uint _borderColorIndex;
         private int _horizontalOffset;
         private int _startPosition;
         private int _verticalOffset;
@@ -171,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
         private bool MemoryPreset(Packet packet)
         {
             bool hasChanges = false;
-            var color = packet.Data[0] & 0xf;
+            var color = (uint)packet.Data[0] & 0xf;
             if (_borderColorIndex != color)
             {
                 hasChanges = true;
@@ -217,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
             {
                 hasChanges = true;
             }
-            _borderColorIndex = color;
+            _borderColorIndex = (uint)color;
 
             //The border area is the area contained with a rectangle 
             //defined by (0,0,300,216) minus the interior pixels which are contained
@@ -291,7 +292,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
                 green *= 17;
                 blue *= 17;
 
-                var color = Color.FromArgb(red, green, blue).ToArgb();
+                var color = ColorUtils.FromArgb(red, green, blue).ToArgb();
 
                 if (_colorTable[i + table * 8] != color)
                 {
@@ -507,11 +508,11 @@ namespace Nikse.SubtitleEdit.Core.CDG
                     if (rowIndex < TileHeight || rowIndex >= FullHeight - TileHeight || columnIndex < TileWidth ||
                         columnIndex >= FullWidth - TileWidth)
                     {
-                        graphicData[rowIndex, columnIndex] = _colorTable[_borderColorIndex];
+                        graphicData[rowIndex, columnIndex] =(int) _colorTable[_borderColorIndex];
                     }
                     else
                     {
-                        graphicData[rowIndex, columnIndex] =
+                        graphicData[rowIndex, columnIndex] = (int)
                             _colorTable[_pixelColors[rowIndex + _verticalOffset, columnIndex + _horizontalOffset]];
                     }
                 }

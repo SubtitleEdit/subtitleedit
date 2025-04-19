@@ -389,14 +389,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                                 detectedBreak = jsonParser.GetFirstObject(detectedBreak, "type");
                             }
 
-                            var vertices = new List<SKPoint>();
+                            var vertices = new List<SKPointI>();
                             foreach (var point in jsonParser.GetArrayElementsByName(symbol, "vertices"))
                             {
                                 var x = jsonParser.GetFirstObject(point, "x");
                                 var y = jsonParser.GetFirstObject(point, "y");
                                 if (int.TryParse(x, out var xNumber) && int.TryParse(y, out var yNumber))
                                 {
-                                    vertices.Add(new SKPoint(xNumber, yNumber));
+                                    vertices.Add(new SKPointI(xNumber, yNumber));
                                 }
                             }
 
@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public class Annotation
         {
             public string Text { get; set; }
-            public List<SKPoint> Vertices { get; set; }
+            public List<SKPointI> Vertices { get; set; }
             public string DetectedBreak { get; set; }
 
             public int Width

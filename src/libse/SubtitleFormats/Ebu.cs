@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1180,14 +1181,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return encoding.GetString(new byte[] { 0x07 }); // white
                 }
 
-                if (SKColors.Length == 6)
+                if (color.Length == 6)
                 {
                     if (RegExprColor.IsMatch(color))
                     {
                         const int maxDiff = 130;
-                        var r = int.Parse(SKColors.Substring(0, 2), NumberStyles.HexNumber);
-                        var g = int.Parse(SKColors.Substring(2, 2), NumberStyles.HexNumber);
-                        var b = int.Parse(SKColors.Substring(4, 2), NumberStyles.HexNumber);
+                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
                         if (r < maxDiff && g < maxDiff && b < maxDiff)
                         {
                             return encoding.GetString(new byte[] { 0x00 }); // black
@@ -1276,14 +1277,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return 0x07; // white
                 }
 
-                if (SKColors.Length == 6)
+                if (color.Length == 6)
                 {
                     if (RegExprColor.IsMatch(color))
                     {
                         const int maxDiff = 130;
-                        var r = int.Parse(SKColors.Substring(0, 2), NumberStyles.HexNumber);
-                        var g = int.Parse(SKColors.Substring(2, 2), NumberStyles.HexNumber);
-                        var b = int.Parse(SKColors.Substring(4, 2), NumberStyles.HexNumber);
+                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
                         if (r < maxDiff && g < maxDiff && b < maxDiff)
                         {
                             return 0x00; // black

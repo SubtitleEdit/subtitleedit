@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (var x = 0; x < bitmap.Width; x++)
             {
                 var color = bitmap.GetPixel(x, y);
-                if (SKColors.Alpha != 0)
+                if (color.Alpha != 0)
                 {
                     return false;
                 }
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (var y = 0; y < bitmap.Height; y++)
             {
                 var color = bitmap.GetPixel(x, y);
-                if (SKColors.Alpha != 0)
+                if (color.Alpha != 0)
                 {
                     return false;
                 }

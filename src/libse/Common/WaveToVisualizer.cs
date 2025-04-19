@@ -1056,9 +1056,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
-                                                     Configuration.Settings.VideoControls.WaveformColor.G,
-                                                     Configuration.Settings.VideoControls.WaveformColor.B, MagnitudeIndexRange);
+                    var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.Red,
+                                                     Configuration.Settings.VideoControls.WaveformColor.Green,
+                                                     Configuration.Settings.VideoControls.WaveformColor.Blue, MagnitudeIndexRange);
                     for (int i = 0; i < MagnitudeIndexRange; i++)
                     {
                         palette[i] = new FastBitmap.PixelData(list[i]);

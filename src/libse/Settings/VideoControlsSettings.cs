@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
@@ -66,13 +67,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             WaveformDrawGrid = true;
             WaveformAllowOverlap = false;
             WaveformBorderHitMs = 15;
-            WaveformGridColor = Color.FromArgb(255, 20, 20, 18);
-            WaveformColor = Color.FromArgb(255, 160, 240, 30);
-            WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
-            WaveformBackgroundColor = Color.Black;
-            WaveformTextColor = Color.Gray;
-            WaveformCursorColor = Color.Turquoise;
-            WaveformChaptersColor = Color.FromArgb(255, 104, 33, 122);
+            WaveformGridColor = ColorUtils.FromArgb(255, 20, 20, 18);
+            WaveformColor = ColorUtils.FromArgb(255, 160, 240, 30);
+            WaveformSelectedColor = ColorUtils.FromArgb(255, 230, 0, 0);
+            WaveformBackgroundColor = SKColors.Black;
+            WaveformTextColor = SKColors.Gray;
+            WaveformCursorColor = SKColors.Turquoise;
+            WaveformChaptersColor = ColorUtils.FromArgb(255, 104, 33, 122);
             WaveformTextSize = 9;
             WaveformTextBold = true;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
