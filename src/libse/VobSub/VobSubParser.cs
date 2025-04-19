@@ -72,27 +72,27 @@ namespace Nikse.SubtitleEdit.Core.VobSub {
                     Buffer.BlockCopy(pesPacketHeaderBuffer, 0, cleanBuffer, mpeg2HeaderBuffer.Length, pesPacketHeaderBuffer.Length);
                     ms.Read(cleanBuffer, mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length, packetLength);
                     VobSubPacks.Add(new VobSubPack(cleanBuffer, null));
-					position += cleanBuffer.Length;
+                    position += cleanBuffer.Length;
                 }
                 else if (IsProgramEnd(header, 0)) {
                     // end of program, should take exactly 4 bytes
                     position += 4;
                 }
-				else if (IsPaddingStream(header, 0)) {
-					byte[] pesPacketLengthBuffer = new byte[2];
-					ms.Read(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
-					position += PacketizedElementaryStream.HeaderLength + Helper.GetEndian(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
-				}
-				else {
-					long newPos = FindNextMpeg2PackHeader(ms, position + 1);
-					if (newPos > position) {
-						position = newPos;
-						continue;
-					}
-					else {
-						break;
-					}
-				}
+                else if (IsPaddingStream(header, 0)) {
+                    byte[] pesPacketLengthBuffer = new byte[2];
+                    ms.Read(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
+                    position += PacketizedElementaryStream.HeaderLength + Helper.GetEndian(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
+                }
+                else {
+                    long newPos = FindNextMpeg2PackHeader(ms, position + 1);
+                    if (newPos > position) {
+                        position = newPos;
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
             }
         }
 
