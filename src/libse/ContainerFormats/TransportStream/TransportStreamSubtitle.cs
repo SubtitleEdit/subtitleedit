@@ -44,13 +44,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
             {
-                return (Bitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
+                return (SKBitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
             }
 
             return Pes.GetImageFull();
         }
 
-        public Size GetScreenSize()
+        public SKSize GetScreenSize()
         {
             if (_bdSup != null)
             {
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return Pes.GetScreenSize();
             }
 
-            return new Size(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+            return new SKSize(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
         }
 
         public bool IsForced

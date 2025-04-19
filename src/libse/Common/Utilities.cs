@@ -1832,7 +1832,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (int.TryParse(alpha, NumberStyles.HexNumber, null, out var a))
                         {
                             var realAlpha = byte.MaxValue - a;
-                            c = Color.FromArgb(realAlpha, c);
+                            c = new SKColor(c.Red, c.Green, c.Blue, (byte)realAlpha);
                         }
                     }
                 }

@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             }
         }
 
-        private static Color HexToColor(string hex)
+        private static SKColor HexToColor(string hex)
         {
             hex = hex.TrimStart('#').Trim();
             if (hex.Length == 6)
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 int r = Convert.ToInt32(hex.Substring(0, 2), 16);
                 int g = Convert.ToInt32(hex.Substring(2, 2), 16);
                 int b = Convert.ToInt32(hex.Substring(4, 2), 16);
-                return Color.FromArgb(r, g, b);
+                return  ColorUtils.FromArgb(r, g, b);
             }
             else if (hex.Length == 8)
             {
@@ -83,9 +83,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 int r = Convert.ToInt32(hex.Substring(2, 2), 16);
                 int g = Convert.ToInt32(hex.Substring(4, 2), 16);
                 int b = Convert.ToInt32(hex.Substring(6, 2), 16);
-                return Color.FromArgb(a, r, g, b);
+                return ColorUtils.FromArgb(a, (byte)r, (byte)g, (byte)b);
             }
-            return Color.Red;
+            return SKColors.Red;
         }
 
         private static IdxParagraph GetTimeCodeAndFilePosition(string line)

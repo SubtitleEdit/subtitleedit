@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
     {
         public bool IsPal { get; private set; }
         public List<VobSubPack> VobSubPacks { get; private set; }
-        public List<Color> IdxPalette { get; private set; } = new List<Color>();
+        public List<SKColor> IdxPalette { get; private set; } = new List<SKColor>();
         public List<string> IdxLanguages { get; private set; } = new List<string>();
 
         private const int PacketizedElementaryStreamMaximumLength = 2028;

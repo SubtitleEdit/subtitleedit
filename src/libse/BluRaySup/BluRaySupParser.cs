@@ -39,27 +39,15 @@ public class BluRayPoint
     }
 }
 
-public class BluRaySize
-{
-    public int Width { get; set; }
-    public int Height { get; set; }
-
-    public BluRaySize(int width, int height)
-    {
-        Width = width;
-        Height = height;
-    }
-}
-
 public class BluRayRectangle
 {
     public BluRayPoint Location { get; set; }
-    public BluRaySize Size { get; set; }
-    public static BluRayRectangle Empty => new BluRayRectangle(new BluRayPoint(0, 0), new BluRaySize(0, 0));
+    public SKSizeI Size { get; set; }
+    public static BluRayRectangle Empty => new BluRayRectangle(new BluRayPoint(0, 0), new SKSizeI(0, 0));
 
     public bool IsEmpty => Location.X == 0 && Location.Y == 0 && Size.Width == 0 && Size.Height == 0;
 
-    public BluRayRectangle(BluRayPoint location, BluRaySize size)
+    public BluRayRectangle(BluRayPoint location, SKSizeI size)
     {
         Location = location;
         Size = size;
@@ -69,7 +57,7 @@ public class BluRayRectangle
     {
         return new BluRayRectangle(
             new BluRayPoint(Math.Min(r.Location.X, ioRect.Location.X), Math.Min(r.Location.Y, ioRect.Location.Y)),
-            new BluRaySize(Math.Max(r.Location.X + r.Size.Width, ioRect.Location.X + ioRect.Size.Width), Math.Max(r.Location.Y + r.Size.Height, ioRect.Location.Y + ioRect.Size.Height)));
+            new SKSizeI(Math.Max(r.Location.X + r.Size.Width, ioRect.Location.X + ioRect.Size.Width), Math.Max(r.Location.Y + r.Size.Height, ioRect.Location.Y + ioRect.Size.Height)));
     }
 }
 
@@ -303,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             public bool PaletteUpdate { get; set; }
             public long StartTime { get; set; }
             public long EndTime { get; set; }
-            public BluRaySize Size { get; set; }
+            public SKSize Size { get; set; }
             public int FramesPerSecondType { get; set; }
             public int PaletteId { get; set; }
             public List<PcsObject> PcsObjects { get; set; }
@@ -313,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             public PcsData()
             {
-                Size = new BluRaySize(0, 0);
+                Size = new SKSize(0, 0);
                 PcsObjects = new List<PcsObject>();
                 BitmapObjects = new List<List<OdsData>>();
                 PaletteInfos = new List<PaletteInfo>();
@@ -337,7 +325,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     if (ioIndex < BitmapObjects.Count)
                     {
-                        var ioRect = new BluRayRectangle(PcsObjects[ioIndex].Origin, new BluRaySize(BitmapObjects[ioIndex][0].Width, BitmapObjects[ioIndex][0].Height));
+                        var ioRect = new BluRayRectangle(PcsObjects[ioIndex].Origin, new SKSizeI(BitmapObjects[ioIndex][0].Width, BitmapObjects[ioIndex][0].Height));
                         r = r.IsEmpty ? ioRect : BluRayRectangle.Union(r, ioRect);
                     }
                 }
@@ -375,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return mergedBmp;
             }
 
-            public BluRaySize GetScreenSize()
+            public SKSize GetScreenSize()
             {
                 return Size;
             }
@@ -619,7 +607,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var sb = new StringBuilder();
             var pcs = new PcsData
             {
-                Size = new BluRaySize(BigEndianInt16(buffer, 0), BigEndianInt16(buffer, 2)),
+                Size = new SKSizeI(BigEndianInt16(buffer, 0), BigEndianInt16(buffer, 2)),
                 FramesPerSecondType = buffer[4],
                 CompNum = BigEndianInt16(buffer, 5),
                 CompositionState = GetCompositionState(buffer[7]),

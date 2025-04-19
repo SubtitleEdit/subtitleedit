@@ -1230,7 +1230,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
-                            color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
+                            color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
                             color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
@@ -1274,7 +1274,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
-                            color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
+                            color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
                             color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
@@ -1443,7 +1443,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         color = color.RemoveChar('&').TrimStart('H');
                         color = color.PadLeft(6, '0');
                         // switch to rrggbb from bbggrr
-                        color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
+                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
                         color = color.ToLowerInvariant();
 
                         extraTags += " color=\"" + color + "\"";
@@ -2043,7 +2043,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 try
                 {
                     var c = ColorTranslator.FromHtml(hexColor);
-                    return Color.FromArgb(alpha, c);
+                    return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);
                 }
                 catch
                 {
@@ -2053,23 +2053,23 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
             if (int.TryParse(f, out var number))
             {
-                var temp = Color.FromArgb(number);
-                return Color.FromArgb(255, temp.B, temp.G, temp.R);
+                var temp = ColorUtils.FromArgb(number);
+                return ColorUtils.FromArgb(255, temp.Blue, temp.Green, temp.Red);
             }
 
             return defaultColor;
         }
 
-        public static string GetSsaColorString(Color c)
+        public static string GetSsaColorString(SKColor c)
         {
-            return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
+            return $"&H{255 - c.Alpha:X2}{c.Blue:X2}{c.Green:X2}{c.Red:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
         public static string GetSsaColorStringForEvent(SKColor c, string tag = "c")
         {
-            if (c.A >= 255)
+            if (c.Alpha >= 255)
             {
-                return $"{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+                return $"{tag}&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
             }
 
             var alphaName = "alpha";
@@ -2086,11 +2086,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 alphaName = "4a";
             }
 
-            var alpha = 255 - c.A; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
-            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            var alpha = 255 - c.Alpha; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
+            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
         }
 
-        public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";
+        public static string GetSsaColorStringNoTransparency(SKColor c) => $"&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
 
         public static string CheckForErrors(string header)
         {
@@ -2243,7 +2243,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                         else
                         {
-                            var dummyColor = Color.FromArgb(9, 14, 16, 26);
+                            var dummyColor = ColorUtils.FromArgb(9, 14, 16, 26);
                             for (int i = 0; i < format.Length; i++)
                             {
                                 string f = format[i].Trim().ToLowerInvariant();
@@ -2650,23 +2650,23 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == primaryColourIndex)
                             {
-                                style.Primary = GetSsaColor(f, Color.White);
+                                style.Primary = GetSsaColor(f, SKColors.White);
                             }
                             else if (i == secondaryColourIndex)
                             {
-                                style.Secondary = GetSsaColor(f, Color.Yellow);
+                                style.Secondary = GetSsaColor(f, SKColors.Yellow);
                             }
                             else if (i == tertiaryColourIndex)
                             {
-                                style.Tertiary = GetSsaColor(f, Color.Yellow);
+                                style.Tertiary = GetSsaColor(f, SKColors.Yellow);
                             }
                             else if (i == outlineColourIndex)
                             {
-                                style.Outline = GetSsaColor(f, Color.Black);
+                                style.Outline = GetSsaColor(f, SKColors.Black);
                             }
                             else if (i == backColourIndex)
                             {
-                                style.Background = GetSsaColor(f, Color.Black);
+                                style.Background = GetSsaColor(f, SKColors.Black);
                             }
                             else if (i == boldIndex)
                             {

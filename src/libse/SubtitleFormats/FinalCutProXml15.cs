@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public string FontName { get; set; }
         public int FontSize { get; set; }
         public string FontFace { get; set; }
-        public Color FontColor { get; set; }
+        public SKColor FontColor { get; set; }
         public string Alignment { get; set; }
         public int Baseline { get; set; }
         public bool Italic { get; set; }
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 FontName = "Lucida Sans",
                 FontSize = 36,
                 FontFace = "Regular",
-                FontColor = Color.WhiteSmoke,
+                FontColor = SKColors.WhiteSmoke,
                 Alignment = "center",
                 Baseline = 29,
                 Width = 1980,
@@ -411,7 +412,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string ToColorString(Color fontColor)
+        private static string ToColorString(SKColor fontColor)
         {
             //  0.793266 0.793391 0.793221 1
 

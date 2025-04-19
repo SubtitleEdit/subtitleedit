@@ -71,6 +71,6 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
             return 0;
         }
 
-        private string GetColor(Color color) => $"<font color=\"{Utilities.ColorToHex(color)}\">";
+        private string GetColor(SKColor color) => $"<font color=\"{Utilities.ColorToHex(color)}\">";
     }
 }

@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, Point? overridePosition)
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, SKPoint? overridePosition)
         {
             var ms = new MemoryStream();
 
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, Point? overridePosition)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, SKPoint? overridePosition)
         {
             stream.WriteByte(5);
 

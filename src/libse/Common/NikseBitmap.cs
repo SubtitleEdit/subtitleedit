@@ -1144,20 +1144,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public NikseBitmap CopyRectangle(SKRect section)
         {
-            var rect = new Rectangle((int)section.Left, (int)section.Top, (int)section.Width, (int)section.Height);
+            var rect = new SKRectI((int)section.Left, (int)section.Top, (int)section.Width, (int)section.Height);
             return CopyRectangle(rect);
         }
 
-        public NikseBitmap CopyRectangle(Rectangle section)
+        public NikseBitmap CopyRectangle(SKRectI section)
         {
             if (section.Bottom > Height)
             {
-                section = new Rectangle(section.Left, section.Top, section.Width, Height - section.Top);
+                section = new SKRectI(section.Left, section.Top, section.Width, Height - section.Top);
             }
 
             if (section.Width + section.Left > Width)
             {
-                section = new Rectangle(section.Left, section.Top, Width - section.Left, section.Height);
+                section = new SKRectI(section.Left, section.Top, Width - section.Left, section.Height);
             }
 
             var newBitmapData = new byte[section.Width * section.Height * 4];

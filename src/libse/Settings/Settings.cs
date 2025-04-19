@@ -636,25 +636,25 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("SubtitleTextBoxHtmlColor");
             if (subNode != null)
             {
-                settings.General.SubtitleTextBoxHtmlColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.General.SubtitleTextBoxHtmlColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleTextBoxAssColor");
             if (subNode != null)
             {
-                settings.General.SubtitleTextBoxAssColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.General.SubtitleTextBoxAssColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleFontColor");
             if (subNode != null)
             {
-                settings.General.SubtitleFontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.General.SubtitleFontColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleBackgroundColor");
             if (subNode != null)
             {
-                settings.General.SubtitleBackgroundColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.General.SubtitleBackgroundColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("MeasureFontName");
@@ -1708,44 +1708,19 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("DarkThemeBackColor");
             if (subNode != null)
             {
-                var x = subNode.InnerText;
-                if (x == "-14803426")
-                {
-                    settings.General.DarkThemeBackColor = Color.FromArgb(-14803426); //TODO: remove at some point
-                }
-                else
-                {
-                    settings.General.DarkThemeBackColor = FromHtml(subNode.InnerText);
-                }
+                settings.General.DarkThemeBackColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeSelectedBackgroundColor");
             if (subNode != null)
             {
-                var x = subNode.InnerText;
-                if (x == "")
-                {
-                    settings.General.DarkThemeSelectedBackgroundColor = Color.FromArgb(1); //TODO: remove at some point
-                }
-                else
-                {
-                    settings.General.DarkThemeSelectedBackgroundColor = FromHtml(subNode.InnerText);
-                }
-
+                settings.General.DarkThemeSelectedBackgroundColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeForeColor");
             if (subNode != null)
             {
-                var x = subNode.InnerText;
-                if (x == "-6579301")
-                {
-                    settings.General.DarkThemeForeColor = Color.FromArgb(-6579301); //TODO: remove at some point
-                }
-                else
-                {
-                    settings.General.DarkThemeForeColor = FromHtml(subNode.InnerText);
-                }
+                settings.General.DarkThemeForeColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeDisabledColor");
@@ -2584,13 +2559,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
             if (subNode != null)
             {
-                settings.Tools.ListViewSyntaxErrorColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.ListViewSyntaxErrorColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewUnfocusedSelectedColor");
             if (subNode != null)
             {
-                settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.ListViewUnfocusedSelectedColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color1");
@@ -3244,19 +3219,19 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("ExportFontColor");
             if (subNode != null)
             {
-                settings.Tools.ExportFontColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.ExportFontColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ExportBorderColor");
             if (subNode != null)
             {
-                settings.Tools.ExportBorderColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.ExportBorderColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ExportShadowColor");
             if (subNode != null)
             {
-                settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.ExportShadowColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ExportBoxBorderSize");
@@ -3532,13 +3507,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("BinEditBackgroundColor");
             if (subNode != null)
             {
-                settings.Tools.BinEditBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.BinEditBackgroundColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BinEditImageBackgroundColor");
             if (subNode != null)
             {
-                settings.Tools.BinEditImageBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.BinEditImageBackgroundColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BinEditTopMargin");
@@ -4571,25 +4546,25 @@ namespace Nikse.SubtitleEdit.Core.Settings
                         subNode = listNode.SelectSingleNode("Primary");
                         if (subNode != null)
                         {
-                            item.Primary = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                            item.Primary = ColorUtils.FromArgb(subNode.InnerText);
                         }
 
                         subNode = listNode.SelectSingleNode("Secondary");
                         if (subNode != null)
                         {
-                            item.Secondary = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                            item.Secondary = ColorUtils.FromArgb(subNode.InnerText);
                         }
 
                         subNode = listNode.SelectSingleNode("Outline");
                         if (subNode != null)
                         {
-                            item.Outline = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                            item.Outline = ColorUtils.FromArgb(subNode.InnerText);
                         }
 
                         subNode = listNode.SelectSingleNode("Background");
                         if (subNode != null)
                         {
-                            item.Background = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                            item.Background = ColorUtils.FromArgb(subNode.InnerText);
                         }
 
                         subNode = listNode.SelectSingleNode("ShadowWidth");
@@ -5095,7 +5070,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 subNode = node.SelectSingleNode("Color");
                 if (subNode != null)
                 {
-                    settings.FcpExportSettings.Color = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                    settings.FcpExportSettings.Color = ColorUtils.FromArgb(subNode.InnerText);
                 }
             }
 
@@ -5540,43 +5515,43 @@ namespace Nikse.SubtitleEdit.Core.Settings
             subNode = node.SelectSingleNode("WaveformGridColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformGridColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformGridColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformSelectedColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformSelectedColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformBackgroundColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformBackgroundColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformTextColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformTextColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformTextColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformCursorColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformCursorColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformCursorColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformChaptersColor");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformChaptersColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.VideoControls.WaveformChaptersColor = ColorUtils.FromArgb(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("WaveformTextSize");
@@ -6120,7 +6095,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 subNode = node.SelectSingleNode("FontColor");
                 if (subNode != null)
                 {
-                    settings.SubtitleBeaming.FontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                    settings.SubtitleBeaming.FontColor = ColorUtils.FromArgb(subNode.InnerText);
                 }
 
                 subNode = node.SelectSingleNode("FontSize");
@@ -6132,7 +6107,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 subNode = node.SelectSingleNode("BorderColor");
                 if (subNode != null)
                 {
-                    settings.SubtitleBeaming.BorderColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                    settings.SubtitleBeaming.BorderColor = ColorUtils.FromArgb(subNode.InnerText);
                 }
 
                 subNode = node.SelectSingleNode("BorderWidth");
@@ -10011,7 +9986,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             return Utilities.ColorToHexWithTransparency(c);
         }
 
-        public static Color FromHtml(string hex)
+        public static SKColor FromHtml(string hex)
         {
             var s = hex.Trim().TrimStart('#');
 
@@ -10022,15 +9997,15 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 {
                     try
                     {
-                        return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                        return ColorUtils.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                     }
                     catch
                     {
-                        return Color.White;
+                        return SKColors.White;
                     }
                 }
 
-                return Color.White;
+                return SKColors.White;
             }
 
 
@@ -10042,7 +10017,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 }
                 catch
                 {
-                    return Color.White;
+                    return SKColors.White;
                 }
             }
 
@@ -10059,11 +10034,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     try
                     {
                         var c = HtmlUtil.GetColorFromString("#" + s);
-                        return Color.FromArgb(alpha, c);
+                        return ColorUtils.FromArgb(alpha, c);
                     }
                     catch
                     {
-                        return Color.White;
+                        return SKColors.White;
                     }
                 }
                 else
@@ -10077,16 +10052,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     try
                     {
                         var c = HtmlUtil.GetColorFromString("#" + s);
-                        return Color.FromArgb(alpha, c);
+                        return ColorUtils.FromArgb(alpha, c);
                     }
                     catch
                     {
-                        return Color.White;
+                        return SKColors.White;
                     }
                 }
             }
 
-            return Color.White;
+            return SKColors.White;
         }
 
         internal static void WriteShortcuts(Shortcuts shortcuts, XmlWriter textWriter)

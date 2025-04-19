@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private SpectrogramData(string loadFromDirectory)
         {
             _loadFromDirectory = loadFromDirectory;
-            Images = new Bitmap[0];
+            Images = new SKBitmap[0];
         }
 
         public int FftSize { get; private set; }
@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
 
-            var images = new List<Bitmap>();
+            var images = new List<SKBitmap>();
             var drawer = new SpectrogramDrawer(fftSize);
             var readSampleDataValue = GetSampleDataReader();
             Task saveImageTask = null;
@@ -1067,7 +1067,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return palette;
             }
 
-            private static Color PaletteValue(int x, int range)
+            private static SKColor PaletteValue(int x, int range)
             {
                 double g;
                 double r;
@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 g = ((int)(Math.Sqrt(g) * u)) & 0xff;
                 b = ((int)(Math.Sqrt(b) * u)) & 0xff;
 
-                return Color.FromArgb((int)r, (int)g, (int)b);
+                return new SKColor((byte)r, (byte)g, (byte)b);
             }
 
             private static List<SKColor> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
@@ -1127,7 +1127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 for (int i = 0; i < count; i++)
                 {
-                    list.Add(SKColors.FromArgb((int)r, (int)g, (int)b));
+                    list.Add(ColorUtils.FromArgb((int)r, (int)g, (int)b));
                     r += diffR;
                     g += diffG;
                     b += diffB;

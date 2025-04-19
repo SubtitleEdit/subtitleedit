@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                                 var y = jsonParser.GetFirstObject(point, "y");
                                 if (int.TryParse(x, out var xNumber) && int.TryParse(y, out var yNumber))
                                 {
-                                    vertices.Add(new Point(xNumber, yNumber));
+                                    vertices.Add(new SKPoint(xNumber, yNumber));
                                 }
                             }
 

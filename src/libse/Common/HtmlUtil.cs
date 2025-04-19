@@ -1336,7 +1336,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     s = s.Substring(1, 6);
                     var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);
                 }
 
                 return ColorTranslator.FromHtml(s);

@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         .TrimEnd(')')
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(byte.Parse(arr[0]), byte.Parse(arr[1]), byte.Parse(arr[2]));
                 }
 
                 if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
 
-                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(byte.Parse(arr[0]), byte.Parse(arr[1]), byte.Parse(arr[2]), alpha);
                 }
 
                 if (s.Length == 9 && s.StartsWith("#"))
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     s = s.Substring(1, 6);
                     var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);
                 }
 
                 return ColorTranslator.FromHtml(s);
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static WebVttStyle AddStyleFromColor(Color color)
+        public static WebVttStyle AddStyleFromColor(SKColor color)
         {
             return new WebVttStyle
             {
@@ -343,25 +343,25 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (style.Color != null)
             {
-                if (style.Color.Value.A == byte.MaxValue)
+                if (style.Color.Value.Alpha == byte.MaxValue)
                 {
-                    sb.Append($"color:rgb({style.Color.Value.R},{style.Color.Value.G},{style.Color.Value.B}); ");
+                    sb.Append($"color:rgb({style.Color.Value.Red},{style.Color.Value.Green},{style.Color.Value.Blue}); ");
                 }
                 else
                 {
-                    sb.Append($"color:rgba({style.Color.Value.R},{style.Color.Value.G},{style.Color.Value.B},{(style.Color.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                    sb.Append($"color:rgba({style.Color.Value.Red},{style.Color.Value.Green},{style.Color.Value.Blue},{(style.Color.Value.Alpha / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
                 }
             }
 
             if (style.BackgroundColor != null)
             {
-                if (style.BackgroundColor.Value.A == byte.MaxValue)
+                if (style.BackgroundColor.Value.Alpha == byte.MaxValue)
                 {
-                    sb.Append($"background-color:rgb({style.BackgroundColor.Value.R},{style.BackgroundColor.Value.G},{style.BackgroundColor.Value.B}); ");
+                    sb.Append($"background-color:rgb({style.BackgroundColor.Value.Red} , {style.BackgroundColor.Value.Green} , {style.BackgroundColor.Value.Blue}); ");
                 }
                 else
                 {
-                    sb.Append($"background-color:rgba({style.BackgroundColor.Value.R},{style.BackgroundColor.Value.G},{style.BackgroundColor.Value.B},{(style.BackgroundColor.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                    sb.Append($"background-color:rgba({style.BackgroundColor.Value.Red} , {style.BackgroundColor.Value.Green} , {style.BackgroundColor.Value.Blue} , {(style.BackgroundColor.Value.Alpha / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
                 }
             }
 
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        public static WebVttStyle GetOnlyColorStyle(Color color, string header)
+        public static WebVttStyle GetOnlyColorStyle(SKColor color, string header)
         {
             if (string.IsNullOrEmpty(header) || !header.Contains("WEBVTT"))
             {
