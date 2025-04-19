@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Files\sample_VodSub_stuffingBytes.sub" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Files\auto_detect_Danish.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
