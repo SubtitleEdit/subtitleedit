@@ -2308,5 +2308,13 @@ namespace Tests.Logic
             Assert.AreEqual(line1Expected, line1Actual);
             Assert.AreEqual(line2Expected, line2Actual);
         }
+
+        [TestMethod]
+        public void IsFullLineQuote1()
+        {
+            string line1 = "\"";
+            var result = ContinuationUtilities.IsFullLineQuote(line1, 0, '"', '"');
+            Assert.AreEqual(false, result);
+        }
     }
 }
