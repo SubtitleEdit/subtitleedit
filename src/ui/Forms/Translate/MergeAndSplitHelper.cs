@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 else if (".!?,".Contains(endChar) && 
                     sPunctuations > tPunctuations &&
                     t.Length < s.Length / 1.5  &&
-                    sourceIndex + 1 < source.Count)
+                    sourceIndex + 1 < source.Count && translationIndex + 1 < translation.Count)
                 {
                     var next = translation[translationIndex + 1];
                     if (next.EndsWith(endChar))
