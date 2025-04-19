@@ -24,7 +24,7 @@ namespace Tests.Logic.VobSub
             reader.Open(fileName);
             var list = reader.MergeVobSubPacks();
 
-            Assert.IsTrue(list.Count == 2);
+            Assert.AreEqual(2, list.Count);
         }
 
     }
