@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             IsAntialias = false
         };
 
-        private static float GetWidth(string text)
+        public static float GetWidth(string text)
         {
             if (text.Length > 128)
             {

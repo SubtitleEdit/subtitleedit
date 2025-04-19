@@ -318,7 +318,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // important that this does not lock file (do NOT use Image.FromFile(fileName) or alike!!!)
                     using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
                     {
-                        images.Add((Bitmap)Image.FromStream(ms));
+                        var skBitmap = SKBitmap.Decode(ms);
+                        images.Add(skBitmap);
                     }
                 }
                 Images = images;
@@ -887,7 +888,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
                 saveImageTask = Task.Factory.StartNew(() =>
                 {
-                    bmp.Save(imagePath, System.Drawing.Imaging.ImageFormat.Gif);
+                    using (var stream = File.OpenWrite(imagePath))
+                    using (var gitData = bmp.Encode(SKEncodedImageFormat.Gif, 100))
+                    {
+                        gitData.SaveTo(stream);
+                    }
                 });
             }
 

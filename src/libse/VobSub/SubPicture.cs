@@ -1,196 +1,518 @@
-﻿using SkiaSharp;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-public class SubPicture
+namespace Nikse.SubtitleEdit.Core.VobSub
 {
-    private readonly byte[] _data;
-
-    public SubPicture(byte[] data)
+    /// <summary>
+    /// Subtitle Picture - see http://www.mpucoder.com/DVD/spu.html for more info
+    /// </summary>
+    public class SubPicture
     {
-        _data = data;
-    }
-
-    public SKBitmap GenerateBitmap(SKRectI imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<SKColor> fourColors, bool crop)
-    {
-        if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
+        private enum DisplayControlCommand
         {
-            return new SKBitmap(1, 1);
+            ForcedStartDisplay = 0,
+            StartDisplay = 1,
+            StopDisplay = 2,
+            SetColor = 3,
+            SetContrast = 4,
+            SetDisplayArea = 5,
+            SetPixelDataAddress = 6,
+            ChangeColorAndContrast = 7,
+            End = 0xFF,
         }
 
-        var width = imageDisplayArea.Width + 1;
-        var height = imageDisplayArea.Height + 1;
-        var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
-        var canvas = new SKCanvas(bitmap);
+        public readonly int SubPictureDateSize;
+        public TimeSpan Delay;
+        public int BufferSize => _data.Length;
+        private readonly byte[] _data;
+        public SKRectI ImageDisplayArea;
+        public bool Forced { get; private set; }
+        private readonly int _pixelDataAddressOffset;
+        private readonly int _startDisplayControlSequenceTableAddress;
 
-        var bgColor = ToSKColor(fourColors[0]);
-        if (bgColor != SKColors.Transparent)
+        public SubPicture(byte[] data)
         {
-            canvas.Clear(bgColor);
+            _data = data;
+            SubPictureDateSize = Helper.GetEndianWord(_data, 0);
+            _startDisplayControlSequenceTableAddress = Helper.GetEndianWord(_data, 2);
+            ParseDisplayControlCommands(false, null, null, false, false);
         }
 
-        var fastBmp = new FastSkiaBitmap(bitmap);
-        GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors, 2);
-        GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors, 2);
-
-        return CropBitmapAndUnlock(fastBmp, bgColor, crop);
-    }
-
-    private void GenerateBitmap(byte[] pixelData, FastSkiaBitmap bmp, int field, int imageDataAddress, List<SKColor> fourColors, int pixelDepth)
-    {
-        int width = bmp.Width;
-        int height = bmp.Height;
-        int pitch = width;
-        int x = 0;
-        int y = field;
-        int idx = imageDataAddress;
-        int colorIdx = 0;
-
-        while (idx + 1 < pixelData.Length)
+        /// <summary>
+        /// For SP packet with DVD sub pictures
+        /// </summary>
+        /// <param name="data">Byte data buffer</param>
+        /// <param name="startDisplayControlSequenceTableAddress">Address of first control sequence in data</param>
+        /// <param name="pixelDataAddressOffset">Bitmap pixel data address offset</param>
+        public SubPicture(byte[] data, int startDisplayControlSequenceTableAddress, int pixelDataAddressOffset)
         {
-            int b1 = pixelData[idx++];
-            int b2 = pixelData[idx++];
-
-            int count = (b1 & 0x3F);
-            bool isTwoByte = (b1 & 0x40) != 0;
-            bool isEndOfLine = (b1 & 0x80) != 0;
-
-            if (isTwoByte && idx < pixelData.Length)
-            {
-                count = ((count << 8) | pixelData[idx++]);
-            }
-
-            SKColor color = ToSKColor(fourColors[b2 & 0x03]);
-
-            for (int i = 0; i < count; i++)
-            {
-                if (x >= 0 && x < width && y >= 0 && y < height)
-                {
-                    bmp.SetPixel(x, y, color);
-                }
-                x++;
-            }
-
-            if (isEndOfLine)
-            {
-                y += 2;
-                x = 0;
-            }
-        }
-    }
-
-    private static SKBitmap CropBitmapAndUnlock(FastSkiaBitmap bmp, SKColor backgroundColor, bool crop)
-    {
-        int minX = 0, maxX = bmp.Width - 1;
-        int minY = 0, maxY = bmp.Height - 1;
-
-        if (crop)
-        {
-            for (int y = 0; y < bmp.Height; y++)
-            {
-                bool isBg = true;
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    if (!IsBackgroundColor(bmp.GetPixel(x, y)))
-                    {
-                        isBg = false;
-                        break;
-                    }
-                }
-                if (!isBg)
-                {
-                    minY = Math.Max(0, y - 3);
-                    break;
-                }
-            }
-
-            for (int y = bmp.Height - 1; y >= minY; y--)
-            {
-                bool isBg = true;
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    if (!IsBackgroundColor(bmp.GetPixel(x, y)))
-                    {
-                        isBg = false;
-                        break;
-                    }
-                }
-                if (!isBg)
-                {
-                    maxY = Math.Min(bmp.Height - 1, y + 7);
-                    break;
-                }
-            }
-
-            for (int x = 0; x < bmp.Width; x++)
-            {
-                bool isBg = true;
-                for (int y = minY; y <= maxY; y++)
-                {
-                    if (!IsBackgroundColor(bmp.GetPixel(x, y)))
-                    {
-                        isBg = false;
-                        break;
-                    }
-                }
-                if (!isBg)
-                {
-                    minX = Math.Max(0, x - 3);
-                    break;
-                }
-            }
-
-            for (int x = bmp.Width - 1; x >= minX; x--)
-            {
-                bool isBg = true;
-                for (int y = minY; y <= maxY; y++)
-                {
-                    if (!IsBackgroundColor(bmp.GetPixel(x, y)))
-                    {
-                        isBg = false;
-                        break;
-                    }
-                }
-                if (!isBg)
-                {
-                    maxX = Math.Min(bmp.Width - 1, x + 7);
-                    break;
-                }
-            }
+            _data = data;
+            SubPictureDateSize = _data.Length;
+            _startDisplayControlSequenceTableAddress = startDisplayControlSequenceTableAddress;
+            _pixelDataAddressOffset = pixelDataAddressOffset;
+            ParseDisplayControlCommands(false, null, null, false, false);
         }
 
-        var cropped = new SKBitmap(maxX - minX + 1, maxY - minY + 1);
-        using (var canvas = new SKCanvas(cropped))
+        /// <summary>
+        /// Generates the current subtitle image
+        /// </summary>
+        /// <param name="colorLookupTable">The Color LookUp Table (CLUT), if null then only the four colors are used (should contain 16 elements if not null)</param>
+        /// <param name="background">Background color</param>
+        /// <param name="pattern">Color</param>
+        /// <param name="emphasis1">Color</param>
+        /// <param name="emphasis2">Color</param>
+        /// <param name="useCustomColors">Use custom colors instead of lookup table</param>
+        /// <param name="crop">Crop result image</param>
+        /// <returns>Subtitle image</returns>
+        public SKBitmap GetBitmap(List<SKColor> colorLookupTable, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2, bool useCustomColors, bool crop = true)
         {
-            canvas.DrawBitmap(bmp.Bitmap, new SKRect(minX, minY, maxX + 1, maxY + 1), new SKRect(0, 0, cropped.Width, cropped.Height));
+            var fourColors = new List<SKColor> { background, pattern, emphasis1, emphasis2 };
+            return ParseDisplayControlCommands(true, colorLookupTable, fourColors, useCustomColors, crop);
+        }
+
+        private SKBitmap ParseDisplayControlCommands(bool createBitmap, List<SKColor> colorLookUpTable, List<SKColor> fourColors, bool useCustomColors, bool crop)
+        {
+            ImageDisplayArea = new SKRectI();
+            SKBitmap bmp = null;
+            var displayControlSequenceTableAddresses = new List<int>();
+            var imageTopFieldDataAddress = 0;
+            var imageBottomFieldDataAddress = 0;
+            var bitmapGenerated = false;
+            double largestDelay = -999999;
+            var displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
+            var lastDisplayControlSequenceTableAddress = 0;
+            displayControlSequenceTableAddresses.Add(displayControlSequenceTableAddress);
+            var commandIndex = 0;
+            while (displayControlSequenceTableAddress > lastDisplayControlSequenceTableAddress && displayControlSequenceTableAddress + 1 < _data.Length && commandIndex < _data.Length)
+            {
+                int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
+                commandIndex = displayControlSequenceTableAddress + 4 + _pixelDataAddressOffset;
+                if (commandIndex >= _data.Length)
+                {
+                    break; // invalid index
+                }
+
+                int command = _data[commandIndex];
+                int numberOfCommands = 0;
+                while (command != (int)DisplayControlCommand.End && numberOfCommands < 1000 && commandIndex < _data.Length)
+                {
+                    numberOfCommands++;
+                    switch (command)
+                    {
+                        case (int)DisplayControlCommand.ForcedStartDisplay: // 0
+                            Forced = true;
+                            commandIndex++;
+                            break;
+                        case (int)DisplayControlCommand.StartDisplay: // 1
+                            commandIndex++;
+                            break;
+                        case (int)DisplayControlCommand.StopDisplay: // 2
+                            Delay = TimeSpan.FromMilliseconds((delayBeforeExecute << 10) / 90.0);
+                            if (createBitmap && Delay.TotalMilliseconds > largestDelay) // in case of more than one images, just use the one with the largest display time
+                            {
+                                largestDelay = Delay.TotalMilliseconds;
+                                bmp?.Dispose();
+                                bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors, crop);
+                                bitmapGenerated = true;
+                            }
+                            commandIndex++;
+                            break;
+                        case (int)DisplayControlCommand.SetColor: // 3
+                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            {
+                                byte[] imageColor = { _data[commandIndex + 1], _data[commandIndex + 2] };
+                                if (!useCustomColors)
+                                {
+                                    SetColor(fourColors, 3, imageColor[0] >> 4, colorLookUpTable);
+                                    SetColor(fourColors, 2, imageColor[0] & 0b00001111, colorLookUpTable);
+                                    SetColor(fourColors, 1, imageColor[1] >> 4, colorLookUpTable);
+                                    SetColor(fourColors, 0, imageColor[1] & 0b00001111, colorLookUpTable);
+                                }
+                            }
+                            commandIndex += 3;
+                            break;
+                        case (int)DisplayControlCommand.SetContrast: // 4
+                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            {
+                                var imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
+                                if (imageContrast[0] + imageContrast[1] > 0)
+                                {
+                                    SetTransparency(fourColors, 3, (imageContrast[0] & 0xF0) >> 4);
+                                    SetTransparency(fourColors, 2, imageContrast[0] & 0b00001111);
+                                    SetTransparency(fourColors, 1, (imageContrast[1] & 0xF0) >> 4);
+                                    SetTransparency(fourColors, 0, imageContrast[1] & 0b00001111);
+                                }
+                            }
+                            commandIndex += 3;
+                            break;
+                        case (int)DisplayControlCommand.SetDisplayArea: // 5
+                            if (_data.Length > commandIndex + 6 && ImageDisplayArea.Width == 0 && ImageDisplayArea.Height == 0)
+                            {
+                                var startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
+                                var endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
+                                var startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
+                                var endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
+                                ImageDisplayArea = new SKRectI(startingX, startingY, endingX - startingX, endingY - startingY);
+                            }
+                            commandIndex += 7;
+                            break;
+                        case (int)DisplayControlCommand.SetPixelDataAddress: // 6
+                            imageTopFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 1) + _pixelDataAddressOffset;
+                            imageBottomFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 3) + _pixelDataAddressOffset;
+                            commandIndex += 5;
+                            break;
+                        case (int)DisplayControlCommand.ChangeColorAndContrast: // 7
+                            commandIndex++;
+                            //int parameterAreaSize = (int)Helper.GetEndian(_data, commandIndex, 2);
+                            if (commandIndex + 1 < _data.Length)
+                            {
+                                int parameterAreaSize = _data[commandIndex + 1]; // this should be enough??? (no larger than 255 bytes)
+                                if (colorLookUpTable != null)
+                                {
+                                    // TODO: Set fourColors
+                                }
+                                commandIndex += parameterAreaSize;
+                            }
+                            else
+                            {
+                                commandIndex++;
+                            }
+                            break;
+                        default:
+                            commandIndex++;
+                            break;
+                    }
+                    if (commandIndex >= _data.Length) // in case of bad files...
+                    {
+                        break;
+                    }
+
+                    command = _data[commandIndex];
+                }
+
+                lastDisplayControlSequenceTableAddress = displayControlSequenceTableAddress;
+                if (_pixelDataAddressOffset == -4)
+                {
+                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, commandIndex + 3);
+                }
+                else
+                {
+                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + 2);
+                }
+            }
+            if (createBitmap && !bitmapGenerated) // StopDisplay not needed (delay will be zero - should be just before start of next subtitle)
+            {
+                bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors, crop);
+            }
+
+            return bmp;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SetColor(List<SKColor> fourColors, int fourColorIndex, int clutIndex, List<SKColor> colorLookUpTable)
+        {
+            if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
+            {
+                fourColors[fourColorIndex] = colorLookUpTable[clutIndex];
+            }
+        }
+
+        private static void SetTransparency(List<SKColor> fourColors, int fourColorIndex, int alpha)
+        {
+            // alpha: 0x0 = transparent, 0xF = opaque (in C# 0 is fully transparent, and 255 is fully opaque so we have to multiply by 17)
+
+            if (fourColorIndex >= 0)
+            {
+                fourColors[fourColorIndex] = ColorUtils.FromArgb(alpha * 17, fourColors[fourColorIndex].Red, fourColors[fourColorIndex].Green, fourColors[fourColorIndex].Blue);
+            }
+        }
+
+        private SKBitmap GenerateBitmap(SKRectI imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<SKColor> fourColors, bool crop)
+        {
+            if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
+            {
+                return new SKBitmap(1, 1);
+            }
+
+            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
+            if (fourColors[0] != SKColors.Transparent)
+            {
+                using (var canvas = new SKCanvas(bmp))
+                {
+                    using (var paint = new SKPaint { Color = fourColors[0] })
+                    {
+                        canvas.DrawRect(new SKRect(0, 0, bmp.Width, bmp.Height), paint);
+                    }
+                }
+            }
+
+            var fastBmp = new FastBitmap(bmp);
+            fastBmp.LockImage();
+            GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors, 2);
+            GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors, 2);
+            var cropped = CropBitmapAndUnlock(fastBmp, fourColors[0], crop);
+            bmp.Dispose();
             return cropped;
         }
-    }
 
-    private static bool IsBackgroundColor(SKColor c) => c.Alpha < 2;
+        private static SKBitmap CropBitmapAndUnlock(FastBitmap bmp, SKColor backgroundColor, bool crop)
+        {
+            var y = 0;
+            var c = backgroundColor;
+            var minX = 0;
+            var maxX = 0;
+            var minY = 0;
+            var maxY = 0;
 
-    private static SKColor ToSKColor(SKColor color)
-    {
-        return new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
-    }
-}
+            if (crop)
+            {
+                // Crop top
+                int x;
+                while (y < bmp.Height && IsBackgroundColor(c))
+                {
+                    c = bmp.GetPixel(0, y);
+                    if (IsBackgroundColor(c))
+                    {
+                        for (x = 1; x < bmp.Width; x++)
+                        {
+                            c = bmp.GetPixelNext();
+                            if (c.Alpha > 1)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    if (IsBackgroundColor(c))
+                    {
+                        y++;
+                    }
+                }
+                minY = y;
+                if (minY > 3)
+                {
+                    minY -= 3;
+                }
+                else
+                {
+                    minY = 0;
+                }
 
-public class FastSkiaBitmap
-{
-    public SKBitmap Bitmap { get; }
-    public int Width => Bitmap.Width;
-    public int Height => Bitmap.Height;
+                // Crop left
+                x = 0;
+                c = backgroundColor;
+                while (x < bmp.Width && IsBackgroundColor(c))
+                {
+                    for (y = minY; y < bmp.Height; y++)
+                    {
+                        c = bmp.GetPixel(x, y);
+                        if (!IsBackgroundColor(c))
+                        {
+                            break;
+                        }
+                    }
+                    if (IsBackgroundColor(c))
+                    {
+                        x++;
+                    }
+                }
+                minX = x;
+                if (minX > 3)
+                {
+                    minX -= 3;
+                }
+                else
+                {
+                    minX = 0;
+                }
 
-    public FastSkiaBitmap(SKBitmap bitmap)
-    {
-        Bitmap = bitmap;
-    }
+                // Crop bottom
+                y = bmp.Height - 1;
+                c = backgroundColor;
+                while (y > minY && IsBackgroundColor(c))
+                {
+                    c = bmp.GetPixel(0, y);
+                    if (IsBackgroundColor(c))
+                    {
+                        for (x = 1; x < bmp.Width; x++)
+                        {
+                            c = bmp.GetPixelNext();
+                            if (!IsBackgroundColor(c))
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    if (IsBackgroundColor(c))
+                    {
+                        y--;
+                    }
+                }
+                maxY = y + 7;
+                if (maxY >= bmp.Height)
+                {
+                    maxY = bmp.Height - 1;
+                }
 
-    public SKColor GetPixel(int x, int y) => Bitmap.GetPixel(x, y);
+                // Crop right
+                x = bmp.Width - 1;
+                c = backgroundColor;
+                while (x > minX && IsBackgroundColor(c))
+                {
+                    for (y = minY; y < bmp.Height; y++)
+                    {
+                        c = bmp.GetPixel(x, y);
+                        if (!IsBackgroundColor(c))
+                        {
+                            break;
+                        }
+                    }
+                    if (IsBackgroundColor(c))
+                    {
+                        x--;
+                    }
+                }
+                maxX = x + 7;
+                if (maxX >= bmp.Width)
+                {
+                    maxX = bmp.Width - 1;
+                }
+            }
 
-    public void SetPixel(int x, int y, SKColor color)
-    {
-        if (x >= 0 && x < Width && y >= 0 && y < Height)
-            Bitmap.SetPixel(x, y, color);
+            bmp.UnlockImage();
+            var bmpImage = bmp.GetBitmap();
+            if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
+            {
+                // In SkiaSharp, we use SKBitmap.ExtractSubset instead of Clone with rectangle
+                var bmpCrop = new SKBitmap();
+                bmpImage.ExtractSubset(bmpCrop, new SKRectI(minX, minY, maxX, maxY));
+                return bmpCrop;
+            }
+
+            // In SkiaSharp, we need to create a new bitmap and copy the pixels
+            var clone = new SKBitmap(bmpImage.Width, bmpImage.Height);
+            bmpImage.CopyTo(clone);
+            return clone;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsBackgroundColor(SKColor c)
+        {
+            return c.Alpha < 2;
+        }
+
+        public static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<SKColor> fourColors, int addY)
+        {
+            var index = 0;
+            var onlyHalf = false;
+            var y = startY;
+            var x = 0;
+            var colorZeroValue = fourColors[0].ToArgb();
+            while (y < bmp.Height && dataAddress + index + 2 < data.Length)
+            {
+                index += DecodeRle(dataAddress + index, data, out var color, out var runLength, ref onlyHalf, out var restOfLine);
+                if (restOfLine)
+                {
+                    runLength = bmp.Width - x;
+                }
+
+                var c = fourColors[color]; // set color via the four colors
+                for (var i = 0; i < runLength; i++, x++)
+                {
+                    if (x >= bmp.Width - 1)
+                    {
+                        if (y < bmp.Height && x < bmp.Width && c != fourColors[0])
+                        {
+                            bmp.SetPixel(x, y, c);
+                        }
+
+                        if (onlyHalf)
+                        {
+                            onlyHalf = false;
+                            index++;
+                        }
+                        x = 0;
+                        y += addY;
+                        break;
+                    }
+
+                    if (y < bmp.Height && c.ToArgb() != colorZeroValue)
+                    {
+                        bmp.SetPixel(x, y, c);
+                    }
+                }
+            }
+        }
+
+        private static int DecodeRle(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
+        {
+            //Value      Bits   n=length, c=color
+            //1-3        4      nncc               (half a byte)
+            //4-15       8      00nnnncc           (one byte)
+            //16-63     12      0000nnnnnncc       (one and a half byte)
+            //64-255    16      000000nnnnnnnncc   (two bytes)
+            // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
+            restOfLine = false;
+            byte b1 = data[index];
+            byte b2 = data[index + 1];
+
+            if (onlyHalf)
+            {
+                byte b3 = data[index + 2];
+                b1 = (byte)(((b1 & 0b00001111) << 4) | ((b2 & 0b11110000) >> 4));
+                b2 = (byte)(((b2 & 0b00001111) << 4) | ((b3 & 0b11110000) >> 4));
+            }
+
+            if (b1 >> 2 == 0)
+            {
+                runLength = (b1 << 6) | (b2 >> 2);
+                color = b2 & 0b00000011;
+                if (runLength == 0)
+                {
+                    // rest of line + skip 4 bits if Only half
+                    restOfLine = true;
+                    if (onlyHalf)
+                    {
+                        onlyHalf = false;
+                        return 3;
+                    }
+                }
+                return 2;
+            }
+
+            if (b1 >> 4 == 0)
+            {
+                runLength = (b1 << 2) | (b2 >> 6);
+                color = (b2 & 0b00110000) >> 4;
+                if (onlyHalf)
+                {
+                    onlyHalf = false;
+                    return 2;
+                }
+                onlyHalf = true;
+                return 1;
+            }
+
+            if (b1 >> 6 == 0)
+            {
+                runLength = b1 >> 2;
+                color = b1 & 0b00000011;
+                return 1;
+            }
+
+            runLength = b1 >> 6;
+            color = (b1 & 0b00110000) >> 4;
+
+            if (onlyHalf)
+            {
+                onlyHalf = false;
+                return 1;
+            }
+            onlyHalf = true;
+
+            return 0;
+        }
     }
 }

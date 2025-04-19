@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -59,10 +61,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var rubyOn = false;
             var italicOn = false;
             int startX;
+            var textToMeasure = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
+
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                var actualText = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
-                var actualTextSize = g.MeasureString(actualText, new Font("Arial", 13.8f)); // font size up, move text left
+                var actualTextSize = g.MeasureString(textToMeasure, new Font("Arial", 13.8f)); // font size up, move text left
                 startX = (int)(width / 2.0 - actualTextSize.Width / 2.0);
                 if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
                 {

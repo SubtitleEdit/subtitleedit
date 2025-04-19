@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using SkiaSharp;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -44,7 +45,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
             {
-                return (SKBitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
+                var bitmap = Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]);
+                var clone = new SKBitmap(bitmap.Width, bitmap.Height);
+                bitmap.CopyTo(clone);
+                return clone;
             }
 
             return Pes.GetImageFull();

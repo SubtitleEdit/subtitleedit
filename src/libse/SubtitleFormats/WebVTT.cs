@@ -903,24 +903,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 while (match.Success)
                 {
                     var colorName = match.Value.Substring(13, match.Value.Length - 15);
-                    var color = Color.FromName(colorName);
-                    if (color.IsKnownColor)
+                    var color = HtmlUtil.GetColorFromString(colorName);
+
+                    var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
+                    var fontString = "<c" + tag + ">";
+                    var closeColor = GetCloseColor(tag);
+                    if (closeColor != null)
                     {
-                        var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
-                        var fontString = "<c" + tag + ">";
-                        var closeColor = GetCloseColor(tag);
-                        if (closeColor != null)
-                        {
-                            fontString = "<c." + closeColor + ">";
-                        }
-                        fontString = fontString.Trim('"').Trim('\'');
-                        res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                        match = RegexHtmlColor4.Match(res);
+                        fontString = "<c." + closeColor + ">";
                     }
-                    else
-                    {
-                        break;
-                    }
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    match = RegexHtmlColor4.Match(res);
                 }
             }
 
