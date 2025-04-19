@@ -1,10 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -18,21 +17,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public string Text { get; set; }
 
-            public Bitmap GetBitmap()
+            public SKBitmap GetBitmap()
             {
                 var data = Convert.FromBase64String(Text);
-                using (var stream = new MemoryStream(data, 0, data.Length))
+                using (var stream = new SKMemoryStream(data))
                 {
-                    var bitmap = (Bitmap)Image.FromStream(stream);
-                    return bitmap;
+                    return SKBitmap.Decode(stream);
                 }
             }
 
-            public Size GetScreenSize()
+            public SKSize GetScreenSize()
             {
                 using (var bmp = GetBitmap())
                 {
-                    return new Size(bmp.Width, bmp.Height);
+                    return new SKSize(bmp.Width, bmp.Height);
                 }
             }
 

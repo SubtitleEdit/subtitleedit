@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Core.CDG
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
             _startPosition = 0;
         }
 
-        public Bitmap ToBitmap(int packetNumber) // long timeInMilliseconds)
+        public SKBitmap ToBitmap(int packetNumber) // long timeInMilliseconds)
         {
             //duration of one packet is 1/300 seconds (1000/300ms) (4 packets per sector, 75 sectors per second)
             //p=t*3/10  t=p*10/3 t=milliseconds, p=packets
@@ -80,21 +80,52 @@ namespace Nikse.SubtitleEdit.Core.CDG
             }
 
             var graphicData = GetGraphicData();
-            var image = new Bitmap(FullWidth, FullHeight, PixelFormat.Format32bppArgb);
-            var bitmapData = image.LockBits(new Rectangle(0, 0, FullWidth, FullHeight), ImageLockMode.WriteOnly, image.PixelFormat);
-            var offset = 0;
-            foreach (var colorValue in graphicData)
+            var bitmap = new SKBitmap(FullWidth, FullHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
+
+            // Copy pixel data into the bitmap
+            var pixelData = bitmap.GetPixels();
+            unsafe
             {
-                var color = BitConverter.GetBytes(colorValue);
-                foreach (var bytes in color)
+                var pixels = (uint*)pixelData.ToPointer();
+                for (var y = 0; y < FullHeight; y++)
                 {
-                    Marshal.WriteByte(bitmapData.Scan0, offset, bytes);
-                    offset++;
+                    for (var x = 0; x < FullWidth; x++)
+                    {
+                        var colorValue = graphicData[y, x];
+                        var a = 255; // Fully opaque
+                        var r = (byte)((colorValue >> 16) & 0xFF);
+                        var g = (byte)((colorValue >> 8) & 0xFF);
+                        var b = (byte)(colorValue & 0xFF);
+
+                        // Pack ARGB components into a single 32-bit integer
+                        pixels[y * FullWidth + x] = (uint)((a << 24) | (r << 16) | (g << 8) | b);
+                    }
                 }
             }
-            image.UnlockBits(bitmapData);
-            image.MakeTransparent(image.GetPixel(1, 1));
-            return image;
+
+            // Make a specific color transparent (equivalent to the original's image.MakeTransparent(image.GetPixel(1, 1)))
+            var transparentColor = bitmap.GetPixel(1, 1);
+            using (var canvas = new SKCanvas(bitmap))
+            {
+                var paint = new SKPaint
+                {
+                    Color = SKColors.Transparent,
+                    BlendMode = SKBlendMode.Src
+                };
+
+                for (var y = 0; y < FullHeight; y++)
+                {
+                    for (var x = 0; x < FullWidth; x++)
+                    {
+                        if (bitmap.GetPixel(x, y) == transparentColor)
+                        {
+                            canvas.DrawPoint(x, y, paint);
+                        }
+                    }
+                }
+            }
+
+            return bitmap;
         }
 
         private bool Process(Packet packet)

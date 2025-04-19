@@ -50,7 +50,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Win32.Registry" />
 		<PackageReference Include="SkiaSharp" />
-		<PackageReference Include="System.Drawing.Common" />
 		<PackageReference Include="System.Net.Http" />
 		<PackageReference Include="UTF.Unknown" />
 		<PackageReference Include="zlib.net-mutliplatform" />

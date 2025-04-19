@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
+using SubtitleAlchemist.Logic.BluRaySup;
 using System;
 using System.Drawing;
 using System.IO;
@@ -80,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, ContentAlignment alignment, Point? overridePosition)
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, Point? overridePosition)
         {
             var ms = new MemoryStream();
 
@@ -287,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, ContentAlignment alignment, Point? overridePosition)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, Point? overridePosition)
         {
             stream.WriteByte(5);
 
@@ -295,19 +297,19 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             ushort startX = (ushort)((_screenWidth - nbmp.Width) / 2);
             ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
 
-            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+            if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.TopCenter || alignment == BluRayContentAlignment.TopRight)
             {
                 startY = (ushort)_bottomMargin;
             }
-            if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+            if (alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.MiddleCenter || alignment == BluRayContentAlignment.MiddleRight)
             {
                 startY = (ushort)(_screenHeight / 2 - nbmp.Height / 2);
             }
-            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.BottomLeft)
+            if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.BottomLeft)
             {
                 startX = (ushort)_leftRightMargin;
             }
-            if (alignment == ContentAlignment.TopRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.BottomRight)
+            if (alignment == BluRayContentAlignment.TopRight || alignment == BluRayContentAlignment.MiddleRight || alignment == BluRayContentAlignment.BottomRight)
             {
                 startX = (ushort)(_screenWidth - nbmp.Width - _leftRightMargin);
             }

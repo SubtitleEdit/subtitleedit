@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -1845,7 +1845,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return defaultColor;
         }
 
-        public static Color GetColorFromFontString(string text, Color defaultColor)
+        public static SKColor GetColorFromFontString(string text, SKColor defaultColor)
         {
             var s = text.TrimEnd();
             var start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
@@ -1853,25 +1853,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return defaultColor;
             }
-
             var end = s.IndexOf('>', start);
             if (end <= 0)
             {
                 return defaultColor;
             }
-
             var f = s.Substring(start, end - start);
             if (!f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
             {
                 return defaultColor;
             }
-
             var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
             if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
             {
                 end = s.IndexOf('"', colorStart + " color=".Length + 1);
             }
-
             s = s.Substring(colorStart, end - colorStart);
             s = s.Replace(" color=", string.Empty);
             s = s.Trim('\'').Trim('"').Trim('\'');
@@ -1880,17 +1876,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                 {
                     var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(
+                        (byte)int.Parse(arr[0].Trim()),
+                        (byte)int.Parse(arr[1].Trim()),
+                        (byte)int.Parse(arr[2].Trim()),
+                        255); // Full opacity
                 }
-
                 if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
                 {
                     var arr = s
-                        .RemoveChar(' ')
+                        .Replace(" ", "")
                         .Remove(0, 5)
                         .TrimEnd(')')
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
                     var alpha = byte.MaxValue;
                     if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
                     {
@@ -1899,28 +1897,39 @@ namespace Nikse.SubtitleEdit.Core.Common
                             alpha = (byte)(f2 * byte.MaxValue);
                         }
                     }
-
-                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(
+                        (byte)int.Parse(arr[0]),
+                        (byte)int.Parse(arr[1]),
+                        (byte)int.Parse(arr[2]),
+                        alpha);
                 }
-
                 if (s.Length == 9 && s.StartsWith("#"))
                 {
                     if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
                     {
                         alpha = 255; // full solid color
                     }
-
                     s = s.Substring(1, 6);
-                    var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    var color = SKColor.Parse("#" + s);
+                    return new SKColor(color.Red, color.Green, color.Blue, (byte)alpha);
                 }
-
-                return ColorTranslator.FromHtml(s);
+                return SKColor.Parse(s);
             }
             catch
             {
                 return defaultColor;
             }
+        }
+
+        // Helper method to replace RemoveChar extension method
+        private static string Replace(this string input, char oldChar, string newString)
+        {
+            return input.Replace(oldChar.ToString(), newString);
+        }
+
+        public static SKColor FromHtml(string htmlColor)
+        {
+            return SKColor.Parse(htmlColor);
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
@@ -3302,12 +3311,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             throw new NotImplementedException();
         }
 
-        public static string PngToBase64String(Bitmap bitmap)
+        public static string PngToBase64String(SKBitmap bitmap)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (SKData data = bitmap.Encode(SKEncodedImageFormat.Png, 100))
             {
-                bitmap.Save(memoryStream, ImageFormat.Png);
-                return Convert.ToBase64String(memoryStream.ToArray());
+                return Convert.ToBase64String(data.ToArray());
             }
         }
     }

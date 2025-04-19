@@ -18,12 +18,25 @@
  */
 
 using Nikse.SubtitleEdit.Core.Common;
-using System;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
+using System;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Core.BluRaySup
 {
+    public enum BluRayContentAlignment
+    {
+        TopLeft,
+        TopCenter,
+        TopRight,
+        MiddleLeft,
+        MiddleCenter,
+        MiddleRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight,
+    }
 
     public class BluRaySupPicture
     {
@@ -89,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <summary>
         /// List of (list of) palette info - there are up to 8 palettes per epoch, each can be updated several times
         /// </summary>
-        public List<List<PaletteInfo>> Palettes { get; set; }
+        public List<List<PaletteInfo>> Palettes { get; set; } = new List<List<PaletteInfo>>();
 
         /// <summary>
         /// Create RLE buffer from bitmap
@@ -97,12 +110,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="bm">Bitmap to compress</param>
         /// <param name="palette">Palette used for bitmap encoding</param>
         /// <returns>RLE buffer</returns>
-        private static byte[] EncodeImage(NikseBitmap bm, List<Color> palette)
+        private static byte[] EncodeImage(SKBitmap bm, List<SKColor> palette)
         {
-            var lookup = new Dictionary<int, int>();
+            var lookup = new Dictionary<SKColor, int>();
             for (var i = 0; i < palette.Count; i++)
             {
-                var color = palette[i].ToArgb();
+                var color = palette[i];
                 if (!lookup.ContainsKey(color))
                 {
                     lookup.Add(color, i);
@@ -118,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     var c = bm.GetPixel(x, y);
                     byte color;
-                    if (lookup.TryGetValue(c.ToArgb(), out var intC))
+                    if (lookup.TryGetValue(c, out var intC))
                     {
                         color = (byte)intC;
                     }
@@ -195,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return bytes.ToArray();
         }
 
-        private static byte FindBestMatch(Color color, List<Color> palette)
+        private static byte FindBestMatch(SKColor color, List<SKColor> palette)
         {
             var smallestDiff = 1000;
             var smallestDiffIndex = -1;
@@ -203,7 +216,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (var i = 0; i < max; i++)
             {
                 var c = palette[i];
-                var diff = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
+                var diff = Math.Abs(c.Alpha - color.Alpha) + Math.Abs(c.Red - color.Red) + Math.Abs(c.Green - color.Green) + Math.Abs(c.Blue - color.Blue);
                 if (diff < smallestDiff)
                 {
                     smallestDiff = diff;
@@ -214,13 +227,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return (byte)smallestDiffIndex;
         }
 
-        private static bool HasCloseColor(Color color, List<Color> palette, int maxDifference)
+        private static bool HasCloseColor(SKColor color, List<SKColor> palette, int maxDifference)
         {
             var max = palette.Count;
             for (var i = 0; i < max; i++)
             {
                 var c = palette[i];
-                var difference = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
+                var difference = Math.Abs(c.Alpha - color.Alpha) + Math.Abs(c.Red - color.Red) + Math.Abs(c.Green - color.Green) + Math.Abs(c.Blue - color.Blue);
                 if (difference < maxDifference)
                 {
                     return true;
@@ -230,10 +243,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return false;
         }
 
-        private static List<Color> GetBitmapPalette(NikseBitmap bitmap)
+        private static List<SKColor> GetBitmapPalette(SKBitmap bitmap)
         {
-            var pal = new List<Color>(250);
-            var lookup = new HashSet<int>(250);
+            var pal = new List<SKColor>(250);
+            var lookup = new HashSet<SKColor>(250);
 
             // first we try with exact colors
             for (var y = 0; y < bitmap.Height; y++)
@@ -241,16 +254,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 for (var x = 0; x < bitmap.Width; x++)
                 {
                     var c = bitmap.GetPixel(x, y);
-                    if (c.A > 0)
+                    if (c.Alpha > 0)
                     {
-                        if (lookup.Contains(c.ToArgb()))
+                        if (lookup.Contains(c))
                         {
                             // exact color already exists
                         }
                         else
                         {
                             pal.Add(c);
-                            lookup.Add(c.ToArgb());
+                            lookup.Add(c);
                         }
 
                         if (pal.Count >= 254)
@@ -267,22 +280,22 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             if (pal.Count < 254)
             {
-                pal.Add(Color.FromArgb(0, 0, 0, 0)); // last entry must be transparent
+                pal.Add(SKColors.Transparent); // last entry must be transparent
                 return pal;
             }
 
 
             // get close colors (image has probably been processed in SE)
-            pal = new List<Color>();
-            lookup = new HashSet<int>();
+            pal = new List<SKColor>();
+            lookup = new HashSet<SKColor>();
             for (var y = 0; y < bitmap.Height; y++)
             {
                 for (var x = 0; x < bitmap.Width; x++)
                 {
                     var c = bitmap.GetPixel(x, y);
-                    if (c.A > 0)
+                    if (c.Alpha > 0)
                     {
-                        if (lookup.Contains(c.ToArgb()))
+                        if (lookup.Contains(c))
                         {
                             // exact color already exists
                         }
@@ -291,7 +304,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             if (!HasCloseColor(c, pal, 1))
                             {
                                 pal.Add(c);
-                                lookup.Add(c.ToArgb());
+                                lookup.Add(c);
                             }
                         }
                         else if (pal.Count < 240)
@@ -299,19 +312,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             if (!HasCloseColor(c, pal, 5))
                             {
                                 pal.Add(c);
-                                lookup.Add(c.ToArgb());
+                                lookup.Add(c);
                             }
                         }
                         else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
                         {
                             pal.Add(c);
-                            lookup.Add(c.ToArgb());
+                            lookup.Add(c);
                         }
                     }
                 }
             }
 
-            pal.Add(Color.FromArgb(0, 0, 0, 0)); // last entry must be transparent
+            pal.Add(SKColors.Transparent); // last entry must be transparent
             return pal;
         }
 
@@ -368,10 +381,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="alignment">Alignment of image</param>
         /// <param name="overridePosition">Position that overrides alignment</param>
         /// <returns>Byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment, Point? overridePosition = null)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, SKBitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, BluRayContentAlignment alignment, BluRayPoint overridePosition = null)
         {
-            var bm = new NikseBitmap(bmp);
-            bm.SetTransparentTo(Color.FromArgb(0, 0, 0, 0));
+            var bm = bmp.Copy();
+            // bm.SetTransparentTo(Color.FromArgb(0, 0, 0, 0));
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
             for (var i = 0; i < colorPalette.Count; i++)
@@ -467,35 +480,35 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             switch (alignment)
             {
-                case ContentAlignment.BottomLeft:
+                case BluRayContentAlignment.BottomLeft:
                     pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
-                case ContentAlignment.BottomRight:
+                case BluRayContentAlignment.BottomRight:
                     pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
                     pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
-                case ContentAlignment.MiddleCenter:
+                case BluRayContentAlignment.MiddleCenter:
                     pic.WindowXOffset = (pic.Width - bm.Width) / 2;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
-                case ContentAlignment.MiddleLeft:
+                case BluRayContentAlignment.MiddleLeft:
                     pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
-                case ContentAlignment.MiddleRight:
+                case BluRayContentAlignment.MiddleRight:
                     pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
-                case ContentAlignment.TopCenter:
+                case BluRayContentAlignment.TopCenter:
                     pic.WindowXOffset = (pic.Width - bm.Width) / 2;
                     pic.WindowYOffset = bottomMargin;
                     break;
-                case ContentAlignment.TopLeft:
+                case BluRayContentAlignment.TopLeft:
                     pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = bottomMargin;
                     break;
-                case ContentAlignment.TopRight:
+                case BluRayContentAlignment.TopRight:
                     pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
                     pic.WindowYOffset = bottomMargin;
                     break;
@@ -506,11 +519,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             if (overridePosition != null &&
-                overridePosition.Value.X >= 0 && overridePosition.Value.X < pic.Width &&
-                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < pic.Height)
+                overridePosition.X >= 0 && overridePosition.X < pic.Width &&
+                overridePosition.Y >= 0 && overridePosition.Y < pic.Height)
             {
-                pic.WindowXOffset = overridePosition.Value.X;
-                pic.WindowYOffset = overridePosition.Value.Y;
+                pic.WindowXOffset = overridePosition.X;
+                pic.WindowYOffset = overridePosition.Y;
             }
 
             var yOfs = pic.WindowYOffset - Core.CropOfsY;

@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -163,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return "https://cloud.google.com/vision/docs/ocr";
         }
 
-        public List<string> PerformOcr(string language, List<Bitmap> images)
+        public List<string> PerformOcr(string language, List<SKBitmap> images)
         {
             var requestBody = new RequestBody();
 
@@ -172,7 +173,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 string imageBase64;
                 using (var memoryStream = new MemoryStream())
                 {
-                    image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+                    using (var skImage = SKImage.FromBitmap(image))
+                    using (var data = skImage.Encode(SKEncodedImageFormat.Png, 100))
+                    {
+                        data.SaveTo(memoryStream);
+                    }
+
                     imageBase64 = Convert.ToBase64String(memoryStream.ToArray());
                 }
 

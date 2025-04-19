@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SkiaSharp;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
@@ -7,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
     {
         string GetName();
         string GetUrl();
-        List<string> PerformOcr(string language, List<Bitmap> images);
+        List<string> PerformOcr(string language, List<SKBitmap> images);
         int GetMaxImageSize();
         int GetMaximumRequestArraySize();
         List<OcrLanguage> GetLanguages();

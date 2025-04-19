@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private readonly Color[] _colors;
+        private readonly SKColor[] _colors;
         public bool LoadedOk { get; private set; }
 
         public ManagedBitmap(string fileName)
@@ -26,13 +26,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 Width = buffer[4] << 8 | buffer[5];
                 Height = buffer[6] << 8 | buffer[7];
-                _colors = new Color[Width * Height];
+                _colors = new SKColor[Width * Height];
                 int start = 8;
                 for (int i = 0; i < _colors.Length; i++)
                 {
-                    _colors[i] = Color.FromArgb(buffer[start], buffer[start + 1], buffer[start + 2], buffer[start + 3]);
+                    _colors[i] = new SKColor(buffer[start + 1], buffer[start + 2], buffer[start + 3], buffer[start]);
                     start += 4;
                 }
+                LoadedOk = true;
             }
             catch
             {
@@ -46,23 +47,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             stream.Read(buffer, 0, buffer.Length);
             Width = buffer[4] << 8 | buffer[5];
             Height = buffer[6] << 8 | buffer[7];
-            _colors = new Color[Width * Height];
+            _colors = new SKColor[Width * Height];
             buffer = new byte[Width * Height * 4];
             stream.Read(buffer, 0, buffer.Length);
             int start = 0;
             for (int i = 0; i < _colors.Length; i++)
             {
-                _colors[i] = Color.FromArgb(buffer[start], buffer[start + 1], buffer[start + 2], buffer[start + 3]);
+                _colors[i] = new SKColor(buffer[start + 1], buffer[start + 2], buffer[start + 3], buffer[start]);
                 start += 4;
             }
         }
 
-        public ManagedBitmap(Bitmap oldBitmap)
+        public ManagedBitmap(SKBitmap oldBitmap)
         {
             var nbmp = new NikseBitmap(oldBitmap);
             Width = nbmp.Width;
             Height = nbmp.Height;
-            _colors = new Color[Width * Height];
+            _colors = new SKColor[Width * Height];
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -76,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Width = nbmp.Width;
             Height = nbmp.Height;
-            _colors = new Color[Width * Height];
+            _colors = new SKColor[Width * Height];
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -94,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 outFile.Write(buffer, 0, buffer.Length);
                 WriteInt16(outFile, (short)Width);
                 WriteInt16(outFile, (short)Height);
-                foreach (Color c in _colors)
+                foreach (SKColor c in _colors)
                 {
                     WriteColor(outFile, c);
                 }
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 outFile.Write(buffer, 0, buffer.Length);
                 WriteInt16(outFile, (short)Width);
                 WriteInt16(outFile, (short)Height);
-                foreach (Color c in _colors)
+                foreach (SKColor c in _colors)
                 {
                     WriteColor(outFile, c);
                 }
@@ -131,13 +132,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             stream.Write(buffer, 0, buffer.Length);
         }
 
-        private static void WriteColor(Stream stream, Color c)
+        private static void WriteColor(Stream stream, SKColor c)
         {
             byte[] buffer = new byte[4];
-            buffer[0] = c.A;
-            buffer[1] = c.R;
-            buffer[2] = c.G;
-            buffer[3] = c.B;
+            buffer[0] = c.Alpha;
+            buffer[1] = c.Red;
+            buffer[2] = c.Green;
+            buffer[3] = c.Blue;
             stream.Write(buffer, 0, buffer.Length);
         }
 
@@ -145,15 +146,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Width = width;
             Height = height;
-            _colors = new Color[Width * Height];
+            _colors = new SKColor[Width * Height];
         }
 
-        public Color GetPixel(int x, int y)
+        public SKColor GetPixel(int x, int y)
         {
             return _colors[Width * y + x];
         }
 
-        public void SetPixel(int x, int y, Color c)
+        public void SetPixel(int x, int y, SKColor c)
         {
             _colors[Width * y + x] = c;
         }
@@ -163,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="section">Source rectangle</param>
         /// <returns>Rectangle from current image as new bitmap</returns>
-        public ManagedBitmap GetRectangle(Rectangle section)
+        public ManagedBitmap GetRectangle(SKRectI section)
         {
             var newRectangle = new ManagedBitmap(section.Width, section.Height);
 
@@ -181,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newRectangle;
         }
 
-        public Bitmap ToOldBitmap()
+        public SKBitmap ToSKBitmap()
         {
             var nbmp = new NikseBitmap(Width, Height);
             for (int y = 0; y < Height; y++)
@@ -193,6 +194,5 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             return nbmp.GetBitmap();
         }
-
     }
 }
