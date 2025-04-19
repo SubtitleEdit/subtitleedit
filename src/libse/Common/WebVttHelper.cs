@@ -405,7 +405,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().TrimEnd(' ', ';');
         }
 
-        public static string RemoveColorTag(string input, Color color, List<WebVttStyle> webVttStyles)
+        public static string RemoveColorTag(string input, SKColor color, List<WebVttStyle> webVttStyles)
         {
             if (webVttStyles == null)
             {

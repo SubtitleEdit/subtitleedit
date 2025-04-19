@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         private string _loadFromDirectory;
 
-        public SpectrogramData(int fftSize, int imageWidth, double sampleDuration, IList<Bitmap> images)
+        public SpectrogramData(int fftSize, int imageWidth, double sampleDuration, IList<SKBitmap> images)
         {
             FftSize = fftSize;
             ImageWidth = imageWidth;
@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 ImageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, culture);
                 SampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, culture);
 
-                var images = new List<Bitmap>();
+                var images = new List<SKBitmap>();
                 var fileNames = Enumerable.Range(0, int.MaxValue)
                     .Select(n => Path.Combine(directory, n + ".gif"))
                     .TakeWhile(p => File.Exists(p));
@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // ignore
                 }
             }
-            Images = Array.Empty<Bitmap>();
+            Images = Array.Empty<SKBitmap>();
         }
 
         public static SpectrogramData FromDisk(string spectrogramDirectory)
@@ -877,7 +877,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // generate spectrogram for this chunk
-                Bitmap bmp = drawer.Draw(chunkSamples);
+                SKBitmap bmp = drawer.Draw(chunkSamples);
                 images.Add(bmp);
 
                 // wait for previous image to finish saving
@@ -971,11 +971,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            public Bitmap Draw(double[] samples)
+            public SKBitmap Draw(double[] samples)
             {
                 int width = samples.Length / _nfft;
                 int height = _nfft / 2;
-                var bmp = new FastBitmap(new Bitmap(width, height));
+                var bmp = new FastBitmap(new SKBitmap(width, height));
                 bmp.LockImage();
                 for (int x = 0; x < width; x++)
                 {
@@ -1108,7 +1108,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return Color.FromArgb((int)r, (int)g, (int)b);
             }
 
-            private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+            private static List<SKColor> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
             {
                 while (toR < 255 && toG < 255 && toB < 255)
                 {
@@ -1117,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     toB++;
                 }
 
-                var list = new List<Color>();
+                var list = new List<SKColor>();
                 double r = fromR;
                 double g = fromG;
                 double b = fromB;

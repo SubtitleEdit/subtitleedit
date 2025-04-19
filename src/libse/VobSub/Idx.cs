@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
     public class Idx
     {
         public readonly List<IdxParagraph> IdxParagraphs = new List<IdxParagraph>();
-        public readonly List<Color> Palette = new List<Color>();
+        public readonly List<SKColor> Palette = new List<SKColor>();
         public readonly List<string> Languages = new List<string>();
 
         private static readonly Regex TimeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);

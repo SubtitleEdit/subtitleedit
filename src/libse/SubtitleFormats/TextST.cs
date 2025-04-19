@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public int Cb { get; set; }
             public int T { get; set; }
 
-            public Color Color
+            public SKColor Color
             {
                 get
                 {

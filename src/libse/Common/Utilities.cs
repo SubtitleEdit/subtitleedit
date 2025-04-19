@@ -1128,28 +1128,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             switch (number % 20)
             {
-                case 0: return Color.Red;
-                case 1: return Color.Blue;
-                case 2: return Color.Green;
-                case 3: return Color.DarkCyan;
-                case 4: return Color.DarkGreen;
-                case 5: return Color.DarkBlue;
-                case 6: return Color.DarkTurquoise;
-                case 7: return Color.DarkViolet;
-                case 8: return Color.DeepPink;
-                case 9: return Color.DodgerBlue;
-                case 10: return Color.ForestGreen;
-                case 11: return Color.Fuchsia;
-                case 12: return Color.DarkOrange;
-                case 13: return Color.GreenYellow;
-                case 14: return Color.IndianRed;
-                case 15: return Color.Indigo;
-                case 16: return Color.LawnGreen;
-                case 17: return Color.LightBlue;
-                case 18: return Color.DarkGoldenrod;
-                case 19: return Color.Magenta;
+                case 0: return SKColors.Red;
+                case 1: return SKColors.Blue;
+                case 2: return SKColors.Green;
+                case 3: return SKColors.DarkCyan;
+                case 4: return SKColors.DarkGreen;
+                case 5: return SKColors.DarkBlue;
+                case 6: return SKColors.DarkTurquoise;
+                case 7: return SKColors.DarkViolet;
+                case 8: return SKColors.DeepPink;
+                case 9: return SKColors.DodgerBlue;
+                case 10: return SKColors.ForestGreen;
+                case 11: return SKColors.Fuchsia;
+                case 12: return SKColors.DarkOrange;
+                case 13: return SKColors.GreenYellow;
+                case 14: return SKColors.IndianRed;
+                case 15: return SKColors.Indigo;
+                case 16: return SKColors.LawnGreen;
+                case 17: return SKColors.LightBlue;
+                case 18: return SKColors.DarkGoldenrod;
+                case 19: return SKColors.Magenta;
                 default:
-                    return Color.Black;
+                    return SKColors.Black;
             }
         }
 
@@ -1776,7 +1776,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text.Replace("\"\"", "\"");
         }
 
-        public static Color GetColorFromAssa(string text, Color defaultColor)
+        public static SKColor GetColorFromAssa(string text, SKColor defaultColor)
         {
             var start = text.IndexOf(@"\c", StringComparison.Ordinal);
             if (start < 0)

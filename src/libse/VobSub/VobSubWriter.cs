@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return ms.ToArray();
         }
 
-        public void WriteParagraph(Paragraph p, SKBitmap bmp, BluRayContentAlignment alignment, Point? overridePosition = null) // inspired by code from SubtitleCreator
+        public void WriteParagraph(Paragraph p, SKBitmap bmp, BluRayContentAlignment alignment, SKPoint? overridePosition = null) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
             _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLowerInvariant()}");

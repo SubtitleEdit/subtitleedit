@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1997,7 +1998,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         /// <param name="f">Input string</param>
         /// <param name="defaultColor">Default color</param>
         /// <returns>Input string as color, or default color if problems</returns>
-        public static Color GetSsaColor(string f, Color defaultColor)
+        public static SKColor GetSsaColor(string f, SKColor defaultColor)
         {
             //Red = &H0000FF&
             //Green = &H00FF00&
