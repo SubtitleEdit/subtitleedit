@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -1291,7 +1292,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="s">The string representation of the color.</param>
         /// <returns>A Color object corresponding to the input string. If the string cannot be parsed, the default color is white.</returns
-        public static Color GetColorFromString(string s)
+        public static SKColor GetColorFromString(string s)
         {
             try
             {
@@ -1303,7 +1304,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         .TrimEnd(')')
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(byte.Parse(arr[0]), byte.Parse(arr[1]), byte.Parse(arr[2]));
                 }
 
                 if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
@@ -1323,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
 
-                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(byte.Parse(arr[0]), byte.Parse(arr[1]), byte.Parse(arr[2]), alpha);
                 }
 
                 if (s.Length == 9 && s.StartsWith("#"))
@@ -1342,7 +1343,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch
             {
-                return Color.White;
+                return SKColors.White;
             }
         }
 

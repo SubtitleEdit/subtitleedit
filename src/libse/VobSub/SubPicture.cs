@@ -11,10 +11,12 @@ public class SubPicture
         _data = data;
     }
 
-    public SKBitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors, bool crop)
+    public SKBitmap GenerateBitmap(SKRectI imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<SKColor> fourColors, bool crop)
     {
         if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
+        {
             return new SKBitmap(1, 1);
+        }
 
         var width = imageDisplayArea.Width + 1;
         var height = imageDisplayArea.Height + 1;
@@ -34,7 +36,7 @@ public class SubPicture
         return CropBitmapAndUnlock(fastBmp, bgColor, crop);
     }
 
-    private void GenerateBitmap(byte[] pixelData, FastSkiaBitmap bmp, int field, int imageDataAddress, List<Color> fourColors, int pixelDepth)
+    private void GenerateBitmap(byte[] pixelData, FastSkiaBitmap bmp, int field, int imageDataAddress, List<SKColor> fourColors, int pixelDepth)
     {
         int width = bmp.Width;
         int height = bmp.Height;
@@ -167,9 +169,9 @@ public class SubPicture
 
     private static bool IsBackgroundColor(SKColor c) => c.Alpha < 2;
 
-    private static SKColor ToSKColor(Color color)
+    private static SKColor ToSKColor(SKColor color)
     {
-        return new SKColor(SKColors.R, color.G, color.B, color.A);
+        return new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
     }
 }
 
