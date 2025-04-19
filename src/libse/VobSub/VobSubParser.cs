@@ -15,6 +15,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         private const int PacketizedElementaryStreamMaximumLength = 2028;
 
+        /// <summary>
+        /// Minimum length of a releavent sub packet.
+        /// mpeg header length (14) + pes header length (6) + mpeg2 extension (3) + 1 because we care about the stream id.
+        /// </summary>
+        private static readonly int s_minMpeg2SectionLength = Mpeg2Header.Length + PacketizedElementaryStream.HeaderLength + 3 + 1;
+
         public VobSubParser(bool isPal)
         {
             IsPal = isPal;
@@ -29,6 +35,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             }
         }
 
+
         /// <summary>
         /// Can be used with e.g. MemoryStream or FileStream
         /// </summary>
@@ -37,19 +44,176 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             VobSubPacks = new List<VobSubPack>();
             ms.Position = 0;
-            var buffer = new byte[0x800]; // 2048
             long position = 0;
-            while (position < ms.Length)
+            while (position + s_minMpeg2SectionLength < ms.Length)
             {
+                var header = new byte[4];
                 ms.Seek(position, SeekOrigin.Begin);
-                ms.Read(buffer, 0, 0x0800);
-                if (IsSubtitlePack(buffer))
+                ms.Read(header, 0, header.Length);
+                if (IsMpeg2PackHeader(header))
                 {
-                    VobSubPacks.Add(new VobSubPack(buffer, null));
-                }
+                    if (!IsStartOfMpeg2Pack(ms, position))
+                    {
+                        long newPos = FindNextMpeg2PackHeader(ms, position + 1);
+                        if (newPos > position)
+                        {
+                            position = newPos;
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    // find how much stuffing there is
+                    byte[] mpeg2HeaderBuffer = new byte[Mpeg2Header.Length];
+                    ms.Seek(position, SeekOrigin.Begin);
+                    ms.Read(mpeg2HeaderBuffer, 0, mpeg2HeaderBuffer.Length);
+                    int stuffingBytes = mpeg2HeaderBuffer[13] & 0b111;
+                    ms.Seek(stuffingBytes, SeekOrigin.Current);
 
-                position += 0x800;
+                    // skip stuffing and go to pes packet length
+                    byte[] pesPacketHeaderBuffer = new byte[6];
+                    ms.Read(pesPacketHeaderBuffer, 0, pesPacketHeaderBuffer.Length);
+                    int packetLength = (int)(Helper.GetEndian(pesPacketHeaderBuffer, 4, 2) & 0xffff);
+
+                    // create a new clean buffer without the stuffing.
+                    byte[] cleanBuffer = new byte[mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length + packetLength];
+                    Buffer.BlockCopy(mpeg2HeaderBuffer, 0, cleanBuffer, 0, mpeg2HeaderBuffer.Length);
+                    Buffer.BlockCopy(pesPacketHeaderBuffer, 0, cleanBuffer, mpeg2HeaderBuffer.Length, pesPacketHeaderBuffer.Length);
+                    ms.Read(cleanBuffer, mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length, packetLength);
+                    VobSubPacks.Add(new VobSubPack(cleanBuffer, null));
+                    position += cleanBuffer.Length;
+                }
+                else if (IsProgramEnd(header, 0))
+                {
+                    // end of program, should take exactly 4 bytes
+                    position += 4;
+                }
+                else if (IsPaddingStream(header, 0))
+                {
+                    byte[] pesPacketLengthBuffer = new byte[2];
+                    ms.Read(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
+                    position += PacketizedElementaryStream.HeaderLength + Helper.GetEndian(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
+                }
+                else
+                {
+                    long newPos = FindNextMpeg2PackHeader(ms, position + 1);
+                    if (newPos > position)
+                    {
+                        position = newPos;
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
+        }
+
+
+        private static bool IsStartOfMpeg2Pack(Stream ms, long position)
+        {
+            // we won't be able to do anything if the private stream is empty.
+            if (position + s_minMpeg2SectionLength >= ms.Length)
+            {
+                return false;
+            }
+
+            // fingerprint the mpeg2 header
+            var buffer = new byte[Mpeg2Header.Length];
+            ms.Seek(position, SeekOrigin.Begin);
+            ms.Read(buffer, 0, buffer.Length);
+            if (!IsMpeg2PackHeader(buffer))
+            {
+                return false;
+            }
+
+            if ((buffer[4] & 0b1100_0100) != 0b0100_0100)
+            {
+                return false;
+            }
+            // byte 6 and 8 needs xxxx_x1xx
+            if ((buffer[6] & 0b0000_0100) != 0b0000_0100)
+            {
+                return false;
+            }
+
+            if ((buffer[8] & 0b0000_0100) != 0b0000_0100)
+            {
+                return false;
+            }
+            // byte 9 needs xxxx_xxx1
+            if ((buffer[9] & 0b0000_0001) != 0b0000_0001)
+            {
+                return false;
+            }
+            // byte 12 has a hard req of xxxx_xx11
+            if ((buffer[12] & 0b0000_0011) != 0b0000_0011)
+            {
+                return false;
+            }
+            // mux value can't be 0
+            if (buffer[10] == 0x00 && buffer[11] == 0x00 && buffer[12] == 0x03)
+            {
+                return false;
+            }
+            // there should be at least room for the whole private header (8 bytes) + the stream id byte
+            if (ms.Position + (buffer[13] & 0b111) + 9 >= ms.Length)
+            {
+                return false;
+            }
+
+            // fingerprint the private stream 1
+            var privateStreamBuffer = new byte[9];
+            ms.Seek(buffer[13] & 0b111, SeekOrigin.Current);
+            ms.Read(privateStreamBuffer, 0, privateStreamBuffer.Length);
+            if (!IsPrivateStream1(privateStreamBuffer, 0))
+            {
+                return false;
+            }
+            // byte 6 needs 10xx_xxxx
+            if ((privateStreamBuffer[6] & 0b1100_0000) != 0b1000_0000)
+            {
+                return false;
+            }
+            // check if we have enough data for this packet
+            if (ms.Position - 3 + Helper.GetEndian(privateStreamBuffer, 4, 2) > ms.Length)
+            {
+                return false;
+            }
+            // check if we have enough data for the header data + stream id
+            if (ms.Position + privateStreamBuffer[8] + 1 > ms.Length)
+            {
+                return false;
+            }
+            // check for a valid private stream id.
+            ms.Seek(privateStreamBuffer[8], SeekOrigin.Current);
+            if (!IsSubtileStreamId(ms.ReadByte() & 0xff))
+            {
+                return false;
+            }
+
+            // all good
+            return true;
+        }
+
+
+        private static long FindNextMpeg2PackHeader(Stream ms, long position)
+        {
+            // If it doesn't have the pes start code? Just assume something went really wrong.
+            // scan until we can fingerprint an other mpeg2 packet header.
+            while (position + s_minMpeg2SectionLength < ms.Length)
+            {
+                if (IsStartOfMpeg2Pack(ms, position))
+                {
+                    return position;
+                }
+                position++;
+            }
+
+            return -1;
         }
 
         public void OpenSubIdx(string vobSubFileName, string idxFileName)
@@ -125,6 +289,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             }
                         }
                     }
+
                     return;
                 }
             }
@@ -231,7 +396,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
                         }
                     }
-                     else
+                    else
                     {
                         pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + 3000);
                     }
@@ -259,6 +424,24 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                    buffer[index + 3] == 0xbd; // 0xbd == 189 - MPEG-2 Private stream 1 (non MPEG audio, subpictures)
         }
 
+        public static bool IsPaddingStream(byte[] buffer, int index)
+        {
+            return buffer.Length >= index + 4 &&
+                   buffer[index + 0] == 0 &&
+                   buffer[index + 1] == 0 &&
+                   buffer[index + 2] == 1 &&
+                   buffer[index + 3] == 0xbe; // 0xbd == 190 - padding stream
+        }
+
+        public static bool IsProgramEnd(byte[] buffer, int index)
+        {
+            return buffer.Length >= index + 4 &&
+                   buffer[index + 0] == 0 &&
+                   buffer[index + 1] == 0 &&
+                   buffer[index + 2] == 1 &&
+                   buffer[index + 3] == 0xb9; // 0xbd == 190 - padding stream
+        }
+
         public static bool IsPrivateStream2(byte[] buffer, int index)
         {
             return buffer.Length >= index + 4 &&
@@ -272,14 +455,17 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             if (IsMpeg2PackHeader(buffer) && IsPrivateStream1(buffer, Mpeg2Header.Length))
             {
-                int pesHeaderDataLength = buffer[Mpeg2Header.Length + 8];
-                int streamId = buffer[Mpeg2Header.Length + 8 + 1 + pesHeaderDataLength];
-                if (streamId >= 0x20 && streamId <= 0x3f) // Subtitle IDs allowed (or x3f to x40?)
-                {
-                    return true;
-                }
+                byte pesHeaderDataLength = buffer[Mpeg2Header.Length + 8];
+                byte streamId = buffer[Mpeg2Header.Length + 8 + 1 + pesHeaderDataLength];
+                return IsSubtileStreamId(streamId);
             }
+
             return false;
+        }
+        public static bool IsSubtileStreamId(int streamId)
+        {
+            // Subtitle IDs allowed (or x3f to x40?)
+            return streamId >= 0x20 && streamId <= 0x3f;
         }
 
     }

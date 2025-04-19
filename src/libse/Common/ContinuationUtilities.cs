@@ -954,7 +954,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var input = ExtractParagraphOnly(originalInput);
 
             // Return if empty string
-            if (string.IsNullOrEmpty(originalInput))
+            if (string.IsNullOrEmpty(originalInput) || string.IsNullOrWhiteSpace(input) || input.Length < 2)
             {
                 return false;
             }
