@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -1230,7 +1229,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
-                            color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                            color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
                             color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
@@ -1274,7 +1273,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
-                            color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                            color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
                             color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
@@ -1443,7 +1442,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         color = color.RemoveChar('&').TrimStart('H');
                         color = color.PadLeft(6, '0');
                         // switch to rrggbb from bbggrr
-                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                        color = "#" + color.Remove(SKColors.Length - 6) + color.Substring(SKColors.Length - 2, 2) + color.Substring(SKColors.Length - 4, 2) + color.Substring(SKColors.Length - 6, 2);
                         color = color.ToLowerInvariant();
 
                         extraTags += " color=\"" + color + "\"";
@@ -2065,7 +2064,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
-        public static string GetSsaColorStringForEvent(Color c, string tag = "c")
+        public static string GetSsaColorStringForEvent(SKColor c, string tag = "c")
         {
             if (c.A >= 255)
             {

@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         color = color.Trim('"');
                                         color = color.Trim('\'');
                                         color = color.TrimStart('#');
-                                        if (color.Length == 6)
+                                        if (SKColors.Length == 6)
                                         {
                                             if (s.Contains(Environment.NewLine, StringComparison.Ordinal) && s.Contains("</font>" + Environment.NewLine, StringComparison.OrdinalIgnoreCase))
                                             {

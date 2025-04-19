@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return i;
         }
 
-        public Color GetColor()
+        public SKColor GetColor()
         {
             double y, cr, cb;
             if (FullRangeFlag)
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 t = 0;
             }
 
-            return Color.FromArgb(t, r, g, b);
+            return new SKColor((byte)r, (byte)g, (byte)b, (byte)t);
         }
     }
 

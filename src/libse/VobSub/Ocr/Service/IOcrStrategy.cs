@@ -1,6 +1,5 @@
 ﻿using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
 {

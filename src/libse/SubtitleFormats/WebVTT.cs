@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -904,7 +903,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var colorName = match.Value.Substring(13, match.Value.Length - 15);
                     var color = Color.FromName(colorName);
-                    if (color.IsKnownColor)
+                    if (SKColors.IsKnownColor)
                     {
                         var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
                         var fontString = "<c" + tag + ">";

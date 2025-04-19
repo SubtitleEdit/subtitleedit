@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -15,9 +15,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         public double TotalLength => Lines.Sum(p => p.Length);
         public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
 
-        private static Graphics Graphics;
-        private static readonly Font DefaultFont = SystemFonts.DefaultFont;
-        private static readonly object GdiLock = new object();
+        private static readonly SKFont Font = new SKFont
+        {
+            Size = 12f // Adjust this size to match your original DefaultFont size
+        };
+
+        private static readonly SKPaint Paint = new SKPaint
+        {
+            IsAntialias = false
+        };
 
         private static float GetWidth(string text)
         {
@@ -26,21 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text.Length * 5;
             }
 
-            lock (GdiLock)
-            {
-                try
-                {
-                    if (Graphics == null)
-                    {
-                        Graphics = Graphics.FromHwnd(IntPtr.Zero);
-                    }
-                    return Graphics.MeasureString(text, DefaultFont).Width;
-                }
-                catch
-                {
-                    return text.Length * 5;
-                }
-            }
+            return Font.MeasureText(text, Paint);
         }
 
         public TextSplitResult(List<string> lines)

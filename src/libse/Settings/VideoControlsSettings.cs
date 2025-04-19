@@ -1,4 +1,4 @@
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -29,13 +29,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int WaveformShotChangeEndTimeBeforeMs { get; set; }
         public int WaveformShotChangeEndTimeAfterMs { get; set; }
         public int WaveformBorderHitMs { get; set; }
-        public Color WaveformGridColor { get; set; }
-        public Color WaveformColor { get; set; }
-        public Color WaveformSelectedColor { get; set; }
-        public Color WaveformBackgroundColor { get; set; }
-        public Color WaveformTextColor { get; set; }
-        public Color WaveformCursorColor { get; set; }
-        public Color WaveformChaptersColor { get; set; }
+        public SKColor WaveformGridColor { get; set; }
+        public SKColor WaveformColor { get; set; }
+        public SKColor WaveformSelectedColor { get; set; }
+        public SKColor WaveformBackgroundColor { get; set; }
+        public SKColor WaveformTextColor { get; set; }
+        public SKColor WaveformCursorColor { get; set; }
+        public SKColor WaveformChaptersColor { get; set; }
         public int WaveformTextSize { get; set; }
         public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }

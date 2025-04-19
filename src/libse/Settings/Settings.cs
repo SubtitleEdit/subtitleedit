@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -10006,7 +10006,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             }
         }
 
-        public static string ToHtml(Color c)
+        public static string ToHtml(SKColor c)
         {
             return Utilities.ColorToHexWithTransparency(c);
         }

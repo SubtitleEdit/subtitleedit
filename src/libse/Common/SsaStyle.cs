@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Drawing;
+using SkiaSharp;
 using System.Globalization;
 using System.Text;
 
@@ -14,11 +14,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool Bold { get; set; }
         public bool Underline { get; set; }
         public bool Strikeout { get; set; }
-        public Color Primary { get; set; }
-        public Color Secondary { get; set; }
-        public Color Tertiary { get; set; }
-        public Color Outline { get; set; }
-        public Color Background { get; set; }
+        public SKColor Primary { get; set; }
+        public SKColor Secondary { get; set; }
+        public SKColor Tertiary { get; set; }
+        public SKColor Outline { get; set; }
+        public SKColor Background { get; set; }
         public decimal ShadowWidth { get; set; }
         public decimal OutlineWidth { get; set; }
         public string Alignment { get; set; }
@@ -40,10 +40,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             Name = "Default";
             FontName = "Arial";
             FontSize = 20m;
-            Primary = Color.White;
-            Secondary = Color.Yellow;
-            Outline = Color.Black;
-            Background = Color.Black;
+            Primary = SKColors.White;
+            Secondary = SKColors.Yellow;
+            Outline = SKColors.Black;
+            Background = SKColors.Black;
             Alignment = "2";
             OutlineWidth = 1M;
             ShadowWidth = 1M;

@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.VobSub;
 using SkiaSharp;
@@ -919,14 +917,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return duration;
         }
 
-        public static string ColorToHex(Color c)
+        public static string ColorToHex(SKColor c)
         {
-            return $"#{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.Red:x2}{c.Green:x2}{c.Blue:x2}";
         }
 
-        public static string ColorToHexWithTransparency(Color c)
+        public static string ColorToHexWithTransparency(SKColor c)
         {
-            return $"#{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}";
+            return $"#{c.Red:x2}{c.Green:x2}{c.Blue:x2}{c.Alpha:x2}";
         }
 
         public static int GetMaxLineLength(string text)
@@ -1114,11 +1112,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
-        public static Color GetColorFromUserName(string userName)
+        public static SKColor GetColorFromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
             {
-                return Color.Pink;
+                return SKColors.Pink;
             }
 
             byte[] buffer = Encoding.UTF8.GetBytes(userName);
@@ -1911,7 +1909,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     s = s.Substring(1, 6);
                     var color = SKColor.Parse("#" + s);
-                    return new SKColor(color.Red, color.Green, color.Blue, (byte)alpha);
+                    return new SKColor(SKColors.Red, color.Green, color.Blue, (byte)alpha);
                 }
                 return SKColor.Parse(s);
             }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             webVttStyle.Color = color;
         }
 
-        private static Color? GetColorFromString(string s)
+        private static SKColor? GetColorFromString(string s)
         {
             try
             {

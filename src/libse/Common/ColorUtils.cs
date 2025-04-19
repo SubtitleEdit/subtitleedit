@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return (byte)Math.Round(baseColor  + percentage * (targetColor - baseColor));
         }
         
-        public static double Luminance(this Color color) => (color.R * 0.299 + color.G * 0.587 + color.B * 0.114) / 255;
+        public static double Luminance(this Color color) => (SKColors.R * 0.299 + color.G * 0.587 + color.B * 0.114) / 255;
         
         public static Color OpposingLuminanceColor(this Color baseColor)
         {

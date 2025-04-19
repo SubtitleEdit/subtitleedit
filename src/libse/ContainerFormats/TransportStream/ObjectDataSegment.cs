@@ -1,6 +1,7 @@
 ﻿using System;
 using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public int NumberOfCodes { get; set; }
 
         public List<string> FirstDataTypes = new List<string>();
-        public Bitmap Image { get; set; }
+        public SKBitmap Image { get; set; }
         private FastBitmap _fastImage;
 
         public static int PixelDecoding2Bit => 0x10;
@@ -61,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 if (length + index + 7 > buffer.Length) // check if buffer is large enough
                 {
-                    Image = new Bitmap(1, 1);
+                    Image = new SKBitmap(1, 1);
                     return;
                 }
 
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     y = 500;
                 }
 
-                Image = new Bitmap(Math.Max(1, width), y + 1);
+                Image = new SKBitmap(Math.Max(1, width), y + 1);
                 _fastImage = new FastBitmap(Image);
                 _fastImage.LockImage();
 
@@ -119,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
             else if (ObjectCodingMethod == 1)
             {
-                Image = new Bitmap(1, 1);
+                Image = new SKBitmap(1, 1);
                 NumberOfCodes = buffer[index + 3];
             }
         }
@@ -461,7 +462,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         private void DrawPixels(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y)
         {
-            var c = Color.Red;
+            var c = SKColors.Red;
             if (cds != null)
             {
                 foreach (var item in cds.Entries)
@@ -487,7 +488,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         private Position GetFirstPixelPosition(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y, int width, int height)
         {
-            var c = Color.Red;
+            var c = SKColors.Red;
             if (cds != null)
             {
                 foreach (var item in cds.Entries)

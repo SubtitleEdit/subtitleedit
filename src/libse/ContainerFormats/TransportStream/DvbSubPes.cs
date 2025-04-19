@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
@@ -389,14 +389,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return null; // TODO: Return default clut
         }
 
-        public Point GetImagePosition(ObjectDataSegment ods)
+        public SKPoint GetImagePosition(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
             {
                 ParseSegments();
             }
 
-            var p = new Point(0, 0);
+            var p = new SKPoint(0, 0);
 
             foreach (var rcs in RegionCompositions)
             {

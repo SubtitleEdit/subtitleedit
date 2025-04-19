@@ -1,8 +1,6 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Core.CDG
 {

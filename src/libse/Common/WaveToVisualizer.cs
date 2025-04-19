@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public double SampleDuration { get; private set; }
 
-        public IList<Bitmap> Images { get; private set; }
+        public IList<SKBitmap> Images { get; private set; }
 
         public bool IsLoaded
         {
@@ -1127,7 +1127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 for (int i = 0; i < count; i++)
                 {
-                    list.Add(Color.FromArgb((int)r, (int)g, (int)b));
+                    list.Add(SKColors.FromArgb((int)r, (int)g, (int)b));
                     r += diffR;
                     g += diffG;
                     b += diffB;

@@ -1,7 +1,6 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 public class SubPicture
 {
@@ -170,7 +169,7 @@ public class SubPicture
 
     private static SKColor ToSKColor(Color color)
     {
-        return new SKColor(color.R, color.G, color.B, color.A);
+        return new SKColor(SKColors.R, color.G, color.B, color.A);
     }
 }
 

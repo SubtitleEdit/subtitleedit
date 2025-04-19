@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -343,7 +342,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int g = (int)Math.Min(Math.Max(Math.Round(1.1644F * y - 0.813F * cr - 0.391F * cb), 0), 255);
                     int b = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 2.018F * cb), 0), 255);
 
-                    programChain.ColorLookupTable.Add(Color.FromArgb(r, g, b));
+                    programChain.ColorLookupTable.Add(SKColors.FromArgb(r, g, b));
                 }
 
                 //Parse Program Map

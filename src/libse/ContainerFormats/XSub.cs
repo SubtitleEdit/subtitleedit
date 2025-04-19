@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
-        private static void GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
+        private static void GenerateBitmap(FastBitmap bmp, byte[] buf, List<SKColor> fourColors)
         {
             int w = bmp.Width;
             int h = bmp.Height;
@@ -97,17 +97,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             return (buf[nibbleOffset >> 1] >> ((1 - (nibbleOffset & 1)) << 2)) & 0xf;
         }
 
-        public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
+        public SKBitmap GetImage(SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
         {
-            var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
-            var bmp = new Bitmap(Width, Height);
-            if (fourColors[0] != Color.Transparent)
+            var fourColors = new List<SKColor> { background, pattern, emphasis1, emphasis2 };
+            var bmp = new SKBitmap(Width, Height);
+
+            // If background isn't transparent, fill the bitmap with it
+            if (fourColors[0].Alpha != 0)
             {
-                using (var gr = Graphics.FromImage(bmp))
+                using (var canvas = new SKCanvas(bmp))
                 {
-                    gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    using (var paint = new SKPaint { Color = fourColors[0] })
+                    {
+                        canvas.DrawRect(0, 0, bmp.Width, bmp.Height, paint);
+                    }
                 }
             }
+
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
             GenerateBitmap(fastBmp, _rleBuffer, fourColors);
@@ -115,14 +121,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             return bmp;
         }
 
-        private Color GetColor(int start)
+        private SKColor GetColor(int start)
         {
-            return Color.FromArgb(_colorBuffer[start], _colorBuffer[start + 1], _colorBuffer[start + 2]);
+            return new SKColor(_colorBuffer[start], _colorBuffer[start + 1], _colorBuffer[start + 2]);
         }
 
-        public Bitmap GetImage()
+        public SKBitmap GetImage()
         {
-            return GetImage(Color.Transparent, GetColor(3), GetColor(6), GetColor(9));
+            return GetImage(SKColors.Transparent, GetColor(3), GetColor(6), GetColor(9));
         }
     }
 }

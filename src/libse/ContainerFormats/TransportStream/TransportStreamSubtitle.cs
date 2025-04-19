@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// Gets full image if 'ActiveImageIndex' not set, otherwise only gets image by index
         /// </summary>
         /// <returns></returns>
-        public Bitmap GetBitmap()
+        public SKBitmap GetBitmap()
         {
             if (_bdSup != null)
             {
