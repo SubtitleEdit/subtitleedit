@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             // Win32 color format is 0x00BBGGRR (BGR, no alpha)
             var number = (color.Blue << 16) | (color.Green << 8) | color.Red;
-            return number.ToString(CultureInfo.InvariantCulture);   
+            return number.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

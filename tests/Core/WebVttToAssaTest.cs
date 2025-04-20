@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Tests.Core
 {
-    
     public class WebVttToAssaTest
     {
         [Fact]

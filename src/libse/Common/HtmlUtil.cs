@@ -660,7 +660,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len - 1;
-            
+
             // no formattable text in between
             if (fromLenIdx < index)
             {
@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var line = lines[i];
                     var italicIndex = line.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    
+
                     // no italic in current 'i' line, try next
                     if (italicIndex < 0)
                     {
@@ -857,7 +857,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return lastClosingTagIndex > italicIndex ? lastClosingTagIndex : len;
                     }
                 }
-                
+
                 // reconstruct the text from lines
                 text = string.Join(Environment.NewLine, lines);
             }
@@ -964,9 +964,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (idx > 1)
                         {
                             var pre = text.Substring(0, idx + 1).TrimStart();
-                            var tempText = text.Remove(0, idx + 1); 
-                            
-                            if (!tempText.StartsWith(']') && 
+                            var tempText = text.Remove(0, idx + 1);
+
+                            if (!tempText.StartsWith(']') &&
                                 !tempText.StartsWith(')') &&
                                 !tempText.StartsWith(Environment.NewLine) &&
                                 !tempText.StartsWith("</i>" + Environment.NewLine))
@@ -1531,9 +1531,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             switch (tag)
             {
-                case "<i>" : return "</i>";
-                case "<b>" : return "</b>";
-                case "<u>" : return "</u>";
+                case "<i>": return "</i>";
+                case "<b>": return "</b>";
+                case "<u>": return "</u>";
             }
             return tag.StartsWith("<font ", StringComparison.Ordinal) ? "</font>" : string.Empty;
         }

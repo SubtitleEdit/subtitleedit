@@ -4,7 +4,6 @@ using System.Text;
 
 namespace Tests.Logic.BluRaySup
 {
-    
     public class BluRaySupParserTest
     {
         [Fact]
@@ -48,6 +47,5 @@ namespace Tests.Logic.BluRaySup
                 Assert.Equal(911, bmp.Height);
             }
         }
-
     }
 }
