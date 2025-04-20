@@ -7,7 +7,7 @@ namespace Tests.Core
     {
         private static string GetLanguageCode(string fileName)
         {
-            fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+            fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
             var sub = new Subtitle();
             sub.LoadSubtitle(fileName, out _, null);
             return LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
@@ -31,7 +31,7 @@ namespace Tests.Core
 
         private static Encoding DetectAnsiEncoding(string fileName)
         {
-            fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+            fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
             return LanguageAutoDetect.DetectAnsiEncoding(FileUtil.ReadAllBytesShared(fileName));
         }
 

@@ -7,7 +7,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestValid()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_SRT.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 Assert.True(parser.IsValid);
@@ -17,7 +17,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestInvalid()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_graphics.ts");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_TS_with_graphics.ts");
             using (var parser = new MatroskaFile(fileName))
             {
                 Assert.False(parser.IsValid);
@@ -27,7 +27,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestIsSrt()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_SRT.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 var tracks = parser.GetTracks(true);
@@ -38,7 +38,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestSrtContent()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_SRT.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 var tracks = parser.GetTracks(true);
@@ -52,7 +52,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestVobSubPgs()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_VobSub_PGS.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 var tracks = parser.GetTracks(true);
@@ -64,7 +64,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestVobSubPgsContent()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_VobSub_PGS.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 var tracks = parser.GetTracks(true);
@@ -81,7 +81,7 @@ namespace Tests.Logic.VideoFormats
         [Fact]
         public void MatroskaTestDelayed500Ms()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_delayed.mkv");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_delayed.mkv");
             using (var parser = new MatroskaFile(fileName))
             {
                 var delay = parser.GetTrackStartTime(parser.GetTracks()[0].TrackNumber);

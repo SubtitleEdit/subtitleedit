@@ -7,7 +7,7 @@ namespace Tests.Logic.TransportStream
         [Fact]
         public void TransportStreamTestImage()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_graphics.ts");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_TS_with_graphics.ts");
             var parser = new TransportStreamParser();
             parser.Parse(fileName, null);
             var subtitles = parser.GetDvbSubtitles(41);
@@ -23,7 +23,7 @@ namespace Tests.Logic.TransportStream
         [Fact]
         public void TransportStreamTestTeletext()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_teletext.ts");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_TS_with_teletext.ts");
             var parser = new TransportStreamParser();
             parser.Parse(fileName, null);
             Assert.Single(parser.TeletextSubtitlesLookup);

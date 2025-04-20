@@ -26,6 +26,5 @@ namespace Tests.Logic.VobSub
 
             Assert.Equal(2, list.Count);
         }
-
     }
 }

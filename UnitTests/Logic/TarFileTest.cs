@@ -8,7 +8,7 @@ namespace Tests.Logic
         [Fact]
         public void TarFileReadTest()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample.tar");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample.tar");
             using (var tr = new TarReader(fileName))
             {
                 Assert.True(tr.Files.Count(p => p.FileSizeInBytes > 0) == 13);

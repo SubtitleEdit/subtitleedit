@@ -9,7 +9,7 @@ namespace Tests.Logic.Mp4
         [Fact]
         public void Mp4TestFile1()
         {
-            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MP4.mp4");
+            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MP4.mp4");
             var parser = new MP4Parser(fileName);
 
             var tracks = parser.GetSubtitleTracks();
@@ -38,7 +38,7 @@ namespace Tests.Logic.Mp4
         [Fact]
         public void Mp4TestFile2()
         {
-            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MP4_SRT.mp4");
+            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MP4_SRT.mp4");
             var parser = new MP4Parser(fileName);
 
             var tracks = parser.GetSubtitleTracks();

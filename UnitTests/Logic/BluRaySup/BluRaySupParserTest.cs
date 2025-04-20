@@ -37,7 +37,7 @@ namespace Tests.Logic.BluRaySup
         [Fact]
         public void BluRaySupReadMultiImagePic()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_BDSUP_multi_image.sup");
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_BDSUP_multi_image.sup");
             var log = new StringBuilder();
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
             Assert.Equal(2, subtitles.Count);
