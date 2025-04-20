@@ -17,7 +17,11 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
             for (var en = StringInfo.GetTextElementEnumerator(s); en.MoveNext();)
             {
                 var element = en.GetTextElement();
-                if (element.Length == 1)
+                if (element == "\r\n")
+                { 
+                    // skip
+                }
+                else if (element.Length == 1)
                 {
                     var ch = element[0];
                     if (!char.IsControl(ch) &&
