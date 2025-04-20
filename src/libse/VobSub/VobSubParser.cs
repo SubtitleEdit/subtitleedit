@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     Buffer.BlockCopy(mpeg2HeaderBuffer, 0, cleanBuffer, 0, mpeg2HeaderBuffer.Length);
                     Buffer.BlockCopy(pesPacketHeaderBuffer, 0, cleanBuffer, mpeg2HeaderBuffer.Length, pesPacketHeaderBuffer.Length);
                     ms.Read(cleanBuffer, mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length, packetLength);
+                    // since we are cutting out the mpeg header stuffing bytes
+                    // update the cleaned data to say we don't have any.
+                    cleanBuffer[13] = (byte)(cleanBuffer[13] & 0b1111_1000);
                     VobSubPacks.Add(new VobSubPack(cleanBuffer, null));
                     position += cleanBuffer.Length;
                 }
