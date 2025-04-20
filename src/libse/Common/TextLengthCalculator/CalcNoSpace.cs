@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
-    public  class CalcNoSpace : ICalcLength
+    public class CalcNoSpace : ICalcLength
     {
         /// <summary>
         /// Calculate all text excluding space (tags are not counted).
@@ -17,11 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
             for (var en = StringInfo.GetTextElementEnumerator(s); en.MoveNext();)
             {
                 var element = en.GetTextElement();
-                if (element == "\r\n")
-                { 
-                    // skip
-                }
-                else if (element.Length == 1)
+                if (element.Length == 1)
                 {
                     var ch = element[0];
                     if (!char.IsControl(ch) &&
@@ -41,7 +37,10 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 }
                 else
                 {
-                    length++;
+                    if (element != "\r\n")
+                    {
+                        length++;
+                    }
                 }
             }
 

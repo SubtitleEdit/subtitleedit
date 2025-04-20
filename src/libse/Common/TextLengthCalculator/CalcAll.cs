@@ -36,7 +36,10 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 }
                 else
                 {
-                    length++;
+                    if (element != "\r\n")
+                    {
+                        length++;
+                    }
                 }
             }
 
