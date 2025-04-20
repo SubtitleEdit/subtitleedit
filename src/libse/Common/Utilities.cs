@@ -1927,7 +1927,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static SKColor FromHtml(string htmlColor)
         {
-            return SKColor.Parse(htmlColor);
+            return ColorTranslator.FromHtml(htmlColor);
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
