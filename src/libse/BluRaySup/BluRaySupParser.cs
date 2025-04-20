@@ -26,6 +26,7 @@ using System.IO;
 using System;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using System.Linq;
+using System.Drawing;
 
 public class BluRayPoint
 {
@@ -53,11 +54,15 @@ public class BluRayRectangle
         Size = size;
     }
 
-    internal static BluRayRectangle Union(BluRayRectangle r, BluRayRectangle ioRect)
+    internal static BluRayRectangle Union(BluRayRectangle a, BluRayRectangle b)
     {
-        return new BluRayRectangle(
-            new BluRayPoint(Math.Min(r.Location.X, ioRect.Location.X), Math.Min(r.Location.Y, ioRect.Location.Y)),
-            new SKSizeI(Math.Max(r.Location.X + r.Size.Width, ioRect.Location.X + ioRect.Size.Width), Math.Max(r.Location.Y + r.Size.Height, ioRect.Location.Y + ioRect.Size.Height)));
+        var x = Math.Min(a.Location.X, b.Location.X);
+        var width = Math.Max(a.Location.X + a.Size.Width, b.Location.X + b.Size.Width) -x;
+
+        var y = Math.Min(a.Location.Y, b.Location.Y);
+        var height = Math.Max(a.Location.Y + a.Size.Height, b.Location.Y + b.Size.Height) - y;
+
+        return new BluRayRectangle(new BluRayPoint(x, y), new SKSizeI(width, height));
     }
 }
 
