@@ -63,6 +63,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new SKColor((byte)red, (byte)green, (byte)blue);
         }
 
+        public static SKColor FromArgb(int alpha, int red, int green, int blue)
+        {
+            return new SKColor((byte)red, (byte)green, (byte)blue, (byte)alpha);
+        }
+
         public static SKColor FromArgb(int number)
         {
             return new SKColor((uint)number);

@@ -1,11 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace Tests.Logic
 {
-    [TestClass]
+    
     public class ContinuationUtilitiesTest
     {
         [Fact]
@@ -14,7 +12,7 @@ namespace Tests.Logic
             string line1 = @"{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "This is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -23,7 +21,7 @@ namespace Tests.Logic
             string line1 = "<font color=\"#000000\"><i>Just testin'</i></font>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "Just testin'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -32,7 +30,7 @@ namespace Tests.Logic
             string line1 = "<font color=\"#000000\"><i>But this is an ending quote.'</i></font>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "But this is an ending quote.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -41,7 +39,7 @@ namespace Tests.Logic
             string line1 = "'s Avonds gaat de zon onder.'";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "'s Avonds gaat de zon onder.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -50,7 +48,7 @@ namespace Tests.Logic
             string line1 = "MAN IN BACKGROUND: this is a test: like this.";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "this is a test: like this.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -59,7 +57,7 @@ namespace Tests.Logic
             string line1 = "Unit tests: used to test code.";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "Unit tests: used to test code.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -68,7 +66,7 @@ namespace Tests.Logic
             string line1 = ">> ...this is a test.";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "...this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -77,7 +75,7 @@ namespace Tests.Logic
             string line1 = "for example: ...this is a test.";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "for example: ...this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -86,7 +84,7 @@ namespace Tests.Logic
             string line1 = "- ...this is a test." + Environment.NewLine + "<i>- Another test...</i>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "...this is a test." + Environment.NewLine + "- Another test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -95,7 +93,7 @@ namespace Tests.Logic
             string line1 = "- this is a test." + Environment.NewLine + "<i>- Another test -</i>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "- this is a test." + Environment.NewLine + "- Another test -";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -104,7 +102,7 @@ namespace Tests.Logic
             string line1 = "";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -113,7 +111,7 @@ namespace Tests.Logic
             string line1 = "<i></i>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -123,7 +121,7 @@ namespace Tests.Logic
             Configuration.Settings.General.FixContinuationStyleIgnoreLyrics = false;
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "la la la";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -132,7 +130,7 @@ namespace Tests.Logic
             string line1 = "<i>end of the song ♪</i>";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "end of the song";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -141,7 +139,7 @@ namespace Tests.Logic
             string line1 = "(TEST)";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -150,7 +148,7 @@ namespace Tests.Logic
             string line1 = "(TEST " + Environment.NewLine + " TEST)";
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -159,7 +157,7 @@ namespace Tests.Logic
             string line1 = @"{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
             string line1Actual = ContinuationUtilities.ExtractParagraphOnly(line1);
             string line1Expected = "<i>'This is a test.'</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -168,7 +166,7 @@ namespace Tests.Logic
             string line1 = "Mark and Fred. Mark is the strongest.";
             string line1Actual = ContinuationUtilities.ReplaceFirstOccurrence(line1, "Mark", "...Mark");
             string line1Expected = "...Mark and Fred. Mark is the strongest.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -177,7 +175,7 @@ namespace Tests.Logic
             string line1 = "Mark and Fred. Mark is the strongest.";
             string line1Actual = ContinuationUtilities.ReplaceFirstOccurrence(line1, "John", "...John");
             string line1Expected = "Mark and Fred. Mark is the strongest.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -186,7 +184,7 @@ namespace Tests.Logic
             string line1 = "You ask who's the strongest. Mark is the strongest";
             string line1Actual = ContinuationUtilities.ReplaceLastOccurrence(line1, "strongest", "strongest...");
             string line1Expected = "You ask who's the strongest. Mark is the strongest...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -195,7 +193,7 @@ namespace Tests.Logic
             string line1 = "You ask who's the strongest. Mark is the strongest";
             string line1Actual = ContinuationUtilities.ReplaceLastOccurrence(line1, "tallest", "tallest...");
             string line1Expected = "You ask who's the strongest. Mark is the strongest";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -204,7 +202,7 @@ namespace Tests.Logic
             string line1 = "This is a test.";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -213,7 +211,7 @@ namespace Tests.Logic
             string line1 = "This is a test:";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -231,7 +229,7 @@ namespace Tests.Logic
             string line1 = "";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -240,7 +238,7 @@ namespace Tests.Logic
             string line1 = " ";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -249,7 +247,7 @@ namespace Tests.Logic
             string line1 = "...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -258,7 +256,7 @@ namespace Tests.Logic
             string line1 = "<i>...</i>";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -268,7 +266,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -278,7 +276,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.NoneLeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a test,";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -288,7 +286,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.NoneLeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, true);
             string line1Expected = "This is a test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -298,7 +296,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = @"{\an8}<i>This is a test...</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -308,7 +306,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>- What is this?</i>" + Environment.NewLine + "<i>- This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -318,7 +316,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>- What is this?" + Environment.NewLine + "- This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -328,7 +326,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>- What are you doing?" + Environment.NewLine + "- I'm just testin'...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -338,7 +336,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "- What is this?" + Environment.NewLine + "- This is a <b>test</b>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -348,7 +346,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -358,7 +356,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -368,7 +366,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "We just vibin' here you know...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -378,7 +376,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "'We just vibin' here you know...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -388,7 +386,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "'We just vibin' here you know...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -398,7 +396,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "test in...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -408,7 +406,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "in...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -418,7 +416,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "- Hello." + Environment.NewLine + "- This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -428,7 +426,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "- Hello." + Environment.NewLine + "- <i>This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -438,7 +436,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>- Hello." + Environment.NewLine + "- This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -448,7 +446,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -458,7 +456,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -468,7 +466,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -478,7 +476,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -488,7 +486,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         /*[Fact]
@@ -498,7 +496,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -508,7 +506,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         [Fact]
@@ -518,7 +516,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "- Hello." + Environment.NewLine + "- This is a <i>test</i>...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -528,7 +526,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "- Hello." + Environment.NewLine + "- <i>This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -538,7 +536,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "<i>- Hello." + Environment.NewLine + "- This is a test...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -548,7 +546,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -558,7 +556,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = " ";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -568,7 +566,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -578,7 +576,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -588,7 +586,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "妈...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -598,7 +596,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "...test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -608,7 +606,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "...test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -618,7 +616,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -628,7 +626,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -638,7 +636,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         /*[Fact]
@@ -648,7 +646,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -658,7 +656,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         [Fact]
@@ -668,7 +666,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "'This is a test...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -678,7 +676,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "'This is a test...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -688,7 +686,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "'This is a test...'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         /*[Fact]
@@ -698,7 +696,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "What are you <i>do</i>ing...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         [Fact]
@@ -708,7 +706,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "...this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -718,7 +716,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.NoneLeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -728,7 +726,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.NoneLeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -738,7 +736,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = @"{\an8}<i>...this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -748,7 +746,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "<i>- ...this is a test." + Environment.NewLine + "-A what do you say?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -758,7 +756,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "<i>- this is a test." + Environment.NewLine + "-A what do you say?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -768,7 +766,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "- ...<b>this</b> is a test." + Environment.NewLine + "-A what do you say?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -778,7 +776,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "- <b>this</b> is a test." + Environment.NewLine + "-A what do you say?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -788,7 +786,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "<i>...this is a test.</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -798,7 +796,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...<i>this</i> is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -808,7 +806,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "- <i>...this is a test.</i>" + Environment.NewLine + "- Okay.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -818,7 +816,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "- ...<i>this</i> is a test." + Environment.NewLine + "- Okay.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -828,7 +826,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -838,7 +836,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = " ";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -848,7 +846,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...象";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -858,7 +856,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -868,7 +866,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -878,7 +876,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "<i>...</i>";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -888,7 +886,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...test...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -898,7 +896,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "...'this' is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -908,7 +906,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "...'this' is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         /*[Fact]
@@ -918,7 +916,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "...'this' is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         [Fact]
@@ -928,7 +926,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "'...this is a test'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -938,7 +936,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
             string line1Expected = "'...this is a test'";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         /*[Fact]
@@ -948,7 +946,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...<i>do</i>ing is what I meant.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         /*[Fact]
@@ -958,7 +956,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "MAN: ...<i>do</i>ing is what I meant.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }*/
 
         [Fact]
@@ -968,7 +966,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile, new List<string> { "," }, false);
             string line1Expected = "<i>This is a test</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -978,7 +976,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "<i>This is a test</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -988,7 +986,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "This is a test";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -998,7 +996,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "<i>This is a <b>test</b></i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1008,7 +1006,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "<i>This is a <b>test</b></i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1018,7 +1016,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "<i>This is a test</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1028,7 +1026,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1038,7 +1036,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = " ";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1048,7 +1046,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1058,7 +1056,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "<i>this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1068,7 +1066,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "this is a test.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1078,7 +1076,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "<i><b>this</b> is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1088,7 +1086,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "<i><b>this</b> is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1098,7 +1096,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "and this is the end.";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1108,7 +1106,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "- and this is the end." + Environment.NewLine + "- Really?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1118,7 +1116,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "- and this is the end." + Environment.NewLine + "- Really?";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1128,7 +1126,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1138,7 +1136,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = " ";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1148,7 +1146,7 @@ namespace Tests.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
             string line1Expected = "...";
-            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.Equal(line1Expected, line1Actual);
         }
 
         [Fact]
@@ -1164,7 +1162,7 @@ namespace Tests.Logic
         {
             string line1 = "but this is not a new sentence.";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1188,7 +1186,7 @@ namespace Tests.Logic
         {
             string line1 = "'s avonds gaat de zon onder.";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1204,7 +1202,7 @@ namespace Tests.Logic
         {
             string line1 = "¿habla Español?";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1212,7 +1210,7 @@ namespace Tests.Logic
         {
             string line1 = "";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1220,7 +1218,7 @@ namespace Tests.Logic
         {
             string line1 = " ";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1260,7 +1258,7 @@ namespace Tests.Logic
         {
             string line1 = "This is not the end:";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1268,7 +1266,7 @@ namespace Tests.Logic
         {
             string line1 = "This is not the end...";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1276,7 +1274,7 @@ namespace Tests.Logic
         {
             string line1 = "This is not the end,";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1292,7 +1290,7 @@ namespace Tests.Logic
         {
             string line1 = "This is not the end;";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1308,7 +1306,7 @@ namespace Tests.Logic
         {
             string line1 = "";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1316,7 +1314,7 @@ namespace Tests.Logic
         {
             string line1 = " ";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1324,7 +1322,7 @@ namespace Tests.Logic
         {
             string line1 = "Hey...";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1332,7 +1330,7 @@ namespace Tests.Logic
         {
             string line1 = "...";
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1377,7 +1375,7 @@ namespace Tests.Logic
             string line1 = "This ends with something,";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1386,7 +1384,7 @@ namespace Tests.Logic
             string line1 = "This ends with something..";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1395,7 +1393,7 @@ namespace Tests.Logic
             string line1 = "This ends with something--";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1404,7 +1402,7 @@ namespace Tests.Logic
             string line1 = "This ends with something --";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1413,7 +1411,7 @@ namespace Tests.Logic
             string line1 = "This ends with something:";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1422,7 +1420,7 @@ namespace Tests.Logic
             string line1 = "This ends with something;";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1431,7 +1429,7 @@ namespace Tests.Logic
             string line1 = "Ψάξατε πραγματικά αυτό;";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1440,7 +1438,7 @@ namespace Tests.Logic
             string line1 = "This ends with something?";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1449,7 +1447,7 @@ namespace Tests.Logic
             string line1 = "This ends with something...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1458,7 +1456,7 @@ namespace Tests.Logic
             string line1 = "...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1474,7 +1472,7 @@ namespace Tests.Logic
         {
             string line1 = "This is not. NO, it's NOT! SHUT UP!";
             bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1498,7 +1496,7 @@ namespace Tests.Logic
         {
             string line1 = "";
             bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1506,7 +1504,7 @@ namespace Tests.Logic
         {
             string line1 = " ";
             bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1522,7 +1520,7 @@ namespace Tests.Logic
         {
             string line1 = "<i>This</i> is italic.";
             bool line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1530,7 +1528,7 @@ namespace Tests.Logic
         {
             string line1 = "<i>This is italic." + Environment.NewLine + "- Really?</i> Just stop it.";
             bool line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1562,7 +1560,7 @@ namespace Tests.Logic
         {
             string line1 = "<i>This is italic.</i> <i>This too.</i>";
             bool line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1586,7 +1584,7 @@ namespace Tests.Logic
         {
             string line1 = "";
             bool line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1594,7 +1592,7 @@ namespace Tests.Logic
         {
             string line1 = " ";
             bool line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1626,7 +1624,7 @@ namespace Tests.Logic
         {
             var line1 = "liebe</i> ♫ ♫ <i>Bevor es zu spät ist</i> ♫ ♫ <i>Das, was";
             var line1Actual = ContinuationUtilities.IsItalic(line1);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1644,7 +1642,7 @@ namespace Tests.Logic
             string line1 = "Not here.";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1653,7 +1651,7 @@ namespace Tests.Logic
             string line1 = "~~ this is my own prefix.";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1672,7 +1670,7 @@ namespace Tests.Logic
             string line1 = "";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1681,7 +1679,7 @@ namespace Tests.Logic
             string line1 = " ";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1690,7 +1688,7 @@ namespace Tests.Logic
             string line1 = "...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1699,7 +1697,7 @@ namespace Tests.Logic
             string line1 = "<i>...</i>";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1753,7 +1751,7 @@ namespace Tests.Logic
             string line1 = "Not here.";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1762,7 +1760,7 @@ namespace Tests.Logic
             string line1 = "This is my own suffix ~~";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1781,7 +1779,7 @@ namespace Tests.Logic
             string line1 = "";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1790,7 +1788,7 @@ namespace Tests.Logic
             string line1 = " ";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1799,7 +1797,7 @@ namespace Tests.Logic
             string line1 = "...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1808,7 +1806,7 @@ namespace Tests.Logic
             string line1 = " ...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1862,7 +1860,7 @@ namespace Tests.Logic
             string line1 = "<i>...</i>";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1889,7 +1887,7 @@ namespace Tests.Logic
             string line1 = "a...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1907,7 +1905,7 @@ namespace Tests.Logic
             string line1 = "!...";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1916,7 +1914,7 @@ namespace Tests.Logic
             string line1 = "?";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1925,7 +1923,7 @@ namespace Tests.Logic
             string line1 = "象";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1934,7 +1932,7 @@ namespace Tests.Logic
             string line1 = "";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1943,7 +1941,7 @@ namespace Tests.Logic
             string line1 = " ";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1959,7 +1957,7 @@ namespace Tests.Logic
         {
             string line1 = "is a walk in the park.";
             bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "en");
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1975,7 +1973,7 @@ namespace Tests.Logic
         {
             string line1 = "is een fluitje van een cent.";
             bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1983,7 +1981,7 @@ namespace Tests.Logic
         {
             string line1 = "";
             bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -1991,7 +1989,7 @@ namespace Tests.Logic
         {
             string line1 = " ";
             bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
-            Assert.IsFalse(line1Actual);
+            Assert.False(line1Actual);
         }
 
         [Fact]
@@ -2005,8 +2003,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2020,8 +2018,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged,";
             string line2Expected = "but keeping in mind the conjunctions.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2035,8 +2033,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged...";
             string line2Expected = "But this is a new sentence.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2050,8 +2048,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "The winner is";
             string line2Expected = "Mark.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2065,8 +2063,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "The winner is";
             string line2Expected = "Mark.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2080,8 +2078,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "The winner is";
             string line2Expected = "anyone.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2095,8 +2093,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible." + Environment.NewLine + "- Shut up.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2110,8 +2108,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible." + Environment.NewLine + "- Shut up.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2125,8 +2123,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible." + Environment.NewLine + "- Shut up.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2140,8 +2138,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible." + Environment.NewLine + "- Shut up.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2155,8 +2153,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged...";
             string line2Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2170,8 +2168,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2185,8 +2183,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged...";
             string line2Expected = "-This is a response.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2200,8 +2198,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged...";
             string line2Expected = "-This is a response.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2215,8 +2213,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "This is a response.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2230,8 +2228,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "with this.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2245,8 +2243,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged...";
             string line2Expected = "-just something random.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2260,8 +2258,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged.";
             string line2Expected = "-just something random.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2275,8 +2273,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "-just something random.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2290,8 +2288,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "just something random." + Environment.NewLine + "-Good idea.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2305,8 +2303,8 @@ namespace Tests.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged.";
             string line2Expected = "just something random.";
-            Assert.AreEqual(line1Expected, line1Actual);
-            Assert.AreEqual(line2Expected, line2Actual);
+            Assert.Equal(line1Expected, line1Actual);
+            Assert.Equal(line2Expected, line2Actual);
         }
 
         [Fact]
@@ -2314,7 +2312,7 @@ namespace Tests.Logic
         {
             string line1 = "\"";
             var result = ContinuationUtilities.IsFullLineQuote(line1, 0, '"', '"');
-            Assert.AreEqual(false, result);
+            Assert.False(result);
         }
     }
 }
