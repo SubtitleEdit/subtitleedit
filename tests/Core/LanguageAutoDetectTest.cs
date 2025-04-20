@@ -7,6 +7,7 @@ namespace Tests.Core
     {
         private static string GetLanguageCode(string fileName)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
             var sub = new Subtitle();
             sub.LoadSubtitle(fileName, out _, null);
@@ -31,6 +32,7 @@ namespace Tests.Core
 
         private static Encoding DetectAnsiEncoding(string fileName)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             fileName = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
             return LanguageAutoDetect.DetectAnsiEncoding(FileUtil.ReadAllBytesShared(fileName));
         }

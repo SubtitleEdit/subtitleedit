@@ -1646,7 +1646,7 @@ Hi, I'm Keith Lemon.
 <c.color008000>AUDIENCE: Aww!</c>";
             target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
 
-            Assert.Equal("<font color=\"#r008000\">AUDIENCE: Aww!</font>", subtitle.Paragraphs[1].Text);
+            Assert.Equal("<c.color008000>AUDIENCE: Aww!</c>", subtitle.Paragraphs[1].Text);
         }
 
         [Fact]
