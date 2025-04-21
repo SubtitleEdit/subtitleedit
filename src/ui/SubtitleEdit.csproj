@@ -111,6 +111,9 @@
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="Icons\BeautifyTimeCodes.png" />
+    <Content Include="Languages\tt-RU.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="Hunspellx64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -304,6 +307,7 @@
     <None Remove="Icons\mpc-hc.png" />
     <None Remove="Icons\mpv.png" />
     <None Remove="Icons\vlc.png" />
+    <None Remove="Languages\tt-RU.xml" />
     <None Remove="Resources\TtsMurfVoices.zip" />
   </ItemGroup>
   <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
