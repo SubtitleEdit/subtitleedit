@@ -10,8 +10,8 @@ namespace Tests.Logic.SubtitleFormats
     ///This is a test class for subtitle formats and is intended
     ///to contain all subtitle formats Unit Tests
     ///</summary>
-    
-    
+
+    [Collection("NonParallelTests")]
     public class SubtitleFormatsTest
     {
         /// <summary>

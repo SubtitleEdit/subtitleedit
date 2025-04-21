@@ -3,8 +3,7 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Tests.Logic
 {
-    
-    
+    [Collection("NonParallelTests")]
     public class UtilitiesTest
     {
         [Fact]

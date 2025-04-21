@@ -2,8 +2,7 @@
 
 namespace Tests.Logic
 {
-    
-    
+    [Collection("NonParallelTests")]
     public class BeautifyTimeCodesTest
     {
         [Fact]
