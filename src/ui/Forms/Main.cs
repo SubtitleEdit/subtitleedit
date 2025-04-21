@@ -36748,6 +36748,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleOriginalFileName = null;
                 _subtitleOriginal = new Subtitle();
                 _isOriginalActive = false;
+                _changeSubtitleHash = _changeOriginalSubtitleHash;
+                textBoxListViewText.Text = textBoxListViewTextOriginal.Text;
+
+                _fileDateTime = new DateTime();
+                if (File.Exists(_fileName))
+                {
+                    _fileDateTime = File.GetLastWriteTime(_fileName);
+                }
 
                 var selectIndices = SubtitleListview1.GetSelectedIndices();
                 RemoveOriginal(true, true);
