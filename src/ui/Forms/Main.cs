@@ -26503,7 +26503,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
             {
                 _checkForUpdatesHelper = new CheckForUpdatesHelper();
-                _checkForUpdatesHelper.CheckForUpdates(false);
+                _ = _checkForUpdatesHelper.CheckForUpdates(false);
                 _timerCheckForUpdates = new Timer { Interval = 7000 };
                 _timerCheckForUpdates.Tick += TimerCheckForUpdatesTick;
                 _timerCheckForUpdates.Start();
