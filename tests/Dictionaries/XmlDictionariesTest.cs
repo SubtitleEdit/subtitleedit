@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Tests.Dictionaries
 {
-    
+    [Collection("NonParallelTests")]
     public class XmlDictionariesTest
     {
         private const string DictionaryFolder = @"..\..\..\..\..\Dictionaries";

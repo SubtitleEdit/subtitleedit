@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 var endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
                                 var startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
                                 var endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
-                                ImageDisplayArea = new SKRectI(startingX, startingY, endingX - startingX, endingY - startingY);
+                                ImageDisplayArea = new SKRectI(startingX, startingY, endingX, endingY);
                             }
                             commandIndex += 7;
                             break;
