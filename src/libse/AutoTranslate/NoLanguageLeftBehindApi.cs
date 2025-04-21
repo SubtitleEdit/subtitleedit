@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
     public class NoLanguageLeftBehindApi : IAutoTranslator, IDisposable
     {
-        private IDownloader _httpClient;
+        private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "winstxnhdw-nllb-api";
         public override string ToString() => StaticName;
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateNllbApiUrl);

@@ -26503,7 +26503,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
             {
                 _checkForUpdatesHelper = new CheckForUpdatesHelper();
-                _checkForUpdatesHelper.CheckForUpdates(false);
+                _ = _checkForUpdatesHelper.CheckForUpdates(false);
                 _timerCheckForUpdates = new Timer { Interval = 7000 };
                 _timerCheckForUpdates.Tick += TimerCheckForUpdatesTick;
                 _timerCheckForUpdates.Start();
@@ -31848,22 +31848,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TimerOriginalTextUndoTick(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+            if (!Configuration.Settings.General.AllowEditOfOriginalSubtitle ||
+                _subtitleOriginal == null ||
+                _subtitleOriginal.Paragraphs.Count <= 0 ||
+                _subtitle == null ||
+                _subtitle.Paragraphs.Count <= 0)
             {
-                int index = _listViewTextUndoIndex;
-                if (index == -1)
-                {
-                    index = _subtitleListViewIndex;
-                }
+                return;
+            }
 
-                if (_listViewOriginalTextTicks == -1 || !CanFocus || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0 || index < 0 || index >= _subtitleOriginal.Paragraphs.Count)
-                {
-                    return;
-                }
+            int index = _listViewTextUndoIndex;
+            if (index == -1)
+            {
+                index = _subtitleListViewIndex;
+            }
 
-                if ((Stopwatch.GetTimestamp() - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if (_listViewOriginalTextTicks == -1 || !CanFocus || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0 || index < 0 || index >= _subtitleOriginal.Paragraphs.Count)
+            {
+                return;
+            }
+
+            if ((Stopwatch.GetTimestamp() - _listViewOriginalTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            {
+                try
                 {
-                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
+                    var p = _subtitle.GetParagraphOrDefault(index);
+                    if (p == null)
+                    {
+                        return;
+                    }
+
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleOriginal.Paragraphs);
                     if (original != null)
                     {
                         index = _subtitleOriginal.Paragraphs.IndexOf(original);
@@ -31873,7 +31888,13 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    string newText = _subtitleOriginal.Paragraphs[index].Text.TrimEnd();
+                    var newP = _subtitleOriginal.GetParagraphOrDefault(index);
+                    if (newP == null)
+                    {
+                        return;
+                    }
+
+                    string newText = newP.Text.TrimEnd();
                     string oldText = _listViewOriginalTextUndoLast;
                     if (oldText == null || index < 0)
                     {
@@ -31889,6 +31910,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _listViewOriginalTextUndoLast = newText;
                         _listViewTextUndoIndex = -1;
                     }
+                }
+                catch
+                { 
+                    // ignore
                 }
             }
         }
@@ -36748,6 +36773,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleOriginalFileName = null;
                 _subtitleOriginal = new Subtitle();
                 _isOriginalActive = false;
+                _changeSubtitleHash = _changeOriginalSubtitleHash;
+                textBoxListViewText.Text = textBoxListViewTextOriginal.Text;
+
+                _fileDateTime = new DateTime();
+                if (File.Exists(_fileName))
+                {
+                    _fileDateTime = File.GetLastWriteTime(_fileName);
+                }
 
                 var selectIndices = SubtitleListview1.GetSelectedIndices();
                 RemoveOriginal(true, true);

@@ -239,7 +239,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.numericUpDownTargetFileSize);
             this.groupBoxSettings.Controls.Add(this.labelFileSize);
             this.groupBoxSettings.Controls.Add(this.checkBoxTargetFileSize);
-            this.groupBoxSettings.Controls.Add(this.labelFileName);
             this.groupBoxSettings.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Controls.Add(this.listViewBatch);
@@ -829,7 +828,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.nikseComboBoxPixelFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.nikseComboBoxPixelFormat.DropDownWidth = 121;
             this.nikseComboBoxPixelFormat.FormattingEnabled = true;
-            this.nikseComboBoxPixelFormat.Items.AddRange(new string[] {
+            this.nikseComboBoxPixelFormat.Items.AddRange(new object[] {
             "",
             "8-bit 4:2:0 (yuv420p)",
             "8-bit 4:2:2 (yuv422p)",
@@ -996,7 +995,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTune.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTune.DropDownWidth = 121;
             this.comboBoxTune.FormattingEnabled = true;
-            this.comboBoxTune.Items.AddRange(new string[] {
+            this.comboBoxTune.Items.AddRange(new object[] {
             "",
             "film",
             "animation",
@@ -1024,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPreset.DropDownWidth = 121;
             this.comboBoxPreset.FormattingEnabled = true;
-            this.comboBoxPreset.Items.AddRange(new string[] {
+            this.comboBoxPreset.Items.AddRange(new object[] {
             "ultrafast",
             "superfast",
             "veryfast",
@@ -1075,7 +1074,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxVideoEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoEncoding.DropDownWidth = 121;
             this.comboBoxVideoEncoding.FormattingEnabled = true;
-            this.comboBoxVideoEncoding.Items.AddRange(new string[] {
+            this.comboBoxVideoEncoding.Items.AddRange(new object[] {
             "libx264",
             "libx265",
             "libvpx-vp9",
@@ -1110,7 +1109,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxCrf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCrf.DropDownWidth = 121;
             this.comboBoxCrf.FormattingEnabled = true;
-            this.comboBoxCrf.Items.AddRange(new string[] {
+            this.comboBoxCrf.Items.AddRange(new object[] {
             "17",
             "18",
             "19",
@@ -1203,7 +1202,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAudioBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAudioBitRate.DropDownWidth = 121;
             this.comboBoxAudioBitRate.FormattingEnabled = true;
-            this.comboBoxAudioBitRate.Items.AddRange(new string[] {
+            this.comboBoxAudioBitRate.Items.AddRange(new object[] {
             "64k",
             "128k",
             "160k",
@@ -1233,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAudioEnc.DropDownWidth = 121;
             this.comboBoxAudioEnc.FormattingEnabled = true;
-            this.comboBoxAudioEnc.Items.AddRange(new string[] {
+            this.comboBoxAudioEnc.Items.AddRange(new object[] {
             "copy",
             "aac"});
             this.comboBoxAudioEnc.Location = new System.Drawing.Point(91, 29);
@@ -1290,7 +1289,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAudioSampleRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAudioSampleRate.DropDownWidth = 121;
             this.comboBoxAudioSampleRate.FormattingEnabled = true;
-            this.comboBoxAudioSampleRate.Items.AddRange(new string[] {
+            this.comboBoxAudioSampleRate.Items.AddRange(new object[] {
             "44100 Hz",
             "48000 Hz",
             "88200 Hz",
@@ -1367,7 +1366,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(19, 398);
+            this.labelFileName.Location = new System.Drawing.Point(9, 563);
             this.labelFileName.Name = "labelFileName";
             this.labelFileName.Size = new System.Drawing.Size(52, 13);
             this.labelFileName.TabIndex = 0;
@@ -1806,6 +1805,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxLog);
+            this.Controls.Add(this.labelFileName);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(890, 680);
             this.Name = "GenerateVideoWithHardSubs";
