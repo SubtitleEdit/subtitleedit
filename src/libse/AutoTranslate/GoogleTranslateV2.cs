@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class GoogleTranslateV2 : IAutoTranslator, IDisposable
     {
         private string _apiKey;
-        private IDownloader _httpClient;
+        private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Google Translate V2 API";
         public override string ToString() => StaticName;
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public void Initialize()
         {
             _apiKey = Configuration.Settings.Tools.GoogleApiV2Key;
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

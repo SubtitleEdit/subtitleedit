@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 return;
             }
 
-            _httpClient = new HttpClient();
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + _apiKey.Trim());
         }

@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private string _apiKey;
         private string _apiUrl;
         private string _formality;
-        private HttpClient _client;
+        private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "DeepL V2 translate";
         public override string ToString() => StaticName;
@@ -37,9 +37,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 return;
             }
 
-            _client = new HttpClient();
-            _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
-            _client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "DeepL-Auth-Key " + _apiKey.Trim());
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
+            _httpClient.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "DeepL-Auth-Key " + _apiKey.Trim());
             _formality = string.IsNullOrWhiteSpace(_formality) ? "default" : _formality.Trim();
         }
 
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _client.PostAsync("/v2/translate", postContent, cancellationToken);
+                result = await _httpClient.PostAsync("/v2/translate", postContent, cancellationToken);
                 resultContent = await result.Content.ReadAsStringAsync();
 
                 if (!ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public void Dispose()
         {
-            _client?.Dispose();
+            _httpClient?.Dispose();
         }
     }
 }
