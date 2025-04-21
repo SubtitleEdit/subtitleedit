@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+4.0.13 (xth July 2025) BETA
+* NEW
+   * Add Tatar translation - thx Ирек
+* IMPROVED:
+   * Update Italian translation - thx bovirus
+   * Update Polish translation - thx admas
+   * Add Brazilian Portuguese for LibreTranslate - thx erickcomcek
+   * Minor UI improvementx for burn-in - thx Leon
+   * Add o4-mini/gpt-4.1-mini models for ChatGPT API
+* FIXED:
+   * Enable automatic translation via proxy - thx solidvan
+   * Fix crash in undo timer - thx darnn
+   * Fix issues with "Close translation" - thx darnn
+   * Fix VobSub with no idx file reading issue - thx C0bra5
+   * Fix crash in translate - thx justcaws
+   * Fix Brazil/Chinese in LibreTranslate - thx erickcomcek/smllin
+
+
+Subtitle Edit Changelog
+
 4.0.12 (14th April 2025)
 * NEW
    * Add read support for "OOONA json" format - thx Alfonso
