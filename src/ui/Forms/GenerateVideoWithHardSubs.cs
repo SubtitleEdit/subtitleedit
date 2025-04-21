@@ -368,6 +368,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FontEnableOrDisable(BatchMode || _initialFontOn);
+
+            labelFileName.ForeColor = DarkTheme.DarkThemeDisabledColor;
+            labelFileName.Font = new Font(labelFileName.Font.FontFamily, labelFileName.Font.Size - 1, FontStyle.Regular);
         }
 
         private void FontEnableOrDisable(bool enabled)
