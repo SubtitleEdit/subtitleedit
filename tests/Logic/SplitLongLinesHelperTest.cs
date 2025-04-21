@@ -6,7 +6,7 @@ namespace Tests.Logic
     /// <summary>
     /// Summary description for SplitLongLinesHelperTest
     /// </summary>
-    
+    [Collection("NonParallelTests")]
     public class SplitLongLinesHelperTest
     {
         private int _maxLineLength;

@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Tests.Logic
 {
-    
+    [Collection("NonParallelTests")]
     public class ContinuationUtilitiesTest
     {
         [Fact]

@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Tests.Logic
 {
-    
+    [Collection("NonParallelTests")]
     public class BridgeGapsTest
     {
         [Fact]

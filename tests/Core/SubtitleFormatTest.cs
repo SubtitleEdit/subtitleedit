@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Tests.Core
 {
-    
+    [Collection("NonParallelTests")]
     public class SubtitleFormatTest
     {
         [Fact]
