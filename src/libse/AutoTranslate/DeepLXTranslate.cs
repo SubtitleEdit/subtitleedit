@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class DeepLXTranslate : IAutoTranslator, IDisposable
     {
         private string _apiUrl;
-        private HttpClient _client;
+        private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "DeepLX translate";
         public override string ToString() => StaticName;
@@ -33,8 +33,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLXUrl;
 
-            _client = new HttpClient();
-            _client.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
+            _httpClient.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _client.PostAsync("/translate", postContent, cancellationToken);
+                result = await _httpClient.PostAsync("/translate", postContent, cancellationToken);
                 resultContent = await result.Content.ReadAsStringAsync();
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public void Dispose()
         {
-            _client?.Dispose();
+            _httpClient?.Dispose();
         }
     }
 }
