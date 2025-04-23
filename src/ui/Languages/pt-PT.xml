@@ -610,6 +610,15 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <OnlyLookForDifferencesInText>Procurar apenas as diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar legendas baseadas em imagens</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Converter atores</Title>
+    <ConvertActorFrom>Alterar ator de</ConvertActorFrom>
+    <ConvertActorTo>Alterar ator para</ConvertActorTo>
+    <InlineActorViaX>Ator embutido via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Número de conversões de atores: {0}</NumberOfConversionsX>
+    <SetColor>Definir cor</SetColor>
+    <OnlyNames>Apenas nomes</OnlyNames>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Converter cores para diálogos</Title>
     <RemoveColorTags>Remover etiquetas de cor</RemoveColorTags>
@@ -1406,6 +1415,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remover texto para deficientes auditivos...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Converter cores para diálogos...</ConvertColorsToDialog>
+         <ConvertActors>Converter atores...</ConvertActors>
         <ChangeCasing>Alterar maiúsculas/minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
@@ -2481,6 +2491,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aspeto do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Gradiente de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
+    <SpectrogramHeat>Temperatura</SpectrogramHeat>
+    <SpectrogramCyanToOrange>Ciano para laranja</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Opacidade do espectrograma/forma de onda:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>Utilizar o FFmpeg para extrair a onda áudio</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Utilizar apenas o canal central frontal (para 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Transferir o {0}</DownloadX>
