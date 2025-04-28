@@ -611,6 +611,8 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
 		<ConvertActorTo>Alterar ator para</ConvertActorTo>
 		<InlineActorViaX>Ator embutido via {0}</InlineActorViaX>
 		<NumberOfConversionsX>Número de conversões de atores: {0}</NumberOfConversionsX>
+		<SetColor>Definir cor</SetColor>
+		<OnlyNames>Somente nomes</OnlyNames>
 	</ConvertActor>
 	<ConvertColorsToDialog>
 		<Title>Converter cores para diálogo</Title>
@@ -2484,6 +2486,9 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
 		<SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
 		<SpectrogramClassic>Clássico</SpectrogramClassic>
+		<SpectrogramHeat>Temperatura</SpectrogramHeat>
+		<SpectrogramCyanToOrange>Ciano para laranja</SpectrogramCyanToOrange>
+		<SpectrogramWaveformOpacity>Opacidade do espectrograma / forma de onda:</SpectrogramWaveformOpacity>
 		<WaveformUseFFmpeg>Usar FFmepg para extração Wave</WaveformUseFFmpeg>
 		<WaveformUseCenterChannelOnly>Use apenas o canal central frontal (para 5.1/7.1)</WaveformUseCenterChannelOnly>
 		<DownloadX>Baixar {0}</DownloadX>

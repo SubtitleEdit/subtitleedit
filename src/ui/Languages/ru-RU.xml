@@ -33,7 +33,7 @@
     <VideoInformation>Информация о видео</VideoInformation>
     <StartTime>Начало</StartTime>
     <EndTime>Конец</EndTime>
-    <Duration>Длина</Duration>
+    <Duration>Дл-сть</Duration>
     <CharsPerSec>Симв./сек.</CharsPerSec>
     <WordsPerMin>Слов/мин.</WordsPerMin>
     <Actor>Актёр</Actor>
@@ -69,7 +69,7 @@
     <OverlapNextX>Налож. на след-щий ({0:#,##0.###})</OverlapNextX>
     <OverlapStartAndEnd>Наложение начало и конец</OverlapStartAndEnd>
     <Negative>Отрицательная</Negative>
-    <RegularExpressionIsNotValid>Ошибка в регулярном выражении!</RegularExpressionIsNotValid>
+    <RegularExpressionIsNotValid>Неверное регулярное выражение!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Текущий субтитр</CurrentSubtitle>
     <OriginalText>Исходный текст</OriginalText>
     <OpenOriginalSubtitleFile>Открытие исходного файла субтитров…</OpenOriginalSubtitleFile>
@@ -386,10 +386,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <SearchFolderScanVideo>Сканировать видеофайлы в «Папке поиска» (медленно)</SearchFolderScanVideo>
   </BatchConvert>
   <BeautifyTimeCodes>
-    <Title>Украшение тайм-кодов</Title>
-    <TitleSelectedLines>Украшение тайм-кодов ({0} выбранных строк)</TitleSelectedLines>
+    <Title>Оптимизирование тайм-кодов</Title>
+    <TitleSelectedLines>Оптимизирование тайм-кодов ({0} выбранных строк)</TitleSelectedLines>
     <GroupTimeCodes>Тайм-коды</GroupTimeCodes>
-    <AlignTimeCodes>Согласование тайм-кодов с тайм-кодами кадров</AlignTimeCodes>
+    <AlignTimeCodes>Синхронизирование тайм-кодов с тайм-кодами кадров</AlignTimeCodes>
     <ExtractExactTimeCodes>Извлечение тайм-кодов с точностью до кадра с помощью FFprobe</ExtractExactTimeCodes>
     <ExtractTimeCodes>Извлечь тайм-коды</ExtractTimeCodes>
     <CancelTimeCodes>Отмена</CancelTimeCodes>
@@ -416,7 +416,7 @@ https://github.com/SubtitleEdit/subtitleedit
 Такие случаи вы можете просмотреть вручную, чтобы убедиться, что реплики привязаны к правильным (реальным) изменениям кадра.</UnfixableParagraphsInstructions>
     <UnfixableParagraphsColumnParagraphs>Строки</UnfixableParagraphsColumnParagraphs>
     <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
-    <UnfixableParagraphsColumnGap>Разрыв (кадры)</UnfixableParagraphsColumnGap>
+    <UnfixableParagraphsColumnGap>Интервал (кадры)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Редактировать профиль</Title>
@@ -619,6 +619,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ConvertActorTo>Сменить актёра на</ConvertActorTo>
     <InlineActorViaX>Встраивание через {0}</InlineActorViaX>
     <NumberOfConversionsX>Количество конверсий актёров: {0}</NumberOfConversionsX>
+    <SetColor>Задать цвет</SetColor>
+    <OnlyNames>Только имена</OnlyNames>
   </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Преобразование цветов в диалог</Title>
@@ -655,13 +657,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <GenerateNewIdOnSave>Создать новый ID при сохранении</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Устранение небольших интервалов между субтитрами</Title>
+    <Title>Устранение коротких интервалов между субтитрами</Title>
     <GapsBridgedX>Количество устранённых интервалов: {0}</GapsBridgedX>
     <GapToNext>Интервал до следующего в сек.</GapToNext>
     <GapToNextFrames>Интервал до следующего в кадрах</GapToNextFrames>
-    <BridgeGapsSmallerThanXPart1>Продлять интервалы меньше</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart1>Продлевать интервалы меньше</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>миллисекунд</BridgeGapsSmallerThanXPart2>
-    <BridgeGapsSmallerThanXPart1Frames>Продлять интервалы меньше</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart1Frames>Продлевать интервалы меньше</BridgeGapsSmallerThanXPart1Frames>
     <BridgeGapsSmallerThanXPart2Frames>кадров</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Минимум мс между строками</MinMillisecondsBetweenLines>
     <MinFramesBetweenLines>Мин. кадров между строками</MinFramesBetweenLines>
@@ -1076,7 +1078,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <From>С:</From>
     <To>На:</To>
     <Translate>Перевести</Translate>
-    <PleaseWait>Пожалуйста, подождите какое-то время…</PleaseWait>
+    <PleaseWait>Пожалуйста, подождите…</PleaseWait>
     <PoweredByX>Переводчик {0}</PoweredByX>
     <LineMergeHandling>Объединение строк:</LineMergeHandling>
     <ProcessorMergeNext>Не более двух строк</ProcessorMergeNext>
@@ -1183,7 +1185,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <StartTime>Начало</StartTime>
     <EndTime>Конец</EndTime>
     <FileName>Имя файла</FileName>
-    <Join>Старт</Join>
+    <Join>Объединить</Join>
     <TotalNumberOfLinesX>Общее число строк: {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Файлы уже имеют правильные тайм-коды</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>Добавить время окончания предыдущего файла</AppendTimeCodes>
@@ -1431,10 +1433,10 @@ https://github.com/SubtitleEdit/subtitleedit
         <Number>Номер</Number>
         <StartTime>Начало</StartTime>
         <EndTime>Конец</EndTime>
-        <Duration>Длина</Duration>
+        <Duration>Продолжительность</Duration>
         <ListErrors>Список ошибок…</ListErrors>
         <NetflixQualityCheck>Проверка качества Netflix…</NetflixQualityCheck>
-        <BeautifyTimeCodes>Украсить тайм-коды…</BeautifyTimeCodes>
+        <BeautifyTimeCodes>Оптимизировать тайм-коды…</BeautifyTimeCodes>
         <TextAlphabetically>Текст - по алфавиту</TextAlphabetically>
         <TextSingleLineMaximumLength>Текст - по длине строк</TextSingleLineMaximumLength>
         <TextTotalLength>Текст - по общей длине</TextTotalLength>
@@ -1530,7 +1532,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <VisualSync>Визуальная синхронизация</VisualSync>
         <SpellCheck>Проверка орфографии</SpellCheck>
         <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
-        <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
+        <BeautifyTimeCodes>Оптимизировать тайм-коды</BeautifyTimeCodes>
         <Settings>Настройки</Settings>
         <Help>Справка</Help>
         <Layout>Макет</Layout>
@@ -1608,7 +1610,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <KaraokeEffect>Эффект караоке…</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Сдвинуть выбранные строки по времени…</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Синхронизация выбранных строк…</VisualSyncSelectedLines>
-        <BeautifyTimeCodesOfSelectedLines>Украсить тайм-коды выбранных строк…</BeautifyTimeCodesOfSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Оптимизировать тайм-коды выбранных строк…</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Перевести в Google/Microsoft исходные строки</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Выбранные строки</SelectedLines>
         <TranslateSelectedLines>Перевести выделенные строки…</TranslateSelectedLines>
@@ -1766,10 +1768,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <CommonErrorsFixed>Ошибки исправлены</CommonErrorsFixed>
     <BeforeRenumbering>Перед перенумерацией</BeforeRenumbering>
     <RenumberedStartingFromX>Перенумеровано, начиная с: {0}</RenumberedStartingFromX>
-    <BeforeBeautifyTimeCodes>Прежде чем украшать тайм-коды</BeforeBeautifyTimeCodes>
-    <BeforeBeautifyTimeCodesSelectedLines>Перед украшением тайм-кодов выбранных строк</BeforeBeautifyTimeCodesSelectedLines>
-    <BeautifiedTimeCodes>Тайм-коды украшены</BeautifiedTimeCodes>
-    <BeautifiedTimeCodesSelectedLines>Тайм-коды выбранных строк украшены</BeautifiedTimeCodesSelectedLines>
+    <BeforeBeautifyTimeCodes>Перед оптимизированием тайм-кодов</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Перед оптимизированием тайм-кодов выбранных строк</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Тайм-коды оптимизированы</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Тайм-коды выбранных строк оптимизированы</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Перед удалением текста для людей с нарушением слуха</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Удалён текст для людей с нарушением слуха: Одна строка</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Удалён текст для людей с нарушением слуха: {0} строк</TextingForHearingImpairedRemovedXLines>
@@ -2151,8 +2153,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <RegEx>Регулярные выражения</RegEx>
     <OddLines>Неравные строки</OddLines>
     <EvenLines>Равные строки</EvenLines>
-    <DurationLessThan>Продолжите-ность меньше</DurationLessThan>
-    <DurationGreaterThan>Продолжите-ность больше</DurationGreaterThan>
+    <DurationLessThan>Длительность меньше</DurationLessThan>
+    <DurationGreaterThan>Длительность больше</DurationGreaterThan>
     <CpsLessThan>Симв./сек. меньше</CpsLessThan>
     <CpsGreaterThan>Симв./сек. больше</CpsGreaterThan>
     <LengthLessThan>Длина меньше</LengthLessThan>
@@ -2354,7 +2356,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BurnIn>Хардсаб</BurnIn>
     <SpellCheck>Орфография</SpellCheck>
     <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
-    <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
+    <BeautifyTimeCodes>Оптимизировать тайм-коды</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Добавить/Удалить закладки</ToggleBookmarks>
     <FocusTextBox>Фокус на текстовом поле</FocusTextBox>
@@ -2563,7 +2565,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ContinuationStyleLeadingTrailingDash>Тире</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Тире, но точки для пауз</ContinuationStyleLeadingTrailingDashDots>
     <ContinuationStyleCustom>Настройка</ContinuationStyleCustom>
-    <CpsLineLengthStyle>CPS/Длина строки</CpsLineLengthStyle>
+    <CpsLineLengthStyle>Симв. в сек./Длина строки</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Все символы</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Исключить пробелы, только CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Исключить пробелы</CpsLineLengthStyleCalcNoSpace>
@@ -2714,13 +2716,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению плана</WaveformGoToPreviousShotChange>
-    <WaveformGoToNextShotChange>Перейти к следующему изменению плана</WaveformGoToNextShotChange>
+    <WaveformGoToPreviousShotChange>Перейти к предыдущей смене плана</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Перейти к следующей смене плана</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Переключить смену плана</WaveformToggleShotChange>
-    <WaveformAllShotChangesOneFrameForward>Переместить все изменения плана на один кадр вперёд</WaveformAllShotChangesOneFrameForward>
-    <WaveformAllShotChangesOneFrameBack>Переместить все изменения плана на один кадр назад</WaveformAllShotChangesOneFrameBack>
-    <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения плана</WaveformRemoveOrExportShotChanges>
-    <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения плана</WaveformGuessStart>
+    <WaveformAllShotChangesOneFrameForward>Переместить все смены плана на один кадр вперёд</WaveformAllShotChangesOneFrameForward>
+    <WaveformAllShotChangesOneFrameBack>Переместить все смены плана на один кадр назад</WaveformAllShotChangesOneFrameBack>
+    <WaveformRemoveOrExportShotChanges>Удалить/экспортировать смены плана</WaveformRemoveOrExportShotChanges>
+    <WaveformGuessStart>Автонастройка начала с помощью громкости/смены плана</WaveformGuessStart>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперёд</GoForward1Frame>
     <GoBack1FrameWithPlay>1 кадр назад (с воспроизведением)</GoBack1FrameWithPlay>
