@@ -54,7 +54,7 @@
 
             EdgeColorBlue = bytes[index + 2] & 0b00000011;
             EdgeColorGreen = (bytes[index + 2] & 0b00001100) >> 2;
-            EdgeColorRed = (bytes[index + 2] & 0b11110000) >> 4;
+            EdgeColorRed = (bytes[index + 2] & 0b00110000) >> 4;
         }
 
         public byte[] GetBytes()
