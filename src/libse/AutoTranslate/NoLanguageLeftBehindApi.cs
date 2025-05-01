@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
@@ -44,10 +43,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            var result = await _httpClient.PostAsync("translator", content);
+            var result = await _httpClient.PostAsync("translator", content, cancellationToken).ConfigureAwait(false);
             result.EnsureSuccessStatusCode();
 
-            var responseString = await result.Content.ReadAsStringAsync();
+            var responseString = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var validator = new SeJsonValidator();
             var isValidJson = validator.ValidateJson(responseString);

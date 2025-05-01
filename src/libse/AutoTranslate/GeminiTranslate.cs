@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var content = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _httpClient.PostAsync(_baseUrl, content, cancellationToken);
+                result = await _httpClient.PostAsync(_baseUrl, content, cancellationToken).ConfigureAwait(false);
 
                 if (result.StatusCode == System.Net.HttpStatusCode.NotFound && !switchedBaseUrl)
                 {
@@ -98,14 +98,14 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     continue;
                 }
 
-                resultContent = await result.Content.ReadAsStringAsync();
+                resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
                     break;
                 }
 
-                await Task.Delay(retryDelays[attempt], cancellationToken);
+                await Task.Delay(retryDelays[attempt], cancellationToken).ConfigureAwait(false);
             }
 
             if (!result.IsSuccessStatusCode)

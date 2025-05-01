@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var url = string.Format(TranslateUrl, sourceLanguageCode, targetLanguageCode);
             if (!string.IsNullOrEmpty(_category))
@@ -79,9 +79,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var json = jsonBuilder.ToString();
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = httpClient.PostAsync(url, content).Result;
+            var result = await httpClient.PostAsync(url, content).ConfigureAwait(false);
             var parser = new JsonParser();
-            var jsonResult = result.Content.ReadAsStringAsync().Result;
+            var jsonResult = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 }
             }
 
-            return Task.FromResult(string.Join(Environment.NewLine, results));
+            return string.Join(Environment.NewLine, results);
         }
 
         private IDownloader GetTranslateClient()

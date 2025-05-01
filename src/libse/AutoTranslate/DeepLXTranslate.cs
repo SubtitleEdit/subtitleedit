@@ -55,15 +55,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _httpClient.PostAsync("/translate", postContent, cancellationToken);
-                resultContent = await result.Content.ReadAsStringAsync();
+                result = await _httpClient.PostAsync("/translate", postContent, cancellationToken).ConfigureAwait(false);
+                resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
                     break;
                 }
 
-                await Task.Delay(retryDelays[attempt], cancellationToken);
+                await Task.Delay(retryDelays[attempt], cancellationToken).ConfigureAwait(false);
             }
 
             if (!result.IsSuccessStatusCode)
@@ -87,11 +87,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
                     return resultTextWithFixedNewLines.Trim();
                 }
-                else
-                {
-                    SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
-                    throw new Exception("DeepLXTranslate gave empty alternatives: StatusCode=" + result.StatusCode + Environment.NewLine + resultContent);
-                }
+
+                SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
+                throw new Exception("DeepLXTranslate gave empty alternatives: StatusCode=" + result.StatusCode + Environment.NewLine + resultContent);
             }
             catch (Exception ex)
             {

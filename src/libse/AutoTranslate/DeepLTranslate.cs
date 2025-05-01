@@ -138,15 +138,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
-                result = await _httpClient.PostAsync("/v2/translate", postContent, cancellationToken);
-                resultContent = await result.Content.ReadAsStringAsync();
+                result = await _httpClient.PostAsync("/v2/translate", postContent, cancellationToken).ConfigureAwait(false);
+                resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (!ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
                     break;
                 }
 
-                await Task.Delay(retryDelays[attempt], cancellationToken);
+                await Task.Delay(retryDelays[attempt], cancellationToken).ConfigureAwait(false);
             }
 
             if (!result.IsSuccessStatusCode)
