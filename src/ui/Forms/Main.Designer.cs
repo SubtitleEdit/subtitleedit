@@ -3768,9 +3768,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoContinue.AutoSize = true;
             this.checkBoxAutoContinue.Location = new System.Drawing.Point(10, 19);
             this.checkBoxAutoContinue.Name = "checkBoxAutoContinue";
-            this.checkBoxAutoContinue.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxAutoContinue.Size = new System.Drawing.Size(38, 17);
             this.checkBoxAutoContinue.TabIndex = 0;
-            this.checkBoxAutoContinue.Text = "Auto continue on";
+            this.checkBoxAutoContinue.Text = "on";
             this.checkBoxAutoContinue.UseVisualStyleBackColor = true;
             // 
             // buttonStop
@@ -3848,9 +3848,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoRepeatOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoRepeatOn.Location = new System.Drawing.Point(10, 19);
             this.checkBoxAutoRepeatOn.Name = "checkBoxAutoRepeatOn";
-            this.checkBoxAutoRepeatOn.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxAutoRepeatOn.Size = new System.Drawing.Size(38, 17);
             this.checkBoxAutoRepeatOn.TabIndex = 0;
-            this.checkBoxAutoRepeatOn.Text = "Auto repeat on";
+            this.checkBoxAutoRepeatOn.Text = "on";
             this.checkBoxAutoRepeatOn.UseVisualStyleBackColor = true;
             // 
             // buttonPlayPrevious
