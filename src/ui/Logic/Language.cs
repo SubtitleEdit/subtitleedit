@@ -2255,10 +2255,10 @@ namespace Nikse.SubtitleEdit.Logic
 
                     AutoRepeat = "Auto repeat",
                     AutoRepeatOn = "",
-                    AutoRepeatCount = "Repeat count (times)",
+                    AutoRepeatCount = "№",
                     AutoContinue = "Auto continue",
                     AutoContinueOn = "",
-                    DelayInSeconds = "Delay (seconds)",
+                    DelayInSeconds = "Delay\n(sec)",
                     Previous = "‹Pre&vious",
                     Next = "&Next›",
                     PlayCurrent = "&Play current",
