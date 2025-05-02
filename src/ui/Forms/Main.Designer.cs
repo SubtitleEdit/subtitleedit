@@ -3706,9 +3706,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoContinue.Controls.Add(this.comboBoxAutoContinue);
             this.groupBoxAutoContinue.Controls.Add(this.labelAutoContinueDelay);
             this.groupBoxAutoContinue.Controls.Add(this.checkBoxAutoContinue);
-            this.groupBoxAutoContinue.Location = new System.Drawing.Point(6, 120);
+            this.groupBoxAutoContinue.Location = new System.Drawing.Point(1, 64);
             this.groupBoxAutoContinue.Name = "groupBoxAutoContinue";
-            this.groupBoxAutoContinue.Size = new System.Drawing.Size(182, 98);
+            this.groupBoxAutoContinue.Size = new System.Drawing.Size(182, 62);
             this.groupBoxAutoContinue.TabIndex = 1;
             this.groupBoxAutoContinue.TabStop = false;
             this.groupBoxAutoContinue.Text = "Auto continue";
@@ -3743,7 +3743,7 @@ namespace Nikse.SubtitleEdit.Forms
             "13",
             "14",
             "15"});
-            this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 59);
+            this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 33);
             this.comboBoxAutoContinue.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoContinue.MaxLength = 32767;
             this.comboBoxAutoContinue.Name = "comboBoxAutoContinue";
@@ -3757,7 +3757,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoContinueDelay
             // 
             this.labelAutoContinueDelay.AutoSize = true;
-            this.labelAutoContinueDelay.Location = new System.Drawing.Point(7, 43);
+            this.labelAutoContinueDelay.Location = new System.Drawing.Point(7, 17);
             this.labelAutoContinueDelay.Name = "labelAutoContinueDelay";
             this.labelAutoContinueDelay.Size = new System.Drawing.Size(83, 13);
             this.labelAutoContinueDelay.TabIndex = 1;
@@ -3790,9 +3790,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoRepeat.Controls.Add(this.comboBoxAutoRepeat);
             this.groupBoxAutoRepeat.Controls.Add(this.labelAutoRepeatCount);
             this.groupBoxAutoRepeat.Controls.Add(this.checkBoxAutoRepeatOn);
-            this.groupBoxAutoRepeat.Location = new System.Drawing.Point(6, 14);
+            this.groupBoxAutoRepeat.Location = new System.Drawing.Point(1, 1);
             this.groupBoxAutoRepeat.Name = "groupBoxAutoRepeat";
-            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(182, 100);
+            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(182, 57);
             this.groupBoxAutoRepeat.TabIndex = 0;
             this.groupBoxAutoRepeat.TabStop = false;
             this.groupBoxAutoRepeat.Text = "Auto repeat";
@@ -3821,7 +3821,7 @@ namespace Nikse.SubtitleEdit.Forms
             "7",
             "8",
             "9"});
-            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 60);
+            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 30);
             this.comboBoxAutoRepeat.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoRepeat.MaxLength = 32767;
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
@@ -3835,7 +3835,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoRepeatCount
             // 
             this.labelAutoRepeatCount.AutoSize = true;
-            this.labelAutoRepeatCount.Location = new System.Drawing.Point(6, 44);
+            this.labelAutoRepeatCount.Location = new System.Drawing.Point(6, 14);
             this.labelAutoRepeatCount.Name = "labelAutoRepeatCount";
             this.labelAutoRepeatCount.Size = new System.Drawing.Size(105, 13);
             this.labelAutoRepeatCount.TabIndex = 1;
