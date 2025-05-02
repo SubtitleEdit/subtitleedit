@@ -3766,7 +3766,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxAutoContinue
             // 
             this.checkBoxAutoContinue.AutoSize = true;
-            this.checkBoxAutoContinue.Location = new System.Drawing.Point(10, 19);
+            this.checkBoxAutoContinue.Location = new System.Drawing.Point(150, 0);
             this.checkBoxAutoContinue.Name = "checkBoxAutoContinue";
             this.checkBoxAutoContinue.Size = new System.Drawing.Size(38, 17);
             this.checkBoxAutoContinue.TabIndex = 0;
@@ -3846,7 +3846,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoRepeatOn.AutoSize = true;
             this.checkBoxAutoRepeatOn.Checked = true;
             this.checkBoxAutoRepeatOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAutoRepeatOn.Location = new System.Drawing.Point(10, 19);
+            this.checkBoxAutoRepeatOn.Location = new System.Drawing.Point(150, 0);
             this.checkBoxAutoRepeatOn.Name = "checkBoxAutoRepeatOn";
             this.checkBoxAutoRepeatOn.Size = new System.Drawing.Size(38, 17);
             this.checkBoxAutoRepeatOn.TabIndex = 0;
