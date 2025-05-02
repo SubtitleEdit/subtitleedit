@@ -5401,6 +5401,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.Location = new System.Drawing.Point(620, 72);
+            this.buttonSplitLine.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(114, 23);
             this.buttonSplitLine.TabIndex = 39;
@@ -5502,6 +5503,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAutoBreak.Location = new System.Drawing.Point(620, 43);
+            this.buttonAutoBreak.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
             this.buttonAutoBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonAutoBreak.TabIndex = 7;
@@ -5543,6 +5545,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUnBreak.Location = new System.Drawing.Point(620, 14);
+            this.buttonUnBreak.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonUnBreak.TabIndex = 6;
