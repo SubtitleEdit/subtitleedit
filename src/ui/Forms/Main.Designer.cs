@@ -5413,7 +5413,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelOriginalCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelOriginalCharactersPerSecond.AutoSize = true;
-            this.labelOriginalCharactersPerSecond.Location = new System.Drawing.Point(652, 11);
+            this.labelOriginalCharactersPerSecond.Location = new System.Drawing.Point(652, 0);
             this.labelOriginalCharactersPerSecond.Name = "labelOriginalCharactersPerSecond";
             this.labelOriginalCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
             this.labelOriginalCharactersPerSecond.TabIndex = 38;
@@ -5452,7 +5452,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelText
             // 
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(239, 11);
+            this.labelText.Location = new System.Drawing.Point(239, 0);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 5;
@@ -5533,7 +5533,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCharactersPerSecond.AutoSize = true;
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(448, 11);
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(448, 0);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
             this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
@@ -5644,7 +5644,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelStartTime
             // 
             this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(9, 11);
+            this.labelStartTime.Location = new System.Drawing.Point(9, 0);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
             this.labelStartTime.TabIndex = 3;
@@ -5653,7 +5653,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelDuration
             // 
             this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(122, 11);
+            this.labelDuration.Location = new System.Drawing.Point(122, 0);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(47, 13);
             this.labelDuration.TabIndex = 4;
@@ -5662,7 +5662,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoDuration
             // 
             this.labelAutoDuration.AutoSize = true;
-            this.labelAutoDuration.Location = new System.Drawing.Point(92, 11);
+            this.labelAutoDuration.Location = new System.Drawing.Point(92, 0);
             this.labelAutoDuration.Name = "labelAutoDuration";
             this.labelAutoDuration.Size = new System.Drawing.Size(29, 13);
             this.labelAutoDuration.TabIndex = 30;
