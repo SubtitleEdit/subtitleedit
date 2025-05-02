@@ -1084,7 +1084,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxEncoding.DropDownHeight = 215;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.DropDownWidth = 0;
-            this.comboBoxEncoding.Items.AddRange(new string[] {
+            this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -2749,7 +2749,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 826);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 666);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -3487,10 +3487,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause,
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
-            this.toolStripSplitButtonPlayRate });
+            this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(261, 29);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(204, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3722,7 +3722,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoContinue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoContinue.DropDownWidth = 96;
             this.comboBoxAutoContinue.FormattingEnabled = false;
-            this.comboBoxAutoContinue.Items.AddRange(new string[] {
+            this.comboBoxAutoContinue.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -3804,7 +3804,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoRepeat.DropDownWidth = 96;
             this.comboBoxAutoRepeat.FormattingEnabled = false;
-            this.comboBoxAutoRepeat.Items.AddRange(new string[] {
+            this.comboBoxAutoRepeat.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
