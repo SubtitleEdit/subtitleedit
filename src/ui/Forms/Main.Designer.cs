@@ -4910,7 +4910,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.numericUpDownLayer.Location = new System.Drawing.Point(44, 101);
+            this.numericUpDownLayer.Location = new System.Drawing.Point(36, 101);
             this.numericUpDownLayer.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -4936,7 +4936,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelLayer
             // 
             this.labelLayer.AutoSize = true;
-            this.labelLayer.Location = new System.Drawing.Point(9, 103);
+            this.labelLayer.Location = new System.Drawing.Point(1, 103);
             this.labelLayer.Name = "labelLayer";
             this.labelLayer.Size = new System.Drawing.Size(33, 13);
             this.labelLayer.TabIndex = 45;
