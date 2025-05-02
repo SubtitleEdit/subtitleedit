@@ -3682,7 +3682,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGoogleTranslateIt.Name = "buttonGoogleTranslateIt";
             this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(92, 23);
             this.buttonGoogleTranslateIt.TabIndex = 2;
-            this.buttonGoogleTranslateIt.Text = "Google translate it";
+            this.buttonGoogleTranslateIt.Text = "G translate";
             this.buttonGoogleTranslateIt.UseVisualStyleBackColor = true;
             this.buttonGoogleTranslateIt.Click += new System.EventHandler(this.ButtonGoogleTranslateItClick);
             // 
@@ -3694,7 +3694,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(92, 23);
             this.buttonGoogleIt.TabIndex = 1;
-            this.buttonGoogleIt.Text = "Google it";
+            this.buttonGoogleIt.Text = "Google";
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
             this.buttonGoogleIt.Click += new System.EventHandler(this.ButtonGoogleItClick);
             // 

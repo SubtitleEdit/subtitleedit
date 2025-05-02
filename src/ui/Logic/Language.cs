@@ -2284,8 +2284,8 @@ namespace Nikse.SubtitleEdit.Logic
                     SetEndTime = "Set end time",
                     SetStartTimeAndOffsetTheRest = "Set start && offset the rest",
 
-                    GoogleIt = "Google it",
-                    GoogleTranslate = "Google translate",
+                    GoogleIt = "Google",
+                    GoogleTranslate = "G translate",
                     AutoTranslate = "Auto-translate",
                     OriginalText = "Original text",
                     SearchTextOnline = "Search text online",
