@@ -3744,6 +3744,7 @@ namespace Nikse.SubtitleEdit.Forms
             "14",
             "15"});
             this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 59);
+            this.comboBoxAutoContinue.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoContinue.MaxLength = 32767;
             this.comboBoxAutoContinue.Name = "comboBoxAutoContinue";
             this.comboBoxAutoContinue.SelectedIndex = -1;
@@ -3821,6 +3822,7 @@ namespace Nikse.SubtitleEdit.Forms
             "8",
             "9"});
             this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 60);
+            this.comboBoxAutoRepeat.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoRepeat.MaxLength = 32767;
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
             this.comboBoxAutoRepeat.SelectedIndex = -1;
@@ -3932,6 +3934,7 @@ namespace Nikse.SubtitleEdit.Forms
             0});
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(90, 190);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPosition.MaximumSize = new System.Drawing.Size(128, 26);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPosition.TabIndex = 12;
@@ -3949,6 +3952,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonGotoSub
             // 
             this.buttonGotoSub.Location = new System.Drawing.Point(6, 58);
+            this.buttonGotoSub.MaximumSize = new System.Drawing.Size(202, 26);
             this.buttonGotoSub.Name = "buttonGotoSub";
             this.buttonGotoSub.Size = new System.Drawing.Size(180, 23);
             this.buttonGotoSub.TabIndex = 2;
@@ -3960,6 +3964,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonBeforeText
             // 
             this.buttonBeforeText.Location = new System.Drawing.Point(6, 32);
+            this.buttonBeforeText.MaximumSize = new System.Drawing.Size(202, 26);
             this.buttonBeforeText.Name = "buttonBeforeText";
             this.buttonBeforeText.Size = new System.Drawing.Size(180, 23);
             this.buttonBeforeText.TabIndex = 1;
@@ -3971,6 +3976,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSetEnd
             // 
             this.buttonSetEnd.Location = new System.Drawing.Point(6, 110);
+            this.buttonSetEnd.MaximumSize = new System.Drawing.Size(202, 26);
             this.buttonSetEnd.Name = "buttonSetEnd";
             this.buttonSetEnd.Size = new System.Drawing.Size(180, 23);
             this.buttonSetEnd.TabIndex = 4;
@@ -3982,6 +3988,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonInsertNewText
             // 
             this.buttonInsertNewText.Location = new System.Drawing.Point(6, 6);
+            this.buttonInsertNewText.MaximumSize = new System.Drawing.Size(202, 26);
             this.buttonInsertNewText.Name = "buttonInsertNewText";
             this.buttonInsertNewText.Size = new System.Drawing.Size(180, 23);
             this.buttonInsertNewText.TabIndex = 0;
@@ -3993,6 +4000,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSetStartTime
             // 
             this.buttonSetStartTime.Location = new System.Drawing.Point(6, 84);
+            this.buttonSetStartTime.MaximumSize = new System.Drawing.Size(202, 26);
             this.buttonSetStartTime.Name = "buttonSetStartTime";
             this.buttonSetStartTime.Size = new System.Drawing.Size(180, 23);
             this.buttonSetStartTime.TabIndex = 3;
@@ -4044,6 +4052,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonForward2
             // 
             this.buttonForward2.Location = new System.Drawing.Point(130, 163);
+            this.buttonForward2.MaximumSize = new System.Drawing.Size(63, 26);
             this.buttonForward2.Name = "buttonForward2";
             this.buttonForward2.Size = new System.Drawing.Size(56, 23);
             this.buttonForward2.TabIndex = 10;
@@ -4072,6 +4081,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSec2.MaximumSize = new System.Drawing.Size(66, 26);
             this.numericUpDownSec2.Minimum = new decimal(new int[] {
             0,
             0,
@@ -4092,6 +4102,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSecBack2
             // 
             this.buttonSecBack2.Location = new System.Drawing.Point(6, 163);
+            this.buttonSecBack2.MaximumSize = new System.Drawing.Size(63, 26);
             this.buttonSecBack2.Name = "buttonSecBack2";
             this.buttonSecBack2.Size = new System.Drawing.Size(56, 23);
             this.buttonSecBack2.TabIndex = 8;
@@ -4102,6 +4113,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonForward1
             // 
             this.buttonForward1.Location = new System.Drawing.Point(130, 137);
+            this.buttonForward1.MaximumSize = new System.Drawing.Size(63, 26);
             this.buttonForward1.Name = "buttonForward1";
             this.buttonForward1.Size = new System.Drawing.Size(56, 23);
             this.buttonForward1.TabIndex = 7;
@@ -4130,6 +4142,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSec1.MaximumSize = new System.Drawing.Size(66, 26);
             this.numericUpDownSec1.Minimum = new decimal(new int[] {
             0,
             0,
@@ -4160,6 +4173,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSecBack1
             // 
             this.buttonSecBack1.Location = new System.Drawing.Point(6, 137);
+            this.buttonSecBack1.MaximumSize = new System.Drawing.Size(63, 26);
             this.buttonSecBack1.Name = "buttonSecBack1";
             this.buttonSecBack1.Size = new System.Drawing.Size(56, 23);
             this.buttonSecBack1.TabIndex = 5;
