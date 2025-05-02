@@ -4889,6 +4889,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEdit.Controls.Add(this.pictureBoxRecord);
             this.groupBoxEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxEdit.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxEdit.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxEdit.Name = "groupBoxEdit";
             this.groupBoxEdit.Size = new System.Drawing.Size(740, 142);
             this.groupBoxEdit.TabIndex = 1;
@@ -4980,7 +4981,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.IsSpellCheckRequested = false;
             this.textBoxListViewText.IsWrongWord = false;
             this.textBoxListViewText.LanguageChanged = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(184, 14);
+            this.textBoxListViewText.Location = new System.Drawing.Point(165, 14);
             this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
@@ -4990,7 +4991,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.SelectedText = "";
             this.textBoxListViewText.SelectionLength = 0;
             this.textBoxListViewText.SelectionStart = 0;
-            this.textBoxListViewText.Size = new System.Drawing.Size(430, 84);
+            this.textBoxListViewText.Size = new System.Drawing.Size(450, 84);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxListViewText.UseSystemPasswordChar = false;
@@ -5405,7 +5406,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLinePixels.AutoSize = true;
-            this.labelSingleLinePixels.Location = new System.Drawing.Point(427, 103);
+            this.labelSingleLinePixels.Location = new System.Drawing.Point(408, 103);
             this.labelSingleLinePixels.Name = "labelSingleLinePixels";
             this.labelSingleLinePixels.Size = new System.Drawing.Size(105, 13);
             this.labelSingleLinePixels.TabIndex = 42;
@@ -5414,7 +5415,7 @@ namespace Nikse.SubtitleEdit.Forms
             // pictureBoxBookmark
             // 
             this.pictureBoxBookmark.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxBookmark.Image")));
-            this.pictureBoxBookmark.Location = new System.Drawing.Point(150, 40);
+            this.pictureBoxBookmark.Location = new System.Drawing.Point(131, 40);
             this.pictureBoxBookmark.Name = "pictureBoxBookmark";
             this.pictureBoxBookmark.Size = new System.Drawing.Size(22, 22);
             this.pictureBoxBookmark.TabIndex = 41;
@@ -5426,7 +5427,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(346, 103);
+            this.labelSingleLine.Location = new System.Drawing.Point(327, 103);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Size = new System.Drawing.Size(78, 13);
             this.labelSingleLine.TabIndex = 32;
@@ -5454,7 +5455,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSplitLine
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSplitLine.Location = new System.Drawing.Point(620, 72);
+            this.buttonSplitLine.Location = new System.Drawing.Point(621, 72);
             this.buttonSplitLine.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(114, 23);
@@ -5468,7 +5469,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelOriginalCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelOriginalCharactersPerSecond.AutoSize = true;
-            this.labelOriginalCharactersPerSecond.Location = new System.Drawing.Point(652, 0);
+            this.labelOriginalCharactersPerSecond.Location = new System.Drawing.Point(551, 0);
             this.labelOriginalCharactersPerSecond.Name = "labelOriginalCharactersPerSecond";
             this.labelOriginalCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
             this.labelOriginalCharactersPerSecond.TabIndex = 38;
@@ -5478,7 +5479,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextOriginalLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextOriginalLineTotal.AutoSize = true;
-            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(579, 103);
+            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(580, 103);
             this.labelTextOriginalLineTotal.Name = "labelTextOriginalLineTotal";
             this.labelTextOriginalLineTotal.Size = new System.Drawing.Size(35, 13);
             this.labelTextOriginalLineTotal.TabIndex = 37;
@@ -5507,7 +5508,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelText
             // 
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(239, 0);
+            this.labelText.Location = new System.Drawing.Point(165, 0);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 5;
@@ -5556,7 +5557,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoBreak.Location = new System.Drawing.Point(620, 43);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(621, 43);
             this.buttonAutoBreak.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
             this.buttonAutoBreak.Size = new System.Drawing.Size(114, 23);
@@ -5569,7 +5570,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 103);
+            this.labelTextLineLengths.Location = new System.Drawing.Point(220, 103);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
             this.labelTextLineLengths.TabIndex = 12;
@@ -5589,7 +5590,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCharactersPerSecond.AutoSize = true;
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(448, 0);
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(429, 0);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
             this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
@@ -5598,7 +5599,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(620, 14);
+            this.buttonUnBreak.Location = new System.Drawing.Point(621, 14);
             this.buttonUnBreak.MaximumSize = new System.Drawing.Size(128, 26);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(114, 23);
@@ -5623,10 +5624,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 14);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(1, 14);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 23);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(90, 23);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TabStop = false;
             timeCode3.Hours = 0;
@@ -5654,7 +5655,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 14);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(97, 14);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -5680,7 +5681,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonPrevious
             // 
-            this.buttonPrevious.Location = new System.Drawing.Point(8, 65);
+            this.buttonPrevious.Location = new System.Drawing.Point(1, 65);
             this.buttonPrevious.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
@@ -5691,7 +5692,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(86, 65);
+            this.buttonNext.Location = new System.Drawing.Point(79, 65);
             this.buttonNext.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(72, 23);
@@ -5703,7 +5704,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelStartTime
             // 
             this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(9, 0);
+            this.labelStartTime.Location = new System.Drawing.Point(2, 0);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
             this.labelStartTime.TabIndex = 3;
@@ -5712,7 +5713,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelDuration
             // 
             this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(122, 0);
+            this.labelDuration.Location = new System.Drawing.Point(97, 0);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(47, 13);
             this.labelDuration.TabIndex = 4;
@@ -5721,7 +5722,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoDuration
             // 
             this.labelAutoDuration.AutoSize = true;
-            this.labelAutoDuration.Location = new System.Drawing.Point(92, 0);
+            this.labelAutoDuration.Location = new System.Drawing.Point(67, 0);
             this.labelAutoDuration.Name = "labelAutoDuration";
             this.labelAutoDuration.Size = new System.Drawing.Size(29, 13);
             this.labelAutoDuration.TabIndex = 30;
@@ -5730,7 +5731,7 @@ namespace Nikse.SubtitleEdit.Forms
             // pictureBoxRecord
             // 
             this.pictureBoxRecord.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxRecord.Image")));
-            this.pictureBoxRecord.Location = new System.Drawing.Point(146, 40);
+            this.pictureBoxRecord.Location = new System.Drawing.Point(127, 40);
             this.pictureBoxRecord.Name = "pictureBoxRecord";
             this.pictureBoxRecord.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxRecord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
