@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
@@ -281,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSplitterCheckForUpdates = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetLayer = new System.Windows.Forms.ToolStripMenuItem();
@@ -367,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.checkBoxSyncListViewWithVideoWhilePlaying = new System.Windows.Forms.CheckBox();
             this.labelVideoInfo = new System.Windows.Forms.Label();
-            this.contextMenuStripVideoFileName = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripVideoFileName = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.videoInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trackBarWaveformPosition = new System.Windows.Forms.TrackBar();
@@ -439,13 +440,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
-            this.contextMenuStripHideVideoControls = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripHideVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.hideVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ShowSubtitleTimer = new System.Windows.Forms.Timer();
-            this.timerAutoDuration = new System.Windows.Forms.Timer();
-            this.timerAutoContinue = new System.Windows.Forms.Timer();
-            this.timerWaveform = new System.Windows.Forms.Timer();
-            this.contextMenuStripWaveform = new System.Windows.Forms.ContextMenuStrip();
+            this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
+            this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
+            this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
+            this.timerWaveform = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStripWaveform = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertNewSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addParagraphHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addParagraphAndPasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -477,14 +478,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.imageListBookmarks = new System.Windows.Forms.ImageList();
+            this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.numericUpDownLayer = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelLayer = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparatorSpellCheckSuggestions = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSpellCheckSkipOnce = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSpellCheckSkipAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -560,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAutoDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.pictureBoxRecord = new System.Windows.Forms.PictureBox();
             this.textBoxSource = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemGoToListView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -580,12 +581,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.startOfRighttoleftOverrideRLOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aSSStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerTextUndo = new System.Windows.Forms.Timer();
-            this.timerOriginalTextUndo = new System.Windows.Forms.Timer();
-            this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip();
+            this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -5680,6 +5681,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPrevious
             // 
             this.buttonPrevious.Location = new System.Drawing.Point(8, 65);
+            this.buttonPrevious.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
             this.buttonPrevious.TabIndex = 2;
@@ -5690,6 +5692,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonNext
             // 
             this.buttonNext.Location = new System.Drawing.Point(86, 65);
+            this.buttonNext.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(72, 23);
             this.buttonNext.TabIndex = 3;
