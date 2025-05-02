@@ -682,6 +682,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStrip1.AutoSize = false;
             this.toolStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStrip1.GripMargin = new System.Windows.Forms.Padding(0);
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonFileNew,
@@ -723,6 +724,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonGetFrameRate});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
             this.toolStrip1.Size = new System.Drawing.Size(975, 40);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
@@ -1145,6 +1147,7 @@ namespace Nikse.SubtitleEdit.Forms
             // menuStrip1
             // 
             this.menuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(0);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -1158,6 +1161,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(0);
             this.menuStrip1.Size = new System.Drawing.Size(975, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
@@ -1192,7 +1196,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator10,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 24);
             this.fileToolStripMenuItem.Text = "File";
             this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.FileToolStripMenuItemDropDownOpening);
             // 
@@ -1716,7 +1720,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInverseSelection,
             this.editSelectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(40, 24);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.DropDownOpening += new System.EventHandler(this.EditToolStripMenuItemDropDownOpening);
             // 
@@ -1895,7 +1899,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.appendTextVisuallyToolStripMenuItem,
             this.joinSubtitlesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.ToolsToolStripMenuItemDropDownOpening);
             // 
@@ -2231,7 +2235,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.GetDictionariesToolStripMenuItem,
             this.addWordToNameListToolStripMenuItem});
             this.toolStripMenuItemSpellCheckMain.Name = "toolStripMenuItemSpellCheckMain";
-            this.toolStripMenuItemSpellCheckMain.Size = new System.Drawing.Size(82, 20);
+            this.toolStripMenuItemSpellCheckMain.Size = new System.Drawing.Size(82, 24);
             this.toolStripMenuItemSpellCheckMain.Text = "Spell check";
             this.toolStripMenuItemSpellCheckMain.DropDownOpening += new System.EventHandler(this.ToolStripMenuItemSpellCheckMainDropDownOpening);
             // 
@@ -2314,7 +2318,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.undockVideoControlsToolStripMenuItem,
             this.redockVideoControlsToolStripMenuItem});
             this.toolStripMenuItemVideo.Name = "toolStripMenuItemVideo";
-            this.toolStripMenuItemVideo.Size = new System.Drawing.Size(50, 20);
+            this.toolStripMenuItemVideo.Size = new System.Drawing.Size(50, 24);
             this.toolStripMenuItemVideo.Text = "Video";
             this.toolStripMenuItemVideo.DropDownClosed += new System.EventHandler(this.ToolStripMenuItemVideoDropDownClosed);
             this.toolStripMenuItemVideo.DropDownOpening += new System.EventHandler(this.ToolStripMenuItemVideoDropDownOpening);
@@ -2481,7 +2485,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemChangeFrameRate2,
             this.changeSpeedInPercentToolStripMenuItem});
             this.toolStripMenuItemSynchronization.Name = "toolStripMenuItemSynchronization";
-            this.toolStripMenuItemSynchronization.Size = new System.Drawing.Size(106, 20);
+            this.toolStripMenuItemSynchronization.Size = new System.Drawing.Size(106, 24);
             this.toolStripMenuItemSynchronization.Text = "Synchronization";
             // 
             // toolStripMenuItemAdjustAllTimes
@@ -2542,7 +2546,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.mergeSentencesToolStripMenuItem,
             this.breaksplitLongLinesToolStripMenuItem});
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
-            this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
+            this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 24);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
             // 
             // translateToolStripMenuItem
@@ -2592,7 +2596,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.wordListsToolStripMenuItem,
             this.changeLanguageToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 24);
             this.optionsToolStripMenuItem.Text = "Options";
             // 
             // settingsToolStripMenuItem
@@ -2625,7 +2629,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.showSessionKeyLogToolStripMenuItem,
             this.leaveSessionToolStripMenuItem});
             this.toolStripMenuItemNetworking.Name = "toolStripMenuItemNetworking";
-            this.toolStripMenuItemNetworking.Size = new System.Drawing.Size(81, 20);
+            this.toolStripMenuItemNetworking.Size = new System.Drawing.Size(81, 24);
             this.toolStripMenuItemNetworking.Text = "Networking";
             this.toolStripMenuItemNetworking.DropDownOpening += new System.EventHandler(this.ToolStripMenuItemNetworkingDropDownOpening);
             // 
@@ -2672,7 +2676,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.helpToolStripMenuItem1,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(45, 24);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.DropDownClosed += new System.EventHandler(this.MenuClosed);
             this.helpToolStripMenuItem.DropDownOpening += new System.EventHandler(this.MenuOpened);
@@ -3410,7 +3414,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxSyncListViewWithVideoWhilePlaying
             // 
             this.checkBoxSyncListViewWithVideoWhilePlaying.AutoSize = true;
-            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 4);
+            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 2);
             this.checkBoxSyncListViewWithVideoWhilePlaying.Name = "checkBoxSyncListViewWithVideoWhilePlaying";
             this.checkBoxSyncListViewWithVideoWhilePlaying.Size = new System.Drawing.Size(205, 17);
             this.checkBoxSyncListViewWithVideoWhilePlaying.TabIndex = 1;
@@ -3421,7 +3425,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVideoInfo.ContextMenuStrip = this.contextMenuStripVideoFileName;
-            this.labelVideoInfo.Location = new System.Drawing.Point(603, 12);
+            this.labelVideoInfo.Location = new System.Drawing.Point(603, 2);
             this.labelVideoInfo.Name = "labelVideoInfo";
             this.labelVideoInfo.Size = new System.Drawing.Size(369, 19);
             this.labelVideoInfo.TabIndex = 12;
