@@ -3719,7 +3719,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoContinue.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxAutoContinue.Name = "groupBoxAutoContinue";
             this.groupBoxAutoContinue.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBoxAutoContinue.Size = new System.Drawing.Size(108, 48);
+            this.groupBoxAutoContinue.Size = new System.Drawing.Size(108, 52);
             this.groupBoxAutoContinue.TabIndex = 1;
             this.groupBoxAutoContinue.TabStop = false;
             this.groupBoxAutoContinue.Text = "Auto continue";
@@ -3805,7 +3805,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoRepeat.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxAutoRepeat.Name = "groupBoxAutoRepeat";
             this.groupBoxAutoRepeat.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(90, 48);
+            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(90, 52);
             this.groupBoxAutoRepeat.TabIndex = 0;
             this.groupBoxAutoRepeat.TabStop = false;
             this.groupBoxAutoRepeat.Text = "Auto repeat";
