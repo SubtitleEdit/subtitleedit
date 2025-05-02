@@ -5705,6 +5705,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPrevious
             // 
             this.buttonPrevious.Location = new System.Drawing.Point(1, 61);
+            this.buttonPrevious.Margin = new System.Windows.Forms.Padding(0);
             this.buttonPrevious.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
@@ -5716,6 +5717,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonNext
             // 
             this.buttonNext.Location = new System.Drawing.Point(79, 61);
+            this.buttonNext.Margin = new System.Windows.Forms.Padding(0);
             this.buttonNext.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(72, 23);
