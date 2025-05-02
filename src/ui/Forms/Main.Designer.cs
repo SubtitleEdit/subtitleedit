@@ -5423,7 +5423,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextOriginalLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextOriginalLineTotal.AutoSize = true;
-            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(698, 115);
+            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(579, 115);
             this.labelTextOriginalLineTotal.Name = "labelTextOriginalLineTotal";
             this.labelTextOriginalLineTotal.Size = new System.Drawing.Size(35, 13);
             this.labelTextOriginalLineTotal.TabIndex = 37;
