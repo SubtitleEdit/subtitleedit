@@ -3829,7 +3829,7 @@ namespace Nikse.SubtitleEdit.Forms
             "7",
             "8",
             "9"});
-            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(1, 32);
+            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(1, 35);
             this.comboBoxAutoRepeat.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoRepeat.MaxLength = 32767;
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
@@ -3843,7 +3843,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoRepeatCount
             // 
             this.labelAutoRepeatCount.AutoSize = true;
-            this.labelAutoRepeatCount.Location = new System.Drawing.Point(-2, 13);
+            this.labelAutoRepeatCount.Location = new System.Drawing.Point(-2, 17);
             this.labelAutoRepeatCount.Name = "labelAutoRepeatCount";
             this.labelAutoRepeatCount.Size = new System.Drawing.Size(105, 13);
             this.labelAutoRepeatCount.TabIndex = 1;
@@ -5457,7 +5457,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelStartTimeWarning
             // 
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelStartTimeWarning.Location = new System.Drawing.Point(8, 42);
+            this.labelStartTimeWarning.Location = new System.Drawing.Point(8, 38);
             this.labelStartTimeWarning.Name = "labelStartTimeWarning";
             this.labelStartTimeWarning.Size = new System.Drawing.Size(170, 17);
             this.labelStartTimeWarning.TabIndex = 18;
@@ -5697,7 +5697,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonPrevious
             // 
-            this.buttonPrevious.Location = new System.Drawing.Point(1, 65);
+            this.buttonPrevious.Location = new System.Drawing.Point(1, 61);
             this.buttonPrevious.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
@@ -5708,7 +5708,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(79, 65);
+            this.buttonNext.Location = new System.Drawing.Point(79, 61);
             this.buttonNext.MaximumSize = new System.Drawing.Size(82, 26);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(72, 23);
