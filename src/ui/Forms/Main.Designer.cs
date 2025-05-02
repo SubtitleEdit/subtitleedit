@@ -3349,7 +3349,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNextWord.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.labelNextWord.AutoSize = true;
             this.labelNextWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNextWord.Location = new System.Drawing.Point(401, 9);
+            this.labelNextWord.Location = new System.Drawing.Point(401, 2);
             this.labelNextWord.Name = "labelNextWord";
             this.labelNextWord.Size = new System.Drawing.Size(71, 17);
             this.labelNextWord.TabIndex = 13;
@@ -3375,7 +3375,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.InsertAtVideoPositionShortcut = System.Windows.Forms.Keys.Insert;
-            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
+            this.audioVisualizer.Location = new System.Drawing.Point(472, 24);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
             this.audioVisualizer.MouseWheelScrollUpIsForward = true;
             this.audioVisualizer.Move100MsLeft = System.Windows.Forms.Keys.None;
@@ -3410,7 +3410,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxSyncListViewWithVideoWhilePlaying
             // 
             this.checkBoxSyncListViewWithVideoWhilePlaying.AutoSize = true;
-            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 11);
+            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 4);
             this.checkBoxSyncListViewWithVideoWhilePlaying.Name = "checkBoxSyncListViewWithVideoWhilePlaying";
             this.checkBoxSyncListViewWithVideoWhilePlaying.Size = new System.Drawing.Size(205, 17);
             this.checkBoxSyncListViewWithVideoWhilePlaying.TabIndex = 1;
@@ -3456,7 +3456,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
-            this.trackBarWaveformPosition.Location = new System.Drawing.Point(692, 267);
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(692, 257);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
             this.trackBarWaveformPosition.Size = new System.Drawing.Size(279, 20);
@@ -3469,7 +3469,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.panelWaveformControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelWaveformControls.Controls.Add(this.toolStripWaveControls);
-            this.panelWaveformControls.Location = new System.Drawing.Point(474, 265);
+            this.panelWaveformControls.Location = new System.Drawing.Point(474, 255);
             this.panelWaveformControls.Name = "panelWaveformControls";
             this.panelWaveformControls.Size = new System.Drawing.Size(212, 30);
             this.panelWaveformControls.TabIndex = 10;
@@ -3594,7 +3594,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlModes.Controls.Add(this.tabPageTranslate);
             this.tabControlModes.Controls.Add(this.tabPageCreate);
             this.tabControlModes.Controls.Add(this.tabPageAdjust);
-            this.tabControlModes.Location = new System.Drawing.Point(0, 14);
+            this.tabControlModes.Location = new System.Drawing.Point(0, 0);
             this.tabControlModes.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlModes.Name = "tabControlModes";
             this.tabControlModes.SelectedIndex = 0;
@@ -3613,8 +3613,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageTranslate.Controls.Add(this.buttonPlayCurrent);
             this.tabPageTranslate.Controls.Add(this.buttonPlayNext);
             this.tabPageTranslate.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTranslate.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageTranslate.Name = "tabPageTranslate";
-            this.tabPageTranslate.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageTranslate.Size = new System.Drawing.Size(459, 257);
             this.tabPageTranslate.TabIndex = 0;
             this.tabPageTranslate.Text = "Translate";
@@ -3623,7 +3623,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTranslateTip.AutoSize = true;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(10, 207);
+            this.labelTranslateTip.Location = new System.Drawing.Point(7, 204);
             this.labelTranslateTip.Name = "labelTranslateTip";
             this.labelTranslateTip.Size = new System.Drawing.Size(294, 13);
             this.labelTranslateTip.TabIndex = 7;
@@ -3792,7 +3792,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoRepeat.Controls.Add(this.checkBoxAutoRepeatOn);
             this.groupBoxAutoRepeat.Location = new System.Drawing.Point(1, 1);
             this.groupBoxAutoRepeat.Name = "groupBoxAutoRepeat";
-            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(129, 57);
+            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(129, 63);
             this.groupBoxAutoRepeat.TabIndex = 0;
             this.groupBoxAutoRepeat.TabStop = false;
             this.groupBoxAutoRepeat.Text = "Auto repeat";
@@ -3821,7 +3821,7 @@ namespace Nikse.SubtitleEdit.Forms
             "7",
             "8",
             "9"});
-            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 30);
+            this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 32);
             this.comboBoxAutoRepeat.MaximumSize = new System.Drawing.Size(108, 24);
             this.comboBoxAutoRepeat.MaxLength = 32767;
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
@@ -3835,7 +3835,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAutoRepeatCount
             // 
             this.labelAutoRepeatCount.AutoSize = true;
-            this.labelAutoRepeatCount.Location = new System.Drawing.Point(6, 14);
+            this.labelAutoRepeatCount.Location = new System.Drawing.Point(6, 16);
             this.labelAutoRepeatCount.Name = "labelAutoRepeatCount";
             this.labelAutoRepeatCount.Size = new System.Drawing.Size(105, 13);
             this.labelAutoRepeatCount.TabIndex = 1;
