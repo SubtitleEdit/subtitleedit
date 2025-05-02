@@ -4843,6 +4843,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
+            this.SubtitleListview1.Margin = new System.Windows.Forms.Padding(0);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(740, 105);
