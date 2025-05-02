@@ -3646,6 +3646,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCustomUrl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCustomUrl2.Location = new System.Drawing.Point(6, 118);
+            this.buttonCustomUrl2.MaximumSize = new System.Drawing.Size(274, 26);
             this.buttonCustomUrl2.Name = "buttonCustomUrl2";
             this.buttonCustomUrl2.Size = new System.Drawing.Size(244, 23);
             this.buttonCustomUrl2.TabIndex = 4;
@@ -3657,6 +3658,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCustomUrl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCustomUrl1.Location = new System.Drawing.Point(6, 91);
+            this.buttonCustomUrl1.MaximumSize = new System.Drawing.Size(274, 26);
             this.buttonCustomUrl1.Name = "buttonCustomUrl1";
             this.buttonCustomUrl1.Size = new System.Drawing.Size(244, 23);
             this.buttonCustomUrl1.TabIndex = 3;
@@ -3668,6 +3670,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonGoogleTranslateIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(132, 63);
+            this.buttonGoogleTranslateIt.MaximumSize = new System.Drawing.Size(135, 26);
             this.buttonGoogleTranslateIt.Name = "buttonGoogleTranslateIt";
             this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(118, 23);
             this.buttonGoogleTranslateIt.TabIndex = 2;
@@ -3679,6 +3682,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGoogleIt.Location = new System.Drawing.Point(6, 63);
+            this.buttonGoogleIt.MaximumSize = new System.Drawing.Size(135, 26);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(120, 23);
             this.buttonGoogleIt.TabIndex = 1;
@@ -3772,6 +3776,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStop.Location = new System.Drawing.Point(282, 42);
+            this.buttonStop.MaximumSize = new System.Drawing.Size(86, 26);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(76, 23);
             this.buttonStop.TabIndex = 5;
@@ -3850,6 +3855,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonPlayPrevious.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonPlayPrevious.Location = new System.Drawing.Point(200, 14);
+            this.buttonPlayPrevious.MaximumSize = new System.Drawing.Size(86, 26);
             this.buttonPlayPrevious.Name = "buttonPlayPrevious";
             this.buttonPlayPrevious.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayPrevious.TabIndex = 2;
@@ -3861,6 +3867,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonPlayCurrent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonPlayCurrent.Location = new System.Drawing.Point(282, 14);
+            this.buttonPlayCurrent.MaximumSize = new System.Drawing.Size(86, 26);
             this.buttonPlayCurrent.Name = "buttonPlayCurrent";
             this.buttonPlayCurrent.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayCurrent.TabIndex = 3;
@@ -3872,6 +3879,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonPlayNext.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonPlayNext.Location = new System.Drawing.Point(363, 14);
+            this.buttonPlayNext.MaximumSize = new System.Drawing.Size(86, 26);
             this.buttonPlayNext.Name = "buttonPlayNext";
             this.buttonPlayNext.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayNext.TabIndex = 4;
