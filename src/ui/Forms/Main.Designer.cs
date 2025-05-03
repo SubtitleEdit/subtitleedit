@@ -738,7 +738,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonFileNew.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.toolStripButtonFileNew.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonFileNew.Name = "toolStripButtonFileNew";
-            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonFileNew.Text = "New";
             this.toolStripButtonFileNew.ToolTipText = "New";
             this.toolStripButtonFileNew.Click += new System.EventHandler(this.ToolStripButtonFileNewClick);
@@ -752,7 +752,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.toolStripButtonFileOpen.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
-            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonFileOpen.Text = "toolStripButtonOpen";
             this.toolStripButtonFileOpen.ToolTipText = "Open";
             this.toolStripButtonFileOpen.Click += new System.EventHandler(this.ToolStripButtonFileOpenClick);
@@ -766,7 +766,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonVideoOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.toolStripButtonVideoOpen.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonVideoOpen.Name = "toolStripButtonVideoOpen";
-            this.toolStripButtonVideoOpen.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonVideoOpen.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonVideoOpen.Text = "toolStripButtonOpen";
             this.toolStripButtonVideoOpen.ToolTipText = "Open";
             this.toolStripButtonVideoOpen.Click += new System.EventHandler(this.ToolStripButtonVideoOpenClick);
@@ -780,7 +780,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSave.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonSave.Text = "toolStripButtonSave";
             this.toolStripButtonSave.ToolTipText = "Save";
             this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSaveClick);
@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSaveAs.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonSaveAs.Name = "toolStripButtonSaveAs";
-            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonSaveAs.Text = "toolStripButtonSaveAs";
             this.toolStripButtonSaveAs.ToolTipText = "Save as";
             this.toolStripButtonSaveAs.Click += new System.EventHandler(this.ToolStripButtonSaveAsClick);
@@ -814,7 +814,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFind.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonFind.Name = "toolStripButtonFind";
-            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonFind.Text = "Find";
             this.toolStripButtonFind.Click += new System.EventHandler(this.ToolStripButtonFindClick);
             // 
@@ -827,7 +827,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonReplace.ImageTransparentColor = System.Drawing.Color.White;
             this.toolStripButtonReplace.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonReplace.Name = "toolStripButtonReplace";
-            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonReplace.Text = "Replace";
             this.toolStripButtonReplace.ToolTipText = "Replace";
             this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonFixCommonErrors.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFixCommonErrors.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonFixCommonErrors.Name = "toolStripButtonFixCommonErrors";
-            this.toolStripButtonFixCommonErrors.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonFixCommonErrors.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonFixCommonErrors.Text = "Fix common errors";
             this.toolStripButtonFixCommonErrors.ToolTipText = "Fix common errors";
             this.toolStripButtonFixCommonErrors.Click += new System.EventHandler(this.ToolStripButtonFixCommonErrorsClick);
@@ -861,7 +861,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonRemoveTextForHi.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRemoveTextForHi.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonRemoveTextForHi.Name = "toolStripButtonRemoveTextForHi";
-            this.toolStripButtonRemoveTextForHi.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonRemoveTextForHi.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonRemoveTextForHi.Text = "Remove text for HI";
             this.toolStripButtonRemoveTextForHi.ToolTipText = "Fix common errors";
             this.toolStripButtonRemoveTextForHi.Click += new System.EventHandler(this.ToolStripButtonRemoveTextForHiClick);
@@ -875,7 +875,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonVisualSync.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonVisualSync.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonVisualSync.Name = "toolStripButtonVisualSync";
-            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonVisualSync.Text = "Visual sync";
             this.toolStripButtonVisualSync.Click += new System.EventHandler(this.ToolStripButtonVisualSyncClick);
             // 
@@ -888,7 +888,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonBurnIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonBurnIn.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonBurnIn.Name = "toolStripButtonBurnIn";
-            this.toolStripButtonBurnIn.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonBurnIn.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonBurnIn.Text = "Burn in";
             this.toolStripButtonBurnIn.Click += new System.EventHandler(this.ToolStripButtonBurnInClick);
             // 
@@ -901,7 +901,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSpellCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSpellCheck.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
-            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonSpellCheck.Text = "Spell check";
             this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.SpellCheckToolStripMenuItemClick);
             // 
@@ -913,7 +913,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssStyleManager.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssStyleManager.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonAssStyleManager.Name = "toolStripButtonAssStyleManager";
-            this.toolStripButtonAssStyleManager.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonAssStyleManager.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonAssStyleManager.Text = "ASS style manager";
             this.toolStripButtonAssStyleManager.ToolTipText = "ASS style manager";
             this.toolStripButtonAssStyleManager.Visible = false;
@@ -928,7 +928,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonXProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonXProperties.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonXProperties.Name = "toolStripButtonXProperties";
-            this.toolStripButtonXProperties.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonXProperties.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonXProperties.Text = "Properties";
             this.toolStripButtonXProperties.Click += new System.EventHandler(this.ToolStripMenuItemFileFormatPropertiesClick);
             // 
@@ -940,7 +940,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssProperties.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonAssProperties.Name = "toolStripButtonAssProperties";
-            this.toolStripButtonAssProperties.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonAssProperties.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonAssProperties.Text = "ASS properties";
             this.toolStripButtonAssProperties.ToolTipText = "ASS properties";
             this.toolStripButtonAssProperties.Click += new System.EventHandler(this.ToolStripMenuItemFileFormatPropertiesClick);
@@ -953,7 +953,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssAttachments.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssAttachments.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonAssAttachments.Name = "toolStripButtonAssAttachments";
-            this.toolStripButtonAssAttachments.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonAssAttachments.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonAssAttachments.Text = "Attachments";
             this.toolStripButtonAssAttachments.ToolTipText = "Attachments";
             this.toolStripButtonAssAttachments.Click += new System.EventHandler(this.ToolStripButtonAssAttachmentsClick);
@@ -966,7 +966,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssaDraw.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssaDraw.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonAssaDraw.Name = "toolStripButtonAssaDraw";
-            this.toolStripButtonAssaDraw.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonAssaDraw.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonAssaDraw.Text = "ASS properties";
             this.toolStripButtonAssaDraw.ToolTipText = "ASS properties";
             this.toolStripButtonAssaDraw.Click += new System.EventHandler(this.ToolStripButtonAssaDrawClick);
@@ -979,7 +979,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonNetflixQualityCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonNetflixQualityCheck.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonNetflixQualityCheck.Name = "toolStripButtonNetflixQualityCheck";
-            this.toolStripButtonNetflixQualityCheck.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonNetflixQualityCheck.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonNetflixQualityCheck.Text = "Netflix quality check";
             this.toolStripButtonNetflixQualityCheck.Click += new System.EventHandler(this.ToolStripButtonNetflixGlyphCheckClick);
             // 
@@ -991,7 +991,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonBeautifyTimeCodes.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonBeautifyTimeCodes.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonBeautifyTimeCodes.Name = "toolStripButtonBeautifyTimeCodes";
-            this.toolStripButtonBeautifyTimeCodes.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonBeautifyTimeCodes.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonBeautifyTimeCodes.Text = "Beautify time codes...";
             this.toolStripButtonBeautifyTimeCodes.Click += new System.EventHandler(this.ToolStripButtonBeautifyTimeCodesClick);
             // 
@@ -1004,7 +1004,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.toolStripButtonSettings.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonSettings.Name = "toolStripButtonSettings";
-            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonSettings.Text = "Settings";
             this.toolStripButtonSettings.Click += new System.EventHandler(this.ToolStripButtonSettingsClick);
             // 
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.toolStripButtonHelp.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonHelp.Text = "Help";
             this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
             // 
@@ -1042,7 +1042,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSourceView.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSourceView.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonSourceView.Name = "toolStripButtonSourceView";
-            this.toolStripButtonSourceView.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonSourceView.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonSourceView.Text = "Toggle list/source view";
             this.toolStripButtonSourceView.Click += new System.EventHandler(this.ToolStripButtonSourceViewClick);
             // 
@@ -1055,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLayout.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripButtonLayout.Name = "toolStripButtonLayout";
-            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 35);
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 34);
             this.toolStripButtonLayout.Text = "Show/hide waveform";
             this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
@@ -1068,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripLabelSubtitleFormat
             // 
             this.toolStripLabelSubtitleFormat.Name = "toolStripLabelSubtitleFormat";
-            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 15);
+            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 31);
             this.toolStripLabelSubtitleFormat.Text = "Subtitle format";
             // 
             // comboBoxSubtitleFormats
