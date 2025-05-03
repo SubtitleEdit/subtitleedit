@@ -697,8 +697,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxFrameRate);
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxMiscellaneous.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
-            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(851, 522);
+            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(846, 517);
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
@@ -706,7 +707,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelDefaultLanguagesList
             // 
             this.labelDefaultLanguagesList.AutoSize = true;
-            this.labelDefaultLanguagesList.Location = new System.Drawing.Point(241, 495);
+            this.labelDefaultLanguagesList.Location = new System.Drawing.Point(239, 483);
             this.labelDefaultLanguagesList.Name = "labelDefaultLanguagesList";
             this.labelDefaultLanguagesList.Size = new System.Drawing.Size(37, 13);
             this.labelDefaultLanguagesList.TabIndex = 67;
@@ -714,7 +715,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             // buttonDefaultLanguages
             // 
-            this.buttonDefaultLanguages.Location = new System.Drawing.Point(205, 489);
+            this.buttonDefaultLanguages.Location = new System.Drawing.Point(203, 477);
             this.buttonDefaultLanguages.Name = "buttonDefaultLanguages";
             this.buttonDefaultLanguages.Size = new System.Drawing.Size(28, 23);
             this.buttonDefaultLanguages.TabIndex = 66;
@@ -725,7 +726,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelDefaultLanguages
             // 
             this.labelDefaultLanguages.AutoSize = true;
-            this.labelDefaultLanguages.Location = new System.Drawing.Point(8, 491);
+            this.labelDefaultLanguages.Location = new System.Drawing.Point(6, 479);
             this.labelDefaultLanguages.Name = "labelDefaultLanguages";
             this.labelDefaultLanguages.Size = new System.Drawing.Size(93, 13);
             this.labelDefaultLanguages.TabIndex = 33;
@@ -883,7 +884,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinGapMs);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxGeneralRules.Location = new System.Drawing.Point(6, 23);
+            this.groupBoxGeneralRules.Location = new System.Drawing.Point(1, 15);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
             this.groupBoxGeneralRules.Size = new System.Drawing.Size(384, 380);
             this.groupBoxGeneralRules.TabIndex = 0;
@@ -1577,7 +1578,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxEncoding.Location = new System.Drawing.Point(205, 438);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(203, 426);
             this.comboBoxEncoding.MaxLength = 32767;
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.SelectedIndex = -1;
@@ -1590,7 +1591,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // checkBoxAutoDetectAnsiEncoding
             // 
             this.checkBoxAutoDetectAnsiEncoding.AutoSize = true;
-            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(205, 467);
+            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(203, 455);
             this.checkBoxAutoDetectAnsiEncoding.Name = "checkBoxAutoDetectAnsiEncoding";
             this.checkBoxAutoDetectAnsiEncoding.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoDetectAnsiEncoding.TabIndex = 6;
@@ -1724,7 +1725,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelAutoDetectAnsiEncoding
             // 
             this.labelAutoDetectAnsiEncoding.AutoSize = true;
-            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(8, 466);
+            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(6, 454);
             this.labelAutoDetectAnsiEncoding.Name = "labelAutoDetectAnsiEncoding";
             this.labelAutoDetectAnsiEncoding.Size = new System.Drawing.Size(137, 13);
             this.labelAutoDetectAnsiEncoding.TabIndex = 5;
@@ -1820,7 +1821,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelDefaultFileEncoding
             // 
             this.labelDefaultFileEncoding.AutoSize = true;
-            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 441);
+            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(6, 429);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
             this.labelDefaultFileEncoding.Size = new System.Drawing.Size(104, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
@@ -1839,7 +1840,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxFrameRate.DropDownWidth = 121;
             this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 410);
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(203, 398);
             this.comboBoxFrameRate.MaxLength = 32767;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.SelectedIndex = -1;
@@ -1853,7 +1854,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelDefaultFrameRate
             // 
             this.labelDefaultFrameRate.AutoSize = true;
-            this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 415);
+            this.labelDefaultFrameRate.Location = new System.Drawing.Point(6, 403);
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
             this.labelDefaultFrameRate.Size = new System.Drawing.Size(91, 13);
             this.labelDefaultFrameRate.TabIndex = 1;
