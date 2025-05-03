@@ -3822,7 +3822,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(84, 23);
             this.buttonStop.TabIndex = 5;
-            this.buttonStop.Text = "Pa&use";
+            this.buttonStop.Text = "⏸Pa&use";
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.ButtonStopClick);
             // 
@@ -3904,7 +3904,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPlayPrevious.Name = "buttonPlayPrevious";
             this.buttonPlayPrevious.Size = new System.Drawing.Size(84, 23);
             this.buttonPlayPrevious.TabIndex = 2;
-            this.buttonPlayPrevious.Text = "<< Previous";
+            this.buttonPlayPrevious.Text = "⮜Pre&vious";
             this.buttonPlayPrevious.UseVisualStyleBackColor = true;
             this.buttonPlayPrevious.Click += new System.EventHandler(this.ButtonPlayPreviousClick);
             // 
@@ -3916,7 +3916,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPlayCurrent.Name = "buttonPlayCurrent";
             this.buttonPlayCurrent.Size = new System.Drawing.Size(84, 23);
             this.buttonPlayCurrent.TabIndex = 3;
-            this.buttonPlayCurrent.Text = "&Play current";
+            this.buttonPlayCurrent.Text = "▶&Play current";
             this.buttonPlayCurrent.UseVisualStyleBackColor = true;
             this.buttonPlayCurrent.Click += new System.EventHandler(this.ButtonPlayCurrentClick);
             // 
@@ -3928,7 +3928,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPlayNext.Name = "buttonPlayNext";
             this.buttonPlayNext.Size = new System.Drawing.Size(84, 23);
             this.buttonPlayNext.TabIndex = 4;
-            this.buttonPlayNext.Text = "Next >>";
+            this.buttonPlayNext.Text = "&Next⮞";
             this.buttonPlayNext.UseVisualStyleBackColor = true;
             this.buttonPlayNext.Click += new System.EventHandler(this.ButtonPlayNextClick);
             // 
