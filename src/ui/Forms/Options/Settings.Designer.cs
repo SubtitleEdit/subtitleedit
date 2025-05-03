@@ -4873,7 +4873,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxGoogleTranslate.Controls.Add(this.label3);
             this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(9, 9);
             this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
-            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(410, 79);
+            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(402, 79);
             this.groupBoxGoogleTranslate.TabIndex = 31;
             this.groupBoxGoogleTranslate.TabStop = false;
             this.groupBoxGoogleTranslate.Text = "Google translate";
@@ -4929,7 +4929,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxBing.Controls.Add(this.label1);
             this.groupBoxBing.Location = new System.Drawing.Point(9, 95);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(410, 111);
+            this.groupBoxBing.Size = new System.Drawing.Size(402, 110);
             this.groupBoxBing.TabIndex = 32;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -5030,9 +5030,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelToolBar.Controls.Add(this.groupBox2);
             this.panelToolBar.Controls.Add(this.groupBoxShowToolBarButtons);
             this.panelToolBar.Location = new System.Drawing.Point(230, 6);
+            this.panelToolBar.Margin = new System.Windows.Forms.Padding(0);
             this.panelToolBar.Name = "panelToolBar";
             this.panelToolBar.Padding = new System.Windows.Forms.Padding(3);
-            this.panelToolBar.Size = new System.Drawing.Size(864, 521);
+            this.panelToolBar.Size = new System.Drawing.Size(860, 520);
             this.panelToolBar.TabIndex = 9;
             this.panelToolBar.Text = "Toolbar ";
             // 
@@ -5044,14 +5045,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBox2.Controls.Add(this.checkBoxShowFrameRate);
             this.groupBox2.Location = new System.Drawing.Point(0, 449);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(850, 70);
+            this.groupBox2.Size = new System.Drawing.Size(846, 39);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
             // 
             // checkBoxShowFrameRate
             // 
             this.checkBoxShowFrameRate.AutoSize = true;
-            this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 20);
+            this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 12);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
             this.checkBoxShowFrameRate.Size = new System.Drawing.Size(149, 17);
             this.checkBoxShowFrameRate.TabIndex = 47;
@@ -5125,7 +5126,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxToolbarNew);
             this.groupBoxShowToolBarButtons.Location = new System.Drawing.Point(0, 0);
             this.groupBoxShowToolBarButtons.Name = "groupBoxShowToolBarButtons";
-            this.groupBoxShowToolBarButtons.Size = new System.Drawing.Size(851, 448);
+            this.groupBoxShowToolBarButtons.Size = new System.Drawing.Size(847, 448);
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
@@ -6523,7 +6524,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelAutoTranslate.Margin = new System.Windows.Forms.Padding(0);
             this.panelAutoTranslate.Name = "panelAutoTranslate";
             this.panelAutoTranslate.Padding = new System.Windows.Forms.Padding(3);
-            this.panelAutoTranslate.Size = new System.Drawing.Size(864, 521);
+            this.panelAutoTranslate.Size = new System.Drawing.Size(856, 520);
             this.panelAutoTranslate.TabIndex = 33;
             this.panelAutoTranslate.Text = "Tools";
             // 
@@ -6540,7 +6541,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxAutoTranslatePapago.Controls.Add(this.label11);
             this.groupBoxAutoTranslatePapago.Location = new System.Drawing.Point(431, 368);
             this.groupBoxAutoTranslatePapago.Name = "groupBoxAutoTranslatePapago";
-            this.groupBoxAutoTranslatePapago.Size = new System.Drawing.Size(411, 110);
+            this.groupBoxAutoTranslatePapago.Size = new System.Drawing.Size(403, 109);
             this.groupBoxAutoTranslatePapago.TabIndex = 47;
             this.groupBoxAutoTranslatePapago.TabStop = false;
             this.groupBoxAutoTranslatePapago.Text = "Papago";
@@ -6612,7 +6613,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.label10);
             this.groupBoxAutoTranslateChatGpt.Location = new System.Drawing.Point(430, 210);
             this.groupBoxAutoTranslateChatGpt.Name = "groupBoxAutoTranslateChatGpt";
-            this.groupBoxAutoTranslateChatGpt.Size = new System.Drawing.Size(411, 148);
+            this.groupBoxAutoTranslateChatGpt.Size = new System.Drawing.Size(403, 147);
             this.groupBoxAutoTranslateChatGpt.TabIndex = 46;
             this.groupBoxAutoTranslateChatGpt.TabStop = false;
             this.groupBoxAutoTranslateChatGpt.Text = "ChatGPT API";
@@ -6714,7 +6715,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxDeepL.Controls.Add(this.label9);
             this.groupBoxDeepL.Location = new System.Drawing.Point(9, 399);
             this.groupBoxDeepL.Name = "groupBoxDeepL";
-            this.groupBoxDeepL.Size = new System.Drawing.Size(410, 110);
+            this.groupBoxDeepL.Size = new System.Drawing.Size(402, 109);
             this.groupBoxDeepL.TabIndex = 37;
             this.groupBoxDeepL.TabStop = false;
             this.groupBoxDeepL.Text = "DeepL";
@@ -6783,7 +6784,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxMyMemory.Controls.Add(this.label8);
             this.groupBoxMyMemory.Location = new System.Drawing.Point(431, 127);
             this.groupBoxMyMemory.Name = "groupBoxMyMemory";
-            this.groupBoxMyMemory.Size = new System.Drawing.Size(410, 73);
+            this.groupBoxMyMemory.Size = new System.Drawing.Size(402, 72);
             this.groupBoxMyMemory.TabIndex = 45;
             this.groupBoxMyMemory.TabStop = false;
             this.groupBoxMyMemory.Text = "MyMemory API";
@@ -6837,7 +6838,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxLibreTranslate.Controls.Add(this.label7);
             this.groupBoxLibreTranslate.Location = new System.Drawing.Point(431, 9);
             this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
-            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(411, 110);
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(403, 109);
             this.groupBoxLibreTranslate.TabIndex = 40;
             this.groupBoxLibreTranslate.TabStop = false;
             this.groupBoxLibreTranslate.Text = "LibreTranslate API";
@@ -6908,7 +6909,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxNllbServe.Controls.Add(this.label4);
             this.groupBoxNllbServe.Location = new System.Drawing.Point(9, 213);
             this.groupBoxNllbServe.Name = "groupBoxNllbServe";
-            this.groupBoxNllbServe.Size = new System.Drawing.Size(410, 103);
+            this.groupBoxNllbServe.Size = new System.Drawing.Size(402, 102);
             this.groupBoxNllbServe.TabIndex = 35;
             this.groupBoxNllbServe.TabStop = false;
             this.groupBoxNllbServe.Text = "NLLM Serve";
@@ -6977,7 +6978,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxNllbApi.Controls.Add(this.label5);
             this.groupBoxNllbApi.Location = new System.Drawing.Point(9, 322);
             this.groupBoxNllbApi.Name = "groupBoxNllbApi";
-            this.groupBoxNllbApi.Size = new System.Drawing.Size(410, 73);
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(402, 72);
             this.groupBoxNllbApi.TabIndex = 36;
             this.groupBoxNllbApi.TabStop = false;
             this.groupBoxNllbApi.Text = "NLLM API";
