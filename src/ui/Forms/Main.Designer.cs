@@ -5678,9 +5678,9 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(1, 14);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(0);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(90, 23);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(90, 24);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TabStop = false;
             timeCode3.Hours = 0;
@@ -5709,6 +5709,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             65536});
             this.numericUpDownDuration.Location = new System.Drawing.Point(97, 14);
+            this.numericUpDownDuration.Margin = new System.Windows.Forms.Padding(0);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -5720,7 +5721,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(60, 23);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(60, 24);
             this.numericUpDownDuration.TabIndex = 1;
             this.numericUpDownDuration.TabStop = false;
             this.numericUpDownDuration.ThousandsSeparator = false;
