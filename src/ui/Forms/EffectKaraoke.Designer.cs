@@ -230,8 +230,8 @@
             // 
             // EffectKaraoke
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(508, 287);
             this.Controls.Add(this.radioButtonByCharEffect);
             this.Controls.Add(this.radioButtonByWordEffect);

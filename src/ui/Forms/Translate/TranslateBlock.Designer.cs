@@ -80,8 +80,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // 
             // TranslateBlock
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(539, 200);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonCancel);

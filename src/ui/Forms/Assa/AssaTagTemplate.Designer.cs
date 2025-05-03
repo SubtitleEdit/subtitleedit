@@ -307,8 +307,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // AssaTagTemplate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(925, 519);
             this.Controls.Add(this.groupBoxTemplateItem);
             this.Controls.Add(this.buttonCopy);

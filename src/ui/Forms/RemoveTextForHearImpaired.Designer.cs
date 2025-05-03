@@ -559,8 +559,8 @@
             // 
             // FormRemoveTextForHearImpaired
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(965, 598);
             this.Controls.Add(this.labelText);
             this.Controls.Add(this.textBoxAfterText);

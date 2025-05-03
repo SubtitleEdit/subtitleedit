@@ -107,8 +107,8 @@
             // 
             // VoskModelDownload
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(415, 150);
             this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.comboBoxModels);

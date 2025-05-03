@@ -520,8 +520,8 @@
             // 
             // ExportFcpXmlAdvanced
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(935, 511);
             this.Controls.Add(this.SubtitleListview);
             this.Controls.Add(this.groupBoxImageSettings);

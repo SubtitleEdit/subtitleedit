@@ -250,8 +250,8 @@
             // 
             // WordSplitDictionaryGenerator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(978, 654);
             this.Controls.Add(this.comboBoxMinOccurrencesLongWords);
             this.Controls.Add(this.labelMinOccurLarge);

@@ -177,8 +177,8 @@
             // 
             // ChangeCasing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(504, 282);
             this.Controls.Add(this.groupBoxChangeCasing);
             this.Controls.Add(this.buttonCancel);
