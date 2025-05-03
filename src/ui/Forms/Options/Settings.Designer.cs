@@ -4253,9 +4253,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelTools.Controls.Add(this.groupBoxFixCommonErrors);
             this.panelTools.Controls.Add(this.groupBoxToolsVisualSync);
             this.panelTools.Location = new System.Drawing.Point(230, 6);
+            this.panelTools.Margin = new System.Windows.Forms.Padding(0);
             this.panelTools.Name = "panelTools";
             this.panelTools.Padding = new System.Windows.Forms.Padding(3);
-            this.panelTools.Size = new System.Drawing.Size(864, 521);
+            this.panelTools.Size = new System.Drawing.Size(855, 520);
             this.panelTools.TabIndex = 7;
             this.panelTools.Text = "Tools";
             // 
@@ -4267,7 +4268,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxShortcutsAllowLetterOrNumberInTextBox);
             this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
             this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(415, 180);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(406, 180);
+            this.groupBoxToolsMisc.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
             this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
             this.groupBoxToolsMisc.TabIndex = 6;
@@ -4394,7 +4396,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxToolsAutoBr.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsAutoBr.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsAutoBr.Location = new System.Drawing.Point(415, 0);
+            this.groupBoxToolsAutoBr.Location = new System.Drawing.Point(406, 0);
+            this.groupBoxToolsAutoBr.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxToolsAutoBr.Name = "groupBoxToolsAutoBr";
             this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(434, 174);
             this.groupBoxToolsAutoBr.TabIndex = 5;
@@ -4536,9 +4539,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 389);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 376);
+            this.groupBoxSpellCheck.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 131);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(399, 130);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -4605,9 +4609,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxFixCommonErrors.Controls.Add(this.textBoxMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
-            this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(0, 123);
+            this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(0, 116);
+            this.groupBoxFixCommonErrors.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 260);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(406, 260);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -4740,8 +4745,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxToolsVisualSync.Controls.Add(this.comboBoxToolsVerifySeconds);
             this.groupBoxToolsVisualSync.Controls.Add(this.labelVerifyButton);
             this.groupBoxToolsVisualSync.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxToolsVisualSync.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxToolsVisualSync.Name = "groupBoxToolsVisualSync";
-            this.groupBoxToolsVisualSync.Size = new System.Drawing.Size(409, 116);
+            this.groupBoxToolsVisualSync.Size = new System.Drawing.Size(401, 116);
             this.groupBoxToolsVisualSync.TabIndex = 2;
             this.groupBoxToolsVisualSync.TabStop = false;
             this.groupBoxToolsVisualSync.Text = "Visual sync";
