@@ -2594,8 +2594,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooLarge);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxListViewSyntaxColoring.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
-            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(852, 521);
+            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(842, 511);
             this.groupBoxListViewSyntaxColoring.TabIndex = 0;
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
