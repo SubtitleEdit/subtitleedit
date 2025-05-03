@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(750, 400);
             this.Name = "MergeShortLines";

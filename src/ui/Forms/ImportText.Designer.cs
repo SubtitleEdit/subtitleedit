@@ -868,7 +868,7 @@
             this.Controls.Add(this.groupBoxImportResult);
             this.Controls.Add(this.groupBoxImportOptions);
             this.Controls.Add(this.groupBoxImportText);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(810, 648);
             this.Name = "ImportText";

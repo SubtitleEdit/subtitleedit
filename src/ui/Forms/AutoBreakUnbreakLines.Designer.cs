@@ -187,7 +187,7 @@
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

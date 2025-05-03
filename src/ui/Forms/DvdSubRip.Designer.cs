@@ -289,7 +289,7 @@
             this.Controls.Add(this.buttonStartRipping);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxDvd);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

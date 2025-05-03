@@ -111,7 +111,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxAddName);
             this.Controls.Add(this.labelDescription);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

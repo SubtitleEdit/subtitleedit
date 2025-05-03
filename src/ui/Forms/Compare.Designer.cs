@@ -384,7 +384,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.labelSubtitle2);
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.labelSubtitle1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(800, 400);
             this.Name = "Compare";
