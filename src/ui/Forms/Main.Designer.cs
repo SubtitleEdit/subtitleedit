@@ -3379,7 +3379,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.InsertAtVideoPositionShortcut = System.Windows.Forms.Keys.Insert;
-            this.audioVisualizer.Location = new System.Drawing.Point(384, 23);
+            this.audioVisualizer.Location = new System.Drawing.Point(382, 23);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
             this.audioVisualizer.MouseWheelScrollUpIsForward = true;
             this.audioVisualizer.Move100MsLeft = System.Windows.Forms.Keys.None;
@@ -3394,7 +3394,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
-            this.audioVisualizer.Size = new System.Drawing.Size(587, 229);
+            this.audioVisualizer.Size = new System.Drawing.Size(592, 229);
             this.audioVisualizer.SpectrogramAlpha = 1F;
             this.audioVisualizer.StartPositionSeconds = 0D;
             this.audioVisualizer.TabIndex = 6;
@@ -3460,10 +3460,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
-            this.trackBarWaveformPosition.Location = new System.Drawing.Point(599, 257);
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(596, 257);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
-            this.trackBarWaveformPosition.Size = new System.Drawing.Size(372, 20);
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(374, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.TrackBarWaveformPositionValueChanged);
@@ -3473,7 +3473,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.panelWaveformControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelWaveformControls.Controls.Add(this.toolStripWaveControls);
-            this.panelWaveformControls.Location = new System.Drawing.Point(384, 253);
+            this.panelWaveformControls.Location = new System.Drawing.Point(382, 253);
             this.panelWaveformControls.Name = "panelWaveformControls";
             this.panelWaveformControls.Size = new System.Drawing.Size(212, 30);
             this.panelWaveformControls.TabIndex = 10;
@@ -3602,7 +3602,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlModes.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlModes.Name = "tabControlModes";
             this.tabControlModes.SelectedIndex = 0;
-            this.tabControlModes.Size = new System.Drawing.Size(386, 283);
+            this.tabControlModes.Size = new System.Drawing.Size(382, 283);
             this.tabControlModes.TabIndex = 0;
             this.tabControlModes.SelectedIndexChanged += new System.EventHandler(this.TabControlModes_SelectedIndexChanged);
             // 
@@ -3619,7 +3619,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageTranslate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTranslate.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageTranslate.Name = "tabPageTranslate";
-            this.tabPageTranslate.Size = new System.Drawing.Size(378, 257);
+            this.tabPageTranslate.Size = new System.Drawing.Size(374, 257);
             this.tabPageTranslate.TabIndex = 0;
             this.tabPageTranslate.Text = "Translate";
             // 
@@ -3627,7 +3627,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTranslateTip.AutoSize = true;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(1, 181);
+            this.labelTranslateTip.Location = new System.Drawing.Point(1, 155);
             this.labelTranslateTip.Margin = new System.Windows.Forms.Padding(0);
             this.labelTranslateTip.Name = "labelTranslateTip";
             this.labelTranslateTip.Size = new System.Drawing.Size(294, 13);
@@ -3645,7 +3645,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxTranslateSearch.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxTranslateSearch.Name = "groupBoxTranslateSearch";
             this.groupBoxTranslateSearch.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(372, 127);
+            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(372, 101);
             this.groupBoxTranslateSearch.TabIndex = 6;
             this.groupBoxTranslateSearch.TabStop = false;
             this.groupBoxTranslateSearch.Text = "Search text online";
@@ -3653,7 +3653,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonCustomUrl2
             // 
             this.buttonCustomUrl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomUrl2.Location = new System.Drawing.Point(279, 75);
+            this.buttonCustomUrl2.Location = new System.Drawing.Point(279, 74);
             this.buttonCustomUrl2.MaximumSize = new System.Drawing.Size(274, 26);
             this.buttonCustomUrl2.Name = "buttonCustomUrl2";
             this.buttonCustomUrl2.Size = new System.Drawing.Size(92, 23);
@@ -3665,7 +3665,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonCustomUrl1
             // 
             this.buttonCustomUrl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomUrl1.Location = new System.Drawing.Point(186, 75);
+            this.buttonCustomUrl1.Location = new System.Drawing.Point(186, 74);
             this.buttonCustomUrl1.MaximumSize = new System.Drawing.Size(274, 26);
             this.buttonCustomUrl1.Name = "buttonCustomUrl1";
             this.buttonCustomUrl1.Size = new System.Drawing.Size(92, 23);
@@ -3677,7 +3677,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonGoogleTranslateIt
             // 
             this.buttonGoogleTranslateIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(93, 75);
+            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(93, 74);
             this.buttonGoogleTranslateIt.MaximumSize = new System.Drawing.Size(135, 26);
             this.buttonGoogleTranslateIt.Name = "buttonGoogleTranslateIt";
             this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(92, 23);
@@ -3689,7 +3689,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonGoogleIt
             // 
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleIt.Location = new System.Drawing.Point(1, 75);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(1, 74);
             this.buttonGoogleIt.MaximumSize = new System.Drawing.Size(135, 26);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(92, 23);
@@ -3924,7 +3924,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
             this.tabPageCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCreate.Size = new System.Drawing.Size(378, 257);
+            this.tabPageCreate.Size = new System.Drawing.Size(374, 257);
             this.tabPageCreate.TabIndex = 1;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
@@ -4224,7 +4224,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageAdjust.Controls.Add(this.buttonAdjustPlayBefore);
             this.tabPageAdjust.Location = new System.Drawing.Point(4, 22);
             this.tabPageAdjust.Name = "tabPageAdjust";
-            this.tabPageAdjust.Size = new System.Drawing.Size(378, 257);
+            this.tabPageAdjust.Size = new System.Drawing.Size(374, 257);
             this.tabPageAdjust.TabIndex = 2;
             this.tabPageAdjust.Text = "Adjust";
             this.tabPageAdjust.UseVisualStyleBackColor = true;
