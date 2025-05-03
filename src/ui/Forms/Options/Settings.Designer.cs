@@ -2186,8 +2186,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxShortcuts.Controls.Add(this.treeViewShortcuts);
             this.groupBoxShortcuts.Controls.Add(this.labelShortcut);
             this.groupBoxShortcuts.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxShortcuts.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxShortcuts.Name = "groupBoxShortcuts";
-            this.groupBoxShortcuts.Size = new System.Drawing.Size(851, 521);
+            this.groupBoxShortcuts.Size = new System.Drawing.Size(848, 518);
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
@@ -2211,7 +2212,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             "All",
             "Used",
             "Unused"});
-            this.nikseComboBoxShortcutsFilter.Location = new System.Drawing.Point(449, 19);
+            this.nikseComboBoxShortcutsFilter.Location = new System.Drawing.Point(449, 16);
             this.nikseComboBoxShortcutsFilter.MaxLength = 32767;
             this.nikseComboBoxShortcutsFilter.Name = "nikseComboBoxShortcutsFilter";
             this.nikseComboBoxShortcutsFilter.SelectedIndex = -1;
@@ -2267,7 +2268,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.buttonClearShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonClearShortcut.Enabled = false;
-            this.buttonClearShortcut.Location = new System.Drawing.Point(582, 492);
+            this.buttonClearShortcut.Location = new System.Drawing.Point(582, 489);
             this.buttonClearShortcut.Name = "buttonClearShortcut";
             this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonClearShortcut.TabIndex = 9;
@@ -2426,7 +2427,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             "F22",
             "F23",
             "F24"});
-            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 492);
+            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 489);
             this.comboBoxShortcutKey.MaxLength = 32767;
             this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
             this.comboBoxShortcutKey.SelectedIndex = -1;
@@ -2442,7 +2443,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.labelShortcutKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelShortcutKey.AutoSize = true;
-            this.labelShortcutKey.Location = new System.Drawing.Point(322, 494);
+            this.labelShortcutKey.Location = new System.Drawing.Point(322, 491);
             this.labelShortcutKey.Name = "labelShortcutKey";
             this.labelShortcutKey.Size = new System.Drawing.Size(25, 13);
             this.labelShortcutKey.TabIndex = 35;
@@ -2453,7 +2454,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsShift.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsShift.AutoSize = true;
             this.checkBoxShortcutsShift.Enabled = false;
-            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 494);
+            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 491);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 6;
@@ -2466,7 +2467,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsAlt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsAlt.AutoSize = true;
             this.checkBoxShortcutsAlt.Enabled = false;
-            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 494);
+            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 491);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 5;
@@ -2479,7 +2480,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsControl.AutoSize = true;
             this.checkBoxShortcutsControl.Enabled = false;
-            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 494);
+            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 491);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 4;
@@ -2491,7 +2492,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.buttonUpdateShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUpdateShortcut.Enabled = false;
-            this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 492);
+            this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 489);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonUpdateShortcut.TabIndex = 8;
@@ -2508,7 +2509,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.treeViewShortcuts.HideSelection = false;
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
-            this.treeViewShortcuts.Size = new System.Drawing.Size(829, 439);
+            this.treeViewShortcuts.Size = new System.Drawing.Size(826, 436);
             this.treeViewShortcuts.TabIndex = 3;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
@@ -2560,7 +2561,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.labelShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelShortcut.AutoSize = true;
-            this.labelShortcut.Location = new System.Drawing.Point(15, 494);
+            this.labelShortcut.Location = new System.Drawing.Point(15, 491);
             this.labelShortcut.Name = "labelShortcut";
             this.labelShortcut.Size = new System.Drawing.Size(50, 13);
             this.labelShortcut.TabIndex = 3;
