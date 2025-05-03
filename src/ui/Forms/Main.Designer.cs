@@ -5452,7 +5452,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLinePixels.AutoSize = true;
-            this.labelSingleLinePixels.Location = new System.Drawing.Point(405, 110);
+            this.labelSingleLinePixels.Location = new System.Drawing.Point(405, 126);
             this.labelSingleLinePixels.Name = "labelSingleLinePixels";
             this.labelSingleLinePixels.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.labelSingleLinePixels.Size = new System.Drawing.Size(105, 16);
@@ -5474,7 +5474,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(324, 110);
+            this.labelSingleLine.Location = new System.Drawing.Point(324, 126);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.labelSingleLine.Size = new System.Drawing.Size(78, 16);
@@ -5528,7 +5528,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextOriginalLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextOriginalLineTotal.AutoSize = true;
-            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(583, 110);
+            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(583, 126);
             this.labelTextOriginalLineTotal.Name = "labelTextOriginalLineTotal";
             this.labelTextOriginalLineTotal.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.labelTextOriginalLineTotal.Size = new System.Drawing.Size(35, 16);
@@ -5621,7 +5621,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(217, 110);
+            this.labelTextLineLengths.Location = new System.Drawing.Point(162, 126);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 16);
