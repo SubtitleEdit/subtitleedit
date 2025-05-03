@@ -3602,7 +3602,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlModes.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlModes.Name = "tabControlModes";
             this.tabControlModes.SelectedIndex = 0;
-            this.tabControlModes.Size = new System.Drawing.Size(382, 283);
+            this.tabControlModes.Size = new System.Drawing.Size(382, 182);
             this.tabControlModes.TabIndex = 0;
             this.tabControlModes.SelectedIndexChanged += new System.EventHandler(this.TabControlModes_SelectedIndexChanged);
             // 
@@ -3619,7 +3619,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageTranslate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTranslate.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageTranslate.Name = "tabPageTranslate";
-            this.tabPageTranslate.Size = new System.Drawing.Size(374, 257);
+            this.tabPageTranslate.Size = new System.Drawing.Size(374, 156);
             this.tabPageTranslate.TabIndex = 0;
             this.tabPageTranslate.Text = "Translate";
             // 
