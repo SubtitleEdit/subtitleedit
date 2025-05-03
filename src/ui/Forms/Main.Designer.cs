@@ -3817,7 +3817,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonStop
             // 
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStop.Location = new System.Drawing.Point(205, 27);
+            this.buttonStop.Location = new System.Drawing.Point(205, 26);
             this.buttonStop.MaximumSize = new System.Drawing.Size(94, 26);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(84, 23);
@@ -3911,7 +3911,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPlayCurrent
             // 
             this.buttonPlayCurrent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlayCurrent.Location = new System.Drawing.Point(289, 27);
+            this.buttonPlayCurrent.Location = new System.Drawing.Point(289, 26);
             this.buttonPlayCurrent.MaximumSize = new System.Drawing.Size(94, 26);
             this.buttonPlayCurrent.Name = "buttonPlayCurrent";
             this.buttonPlayCurrent.Size = new System.Drawing.Size(84, 23);
