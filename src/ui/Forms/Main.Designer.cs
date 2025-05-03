@@ -3353,7 +3353,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNextWord.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.labelNextWord.AutoSize = true;
             this.labelNextWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNextWord.Location = new System.Drawing.Point(401, 2);
+            this.labelNextWord.Location = new System.Drawing.Point(401, 0);
             this.labelNextWord.Name = "labelNextWord";
             this.labelNextWord.Size = new System.Drawing.Size(71, 17);
             this.labelNextWord.TabIndex = 13;
@@ -3414,7 +3414,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxSyncListViewWithVideoWhilePlaying
             // 
             this.checkBoxSyncListViewWithVideoWhilePlaying.AutoSize = true;
-            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 2);
+            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 0);
             this.checkBoxSyncListViewWithVideoWhilePlaying.Name = "checkBoxSyncListViewWithVideoWhilePlaying";
             this.checkBoxSyncListViewWithVideoWhilePlaying.Size = new System.Drawing.Size(205, 17);
             this.checkBoxSyncListViewWithVideoWhilePlaying.TabIndex = 1;
@@ -3627,12 +3627,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTranslateTip.AutoSize = true;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(1, 155);
+            this.labelTranslateTip.Location = new System.Drawing.Point(115, 53);
             this.labelTranslateTip.Margin = new System.Windows.Forms.Padding(0);
             this.labelTranslateTip.Name = "labelTranslateTip";
-            this.labelTranslateTip.Size = new System.Drawing.Size(294, 13);
+            this.labelTranslateTip.Size = new System.Drawing.Size(197, 13);
             this.labelTranslateTip.TabIndex = 7;
-            this.labelTranslateTip.Text = "Tip: Use <alt+arrow up/down> to go to previous/next subtitle";
+            this.labelTranslateTip.Text = "<Alt▲/▼> to go to previous/next subtitle";
             // 
             // groupBoxTranslateSearch
             // 
