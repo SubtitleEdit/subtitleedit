@@ -3407,8 +3407,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.InsertAtVideoPositionShortcut = System.Windows.Forms.Keys.Insert;
-            this.audioVisualizer.Location = new System.Drawing.Point(382, 22);
-            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
+            this.audioVisualizer.Location = new System.Drawing.Point(390, 22);
+            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(1, 0, 0, 0);
             this.audioVisualizer.MouseWheelScrollUpIsForward = true;
             this.audioVisualizer.Move100MsLeft = System.Windows.Forms.Keys.None;
             this.audioVisualizer.Move100MsRight = System.Windows.Forms.Keys.None;
@@ -3422,7 +3422,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
-            this.audioVisualizer.Size = new System.Drawing.Size(592, 252);
+            this.audioVisualizer.Size = new System.Drawing.Size(582, 252);
             this.audioVisualizer.SpectrogramAlpha = 1F;
             this.audioVisualizer.StartPositionSeconds = 0D;
             this.audioVisualizer.TabIndex = 6;
@@ -3488,11 +3488,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
-            this.trackBarWaveformPosition.Location = new System.Drawing.Point(594, 276);
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(598, 276);
             this.trackBarWaveformPosition.Margin = new System.Windows.Forms.Padding(0);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
-            this.trackBarWaveformPosition.Size = new System.Drawing.Size(380, 20);
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(376, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.TrackBarWaveformPositionValueChanged);
@@ -3502,7 +3502,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.panelWaveformControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelWaveformControls.Controls.Add(this.toolStripWaveControls);
-            this.panelWaveformControls.Location = new System.Drawing.Point(382, 275);
+            this.panelWaveformControls.Location = new System.Drawing.Point(386, 275);
             this.panelWaveformControls.Margin = new System.Windows.Forms.Padding(0);
             this.panelWaveformControls.Name = "panelWaveformControls";
             this.panelWaveformControls.Size = new System.Drawing.Size(212, 30);
@@ -5032,6 +5032,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
+            this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxListViewText.ReadOnly = false;
             this.textBoxListViewText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxListViewText.SelectedText = "";
