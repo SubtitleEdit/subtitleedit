@@ -3671,7 +3671,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleTranslateIt);
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleIt);
             this.groupBoxTranslateSearch.Controls.Add(this.textBoxSearchWord);
-            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(1, 53);
+            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(1, 52);
             this.groupBoxTranslateSearch.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxTranslateSearch.Name = "groupBoxTranslateSearch";
             this.groupBoxTranslateSearch.Padding = new System.Windows.Forms.Padding(0);
