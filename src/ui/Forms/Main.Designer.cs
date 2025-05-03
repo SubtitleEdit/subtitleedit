@@ -3492,7 +3492,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Margin = new System.Windows.Forms.Padding(0);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
-            this.trackBarWaveformPosition.Size = new System.Drawing.Size(376, 20);
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(368, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.TrackBarWaveformPositionValueChanged);
