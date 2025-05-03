@@ -5028,10 +5028,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.IsWrongWord = false;
             this.textBoxListViewText.LanguageChanged = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(162, 11);
+            this.textBoxListViewText.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxListViewText.ReadOnly = false;
             this.textBoxListViewText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxListViewText.SelectedText = "";
