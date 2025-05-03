@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.Settings.VideoControlsSettings videoControlsSettings1 = new Nikse.SubtitleEdit.Core.Settings.VideoControlsSettings();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.listBoxSection = new Nikse.SubtitleEdit.Controls.NikseListBox();
@@ -531,6 +532,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelWaveform.SuspendLayout();
             this.groupBoxFfmpeg.SuspendLayout();
             this.groupBoxSpectrogram.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSpectrogramOpacity)).BeginInit();
             this.groupBoxSpectrogramClean.SuspendLayout();
             this.groupBoxWaveformAppearence.SuspendLayout();
             this.panelTools.SuspendLayout();
@@ -706,7 +708,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultLanguagesList.AutoSize = true;
             this.labelDefaultLanguagesList.Location = new System.Drawing.Point(241, 495);
             this.labelDefaultLanguagesList.Name = "labelDefaultLanguagesList";
-            this.labelDefaultLanguagesList.Size = new System.Drawing.Size(38, 13);
+            this.labelDefaultLanguagesList.Size = new System.Drawing.Size(37, 13);
             this.labelDefaultLanguagesList.TabIndex = 67;
             this.labelDefaultLanguagesList.Text = "da, en";
             // 
@@ -725,7 +727,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultLanguages.AutoSize = true;
             this.labelDefaultLanguages.Location = new System.Drawing.Point(8, 491);
             this.labelDefaultLanguages.Name = "labelDefaultLanguages";
-            this.labelDefaultLanguages.Size = new System.Drawing.Size(94, 13);
+            this.labelDefaultLanguages.Size = new System.Drawing.Size(93, 13);
             this.labelDefaultLanguages.TabIndex = 33;
             this.labelDefaultLanguages.Text = "Default languages";
             // 
@@ -752,7 +754,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxTranslationAutoSuffix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTranslationAutoSuffix.DropDownWidth = 121;
             this.comboBoxTranslationAutoSuffix.FormattingEnabled = true;
-            this.comboBoxTranslationAutoSuffix.Items.AddRange(new string[] {
+            this.comboBoxTranslationAutoSuffix.Items.AddRange(new object[] {
             "None",
             "Every minute",
             "Every 5 minutes",
@@ -772,7 +774,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTranslationAutoSuffix.AutoSize = true;
             this.labelTranslationAutoSuffix.Location = new System.Drawing.Point(416, 424);
             this.labelTranslationAutoSuffix.Name = "labelTranslationAutoSuffix";
-            this.labelTranslationAutoSuffix.Size = new System.Drawing.Size(115, 13);
+            this.labelTranslationAutoSuffix.Size = new System.Drawing.Size(110, 13);
             this.labelTranslationAutoSuffix.TabIndex = 32;
             this.labelTranslationAutoSuffix.Text = "Translation auto suffix";
             // 
@@ -781,7 +783,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSplitBehavior.AutoSize = true;
             this.labelSplitBehavior.Location = new System.Drawing.Point(416, 291);
             this.labelSplitBehavior.Name = "labelSplitBehavior";
-            this.labelSplitBehavior.Size = new System.Drawing.Size(72, 13);
+            this.labelSplitBehavior.Size = new System.Drawing.Size(71, 13);
             this.labelSplitBehavior.TabIndex = 20;
             this.labelSplitBehavior.Text = "Split behavior";
             // 
@@ -813,7 +815,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxAutoSave.AutoSize = true;
             this.checkBoxAutoSave.Location = new System.Drawing.Point(421, 491);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
-            this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
+            this.checkBoxAutoSave.Size = new System.Drawing.Size(74, 17);
             this.checkBoxAutoSave.TabIndex = 30;
             this.checkBoxAutoSave.Text = "Auto save";
             this.checkBoxAutoSave.UseVisualStyleBackColor = true;
@@ -846,7 +848,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSaveAsFileNameFrom.AutoSize = true;
             this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(416, 370);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
-            this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
+            this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(158, 13);
             this.labelSaveAsFileNameFrom.TabIndex = 24;
             this.labelSaveAsFileNameFrom.Text = "\"Save as...\" will take name from";
             // 
@@ -929,7 +931,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelCpsLineLenCalc.AutoSize = true;
             this.labelCpsLineLenCalc.Location = new System.Drawing.Point(6, 354);
             this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
-            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(104, 13);
+            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
             this.labelCpsLineLenCalc.TabIndex = 64;
             this.labelCpsLineLenCalc.Text = "Cps/line length style";
             // 
@@ -972,7 +974,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelContinuationStyle.AutoSize = true;
             this.labelContinuationStyle.Location = new System.Drawing.Point(6, 327);
             this.labelContinuationStyle.Name = "labelContinuationStyle";
-            this.labelContinuationStyle.Size = new System.Drawing.Size(140, 13);
+            this.labelContinuationStyle.Size = new System.Drawing.Size(138, 13);
             this.labelContinuationStyle.TabIndex = 63;
             this.labelContinuationStyle.Text = "Sentence continuation style";
             // 
@@ -981,7 +983,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDialogStyle.AutoSize = true;
             this.labelDialogStyle.Location = new System.Drawing.Point(6, 300);
             this.labelDialogStyle.Name = "labelDialogStyle";
-            this.labelDialogStyle.Size = new System.Drawing.Size(62, 13);
+            this.labelDialogStyle.Size = new System.Drawing.Size(61, 13);
             this.labelDialogStyle.TabIndex = 61;
             this.labelDialogStyle.Text = "Dialog style";
             // 
@@ -998,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDialogStyle.DropDownWidth = 170;
             this.comboBoxDialogStyle.FormattingEnabled = true;
-            this.comboBoxDialogStyle.Items.AddRange(new string[] {
+            this.comboBoxDialogStyle.Items.AddRange(new object[] {
             "Dash both lines with space",
             "Dash both lines without space",
             "Dash second line with space",
@@ -1053,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelRulesProfileName.AutoSize = true;
             this.labelRulesProfileName.Location = new System.Drawing.Point(6, 24);
             this.labelRulesProfileName.Name = "labelRulesProfileName";
-            this.labelRulesProfileName.Size = new System.Drawing.Size(37, 13);
+            this.labelRulesProfileName.Size = new System.Drawing.Size(36, 13);
             this.labelRulesProfileName.TabIndex = 50;
             this.labelRulesProfileName.Text = "Profile";
             // 
@@ -1062,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelOptimalCharsPerSecond.AutoSize = true;
             this.labelOptimalCharsPerSecond.Location = new System.Drawing.Point(6, 84);
             this.labelOptimalCharsPerSecond.Name = "labelOptimalCharsPerSecond";
-            this.labelOptimalCharsPerSecond.Size = new System.Drawing.Size(92, 13);
+            this.labelOptimalCharsPerSecond.Size = new System.Drawing.Size(93, 13);
             this.labelOptimalCharsPerSecond.TabIndex = 8;
             this.labelOptimalCharsPerSecond.Text = "Optimal chars/sec";
             // 
@@ -1109,7 +1111,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubMaxLen.AutoSize = true;
             this.labelSubMaxLen.Location = new System.Drawing.Point(6, 57);
             this.labelSubMaxLen.Name = "labelSubMaxLen";
-            this.labelSubMaxLen.Size = new System.Drawing.Size(103, 13);
+            this.labelSubMaxLen.Size = new System.Drawing.Size(99, 13);
             this.labelSubMaxLen.TabIndex = 6;
             this.labelSubMaxLen.Text = "Subtitle max. length";
             // 
@@ -1156,7 +1158,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMergeShortLines.AutoSize = true;
             this.labelMergeShortLines.Location = new System.Drawing.Point(6, 273);
             this.labelMergeShortLines.Name = "labelMergeShortLines";
-            this.labelMergeShortLines.Size = new System.Drawing.Size(124, 13);
+            this.labelMergeShortLines.Size = new System.Drawing.Size(120, 13);
             this.labelMergeShortLines.TabIndex = 16;
             this.labelMergeShortLines.Text = "Merge lines shorter than";
             // 
@@ -1165,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMaxWordsPerMin.AutoSize = true;
             this.labelMaxWordsPerMin.Location = new System.Drawing.Point(6, 138);
             this.labelMaxWordsPerMin.Name = "labelMaxWordsPerMin";
-            this.labelMaxWordsPerMin.Size = new System.Drawing.Size(83, 13);
+            this.labelMaxWordsPerMin.Size = new System.Drawing.Size(82, 13);
             this.labelMaxWordsPerMin.TabIndex = 49;
             this.labelMaxWordsPerMin.Text = "Max. words/min";
             // 
@@ -1174,7 +1176,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMinDuration.AutoSize = true;
             this.labelMinDuration.Location = new System.Drawing.Point(6, 165);
             this.labelMinDuration.Name = "labelMinDuration";
-            this.labelMinDuration.Size = new System.Drawing.Size(132, 13);
+            this.labelMinDuration.Size = new System.Drawing.Size(130, 13);
             this.labelMinDuration.TabIndex = 10;
             this.labelMinDuration.Text = "Min. duration, milliseconds";
             // 
@@ -1221,7 +1223,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMaxDuration.AutoSize = true;
             this.labelMaxDuration.Location = new System.Drawing.Point(6, 191);
             this.labelMaxDuration.Name = "labelMaxDuration";
-            this.labelMaxDuration.Size = new System.Drawing.Size(136, 13);
+            this.labelMaxDuration.Size = new System.Drawing.Size(133, 13);
             this.labelMaxDuration.TabIndex = 12;
             this.labelMaxDuration.Text = "Max. duration, milliseconds";
             // 
@@ -1230,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMaxLines.AutoSize = true;
             this.labelMaxLines.Location = new System.Drawing.Point(6, 244);
             this.labelMaxLines.Name = "labelMaxLines";
-            this.labelMaxLines.Size = new System.Drawing.Size(107, 13);
+            this.labelMaxLines.Size = new System.Drawing.Size(104, 13);
             this.labelMaxLines.TabIndex = 47;
             this.labelMaxLines.Text = "Max. number of lines";
             // 
@@ -1339,7 +1341,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMaxCharsPerSecond.AutoSize = true;
             this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(6, 111);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
-            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
+            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
             this.labelMaxCharsPerSecond.TabIndex = 9;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
@@ -1424,7 +1426,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMinGapMs.AutoSize = true;
             this.labelMinGapMs.Location = new System.Drawing.Point(6, 217);
             this.labelMinGapMs.Name = "labelMinGapMs";
-            this.labelMinGapMs.Size = new System.Drawing.Size(136, 13);
+            this.labelMinGapMs.Size = new System.Drawing.Size(133, 13);
             this.labelMinGapMs.TabIndex = 14;
             this.labelMinGapMs.Text = "Min. gap between subtitles";
             // 
@@ -1479,7 +1481,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxAutoBackupDeleteAfter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoBackupDeleteAfter.DropDownWidth = 88;
             this.comboBoxAutoBackupDeleteAfter.FormattingEnabled = true;
-            this.comboBoxAutoBackupDeleteAfter.Items.AddRange(new string[] {
+            this.comboBoxAutoBackupDeleteAfter.Items.AddRange(new object[] {
             "1 month",
             "3 months",
             "6 months"});
@@ -1498,7 +1500,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelAutoBackupDeleteAfter.AutoSize = true;
             this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(619, 462);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
-            this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
+            this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(62, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 28;
             this.labelAutoBackupDeleteAfter.Text = "Delete after";
             // 
@@ -1507,7 +1509,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxCheckForUpdates.AutoSize = true;
             this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(502, 491);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
-            this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.checkBoxCheckForUpdates.TabIndex = 31;
             this.checkBoxCheckForUpdates.Text = "Check for updates";
             this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
@@ -1517,7 +1519,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSpellChecker.AutoSize = true;
             this.labelSpellChecker.Location = new System.Drawing.Point(647, 19);
             this.labelSpellChecker.Name = "labelSpellChecker";
-            this.labelSpellChecker.Size = new System.Drawing.Size(69, 13);
+            this.labelSpellChecker.Size = new System.Drawing.Size(72, 13);
             this.labelSpellChecker.TabIndex = 30;
             this.labelSpellChecker.Text = "Spell checker";
             this.labelSpellChecker.Visible = false;
@@ -1535,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxTimeCodeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeMode.DropDownWidth = 207;
             this.comboBoxTimeCodeMode.FormattingEnabled = true;
-            this.comboBoxTimeCodeMode.Items.AddRange(new string[] {
+            this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
             "HH:MM:SS:MSEC (00:00:00.000)",
             "HH:MM:SS:FF (00:00:00.00)"});
             this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(506, 261);
@@ -1553,7 +1555,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTimeCodeMode.AutoSize = true;
             this.labelTimeCodeMode.Location = new System.Drawing.Point(416, 264);
             this.labelTimeCodeMode.Name = "labelTimeCodeMode";
-            this.labelTimeCodeMode.Size = new System.Drawing.Size(84, 13);
+            this.labelTimeCodeMode.Size = new System.Drawing.Size(86, 13);
             this.labelTimeCodeMode.TabIndex = 18;
             this.labelTimeCodeMode.Text = "Time code mode";
             // 
@@ -1570,7 +1572,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.DropDownWidth = 188;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Items.AddRange(new string[] {
+            this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -1610,7 +1612,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
             this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(419, 210);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
-            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(132, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 15;
             this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
             this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
@@ -1620,7 +1622,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxPromptDeleteLines.AutoSize = true;
             this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(419, 187);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
-            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(138, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 14;
             this.checkBoxPromptDeleteLines.Text = "Prompt for deleting lines";
             this.checkBoxPromptDeleteLines.UseVisualStyleBackColor = true;
@@ -1630,7 +1632,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(419, 164);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 13;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
@@ -1648,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxSpellChecker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSpellChecker.DropDownWidth = 121;
             this.comboBoxSpellChecker.FormattingEnabled = true;
-            this.comboBoxSpellChecker.Items.AddRange(new string[] {
+            this.comboBoxSpellChecker.Items.AddRange(new object[] {
             "Hunspell",
             "Word"});
             this.comboBoxSpellChecker.Location = new System.Drawing.Point(670, 16);
@@ -1675,7 +1677,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxAutoBackup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoBackup.DropDownWidth = 121;
             this.comboBoxAutoBackup.FormattingEnabled = true;
-            this.comboBoxAutoBackup.Items.AddRange(new string[] {
+            this.comboBoxAutoBackup.Items.AddRange(new object[] {
             "None",
             "Every minute",
             "Every 5 minutes",
@@ -1741,7 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxListViewDoubleClickEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxListViewDoubleClickEvent.DropDownWidth = 332;
             this.comboBoxListViewDoubleClickEvent.FormattingEnabled = true;
-            this.comboBoxListViewDoubleClickEvent.Items.AddRange(new string[] {
+            this.comboBoxListViewDoubleClickEvent.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -1761,7 +1763,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelListViewDoubleClickEvent.AutoSize = true;
             this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(416, 321);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
-            this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
+            this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(229, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 22;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
@@ -1779,7 +1781,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(419, 95);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 10;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -1789,7 +1791,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(419, 118);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
             this.checkBoxStartInSourceView.TabIndex = 11;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -1799,7 +1801,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(427, 46);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
             this.checkBoxReopenLastOpened.TabIndex = 8;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -1809,7 +1811,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(419, 22);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 7;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -1820,7 +1822,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultFileEncoding.AutoSize = true;
             this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 441);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
-            this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
+            this.labelDefaultFileEncoding.Size = new System.Drawing.Size(104, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
             this.labelDefaultFileEncoding.Text = "Default file encoding";
             // 
@@ -1853,7 +1855,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultFrameRate.AutoSize = true;
             this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 415);
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
-            this.labelDefaultFrameRate.Size = new System.Drawing.Size(96, 13);
+            this.labelDefaultFrameRate.Size = new System.Drawing.Size(91, 13);
             this.labelDefaultFrameRate.TabIndex = 1;
             this.labelDefaultFrameRate.Text = "Default frame rate";
             // 
@@ -1911,7 +1913,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFavoriteSubtitleFormatsNote.AutoSize = true;
             this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(10, 367);
             this.labelFavoriteSubtitleFormatsNote.Name = "labelFavoriteSubtitleFormatsNote";
-            this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(540, 13);
+            this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(516, 13);
             this.labelFavoriteSubtitleFormatsNote.TabIndex = 9;
             this.labelFavoriteSubtitleFormatsNote.Text = "Note: favorite formats will be shown first when selecting a format, the default f" +
     "ormat will always be shown first";
@@ -1961,7 +1963,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFormatsSearch.AutoSize = true;
             this.labelFormatsSearch.Location = new System.Drawing.Point(489, 56);
             this.labelFormatsSearch.Name = "labelFormatsSearch";
-            this.labelFormatsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelFormatsSearch.Size = new System.Drawing.Size(41, 13);
             this.labelFormatsSearch.TabIndex = 5;
             this.labelFormatsSearch.Text = "Search";
             // 
@@ -1970,7 +1972,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFormats.AutoSize = true;
             this.labelFormats.Location = new System.Drawing.Point(489, 34);
             this.labelFormats.Name = "labelFormats";
-            this.labelFormats.Size = new System.Drawing.Size(46, 13);
+            this.labelFormats.Size = new System.Drawing.Size(44, 13);
             this.labelFormats.TabIndex = 4;
             this.labelFormats.Text = "Formats";
             // 
@@ -2086,7 +2088,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFavoriteFormats.AutoSize = true;
             this.labelFavoriteFormats.Location = new System.Drawing.Point(48, 34);
             this.labelFavoriteFormats.Name = "labelFavoriteFormats";
-            this.labelFavoriteFormats.Size = new System.Drawing.Size(87, 13);
+            this.labelFavoriteFormats.Size = new System.Drawing.Size(82, 13);
             this.labelFavoriteFormats.TabIndex = 0;
             this.labelFavoriteFormats.Text = "Favorite formats";
             // 
@@ -2118,7 +2120,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultSaveAsFormat.AutoSize = true;
             this.labelDefaultSaveAsFormat.Location = new System.Drawing.Point(8, 64);
             this.labelDefaultSaveAsFormat.Name = "labelDefaultSaveAsFormat";
-            this.labelDefaultSaveAsFormat.Size = new System.Drawing.Size(117, 13);
+            this.labelDefaultSaveAsFormat.Size = new System.Drawing.Size(113, 13);
             this.labelDefaultSaveAsFormat.TabIndex = 2;
             this.labelDefaultSaveAsFormat.Text = "Default save as format";
             // 
@@ -2150,7 +2152,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelDefaultSubtitleFormat.AutoSize = true;
             this.labelDefaultSubtitleFormat.Location = new System.Drawing.Point(8, 30);
             this.labelDefaultSubtitleFormat.Name = "labelDefaultSubtitleFormat";
-            this.labelDefaultSubtitleFormat.Size = new System.Drawing.Size(77, 13);
+            this.labelDefaultSubtitleFormat.Size = new System.Drawing.Size(73, 13);
             this.labelDefaultSubtitleFormat.TabIndex = 0;
             this.labelDefaultSubtitleFormat.Text = "Default format";
             // 
@@ -2205,7 +2207,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseComboBoxShortcutsFilter.DropDownWidth = 92;
             this.nikseComboBoxShortcutsFilter.Enabled = false;
             this.nikseComboBoxShortcutsFilter.FormattingEnabled = true;
-            this.nikseComboBoxShortcutsFilter.Items.AddRange(new string[] {
+            this.nikseComboBoxShortcutsFilter.Items.AddRange(new object[] {
             "All",
             "Used",
             "Unused"});
@@ -2225,7 +2227,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelShortcutsFilter.AutoSize = true;
             this.labelShortcutsFilter.Location = new System.Drawing.Point(406, 22);
             this.labelShortcutsFilter.Name = "labelShortcutsFilter";
-            this.labelShortcutsFilter.Size = new System.Drawing.Size(31, 13);
+            this.labelShortcutsFilter.Size = new System.Drawing.Size(29, 13);
             this.labelShortcutsFilter.TabIndex = 38;
             this.labelShortcutsFilter.Text = "Filter";
             // 
@@ -2245,7 +2247,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelShortcutsSearch.AutoSize = true;
             this.labelShortcutsSearch.Location = new System.Drawing.Point(18, 23);
             this.labelShortcutsSearch.Name = "labelShortcutsSearch";
-            this.labelShortcutsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelShortcutsSearch.Size = new System.Drawing.Size(41, 13);
             this.labelShortcutsSearch.TabIndex = 37;
             this.labelShortcutsSearch.Text = "Search";
             // 
@@ -2288,7 +2290,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxShortcutKey.DropDownWidth = 92;
             this.comboBoxShortcutKey.Enabled = false;
             this.comboBoxShortcutKey.FormattingEnabled = true;
-            this.comboBoxShortcutKey.Items.AddRange(new string[] {
+            this.comboBoxShortcutKey.Items.AddRange(new object[] {
             "None",
             "A",
             "B",
@@ -2453,7 +2455,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsShift.Enabled = false;
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 494);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
-            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 6;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
@@ -2466,7 +2468,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsAlt.Enabled = false;
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 494);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
-            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 5;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
@@ -2479,7 +2481,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsControl.Enabled = false;
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 494);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
-            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 4;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
@@ -2519,38 +2521,38 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.exportShortcutsToolStripMenuItem,
             this.exportAsHtmlToolStripMenuItem});
             this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
-            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(160, 98);
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(159, 98);
             // 
             // toolStripMenuItemShortcutsCollapse
             // 
             this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
-            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(159, 22);
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(158, 22);
             this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
             this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(156, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
             // 
             // importShortcutsToolStripMenuItem
             // 
             this.importShortcutsToolStripMenuItem.Name = "importShortcutsToolStripMenuItem";
-            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.importShortcutsToolStripMenuItem.Text = "Import...";
             this.importShortcutsToolStripMenuItem.Click += new System.EventHandler(this.importShortcutsToolStripMenuItem_Click);
             // 
             // exportShortcutsToolStripMenuItem
             // 
             this.exportShortcutsToolStripMenuItem.Name = "exportShortcutsToolStripMenuItem";
-            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.exportShortcutsToolStripMenuItem.Text = "Export...";
             this.exportShortcutsToolStripMenuItem.Click += new System.EventHandler(this.exportShortcutsToolStripMenuItem_Click);
             // 
             // exportAsHtmlToolStripMenuItem
             // 
             this.exportAsHtmlToolStripMenuItem.Name = "exportAsHtmlToolStripMenuItem";
-            this.exportAsHtmlToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.exportAsHtmlToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.exportAsHtmlToolStripMenuItem.Text = "Export as html...";
             this.exportAsHtmlToolStripMenuItem.Click += new System.EventHandler(this.exportAsHtmlToolStripMenuItem_Click);
             // 
@@ -2560,7 +2562,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelShortcut.AutoSize = true;
             this.labelShortcut.Location = new System.Drawing.Point(15, 494);
             this.labelShortcut.Name = "labelShortcut";
-            this.labelShortcut.Size = new System.Drawing.Size(52, 13);
+            this.labelShortcut.Size = new System.Drawing.Size(50, 13);
             this.labelShortcut.TabIndex = 3;
             this.labelShortcut.Text = "Shortcut:";
             // 
@@ -2611,7 +2613,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorTextTooWide.AutoSize = true;
             this.checkBoxSyntaxColorTextTooWide.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextTooWide.Name = "checkBoxSyntaxColorTextTooWide";
-            this.checkBoxSyntaxColorTextTooWide.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxSyntaxColorTextTooWide.Size = new System.Drawing.Size(130, 17);
             this.checkBoxSyntaxColorTextTooWide.TabIndex = 3;
             this.checkBoxSyntaxColorTextTooWide.Text = "Text - color if too wide";
             this.checkBoxSyntaxColorTextTooWide.UseVisualStyleBackColor = true;
@@ -2621,7 +2623,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorGapTooSmall.AutoSize = true;
             this.checkBoxSyntaxColorGapTooSmall.Location = new System.Drawing.Point(20, 209);
             this.checkBoxSyntaxColorGapTooSmall.Name = "checkBoxSyntaxColorGapTooSmall";
-            this.checkBoxSyntaxColorGapTooSmall.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorGapTooSmall.Size = new System.Drawing.Size(130, 17);
             this.checkBoxSyntaxColorGapTooSmall.TabIndex = 7;
             this.checkBoxSyntaxColorGapTooSmall.Text = "Gap - color if too small";
             this.checkBoxSyntaxColorGapTooSmall.UseVisualStyleBackColor = true;
@@ -2631,7 +2633,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 139);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(164, 17);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 5;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
@@ -2641,7 +2643,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 174);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 6;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
@@ -2651,7 +2653,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorDurationTooSmall.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooSmall.Location = new System.Drawing.Point(20, 35);
             this.checkBoxSyntaxColorDurationTooSmall.Name = "checkBoxSyntaxColorDurationTooSmall";
-            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 0;
             this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
             this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
@@ -2671,7 +2673,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
             this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
@@ -2681,7 +2683,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
@@ -2728,7 +2730,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl1);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 345);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 340);
+            this.groupBoxMainWindowVideoControls.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
             this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 175);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
@@ -2767,7 +2770,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomSearch5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch5.DropDownWidth = 148;
             this.comboBoxCustomSearch5.FormattingEnabled = true;
-            this.comboBoxCustomSearch5.Items.AddRange(new string[] {
+            this.comboBoxCustomSearch5.Items.AddRange(new object[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2820,7 +2823,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomSearch4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch4.DropDownWidth = 148;
             this.comboBoxCustomSearch4.FormattingEnabled = true;
-            this.comboBoxCustomSearch4.Items.AddRange(new string[] {
+            this.comboBoxCustomSearch4.Items.AddRange(new object[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2873,7 +2876,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomSearch3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch3.DropDownWidth = 148;
             this.comboBoxCustomSearch3.FormattingEnabled = true;
-            this.comboBoxCustomSearch3.Items.AddRange(new string[] {
+            this.comboBoxCustomSearch3.Items.AddRange(new object[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2926,7 +2929,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomSearch2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch2.DropDownWidth = 148;
             this.comboBoxCustomSearch2.FormattingEnabled = true;
-            this.comboBoxCustomSearch2.Items.AddRange(new string[] {
+            this.comboBoxCustomSearch2.Items.AddRange(new object[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -2971,7 +2974,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelCustomSearch.AutoSize = true;
             this.labelCustomSearch.Location = new System.Drawing.Point(12, 20);
             this.labelCustomSearch.Name = "labelCustomSearch";
-            this.labelCustomSearch.Size = new System.Drawing.Size(144, 13);
+            this.labelCustomSearch.Size = new System.Drawing.Size(143, 13);
             this.labelCustomSearch.TabIndex = 1;
             this.labelCustomSearch.Text = "Custom search text and URL";
             // 
@@ -2988,7 +2991,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomSearch1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomSearch1.DropDownWidth = 148;
             this.comboBoxCustomSearch1.FormattingEnabled = true;
-            this.comboBoxCustomSearch1.Items.AddRange(new string[] {
+            this.comboBoxCustomSearch1.Items.AddRange(new object[] {
             "Dictionary.com",
             "learnersdictionary.com",
             "Merriam-Webster",
@@ -3032,7 +3035,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
-            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 160);
+            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 158);
+            this.groupBoxVideoPlayerDefault.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
             this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 182);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
@@ -3186,7 +3190,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.radioButtonMpvOpaqueBox.AutoSize = true;
             this.radioButtonMpvOpaqueBox.Location = new System.Drawing.Point(12, 50);
             this.radioButtonMpvOpaqueBox.Name = "radioButtonMpvOpaqueBox";
-            this.radioButtonMpvOpaqueBox.Size = new System.Drawing.Size(84, 17);
+            this.radioButtonMpvOpaqueBox.Size = new System.Drawing.Size(83, 17);
             this.radioButtonMpvOpaqueBox.TabIndex = 4;
             this.radioButtonMpvOpaqueBox.Text = "Opaque bo&x";
             this.radioButtonMpvOpaqueBox.UseVisualStyleBackColor = false;
@@ -3196,7 +3200,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.radioButtonMpvOutline.AutoSize = true;
             this.radioButtonMpvOutline.Location = new System.Drawing.Point(12, 24);
             this.radioButtonMpvOutline.Name = "radioButtonMpvOutline";
-            this.radioButtonMpvOutline.Size = new System.Drawing.Size(59, 17);
+            this.radioButtonMpvOutline.Size = new System.Drawing.Size(58, 17);
             this.radioButtonMpvOutline.TabIndex = 0;
             this.radioButtonMpvOutline.Text = "Outline";
             this.radioButtonMpvOutline.UseVisualStyleBackColor = true;
@@ -3280,7 +3284,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelMpvShadow.AutoSize = true;
             this.labelMpvShadow.Location = new System.Drawing.Point(134, 11);
             this.labelMpvShadow.Name = "labelMpvShadow";
-            this.labelMpvShadow.Size = new System.Drawing.Size(45, 13);
+            this.labelMpvShadow.Size = new System.Drawing.Size(46, 13);
             this.labelMpvShadow.TabIndex = 2;
             this.labelMpvShadow.Text = "Shadow";
             // 
@@ -3289,7 +3293,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxAllowVolumeBoost.AutoSize = true;
             this.checkBoxAllowVolumeBoost.Location = new System.Drawing.Point(9, 95);
             this.checkBoxAllowVolumeBoost.Name = "checkBoxAllowVolumeBoost";
-            this.checkBoxAllowVolumeBoost.Size = new System.Drawing.Size(118, 17);
+            this.checkBoxAllowVolumeBoost.Size = new System.Drawing.Size(117, 17);
             this.checkBoxAllowVolumeBoost.TabIndex = 4;
             this.checkBoxAllowVolumeBoost.Text = "Allow volume boost";
             this.checkBoxAllowVolumeBoost.UseVisualStyleBackColor = true;
@@ -3299,7 +3303,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoAutoOpen.AutoSize = true;
             this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(9, 75);
             this.checkBoxVideoAutoOpen.Name = "checkBoxVideoAutoOpen";
-            this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(213, 17);
+            this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(210, 17);
             this.checkBoxVideoAutoOpen.TabIndex = 3;
             this.checkBoxVideoAutoOpen.Text = "Auto open video when opening subtitle";
             this.checkBoxVideoAutoOpen.UseVisualStyleBackColor = true;
@@ -3309,7 +3313,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
             this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(641, 17);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
-            this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 7;
             this.checkBoxVideoPlayerPreviewFontBold.Text = "Bold";
             this.checkBoxVideoPlayerPreviewFontBold.UseVisualStyleBackColor = true;
@@ -3319,7 +3323,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerShowFullscreenButton.AutoSize = true;
             this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 55);
             this.checkBoxVideoPlayerShowFullscreenButton.Name = "checkBoxVideoPlayerShowFullscreenButton";
-            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(134, 17);
             this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 2;
             this.checkBoxVideoPlayerShowFullscreenButton.Text = "Show fullscreen button";
             this.checkBoxVideoPlayerShowFullscreenButton.UseVisualStyleBackColor = true;
@@ -3329,7 +3333,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
             this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 35);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
-            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(112, 17);
             this.checkBoxVideoPlayerShowMuteButton.TabIndex = 1;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
@@ -3339,7 +3343,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelVideoPlayerPreviewFontName.AutoSize = true;
             this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(305, 16);
             this.labelVideoPlayerPreviewFontName.Name = "labelVideoPlayerPreviewFontName";
-            this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(136, 13);
+            this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(132, 13);
             this.labelVideoPlayerPreviewFontName.TabIndex = 5;
             this.labelVideoPlayerPreviewFontName.Text = "Subtitle preview font name";
             // 
@@ -3371,7 +3375,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
             this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(305, 43);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
-            this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
+            this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(124, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
             this.labelVideoPlayerPreviewFontSize.Text = "Subtitle preview font size";
             // 
@@ -3403,7 +3407,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 15);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 0;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -3428,6 +3432,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerDirectShow);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMpcHc);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxVideoEngine.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxVideoEngine.Name = "groupBoxVideoEngine";
             this.groupBoxVideoEngine.Size = new System.Drawing.Size(852, 158);
             this.groupBoxVideoEngine.TabIndex = 0;
@@ -3439,7 +3444,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
             this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(164, 43);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
-            this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(146, 17);
             this.checkBoxMpvHandlesPreviewText.TabIndex = 3;
             this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
             this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
@@ -3505,7 +3510,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelVlcPath.AutoSize = true;
             this.labelVlcPath.Location = new System.Drawing.Point(414, 89);
             this.labelVlcPath.Name = "labelVlcPath";
-            this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
+            this.labelVlcPath.Size = new System.Drawing.Size(308, 13);
             this.labelVlcPath.TabIndex = 24;
             this.labelVlcPath.Text = "VLC path (only needed if you using the  portable version of VLC)";
             // 
@@ -3525,7 +3530,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.radioButtonVideoPlayerVLC.AutoSize = true;
             this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(9, 106);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
-            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
+            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(45, 17);
             this.radioButtonVideoPlayerVLC.TabIndex = 5;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
@@ -3582,7 +3587,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
             this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(9, 72);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
-            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
+            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(83, 17);
             this.radioButtonVideoPlayerDirectShow.TabIndex = 4;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
@@ -3593,7 +3598,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.radioButtonVideoPlayerMpcHc.AutoSize = true;
             this.radioButtonVideoPlayerMpcHc.Location = new System.Drawing.Point(9, 135);
             this.radioButtonVideoPlayerMpcHc.Name = "radioButtonVideoPlayerMpcHc";
-            this.radioButtonVideoPlayerMpcHc.Size = new System.Drawing.Size(64, 17);
+            this.radioButtonVideoPlayerMpcHc.Size = new System.Drawing.Size(66, 17);
             this.radioButtonVideoPlayerMpcHc.TabIndex = 8;
             this.radioButtonVideoPlayerMpcHc.TabStop = true;
             this.radioButtonVideoPlayerMpcHc.Text = "MPC-HC";
@@ -3634,7 +3639,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxFfmpegUseCenterChannel.AutoSize = true;
             this.checkBoxFfmpegUseCenterChannel.Location = new System.Drawing.Point(6, 99);
             this.checkBoxFfmpegUseCenterChannel.Name = "checkBoxFfmpegUseCenterChannel";
-            this.checkBoxFfmpegUseCenterChannel.Size = new System.Drawing.Size(219, 17);
+            this.checkBoxFfmpegUseCenterChannel.Size = new System.Drawing.Size(217, 17);
             this.checkBoxFfmpegUseCenterChannel.TabIndex = 24;
             this.checkBoxFfmpegUseCenterChannel.Text = "Use center channel only for audio tracks";
             this.checkBoxFfmpegUseCenterChannel.UseVisualStyleBackColor = true;
@@ -3676,7 +3681,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFFmpegPath.AutoSize = true;
             this.labelFFmpegPath.Location = new System.Drawing.Point(6, 49);
             this.labelFFmpegPath.Name = "labelFFmpegPath";
-            this.labelFFmpegPath.Size = new System.Drawing.Size(70, 13);
+            this.labelFFmpegPath.Size = new System.Drawing.Size(69, 13);
             this.labelFFmpegPath.TabIndex = 2;
             this.labelFFmpegPath.Text = "FFmpeg path";
             // 
@@ -3685,7 +3690,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxUseFFmpeg.AutoSize = true;
             this.checkBoxUseFFmpeg.Location = new System.Drawing.Point(6, 20);
             this.checkBoxUseFFmpeg.Name = "checkBoxUseFFmpeg";
-            this.checkBoxUseFFmpeg.Size = new System.Drawing.Size(200, 17);
+            this.checkBoxUseFFmpeg.Size = new System.Drawing.Size(195, 17);
             this.checkBoxUseFFmpeg.TabIndex = 1;
             this.checkBoxUseFFmpeg.Text = "Use FFmpeg for wave file extraction";
             this.checkBoxUseFFmpeg.UseVisualStyleBackColor = true;
@@ -3711,7 +3716,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSpectrogramAppearance.AutoSize = true;
             this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 45);
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
-            this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
+            this.labelSpectrogramAppearance.Size = new System.Drawing.Size(158, 13);
             this.labelSpectrogramAppearance.TabIndex = 1;
             this.labelSpectrogramAppearance.Text = "Appearance (at generation time)";
             // 
@@ -3728,7 +3733,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxSpectrogramAppearance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSpectrogramAppearance.DropDownWidth = 325;
             this.comboBoxSpectrogramAppearance.FormattingEnabled = true;
-            this.comboBoxSpectrogramAppearance.Items.AddRange(new string[] {
+            this.comboBoxSpectrogramAppearance.Items.AddRange(new object[] {
             "Classic",
             "Use waveform color (one color gradient)"});
             this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 63);
@@ -3745,21 +3750,67 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.labelSpectrogramOpacity.AutoSize = true;
             this.labelSpectrogramOpacity.Location = new System.Drawing.Point(10, 95);
-            this.labelSpectrogramOpacity.Name = "labelSpectrogramAppearance";
-            this.labelSpectrogramOpacity.Size = new System.Drawing.Size(164, 13);
+            this.labelSpectrogramOpacity.Name = "labelSpectrogramOpacity";
+            this.labelSpectrogramOpacity.Size = new System.Drawing.Size(0, 13);
             this.labelSpectrogramOpacity.TabIndex = 1;
-            //
+            // 
             // trackBarSpectrogramOpacity
-            //
+            // 
             this.trackBarSpectrogramOpacity.AutoSize = false;
             this.trackBarSpectrogramOpacity.Location = new System.Drawing.Point(190, 94);
-            this.trackBarSpectrogramOpacity.Name = "trackBarSpectrogramAppearance";
-            this.trackBarSpectrogramOpacity.Size = new System.Drawing.Size(175, 20);
             this.trackBarSpectrogramOpacity.Maximum = 511;
-            this.trackBarSpectrogramOpacity.Tag = 256;
-            this.trackBarSpectrogramOpacity.Value = Configuration.Settings.VideoControls.SpectrogramWaveformOpacity;
-            this.trackBarSpectrogramOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarSpectrogramOpacity.Name = "trackBarSpectrogramOpacity";
+            this.trackBarSpectrogramOpacity.Size = new System.Drawing.Size(175, 20);
             this.trackBarSpectrogramOpacity.TabIndex = 1;
+            this.trackBarSpectrogramOpacity.Tag = 256;
+            this.trackBarSpectrogramOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+            videoControlsSettings1.CustomSearchText1 = "The Free Dictionary";
+            videoControlsSettings1.CustomSearchText2 = "Wikipedia";
+            videoControlsSettings1.CustomSearchText3 = "DuckDuckGo";
+            videoControlsSettings1.CustomSearchText4 = null;
+            videoControlsSettings1.CustomSearchText5 = null;
+            videoControlsSettings1.CustomSearchUrl1 = "https://www.thefreedictionary.com/{0}";
+            videoControlsSettings1.CustomSearchUrl2 = "https://en.wikipedia.org/wiki?search={0}";
+            videoControlsSettings1.CustomSearchUrl3 = "https://duckduckgo.com/?q={0}";
+            videoControlsSettings1.CustomSearchUrl4 = null;
+            videoControlsSettings1.CustomSearchUrl5 = null;
+            videoControlsSettings1.GenerateSpectrogram = false;
+            videoControlsSettings1.LastActiveTab = "Translate";
+            videoControlsSettings1.SpectrogramAppearance = "OneColorGradient";
+            videoControlsSettings1.SpectrogramWaveformOpacity = 256;
+            videoControlsSettings1.WaveformAllowOverlap = false;
+            videoControlsSettings1.WaveformBackgroundColor = System.Drawing.Color.Black;
+            videoControlsSettings1.WaveformBorderHitMs = 15;
+            videoControlsSettings1.WaveformChaptersColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(33)))), ((int)(((byte)(122)))));
+            videoControlsSettings1.WaveformColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(240)))), ((int)(((byte)(30)))));
+            videoControlsSettings1.WaveformCursorColor = System.Drawing.Color.Turquoise;
+            videoControlsSettings1.WaveformDoubleClickOnNonParagraphAction = "";
+            videoControlsSettings1.WaveformDrawCps = false;
+            videoControlsSettings1.WaveformDrawGrid = true;
+            videoControlsSettings1.WaveformDrawWpm = false;
+            videoControlsSettings1.WaveformFocusOnMouseEnter = false;
+            videoControlsSettings1.WaveformGridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
+            videoControlsSettings1.WaveformHideWpmCpsLabels = false;
+            videoControlsSettings1.WaveformLabelShowCodec = true;
+            videoControlsSettings1.WaveformListViewFocusOnMouseEnter = false;
+            videoControlsSettings1.WaveformMinimumSampleRate = 126;
+            videoControlsSettings1.WaveformMouseWheelScrollUpIsForward = true;
+            videoControlsSettings1.WaveformRightClickOnNonParagraphAction = null;
+            videoControlsSettings1.WaveformSeeksSilenceDurationSeconds = 0.3D;
+            videoControlsSettings1.WaveformSeeksSilenceMaxVolume = 0.1D;
+            videoControlsSettings1.WaveformSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            videoControlsSettings1.WaveformSetVideoPositionOnMoveStartEnd = false;
+            videoControlsSettings1.WaveformShotChangeEndTimeAfterMs = 0;
+            videoControlsSettings1.WaveformShotChangeEndTimeBeforeMs = 0;
+            videoControlsSettings1.WaveformShotChangeStartTimeAfterMs = 0;
+            videoControlsSettings1.WaveformShotChangeStartTimeBeforeMs = 0;
+            videoControlsSettings1.WaveformSingleClickSelect = false;
+            videoControlsSettings1.WaveformSnapToShotChanges = true;
+            videoControlsSettings1.WaveformTextBold = true;
+            videoControlsSettings1.WaveformTextColor = System.Drawing.Color.Gray;
+            videoControlsSettings1.WaveformTextSize = 9;
+            videoControlsSettings1.WaveformUnwrapText = false;
+            this.trackBarSpectrogramOpacity.Value = videoControlsSettings1.SpectrogramWaveformOpacity;
             this.trackBarSpectrogramOpacity.ValueChanged += new System.EventHandler(this.TrackBarSpectrogramOpacityValueChanged);
             // 
             // checkBoxGenerateSpectrogram
@@ -3767,7 +3818,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxGenerateSpectrogram.AutoSize = true;
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
-            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
             this.checkBoxGenerateSpectrogram.TabIndex = 0;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
@@ -3799,7 +3850,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelWaveformsFolderInfo.AutoSize = true;
             this.labelWaveformsFolderInfo.Location = new System.Drawing.Point(10, 20);
             this.labelWaveformsFolderInfo.Name = "labelWaveformsFolderInfo";
-            this.labelWaveformsFolderInfo.Size = new System.Drawing.Size(205, 13);
+            this.labelWaveformsFolderInfo.Size = new System.Drawing.Size(197, 13);
             this.labelWaveformsFolderInfo.TabIndex = 0;
             this.labelWaveformsFolderInfo.Text = "\'Waveforms\' folder contains x files (x mb)";
             // 
@@ -3859,7 +3910,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformAutoGen.AutoSize = true;
             this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 185);
             this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
-            this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
+            this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(217, 17);
             this.checkBoxWaveformAutoGen.TabIndex = 28;
             this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
             this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
@@ -3888,7 +3939,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformSnapToShotChanges.AutoSize = true;
             this.checkBoxWaveformSnapToShotChanges.Location = new System.Drawing.Point(262, 161);
             this.checkBoxWaveformSnapToShotChanges.Name = "checkBoxWaveformSnapToShotChanges";
-            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(242, 17);
+            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(236, 17);
             this.checkBoxWaveformSnapToShotChanges.TabIndex = 26;
             this.checkBoxWaveformSnapToShotChanges.Text = "Snap to shot changes (hold Shift to override)";
             this.checkBoxWaveformSnapToShotChanges.UseVisualStyleBackColor = true;
@@ -3898,7 +3949,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformSingleClickSelect.AutoSize = true;
             this.checkBoxWaveformSingleClickSelect.Location = new System.Drawing.Point(262, 138);
             this.checkBoxWaveformSingleClickSelect.Name = "checkBoxWaveformSingleClickSelect";
-            this.checkBoxWaveformSingleClickSelect.Size = new System.Drawing.Size(178, 17);
+            this.checkBoxWaveformSingleClickSelect.Size = new System.Drawing.Size(179, 17);
             this.checkBoxWaveformSingleClickSelect.TabIndex = 25;
             this.checkBoxWaveformSingleClickSelect.Text = "Single click to select paragraphs";
             this.checkBoxWaveformSingleClickSelect.UseVisualStyleBackColor = true;
@@ -3908,7 +3959,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformShowWpm.AutoSize = true;
             this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 249);
             this.checkBoxWaveformShowWpm.Name = "checkBoxWaveformShowWpm";
-            this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(105, 17);
             this.checkBoxWaveformShowWpm.TabIndex = 8;
             this.checkBoxWaveformShowWpm.Text = "Show words/min";
             this.checkBoxWaveformShowWpm.UseVisualStyleBackColor = true;
@@ -3918,7 +3969,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformShowCps.AutoSize = true;
             this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 226);
             this.checkBoxWaveformShowCps.Name = "checkBoxWaveformShowCps";
-            this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(99, 17);
             this.checkBoxWaveformShowCps.TabIndex = 7;
             this.checkBoxWaveformShowCps.Text = "Show char/sec";
             this.checkBoxWaveformShowCps.UseVisualStyleBackColor = true;
@@ -3928,7 +3979,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformSetVideoPosMoveStartEnd.AutoSize = true;
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Location = new System.Drawing.Point(262, 73);
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Name = "checkBoxWaveformSetVideoPosMoveStartEnd";
-            this.checkBoxWaveformSetVideoPosMoveStartEnd.Size = new System.Drawing.Size(225, 17);
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.Size = new System.Drawing.Size(222, 17);
             this.checkBoxWaveformSetVideoPosMoveStartEnd.TabIndex = 22;
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Text = "Set video position when moving start/end";
             this.checkBoxWaveformSetVideoPosMoveStartEnd.UseVisualStyleBackColor = true;
@@ -3938,7 +3989,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelWaveformTextSize.AutoSize = true;
             this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 220);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
-            this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
+            this.labelWaveformTextSize.Size = new System.Drawing.Size(70, 13);
             this.labelWaveformTextSize.TabIndex = 29;
             this.labelWaveformTextSize.Text = "Text font size";
             // 
@@ -3947,7 +3998,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformTextBold.AutoSize = true;
             this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 221);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
-            this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxWaveformTextBold.TabIndex = 31;
             this.checkBoxWaveformTextBold.Text = "Bold";
             this.checkBoxWaveformTextBold.UseVisualStyleBackColor = true;
@@ -3965,7 +4016,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxWaveformTextSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxWaveformTextSize.DropDownWidth = 121;
             this.comboBoxWaveformTextSize.FormattingEnabled = true;
-            this.comboBoxWaveformTextSize.Items.AddRange(new string[] {
+            this.comboBoxWaveformTextSize.Items.AddRange(new object[] {
             "7",
             "8",
             "9",
@@ -3995,7 +4046,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxListViewMouseEnterFocus.AutoSize = true;
             this.checkBoxListViewMouseEnterFocus.Location = new System.Drawing.Point(281, 115);
             this.checkBoxListViewMouseEnterFocus.Name = "checkBoxListViewMouseEnterFocus";
-            this.checkBoxListViewMouseEnterFocus.Size = new System.Drawing.Size(214, 17);
+            this.checkBoxListViewMouseEnterFocus.Size = new System.Drawing.Size(211, 17);
             this.checkBoxListViewMouseEnterFocus.TabIndex = 24;
             this.checkBoxListViewMouseEnterFocus.Text = "Focus list view on list view mouse enter";
             this.checkBoxListViewMouseEnterFocus.UseVisualStyleBackColor = true;
@@ -4005,7 +4056,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxWaveformHoverFocus.AutoSize = true;
             this.checkBoxWaveformHoverFocus.Location = new System.Drawing.Point(262, 96);
             this.checkBoxWaveformHoverFocus.Name = "checkBoxWaveformHoverFocus";
-            this.checkBoxWaveformHoverFocus.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxWaveformHoverFocus.Size = new System.Drawing.Size(147, 17);
             this.checkBoxWaveformHoverFocus.TabIndex = 23;
             this.checkBoxWaveformHoverFocus.Text = "Set focus on mouse enter";
             this.checkBoxWaveformHoverFocus.UseVisualStyleBackColor = true;
@@ -4016,7 +4067,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelWaveformBorderHitMs2.AutoSize = true;
             this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 250);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
-            this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
+            this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(63, 13);
             this.labelWaveformBorderHitMs2.TabIndex = 34;
             this.labelWaveformBorderHitMs2.Text = "milliseconds";
             // 
@@ -4062,7 +4113,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelWaveformBorderHitMs1.AutoSize = true;
             this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 250);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
-            this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
+            this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(124, 13);
             this.labelWaveformBorderHitMs1.TabIndex = 32;
             this.labelWaveformBorderHitMs1.Text = "Marker hit must be within";
             // 
@@ -4071,7 +4122,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxAllowOverlap.AutoSize = true;
             this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 50);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
-            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(212, 17);
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(208, 17);
             this.checkBoxAllowOverlap.TabIndex = 21;
             this.checkBoxAllowOverlap.Text = "Allow overlap (when dragging/resizing)";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
@@ -4081,7 +4132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxReverseMouseWheelScrollDirection.AutoSize = true;
             this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 27);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
-            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(202, 17);
+            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(201, 17);
             this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 20;
             this.checkBoxReverseMouseWheelScrollDirection.Text = "Reverse mouse wheel scroll direction";
             this.checkBoxReverseMouseWheelScrollDirection.UseVisualStyleBackColor = true;
@@ -4233,7 +4284,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomToggleEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomToggleEnd.DropDownWidth = 42;
             this.comboBoxCustomToggleEnd.FormattingEnabled = true;
-            this.comboBoxCustomToggleEnd.Items.AddRange(new string[] {
+            this.comboBoxCustomToggleEnd.Items.AddRange(new object[] {
             ")",
             "♪"});
             this.comboBoxCustomToggleEnd.Location = new System.Drawing.Point(230, 76);
@@ -4260,7 +4311,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxCustomToggleStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxCustomToggleStart.DropDownWidth = 42;
             this.comboBoxCustomToggleStart.FormattingEnabled = true;
-            this.comboBoxCustomToggleStart.Items.AddRange(new string[] {
+            this.comboBoxCustomToggleStart.Items.AddRange(new object[] {
             "(",
             "♪"});
             this.comboBoxCustomToggleStart.Location = new System.Drawing.Point(182, 76);
@@ -4279,7 +4330,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelShortcutCustomToggle.AutoSize = true;
             this.labelShortcutCustomToggle.Location = new System.Drawing.Point(6, 79);
             this.labelShortcutCustomToggle.Name = "labelShortcutCustomToggle";
-            this.labelShortcutCustomToggle.Size = new System.Drawing.Size(169, 13);
+            this.labelShortcutCustomToggle.Size = new System.Drawing.Size(165, 13);
             this.labelShortcutCustomToggle.TabIndex = 62;
             this.labelShortcutCustomToggle.Text = "Shortcut toggle custom  start/end";
             // 
@@ -4288,7 +4339,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(6, 52);
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Name = "checkBoxShortcutsAllowLetterOrNumberInTextBox";
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(214, 17);
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.TabIndex = 61;
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Text = "Allow letter/number shortcuts in text box";
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.UseVisualStyleBackColor = true;
@@ -4306,7 +4357,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxBDOpensIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBDOpensIn.DropDownWidth = 221;
             this.comboBoxBDOpensIn.FormattingEnabled = true;
-            this.comboBoxBDOpensIn.Items.AddRange(new string[] {
+            this.comboBoxBDOpensIn.Items.AddRange(new object[] {
             "OCR",
             "BD SUP EDIIT"});
             this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 25);
@@ -4324,7 +4375,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelBDOpensIn.AutoSize = true;
             this.labelBDOpensIn.Location = new System.Drawing.Point(6, 27);
             this.labelBDOpensIn.Name = "labelBDOpensIn";
-            this.labelBDOpensIn.Size = new System.Drawing.Size(146, 13);
+            this.labelBDOpensIn.Size = new System.Drawing.Size(143, 13);
             this.labelBDOpensIn.TabIndex = 0;
             this.labelBDOpensIn.Text = "Blu-ray sup/bdn-xml opens in";
             // 
@@ -4352,7 +4403,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelToolsBreakBottomHeavyPercent.AutoSize = true;
             this.labelToolsBreakBottomHeavyPercent.Location = new System.Drawing.Point(226, 140);
             this.labelToolsBreakBottomHeavyPercent.Name = "labelToolsBreakBottomHeavyPercent";
-            this.labelToolsBreakBottomHeavyPercent.Size = new System.Drawing.Size(18, 13);
+            this.labelToolsBreakBottomHeavyPercent.Size = new System.Drawing.Size(15, 13);
             this.labelToolsBreakBottomHeavyPercent.TabIndex = 63;
             this.labelToolsBreakBottomHeavyPercent.Text = "%";
             // 
@@ -4398,7 +4449,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolsBreakPreferBottomHeavy.AutoSize = true;
             this.checkBoxToolsBreakPreferBottomHeavy.Location = new System.Drawing.Point(32, 139);
             this.checkBoxToolsBreakPreferBottomHeavy.Name = "checkBoxToolsBreakPreferBottomHeavy";
-            this.checkBoxToolsBreakPreferBottomHeavy.Size = new System.Drawing.Size(126, 17);
+            this.checkBoxToolsBreakPreferBottomHeavy.Size = new System.Drawing.Size(121, 17);
             this.checkBoxToolsBreakPreferBottomHeavy.TabIndex = 61;
             this.checkBoxToolsBreakPreferBottomHeavy.Text = "Prefer bottom heavy";
             this.checkBoxToolsBreakPreferBottomHeavy.UseVisualStyleBackColor = true;
@@ -4408,7 +4459,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolsBreakByPixelWidth.AutoSize = true;
             this.checkBoxToolsBreakByPixelWidth.Location = new System.Drawing.Point(15, 116);
             this.checkBoxToolsBreakByPixelWidth.Name = "checkBoxToolsBreakByPixelWidth";
-            this.checkBoxToolsBreakByPixelWidth.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxToolsBreakByPixelWidth.Size = new System.Drawing.Size(168, 17);
             this.checkBoxToolsBreakByPixelWidth.TabIndex = 60;
             this.checkBoxToolsBreakByPixelWidth.Text = "Break by estimated pixel width";
             this.checkBoxToolsBreakByPixelWidth.UseVisualStyleBackColor = true;
@@ -4419,7 +4470,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolsBreakEarlyLineEnding.AutoSize = true;
             this.checkBoxToolsBreakEarlyLineEnding.Location = new System.Drawing.Point(15, 70);
             this.checkBoxToolsBreakEarlyLineEnding.Name = "checkBoxToolsBreakEarlyLineEnding";
-            this.checkBoxToolsBreakEarlyLineEnding.Size = new System.Drawing.Size(175, 17);
+            this.checkBoxToolsBreakEarlyLineEnding.Size = new System.Drawing.Size(169, 17);
             this.checkBoxToolsBreakEarlyLineEnding.TabIndex = 40;
             this.checkBoxToolsBreakEarlyLineEnding.Text = "Break early for line ending (.!?)";
             this.checkBoxToolsBreakEarlyLineEnding.UseVisualStyleBackColor = true;
@@ -4429,7 +4480,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolsBreakEarlyComma.AutoSize = true;
             this.checkBoxToolsBreakEarlyComma.Location = new System.Drawing.Point(15, 93);
             this.checkBoxToolsBreakEarlyComma.Name = "checkBoxToolsBreakEarlyComma";
-            this.checkBoxToolsBreakEarlyComma.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxToolsBreakEarlyComma.Size = new System.Drawing.Size(131, 17);
             this.checkBoxToolsBreakEarlyComma.TabIndex = 50;
             this.checkBoxToolsBreakEarlyComma.Text = "Break early for comma";
             this.checkBoxToolsBreakEarlyComma.UseVisualStyleBackColor = true;
@@ -4439,7 +4490,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolsBreakEarlyDash.AutoSize = true;
             this.checkBoxToolsBreakEarlyDash.Location = new System.Drawing.Point(15, 47);
             this.checkBoxToolsBreakEarlyDash.Name = "checkBoxToolsBreakEarlyDash";
-            this.checkBoxToolsBreakEarlyDash.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxToolsBreakEarlyDash.Size = new System.Drawing.Size(120, 17);
             this.checkBoxToolsBreakEarlyDash.TabIndex = 30;
             this.checkBoxToolsBreakEarlyDash.Text = "Break early for dash";
             this.checkBoxToolsBreakEarlyDash.UseVisualStyleBackColor = true;
@@ -4467,7 +4518,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
             this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 24);
             this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
-            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(148, 17);
             this.checkBoxUseDoNotBreakAfterList.TabIndex = 1;
             this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list";
             this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
@@ -4494,7 +4545,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 40);
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Name = "checkBoxSpellCheckAutoChangeNamesViaSuggestions";
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(186, 17);
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.TabIndex = 1;
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Text = "Also use \'spell check suggestions\'";
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.UseVisualStyleBackColor = true;
@@ -4504,7 +4555,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxUseAlwaysToFile.AutoSize = true;
             this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(15, 102);
             this.checkBoxUseAlwaysToFile.Name = "checkBoxUseAlwaysToFile";
-            this.checkBoxUseAlwaysToFile.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxUseAlwaysToFile.Size = new System.Drawing.Size(199, 17);
             this.checkBoxUseAlwaysToFile.TabIndex = 4;
             this.checkBoxUseAlwaysToFile.Text = "Remember \"Use always\" / \"Skip all\"";
             this.checkBoxUseAlwaysToFile.UseVisualStyleBackColor = true;
@@ -4524,7 +4575,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
             this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(15, 62);
             this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
-            this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
+            this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(199, 17);
             this.checkBoxSpellCheckOneLetterWords.TabIndex = 2;
             this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
             this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
@@ -4534,7 +4585,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(214, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differs";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
@@ -4563,7 +4614,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxUseWordSplitListAvoidPropercase.AutoSize = true;
             this.checkBoxUseWordSplitListAvoidPropercase.Location = new System.Drawing.Point(34, 146);
             this.checkBoxUseWordSplitListAvoidPropercase.Name = "checkBoxUseWordSplitListAvoidPropercase";
-            this.checkBoxUseWordSplitListAvoidPropercase.Size = new System.Drawing.Size(102, 17);
+            this.checkBoxUseWordSplitListAvoidPropercase.Size = new System.Drawing.Size(103, 17);
             this.checkBoxUseWordSplitListAvoidPropercase.TabIndex = 4;
             this.checkBoxUseWordSplitListAvoidPropercase.Text = "Skip propercase";
             this.checkBoxUseWordSplitListAvoidPropercase.UseVisualStyleBackColor = true;
@@ -4573,7 +4624,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxUseWordSplitList.AutoSize = true;
             this.checkBoxUseWordSplitList.Location = new System.Drawing.Point(15, 125);
             this.checkBoxUseWordSplitList.Name = "checkBoxUseWordSplitList";
-            this.checkBoxUseWordSplitList.Size = new System.Drawing.Size(231, 17);
+            this.checkBoxUseWordSplitList.Size = new System.Drawing.Size(225, 17);
             this.checkBoxUseWordSplitList.TabIndex = 3;
             this.checkBoxUseWordSplitList.Text = "Fix common OCR errors - use word split list";
             this.checkBoxUseWordSplitList.UseVisualStyleBackColor = true;
@@ -4593,7 +4644,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxFceSkipStep1.AutoSize = true;
             this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 193);
             this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
-            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(173, 17);
             this.checkBoxFceSkipStep1.TabIndex = 6;
             this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
             this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
@@ -4603,7 +4654,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 170);
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(241, 17);
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 5;
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
@@ -4613,7 +4664,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 103);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(268, 17);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(264, 17);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
@@ -4631,7 +4682,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxToolsMusicSymbol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsMusicSymbol.DropDownWidth = 86;
             this.comboBoxToolsMusicSymbol.FormattingEnabled = true;
-            this.comboBoxToolsMusicSymbol.Items.AddRange(new string[] {
+            this.comboBoxToolsMusicSymbol.Items.AddRange(new object[] {
             "♪",
             "♪♪",
             "*",
@@ -4662,7 +4713,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelToolsMusicSymbolsToReplace.AutoSize = true;
             this.labelToolsMusicSymbolsToReplace.Location = new System.Drawing.Point(8, 25);
             this.labelToolsMusicSymbolsToReplace.Name = "labelToolsMusicSymbolsToReplace";
-            this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(230, 13);
+            this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(226, 13);
             this.labelToolsMusicSymbolsToReplace.TabIndex = 34;
             this.labelToolsMusicSymbolsToReplace.Text = "Music symbols to replace (separate by comma)";
             // 
@@ -4671,7 +4722,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelToolsMusicSymbol.AutoSize = true;
             this.labelToolsMusicSymbol.Location = new System.Drawing.Point(8, 74);
             this.labelToolsMusicSymbol.Name = "labelToolsMusicSymbol";
-            this.labelToolsMusicSymbol.Size = new System.Drawing.Size(69, 13);
+            this.labelToolsMusicSymbol.Size = new System.Drawing.Size(70, 13);
             this.labelToolsMusicSymbol.TabIndex = 32;
             this.labelToolsMusicSymbol.Text = "Music symbol";
             // 
@@ -4714,7 +4765,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxToolsEndSceneIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsEndSceneIndex.DropDownWidth = 86;
             this.comboBoxToolsEndSceneIndex.FormattingEnabled = true;
-            this.comboBoxToolsEndSceneIndex.Items.AddRange(new string[] {
+            this.comboBoxToolsEndSceneIndex.Items.AddRange(new object[] {
             "Last",
             "Last - 1",
             "Last - 2",
@@ -4734,7 +4785,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelToolsStartScene.AutoSize = true;
             this.labelToolsStartScene.Location = new System.Drawing.Point(13, 52);
             this.labelToolsStartScene.Name = "labelToolsStartScene";
-            this.labelToolsStartScene.Size = new System.Drawing.Size(125, 13);
+            this.labelToolsStartScene.Size = new System.Drawing.Size(122, 13);
             this.labelToolsStartScene.TabIndex = 27;
             this.labelToolsStartScene.Text = "Start scene paragraph is";
             // 
@@ -4751,7 +4802,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxToolsStartSceneIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsStartSceneIndex.DropDownWidth = 86;
             this.comboBoxToolsStartSceneIndex.FormattingEnabled = true;
-            this.comboBoxToolsStartSceneIndex.Items.AddRange(new string[] {
+            this.comboBoxToolsStartSceneIndex.Items.AddRange(new object[] {
             "First",
             "First +1",
             "First +2",
@@ -4779,7 +4830,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxToolsVerifySeconds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolsVerifySeconds.DropDownWidth = 86;
             this.comboBoxToolsVerifySeconds.FormattingEnabled = true;
-            this.comboBoxToolsVerifySeconds.Items.AddRange(new string[] {
+            this.comboBoxToolsVerifySeconds.Items.AddRange(new object[] {
             "2",
             "3",
             "4",
@@ -4799,7 +4850,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelVerifyButton.AutoSize = true;
             this.labelVerifyButton.Location = new System.Drawing.Point(13, 25);
             this.labelVerifyButton.Name = "labelVerifyButton";
-            this.labelVerifyButton.Size = new System.Drawing.Size(147, 13);
+            this.labelVerifyButton.Size = new System.Drawing.Size(151, 13);
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
             // 
@@ -4887,7 +4938,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
             this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
-            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new string[] {
+            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
             "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
@@ -4923,7 +4974,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelBingTokenEndpoint.AutoSize = true;
             this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 80);
             this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
-            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
+            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(82, 13);
             this.labelBingTokenEndpoint.TabIndex = 32;
             this.labelBingTokenEndpoint.Text = "Token endpoint";
             // 
@@ -4993,7 +5044,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxShowFrameRate.AutoSize = true;
             this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 20);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
-            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(149, 17);
             this.checkBoxShowFrameRate.TabIndex = 47;
             this.checkBoxShowFrameRate.Text = "Show frame rate in toolbar";
             this.checkBoxShowFrameRate.UseVisualStyleBackColor = true;
@@ -5092,7 +5143,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBOpenVideo.AutoSize = true;
             this.checkBoxTBOpenVideo.Location = new System.Drawing.Point(215, 81);
             this.checkBoxTBOpenVideo.Name = "checkBoxTBOpenVideo";
-            this.checkBoxTBOpenVideo.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBOpenVideo.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBOpenVideo.TabIndex = 61;
             this.checkBoxTBOpenVideo.Text = "Visible";
             this.checkBoxTBOpenVideo.UseVisualStyleBackColor = true;
@@ -5182,7 +5233,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBToggleSourceView.AutoSize = true;
             this.labelTBToggleSourceView.Location = new System.Drawing.Point(224, 257);
             this.labelTBToggleSourceView.Name = "labelTBToggleSourceView";
-            this.labelTBToggleSourceView.Size = new System.Drawing.Size(99, 13);
+            this.labelTBToggleSourceView.Size = new System.Drawing.Size(100, 13);
             this.labelTBToggleSourceView.TabIndex = 48;
             this.labelTBToggleSourceView.Text = "Toggle source view";
             // 
@@ -5199,7 +5250,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBToggleSourceView.AutoSize = true;
             this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(240, 312);
             this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
-            this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBToggleSourceView.TabIndex = 46;
             this.checkBoxTBToggleSourceView.Text = "Visible";
             this.checkBoxTBToggleSourceView.UseVisualStyleBackColor = true;
@@ -5226,7 +5277,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBBurnIn.AutoSize = true;
             this.checkBoxTBBurnIn.Location = new System.Drawing.Point(259, 198);
             this.checkBoxTBBurnIn.Name = "checkBoxTBBurnIn";
-            this.checkBoxTBBurnIn.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBBurnIn.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBBurnIn.TabIndex = 20;
             this.checkBoxTBBurnIn.Text = "Visible";
             this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
@@ -5236,7 +5287,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBBeautifyTimeCodes.AutoSize = true;
             this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(8, 257);
             this.labelTBBeautifyTimeCodes.Name = "labelTBBeautifyTimeCodes";
-            this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(101, 13);
+            this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(99, 13);
             this.labelTBBeautifyTimeCodes.TabIndex = 45;
             this.labelTBBeautifyTimeCodes.Text = "Beautify time codes";
             // 
@@ -5253,7 +5304,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBBeautifyTimeCodes.AutoSize = true;
             this.checkBoxTBBeautifyTimeCodes.Location = new System.Drawing.Point(22, 312);
             this.checkBoxTBBeautifyTimeCodes.Name = "checkBoxTBBeautifyTimeCodes";
-            this.checkBoxTBBeautifyTimeCodes.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBBeautifyTimeCodes.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBBeautifyTimeCodes.TabIndex = 43;
             this.checkBoxTBBeautifyTimeCodes.Text = "Visible";
             this.checkBoxTBBeautifyTimeCodes.UseVisualStyleBackColor = true;
@@ -5263,7 +5314,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBNetflixQualityCheck.AutoSize = true;
             this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(552, 143);
             this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
-            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
+            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(102, 13);
             this.labelTBNetflixQualityCheck.TabIndex = 42;
             this.labelTBNetflixQualityCheck.Text = "Netflix quality check";
             // 
@@ -5280,7 +5331,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBNetflixQualityCheck.AutoSize = true;
             this.checkBoxTBNetflixQualityCheck.Location = new System.Drawing.Point(568, 198);
             this.checkBoxTBNetflixQualityCheck.Name = "checkBoxTBNetflixQualityCheck";
-            this.checkBoxTBNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBNetflixQualityCheck.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBNetflixQualityCheck.TabIndex = 40;
             this.checkBoxTBNetflixQualityCheck.Text = "Visible";
             this.checkBoxTBNetflixQualityCheck.UseVisualStyleBackColor = true;
@@ -5290,7 +5341,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBRemoveTextForHi.AutoSize = true;
             this.labelTBRemoveTextForHi.Location = new System.Drawing.Point(9, 143);
             this.labelTBRemoveTextForHi.Name = "labelTBRemoveTextForHi";
-            this.labelTBRemoveTextForHi.Size = new System.Drawing.Size(100, 13);
+            this.labelTBRemoveTextForHi.Size = new System.Drawing.Size(96, 13);
             this.labelTBRemoveTextForHi.TabIndex = 39;
             this.labelTBRemoveTextForHi.Text = "Remove text for HI";
             // 
@@ -5307,7 +5358,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBRemoveTextForHi.AutoSize = true;
             this.checkBoxTBRemoveTextForHi.Location = new System.Drawing.Point(25, 198);
             this.checkBoxTBRemoveTextForHi.Name = "checkBoxTBRemoveTextForHi";
-            this.checkBoxTBRemoveTextForHi.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBRemoveTextForHi.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBRemoveTextForHi.TabIndex = 18;
             this.checkBoxTBRemoveTextForHi.Text = "Visible";
             this.checkBoxTBRemoveTextForHi.UseVisualStyleBackColor = true;
@@ -5317,7 +5368,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBFixCommonErrors.AutoSize = true;
             this.labelTBFixCommonErrors.Location = new System.Drawing.Point(675, 22);
             this.labelTBFixCommonErrors.Name = "labelTBFixCommonErrors";
-            this.labelTBFixCommonErrors.Size = new System.Drawing.Size(95, 13);
+            this.labelTBFixCommonErrors.Size = new System.Drawing.Size(92, 13);
             this.labelTBFixCommonErrors.TabIndex = 36;
             this.labelTBFixCommonErrors.Text = "Fix common errors";
             // 
@@ -5334,7 +5385,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBFixCommonErrors.AutoSize = true;
             this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(691, 81);
             this.checkBoxTBFixCommonErrors.Name = "checkBoxTBFixCommonErrors";
-            this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBFixCommonErrors.TabIndex = 17;
             this.checkBoxTBFixCommonErrors.Text = "Visible";
             this.checkBoxTBFixCommonErrors.UseVisualStyleBackColor = true;
@@ -5344,7 +5395,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBHelp.AutoSize = true;
             this.labelTBHelp.Location = new System.Drawing.Point(143, 257);
             this.labelTBHelp.Name = "labelTBHelp";
-            this.labelTBHelp.Size = new System.Drawing.Size(28, 13);
+            this.labelTBHelp.Size = new System.Drawing.Size(29, 13);
             this.labelTBHelp.TabIndex = 33;
             this.labelTBHelp.Text = "Help";
             // 
@@ -5361,7 +5412,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBHelp.AutoSize = true;
             this.checkBoxTBHelp.Location = new System.Drawing.Point(145, 312);
             this.checkBoxTBHelp.Name = "checkBoxTBHelp";
-            this.checkBoxTBHelp.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBHelp.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBHelp.TabIndex = 23;
             this.checkBoxTBHelp.Text = "Visible";
             this.checkBoxTBHelp.UseVisualStyleBackColor = true;
@@ -5371,7 +5422,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBSettings.AutoSize = true;
             this.labelTBSettings.Location = new System.Drawing.Point(456, 143);
             this.labelTBSettings.Name = "labelTBSettings";
-            this.labelTBSettings.Size = new System.Drawing.Size(46, 13);
+            this.labelTBSettings.Size = new System.Drawing.Size(45, 13);
             this.labelTBSettings.TabIndex = 30;
             this.labelTBSettings.Text = "Settings";
             // 
@@ -5388,7 +5439,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBSettings.AutoSize = true;
             this.checkBoxTBSettings.Location = new System.Drawing.Point(462, 198);
             this.checkBoxTBSettings.Name = "checkBoxTBSettings";
-            this.checkBoxTBSettings.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBSettings.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBSettings.TabIndex = 22;
             this.checkBoxTBSettings.Text = "Visible";
             this.checkBoxTBSettings.UseVisualStyleBackColor = true;
@@ -5398,7 +5449,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBSpellCheck.AutoSize = true;
             this.labelTBSpellCheck.Location = new System.Drawing.Point(357, 143);
             this.labelTBSpellCheck.Name = "labelTBSpellCheck";
-            this.labelTBSpellCheck.Size = new System.Drawing.Size(59, 13);
+            this.labelTBSpellCheck.Size = new System.Drawing.Size(63, 13);
             this.labelTBSpellCheck.TabIndex = 27;
             this.labelTBSpellCheck.Text = "Spell check";
             // 
@@ -5415,7 +5466,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBSpellCheck.AutoSize = true;
             this.checkBoxTBSpellCheck.Location = new System.Drawing.Point(362, 198);
             this.checkBoxTBSpellCheck.Name = "checkBoxTBSpellCheck";
-            this.checkBoxTBSpellCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBSpellCheck.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBSpellCheck.TabIndex = 21;
             this.checkBoxTBSpellCheck.Text = "Visible";
             this.checkBoxTBSpellCheck.UseVisualStyleBackColor = true;
@@ -5425,7 +5476,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBVisualSync.AutoSize = true;
             this.labelTBVisualSync.Location = new System.Drawing.Point(132, 143);
             this.labelTBVisualSync.Name = "labelTBVisualSync";
-            this.labelTBVisualSync.Size = new System.Drawing.Size(59, 13);
+            this.labelTBVisualSync.Size = new System.Drawing.Size(60, 13);
             this.labelTBVisualSync.TabIndex = 21;
             this.labelTBVisualSync.Text = "Visual sync";
             // 
@@ -5442,7 +5493,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBVisualSync.AutoSize = true;
             this.checkBoxTBVisualSync.Location = new System.Drawing.Point(148, 198);
             this.checkBoxTBVisualSync.Name = "checkBoxTBVisualSync";
-            this.checkBoxTBVisualSync.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBVisualSync.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBVisualSync.TabIndex = 19;
             this.checkBoxTBVisualSync.Text = "Visible";
             this.checkBoxTBVisualSync.UseVisualStyleBackColor = true;
@@ -5452,7 +5503,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBReplace.AutoSize = true;
             this.labelTBReplace.Location = new System.Drawing.Point(599, 22);
             this.labelTBReplace.Name = "labelTBReplace";
-            this.labelTBReplace.Size = new System.Drawing.Size(45, 13);
+            this.labelTBReplace.Size = new System.Drawing.Size(47, 13);
             this.labelTBReplace.TabIndex = 18;
             this.labelTBReplace.Text = "Replace";
             // 
@@ -5469,7 +5520,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBReplace.AutoSize = true;
             this.checkBoxTBReplace.Location = new System.Drawing.Point(607, 81);
             this.checkBoxTBReplace.Name = "checkBoxTBReplace";
-            this.checkBoxTBReplace.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBReplace.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBReplace.TabIndex = 16;
             this.checkBoxTBReplace.Text = "Visible";
             this.checkBoxTBReplace.UseVisualStyleBackColor = true;
@@ -5496,7 +5547,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBFind.AutoSize = true;
             this.checkBoxTBFind.Location = new System.Drawing.Point(504, 81);
             this.checkBoxTBFind.Name = "checkBoxTBFind";
-            this.checkBoxTBFind.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBFind.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBFind.TabIndex = 13;
             this.checkBoxTBFind.Text = "Visible";
             this.checkBoxTBFind.UseVisualStyleBackColor = true;
@@ -5506,7 +5557,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBSaveAs.AutoSize = true;
             this.labelTBSaveAs.Location = new System.Drawing.Point(394, 22);
             this.labelTBSaveAs.Name = "labelTBSaveAs";
-            this.labelTBSaveAs.Size = new System.Drawing.Size(45, 13);
+            this.labelTBSaveAs.Size = new System.Drawing.Size(46, 13);
             this.labelTBSaveAs.TabIndex = 12;
             this.labelTBSaveAs.Text = "Save as";
             // 
@@ -5523,7 +5574,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBSaveAs.AutoSize = true;
             this.checkBoxTBSaveAs.Location = new System.Drawing.Point(403, 81);
             this.checkBoxTBSaveAs.Name = "checkBoxTBSaveAs";
-            this.checkBoxTBSaveAs.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBSaveAs.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBSaveAs.TabIndex = 10;
             this.checkBoxTBSaveAs.Text = "Visible";
             this.checkBoxTBSaveAs.UseVisualStyleBackColor = true;
@@ -5533,7 +5584,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBSave.AutoSize = true;
             this.labelTBSave.Location = new System.Drawing.Point(303, 22);
             this.labelTBSave.Name = "labelTBSave";
-            this.labelTBSave.Size = new System.Drawing.Size(31, 13);
+            this.labelTBSave.Size = new System.Drawing.Size(32, 13);
             this.labelTBSave.TabIndex = 9;
             this.labelTBSave.Text = "Save";
             // 
@@ -5550,7 +5601,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBSave.AutoSize = true;
             this.checkBoxTBSave.Location = new System.Drawing.Point(305, 81);
             this.checkBoxTBSave.Name = "checkBoxTBSave";
-            this.checkBoxTBSave.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBSave.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBSave.TabIndex = 7;
             this.checkBoxTBSave.Text = "Visible";
             this.checkBoxTBSave.UseVisualStyleBackColor = true;
@@ -5577,7 +5628,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxTBOpen.AutoSize = true;
             this.checkBoxTBOpen.Location = new System.Drawing.Point(126, 81);
             this.checkBoxTBOpen.Name = "checkBoxTBOpen";
-            this.checkBoxTBOpen.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBOpen.Size = new System.Drawing.Size(56, 17);
             this.checkBoxTBOpen.TabIndex = 4;
             this.checkBoxTBOpen.Text = "Visible";
             this.checkBoxTBOpen.UseVisualStyleBackColor = true;
@@ -5587,7 +5638,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelTBNew.AutoSize = true;
             this.labelTBNew.Location = new System.Drawing.Point(24, 22);
             this.labelTBNew.Name = "labelTBNew";
-            this.labelTBNew.Size = new System.Drawing.Size(28, 13);
+            this.labelTBNew.Size = new System.Drawing.Size(29, 13);
             this.labelTBNew.TabIndex = 3;
             this.labelTBNew.Text = "New";
             // 
@@ -5604,7 +5655,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxToolbarNew.AutoSize = true;
             this.checkBoxToolbarNew.Location = new System.Drawing.Point(25, 81);
             this.checkBoxToolbarNew.Name = "checkBoxToolbarNew";
-            this.checkBoxToolbarNew.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarNew.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarNew.TabIndex = 1;
             this.checkBoxToolbarNew.Text = "Visible";
             this.checkBoxToolbarNew.UseVisualStyleBackColor = true;
@@ -5677,7 +5728,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelToolbarIconTheme.AutoSize = true;
             this.labelToolbarIconTheme.Location = new System.Drawing.Point(13, 23);
             this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
-            this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
+            this.labelToolbarIconTheme.Size = new System.Drawing.Size(40, 13);
             this.labelToolbarIconTheme.TabIndex = 52;
             this.labelToolbarIconTheme.Text = "Theme";
             // 
@@ -5761,7 +5812,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFont.AutoSize = true;
             this.labelSubtitleFont.Location = new System.Drawing.Point(13, 26);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
-            this.labelSubtitleFont.Size = new System.Drawing.Size(66, 13);
+            this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
             this.labelSubtitleFont.TabIndex = 28;
             this.labelSubtitleFont.Text = "Subtitle font";
             // 
@@ -5779,7 +5830,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFontColor.AutoSize = true;
             this.labelSubtitleFontColor.Location = new System.Drawing.Point(13, 50);
             this.labelSubtitleFontColor.Name = "labelSubtitleFontColor";
-            this.labelSubtitleFontColor.Size = new System.Drawing.Size(92, 13);
+            this.labelSubtitleFontColor.Size = new System.Drawing.Size(89, 13);
             this.labelSubtitleFontColor.TabIndex = 34;
             this.labelSubtitleFontColor.Text = "Subtitle font color";
             // 
@@ -5797,7 +5848,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFontBackgroundColor.AutoSize = true;
             this.labelSubtitleFontBackgroundColor.Location = new System.Drawing.Point(13, 70);
             this.labelSubtitleFontBackgroundColor.Name = "labelSubtitleFontBackgroundColor";
-            this.labelSubtitleFontBackgroundColor.Size = new System.Drawing.Size(151, 13);
+            this.labelSubtitleFontBackgroundColor.Size = new System.Drawing.Size(149, 13);
             this.labelSubtitleFontBackgroundColor.TabIndex = 36;
             this.labelSubtitleFontBackgroundColor.Text = "Subtitle font background color";
             // 
@@ -5820,7 +5871,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleListViewFontSize.AutoSize = true;
             this.labelSubtitleListViewFontSize.Location = new System.Drawing.Point(13, 17);
             this.labelSubtitleListViewFontSize.Name = "labelSubtitleListViewFontSize";
-            this.labelSubtitleListViewFontSize.Size = new System.Drawing.Size(87, 13);
+            this.labelSubtitleListViewFontSize.Size = new System.Drawing.Size(84, 13);
             this.labelSubtitleListViewFontSize.TabIndex = 33;
             this.labelSubtitleListViewFontSize.Text = "Subtitle font size";
             // 
@@ -5837,7 +5888,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxSubtitleListViewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleListViewFontSize.DropDownWidth = 73;
             this.comboBoxSubtitleListViewFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new string[] {
+            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new object[] {
             "7",
             "8",
             "9",
@@ -5889,7 +5940,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSubtitleListViewFontBold.AutoSize = true;
             this.checkBoxSubtitleListViewFontBold.Location = new System.Drawing.Point(95, 44);
             this.checkBoxSubtitleListViewFontBold.Name = "checkBoxSubtitleListViewFontBold";
-            this.checkBoxSubtitleListViewFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleListViewFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleListViewFontBold.TabIndex = 35;
             this.checkBoxSubtitleListViewFontBold.Text = "Bold";
             this.checkBoxSubtitleListViewFontBold.UseVisualStyleBackColor = true;
@@ -5920,7 +5971,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxLiveSpellCheck.AutoSize = true;
             this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(181, 57);
             this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
-            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(103, 17);
             this.checkBoxLiveSpellCheck.TabIndex = 35;
             this.checkBoxLiveSpellCheck.Text = "Live spell check";
             this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
@@ -5968,7 +6019,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
             this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(162, 35);
             this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
-            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(118, 17);
             this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
             this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
             this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
@@ -5979,7 +6030,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFontSize.AutoSize = true;
             this.labelSubtitleFontSize.Location = new System.Drawing.Point(18, 17);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
-            this.labelSubtitleFontSize.Size = new System.Drawing.Size(87, 13);
+            this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
             this.labelSubtitleFontSize.TabIndex = 30;
             this.labelSubtitleFontSize.Text = "Subtitle font size";
             // 
@@ -5996,7 +6047,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxSubtitleFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFontSize.DropDownWidth = 73;
             this.comboBoxSubtitleFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleFontSize.Items.AddRange(new string[] {
+            this.comboBoxSubtitleFontSize.Items.AddRange(new object[] {
             "7",
             "8",
             "9",
@@ -6048,7 +6099,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(21, 62);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 32;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -6058,7 +6109,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxSubtitleCenter.AutoSize = true;
             this.checkBoxSubtitleCenter.Location = new System.Drawing.Point(21, 85);
             this.checkBoxSubtitleCenter.Name = "checkBoxSubtitleCenter";
-            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(59, 17);
+            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(57, 17);
             this.checkBoxSubtitleCenter.TabIndex = 33;
             this.checkBoxSubtitleCenter.Text = "Center";
             this.checkBoxSubtitleCenter.UseVisualStyleBackColor = true;
@@ -6085,7 +6136,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxDarkThemeShowListViewGridLines.AutoSize = true;
             this.checkBoxDarkThemeShowListViewGridLines.Location = new System.Drawing.Point(191, 82);
             this.checkBoxDarkThemeShowListViewGridLines.Name = "checkBoxDarkThemeShowListViewGridLines";
-            this.checkBoxDarkThemeShowListViewGridLines.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxDarkThemeShowListViewGridLines.Size = new System.Drawing.Size(137, 17);
             this.checkBoxDarkThemeShowListViewGridLines.TabIndex = 46;
             this.checkBoxDarkThemeShowListViewGridLines.Text = "Show list view grid lines";
             this.checkBoxDarkThemeShowListViewGridLines.UseVisualStyleBackColor = true;
@@ -6144,7 +6195,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelFontNote.AutoSize = true;
             this.labelFontNote.Location = new System.Drawing.Point(10, 433);
             this.labelFontNote.Name = "labelFontNote";
-            this.labelFontNote.Size = new System.Drawing.Size(278, 13);
+            this.labelFontNote.Size = new System.Drawing.Size(267, 13);
             this.labelFontNote.TabIndex = 41;
             this.labelFontNote.Text = "Note: This is only to set the font in the Subtitle Edit UI...";
             // 
@@ -6199,7 +6250,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelNetworkSessionNewMessageSound.AutoSize = true;
             this.labelNetworkSessionNewMessageSound.Location = new System.Drawing.Point(25, 34);
             this.labelNetworkSessionNewMessageSound.Name = "labelNetworkSessionNewMessageSound";
-            this.labelNetworkSessionNewMessageSound.Size = new System.Drawing.Size(209, 13);
+            this.labelNetworkSessionNewMessageSound.Size = new System.Drawing.Size(206, 13);
             this.labelNetworkSessionNewMessageSound.TabIndex = 3;
             this.labelNetworkSessionNewMessageSound.Text = "Play sound file when new message arrives";
             // 
@@ -6240,7 +6291,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelProxyAuthType.AutoSize = true;
             this.labelProxyAuthType.Location = new System.Drawing.Point(12, 113);
             this.labelProxyAuthType.Name = "labelProxyAuthType";
-            this.labelProxyAuthType.Size = new System.Drawing.Size(55, 13);
+            this.labelProxyAuthType.Size = new System.Drawing.Size(52, 13);
             this.labelProxyAuthType.TabIndex = 33;
             this.labelProxyAuthType.Text = "Auth type";
             // 
@@ -6249,7 +6300,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxProxyUseDefaultCredentials.AutoSize = true;
             this.checkBoxProxyUseDefaultCredentials.Location = new System.Drawing.Point(139, 132);
             this.checkBoxProxyUseDefaultCredentials.Name = "checkBoxProxyUseDefaultCredentials";
-            this.checkBoxProxyUseDefaultCredentials.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxProxyUseDefaultCredentials.Size = new System.Drawing.Size(134, 17);
             this.checkBoxProxyUseDefaultCredentials.TabIndex = 32;
             this.checkBoxProxyUseDefaultCredentials.Text = "Use default credentials";
             this.checkBoxProxyUseDefaultCredentials.UseVisualStyleBackColor = true;
@@ -6267,7 +6318,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxProxyAuthType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxProxyAuthType.DropDownWidth = 192;
             this.comboBoxProxyAuthType.FormattingEnabled = true;
-            this.comboBoxProxyAuthType.Items.AddRange(new string[] {
+            this.comboBoxProxyAuthType.Items.AddRange(new object[] {
             "",
             "Basic",
             "Digest",
@@ -6300,7 +6351,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelProxyDomain.AutoSize = true;
             this.labelProxyDomain.Location = new System.Drawing.Point(12, 74);
             this.labelProxyDomain.Name = "labelProxyDomain";
-            this.labelProxyDomain.Size = new System.Drawing.Size(42, 13);
+            this.labelProxyDomain.Size = new System.Drawing.Size(43, 13);
             this.labelProxyDomain.TabIndex = 29;
             this.labelProxyDomain.Text = "Domain";
             // 
@@ -6358,7 +6409,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelProxyAddress.AutoSize = true;
             this.labelProxyAddress.Location = new System.Drawing.Point(25, 34);
             this.labelProxyAddress.Name = "labelProxyAddress";
-            this.labelProxyAddress.Size = new System.Drawing.Size(76, 13);
+            this.labelProxyAddress.Size = new System.Drawing.Size(73, 13);
             this.labelProxyAddress.TabIndex = 3;
             this.labelProxyAddress.Text = "Proxy address";
             // 
@@ -6368,7 +6419,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(12, 549);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(60, 13);
+            this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 12;
             this.labelStatus.Text = "labelStatus";
             // 
@@ -6432,7 +6483,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
             this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(439, 531);
             this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
-            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
+            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(37, 13);
             this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
             this.labelUpdateFileTypeAssociationsStatus.Text = "Status";
             // 
@@ -6460,6 +6511,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelAutoTranslate.Controls.Add(this.groupBoxGoogleTranslate);
             this.panelAutoTranslate.Controls.Add(this.groupBoxBing);
             this.panelAutoTranslate.Location = new System.Drawing.Point(227, 3);
+            this.panelAutoTranslate.Margin = new System.Windows.Forms.Padding(0);
             this.panelAutoTranslate.Name = "panelAutoTranslate";
             this.panelAutoTranslate.Padding = new System.Windows.Forms.Padding(3);
             this.panelAutoTranslate.Size = new System.Drawing.Size(864, 521);
@@ -6489,7 +6541,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxPapagoClientId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxPapagoClientId.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxPapagoClientId.Name = "nikseTextBoxPapagoClientId";
-            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 20);
             this.nikseTextBoxPapagoClientId.TabIndex = 34;
             // 
             // nikseTextBoxPapagoClientSecret
@@ -6497,7 +6549,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxPapagoClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxPapagoClientSecret.Location = new System.Drawing.Point(78, 76);
             this.nikseTextBoxPapagoClientSecret.Name = "nikseTextBoxPapagoClientSecret";
-            this.nikseTextBoxPapagoClientSecret.Size = new System.Drawing.Size(314, 21);
+            this.nikseTextBoxPapagoClientSecret.Size = new System.Drawing.Size(314, 20);
             this.nikseTextBoxPapagoClientSecret.TabIndex = 36;
             // 
             // labelSecretPapago
@@ -6505,7 +6557,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSecretPapago.AutoSize = true;
             this.labelSecretPapago.Location = new System.Drawing.Point(6, 80);
             this.labelSecretPapago.Name = "labelSecretPapago";
-            this.labelSecretPapago.Size = new System.Drawing.Size(67, 13);
+            this.labelSecretPapago.Size = new System.Drawing.Size(65, 13);
             this.labelSecretPapago.TabIndex = 35;
             this.labelSecretPapago.Text = "Client secret";
             // 
@@ -6514,7 +6566,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelApiKeyPapago.AutoSize = true;
             this.labelApiKeyPapago.Location = new System.Drawing.Point(6, 23);
             this.labelApiKeyPapago.Name = "labelApiKeyPapago";
-            this.labelApiKeyPapago.Size = new System.Drawing.Size(48, 13);
+            this.labelApiKeyPapago.Size = new System.Drawing.Size(47, 13);
             this.labelApiKeyPapago.TabIndex = 30;
             this.labelApiKeyPapago.Text = "Client ID";
             // 
@@ -6561,7 +6613,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxChatGptUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxChatGptUrl.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxChatGptUrl.Name = "nikseTextBoxChatGptUrl";
-            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 20);
             this.nikseTextBoxChatGptUrl.TabIndex = 34;
             // 
             // nikseComboBoxChatGptModel
@@ -6592,7 +6644,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelChatGptModel.AutoSize = true;
             this.labelChatGptModel.Location = new System.Drawing.Point(6, 112);
             this.labelChatGptModel.Name = "labelChatGptModel";
-            this.labelChatGptModel.Size = new System.Drawing.Size(35, 13);
+            this.labelChatGptModel.Size = new System.Drawing.Size(36, 13);
             this.labelChatGptModel.TabIndex = 37;
             this.labelChatGptModel.Text = "Model";
             // 
@@ -6601,7 +6653,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxChatGptApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxChatGptApiKey.Location = new System.Drawing.Point(52, 76);
             this.nikseTextBoxChatGptApiKey.Name = "nikseTextBoxChatGptApiKey";
-            this.nikseTextBoxChatGptApiKey.Size = new System.Drawing.Size(340, 21);
+            this.nikseTextBoxChatGptApiKey.Size = new System.Drawing.Size(340, 20);
             this.nikseTextBoxChatGptApiKey.TabIndex = 36;
             // 
             // labelApiKeyChatGpt
@@ -6663,7 +6715,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
-            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 20);
             this.nikseTextBoxDeepLUrl.TabIndex = 34;
             // 
             // nikseTextBoxDeepLApiKey
@@ -6671,7 +6723,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxDeepLApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxDeepLApiKey.Location = new System.Drawing.Point(54, 76);
             this.nikseTextBoxDeepLApiKey.Name = "nikseTextBoxDeepLApiKey";
-            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(330, 21);
+            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(330, 20);
             this.nikseTextBoxDeepLApiKey.TabIndex = 36;
             // 
             // labelDeepLApiKey
@@ -6732,7 +6784,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxMyMemoryApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 42);
             this.nikseTextBoxMyMemoryApiKey.Name = "nikseTextBoxMyMemoryApiKey";
-            this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 20);
             this.nikseTextBoxMyMemoryApiKey.TabIndex = 36;
             // 
             // labelMyMemoryApiKey
@@ -6786,7 +6838,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(52, 76);
             this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
-            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(340, 21);
+            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(340, 20);
             this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
             // 
             // labelLibreApiKey
@@ -6803,7 +6855,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxLibreTranslateUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxLibreTranslateUrl.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxLibreTranslateUrl.Name = "nikseTextBoxLibreTranslateUrl";
-            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(384, 20);
             this.nikseTextBoxLibreTranslateUrl.TabIndex = 34;
             // 
             // labelLibreUrl
@@ -6857,7 +6909,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 40);
             this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
-            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 20);
             this.nikseTextBoxNllbServeUrl.TabIndex = 34;
             // 
             // nikseTextBoxNllbServeModel
@@ -6865,7 +6917,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(53, 71);
             this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
-            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(331, 21);
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(331, 20);
             this.nikseTextBoxNllbServeModel.TabIndex = 37;
             // 
             // labelNllbServeModel
@@ -6873,7 +6925,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelNllbServeModel.AutoSize = true;
             this.labelNllbServeModel.Location = new System.Drawing.Point(7, 75);
             this.labelNllbServeModel.Name = "labelNllbServeModel";
-            this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
+            this.labelNllbServeModel.Size = new System.Drawing.Size(36, 13);
             this.labelNllbServeModel.TabIndex = 36;
             this.labelNllbServeModel.Text = "Model";
             // 
@@ -6926,7 +6978,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.nikseTextBoxNllbApiUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseTextBoxNllbApiUrl.Location = new System.Drawing.Point(8, 40);
             this.nikseTextBoxNllbApiUrl.Name = "nikseTextBoxNllbApiUrl";
-            this.nikseTextBoxNllbApiUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbApiUrl.Size = new System.Drawing.Size(376, 20);
             this.nikseTextBoxNllbApiUrl.TabIndex = 34;
             // 
             // labelNllbApiUrl
@@ -6980,7 +7032,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -7022,6 +7073,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxFfmpeg.PerformLayout();
             this.groupBoxSpectrogram.ResumeLayout(false);
             this.groupBoxSpectrogram.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSpectrogramOpacity)).EndInit();
             this.groupBoxSpectrogramClean.ResumeLayout(false);
             this.groupBoxSpectrogramClean.PerformLayout();
             this.groupBoxWaveformAppearence.ResumeLayout(false);
