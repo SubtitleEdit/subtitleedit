@@ -1881,8 +1881,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxSubtitleFormats.Controls.Add(this.comboBoxSubtitleFormats);
             this.groupBoxSubtitleFormats.Controls.Add(this.labelDefaultSubtitleFormat);
             this.groupBoxSubtitleFormats.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSubtitleFormats.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxSubtitleFormats.Name = "groupBoxSubtitleFormats";
-            this.groupBoxSubtitleFormats.Size = new System.Drawing.Size(851, 521);
+            this.groupBoxSubtitleFormats.Size = new System.Drawing.Size(858, 515);
             this.groupBoxSubtitleFormats.TabIndex = 2;
             this.groupBoxSubtitleFormats.TabStop = false;
             this.groupBoxSubtitleFormats.Text = "Subtitle formats";
@@ -1904,7 +1905,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFavoriteFormats);
             this.groupBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(6, 92);
             this.groupBoxFavoriteSubtitleFormats.Name = "groupBoxFavoriteSubtitleFormats";
-            this.groupBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(838, 420);
+            this.groupBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(760, 345);
             this.groupBoxFavoriteSubtitleFormats.TabIndex = 4;
             this.groupBoxFavoriteSubtitleFormats.TabStop = false;
             this.groupBoxFavoriteSubtitleFormats.Text = "Favorites";
@@ -1912,7 +1913,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelFavoriteSubtitleFormatsNote
             // 
             this.labelFavoriteSubtitleFormatsNote.AutoSize = true;
-            this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(10, 367);
+            this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(1, 325);
             this.labelFavoriteSubtitleFormatsNote.Name = "labelFavoriteSubtitleFormatsNote";
             this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(516, 13);
             this.labelFavoriteSubtitleFormatsNote.TabIndex = 9;
@@ -1924,12 +1925,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.listBoxSubtitleFormats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxSubtitleFormats.FormattingEnabled = true;
             this.listBoxSubtitleFormats.ItemHeight = 13;
-            this.listBoxSubtitleFormats.Location = new System.Drawing.Point(489, 76);
+            this.listBoxSubtitleFormats.Location = new System.Drawing.Point(447, 61);
             this.listBoxSubtitleFormats.Name = "listBoxSubtitleFormats";
             this.listBoxSubtitleFormats.SelectedIndex = -1;
             this.listBoxSubtitleFormats.SelectedItem = null;
             this.listBoxSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxSubtitleFormats.Size = new System.Drawing.Size(300, 251);
+            this.listBoxSubtitleFormats.Size = new System.Drawing.Size(302, 251);
             this.listBoxSubtitleFormats.Sorted = false;
             this.listBoxSubtitleFormats.TabIndex = 8;
             this.listBoxSubtitleFormats.TopIndex = 0;
@@ -1939,9 +1940,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // buttonFormatsSearchClear
             // 
             this.buttonFormatsSearchClear.Enabled = false;
-            this.buttonFormatsSearchClear.Location = new System.Drawing.Point(683, 52);
+            this.buttonFormatsSearchClear.Location = new System.Drawing.Point(641, 37);
             this.buttonFormatsSearchClear.Name = "buttonFormatsSearchClear";
-            this.buttonFormatsSearchClear.Size = new System.Drawing.Size(105, 21);
+            this.buttonFormatsSearchClear.Size = new System.Drawing.Size(107, 21);
             this.buttonFormatsSearchClear.TabIndex = 7;
             this.buttonFormatsSearchClear.Text = "&Clear";
             this.buttonFormatsSearchClear.UseVisualStyleBackColor = true;
@@ -1952,17 +1953,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.textBoxFormatsSearch.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxFormatsSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFormatsSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
+            this.textBoxFormatsSearch.Location = new System.Drawing.Point(487, 37);
             this.textBoxFormatsSearch.Multiline = true;
             this.textBoxFormatsSearch.Name = "textBoxFormatsSearch";
-            this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
+            this.textBoxFormatsSearch.Size = new System.Drawing.Size(153, 21);
             this.textBoxFormatsSearch.TabIndex = 6;
             this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
             // 
             // labelFormatsSearch
             // 
             this.labelFormatsSearch.AutoSize = true;
-            this.labelFormatsSearch.Location = new System.Drawing.Point(489, 56);
+            this.labelFormatsSearch.Location = new System.Drawing.Point(447, 41);
             this.labelFormatsSearch.Name = "labelFormatsSearch";
             this.labelFormatsSearch.Size = new System.Drawing.Size(41, 13);
             this.labelFormatsSearch.TabIndex = 5;
@@ -1971,7 +1972,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelFormats
             // 
             this.labelFormats.AutoSize = true;
-            this.labelFormats.Location = new System.Drawing.Point(489, 34);
+            this.labelFormats.Location = new System.Drawing.Point(446, 19);
             this.labelFormats.Name = "labelFormats";
             this.labelFormats.Size = new System.Drawing.Size(44, 13);
             this.labelFormats.TabIndex = 4;
@@ -1980,9 +1981,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // buttonRemoveFromFavoriteFormats
             // 
             this.buttonRemoveFromFavoriteFormats.Enabled = false;
-            this.buttonRemoveFromFavoriteFormats.Location = new System.Drawing.Point(363, 202);
+            this.buttonRemoveFromFavoriteFormats.Location = new System.Drawing.Point(321, 187);
             this.buttonRemoveFromFavoriteFormats.Name = "buttonRemoveFromFavoriteFormats";
-            this.buttonRemoveFromFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonRemoveFromFavoriteFormats.Size = new System.Drawing.Size(113, 23);
             this.buttonRemoveFromFavoriteFormats.TabIndex = 3;
             this.buttonRemoveFromFavoriteFormats.Text = "Remove";
             this.buttonRemoveFromFavoriteFormats.UseVisualStyleBackColor = true;
@@ -1991,9 +1992,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // buttonMoveToFavoriteFormats
             // 
             this.buttonMoveToFavoriteFormats.Enabled = false;
-            this.buttonMoveToFavoriteFormats.Location = new System.Drawing.Point(363, 153);
+            this.buttonMoveToFavoriteFormats.Location = new System.Drawing.Point(321, 138);
             this.buttonMoveToFavoriteFormats.Name = "buttonMoveToFavoriteFormats";
-            this.buttonMoveToFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonMoveToFavoriteFormats.Size = new System.Drawing.Size(113, 23);
             this.buttonMoveToFavoriteFormats.TabIndex = 2;
             this.buttonMoveToFavoriteFormats.Text = " < ";
             this.buttonMoveToFavoriteFormats.UseVisualStyleBackColor = true;
@@ -2005,12 +2006,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.listBoxFavoriteSubtitleFormats.ContextMenuStrip = this.contextMenuStripFavoriteFormats;
             this.listBoxFavoriteSubtitleFormats.FormattingEnabled = true;
             this.listBoxFavoriteSubtitleFormats.ItemHeight = 13;
-            this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(48, 50);
+            this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(6, 35);
             this.listBoxFavoriteSubtitleFormats.Name = "listBoxFavoriteSubtitleFormats";
             this.listBoxFavoriteSubtitleFormats.SelectedIndex = -1;
             this.listBoxFavoriteSubtitleFormats.SelectedItem = null;
             this.listBoxFavoriteSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(300, 277);
+            this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(302, 277);
             this.listBoxFavoriteSubtitleFormats.Sorted = false;
             this.listBoxFavoriteSubtitleFormats.TabIndex = 1;
             this.listBoxFavoriteSubtitleFormats.TopIndex = 0;
@@ -2087,7 +2088,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // labelFavoriteFormats
             // 
             this.labelFavoriteFormats.AutoSize = true;
-            this.labelFavoriteFormats.Location = new System.Drawing.Point(48, 34);
+            this.labelFavoriteFormats.Location = new System.Drawing.Point(5, 19);
+            this.labelFavoriteFormats.Margin = new System.Windows.Forms.Padding(0);
             this.labelFavoriteFormats.Name = "labelFavoriteFormats";
             this.labelFavoriteFormats.Size = new System.Drawing.Size(82, 13);
             this.labelFavoriteFormats.TabIndex = 0;
