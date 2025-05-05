@@ -49,7 +49,7 @@ dzoole@hotmail.com</TranslatedBy>
     <HourMinutesSecondsFrames>Час:мин:сек:кадри</HourMinutesSecondsFrames>
     <XSeconds>{0:0.0##} секунди</XSeconds>
     <Bold>Задебели</Bold>
-    <Italic>Искоси</Italic>
+    <Italic>Италик</Italic>
     <Underline>Подвлечи</Underline>
     <Strikeout>Прецртај</Strikeout>
     <Visible>Видливо</Visible>
@@ -2326,7 +2326,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WordLists>Листи со зборови</WordLists>
     <SsaStyle>Стил ASS/SSA</SsaStyle>
     <Network>Мрежа</Network>
-    <FileTypeAssociations>Подржани фајлови</FileTypeAssociations>
+    <FileTypeAssociations>Поддржани формати</FileTypeAssociations>
     <Rules>Правила</Rules>
     <ShowToolBarButtons>Покажи копчиња во алатник</ShowToolBarButtons>
     <New>Нов</New>
@@ -2373,9 +2373,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaximumCharactersPerSecond>Максимум знаци/сек</MaximumCharactersPerSecond>
     <MaximumWordsPerMinute>Максимум зборови/мин</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Автоматско превиткување при пишување</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Мин. траење на линија .мс</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Макс. траење на линија .мс</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Минимален процеп меѓу линии. мс</MinimumGapMilliseconds>
+    <DurationMinimumMilliseconds>Минимум траење на линија .мс</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Максимум траење на линија .мс</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Минимален процеп меѓу линии .мс</MinimumGapMilliseconds>
     <MaximumLines>Редови во една линија</MaximumLines>
     <SubtitleFont>Фонт на титл</SubtitleFont>
     <SubtitleFontSize>Големина на фонт на титл</SubtitleFontSize>
@@ -2862,8 +2862,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BDOpensInEdit>Уреди</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Кратенки: Дозволи единечна буква/број во текстуална рамка</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <ShortcutCustomToggle>Кратенка за активирање прилагодено почеток/крај</ShortcutCustomToggle>
-    <UpdateFileTypeAssociations>Ажурирај поддржани фајлови</UpdateFileTypeAssociations>
-    <FileTypeAssociationsUpdated>Поддржаните фајлови се ажурирани</FileTypeAssociationsUpdated>
+    <UpdateFileTypeAssociations>Ажурирај поддржани формати</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>Поддржаните формати се ажурирани</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Уреди стил на прилагодено продолжување</CustomContinuationStyle>
     <LoadStyle>Вчитај стил...</LoadStyle>
     <Suffix>Суфикс:</Suffix>
