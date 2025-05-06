@@ -101,8 +101,8 @@
             // AddToNameList
             // 
             this.AcceptButton = this.buttonOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(289, 196);
             this.Controls.Add(this.comboBoxDictionaries);
@@ -111,7 +111,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxAddName);
             this.Controls.Add(this.labelDescription);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
