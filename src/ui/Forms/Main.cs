@@ -6838,7 +6838,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                //if ((_findHelper.SelectedPosition - 1 == tb.SelectionStart || _findHelper.SelectedPosition +1 == tb.SelectionStart) && 
+                //if ((_findHelper.SelectedPosition - 1 == tb.SelectionStart || _findHelper.SelectedPosition +1 == tb.SelectionStart) &&
                 //    tb.SelectionLength > 0 ||
                 //    _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
                 //{
@@ -14004,7 +14004,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox).
                 _forceClose = true;
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Application.Exit());
             }
@@ -31912,7 +31912,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 catch
-                { 
+                {
                     // ignore
                 }
             }
