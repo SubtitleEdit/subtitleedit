@@ -1001,18 +1001,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Concatenates all Paragraphs Text property, using the default NewLine string between each Text.
         /// </summary>
         /// <returns>Concatenated Text property of all Paragraphs.</returns>
-        public string GetAllTexts()
-        {
-            var max = Paragraphs.Count;
-            const int averageLength = 40;
-            var sb = new StringBuilder(max * averageLength);
-            for (var index = 0; index < max; index++)
-            {
-                sb.AppendLine(Paragraphs[index].Text);
-            }
-
-            return sb.ToString();
-        }
+        public string GetAllTexts() => GetAllTexts(int.MaxValue);
 
         /// <summary>
         /// Concatenates all Paragraphs Text property, using the default NewLine string between each Text.
