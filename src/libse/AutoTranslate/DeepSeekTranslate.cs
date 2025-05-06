@@ -80,15 +80,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-                resultContent = await result.Content.ReadAsStringAsync();
+                result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
+                resultContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
                     break;
                 }
 
-                await Task.Delay(retryDelays[attempt], cancellationToken);
+                await Task.Delay(retryDelays[attempt], cancellationToken).ConfigureAwait(false);
             }
 
             if (!result.IsSuccessStatusCode)
