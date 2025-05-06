@@ -26068,6 +26068,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TabControlModes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!_isVideoControlsUndocked) {
+                audioVisualizer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            }
             if (tabControlModes.SelectedIndex == 0)
             {
                 tabControlModes.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 12;
@@ -26117,6 +26120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlModes.Left + tabControlModes.Width + 5;
 
+                audioVisualizer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                 if (!_loading)
                 {
                     Refresh();
