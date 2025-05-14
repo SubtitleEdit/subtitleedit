@@ -175,29 +175,29 @@ Command line: {1} {2}
     <ImageName>圖片名稱 ({0}x{1}):</ImageName>
     <IconName>圖示名稱:</IconName>
     <FontName>字型名稱:</FontName>
-    <ImageResized>Image resized to fit current window</ImageResized>
-    <FilesSkippedX>Files skipped: {0}</FilesSkippedX>
-    <RemoveOneAttachment>Remove one attachment?</RemoveOneAttachment>
-    <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
+    <ImageResized>圖片已調整大小以符合目前視窗</ImageResized>
+    <FilesSkippedX>已略過檔案: {0}</FilesSkippedX>
+    <RemoveOneAttachment>移除一個附件?</RemoveOneAttachment>
+    <RemoveXAttachments>移除 {0} 個附件?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags>Apply custom override tags</ApplyCustomTags>
-    <History>History</History>
-    <TagsToApply>Tags to apply</TagsToApply>
-    <ApplyTo>Apply to</ApplyTo>
-    <SelectedLinesX>Selected lines: {0}</SelectedLinesX>
-    <AdvancedSelection>Advanced selection</AdvancedSelection>
+    <ApplyCustomTags>套用自訂覆寫標籤</ApplyCustomTags>
+    <History>歷史記錄</History>
+    <TagsToApply>要套用的標籤</TagsToApply>
+    <ApplyTo>套用至</ApplyTo>
+    <SelectedLinesX>已選的行:: {0}</SelectedLinesX>
+    <AdvancedSelection>進階選擇</AdvancedSelection>
   </AssaOverrideTags>
   <AssaProgressBarGenerator>
     <Title>產生進度條</Title>
     <Progressbar>進度條</Progressbar>
-    <Chapters>Chapters</Chapters>
-    <SplitterWidth>Splitter width</SplitterWidth>
-    <SplitterHeight>Splitter height</SplitterHeight>
+    <Chapters>章節</Chapters>
+    <SplitterWidth>分割器寬度</SplitterWidth>
+    <SplitterHeight>分割器高度</SplitterHeight>
     <XAdjustment>X 軸調整</XAdjustment>
     <YAdjustment>Y 軸調整</YAdjustment>
     <Position>位置</Position>
-    <TextAlignment>Text alignment</TextAlignment>
+    <TextAlignment>文字對齊</TextAlignment>
     <SquareCorners>直角</SquareCorners>
     <RoundedCorners>圓角</RoundedCorners>
     <Top>頂部</Top>
