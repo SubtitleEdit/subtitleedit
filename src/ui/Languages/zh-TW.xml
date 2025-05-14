@@ -128,18 +128,18 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GeneratingSpectrogram>正在建立頻譜圖...</GeneratingSpectrogram>
     <ExtractingSeconds>正在擷取音訊: {0:0.0} 秒</ExtractingSeconds>
     <ExtractingMinutes>正在擷取音訊: {0}.{1:00} 分</ExtractingMinutes>
-    <WaveFileNotFound>Could not find extracted wave file!
+    <WaveFileNotFound>找不到擷取的波形檔案!
 此功能需要 VLC 媒體播放器 1.1.x 或更新版本 ({0} 位元)。
 
 Command line: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+    <WaveFileMalformed>{0} 無法擷取音訊資料到波形檔案!
 
 Command line: {1} {2}
 
-Note: Do check free disk space.</WaveFileMalformed>
+注意: 請檢查硬碟可用空間</WaveFileMalformed>
     <LowDiskSpace>硬碟空間不足！</LowDiskSpace>
     <FreeDiskSpace>{0} 可用</FreeDiskSpace>
-    <NoAudioTracksFoundGenerateEmptyWaveform>No audio tracks found! Generate empty waveform?</NoAudioTracksFoundGenerateEmptyWaveform>
+    <NoAudioTracksFoundGenerateEmptyWaveform>找不到音軌！要產生空白波形嗎？</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>大量產生波型資料</Title>
@@ -168,10 +168,10 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
-    <AttachFiles>Attach files...</AttachFiles>
-    <FontsAndImages>Fonts and images</FontsAndImages>
-    <Graphics>Graphics</Graphics>
-    <Font>Font</Font>
+    <AttachFiles>附加檔案...</AttachFiles>
+    <FontsAndImages>字型和圖片</FontsAndImages>
+    <Graphics>圖片</Graphics>
+    <Font>字型</Font>
     <ImageName>圖片名稱 ({0}x{1}):</ImageName>
     <IconName>圖示名稱:</IconName>
     <FontName>字型名稱:</FontName>
