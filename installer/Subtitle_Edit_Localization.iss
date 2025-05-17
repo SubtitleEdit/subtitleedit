@@ -460,7 +460,7 @@ pt.tsk_ResetDictionaries=Repor os Dicionários e remover quaisquer nomes persona
 pt.tsk_ResetSettings=Repor as definições do Subtitle Edit
 pt.tsk_SetFileTypes=Associar os ficheiros de texto SubRip (.srt) ao Subtitle Edit
 pt.types_custom=Instalação personalizada
-pt.types_default=Instalação padrão
+pt.types_default=Instalação predefinida
 
 ; Portuguese (Brazil)
 [Messages]
