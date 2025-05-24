@@ -2291,7 +2291,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxShortcutKey.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxShortcutKey.DropDownHeight = 400;
             this.comboBoxShortcutKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxShortcutKey.DropDownWidth = 92;
+            this.comboBoxShortcutKey.DropDownWidth = 230;
             this.comboBoxShortcutKey.Enabled = false;
             this.comboBoxShortcutKey.FormattingEnabled = true;
             this.comboBoxShortcutKey.Items.AddRange(new object[] {
