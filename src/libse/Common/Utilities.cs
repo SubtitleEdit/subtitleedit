@@ -3049,9 +3049,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             var copyPattern = string.Join("|", CopyWords.Select(Regex.Escape));
 
             // Remove common suffixes like " - Copy", " - Copy (2)"
-            while (Regex.IsMatch(strictName, @"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase))
+            while (Regex.IsMatch(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase))
             {
-                strictName = Regex.Replace(strictName, @"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", "", RegexOptions.IgnoreCase);
+                strictName = Regex.Replace(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", "", RegexOptions.IgnoreCase);
             }
 
             // Remove common suffixes like "(2)", "(3)", etc.

@@ -4033,13 +4033,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (!string.IsNullOrEmpty(fileName))
                         {
-                            var baseName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-
-                            if (!TryToFindAndOpenVideoFile(baseName))
-                            {
-                                var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileName);
-                                TryToFindAndOpenVideoFile(fallbackName);
-                            }
+                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(fileName));
                         }
 
                         if (_videoFileName == null)
@@ -23169,13 +23163,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ResetSubtitle();
                         if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
-                            var baseName = Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName);
-
-                            if (!TryToFindAndOpenVideoFile(baseName))
-                            {
-                                var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName);
-                                TryToFindAndOpenVideoFile(fallbackName);
-                            }
+                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName));
                         }
 
                         _fileName = Path.GetFileNameWithoutExtension(importText.VideoFileName);
@@ -24320,6 +24308,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileNameNoExtension);
+            if (!string.Equals(fileNameNoExtension, fallbackName, StringComparison.OrdinalIgnoreCase))
+            {
+                return TryToFindAndOpenVideoFile(fallbackName);
+            }
+
             return false;
         }
 
@@ -24632,13 +24626,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName) && string.IsNullOrEmpty(_videoFileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
             {
-                var baseName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
-
-                if (!TryToFindAndOpenVideoFile(baseName))
-                {
-                    var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(_fileName);
-                    TryToFindAndOpenVideoFile(fallbackName);
-                }
+                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
             }
 
             Main_Resize(null, null);
@@ -25611,13 +25599,7 @@ namespace Nikse.SubtitleEdit.Forms
                 !Configuration.Settings.General.DisableVideoAutoLoading &&
                 mediaPlayer.Visible)
             {
-                var baseName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
-
-                if (!TryToFindAndOpenVideoFile(baseName))
-                {
-                    var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(_fileName);
-                    TryToFindAndOpenVideoFile(fallbackName);
-                }
+                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
             }
 
             if (_subtitleListViewIndex >= 0)
