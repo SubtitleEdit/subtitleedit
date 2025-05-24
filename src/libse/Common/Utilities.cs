@@ -3000,6 +3000,66 @@ namespace Nikse.SubtitleEdit.Core.Common
             return fileName;
         }
 
+        private static readonly HashSet<string> CopyWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "copy",      // en
+            "نسخة",      // ar-EG - Arabic
+            "копие",     // bg-BG - Bulgarian
+            "còpia",     // br-FR - Breton
+            "còpia",     // ca-ES - Catalan
+            "kopie",     // cs-CZ - Czech
+            "kopi",      // da-DK - Danish
+            "kopie",     // de-DE - German
+            "αντίγραφο", // el-GR - Greek
+            "copia",     // es-AR, es-ES, es-MX - Spanish
+            "kopia",     // eu-ES - Basque
+            "کپی",       // fa-IR - Persian
+            "kopio",     // fi-FI - Finnish
+            "copie",     // fr-FR - French
+            "עותק",      // he-IL - Hebrew
+            "kopija",    // hr-HR - Croatian
+            "másolat",   // hu-HU - Hungarian
+            "salinan",   // id-ID - Indonesian
+            "copia",     // it-IT - Italian
+            "コピー",     // ja-JP - Japanese
+            "복사본",     // ko-KR - Korean
+            "копија",    // mk-MK - Macedonian
+            "kopi",      // nb-NO - Norwegian Bokmål
+            "kopie",     // nl-NL - Dutch
+            "kopia",     // pl-PL - Polish
+            "cópia",     // pt-BR, pt-PT - Portuguese
+            "copie",     // ro-RO - Romanian
+            "копия",     // ru-RU - Russian
+            "kopija",    // sl-SI - Slovenian
+            "копија",    // sr-Cyrl-RS - Serbian (Cyrillic)
+            "kopija",    // sr-Latn-RS - Serbian (Latin)
+            "kopia",     // sv-SE - Swedish
+            "สำเนา",     // th-TH - Thai
+            "kopya",     // tr-TR - Turkish
+            "нөсхә",     // tt-RU - Tatar
+            "копія",     // uk-UA - Ukrainian
+            "bản sao",   // vi-VN - Vietnamese
+            "复制",       // zh-Hans - Simplified Chinese
+            "複製",       // zh-TW - Traditional Chinese
+        };
+
+        public static string GetLenientPathAndFileNameWithoutExtension(string fileName)
+        {
+            var strictName = GetPathAndFileNameWithoutExtension(fileName);
+            var copyPattern = string.Join("|", CopyWords.Select(Regex.Escape));
+
+            // Remove common suffixes like " - Copy", " - Copy (2)"
+            while (Regex.IsMatch(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase))
+            {
+                strictName = Regex.Replace(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", "", RegexOptions.IgnoreCase);
+            }
+
+            // Remove common suffixes like "(2)", "(3)", etc.
+            strictName = Regex.Replace(strictName, @"\s*\(\d+\)$", "");
+
+            return strictName;
+        }
+
         public static string GetFileNameWithoutExtension(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
