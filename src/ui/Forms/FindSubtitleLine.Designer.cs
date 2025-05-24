@@ -119,8 +119,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // FindSubtitleLine
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(621, 345);
             this.Controls.Add(this.buttonFindNext);
             this.Controls.Add(this.textBoxFindText);
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.subtitleListView1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
