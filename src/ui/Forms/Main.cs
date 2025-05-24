@@ -4033,7 +4033,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (!string.IsNullOrEmpty(fileName))
                         {
-                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(fileName));
+                            var baseName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+
+                            if (!TryToFindAndOpenVideoFile(baseName))
+                            {
+                                var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileName);
+                                TryToFindAndOpenVideoFile(fallbackName);
+                            }
                         }
 
                         if (_videoFileName == null)
@@ -23163,7 +23169,13 @@ namespace Nikse.SubtitleEdit.Forms
                         ResetSubtitle();
                         if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
-                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName));
+                            var baseName = Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName);
+
+                            if (!TryToFindAndOpenVideoFile(baseName))
+                            {
+                                var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName);
+                                TryToFindAndOpenVideoFile(fallbackName);
+                            }
                         }
 
                         _fileName = Path.GetFileNameWithoutExtension(importText.VideoFileName);
@@ -24620,7 +24632,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName) && string.IsNullOrEmpty(_videoFileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
             {
-                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
+                var baseName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+
+                if (!TryToFindAndOpenVideoFile(baseName))
+                {
+                    var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(_fileName);
+                    TryToFindAndOpenVideoFile(fallbackName);
+                }
             }
 
             Main_Resize(null, null);
@@ -25593,7 +25611,13 @@ namespace Nikse.SubtitleEdit.Forms
                 !Configuration.Settings.General.DisableVideoAutoLoading &&
                 mediaPlayer.Visible)
             {
-                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
+                var baseName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+
+                if (!TryToFindAndOpenVideoFile(baseName))
+                {
+                    var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(_fileName);
+                    TryToFindAndOpenVideoFile(fallbackName);
+                }
             }
 
             if (_subtitleListViewIndex >= 0)
