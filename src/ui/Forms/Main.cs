@@ -24308,6 +24308,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileNameNoExtension);
+            if (!string.Equals(fileNameNoExtension, fallbackName, StringComparison.OrdinalIgnoreCase))
+            {
+                return TryToFindAndOpenVideoFile(fallbackName);
+            }
+
             return false;
         }
 
