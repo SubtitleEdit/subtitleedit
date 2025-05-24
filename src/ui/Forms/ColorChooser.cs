@@ -410,9 +410,11 @@ namespace Nikse.SubtitleEdit.Forms
             // _lblBlue
             // 
             this._lblBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._lblBlue.Location = new System.Drawing.Point(340, 70);
+            this._lblBlue.Location = new System.Drawing.Point(340, 78);
+            this._lblBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._lblBlue.MaximumSize = new System.Drawing.Size(58, 34);
             this._lblBlue.Name = "_lblBlue";
-            this._lblBlue.Size = new System.Drawing.Size(39, 23);
+            this._lblBlue.Size = new System.Drawing.Size(39, 24);
             this._lblBlue.TabIndex = 54;
             this._lblBlue.Text = "Blue";
             this._lblBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -420,9 +422,11 @@ namespace Nikse.SubtitleEdit.Forms
             // _lblGreen
             // 
             this._lblGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._lblGreen.Location = new System.Drawing.Point(340, 35);
+            this._lblGreen.Location = new System.Drawing.Point(340, 43);
+            this._lblGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._lblGreen.MaximumSize = new System.Drawing.Size(58, 34);
             this._lblGreen.Name = "_lblGreen";
-            this._lblGreen.Size = new System.Drawing.Size(39, 23);
+            this._lblGreen.Size = new System.Drawing.Size(39, 24);
             this._lblGreen.TabIndex = 53;
             this._lblGreen.Text = "Green";
             this._lblGreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -430,9 +434,11 @@ namespace Nikse.SubtitleEdit.Forms
             // _lblRed
             // 
             this._lblRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._lblRed.Location = new System.Drawing.Point(340, 0);
+            this._lblRed.Location = new System.Drawing.Point(340, 8);
+            this._lblRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._lblRed.MaximumSize = new System.Drawing.Size(58, 34);
             this._lblRed.Name = "_lblRed";
-            this._lblRed.Size = new System.Drawing.Size(39, 23);
+            this._lblRed.Size = new System.Drawing.Size(39, 24);
             this._lblRed.TabIndex = 52;
             this._lblRed.Text = "Red";
             this._lblRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -503,7 +509,9 @@ namespace Nikse.SubtitleEdit.Forms
             // _lblAlpha2
             // 
             this._lblAlpha2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._lblAlpha2.Location = new System.Drawing.Point(340, 111);
+            this._lblAlpha2.Location = new System.Drawing.Point(340, 119);
+            this._lblAlpha2.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._lblAlpha2.MaximumSize = new System.Drawing.Size(58, 34);
             this._lblAlpha2.Name = "_lblAlpha2";
             this._lblAlpha2.Size = new System.Drawing.Size(39, 24);
             this._lblAlpha2.TabIndex = 57;
@@ -543,7 +551,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._flowLayoutPanel1.Controls.Add(this._lblAlpha2);
             this._flowLayoutPanel1.Location = new System.Drawing.Point(5, 232);
             this._flowLayoutPanel1.Name = "_flowLayoutPanel1";
-            this._flowLayoutPanel1.Size = new System.Drawing.Size(396, 157);
+            this._flowLayoutPanel1.Size = new System.Drawing.Size(396, 168);
             this._flowLayoutPanel1.TabIndex = 59;
             // 
             // _labelRed
@@ -551,8 +559,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._labelRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._labelRed.Location = new System.Drawing.Point(3, 8);
             this._labelRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelRed.MaximumSize = new System.Drawing.Size(108, 28);
             this._labelRed.Name = "_labelRed";
-            this._labelRed.Size = new System.Drawing.Size(72, 18);
+            this._labelRed.Size = new System.Drawing.Size(72, 24);
             this._labelRed.TabIndex = 42;
             this._labelRed.Text = "Red";
             this._labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -575,8 +584,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._labelGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._labelGreen.Location = new System.Drawing.Point(3, 43);
             this._labelGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelGreen.MaximumSize = new System.Drawing.Size(108, 28);
             this._labelGreen.Name = "_labelGreen";
-            this._labelGreen.Size = new System.Drawing.Size(72, 18);
+            this._labelGreen.Size = new System.Drawing.Size(72, 24);
             this._labelGreen.TabIndex = 44;
             this._labelGreen.Text = "Green";
             this._labelGreen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -599,8 +609,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._labelBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._labelBlue.Location = new System.Drawing.Point(3, 78);
             this._labelBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelBlue.MaximumSize = new System.Drawing.Size(108, 28);
             this._labelBlue.Name = "_labelBlue";
-            this._labelBlue.Size = new System.Drawing.Size(72, 18);
+            this._labelBlue.Size = new System.Drawing.Size(72, 24);
             this._labelBlue.TabIndex = 46;
             this._labelBlue.Text = "Blue";
             this._labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -623,8 +634,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._labelAlpha1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._labelAlpha1.Location = new System.Drawing.Point(3, 119);
             this._labelAlpha1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelAlpha1.MaximumSize = new System.Drawing.Size(108, 28);
             this._labelAlpha1.Name = "_labelAlpha1";
-            this._labelAlpha1.Size = new System.Drawing.Size(72, 18);
+            this._labelAlpha1.Size = new System.Drawing.Size(72, 24);
             this._labelAlpha1.TabIndex = 55;
             this._labelAlpha1.Text = "Alpha";
             this._labelAlpha1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -722,9 +734,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this._buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this._buttonCancel.Location = new System.Drawing.Point(321, 406);
+            this._buttonCancel.Location = new System.Drawing.Point(321, 402);
+            this._buttonCancel.MaximumSize = new System.Drawing.Size(228, 46);
             this._buttonCancel.Name = "_buttonCancel";
-            this._buttonCancel.Size = new System.Drawing.Size(80, 23);
+            this._buttonCancel.Size = new System.Drawing.Size(80, 35);
             this._buttonCancel.TabIndex = 61;
             this._buttonCancel.Text = "C&ancel";
             this._buttonCancel.UseVisualStyleBackColor = true;
@@ -734,9 +747,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this._buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._buttonOk.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this._buttonOk.Location = new System.Drawing.Point(235, 406);
+            this._buttonOk.Location = new System.Drawing.Point(235, 402);
+            this._buttonOk.MaximumSize = new System.Drawing.Size(228, 46);
             this._buttonOk.Name = "_buttonOk";
-            this._buttonOk.Size = new System.Drawing.Size(80, 23);
+            this._buttonOk.Size = new System.Drawing.Size(80, 35);
             this._buttonOk.TabIndex = 60;
             this._buttonOk.Text = "&OK";
             this._buttonOk.UseVisualStyleBackColor = true;
