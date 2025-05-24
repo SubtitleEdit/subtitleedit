@@ -348,6 +348,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Minimum PaddleOCR version with PP-OCRv4 model support
         private static readonly Version requiredPaddleOcrVersionForPPOCRv4 = new Version(2, 7, 0);
 
+        // Maximum supported PaddleOCR version
+        private static readonly Version maxSupportedPaddleOcrVersion = new Version(2, 10, 0);
+
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private XmlDocument _bdnXmlDocument;
@@ -7705,7 +7708,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return false;
         }
 
-        private bool HasPaddlePPOCRv4Support()
+        private bool IsPaddleOcrVersionSupported()
         {
             if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
             {
@@ -7743,7 +7746,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             string installedVersionString = line.Split(':')[1].Trim();
                             if (Version.TryParse(installedVersionString, out Version installedVersion))
                             {
-                                return installedVersion >= requiredPaddleOcrVersionForPPOCRv4;
+                                return installedVersion >= requiredPaddleOcrVersionForPPOCRv4 &&
+                                        installedVersion <= maxSupportedPaddleOcrVersion;
                             }
                         }
                     }
@@ -7873,10 +7877,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 // Check if installed PaddleOCR version supports PP-OCRv4
                 if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")) && IsExecutableInPath("paddleocr.exe"))
                 {
-                    if (!HasPaddlePPOCRv4Support())
+                    if (!IsPaddleOcrVersionSupported())
                     {
                         var firstresult = MessageBox.Show(
-                            $"PaddleOCR version {requiredPaddleOcrVersionForPPOCRv4} or higher is required.{Environment.NewLine}{Environment.NewLine}" +
+                            $"PaddleOCR version {requiredPaddleOcrVersionForPPOCRv4} - {maxSupportedPaddleOcrVersion} is required.{Environment.NewLine}{Environment.NewLine}" +
                             $"Download the Standalone PaddleOCR version.{Environment.NewLine}{Environment.NewLine}" +
                             string.Format(LanguageSettings.Current.Settings.DownloadX, "PaddleOCR?"),
                             LanguageSettings.Current.General.Title,
