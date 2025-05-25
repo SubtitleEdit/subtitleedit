@@ -46,7 +46,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            _blinkForm = blinkForm;
+
+			UiUtil.InitializeSubtitleFont(richTextBoxParagraph);
+			UiUtil.InitializeSubtitleFont(textBoxWord);
+			UiUtil.InitializeSubtitleFont(listBoxSuggestions);
+
+			_blinkForm = blinkForm;
             Text = LanguageSettings.Current.SpellCheck.Title;
             buttonAddToDictionary.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
             buttonChange.Text = LanguageSettings.Current.SpellCheck.Change;
@@ -397,7 +402,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             textBoxWholeText.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWholeText.Font.FontFamily, textBoxWholeText.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWholeText.Font.FontFamily, textBoxWholeText.Font.Size + 2, FontStyle.Regular);
             textBoxWord.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWord.Font.FontFamily, textBoxWord.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWord.Font.FontFamily, textBoxWord.Font.Size + 2, FontStyle.Regular);
-            richTextBoxParagraph.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWholeText.Font.FontFamily, richTextBoxParagraph.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWholeText.Font.FontFamily, richTextBoxParagraph.Font.Size + 2, FontStyle.Regular);
+            richTextBoxParagraph.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(richTextBoxParagraph.Font.FontFamily, richTextBoxParagraph.Font.Size - 2, FontStyle.Regular) : new Font(richTextBoxParagraph.Font.FontFamily, richTextBoxParagraph.Font.Size + 2, FontStyle.Regular);
             Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(Font.FontFamily, Font.Size - 2, FontStyle.Regular) : new Font(Font.FontFamily, Font.Size + 2, FontStyle.Regular);
             useLargerFontForThisWindowToolStripMenuItem.Checked = !useLargerFontForThisWindowToolStripMenuItem.Checked;
             Configuration.Settings.Tools.SpellCheckUseLargerFont = useLargerFontForThisWindowToolStripMenuItem.Checked;
