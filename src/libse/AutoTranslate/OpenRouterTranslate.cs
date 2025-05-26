@@ -28,11 +28,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
+            "google/gemini-flash-1.5-8b",
+            "google/gemini-2.0-flash-001",
             "deepseek/deepseek-r1",
             "deepseek/deepseek-r1:free",
-            "google/gemini-2.0-flash-thinking-exp:free",
-            "google/gemini-2.0-flash-001",
             "microsoft/phi-4",
+            "mistralai/mistral-nemo",
             "meta-llama/llama-3.3-70b-instruct",
             "openai/gpt-4o-mini",
             "anthropic/claude-3.5-sonnet",
