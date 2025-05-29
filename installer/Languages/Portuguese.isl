@@ -69,7 +69,7 @@ AboutSetupMenuItem=&Acerca de...
 AboutSetupTitle=Acerca do Assistente de Instalação
 AboutSetupMessage=%1 versão %2%n%3%n%n%1 home page:%n%4
 AboutSetupNote=
-TranslatorNote=Portuguese translation maintained by BlackSpirits (blackspirits@gmail.com)
+TranslatorNote=Tradução para o português gerida por BlackSpirits (blackspirits@gmail.com)
 
 ; *** Buttons
 ButtonBack=< &Anterior
