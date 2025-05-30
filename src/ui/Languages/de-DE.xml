@@ -617,6 +617,15 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kann bildbasierten Untertitel nicht vergleichen</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Darsteller ändern</Title>
+    <ConvertActorFrom>Ändern Darsteller von</ConvertActorFrom>
+    <ConvertActorTo>Ändern Darsteller zu</ConvertActorTo>
+    <InlineActorViaX>Inline Darsteller via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Anzahl der Darstelleränderungen: {0}</NumberOfConversionsX>
+    <SetColor>Farbe</SetColor>
+    <OnlyNames>Nur Name</OnlyNames>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Farben in Dialog umwandeln</Title>
     <RemoveColorTags>Entferne Farbmarkierungen</RemoveColorTags>
@@ -1407,6 +1416,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <StartNumberingFrom>Nummerierung beginnen ab...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Untertitel für Hörgeschädigte entfernen...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Farben in Dialog umwandeln...</ConvertColorsToDialog>
+        <ConvertActors>Darsteller ändern...</ConvertActors>
         <ChangeCasing>Schreibweise ändern...</ChangeCasing>
         <ChangeFrameRate>Bildfrequenz ändern...</ChangeFrameRate>
         <ChangeSpeedInPercent>Geschwindigkeit ändern (%)...</ChangeSpeedInPercent>
@@ -1454,12 +1464,14 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <GenerateBlankVideo>Leeres Video erzeugen</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Video mit eingebrannten Untertiteln erstellen...</GenerateVideoWithBurnedInSub>
         <GenerateVideoWithEmbeddedSubs>Video mit hinzugefügten/entfernten eingebetteten Untertiteln erstellen...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>Transparentes Video mit Untertiteln erzeugen ...</GenerateTransparentVideoWithSubs>
         <VideoAudioToTextX>Audio zu Text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Kapitel aus Video importieren</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Szenenwechsel erstellen/importieren...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Einstellungsänderungen entfernen/exportieren...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Wellenform im Stapel generieren...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Text zu Sprache und in Video einfügen ...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Videosteuerung abdocken</UnDockVideoControls>
         <ReDockVideoControls>Videosteuerung erneut andocken</ReDockVideoControls>
       </Video>
