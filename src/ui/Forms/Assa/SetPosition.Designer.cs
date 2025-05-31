@@ -448,8 +448,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // SetPosition
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(973, 734);
             this.Controls.Add(this.panelAdvanced);
             this.Controls.Add(this.labelCurrentTextPosition);
