@@ -1646,8 +1646,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             using (var form = new WhisperModelDownload { AutoClose = true })
             {
-                form.ShowDialog(this);
-                FillModels(comboBoxModels, form.LastDownloadedModel != null ? form.LastDownloadedModel.Name : string.Empty);
+                var result = form.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    FillModels(comboBoxModels, form.LastDownloadedModel != null ? form.LastDownloadedModel.Name : string.Empty);
+                }
             }
         }
 
