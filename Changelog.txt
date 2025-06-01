@@ -4,11 +4,21 @@
 * NEW
    * Add Tatar translation - thx Ирек
 * IMPROVED:
+   * Update Ukranian translation - thx Oleh
+   * Update Macedonian translation - thx Gjorgji
+   * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Portuguese translation - thx hugok79
    * Update Italian translation - thx bovirus
    * Update Polish translation - thx admas
+   * Update German translation - thx Joachim
+   * Update Russian translation - thx elfriob
+   * Update Turksih translation - thx bilimiyorum
    * Add Brazilian Portuguese for LibreTranslate - thx erickcomcek
    * Minor UI improvementx for burn-in - thx Leon
    * Add o4-mini/gpt-4.1-mini models for ChatGPT API
+   * Enhance video file detection - thx timminator
+   * Add openrouter google/gemini-flash-1.5-8b model - thx cvrle77
+   * Add Windows 7 ffmpeg/mpv support (perhaps) - thx Mark   
 * FIXED:
    * Enable automatic translation via proxy - thx solidvan
    * Fix crash in undo timer - thx darnn
@@ -16,6 +26,9 @@
    * Fix VobSub with no idx file reading issue - thx C0bra5
    * Fix crash in translate - thx justcaws
    * Fix Brazil/Chinese in LibreTranslate - thx erickcomcek/smllin
+   * Fix language code for Czech in elevellabs - thx Geglash15
+   * Fix selected line after translate-via-copy-paste - thx Scripter
+   * Fix crash in Whisper download model - thx lkintact
 
 
 Subtitle Edit Changelog
