@@ -1796,10 +1796,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         {
             // h:mm:ss.cc
             string[] timeCode = time.Split(':', '.');
+            var lastPart = timeCode[3].Trim();
+            if (lastPart.Length > 2)
+            {
+                lastPart = lastPart.Substring(0, 2);
+            }
+
             return new TimeCode(int.Parse(timeCode[0]),
                 int.Parse(timeCode[1]),
                 int.Parse(timeCode[2]),
-                int.Parse(timeCode[3]) * 10);
+                int.Parse(lastPart) * 10);
         }
 
         public static void NormalizeNewLines(Subtitle subtitle)
