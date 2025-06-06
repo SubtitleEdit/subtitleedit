@@ -28,8 +28,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "deepseek-reasoner",
             "deepseek-chat",
+            "deepseek-reasoner",
         };
 
         public void Initialize()
