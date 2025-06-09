@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             line = line.RemoveChar(' ').Replace("-->", defaultSeparator).Trim();
             if (!line.Contains(defaultSeparator, StringComparison.Ordinal))
             {
-                line = line.Replace(" > ", defaultSeparator);
+                line = line.Replace(">", defaultSeparator);
             }
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
