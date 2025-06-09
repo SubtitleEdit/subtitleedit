@@ -14,8 +14,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
-        private static Regex _regExWsrtItalicStart;
-        private static Regex _regExWsrtItalicEnd;
+        private static Regex _regExWsrtItalicStart  = new Regex(@"<3\d>", RegexOptions.Compiled);
+        private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
 
         private enum ExpectingLine
         {
@@ -226,16 +226,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (_isWsrt && !string.IsNullOrEmpty(line) && line.Contains("<3", StringComparison.Ordinal))
                         {
-                            if (_regExWsrtItalicStart == null)
-                            {
-                                _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
-                            }
-
-                            if (_regExWsrtItalicEnd == null)
-                            {
-                                _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
-                            }
-
                             line = _regExWsrtItalicStart.Replace(line, "<i>");
                             line = _regExWsrtItalicEnd.Replace(line, "</i>");
                         }
@@ -301,24 +291,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
             var line = input.Replace('،', ',')
-                .Replace('', ',')
-                .Replace('¡', ',')
-                .Replace(zeroWidthSpace, ' ') 
-                .Replace(zeroWidthNoBreakSpace, ' ')
-                .Replace(" -> ", defaultSeparator)
-                .Replace(" —> ", defaultSeparator) // em-dash
-                .Replace(" ——> ", defaultSeparator) // em-dash
-                .Replace(" - > ", defaultSeparator)
-                .Replace(" ->> ", defaultSeparator)
-                .Replace(" -- > ", defaultSeparator)
-                .Replace(" - -> ", defaultSeparator)
-                .Replace(" -->> ", defaultSeparator)
-                .Replace(" ---> ", defaultSeparator)
-                .Replace(" > ", defaultSeparator)
-                .Replace("  ", " ")
-                .Replace(": ", ":")
-                .Replace(" :", ":")
-                .Trim();
+             .Replace('', ',')
+             .Replace('¡', ',')
+             .Replace(zeroWidthSpace, ' ')
+             .Replace(zeroWidthNoBreakSpace, ' ')
+             .Replace(" -> ", defaultSeparator)
+             .Replace(" —> ", defaultSeparator) // em-dash
+             .Replace(" ——> ", defaultSeparator) // em-dash
+             .Replace(" - > ", defaultSeparator)
+             .Replace(" ->> ", defaultSeparator)
+             .Replace(" -- > ", defaultSeparator)
+             .Replace(" - -> ", defaultSeparator)
+             .Replace(" -->> ", defaultSeparator)
+             .Replace(" ---> ", defaultSeparator)
+             .Replace("  ", " ")
+             .Replace(": ", ":")
+             .Replace(" :", ":")
+             .Trim();
 
             // Removed stuff after time codes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
@@ -340,6 +329,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // removes all extra spaces
             line = line.RemoveChar(' ').Replace("-->", defaultSeparator).Trim();
+            if (!line.Contains(defaultSeparator, StringComparison.Ordinal))
+            {
+                line = line.Replace(" > ", defaultSeparator);
+            }
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');
