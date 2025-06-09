@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var isAllEndTimesZero = subtitle.Paragraphs.All(p => Math.Abs(p.EndTime.TotalMilliseconds) < 0.01);
             if (isAllEndTimesZero)
             {
-                subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
+                subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             }
 
             return subtitle;
