@@ -304,7 +304,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace('', ',')
                 .Replace('¡', ',')
                 .Replace(zeroWidthSpace, ' ') 
-                .Replace(zeroWidthNoBreakSpace, ' ') 
+                .Replace(zeroWidthNoBreakSpace, ' ')
+                .Replace(" > ", defaultSeparator)
                 .Replace(" -> ", defaultSeparator)
                 .Replace(" —> ", defaultSeparator) // em-dash
                 .Replace(" ——> ", defaultSeparator) // em-dash
