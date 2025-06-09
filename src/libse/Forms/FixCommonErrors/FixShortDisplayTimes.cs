@@ -70,9 +70,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     var temp = new Paragraph(p);
-                    while (temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    if (temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
-                        temp.EndTime.TotalMilliseconds++;
+                        var numberOfCharacters = (double)p.Text.CountCharacters(true);
+                        var maxDurationMilliseconds = numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds * 1000.0;
+                        temp.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
                     }
                     Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                     Paragraph nextNext = subtitle.GetParagraphOrDefault(i + 2);

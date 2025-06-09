@@ -460,7 +460,7 @@ pt.tsk_ResetDictionaries=Repor os Dicionários e remover quaisquer nomes persona
 pt.tsk_ResetSettings=Repor as definições do Subtitle Edit
 pt.tsk_SetFileTypes=Associar os ficheiros de texto SubRip (.srt) ao Subtitle Edit
 pt.types_custom=Instalação personalizada
-pt.types_default=Instalação padrão
+pt.types_default=Instalação predefinida
 
 ; Portuguese (Brazil)
 [Messages]
@@ -627,20 +627,20 @@ th.types_default=Default installation
 tr.SetupAppTitle=Setup - Subtitle Edit
 tr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
-tr.comp_translations=Translations
-tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.8. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.8 now?
-tr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-tr.msg_OptimizingPerformance=Optimizing performance...
-tr.run_VisitWebsite=Visit Subtitle Edit's Website
-tr.sm_com_Changelog=Subtitle Edit's Changelog
-tr.tsk_AllUsers=For all users
-tr.tsk_CurrentUser=For the current user only
-tr.tsk_Other=Other:
-tr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-tr.tsk_ResetSettings=Reset Subtitle Edit's settings
-tr.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
-tr.types_custom=Custom installation
-tr.types_default=Default installation
+tr.comp_translations=Çeviriler
+tr.msg_AskToDownNET=Subtitle Edit .NET Framework 4.8 gerektirir. Lütfen .NET Framework'ü indirip kurun ve kurulumu tekrar çalıştırın.%n%nŞimdi .NET Framework 4.8'i indirmek istiyor musunuz?
+tr.msg_DeleteSettings=Ayrıca Subtitle Edit'in ayarlarını ve sözlüklerde yaptığınız özel değişiklikleri silmek istiyor musunuz?%n%nSubtitle Edit'i yeniden yüklemeyi planlıyorsanız bunları silmek zorunda değilsiniz.
+tr.msg_OptimizingPerformance=Performans optimize ediliyor...
+tr.run_VisitWebsite=Subtitle Edit'in Web Sitesini Ziyaret Edin
+tr.sm_com_Changelog=Subtitle Edit'in Değişiklik Günlüğü
+tr.tsk_AllUsers=Tüm kullanıcılar için
+tr.tsk_CurrentUser=Sadece geçerli kullanıcı için
+tr.tsk_Other=Diğer:
+tr.tsk_ResetDictionaries=Sözlükleri sıfırlayın ve özel adları silin
+tr.tsk_ResetSettings=Subtitle Edit ayarlarını sıfırla
+tr.tsk_SetFileTypes=Ortak alt yazı dosyalarını Subtitle Edit ile ilişkilendirin
+tr.types_custom=Özel kurulum
+tr.types_default=Varsayılan kurulum
 
 ; Ukrainian
 [Messages]

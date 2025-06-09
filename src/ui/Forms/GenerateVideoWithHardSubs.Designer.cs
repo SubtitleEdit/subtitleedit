@@ -98,7 +98,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownTargetFileSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFileSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
-            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.listViewBatch = new System.Windows.Forms.ListView();
@@ -116,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOutputFileSettings = new System.Windows.Forms.Button();
+            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -1084,7 +1084,12 @@ namespace Nikse.SubtitleEdit.Forms
             "hevc_amf",
             "prores_ks",
             "h264_qsv",
-            "hevc_qsv"});
+            "hevc_qsv",
+            "libaom-av1",
+            "libsvtav1",
+            "av1_nvenc",
+            "av1_qsv",
+            "av1_amf"});
             this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 49);
             this.comboBoxVideoEncoding.MaxLength = 32767;
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
@@ -1363,15 +1368,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
             this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
             // 
-            // labelFileName
-            // 
-            this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(9, 563);
-            this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(52, 13);
-            this.labelFileName.TabIndex = 0;
-            this.labelFileName.Text = "File name";
-            // 
             // numericUpDownFontSize
             // 
             this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
@@ -1539,6 +1535,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOutputFileSettings.Text = "Output file/folder...";
             this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
             this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(9, 563);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 0;
+            this.labelFileName.Text = "File name";
             // 
             // buttonPreview
             // 

@@ -24308,6 +24308,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileNameNoExtension);
+            if (!string.Equals(fileNameNoExtension, fallbackName, StringComparison.OrdinalIgnoreCase))
+            {
+                return TryToFindAndOpenVideoFile(fallbackName);
+            }
+
             return false;
         }
 
@@ -35867,6 +35873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitle.Paragraphs.Add(new Paragraph(p));
                 }
+                RefreshSelectedParagraph();
 
                 ShowStatus(_language.SubtitleTranslated);
                 _changeOriginalSubtitleHash = oldHash;
@@ -35889,7 +35896,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemShowOriginalInPreview.Checked = false;
                     Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
                     audioVisualizer.Invalidate();
-                }
+                }                
             }
         }
 

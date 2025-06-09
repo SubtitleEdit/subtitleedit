@@ -1194,7 +1194,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     {
                         if (nikseComboBoxLanguage.SelectedItem is TranslationPair tp)
                         {
-                            language = $", \"language_code\": \"{tp.Code}\"";
+                            var languageCode = tp.Code;
+                            if (languageCode == "cz")
+                            {
+                                languageCode = "cs";
+                            }
+                            else if (languageCode == "ph")
+                            {
+                                languageCode = "fil";
+                            }
+
+                            language = $", \"language_code\": \"{languageCode}\"";
                         }
                     }
 

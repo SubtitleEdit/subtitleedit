@@ -14,8 +14,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
 
         public string DecodePassword()
         {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(Password));
+            try
+            {
+                return Encoding.UTF8.GetString(Convert.FromBase64String(Password));
+            }
+            catch
+            {
+                return null;
+            }            
         }
+
         public void EncodePassword(string unencryptedPassword)
         {
             Password = Convert.ToBase64String(Encoding.UTF8.GetBytes(unencryptedPassword));

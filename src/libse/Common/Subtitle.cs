@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -589,10 +589,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal, enforceDurationLimits);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            while (p.GetCharactersPerSecond() > maxCharactersPerSecond)
+
+            if (p.GetCharactersPerSecond() > maxCharactersPerSecond)
             {
-                duration++;
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+                var numberOfCharacters = (double)p.Text.CountCharacters(true);
+                var maxDurationMilliseconds = (numberOfCharacters / maxCharactersPerSecond) * 1000.0;
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
             }
 
             if (extendOnly && p.EndTime.TotalMilliseconds < originalEndTime)

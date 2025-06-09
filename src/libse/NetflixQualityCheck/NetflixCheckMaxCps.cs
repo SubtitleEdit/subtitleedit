@@ -33,9 +33,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
                 {
                     var fixedParagraph = new Paragraph(p, false);
-                    while (fixedParagraph.GetCharactersPerSecond() > charactersPerSecond)
+                    if (fixedParagraph.GetCharactersPerSecond() > charactersPerSecond)
                     {
-                        fixedParagraph.EndTime.TotalMilliseconds++;
+                        var numberOfCharacters = (double)p.Text.CountCharacters(true);
+                        var maxDurationMilliseconds = numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds * 1000.0;
+                        fixedParagraph.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
                     }
 
                     controller.AddRecord(p, fixedParagraph, comment, FormattableString.Invariant($"CPS={charactersPerSeconds:0.##}"));
