@@ -69,7 +69,7 @@ AboutSetupMenuItem=&Acerca de...
 AboutSetupTitle=Acerca do Assistente de Instalação
 AboutSetupMessage=%1 versão %2%n%3%n%n%1 home page:%n%4
 AboutSetupNote=
-TranslatorNote=Portuguese translation maintained by BlackSpirits (blackspirits@gmail.com)
+TranslatorNote=Tradução para o português gerida por BlackSpirits (blackspirits@gmail.com)
 
 ; *** Buttons
 ButtonBack=< &Anterior
@@ -330,7 +330,7 @@ UninstallOpenError=Não foi possível abrir o ficheiro "%1". Não é possível d
 UninstallUnsupportedVer=O ficheiro log de desinstalação "%1" está num formato que não é reconhecido por esta versão do desinstalador. Não é possível desinstalar
 UninstallUnknownEntry=Foi encontrada uma entrada desconhecida (%1) no ficheiro log de desinstalação
 ConfirmUninstall=Tem a certeza que deseja remover completamente o %1 e todos os seus componentes?
-UninstallOnlyOnWin64=Esta desinstalação só pode ser realizada na versão de 64-bit's do Windows.
+UninstallOnlyOnWin64=Esta desinstalação só pode ser realizada na versão de 64 bits do Windows.
 OnlyAdminCanUninstall=Esta desinstalação só pode ser realizada por um utilizador com privilégios administrativos.
 UninstallStatusLabel=Por favor aguarde enquanto o %1 está a ser removido do seu computador.
 UninstalledAll=O %1 foi removido do seu computador com sucesso.

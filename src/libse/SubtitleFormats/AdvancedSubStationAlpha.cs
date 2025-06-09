@@ -1796,10 +1796,31 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         {
             // h:mm:ss.cc
             string[] timeCode = time.Split(':', '.');
+            
+            var lastPart = timeCode[3].Trim();
+            var ms = 0;
+            if (lastPart.Length == 2) // correct ASSA time code
+            {
+                ms = int.Parse(lastPart) * 10;
+            }
+            else if(lastPart.Length == 3)
+            {
+                ms = int.Parse(lastPart); // 3 digits, e.g. 123 = 123 ms
+            }
+            else if (lastPart.Length >= 3)
+            {
+                lastPart = lastPart.Substring(0, 2);
+                ms = int.Parse(lastPart) * 10;
+            }
+            else if (lastPart.Length == 1)
+            {
+                ms = int.Parse(lastPart) * 100;
+            }
+
             return new TimeCode(int.Parse(timeCode[0]),
                 int.Parse(timeCode[1]),
                 int.Parse(timeCode[2]),
-                int.Parse(timeCode[3]) * 10);
+                ms);
         }
 
         public static void NormalizeNewLines(Subtitle subtitle)
