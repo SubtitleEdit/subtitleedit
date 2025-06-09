@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     if (fixedParagraph.GetCharactersPerSecond() > charactersPerSecond)
                     {
                         var numberOfCharacters = (double)p.Text.CountCharacters(true);
-                        var maxDurationMilliseconds = (numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds) * 1000.0;
+                        var maxDurationMilliseconds = numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds * 1000.0;
                         fixedParagraph.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
                     }
 
