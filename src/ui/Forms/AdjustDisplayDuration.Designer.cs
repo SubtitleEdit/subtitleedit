@@ -425,8 +425,8 @@
             // 
             // AdjustDisplayDuration
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(624, 307);
             this.Controls.Add(this.checkBoxEnforceDurationLimits);
             this.Controls.Add(this.checkBoxCheckShotChanges);
@@ -446,7 +446,7 @@
             this.Controls.Add(this.labelAddInPercent);
             this.Controls.Add(this.labelNote);
             this.Controls.Add(this.groupBoxAdjustVia);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
