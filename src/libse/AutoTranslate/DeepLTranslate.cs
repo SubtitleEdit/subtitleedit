@@ -206,13 +206,21 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private FormUrlEncodedContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
-            return new FormUrlEncodedContent(new[]
+            var array = new List<KeyValuePair<string, string>>()
             {
                 new KeyValuePair<string, string>("text", text),
                 new KeyValuePair<string, string>("target_lang", targetLanguageCode),
                 new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
-                new KeyValuePair<string, string>("formality", _formality),
-            });
+            };
+
+            var targetLanguages = GetSupportedTargetLanguages();
+            var hasFormality = targetLanguages.Find(x => x.Code.Equals(targetLanguageCode, StringComparison.OrdinalIgnoreCase))?.HasFormality ?? false;
+            if (hasFormality && !string.IsNullOrEmpty(_formality))
+            {
+                array.Add(new KeyValuePair<string, string>("formality", _formality));
+            }
+
+            return new FormUrlEncodedContent(array);
         }
 
         public void Dispose()
