@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
@@ -46,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return GoogleTranslateV1.GetTranslationPairs();
         }
 
-        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var format = "text";
             var input = new StringBuilder();
@@ -55,13 +54,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             string content;
             try
             {
-                var result = _httpClient.PostAsync(uri, new StringContent(string.Empty)).Result;
+                var result = await _httpClient.PostAsync(uri, new StringContent(string.Empty), cancellationToken).ConfigureAwait(false);
 
                 if (!result.IsSuccessStatusCode)
                 {
                     try
                     {
-                        Error = result.Content.ReadAsStringAsync().Result;
+                        Error = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
                         SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
                     }
                     catch
@@ -141,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     }
                 }
             }
-            return Task.FromResult(string.Join(Environment.NewLine, resultList));
+            return string.Join(Environment.NewLine, resultList);
         }
 
         public void Dispose() => _httpClient?.Dispose();
