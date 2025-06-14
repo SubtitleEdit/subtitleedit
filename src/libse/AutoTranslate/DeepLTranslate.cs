@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Spanish", "es", true),
                 MakeTranslationPair("Swedish", "sv"),
                 MakeTranslationPair("Turkish", "tr"),
-                MakeTranslationPair("Ukranian", "uk"),
+                MakeTranslationPair("Ukrainian", "uk"),
             };
         }
 
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Spanish", "es", true),
                 MakeTranslationPair("Swedish", "sv"),
                 MakeTranslationPair("Turkish", "tr"),
-                MakeTranslationPair("Ukranian", "uk"),
+                MakeTranslationPair("Ukrainian", "uk"),
             };
         }
 

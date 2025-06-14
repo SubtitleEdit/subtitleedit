@@ -716,7 +716,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 new OcrLanguage2("ta", "Tamil"),
                 new OcrLanguage2("te", "Telugu"),
                 new OcrLanguage2("tr", "Turkish"),
-                new OcrLanguage2("uk", "Ukranian"),
+                new OcrLanguage2("uk", "Ukrainian"),
                 new OcrLanguage2("ur", "Urdu"),
                 new OcrLanguage2("ug", "Uyghur"),
                 new OcrLanguage2("uz", "Uzbek"),

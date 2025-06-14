@@ -4,7 +4,7 @@
 * NEW
    * Add Tatar translation - thx Ирек
 * IMPROVED:
-   * Update Ukranian translation - thx Oleh
+   * Update Ukrainian translation - thx Oleh
    * Update Macedonian translation - thx Gjorgji
    * Update Brazilian Portuguese translation - thx igorruckert
    * Update Portuguese translation - thx hugok79
