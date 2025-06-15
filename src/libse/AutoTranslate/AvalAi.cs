@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AvalAiPrompt = new ToolsSettings().AvalAiPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.AvalAiPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AvalAiPrompt), sourceLanguageCode, targetLanguageCode);
             var input = "";
             var input2 = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var modelJson = "\"" + model + "\"";
