@@ -496,14 +496,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (control is ListView)
                 {
-                    if (gs.SubtitleListViewFontBold)
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize);
-                    }
+                    SetControlSubtitleFont(control, gs.SubtitleFontName, gs.SubtitleListViewFontSize, gs.SubtitleListViewFontBold);
+                }
+                else if (control is ListBox)
+                {
+                    SetControlSubtitleFont(control, gs.SubtitleFontName, gs.SubtitleListViewFontSize, gs.SubtitleListViewFontBold);
                 }
                 else if (control is SETextBox seTextBox)
                 {
@@ -511,14 +508,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (control is TextBox)
                 {
-                    if (gs.SubtitleTextBoxFontBold)
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
-                    }
+                    SetControlSubtitleFont(control, gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, gs.SubtitleTextBoxFontBold);
+                }
+                else if (control is RichTextBox rtb)
+                {
+                    SetControlSubtitleFont(control, gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, gs.SubtitleTextBoxFontBold);
                 }
 
                 control.BackColor = gs.SubtitleBackgroundColor;
@@ -527,6 +521,18 @@ namespace Nikse.SubtitleEdit.Logic
             catch
             {
                 // ignored
+            }
+        }
+
+        private static void SetControlSubtitleFont(Control control, string subtitleFontName, int subtitleFontSize, bool subtitleFontBold)
+        {
+            if (subtitleFontBold)
+            {
+                control.Font = new Font(subtitleFontName, subtitleFontSize, FontStyle.Bold);
+            }
+            else
+            {
+                control.Font = new Font(subtitleFontName, subtitleFontSize);
             }
         }
 
