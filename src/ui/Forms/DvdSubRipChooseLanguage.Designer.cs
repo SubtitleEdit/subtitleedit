@@ -134,8 +134,8 @@
             // 
             // DvdSubRipChooseLanguage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(779, 314);
             this.Controls.Add(this.buttonSaveAs);
             this.Controls.Add(this.groupBoxImage);
@@ -144,7 +144,7 @@
             this.Controls.Add(this.labelChooseLanguage);
             this.Controls.Add(this.comboBoxLanguages);
             this.Controls.Add(this.listBox1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
