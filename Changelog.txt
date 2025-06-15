@@ -27,11 +27,13 @@
    * Fix VobSub with no idx file reading issue - thx C0bra5
    * Fix crash in translate - thx justcaws
    * Fix Brazil/Chinese in LibreTranslate - thx erickcomcek/smllin
-   * Fix language code for Czech in elevellabs - thx Geglash15
+   * Fix language code for Czech in ElevelLabs - thx Geglash15
    * Fix selected line after translate-via-copy-paste - thx Scripter
    * Fix crash in Whisper download model - thx lkintact
    * Fix crash/slow-duration-calculation - thx Cyberyoda1411
    * Fix wrong parameter for re-calculate-duration a few places
+   * Fix for Japanese text length calculation - thx Ashita
+   * Fix DeepL formality issue - thx rRobis
 
 
 Subtitle Edit Changelog
