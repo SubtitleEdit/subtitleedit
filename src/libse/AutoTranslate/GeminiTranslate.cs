@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
             var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
+            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             return content;

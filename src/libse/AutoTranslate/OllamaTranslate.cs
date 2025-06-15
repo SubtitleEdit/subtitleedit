@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().OllamaPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            var input = "{ " + modelJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);

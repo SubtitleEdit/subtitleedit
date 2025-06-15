@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.KoboldCppPrompt = new ToolsSettings().KoboldCppPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.KoboldCppPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + temperatureJson + " \"prompt\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            var input = "{ " + modelJson + temperatureJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);

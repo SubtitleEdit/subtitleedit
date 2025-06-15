@@ -34,6 +34,7 @@
    * Fix wrong parameter for re-calculate-duration a few places
    * Fix for Japanese text length calculation - thx Ashita
    * Fix DeepL formality issue - thx rRobis
+   * Fix issue with quote for AI auto-translate prompt - thx Zsolt
 
 
 Subtitle Edit Changelog

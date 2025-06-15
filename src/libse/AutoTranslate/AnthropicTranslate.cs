@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AnthropicPrompt = new ToolsSettings().AnthropicPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.AnthropicPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AnthropicPrompt), sourceLanguageCode, targetLanguageCode);
             var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
