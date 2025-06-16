@@ -1084,12 +1084,7 @@ namespace Nikse.SubtitleEdit.Forms
             "hevc_amf",
             "prores_ks",
             "h264_qsv",
-            "hevc_qsv",
-            "libaom-av1",
-            "libsvtav1",
-            "av1_nvenc",
-            "av1_qsv",
-            "av1_amf"});
+            "hevc_qsv"});
             this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 49);
             this.comboBoxVideoEncoding.MaxLength = 32767;
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
