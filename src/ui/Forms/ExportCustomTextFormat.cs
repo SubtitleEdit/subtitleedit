@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public const string EnglishDoNotModify = "[Do not modify]";
         public string FormatOk { get; set; }
-        private static readonly Regex CurlyCodePattern = new Regex("{\\d+}", RegexOptions.Compiled);
+        private static readonly Regex CurlyCodePattern = new Regex("{\\d+[,:]*[A-Z\\d-]*}", RegexOptions.Compiled);
 
         public ExportCustomTextFormat(string format)
         {
@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{original-text}", "{3}");
             s = s.Replace("{number}", "{4}");
             s = s.Replace("{number:", "{4:");
+            s = s.Replace("{number,", "{4,");
             s = s.Replace("{number-1}", "{5}");
             s = s.Replace("{number-1:", "{5:");
             s = s.Replace("{duration}", "{6}");

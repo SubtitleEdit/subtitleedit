@@ -3,6 +3,7 @@
 4.0.13 (xth July 2025) BETA
 * NEW
    * Add Tatar translation - thx Ирек
+   * Allow complex number formatting in custom export - thx oph
 * IMPROVED:
    * Update Ukrainian translation - thx Oleh
    * Update Macedonian translation - thx Gjorgji
