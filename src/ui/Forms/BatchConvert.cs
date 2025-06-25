@@ -1329,7 +1329,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var fi = new FileInfo(fileName);
                     if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) && !FileUtil.IsMatroskaFile(fileName))
                     {
-                        var allowCache = radioButtonSaveInSourceFolder.Checked && checkBoxOverwrite.Checked;
+                        var allowCache = !(radioButtonSaveInSourceFolder.Checked && checkBoxOverwrite.Checked);
                         if (allowCache && _cache.TryGetValue(fileName, out var sub2))
                         {
                             sub = new Subtitle(sub2, false);
