@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -178,6 +179,26 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void buttonXxlHighlightWord_Click(object sender, EventArgs e)
         {
             comboBoxWhisperExtra.Text = $"--highlight_words true --max_line_width {Configuration.Settings.General.SubtitleLineMaximumLength} --max_line_count {Configuration.Settings.General.MaxNumberOfLines}";
+        }
+
+        private void buttonCppVad_Click(object sender, EventArgs e)
+        {
+            var folder = new WhisperCppModel().ModelFolder;
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation))
+            {
+                Configuration.Settings.Tools.WhisperCppModelLocation = folder;
+            }
+
+            var modelName = Path.Combine(folder, "ggml-silero-v5.1.2.bin");
+            if (File.Exists(modelName))
+            {
+                comboBoxWhisperExtra.Text = $"--vad --vad-model \"{modelName}\"";
+            }
+            else
+            {
+                MessageBox.Show(LanguageSettings.Current.WhisperAdvanced.VadModelNotFound, LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

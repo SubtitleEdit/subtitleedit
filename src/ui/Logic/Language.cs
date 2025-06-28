@@ -3935,15 +3935,10 @@ Keep changes?",
                 HighlightCurrentWord = "Highlight current word",
                 Sentence = "Sentence",
                 SingleWords = "Single words",
+                EnableVad = "Enable VAD",
+                VadModelNotFound = "VAD model not found.",
             };
         }
-
-        //public static Language Load(StreamReader sr) // normal but slow .net way
-        //{
-        //    var s = new XmlSerializer(typeof(Language));
-        //    var language = (Language)s.Deserialize(sr);
-        //    return language;
-        //}
 
         public static Language Load(string fileName)
         {
