@@ -9544,6 +9544,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "WhisperAdvanced/Sentence":
                     language.WhisperAdvanced.Sentence = reader.Value;
                     break;
+                case "WhisperAdvanced/EnableVad":
+                    language.WhisperAdvanced.EnableVad = reader.Value;
+                    break;
                 case "WhisperAdvanced/VadModelNotFound":
                     language.WhisperAdvanced.VadModelNotFound = reader.Value;
                     break;
