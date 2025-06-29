@@ -156,8 +156,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // ShowEarlierLater
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(301, 170);
             this.Controls.Add(this.radioButtonSelectedLineAndForward);
             this.Controls.Add(this.radioButtonSelectedLinesOnly);
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.labelTotalAdjustment);
             this.Controls.Add(this.timeUpDownAdjust);
             this.Controls.Add(this.labelHourMinSecMilliSecond);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
             this.MaximizeBox = false;

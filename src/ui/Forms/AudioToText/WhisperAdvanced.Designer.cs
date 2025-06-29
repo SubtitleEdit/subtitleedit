@@ -423,8 +423,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // WhisperAdvanced
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(865, 594);
             this.Controls.Add(this.tabControlCommandLineHelp);
             this.Controls.Add(this.labelNote);
