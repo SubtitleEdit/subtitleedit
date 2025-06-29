@@ -3202,11 +3202,13 @@ algorithm
 completed
 incorrect
 imaginary
+dishonour
 physician
 Manhattan
 penthouse
 sequences
 WHISTLING
+behaviour
 surrender
 dedicated
 parachute
@@ -7263,6 +7265,7 @@ applying
 Clicking
 bullhorn
 obsolete
+armoured
 ditching
 shatters
 splashed
@@ -12575,6 +12578,7 @@ Morris
 shifts
 temple
 gender
+colour
 Viking
 ethics
 pencil
