@@ -3482,5 +3482,7 @@ Command line: {1} {2}
     <HighlightCurrentWord>突出显示当前单词</HighlightCurrentWord>
     <SingleWords>单字</SingleWords>
     <Sentence>句子</Sentence>
+    <EnableVad>启用VAD</EnableVad>
+    <VadModelNotFound>找不到VAD模型。</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
