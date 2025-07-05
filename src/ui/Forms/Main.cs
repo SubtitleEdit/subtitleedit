@@ -5262,7 +5262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0)
                     {
                         containsNegativeTime = true;
-                        negativeTimeLines.Add(sub.Paragraphs.IndexOf(p).ToString(CultureInfo.InvariantCulture));
+                        negativeTimeLines.Add((sub.Paragraphs.IndexOf(p) + 1).ToString(CultureInfo.InvariantCulture));
                         if (negativeTimeLines.Count > 10)
                         {
                             negativeTimeLines[negativeTimeLines.Count - 1] = negativeTimeLines[negativeTimeLines.Count - 1] + "...";
