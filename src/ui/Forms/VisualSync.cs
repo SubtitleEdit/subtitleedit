@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillStartAndEndTexts();
 
-            if (comboBoxStartTexts.Items.Count > Configuration.Settings.Tools.StartSceneIndex)
+            if (comboBoxStartTexts.Items.Count > Configuration.Settings.Tools.StartSceneIndex && comboBoxStartTexts.Items.Count > 3)
             {
                 comboBoxStartTexts.SelectedIndex = Configuration.Settings.Tools.StartSceneIndex;
             }
@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxStartTexts.SelectedIndex = 0;
             }
 
-            if (comboBoxEndTexts.Items.Count > Configuration.Settings.Tools.EndSceneIndex)
+            if (comboBoxEndTexts.Items.Count > Configuration.Settings.Tools.EndSceneIndex && comboBoxEndTexts.Items.Count > 3)
             {
                 comboBoxEndTexts.SelectedIndex = comboBoxEndTexts.Items.Count - (Configuration.Settings.Tools.EndSceneIndex + 1);
             }
