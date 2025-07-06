@@ -29,10 +29,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static FfmpegMediaInfo Parse(string videoFileName)
         {
-            if (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) ||
-                !File.Exists(Configuration.Settings.General.FFmpegLocation))
+            if (Configuration.IsRunningOnWindows)
             {
-                return new FfmpegMediaInfo();
+                if (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) ||
+                    !File.Exists(Configuration.Settings.General.FFmpegLocation))
+                {
+                    return new FfmpegMediaInfo();
+                }
             }
 
             var log = GetFfmpegLog(videoFileName);
