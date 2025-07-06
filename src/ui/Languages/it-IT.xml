@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.12</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.04.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.06.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3496,5 +3496,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <HighlightCurrentWord>Evidenzia parola attuale</HighlightCurrentWord>
     <SingleWords>Singola parola</SingleWords>
     <Sentence>Frase</Sentence>
+    <EnableVad>Abilita VAD</EnableVad>
+    <VadModelNotFound>Modello VAD non trovato.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

@@ -3743,6 +3743,8 @@
             public string HighlightCurrentWord { get; set; }
             public string SingleWords { get; set; }
             public string Sentence { get; set; }
+            public string EnableVad { get; set; }
+            public string VadModelNotFound { get; set; }
         }
     }
 }

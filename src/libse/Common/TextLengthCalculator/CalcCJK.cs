@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                             length += 0.5m;
                         }
                         else if (ChineseFullWidthPunctuations.Contains(ch) ||
+                                 JapaneseFullWidthCharacters.Contains(ch) ||
                                  LanguageAutoDetect.Letters.Japanese.Contains(ch) ||
                                  LanguageAutoDetect.Letters.Korean.Contains(ch) ||
                                  IsCjk(ch))
@@ -78,6 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         }
 
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
+        public const string JapaneseFullWidthCharacters = "ぁあぃいぅうぇえぉおァアィイゥウェエォオㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹ一二三四五六七八九十学校日本、。・「」々〆〇";
         public const string ChineseFullWidthPunctuations = "，。、：；？！…“”—‘’（）【】「」『』〔〕《》〈〉";
 
         public static readonly Regex CjkCharRegex = new Regex(@"\p{IsHangulJamo}|" +

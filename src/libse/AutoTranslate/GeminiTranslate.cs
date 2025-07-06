@@ -31,6 +31,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
             "gemini-2.0-flash",
             "gemini-2.0-flash-lite",
             "gemini-1.5-pro",
@@ -140,7 +142,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
             var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
+            var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             return content;

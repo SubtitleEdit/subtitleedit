@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonXxlSingleWord = new System.Windows.Forms.Button();
             this.nikseTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.buttonCppVad = new System.Windows.Forms.Button();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -127,6 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // TabPageCPP
             // 
+            this.TabPageCPP.Controls.Add(this.buttonCppVad);
             this.TabPageCPP.Controls.Add(this.textBoxCpp);
             this.TabPageCPP.Location = new System.Drawing.Point(4, 22);
             this.TabPageCPP.Name = "TabPageCPP";
@@ -138,7 +140,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // textBoxCpp
             // 
-            this.textBoxCpp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCpp.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCpp.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCpp.Location = new System.Drawing.Point(3, 3);
@@ -146,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBoxCpp.Name = "textBoxCpp";
             this.textBoxCpp.ReadOnly = true;
             this.textBoxCpp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCpp.Size = new System.Drawing.Size(824, 413);
+            this.textBoxCpp.Size = new System.Drawing.Size(824, 378);
             this.textBoxCpp.TabIndex = 0;
             this.textBoxCpp.Text = resources.GetString("textBoxCpp.Text");
             this.textBoxCpp.WordWrap = false;
@@ -406,6 +410,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
+            // buttonCppVad
+            // 
+            this.buttonCppVad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCppVad.Location = new System.Drawing.Point(6, 389);
+            this.buttonCppVad.Name = "buttonCppVad";
+            this.buttonCppVad.Size = new System.Drawing.Size(148, 24);
+            this.buttonCppVad.TabIndex = 21;
+            this.buttonCppVad.Text = "Enable VAD";
+            this.buttonCppVad.UseVisualStyleBackColor = true;
+            this.buttonCppVad.Click += new System.EventHandler(this.buttonCppVad_Click);
+            // 
             // WhisperAdvanced
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -471,5 +486,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private Button buttonXxlSentence;
         private Button buttonXxlSingleWord;
         private Controls.NikseTextBox nikseTextBox1;
+        private Button buttonCppVad;
     }
 }

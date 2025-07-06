@@ -5262,7 +5262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0)
                     {
                         containsNegativeTime = true;
-                        negativeTimeLines.Add(sub.Paragraphs.IndexOf(p).ToString(CultureInfo.InvariantCulture));
+                        negativeTimeLines.Add((sub.Paragraphs.IndexOf(p) + 1).ToString(CultureInfo.InvariantCulture));
                         if (negativeTimeLines.Count > 10)
                         {
                             negativeTimeLines[negativeTimeLines.Count - 1] = negativeTimeLines[negativeTimeLines.Count - 1] + "...";
@@ -36425,7 +36425,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", "main.exe");
+            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", WhisperHelper.GetExecutableFileName(WhisperChoice.Cpp));
             if (!File.Exists(fullPath) || WhisperDownload.IsOld(fullPath, WhisperChoice.Cpp))
             {
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)

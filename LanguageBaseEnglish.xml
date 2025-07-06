@@ -3496,5 +3496,7 @@ Keep changes?</KeepChangesMessage>
     <HighlightCurrentWord>Highlight current word</HighlightCurrentWord>
     <SingleWords>Single words</SingleWords>
     <Sentence>Sentence</Sentence>
+    <EnableVad>Enable VAD</EnableVad>
+    <VadModelNotFound>VAD model not found.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
