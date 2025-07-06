@@ -40,6 +40,7 @@
    * Fix DeepL formality issue - thx rRobis
    * Fix issue with quote for AI auto-translate prompt - thx Zsolt
    * Fix no-audio-error in "Audio to text" on Linux - thx Kev1n121
+   * Fix for VisualSync start/end index when < 4 lines - thx Leif
 
 
 Subtitle Edit Changelog
