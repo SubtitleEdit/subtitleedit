@@ -2724,11 +2724,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, selectedLines, selectedLinesOriginal, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate);
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, selectedLines, selectedLinesOriginal, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate, true);
                 }
                 else
                 {
-                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _subtitleOriginal, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _subtitleOriginal, _fileName, _language.VisualSyncTitle, CurrentFrameRate, false);
                 }
 
                 ResetPlaySelection();
@@ -6446,7 +6446,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonVisualSyncClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            ShowVisualSync(false);
+            var onlySelectedLines = SubtitleListview1.SelectedItems.Count > 1 && SubtitleListview1.SelectedItems.Count < _subtitle.Paragraphs.Count;
+            ShowVisualSync(onlySelectedLines);
         }
 
         private void ToolStripButtonBurnInClick(object sender, EventArgs e)
@@ -8254,7 +8255,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             using (var visualSync = new VisualSync(this))
                             {
-                                visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, null, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
+                                visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, null, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate, false);
                                 visualSync.ShowDialog(this);
                                 if (visualSync.OkPressed)
                                 {

@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<Paragraph> _paragraphsOriginal;
         private VideoInfo _videoInfo;
         private string _subtitleFileName;
+        private bool _onlySelectedLines;
         private Subtitle _inputSubtitle;
         private Subtitle _inputOriginalSubtitle;
         private bool _isStartSceneActive;
@@ -344,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Bitmap bitmap, Subtitle subtitle, Subtitle original, string fileName, string title, double frameRate)
+        internal void Initialize(Bitmap bitmap, Subtitle subtitle, Subtitle original, string fileName, string title, double frameRate, bool onlySelectedLines)
         {
             if (bitmap != null)
             {
@@ -355,6 +356,7 @@ namespace Nikse.SubtitleEdit.Forms
             _inputSubtitle = subtitle;
             _inputOriginalSubtitle = original;
             _subtitleFileName = fileName;
+            _onlySelectedLines = onlySelectedLines;
             Text = title;
         }
 
@@ -377,7 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillStartAndEndTexts();
 
-            if (comboBoxStartTexts.Items.Count > Configuration.Settings.Tools.StartSceneIndex && comboBoxStartTexts.Items.Count > 3)
+            if (!_onlySelectedLines && comboBoxStartTexts.Items.Count > Configuration.Settings.Tools.StartSceneIndex && comboBoxStartTexts.Items.Count > Configuration.Settings.Tools.StartSceneIndex + 1)
             {
                 comboBoxStartTexts.SelectedIndex = Configuration.Settings.Tools.StartSceneIndex;
             }
@@ -386,7 +388,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxStartTexts.SelectedIndex = 0;
             }
 
-            if (comboBoxEndTexts.Items.Count > Configuration.Settings.Tools.EndSceneIndex && comboBoxEndTexts.Items.Count > 3)
+            if (!_onlySelectedLines && comboBoxEndTexts.Items.Count > Configuration.Settings.Tools.EndSceneIndex && comboBoxEndTexts.Items.Count > Configuration.Settings.Tools.EndSceneIndex + 1)
             {
                 comboBoxEndTexts.SelectedIndex = comboBoxEndTexts.Items.Count - (Configuration.Settings.Tools.EndSceneIndex + 1);
             }
