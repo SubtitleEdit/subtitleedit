@@ -3499,5 +3499,7 @@ Manter as alterações?</KeepChangesMessage>
     <HighlightCurrentWord>Destacar a palavra atual</HighlightCurrentWord>
     <SingleWords>Palavras individuais</SingleWords>
     <Sentence>Frase</Sentence>
+    <EnableVad>Ativar VAD</EnableVad>
+    <VadModelNotFound>Modelo VAD não encontrado.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

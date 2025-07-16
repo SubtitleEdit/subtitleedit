@@ -41,6 +41,7 @@
    * Fix issue with quote for AI auto-translate prompt - thx Zsolt
    * Fix no-audio-error in "Audio to text" on Linux - thx Kev1n121
    * Fix for VisualSync start/end index when < 4 lines - thx Leif
+   * Fix extra "]" character in iTunes-timed-text - thx Silvia
 
 
 Subtitle Edit Changelog
