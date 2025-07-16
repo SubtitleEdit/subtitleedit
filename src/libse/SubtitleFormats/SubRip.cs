@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
-        private static Regex _regExWsrtItalicStart  = new Regex(@"<3\d>", RegexOptions.Compiled);
+        private static Regex _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
         private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
 
         private enum ExpectingLine
@@ -236,6 +236,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
 
                         _paragraph.Text += RemoveBadChars(line).TrimEnd();
+
+                        if (string.IsNullOrWhiteSpace(line) && Utilities.IsInteger(next) && TryReadTimeCodesLine(nextNext, null, false))
+                        {
+                            _expecting = ExpectingLine.Number;
+                        }
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
