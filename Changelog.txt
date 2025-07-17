@@ -24,6 +24,7 @@
    * Handle ASSA with milliseconds - thx ixff
    * Update Gemini models to include 2.5 family - thx mehmetsahin06
    * Improve English split list - thx fraternl
+   * Optimize SRT reading
 * FIXED:
    * Enable automatic translation via proxy - thx solidvan
    * Fix crash in undo timer - thx darnn
@@ -42,6 +43,7 @@
    * Fix no-audio-error in "Audio to text" on Linux - thx Kev1n121
    * Fix for VisualSync start/end index when < 4 lines - thx Leif
    * Fix extra "]" character in iTunes-timed-text - thx Silvia
+   * No warning loading SRT with only numbers - thx timminator
 
 
 Subtitle Edit Changelog
