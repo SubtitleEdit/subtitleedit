@@ -239,6 +239,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (string.IsNullOrWhiteSpace(line) && Utilities.IsInteger(next) && TryReadTimeCodesLine(nextNext, null, false))
                         {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
+                            _paragraph = new Paragraph();
                             _expecting = ExpectingLine.Number;
                         }
                     }
