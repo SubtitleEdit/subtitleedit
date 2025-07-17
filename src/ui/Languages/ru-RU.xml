@@ -611,7 +611,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <IgnoreWhitespace>Игнорировать пробелы</IgnoreWhitespace>
     <IgnoreFormatting>Не учитывать форматирование</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Показывать только текстовые отличия</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>Невозможно сравнить изображение с субтитрами</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>Невозможно сравнить с субтитрами-изображениями</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <ConvertActor>
     <Title>Преобразование актёров</Title>
@@ -932,7 +932,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakDialogsOnOneLine>Разделить диалоги в одну строку</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Удалить начальный тире в первой строке для не диалогов</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Нормализовать строки</NormalizeStrings>
-    <FixTurkishAnsi>Исправить Turkish ANSI (Icelandic) символы в Unicode</FixTurkishAnsi>
+    <FixTurkishAnsi>Исправить Turkish ANSI (Icelandic) символы на Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Исправить датскую буквы «i»</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Исправить испанские перевёрнутые знаки вопроса и восклицания</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Добавить недостающую кавычку (")</AddMissingQuote>
@@ -948,8 +948,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixesFoundX>Найдено неточностей: {0}</FixesFoundX>
     <XFixesApplied>Сделано исправлений: {0}</XFixesApplied>
     <NothingFixableBut>Ничто не может быть исправлено автоматически. Субтитры содержат ошибки - подробности см. в отчёте</NothingFixableBut>
-    <XFixedBut>{0} проблем устранено, но субтитры всё ещё содержат ошибки - подробности см. в отчёте</XFixedBut>
-    <XCouldBeFixedBut>{0} проблем можно исправить, но субтитры всё равно будут содержать ошибки - подробности см. в отчёте</XCouldBeFixedBut>
+    <XFixedBut>{0} ошибок устранено, но субтитры всё ещё содержат ошибки - подробности см. в отчёте</XFixedBut>
+    <XCouldBeFixedBut>{0} ошибок можно исправить, но субтитры всё равно будут содержать ошибки - подробности см. в отчёте</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Исправить первую букву на заглавную после абзаца</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Объединить короткие строки (одно предложение)</MergeShortLine>
     <MergeShortLineAll>Объединить короткие строки (все, за исключением диалогов)</MergeShortLineAll>
@@ -998,7 +998,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SelectDefault>По умолчанию</SelectDefault>
     <SetDefault>Установить текущие исправления по умолчанию</SetDefault>
     <FixContinuationStyleX>Исправить стиль продолжения: {0}</FixContinuationStyleX>
-    <FixUnnecessaryLeadingDots>Удаление ненужных ведущих точек</FixUnnecessaryLeadingDots>
+    <FixUnnecessaryLeadingDots>Удаление лишних начальных точек</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GenerateBlankVideo>
     <Title>Создать пустой видеофайл</Title>
@@ -1109,7 +1109,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranslateLinesSeparately>Переводить каждую строку отдельно</TranslateLinesSeparately>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
-    <Title>Сравнительный перевод в Google и Microsoft</Title>
+    <Title>Сравнительный перевод: Google vs Microsoft</Title>
     <From>С:</From>
     <To>На:</To>
     <Translate>Перевести</Translate>
@@ -1898,9 +1898,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergedShortLinesX>Число объединённых строк: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>Перед разделением длинных строк</BeforeSplitLongLines>
     <LongLinesSplitX>Число разделённых строк: {0}</LongLinesSplitX>
-    <BeforeDurationsBridgeGap>Перед переносом есть несколько пробелов</BeforeDurationsBridgeGap>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Перед установкой минимального времени отображения между субтитрами</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Число изменённых строк с минимальным временем отображения между субтитрами: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeDurationsBridgeGap>Перед устранением коротких интервалов</BeforeDurationsBridgeGap>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Перед установкой минимального интервала между субтитрам</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Число изменённых строк с минимальным интервалом между субтитрами: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Перед импортом простого текста</BeforeImportText>
     <TextImported>Выполнен импорт текста</TextImported>
     <BeforePointSynchronization>Перед синхронизацией по точкам</BeforePointSynchronization>
@@ -1950,7 +1950,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <StatusLog>Журнал состояния</StatusLog>
     <XShotChangesImported>Импортировано изменений: {0}</XShotChangesImported>
     <PluginXExecuted>Плагин «{0}» запущен</PluginXExecuted>
-    <NotAValidXSubFile>Не допустимый XSub файл!</NotAValidXSubFile>
+    <NotAValidXSubFile>Недопустимый XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Перед объединением строк с одинаковым текстом</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитры с тайм-кодом имеют различное число строк ({0}) в отличии от текущих субтитров ({1}). Вы хотите продолжить?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Анализ потокового носителя - ожидайте…</ParsingTransportStream>
@@ -2410,8 +2410,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <StartInSourceView>После запуска показывать исходный список</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Удалять пустые строки при открытии субтитров</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Удалить пустые строки</RemoveBlankLines>
-    <ApplyAssaOverrideTags>Применить выбор тега переопределения ASSA</ApplyAssaOverrideTags>
-    <SetAssaPosition>Установить/получить позицию ASSA</SetAssaPosition>
+    <ApplyAssaOverrideTags>Применить теги переопределения ASSA к выделенному</ApplyAssaOverrideTags>
+    <SetAssaPosition>Задать/извлечь позицию ASSA</SetAssaPosition>
     <SetAssaResolution>Установить разрешение ASSA (PlayResX/PlayResY)</SetAssaResolution>
     <SetAssaBgBox>Установить фоновое поле ASSA</SetAssaBgBox>
     <TakeAutoBackup>Произвести автоматическое резервное копирование сейчас</TakeAutoBackup>
@@ -3510,5 +3510,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <HighlightCurrentWord>Выделение текущего слова</HighlightCurrentWord>
     <SingleWords>Пословно</SingleWords>
     <Sentence>Предложение</Sentence>
+    <EnableVad>Включить VAD</EnableVad>
+    <VadModelNotFound>VAD модель не найдена</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
