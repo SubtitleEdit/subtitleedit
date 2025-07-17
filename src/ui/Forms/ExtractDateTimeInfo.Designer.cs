@@ -260,8 +260,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // ExtractDateTimeInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(390, 302);
             this.Controls.Add(this.timeUpDownDuration);
             this.Controls.Add(this.labelDuration);
