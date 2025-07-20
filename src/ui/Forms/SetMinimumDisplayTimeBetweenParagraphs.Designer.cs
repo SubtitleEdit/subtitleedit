@@ -265,8 +265,8 @@
             // 
             // SetMinimumDisplayTimeBetweenParagraphs
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(754, 480);
             this.Controls.Add(this.groupBoxFrameInfo);
             this.Controls.Add(this.checkBoxShowOnlyChangedLines);
@@ -275,7 +275,7 @@
             this.Controls.Add(this.numericUpDownMinMillisecondsBetweenLines);
             this.Controls.Add(this.labelMaxMillisecondsBetweenLines);
             this.Controls.Add(this.groupBoxLinesFound);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(750, 500);
             this.Name = "SetMinimumDisplayTimeBetweenParagraphs";

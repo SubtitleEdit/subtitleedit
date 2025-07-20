@@ -823,8 +823,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // FixCommonErrors
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(846, 608);
             this.Controls.Add(this.labelStatus);
@@ -834,7 +834,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonNextFinish);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.KeyPreview = true;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(840, 580);

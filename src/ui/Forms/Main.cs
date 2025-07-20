@@ -6839,7 +6839,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                //if ((_findHelper.SelectedPosition - 1 == tb.SelectionStart || _findHelper.SelectedPosition +1 == tb.SelectionStart) && 
+                //if ((_findHelper.SelectedPosition - 1 == tb.SelectionStart || _findHelper.SelectedPosition +1 == tb.SelectionStart) &&
                 //    tb.SelectionLength > 0 ||
                 //    _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
                 //{
@@ -14005,7 +14005,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox).
                 _forceClose = true;
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Application.Exit());
             }
@@ -26075,6 +26075,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TabControlModes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!_isVideoControlsUndocked) {
+                audioVisualizer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            }
             if (tabControlModes.SelectedIndex == 0)
             {
                 tabControlModes.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 12;
@@ -26124,6 +26127,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlModes.Left + tabControlModes.Width + 5;
 
+                audioVisualizer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                 if (!_loading)
                 {
                     Refresh();
@@ -31919,7 +31923,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 catch
-                { 
+                {
                     // ignore
                 }
             }
