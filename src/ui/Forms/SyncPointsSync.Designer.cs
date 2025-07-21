@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.similarityScoreLabel = new System.Windows.Forms.Label();
+            this.buttonAutoSetSyncPoints = new System.Windows.Forms.Button();
+            this.minFuzzScore = new System.Windows.Forms.TrackBar();
             this.labelAdjustFactor = new System.Windows.Forms.Label();
             this.buttonFindTextOther = new System.Windows.Forms.Button();
             this.buttonFindText = new System.Windows.Forms.Button();
@@ -45,13 +48,17 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImportResult.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.minFuzzScore)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxImportResult
             // 
-            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportResult.Controls.Add(this.similarityScoreLabel);
+            this.groupBoxImportResult.Controls.Add(this.buttonAutoSetSyncPoints);
+            this.groupBoxImportResult.Controls.Add(this.minFuzzScore);
             this.groupBoxImportResult.Controls.Add(this.labelAdjustFactor);
             this.groupBoxImportResult.Controls.Add(this.buttonFindTextOther);
             this.groupBoxImportResult.Controls.Add(this.buttonFindText);
@@ -68,6 +75,36 @@
             this.groupBoxImportResult.Size = new System.Drawing.Size(1096, 434);
             this.groupBoxImportResult.TabIndex = 16;
             this.groupBoxImportResult.TabStop = false;
+            // 
+            // similarityScoreLabel
+            // 
+            this.similarityScoreLabel.Location = new System.Drawing.Point(481, 64);
+            this.similarityScoreLabel.Name = "similarityScoreLabel";
+            this.similarityScoreLabel.Size = new System.Drawing.Size(136, 23);
+            this.similarityScoreLabel.TabIndex = 38;
+            this.similarityScoreLabel.Text = "Min similarity score";
+            this.similarityScoreLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonAutoSetSyncPoints
+            // 
+            this.buttonAutoSetSyncPoints.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.buttonAutoSetSyncPoints.Location = new System.Drawing.Point(484, 112);
+            this.buttonAutoSetSyncPoints.Name = "buttonAutoSetSyncPoints";
+            this.buttonAutoSetSyncPoints.Size = new System.Drawing.Size(138, 23);
+            this.buttonAutoSetSyncPoints.TabIndex = 36;
+            this.buttonAutoSetSyncPoints.Text = "Auto set sync points";
+            this.buttonAutoSetSyncPoints.UseVisualStyleBackColor = true;
+            this.buttonAutoSetSyncPoints.Click += new System.EventHandler(this.buttonAutoSetSyncPoints_Click);
+            // 
+            // minFuzzScore
+            // 
+            this.minFuzzScore.Location = new System.Drawing.Point(482, 81);
+            this.minFuzzScore.Maximum = 100;
+            this.minFuzzScore.Minimum = 1;
+            this.minFuzzScore.Name = "minFuzzScore";
+            this.minFuzzScore.Size = new System.Drawing.Size(138, 45);
+            this.minFuzzScore.TabIndex = 37;
+            this.minFuzzScore.Value = 95;
             // 
             // labelAdjustFactor
             // 
@@ -148,11 +185,18 @@
             // listBoxSyncPoints
             // 
             this.listBoxSyncPoints.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.listBoxSyncPoints.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxSyncPoints.FormattingEnabled = true;
+            this.listBoxSyncPoints.ItemHeight = 13;
             this.listBoxSyncPoints.Location = new System.Drawing.Point(482, 214);
             this.listBoxSyncPoints.Name = "listBoxSyncPoints";
+            this.listBoxSyncPoints.SelectedIndex = -1;
+            this.listBoxSyncPoints.SelectedItem = null;
+            this.listBoxSyncPoints.SelectionMode = System.Windows.Forms.SelectionMode.One;
             this.listBoxSyncPoints.Size = new System.Drawing.Size(140, 82);
+            this.listBoxSyncPoints.Sorted = false;
             this.listBoxSyncPoints.TabIndex = 18;
+            this.listBoxSyncPoints.TopIndex = 0;
             this.listBoxSyncPoints.SelectedIndexChanged += new System.EventHandler(this.listBoxSyncPoints_SelectedIndexChanged);
             // 
             // labelNoOfSyncPoints
@@ -191,8 +235,8 @@
             // 
             this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.AllowDrop = true;
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -274,7 +318,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(600, 400);
+            this.MinimumSize = new System.Drawing.Size(600, 450);
             this.Name = "SyncPointsSync";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -285,6 +329,7 @@
             this.Resize += new System.EventHandler(this.SyncPointsSyncResize);
             this.groupBoxImportResult.ResumeLayout(false);
             this.groupBoxImportResult.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.minFuzzScore)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,5 +353,8 @@
         private System.Windows.Forms.Button buttonFindText;
         private System.Windows.Forms.Button buttonFindTextOther;
         private System.Windows.Forms.Label labelAdjustFactor;
+        private System.Windows.Forms.Button buttonAutoSetSyncPoints;
+        private System.Windows.Forms.TrackBar minFuzzScore;
+        private System.Windows.Forms.Label similarityScoreLabel;
     }
 }

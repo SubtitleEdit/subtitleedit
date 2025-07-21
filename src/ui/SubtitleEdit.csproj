@@ -288,6 +288,7 @@
     </HunspellAssemblies>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FuzzySharp" />
     <PackageReference Include="Microsoft.Net.Http" />
     <PackageReference Include="Microsoft.Win32.Registry" />
     <PackageReference Include="NAudio.Core" />
