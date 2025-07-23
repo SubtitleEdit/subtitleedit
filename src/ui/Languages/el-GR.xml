@@ -3428,6 +3428,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtendToNext>Επέκταση μέχρι τον επόμενο υπότιτλο</ExtendToNext>
     <PlaySelection>Αναπαραγωγή επιλογής</PlaySelection>
     <ShowWaveformAndSpectrogram>Εμφάνιση κυματομορφής και φασματογράμματος</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Συνδυασμός κυματομορφής και φασματογράμματος</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Εμφάνιση μόνο κυματομορφής</ShowWaveformOnly>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
     <AddShotChange>Προσθήκη αλλαγής λήψης</AddShotChange>
