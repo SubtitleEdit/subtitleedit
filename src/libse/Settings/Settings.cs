@@ -525,6 +525,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.General.ShowSpectrogram = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("CombineSpectrogramAndWaveform");
+            if (subNode != null)
+            {
+                settings.General.CombineSpectrogramAndWaveform = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
             {
@@ -8905,6 +8911,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CombineSpectrogramAndWaveform", settings.General.CombineSpectrogramAndWaveform.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 xmlWriter.WriteElementString("DefaultSaveAsFormat", settings.General.DefaultSaveAsFormat);
