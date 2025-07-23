@@ -3683,6 +3683,7 @@
             public string ExtendToNext { get; set; }
             public string PlaySelection { get; set; }
             public string ShowWaveformAndSpectrogram { get; set; }
+            public string CombineWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
             public string AddShotChange { get; set; }
