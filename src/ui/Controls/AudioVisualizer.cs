@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double _gapAtStart = -1;
 
         private SpectrogramData _spectrogram;
+        private const int SpectrogramDisplayHeight = 128;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
@@ -232,6 +233,22 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
         }
+
+        private bool _combineSpectrogramAndWaveform;
+
+        public bool CombineSpectrogramAndWaveform
+        {
+            get => _combineSpectrogramAndWaveform;
+            set
+            {
+                if (_combineSpectrogramAndWaveform != value)
+                {
+                    _combineSpectrogramAndWaveform = value;
+                    Invalidate();
+                }
+            }
+        }
+
 
         public bool AllowOverlap { get; set; }
 
@@ -565,7 +582,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var showSpectrogram = _showSpectrogram && IsSpectrogramAvailable;
                 var showSpectrogramOnly = showSpectrogram && !_showWaveform;
-                var waveformHeight = Height;
+                var waveformHeight = Height - (showSpectrogram ? SpectrogramDisplayHeight : 0);
+                if (CombineSpectrogramAndWaveform && showSpectrogram)
+                {
+                    waveformHeight = Height;
+                }
 
                 // background
                 graphics.Clear(BackgroundColor);
@@ -2399,26 +2420,35 @@ namespace Nikse.SubtitleEdit.Controls
                     imageIndex++;
                 }
 
-                var destRect = new Rectangle(0, Height - height, Width, height);
-
-                // Create ImageAttributes
-                using (ImageAttributes imageAttributes = new ImageAttributes())
+                if (CombineSpectrogramAndWaveform)
                 {
-                    // Create a color matrix for transparency
-                    float[][] colorMatrixElements = {
-                new float[] { 1, 0, 0, 0, 0 },
-                new float[] { 0, 1, 0, 0, 0 },
-                new float[] { 0, 0, 1, 0, 0 },
-                new float[] { 0, 0, 0, this.SpectrogramAlpha, 0 },
-                new float[] { 0, 0, 0, 0, 1 }
-            };
-                    ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
+                    var destRect = new Rectangle(0, Height - height, Width, height);
 
-                    // Set the color matrix in ImageAttributes
-                    imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                    // Create ImageAttributes
+                    using (ImageAttributes imageAttributes = new ImageAttributes())
+                    {
+                        // Create a color matrix for transparency
+                        float[][] colorMatrixElements =
+                        {
+                            new float[] { 1, 0, 0, 0, 0 },
+                            new float[] { 0, 1, 0, 0, 0 },
+                            new float[] { 0, 0, 1, 0, 0 },
+                            new float[] { 0, 0, 0, this.SpectrogramAlpha, 0 },
+                            new float[] { 0, 0, 0, 0, 1 }
+                        };
+                        ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
 
-                    // Draw the image with transparency
-                    graphics.DrawImage(bmpCombined, destRect, 0, 0, bmpCombined.Width, bmpCombined.Height, GraphicsUnit.Pixel, imageAttributes);
+                        // Set the color matrix in ImageAttributes
+                        imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                        // Draw the image with transparency
+                        graphics.DrawImage(bmpCombined, destRect, 0, 0, bmpCombined.Width, bmpCombined.Height, GraphicsUnit.Pixel, imageAttributes);
+                    }
+                }
+                else
+                {
+                    var displayHeight = _showWaveform ? SpectrogramDisplayHeight : Height;
+                    graphics.DrawImage(bmpCombined, new Rectangle(0, Height - displayHeight, Width, displayHeight));
                 }
             }
         }

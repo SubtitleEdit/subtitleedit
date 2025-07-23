@@ -458,6 +458,7 @@ namespace Nikse.SubtitleEdit.Forms
                 setSpectrogramWaveformOpacity(Configuration.Settings.VideoControls.SpectrogramWaveformOpacity);
                 audioVisualizer.ShowWaveform = Configuration.Settings.General.ShowWaveform;
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
+                audioVisualizer.CombineSpectrogramAndWaveform = Configuration.Settings.General.CombineSpectrogramAndWaveform;
                 //panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 //trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
 
