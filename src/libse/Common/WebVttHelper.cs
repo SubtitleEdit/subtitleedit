@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class WebVttHelper
     {
-        private static readonly Regex NameRegex = new Regex("\\([\\.a-zA-Z\\d#_-]+\\)", RegexOptions.Compiled);
-        private static readonly Regex PropertiesRegex = new Regex("{[ \\.a-zA-Z\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
+        private static readonly Regex NameRegex = new Regex("\\([\\.\\p{L}\\d#_-]+\\)", RegexOptions.Compiled);
+        private static readonly Regex PropertiesRegex = new Regex("{[ \\.\\p{L}\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
 
         public static List<WebVttStyle> GetStyles(string header)
         {
