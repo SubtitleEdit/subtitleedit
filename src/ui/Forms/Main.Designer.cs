@@ -467,6 +467,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.showWaveformAndSpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlyWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlySpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCombineWaveformAndSpectrogram = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorGuessTimeCodes = new System.Windows.Forms.ToolStripSeparator();
             this.removeShotChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addShotChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1084,7 +1085,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxEncoding.DropDownHeight = 215;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.DropDownWidth = 0;
-            this.comboBoxEncoding.Items.AddRange(new string[] {
+            this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
             "UTF-8",
@@ -3370,6 +3371,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.ChaptersColor = System.Drawing.Color.Empty;
             this.audioVisualizer.ClosenessForBorderSelection = 15;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
+            this.audioVisualizer.CombineSpectrogramAndWaveform = false;
             this.audioVisualizer.CursorColor = System.Drawing.Color.Empty;
             this.audioVisualizer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.audioVisualizer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
@@ -3487,10 +3489,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause,
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
-            this.toolStripSplitButtonPlayRate });
+            this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(261, 29);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(204, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3722,7 +3724,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoContinue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoContinue.DropDownWidth = 96;
             this.comboBoxAutoContinue.FormattingEnabled = false;
-            this.comboBoxAutoContinue.Items.AddRange(new string[] {
+            this.comboBoxAutoContinue.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -3804,7 +3806,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoRepeat.DropDownWidth = 96;
             this.comboBoxAutoRepeat.FormattingEnabled = false;
-            this.comboBoxAutoRepeat.Items.AddRange(new string[] {
+            this.comboBoxAutoRepeat.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -4507,6 +4509,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.showWaveformAndSpectrogramToolStripMenuItem,
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem,
+            this.toolStripMenuItemCombineWaveformAndSpectrogram,
             this.toolStripSeparatorGuessTimeCodes,
             this.removeShotChangeToolStripMenuItem,
             this.addShotChangeToolStripMenuItem,
@@ -4515,7 +4518,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 534);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 578);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.ContextMenuStripWaveformClosing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4652,6 +4655,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.showOnlySpectrogramToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.showOnlySpectrogramToolStripMenuItem.Text = "Show only spectrogram";
             this.showOnlySpectrogramToolStripMenuItem.Click += new System.EventHandler(this.ShowOnlySpectrogramToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemCombineWaveformAndSpectrogram
+            // 
+            this.toolStripMenuItemCombineWaveformAndSpectrogram.Name = "toolStripMenuItemCombineWaveformAndSpectrogram";
+            this.toolStripMenuItemCombineWaveformAndSpectrogram.Size = new System.Drawing.Size(274, 22);
+            this.toolStripMenuItemCombineWaveformAndSpectrogram.Text = "Combine waveform and spectrogram";
+            this.toolStripMenuItemCombineWaveformAndSpectrogram.Click += new System.EventHandler(this.toolStripMenuItemCombineWaveformAndSpectrogram_Click);
             // 
             // toolStripSeparatorGuessTimeCodes
             // 
@@ -6560,5 +6570,6 @@ namespace Nikse.SubtitleEdit.Forms
         private ToolStripMenuItem insertNewSubtitleHereToolStripMenuItem;
         private ToolStripMenuItem generaeTransparentVideoWithSubtitleToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemConvertActors;
+        private ToolStripMenuItem toolStripMenuItemCombineWaveformAndSpectrogram;
     }
 }
