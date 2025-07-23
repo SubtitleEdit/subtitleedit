@@ -26,6 +26,8 @@
    * Improve English split list - thx fraternl
    * Optimize SRT reading
    * Add Myanmar (Burmese) in translation pairs - thx TwizzyIndy
+   * Add option for combine waveform/spectrogram - thx Flitskikker
+   * Allow non-Latin letters in WebVTT style name - thx linshi963
 * FIXED:
    * Enable automatic translation via proxy - thx solidvan
    * Fix crash in undo timer - thx darnn
