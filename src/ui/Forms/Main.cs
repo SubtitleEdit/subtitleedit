@@ -2137,6 +2137,7 @@ namespace Nikse.SubtitleEdit.Forms
             extendToNextToolStripMenuItem.Text = languageWaveform.ExtendToNext;
             toolStripMenuItemWaveformPlaySelection.Text = languageWaveform.PlaySelection;
             showWaveformAndSpectrogramToolStripMenuItem.Text = languageWaveform.ShowWaveformAndSpectrogram;
+            toolStripMenuItemCombineWaveformAndSpectrogram.Text = languageWaveform.CombineWaveformAndSpectrogram;
             showOnlyWaveformToolStripMenuItem.Text = languageWaveform.ShowWaveformOnly;
             showOnlySpectrogramToolStripMenuItem.Text = languageWaveform.ShowSpectrogramOnly;
             seekSilenceToolStripMenuItem.Text = languageWaveform.SeekSilence;
@@ -31349,7 +31350,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (audioVisualizer.ShowSpectrogram && audioVisualizer.ShowWaveform)
                 {
-                    showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
+                    showWaveformAndSpectrogramToolStripMenuItem.Visible = audioVisualizer.CombineSpectrogramAndWaveform;
                     showOnlyWaveformToolStripMenuItem.Visible = true;
                     showOnlySpectrogramToolStripMenuItem.Visible = true;
                     toolStripSeparatorGuessTimeCodes.Visible = true;
@@ -31368,6 +31369,8 @@ namespace Nikse.SubtitleEdit.Forms
                     showOnlySpectrogramToolStripMenuItem.Visible = true;
                     toolStripSeparatorGuessTimeCodes.Visible = true;
                 }
+
+                toolStripMenuItemCombineWaveformAndSpectrogram.Visible = !audioVisualizer.CombineSpectrogramAndWaveform;
             }
             else
             {
@@ -31387,18 +31390,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             audioVisualizer.ShowSpectrogram = true;
             audioVisualizer.ShowWaveform = true;
+            audioVisualizer.CombineSpectrogramAndWaveform = false;
         }
 
         private void ShowOnlyWaveformToolStripMenuItemClick(object sender, EventArgs e)
         {
             audioVisualizer.ShowSpectrogram = false;
             audioVisualizer.ShowWaveform = true;
+            audioVisualizer.CombineSpectrogramAndWaveform = false;
         }
 
         private void ShowOnlySpectrogramToolStripMenuItemClick(object sender, EventArgs e)
         {
             audioVisualizer.ShowSpectrogram = true;
             audioVisualizer.ShowWaveform = false;
+            audioVisualizer.CombineSpectrogramAndWaveform = false;
+        }
+
+        private void toolStripMenuItemCombineWaveformAndSpectrogram_Click(object sender, EventArgs e)
+        {
+            audioVisualizer.ShowSpectrogram = true;
+            audioVisualizer.ShowWaveform = true;
+            audioVisualizer.CombineSpectrogramAndWaveform = true;
         }
 
         private void SplitContainerMainSplitterMoved(object sender, SplitterEventArgs e)

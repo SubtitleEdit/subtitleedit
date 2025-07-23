@@ -3446,6 +3446,7 @@ Keep changes?</KeepChangesMessage>
     <ExtendToNext>Extend to next</ExtendToNext>
     <PlaySelection>Play selection</PlaySelection>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Combine waveform and spectrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
     <AddShotChange>Add shot change</AddShotChange>

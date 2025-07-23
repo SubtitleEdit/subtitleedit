@@ -9424,6 +9424,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Waveform/ShowWaveformAndSpectrogram":
                     language.Waveform.ShowWaveformAndSpectrogram = reader.Value;
                     break;
+                case "Waveform/CombineWaveformAndSpectrogram":
+                    language.Waveform.CombineWaveformAndSpectrogram = reader.Value;
+                    break;
                 case "Waveform/ShowWaveformOnly":
                     language.Waveform.ShowWaveformOnly = reader.Value;
                     break;
