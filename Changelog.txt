@@ -47,6 +47,7 @@
    * Fix for VisualSync start/end index when < 4 lines - thx Leif
    * Fix extra "]" character in iTunes-timed-text - thx Silvia
    * No warning loading SRT with only numbers - thx timminator
+   * Fix freeze loading some files names - thx Flitskikker
 
 
 Subtitle Edit Changelog
