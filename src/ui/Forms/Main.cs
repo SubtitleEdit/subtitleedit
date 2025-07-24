@@ -24264,10 +24264,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool TryToFindAndOpenVideoFile(string fileNameNoExtension)
         {
+            return TryToFindAndOpenVideoFileInner(fileNameNoExtension, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+        }
+
+        private bool TryToFindAndOpenVideoFileInner(string fileNameNoExtension, HashSet<string> videoFileNamesTried)
+        {
             if (string.IsNullOrEmpty(fileNameNoExtension))
             {
                 return false;
+            }            
+
+            if (videoFileNamesTried.Contains(fileNameNoExtension))
+            {
+                return false; 
             }
+            videoFileNamesTried.Add(fileNameNoExtension);
 
             string movieFileName = null;
 
@@ -24299,13 +24310,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 var index = fileNameNoExtension.LastIndexOf('.');
-                if (index > 0 && TryToFindAndOpenVideoFile(fileNameNoExtension.Remove(index)))
+                if (index > 0 && TryToFindAndOpenVideoFileInner(fileNameNoExtension.Remove(index), videoFileNamesTried))
                 {
                     return true;
                 }
 
                 index = fileNameNoExtension.LastIndexOf('_');
-                if (index > 0 && TryToFindAndOpenVideoFile(fileNameNoExtension.Remove(index)))
+                if (index > 0 && TryToFindAndOpenVideoFileInner(fileNameNoExtension.Remove(index), videoFileNamesTried))
                 {
                     return true;
                 }
@@ -24314,7 +24325,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fallbackName = Utilities.GetLenientPathAndFileNameWithoutExtension(fileNameNoExtension);
             if (!string.Equals(fileNameNoExtension, fallbackName, StringComparison.OrdinalIgnoreCase))
             {
-                return TryToFindAndOpenVideoFile(fallbackName);
+                return TryToFindAndOpenVideoFileInner(fallbackName, videoFileNamesTried);
             }
 
             return false;

@@ -204,6 +204,7 @@
             // textBoxRoot
             // 
             this.textBoxRoot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxRoot.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxRoot.Location = new System.Drawing.Point(3, 16);
             this.textBoxRoot.Multiline = true;
             this.textBoxRoot.Name = "textBoxRoot";
@@ -265,7 +266,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(724, 3);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(139, 21);
+            this.buttonImport.Size = new System.Drawing.Size(139, 23);
             this.buttonImport.TabIndex = 7;
             this.buttonImport.Text = "Import TextST...";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -325,6 +326,19 @@
             // 
             // numericUpDownRegionStyleFontOutlineThickness
             // 
+            this.numericUpDownRegionStyleFontOutlineThickness.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontOutlineThickness.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontOutlineThickness.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontOutlineThickness.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontOutlineThickness.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontOutlineThickness.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontOutlineThickness.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontOutlineThickness.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontOutlineThickness.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontOutlineThickness.Location = new System.Drawing.Point(143, 516);
             this.numericUpDownRegionStyleFontOutlineThickness.Maximum = new decimal(new int[] {
             3,
@@ -339,6 +353,8 @@
             this.numericUpDownRegionStyleFontOutlineThickness.Name = "numericUpDownRegionStyleFontOutlineThickness";
             this.numericUpDownRegionStyleFontOutlineThickness.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontOutlineThickness.TabIndex = 41;
+            this.numericUpDownRegionStyleFontOutlineThickness.TabStop = false;
+            this.numericUpDownRegionStyleFontOutlineThickness.ThousandsSeparator = false;
             this.numericUpDownRegionStyleFontOutlineThickness.Value = new decimal(new int[] {
             1,
             0,
@@ -357,15 +373,35 @@
             // 
             // numericUpDownRegionStyleFontOutlinePaletteId
             // 
+            this.numericUpDownRegionStyleFontOutlinePaletteId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontOutlinePaletteId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontOutlinePaletteId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontOutlinePaletteId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontOutlinePaletteId.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontOutlinePaletteId.Location = new System.Drawing.Point(143, 490);
             this.numericUpDownRegionStyleFontOutlinePaletteId.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleFontOutlinePaletteId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontOutlinePaletteId.Name = "numericUpDownRegionStyleFontOutlinePaletteId";
             this.numericUpDownRegionStyleFontOutlinePaletteId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontOutlinePaletteId.TabIndex = 39;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.TabStop = false;
+            this.numericUpDownRegionStyleFontOutlinePaletteId.ThousandsSeparator = false;
             this.numericUpDownRegionStyleFontOutlinePaletteId.Value = new decimal(new int[] {
             8,
             0,
@@ -384,15 +420,40 @@
             // 
             // numericUpDownRegionStyleFontPaletteId
             // 
+            this.numericUpDownRegionStyleFontPaletteId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontPaletteId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontPaletteId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontPaletteId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontPaletteId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontPaletteId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontPaletteId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontPaletteId.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontPaletteId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontPaletteId.Location = new System.Drawing.Point(143, 464);
             this.numericUpDownRegionStyleFontPaletteId.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleFontPaletteId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontPaletteId.Name = "numericUpDownRegionStyleFontPaletteId";
             this.numericUpDownRegionStyleFontPaletteId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontPaletteId.TabIndex = 37;
+            this.numericUpDownRegionStyleFontPaletteId.TabStop = false;
+            this.numericUpDownRegionStyleFontPaletteId.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleFontPaletteId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontPaletteId.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleFontPaletteId_ValueChanged);
             // 
             // label39
@@ -406,15 +467,40 @@
             // 
             // numericUpDownRegionStyleFontStyle
             // 
+            this.numericUpDownRegionStyleFontStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontStyle.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontStyle.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontStyle.Location = new System.Drawing.Point(143, 412);
             this.numericUpDownRegionStyleFontStyle.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleFontStyle.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontStyle.Name = "numericUpDownRegionStyleFontStyle";
             this.numericUpDownRegionStyleFontStyle.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontStyle.TabIndex = 35;
+            this.numericUpDownRegionStyleFontStyle.TabStop = false;
+            this.numericUpDownRegionStyleFontStyle.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleFontStyle.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontStyle.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleFontStyle_ValueChanged);
             // 
             // label38
@@ -428,15 +514,40 @@
             // 
             // numericUpDownRegionStyleFontIdRef
             // 
+            this.numericUpDownRegionStyleFontIdRef.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontIdRef.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontIdRef.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontIdRef.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontIdRef.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontIdRef.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontIdRef.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontIdRef.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontIdRef.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontIdRef.Location = new System.Drawing.Point(143, 386);
             this.numericUpDownRegionStyleFontIdRef.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleFontIdRef.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontIdRef.Name = "numericUpDownRegionStyleFontIdRef";
             this.numericUpDownRegionStyleFontIdRef.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontIdRef.TabIndex = 33;
+            this.numericUpDownRegionStyleFontIdRef.TabStop = false;
+            this.numericUpDownRegionStyleFontIdRef.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleFontIdRef.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontIdRef.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleFontIdRef_ValueChanged);
             // 
             // label37
@@ -450,15 +561,40 @@
             // 
             // numericUpDownRegionStyleLineSpace
             // 
+            this.numericUpDownRegionStyleLineSpace.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleLineSpace.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleLineSpace.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleLineSpace.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleLineSpace.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleLineSpace.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleLineSpace.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleLineSpace.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleLineSpace.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleLineSpace.Location = new System.Drawing.Point(143, 360);
             this.numericUpDownRegionStyleLineSpace.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleLineSpace.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleLineSpace.Name = "numericUpDownRegionStyleLineSpace";
             this.numericUpDownRegionStyleLineSpace.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleLineSpace.TabIndex = 31;
+            this.numericUpDownRegionStyleLineSpace.TabStop = false;
+            this.numericUpDownRegionStyleLineSpace.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleLineSpace.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleLineSpace.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleLineSpace_ValueChanged);
             // 
             // label33
@@ -472,15 +608,40 @@
             // 
             // numericUpDownRegionStyleTextVerAlign
             // 
+            this.numericUpDownRegionStyleTextVerAlign.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTextVerAlign.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTextVerAlign.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTextVerAlign.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTextVerAlign.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTextVerAlign.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTextVerAlign.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTextVerAlign.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTextVerAlign.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextVerAlign.Location = new System.Drawing.Point(143, 334);
             this.numericUpDownRegionStyleTextVerAlign.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTextVerAlign.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextVerAlign.Name = "numericUpDownRegionStyleTextVerAlign";
             this.numericUpDownRegionStyleTextVerAlign.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTextVerAlign.TabIndex = 29;
+            this.numericUpDownRegionStyleTextVerAlign.TabStop = false;
+            this.numericUpDownRegionStyleTextVerAlign.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTextVerAlign.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextVerAlign.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTextVerAlign_ValueChanged);
             // 
             // label34
@@ -494,15 +655,40 @@
             // 
             // numericUpDownRegionStyleTextHorAlign
             // 
+            this.numericUpDownRegionStyleTextHorAlign.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTextHorAlign.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTextHorAlign.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTextHorAlign.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTextHorAlign.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTextHorAlign.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTextHorAlign.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTextHorAlign.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTextHorAlign.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextHorAlign.Location = new System.Drawing.Point(143, 308);
             this.numericUpDownRegionStyleTextHorAlign.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTextHorAlign.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextHorAlign.Name = "numericUpDownRegionStyleTextHorAlign";
             this.numericUpDownRegionStyleTextHorAlign.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTextHorAlign.TabIndex = 27;
+            this.numericUpDownRegionStyleTextHorAlign.TabStop = false;
+            this.numericUpDownRegionStyleTextHorAlign.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTextHorAlign.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextHorAlign.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTextHorAlign_ValueChanged);
             // 
             // label35
@@ -516,15 +702,40 @@
             // 
             // numericUpDownRegionStyleTextFlow
             // 
+            this.numericUpDownRegionStyleTextFlow.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTextFlow.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTextFlow.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTextFlow.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTextFlow.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTextFlow.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTextFlow.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTextFlow.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTextFlow.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextFlow.Location = new System.Drawing.Point(143, 282);
             this.numericUpDownRegionStyleTextFlow.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTextFlow.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextFlow.Name = "numericUpDownRegionStyleTextFlow";
             this.numericUpDownRegionStyleTextFlow.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTextFlow.TabIndex = 25;
+            this.numericUpDownRegionStyleTextFlow.TabStop = false;
+            this.numericUpDownRegionStyleTextFlow.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTextFlow.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTextFlow.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTextFlow_ValueChanged);
             // 
             // label36
@@ -538,15 +749,40 @@
             // 
             // numericUpDownRegionStyleTBHeight
             // 
+            this.numericUpDownRegionStyleTBHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTBHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTBHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTBHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTBHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTBHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTBHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTBHeight.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTBHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHeight.Location = new System.Drawing.Point(143, 256);
             this.numericUpDownRegionStyleTBHeight.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTBHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHeight.Name = "numericUpDownRegionStyleTBHeight";
             this.numericUpDownRegionStyleTBHeight.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTBHeight.TabIndex = 23;
+            this.numericUpDownRegionStyleTBHeight.TabStop = false;
+            this.numericUpDownRegionStyleTBHeight.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTBHeight.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHeight.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTBHeight_ValueChanged);
             // 
             // label17
@@ -560,15 +796,40 @@
             // 
             // numericUpDownRegionStyleTBWidth
             // 
+            this.numericUpDownRegionStyleTBWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTBWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTBWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTBWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTBWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTBWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTBWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTBWidth.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTBWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBWidth.Location = new System.Drawing.Point(143, 230);
             this.numericUpDownRegionStyleTBWidth.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTBWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBWidth.Name = "numericUpDownRegionStyleTBWidth";
             this.numericUpDownRegionStyleTBWidth.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTBWidth.TabIndex = 21;
+            this.numericUpDownRegionStyleTBWidth.TabStop = false;
+            this.numericUpDownRegionStyleTBWidth.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTBWidth.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBWidth.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTBWidth_ValueChanged);
             // 
             // label30
@@ -582,15 +843,40 @@
             // 
             // numericUpDownRegionStyleTBVerPos
             // 
+            this.numericUpDownRegionStyleTBVerPos.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTBVerPos.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTBVerPos.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTBVerPos.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTBVerPos.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTBVerPos.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTBVerPos.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTBVerPos.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTBVerPos.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBVerPos.Location = new System.Drawing.Point(143, 204);
             this.numericUpDownRegionStyleTBVerPos.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTBVerPos.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBVerPos.Name = "numericUpDownRegionStyleTBVerPos";
             this.numericUpDownRegionStyleTBVerPos.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTBVerPos.TabIndex = 19;
+            this.numericUpDownRegionStyleTBVerPos.TabStop = false;
+            this.numericUpDownRegionStyleTBVerPos.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTBVerPos.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBVerPos.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTBVerPos_ValueChanged);
             // 
             // label31
@@ -604,15 +890,40 @@
             // 
             // numericUpDownRegionStyleTBHorPos
             // 
+            this.numericUpDownRegionStyleTBHorPos.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleTBHorPos.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleTBHorPos.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleTBHorPos.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleTBHorPos.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleTBHorPos.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleTBHorPos.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleTBHorPos.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleTBHorPos.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHorPos.Location = new System.Drawing.Point(143, 178);
             this.numericUpDownRegionStyleTBHorPos.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleTBHorPos.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHorPos.Name = "numericUpDownRegionStyleTBHorPos";
             this.numericUpDownRegionStyleTBHorPos.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleTBHorPos.TabIndex = 17;
+            this.numericUpDownRegionStyleTBHorPos.TabStop = false;
+            this.numericUpDownRegionStyleTBHorPos.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleTBHorPos.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleTBHorPos.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleTBHorPos_ValueChanged);
             // 
             // label32
@@ -626,6 +937,19 @@
             // 
             // numericUpDownRegionStyleFontSize
             // 
+            this.numericUpDownRegionStyleFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleFontSize.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleFontSize.Location = new System.Drawing.Point(143, 438);
             this.numericUpDownRegionStyleFontSize.Maximum = new decimal(new int[] {
             144,
@@ -640,6 +964,8 @@
             this.numericUpDownRegionStyleFontSize.Name = "numericUpDownRegionStyleFontSize";
             this.numericUpDownRegionStyleFontSize.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleFontSize.TabIndex = 15;
+            this.numericUpDownRegionStyleFontSize.TabStop = false;
+            this.numericUpDownRegionStyleFontSize.ThousandsSeparator = false;
             this.numericUpDownRegionStyleFontSize.Value = new decimal(new int[] {
             8,
             0,
@@ -658,15 +984,40 @@
             // 
             // numericUpDownRegionStylePaletteEntryId
             // 
+            this.numericUpDownRegionStylePaletteEntryId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStylePaletteEntryId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStylePaletteEntryId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStylePaletteEntryId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStylePaletteEntryId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStylePaletteEntryId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStylePaletteEntryId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStylePaletteEntryId.DecimalPlaces = 0;
+            this.numericUpDownRegionStylePaletteEntryId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStylePaletteEntryId.Location = new System.Drawing.Point(143, 152);
             this.numericUpDownRegionStylePaletteEntryId.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownRegionStylePaletteEntryId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStylePaletteEntryId.Name = "numericUpDownRegionStylePaletteEntryId";
             this.numericUpDownRegionStylePaletteEntryId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStylePaletteEntryId.TabIndex = 13;
+            this.numericUpDownRegionStylePaletteEntryId.TabStop = false;
+            this.numericUpDownRegionStylePaletteEntryId.ThousandsSeparator = false;
+            this.numericUpDownRegionStylePaletteEntryId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStylePaletteEntryId.ValueChanged += new System.EventHandler(this.numericUpDownRegionStylePaletteEntryId_ValueChanged);
             // 
             // label11
@@ -680,15 +1031,40 @@
             // 
             // numericUpDownRegionStyleHeight
             // 
+            this.numericUpDownRegionStyleHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleHeight.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHeight.Location = new System.Drawing.Point(143, 126);
             this.numericUpDownRegionStyleHeight.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHeight.Name = "numericUpDownRegionStyleHeight";
             this.numericUpDownRegionStyleHeight.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleHeight.TabIndex = 11;
+            this.numericUpDownRegionStyleHeight.TabStop = false;
+            this.numericUpDownRegionStyleHeight.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleHeight.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHeight.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleHeight_ValueChanged);
             // 
             // label9
@@ -702,15 +1078,40 @@
             // 
             // numericUpDownRegionStyleWidth
             // 
+            this.numericUpDownRegionStyleWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleWidth.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleWidth.Location = new System.Drawing.Point(143, 100);
             this.numericUpDownRegionStyleWidth.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleWidth.Name = "numericUpDownRegionStyleWidth";
             this.numericUpDownRegionStyleWidth.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleWidth.TabIndex = 9;
+            this.numericUpDownRegionStyleWidth.TabStop = false;
+            this.numericUpDownRegionStyleWidth.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleWidth.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleWidth.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleWidth_ValueChanged);
             // 
             // label10
@@ -724,15 +1125,40 @@
             // 
             // numericUpDownRegionStyleVPos
             // 
+            this.numericUpDownRegionStyleVPos.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleVPos.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleVPos.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleVPos.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleVPos.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleVPos.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleVPos.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleVPos.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleVPos.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleVPos.Location = new System.Drawing.Point(143, 74);
             this.numericUpDownRegionStyleVPos.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleVPos.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleVPos.Name = "numericUpDownRegionStyleVPos";
             this.numericUpDownRegionStyleVPos.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleVPos.TabIndex = 7;
+            this.numericUpDownRegionStyleVPos.TabStop = false;
+            this.numericUpDownRegionStyleVPos.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleVPos.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleVPos.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleVPos_ValueChanged);
             // 
             // label8
@@ -746,15 +1172,40 @@
             // 
             // numericUpDownRegionStyleHPos
             // 
+            this.numericUpDownRegionStyleHPos.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleHPos.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleHPos.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleHPos.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleHPos.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleHPos.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleHPos.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleHPos.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleHPos.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHPos.Location = new System.Drawing.Point(143, 48);
             this.numericUpDownRegionStyleHPos.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleHPos.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHPos.Name = "numericUpDownRegionStyleHPos";
             this.numericUpDownRegionStyleHPos.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleHPos.TabIndex = 5;
+            this.numericUpDownRegionStyleHPos.TabStop = false;
+            this.numericUpDownRegionStyleHPos.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleHPos.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleHPos.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleHPos_ValueChanged);
             // 
             // label7
@@ -768,15 +1219,40 @@
             // 
             // numericUpDownRegionStyleId
             // 
+            this.numericUpDownRegionStyleId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownRegionStyleId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownRegionStyleId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownRegionStyleId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownRegionStyleId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownRegionStyleId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownRegionStyleId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownRegionStyleId.DecimalPlaces = 0;
+            this.numericUpDownRegionStyleId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleId.Location = new System.Drawing.Point(143, 22);
             this.numericUpDownRegionStyleId.Maximum = new decimal(new int[] {
             59,
             0,
             0,
             0});
+            this.numericUpDownRegionStyleId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleId.Name = "numericUpDownRegionStyleId";
             this.numericUpDownRegionStyleId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownRegionStyleId.TabIndex = 3;
+            this.numericUpDownRegionStyleId.TabStop = false;
+            this.numericUpDownRegionStyleId.ThousandsSeparator = false;
+            this.numericUpDownRegionStyleId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownRegionStyleId.ValueChanged += new System.EventHandler(this.numericUpDownRegionStyleId_ValueChanged);
             // 
             // label6
@@ -834,7 +1310,7 @@
             // 
             this.buttonColor.Location = new System.Drawing.Point(10, 173);
             this.buttonColor.Name = "buttonColor";
-            this.buttonColor.Size = new System.Drawing.Size(121, 21);
+            this.buttonColor.Size = new System.Drawing.Size(121, 23);
             this.buttonColor.TabIndex = 13;
             this.buttonColor.Text = "Pick color";
             this.buttonColor.UseVisualStyleBackColor = true;
@@ -842,15 +1318,40 @@
             // 
             // numericUpDownPaletteOpacity
             // 
+            this.numericUpDownPaletteOpacity.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPaletteOpacity.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPaletteOpacity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPaletteOpacity.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPaletteOpacity.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPaletteOpacity.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPaletteOpacity.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPaletteOpacity.DecimalPlaces = 0;
+            this.numericUpDownPaletteOpacity.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteOpacity.Location = new System.Drawing.Point(82, 131);
             this.numericUpDownPaletteOpacity.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
+            this.numericUpDownPaletteOpacity.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteOpacity.Name = "numericUpDownPaletteOpacity";
             this.numericUpDownPaletteOpacity.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownPaletteOpacity.TabIndex = 9;
+            this.numericUpDownPaletteOpacity.TabStop = false;
+            this.numericUpDownPaletteOpacity.ThousandsSeparator = false;
+            this.numericUpDownPaletteOpacity.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteOpacity.ValueChanged += new System.EventHandler(this.numericUpDownPaletteOpacity_ValueChanged);
             // 
             // label5
@@ -864,15 +1365,40 @@
             // 
             // numericUpDownPaletteCb
             // 
+            this.numericUpDownPaletteCb.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPaletteCb.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPaletteCb.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPaletteCb.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPaletteCb.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPaletteCb.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPaletteCb.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPaletteCb.DecimalPlaces = 0;
+            this.numericUpDownPaletteCb.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteCb.Location = new System.Drawing.Point(82, 105);
             this.numericUpDownPaletteCb.Maximum = new decimal(new int[] {
             240,
             0,
             0,
             0});
+            this.numericUpDownPaletteCb.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteCb.Name = "numericUpDownPaletteCb";
             this.numericUpDownPaletteCb.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownPaletteCb.TabIndex = 7;
+            this.numericUpDownPaletteCb.TabStop = false;
+            this.numericUpDownPaletteCb.ThousandsSeparator = false;
+            this.numericUpDownPaletteCb.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteCb.ValueChanged += new System.EventHandler(this.numericUpDownPaletteCb_ValueChanged);
             // 
             // label4
@@ -886,6 +1412,19 @@
             // 
             // numericUpDownPaletteCr
             // 
+            this.numericUpDownPaletteCr.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPaletteCr.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPaletteCr.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPaletteCr.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPaletteCr.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPaletteCr.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPaletteCr.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPaletteCr.DecimalPlaces = 0;
+            this.numericUpDownPaletteCr.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteCr.Location = new System.Drawing.Point(82, 79);
             this.numericUpDownPaletteCr.Maximum = new decimal(new int[] {
             240,
@@ -900,6 +1439,8 @@
             this.numericUpDownPaletteCr.Name = "numericUpDownPaletteCr";
             this.numericUpDownPaletteCr.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownPaletteCr.TabIndex = 5;
+            this.numericUpDownPaletteCr.TabStop = false;
+            this.numericUpDownPaletteCr.ThousandsSeparator = false;
             this.numericUpDownPaletteCr.Value = new decimal(new int[] {
             16,
             0,
@@ -918,6 +1459,19 @@
             // 
             // numericUpDownPaletteY
             // 
+            this.numericUpDownPaletteY.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPaletteY.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPaletteY.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPaletteY.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPaletteY.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPaletteY.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPaletteY.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPaletteY.DecimalPlaces = 0;
+            this.numericUpDownPaletteY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteY.Location = new System.Drawing.Point(82, 53);
             this.numericUpDownPaletteY.Maximum = new decimal(new int[] {
             235,
@@ -932,6 +1486,8 @@
             this.numericUpDownPaletteY.Name = "numericUpDownPaletteY";
             this.numericUpDownPaletteY.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownPaletteY.TabIndex = 3;
+            this.numericUpDownPaletteY.TabStop = false;
+            this.numericUpDownPaletteY.ThousandsSeparator = false;
             this.numericUpDownPaletteY.Value = new decimal(new int[] {
             16,
             0,
@@ -950,15 +1506,40 @@
             // 
             // numericUpDownPaletteEntry
             // 
+            this.numericUpDownPaletteEntry.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPaletteEntry.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPaletteEntry.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPaletteEntry.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPaletteEntry.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPaletteEntry.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPaletteEntry.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPaletteEntry.DecimalPlaces = 0;
+            this.numericUpDownPaletteEntry.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteEntry.Location = new System.Drawing.Point(82, 27);
             this.numericUpDownPaletteEntry.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownPaletteEntry.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteEntry.Name = "numericUpDownPaletteEntry";
             this.numericUpDownPaletteEntry.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownPaletteEntry.TabIndex = 1;
+            this.numericUpDownPaletteEntry.TabStop = false;
+            this.numericUpDownPaletteEntry.ThousandsSeparator = false;
+            this.numericUpDownPaletteEntry.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPaletteEntry.ValueChanged += new System.EventHandler(this.numericUpDownPaletteEntry_ValueChanged);
             // 
             // label1
@@ -1018,15 +1599,40 @@
             // 
             // numericUpDownUserStyleLineSpaceDelta
             // 
+            this.numericUpDownUserStyleLineSpaceDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleLineSpaceDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleLineSpaceDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleLineSpaceDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleLineSpaceDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleLineSpaceDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleLineSpaceDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleLineSpaceDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleLineSpaceDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceDelta.Location = new System.Drawing.Point(184, 438);
             this.numericUpDownUserStyleLineSpaceDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleLineSpaceDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceDelta.Name = "numericUpDownUserStyleLineSpaceDelta";
             this.numericUpDownUserStyleLineSpaceDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleLineSpaceDelta.TabIndex = 47;
+            this.numericUpDownUserStyleLineSpaceDelta.TabStop = false;
+            this.numericUpDownUserStyleLineSpaceDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleLineSpaceDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleLineSpaceDelta_ValueChanged);
             // 
             // label28
@@ -1040,15 +1646,40 @@
             // 
             // numericUpDownUserStyleLineSpaceIncDec
             // 
+            this.numericUpDownUserStyleLineSpaceIncDec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleLineSpaceIncDec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleLineSpaceIncDec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleLineSpaceIncDec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleLineSpaceIncDec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleLineSpaceIncDec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleLineSpaceIncDec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleLineSpaceIncDec.DecimalPlaces = 0;
+            this.numericUpDownUserStyleLineSpaceIncDec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceIncDec.Location = new System.Drawing.Point(184, 412);
             this.numericUpDownUserStyleLineSpaceIncDec.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownUserStyleLineSpaceIncDec.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceIncDec.Name = "numericUpDownUserStyleLineSpaceIncDec";
             this.numericUpDownUserStyleLineSpaceIncDec.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleLineSpaceIncDec.TabIndex = 45;
+            this.numericUpDownUserStyleLineSpaceIncDec.TabStop = false;
+            this.numericUpDownUserStyleLineSpaceIncDec.ThousandsSeparator = false;
+            this.numericUpDownUserStyleLineSpaceIncDec.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleLineSpaceIncDec.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleLineSpaceIncDec_ValueChanged);
             // 
             // label29
@@ -1062,15 +1693,40 @@
             // 
             // numericUpDownUserStyleTBHeightDelta
             // 
+            this.numericUpDownUserStyleTBHeightDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBHeightDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBHeightDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBHeightDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBHeightDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBHeightDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBHeightDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBHeightDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBHeightDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightDelta.Location = new System.Drawing.Point(184, 386);
             this.numericUpDownUserStyleTBHeightDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBHeightDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightDelta.Name = "numericUpDownUserStyleTBHeightDelta";
             this.numericUpDownUserStyleTBHeightDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBHeightDelta.TabIndex = 43;
+            this.numericUpDownUserStyleTBHeightDelta.TabStop = false;
+            this.numericUpDownUserStyleTBHeightDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBHeightDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBHeightDelta_ValueChanged);
             // 
             // label27
@@ -1084,15 +1740,40 @@
             // 
             // numericUpDownUserStyleTBHeightIncDec
             // 
+            this.numericUpDownUserStyleTBHeightIncDec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBHeightIncDec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBHeightIncDec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBHeightIncDec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBHeightIncDec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBHeightIncDec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBHeightIncDec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBHeightIncDec.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBHeightIncDec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightIncDec.Location = new System.Drawing.Point(184, 360);
             this.numericUpDownUserStyleTBHeightIncDec.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBHeightIncDec.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightIncDec.Name = "numericUpDownUserStyleTBHeightIncDec";
             this.numericUpDownUserStyleTBHeightIncDec.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBHeightIncDec.TabIndex = 41;
+            this.numericUpDownUserStyleTBHeightIncDec.TabStop = false;
+            this.numericUpDownUserStyleTBHeightIncDec.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBHeightIncDec.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHeightIncDec.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBHeightIncDec_ValueChanged);
             // 
             // label25
@@ -1106,15 +1787,40 @@
             // 
             // numericUpDownUserStyleTBWidthDelta
             // 
+            this.numericUpDownUserStyleTBWidthDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBWidthDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBWidthDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBWidthDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBWidthDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBWidthDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBWidthDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBWidthDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBWidthDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthDelta.Location = new System.Drawing.Point(184, 334);
             this.numericUpDownUserStyleTBWidthDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBWidthDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthDelta.Name = "numericUpDownUserStyleTBWidthDelta";
             this.numericUpDownUserStyleTBWidthDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBWidthDelta.TabIndex = 39;
+            this.numericUpDownUserStyleTBWidthDelta.TabStop = false;
+            this.numericUpDownUserStyleTBWidthDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBWidthDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBWidthDelta_ValueChanged);
             // 
             // label26
@@ -1128,15 +1834,40 @@
             // 
             // numericUpDownUserStyleTBWidthIncDec
             // 
+            this.numericUpDownUserStyleTBWidthIncDec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBWidthIncDec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBWidthIncDec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBWidthIncDec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBWidthIncDec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBWidthIncDec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBWidthIncDec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBWidthIncDec.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBWidthIncDec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthIncDec.Location = new System.Drawing.Point(184, 308);
             this.numericUpDownUserStyleTBWidthIncDec.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBWidthIncDec.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthIncDec.Name = "numericUpDownUserStyleTBWidthIncDec";
             this.numericUpDownUserStyleTBWidthIncDec.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBWidthIncDec.TabIndex = 37;
+            this.numericUpDownUserStyleTBWidthIncDec.TabStop = false;
+            this.numericUpDownUserStyleTBWidthIncDec.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBWidthIncDec.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBWidthIncDec.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBWidthIncDec_ValueChanged);
             // 
             // label19
@@ -1150,15 +1881,40 @@
             // 
             // numericUpDownUserStyleTBVerPosDelta
             // 
+            this.numericUpDownUserStyleTBVerPosDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBVerPosDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBVerPosDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBVerPosDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBVerPosDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBVerPosDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBVerPosDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBVerPosDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBVerPosDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDelta.Location = new System.Drawing.Point(184, 282);
             this.numericUpDownUserStyleTBVerPosDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBVerPosDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDelta.Name = "numericUpDownUserStyleTBVerPosDelta";
             this.numericUpDownUserStyleTBVerPosDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBVerPosDelta.TabIndex = 35;
+            this.numericUpDownUserStyleTBVerPosDelta.TabStop = false;
+            this.numericUpDownUserStyleTBVerPosDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBVerPosDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBVerPosDelta_ValueChanged);
             // 
             // label20
@@ -1172,15 +1928,40 @@
             // 
             // numericUpDownUserStyleTBVerPosDir
             // 
+            this.numericUpDownUserStyleTBVerPosDir.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBVerPosDir.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBVerPosDir.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBVerPosDir.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBVerPosDir.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBVerPosDir.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBVerPosDir.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBVerPosDir.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBVerPosDir.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDir.Location = new System.Drawing.Point(184, 256);
             this.numericUpDownUserStyleTBVerPosDir.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBVerPosDir.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDir.Name = "numericUpDownUserStyleTBVerPosDir";
             this.numericUpDownUserStyleTBVerPosDir.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBVerPosDir.TabIndex = 33;
+            this.numericUpDownUserStyleTBVerPosDir.TabStop = false;
+            this.numericUpDownUserStyleTBVerPosDir.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBVerPosDir.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBVerPosDir.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBVerPosDir_ValueChanged);
             // 
             // label21
@@ -1194,15 +1975,40 @@
             // 
             // numericUpDownUserStyleTBHorPosDelta
             // 
+            this.numericUpDownUserStyleTBHorPosDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBHorPosDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBHorPosDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBHorPosDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBHorPosDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBHorPosDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBHorPosDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBHorPosDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBHorPosDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDelta.Location = new System.Drawing.Point(184, 230);
             this.numericUpDownUserStyleTBHorPosDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBHorPosDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDelta.Name = "numericUpDownUserStyleTBHorPosDelta";
             this.numericUpDownUserStyleTBHorPosDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBHorPosDelta.TabIndex = 31;
+            this.numericUpDownUserStyleTBHorPosDelta.TabStop = false;
+            this.numericUpDownUserStyleTBHorPosDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBHorPosDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBHorPosDelta_ValueChanged);
             // 
             // label22
@@ -1216,15 +2022,40 @@
             // 
             // numericUpDownUserStyleTBHorPosDir
             // 
+            this.numericUpDownUserStyleTBHorPosDir.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleTBHorPosDir.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleTBHorPosDir.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleTBHorPosDir.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleTBHorPosDir.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleTBHorPosDir.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleTBHorPosDir.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleTBHorPosDir.DecimalPlaces = 0;
+            this.numericUpDownUserStyleTBHorPosDir.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDir.Location = new System.Drawing.Point(184, 204);
             this.numericUpDownUserStyleTBHorPosDir.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownUserStyleTBHorPosDir.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDir.Name = "numericUpDownUserStyleTBHorPosDir";
             this.numericUpDownUserStyleTBHorPosDir.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleTBHorPosDir.TabIndex = 29;
+            this.numericUpDownUserStyleTBHorPosDir.TabStop = false;
+            this.numericUpDownUserStyleTBHorPosDir.ThousandsSeparator = false;
+            this.numericUpDownUserStyleTBHorPosDir.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleTBHorPosDir.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleTBHorPosDir_ValueChanged);
             // 
             // label23
@@ -1238,15 +2069,40 @@
             // 
             // numericUpDownUserStyleFontSizeDelta
             // 
+            this.numericUpDownUserStyleFontSizeDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleFontSizeDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleFontSizeDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleFontSizeDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleFontSizeDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleFontSizeDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleFontSizeDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleFontSizeDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleFontSizeDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeDelta.Location = new System.Drawing.Point(184, 178);
             this.numericUpDownUserStyleFontSizeDelta.Maximum = new decimal(new int[] {
             59,
             0,
             0,
             0});
+            this.numericUpDownUserStyleFontSizeDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeDelta.Name = "numericUpDownUserStyleFontSizeDelta";
             this.numericUpDownUserStyleFontSizeDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleFontSizeDelta.TabIndex = 27;
+            this.numericUpDownUserStyleFontSizeDelta.TabStop = false;
+            this.numericUpDownUserStyleFontSizeDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleFontSizeDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleFontSizeDelta_ValueChanged);
             // 
             // label24
@@ -1260,15 +2116,40 @@
             // 
             // numericUpDownUserStyleFontSizeIncDec
             // 
+            this.numericUpDownUserStyleFontSizeIncDec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleFontSizeIncDec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleFontSizeIncDec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleFontSizeIncDec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleFontSizeIncDec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleFontSizeIncDec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleFontSizeIncDec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleFontSizeIncDec.DecimalPlaces = 0;
+            this.numericUpDownUserStyleFontSizeIncDec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeIncDec.Location = new System.Drawing.Point(184, 152);
             this.numericUpDownUserStyleFontSizeIncDec.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownUserStyleFontSizeIncDec.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeIncDec.Name = "numericUpDownUserStyleFontSizeIncDec";
             this.numericUpDownUserStyleFontSizeIncDec.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleFontSizeIncDec.TabIndex = 25;
+            this.numericUpDownUserStyleFontSizeIncDec.TabStop = false;
+            this.numericUpDownUserStyleFontSizeIncDec.ThousandsSeparator = false;
+            this.numericUpDownUserStyleFontSizeIncDec.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleFontSizeIncDec.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleFontSizeIncDec_ValueChanged);
             // 
             // label13
@@ -1282,15 +2163,40 @@
             // 
             // numericUpDownUserStyleVerPosDelta
             // 
+            this.numericUpDownUserStyleVerPosDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleVerPosDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleVerPosDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleVerPosDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleVerPosDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleVerPosDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleVerPosDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleVerPosDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleVerPosDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDelta.Location = new System.Drawing.Point(184, 126);
             this.numericUpDownUserStyleVerPosDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleVerPosDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDelta.Name = "numericUpDownUserStyleVerPosDelta";
             this.numericUpDownUserStyleVerPosDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleVerPosDelta.TabIndex = 23;
+            this.numericUpDownUserStyleVerPosDelta.TabStop = false;
+            this.numericUpDownUserStyleVerPosDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleVerPosDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleVerPosDelta_ValueChanged);
             // 
             // label14
@@ -1304,15 +2210,40 @@
             // 
             // numericUpDownUserStyleVerPosDir
             // 
+            this.numericUpDownUserStyleVerPosDir.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleVerPosDir.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleVerPosDir.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleVerPosDir.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleVerPosDir.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleVerPosDir.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleVerPosDir.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleVerPosDir.DecimalPlaces = 0;
+            this.numericUpDownUserStyleVerPosDir.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDir.Location = new System.Drawing.Point(184, 100);
             this.numericUpDownUserStyleVerPosDir.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownUserStyleVerPosDir.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDir.Name = "numericUpDownUserStyleVerPosDir";
             this.numericUpDownUserStyleVerPosDir.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleVerPosDir.TabIndex = 21;
+            this.numericUpDownUserStyleVerPosDir.TabStop = false;
+            this.numericUpDownUserStyleVerPosDir.ThousandsSeparator = false;
+            this.numericUpDownUserStyleVerPosDir.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleVerPosDir.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleVerPosDir_ValueChanged);
             // 
             // label15
@@ -1326,15 +2257,40 @@
             // 
             // numericUpDownUserStyleHorPosDelta
             // 
+            this.numericUpDownUserStyleHorPosDelta.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleHorPosDelta.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleHorPosDelta.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleHorPosDelta.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleHorPosDelta.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleHorPosDelta.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleHorPosDelta.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleHorPosDelta.DecimalPlaces = 0;
+            this.numericUpDownUserStyleHorPosDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDelta.Location = new System.Drawing.Point(184, 74);
             this.numericUpDownUserStyleHorPosDelta.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownUserStyleHorPosDelta.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDelta.Name = "numericUpDownUserStyleHorPosDelta";
             this.numericUpDownUserStyleHorPosDelta.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleHorPosDelta.TabIndex = 19;
+            this.numericUpDownUserStyleHorPosDelta.TabStop = false;
+            this.numericUpDownUserStyleHorPosDelta.ThousandsSeparator = false;
+            this.numericUpDownUserStyleHorPosDelta.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDelta.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleHorPosDelta_ValueChanged);
             // 
             // label16
@@ -1348,15 +2304,40 @@
             // 
             // numericUpDownUserStyleHorPosDir
             // 
+            this.numericUpDownUserStyleHorPosDir.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleHorPosDir.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleHorPosDir.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleHorPosDir.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleHorPosDir.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleHorPosDir.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleHorPosDir.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleHorPosDir.DecimalPlaces = 0;
+            this.numericUpDownUserStyleHorPosDir.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDir.Location = new System.Drawing.Point(184, 48);
             this.numericUpDownUserStyleHorPosDir.Maximum = new decimal(new int[] {
             7679,
             0,
             0,
             0});
+            this.numericUpDownUserStyleHorPosDir.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDir.Name = "numericUpDownUserStyleHorPosDir";
             this.numericUpDownUserStyleHorPosDir.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleHorPosDir.TabIndex = 17;
+            this.numericUpDownUserStyleHorPosDir.TabStop = false;
+            this.numericUpDownUserStyleHorPosDir.ThousandsSeparator = false;
+            this.numericUpDownUserStyleHorPosDir.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleHorPosDir.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleHorPosDir_ValueChanged);
             // 
             // labelUserStyleHorPosDir
@@ -1370,15 +2351,40 @@
             // 
             // numericUpDownUserStyleId
             // 
+            this.numericUpDownUserStyleId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownUserStyleId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownUserStyleId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownUserStyleId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownUserStyleId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownUserStyleId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownUserStyleId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownUserStyleId.DecimalPlaces = 0;
+            this.numericUpDownUserStyleId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleId.Location = new System.Drawing.Point(184, 22);
             this.numericUpDownUserStyleId.Maximum = new decimal(new int[] {
             59,
             0,
             0,
             0});
+            this.numericUpDownUserStyleId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleId.Name = "numericUpDownUserStyleId";
             this.numericUpDownUserStyleId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownUserStyleId.TabIndex = 15;
+            this.numericUpDownUserStyleId.TabStop = false;
+            this.numericUpDownUserStyleId.ThousandsSeparator = false;
+            this.numericUpDownUserStyleId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownUserStyleId.ValueChanged += new System.EventHandler(this.numericUpDownUserStyleId_ValueChanged);
             // 
             // label18
@@ -1421,15 +2427,40 @@
             // 
             // numericUpDownSubRegionStyleIdRef
             // 
+            this.numericUpDownSubRegionStyleIdRef.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSubRegionStyleIdRef.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSubRegionStyleIdRef.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSubRegionStyleIdRef.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSubRegionStyleIdRef.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSubRegionStyleIdRef.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSubRegionStyleIdRef.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSubRegionStyleIdRef.DecimalPlaces = 0;
+            this.numericUpDownSubRegionStyleIdRef.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownSubRegionStyleIdRef.Location = new System.Drawing.Point(106, 74);
             this.numericUpDownSubRegionStyleIdRef.Maximum = new decimal(new int[] {
             4319,
             0,
             0,
             0});
+            this.numericUpDownSubRegionStyleIdRef.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSubRegionStyleIdRef.Name = "numericUpDownSubRegionStyleIdRef";
             this.numericUpDownSubRegionStyleIdRef.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownSubRegionStyleIdRef.TabIndex = 35;
+            this.numericUpDownSubRegionStyleIdRef.TabStop = false;
+            this.numericUpDownSubRegionStyleIdRef.ThousandsSeparator = false;
+            this.numericUpDownSubRegionStyleIdRef.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSubRegionStyleIdRef.ValueChanged += new System.EventHandler(this.numericUpDownSubRegionStyleIdRef_ValueChanged);
             // 
             // label40
@@ -1515,18 +2546,44 @@
             // 
             // comboBoxChangeFontStyleOutlineThickness
             // 
+            this.comboBoxChangeFontStyleOutlineThickness.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxChangeFontStyleOutlineThickness.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxChangeFontStyleOutlineThickness.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxChangeFontStyleOutlineThickness.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxChangeFontStyleOutlineThickness.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxChangeFontStyleOutlineThickness.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxChangeFontStyleOutlineThickness.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxChangeFontStyleOutlineThickness.DropDownHeight = 400;
+            this.comboBoxChangeFontStyleOutlineThickness.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxChangeFontStyleOutlineThickness.DropDownWidth = 186;
             this.comboBoxChangeFontStyleOutlineThickness.FormattingEnabled = true;
             this.comboBoxChangeFontStyleOutlineThickness.Items.AddRange(new object[] {
             "Thin border",
             "Medium border",
             "Thick border"});
             this.comboBoxChangeFontStyleOutlineThickness.Location = new System.Drawing.Point(129, 76);
+            this.comboBoxChangeFontStyleOutlineThickness.MaxLength = 32767;
             this.comboBoxChangeFontStyleOutlineThickness.Name = "comboBoxChangeFontStyleOutlineThickness";
+            this.comboBoxChangeFontStyleOutlineThickness.SelectedIndex = -1;
+            this.comboBoxChangeFontStyleOutlineThickness.SelectedItem = null;
+            this.comboBoxChangeFontStyleOutlineThickness.SelectedText = "";
             this.comboBoxChangeFontStyleOutlineThickness.Size = new System.Drawing.Size(186, 21);
             this.comboBoxChangeFontStyleOutlineThickness.TabIndex = 37;
+            this.comboBoxChangeFontStyleOutlineThickness.TabStop = false;
+            this.comboBoxChangeFontStyleOutlineThickness.UsePopupWindow = false;
             // 
             // comboBoxChangeFontStyleFontStyle
             // 
+            this.comboBoxChangeFontStyleFontStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxChangeFontStyleFontStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxChangeFontStyleFontStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxChangeFontStyleFontStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxChangeFontStyleFontStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxChangeFontStyleFontStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxChangeFontStyleFontStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxChangeFontStyleFontStyle.DropDownHeight = 400;
+            this.comboBoxChangeFontStyleFontStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxChangeFontStyleFontStyle.DropDownWidth = 186;
             this.comboBoxChangeFontStyleFontStyle.FormattingEnabled = true;
             this.comboBoxChangeFontStyleFontStyle.Items.AddRange(new object[] {
             "Normal",
@@ -1538,21 +2595,52 @@
             "Italic and Outline-bordered",
             "Bold and Italic and Outline-bordered"});
             this.comboBoxChangeFontStyleFontStyle.Location = new System.Drawing.Point(129, 23);
+            this.comboBoxChangeFontStyleFontStyle.MaxLength = 32767;
             this.comboBoxChangeFontStyleFontStyle.Name = "comboBoxChangeFontStyleFontStyle";
+            this.comboBoxChangeFontStyleFontStyle.SelectedIndex = -1;
+            this.comboBoxChangeFontStyleFontStyle.SelectedItem = null;
+            this.comboBoxChangeFontStyleFontStyle.SelectedText = "";
             this.comboBoxChangeFontStyleFontStyle.Size = new System.Drawing.Size(186, 21);
             this.comboBoxChangeFontStyleFontStyle.TabIndex = 36;
+            this.comboBoxChangeFontStyleFontStyle.TabStop = false;
+            this.comboBoxChangeFontStyleFontStyle.UsePopupWindow = false;
             // 
             // numericUpDownChangeFontStyleOutlinePaletteId
             // 
+            this.numericUpDownChangeFontStyleOutlinePaletteId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChangeFontStyleOutlinePaletteId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChangeFontStyleOutlinePaletteId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChangeFontStyleOutlinePaletteId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChangeFontStyleOutlinePaletteId.DecimalPlaces = 0;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontStyleOutlinePaletteId.Location = new System.Drawing.Point(129, 50);
             this.numericUpDownChangeFontStyleOutlinePaletteId.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontStyleOutlinePaletteId.Name = "numericUpDownChangeFontStyleOutlinePaletteId";
             this.numericUpDownChangeFontStyleOutlinePaletteId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownChangeFontStyleOutlinePaletteId.TabIndex = 35;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.TabStop = false;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.ThousandsSeparator = false;
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // label41
             // 
@@ -1594,15 +2682,40 @@
             // 
             // numericUpDownChangeFontColor
             // 
+            this.numericUpDownChangeFontColor.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChangeFontColor.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChangeFontColor.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChangeFontColor.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChangeFontColor.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChangeFontColor.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChangeFontColor.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChangeFontColor.DecimalPlaces = 0;
+            this.numericUpDownChangeFontColor.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontColor.Location = new System.Drawing.Point(100, 18);
             this.numericUpDownChangeFontColor.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownChangeFontColor.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontColor.Name = "numericUpDownChangeFontColor";
             this.numericUpDownChangeFontColor.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownChangeFontColor.TabIndex = 15;
+            this.numericUpDownChangeFontColor.TabStop = false;
+            this.numericUpDownChangeFontColor.ThousandsSeparator = false;
+            this.numericUpDownChangeFontColor.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontColor.ValueChanged += new System.EventHandler(this.numericUpDownChangeFontColor_ValueChanged);
             // 
             // label45
@@ -1616,6 +2729,19 @@
             // 
             // numericUpDownChangeFontSize
             // 
+            this.numericUpDownChangeFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChangeFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChangeFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChangeFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChangeFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChangeFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChangeFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChangeFontSize.DecimalPlaces = 0;
+            this.numericUpDownChangeFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChangeFontSize.Location = new System.Drawing.Point(80, 23);
             this.numericUpDownChangeFontSize.Maximum = new decimal(new int[] {
             144,
@@ -1630,6 +2756,8 @@
             this.numericUpDownChangeFontSize.Name = "numericUpDownChangeFontSize";
             this.numericUpDownChangeFontSize.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownChangeFontSize.TabIndex = 35;
+            this.numericUpDownChangeFontSize.TabStop = false;
+            this.numericUpDownChangeFontSize.ThousandsSeparator = false;
             this.numericUpDownChangeFontSize.Value = new decimal(new int[] {
             8,
             0,
@@ -1661,6 +2789,7 @@
             // 
             // textBoxSubtitleText
             // 
+            this.textBoxSubtitleText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSubtitleText.Location = new System.Drawing.Point(46, 22);
             this.textBoxSubtitleText.MaxLength = 50;
             this.textBoxSubtitleText.Name = "textBoxSubtitleText";
@@ -1807,15 +2936,40 @@
             // 
             // numericUpDownFontSetFontId
             // 
+            this.numericUpDownFontSetFontId.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFontSetFontId.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFontSetFontId.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFontSetFontId.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFontSetFontId.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFontSetFontId.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFontSetFontId.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFontSetFontId.DecimalPlaces = 0;
+            this.numericUpDownFontSetFontId.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFontSetFontId.Location = new System.Drawing.Point(100, 18);
             this.numericUpDownFontSetFontId.Maximum = new decimal(new int[] {
             254,
             0,
             0,
             0});
+            this.numericUpDownFontSetFontId.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSetFontId.Name = "numericUpDownFontSetFontId";
             this.numericUpDownFontSetFontId.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownFontSetFontId.TabIndex = 15;
+            this.numericUpDownFontSetFontId.TabStop = false;
+            this.numericUpDownFontSetFontId.ThousandsSeparator = false;
+            this.numericUpDownFontSetFontId.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSetFontId.ValueChanged += new System.EventHandler(this.numericUpDownFontSetFontId_ValueChanged);
             // 
             // label48
