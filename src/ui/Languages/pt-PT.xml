@@ -3449,6 +3449,7 @@ Manter as alterações?</KeepChangesMessage>
     <ExtendToNext>Prolongar até à seguinte</ExtendToNext>
     <PlaySelection>Reporduzir a seleção</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Combinar forma de onda e espectrograma</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar apenas forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar apenas espectrograma</ShowSpectrogramOnly>
     <AddShotChange>Adicionar mudança de cena</AddShotChange>
