@@ -745,6 +745,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes(string.Empty)); // don't load subtitles (does not seem to work anymore)
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sid"), GetUtf8Bytes("no")); // don't load subtitles
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("hr-seek"), GetUtf8Bytes("yes")); // don't load subtitles
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("rebase-start-time"), GetUtf8Bytes("no")); // don't adjust timestamps to start at zero
 
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
