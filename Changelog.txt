@@ -2,6 +2,7 @@
 
 4.0.13 (xth July 2025) BETA
 * NEW
+   * Add Mousepad horzontal scrolling - thx bjorn-ali-goransson
    * Add Tatar translation - thx Ирек
    * Allow complex number formatting in custom export - thx oph
 * IMPROVED:
