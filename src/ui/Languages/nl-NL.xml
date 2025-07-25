@@ -2494,7 +2494,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformUseFFmpeg>FFmpeg voor golfvormextractie gebruiken</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Alleen voor-middenkanaal gebruiken (voor 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>{0} downloaden</DownloadX>
-    <ExtractingX>{0} extraheren</ExtractingX>
+    <ExtractingX>{0} uitpakken</ExtractingX>
     <WaveformFFmpegPath>Pad naar FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Naar FFmpeg bladeren</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Naar VLC portable bladeren</WaveformBrowseToVLC>
