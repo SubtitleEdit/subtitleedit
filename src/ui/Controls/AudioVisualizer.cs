@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Subtitle _subtitle;
         private bool _noClear;
         private double _gapAtStart = -1;
+        private const int WM_MOUSEHWHEEL = 0x020E;
 
         private SpectrogramData _spectrogram;
         private const int SpectrogramDisplayHeight = 128;
@@ -2298,6 +2299,20 @@ namespace Nikse.SubtitleEdit.Controls
             VerticalZoomFactor /= 1.1;
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            // support horizontal mousepad panning
+
+            if (m.Msg == WM_MOUSEHWHEEL)
+            {
+                int delta = (short)((m.WParam.ToInt64() >> 16) & 0xffff);
+
+                HandleWaveFormScroll(delta);
+            }
+        }
+
         private void WaveformMouseWheel(object sender, MouseEventArgs e)
         {
             // The scroll wheel could work in theory without the waveform loaded (it would be
@@ -2342,6 +2357,11 @@ namespace Nikse.SubtitleEdit.Controls
                 delta *= -1;
             }
 
+            HandleWaveFormScroll(delta);
+        }
+
+        private void HandleWaveFormScroll(int delta)
+        {
             if (Locked)
             {
                 _currentVideoPositionSeconds += delta / 256.0;
