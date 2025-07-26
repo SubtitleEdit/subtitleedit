@@ -29,6 +29,7 @@
    * Add Myanmar (Burmese) in translation pairs - thx TwizzyIndy
    * Add option for combine waveform/spectrogram - thx Flitskikker
    * Allow non-Latin letters in WebVTT style name - thx linshi963
+   * Update yt-dlp to 2025-07-21
 * FIXED:
    * Enable automatic translation via proxy - thx solidvan
    * Fix crash in undo timer - thx darnn
