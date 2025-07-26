@@ -3444,6 +3444,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ExtendToNext>다음으로 확장</ExtendToNext>
     <PlaySelection>선택한 영역 재생하기</PlaySelection>
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>파형과 스펙트로그램 결합</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
     <AddShotChange>장면전환 추가</AddShotChange>
@@ -3494,5 +3495,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <HighlightCurrentWord>현재 단어 강조 표시</HighlightCurrentWord>
     <SingleWords>단일 단어</SingleWords>
     <Sentence>문장</Sentence>
+    <EnableVad>VAD 활성화</EnableVad>
+    <VadModelNotFound>VAD 모델을 찾을 수 없습니다.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
