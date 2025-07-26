@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.12</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.06.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 25.07.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3446,6 +3446,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <ExtendToNext>Estendi al successivo</ExtendToNext>
     <PlaySelection>Riproduci</PlaySelection>
     <ShowWaveformAndSpectrogram>Visualizza forma onda e spettrogramma</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Combina forma d'onda e spettrogramma</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Visualizza solo la forma d'onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Visualizza solo lo spettrogramma</ShowSpectrogramOnly>
     <AddShotChange>Aggiungi cambio di scena</AddShotChange>
