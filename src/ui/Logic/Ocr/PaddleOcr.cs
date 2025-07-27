@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _detPath;
         private string _recPath;
         private StringBuilder _log = new StringBuilder();
+        private const string TextlineOrientationModelName = "PP-LCNet_x1_0_textline_ori";
 
         private readonly List<string> LatinLanguageCodes = new List<string>
         {
@@ -321,8 +322,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                    $"--text_detection_model_name \"{detName}\" " +
                    $"--text_recognition_model_dir \"{_recPath + Path.DirectorySeparatorChar + recName}\" " +
                    $"--text_recognition_model_name \"{recName}\" " +
-                   $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + "PP-LCNet_x1_0_textline_ori"}\" " +
-                   $"--textline_orientation_model_name \"PP-LCNet_x1_0_textline_ori\"";
+                   $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + TextlineOrientationModelName}\" " +
+                   $"--textline_orientation_model_name \"{TextlineOrientationModelName}\"";
 
                 string PaddleOCRPath = null;
 
