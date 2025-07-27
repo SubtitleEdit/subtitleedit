@@ -10,19 +10,19 @@ using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public sealed partial class DownloadPaddleOCRCPU : Form
+    public sealed partial class DownloadPaddleOcrCpu : Form
     {
-        public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v.1.0.0/PaddleOCR-CPU-v1.0.0.7z";
+        public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.3.0/PaddleOCR-CPU-v1.3.0.7z";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         private string _tempFileName;
 
-        public DownloadPaddleOCRCPU()
+        public DownloadPaddleOcrCpu()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " PaddleOCR (CPU version)";
+            Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " PaddleOCR";
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " PaddleOCR (CPU version)";
             _cancellationTokenSource = new CancellationTokenSource();
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            Extract7Zip(downloadStream, dictionaryFolder, "PaddleOCR-CPU-v1.0.0");
+            Extract7Zip(downloadStream, dictionaryFolder, "PaddleOCR-CPU-v1.3.0");
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
