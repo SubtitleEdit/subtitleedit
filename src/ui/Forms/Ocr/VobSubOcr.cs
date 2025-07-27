@@ -5363,7 +5363,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            labelStatus.Text = "Starting PaddleOCR... This can take a while...";
+            labelStatus.Text = "Starting PaddleOCR. This can take a while...";
             labelStatus.Refresh();
 
             // Outside background worker before OCRViaPaddleBatch!

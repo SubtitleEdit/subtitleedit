@@ -78,19 +78,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
             var parameters = $"ocr -i \"{tempImage}\" " +
-                "--use_angle_cls true " +
                 "--use_textline_orientation true " +
                 "--use_doc_orientation_classify false " +
                 "--use_doc_unwarping false " +
-                "--show_log false " +
-                $"--use_gpu {useGpu.ToString().ToLowerInvariant()} " +
+                $"--device {(useGpu ? "gpu" : "cpu")} " +
                 $"--lang {language} " +
-                $"--text_detection_model_dir \"{_detPath}\" " +
+                $"--text_detection_model_dir \"{_detPath + Path.DirectorySeparatorChar + detName}\" " +
                 $"--text_detection_model_name \"{detName}\" " +
-                $"--text_recognition_model_dir \"{_recPath}\" " +
-                $"--text_recognition_model_name \"{recName}\" ";
-            //$"--textline_orientation_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\" " +
-            //$"--textline_orientation_model_name \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+                $"--text_recognition_model_dir \"{_recPath + Path.DirectorySeparatorChar + recName}\" " +
+                $"--text_recognition_model_name \"{recName}\" " +
+                $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + "PP-LCNet_x1_0_textline_ori"}\" " + 
+                $"--textline_orientation_model_name \"PP-LCNet_x1_0_textline_ori\"";
             string PaddleOCRPath = null;
 
             if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
@@ -323,18 +321,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 var parameters = $"ocr -i \"{tempFolder}\" " +
-                   "--use_angle_cls true " +
                    "--use_textline_orientation true " +
                    "--use_doc_orientation_classify false " +
                    "--use_doc_unwarping false " +
-                   "--show_log false " +
-                   $"--use_gpu {useGpu.ToString().ToLowerInvariant()} " +
+                   $"--device {(useGpu ? "gpu" : "cpu")} " +
                    $"--lang {language} " +
-                   $"--text_detection_model_dir \"{_detPath}\" " +
+                   $"--text_detection_model_dir \"{_detPath + Path.DirectorySeparatorChar + detName}\" " +
                    $"--text_detection_model_name \"{detName}\" " +
-                   $"--text_recognition_model_dir \"{_recPath}\" " +
-                   $"--text_recognition_model_name \"{recName}\" ";
-
+                   $"--text_recognition_model_dir \"{_recPath + Path.DirectorySeparatorChar + recName}\" " +
+                   $"--text_recognition_model_name \"{recName}\" " +
+                   $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + "PP-LCNet_x1_0_textline_ori"}\" " +
+                   $"--textline_orientation_model_name \"PP-LCNet_x1_0_textline_ori\"";
 
                 string PaddleOCRPath = null;
 
