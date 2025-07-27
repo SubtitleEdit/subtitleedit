@@ -5904,6 +5904,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VobSubOcr.CaptureTopAlign = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("PaddleOcrUseGpu");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.PaddleOcrUseGpu = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("PaddleOcrLanguageCode");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.PaddleOcrLanguageCode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UnfocusedAttentionBlinkCount");
             if (subNode != null)
             {
@@ -9881,6 +9893,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
                 xmlWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PaddleOcrUseGpu", settings.VobSubOcr.PaddleOcrUseGpu.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PaddleOcrLanguageCode", settings.VobSubOcr.PaddleOcrLanguageCode);
                 xmlWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);
