@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Vosk;
 using static Nikse.SubtitleEdit.Forms.Ocr.VobSubOcr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
@@ -22,87 +23,34 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _recPath;
         private StringBuilder _log = new StringBuilder();
 
-        private readonly List<string> LatinLanguageCodes = new List<string>()
+        private readonly List<string> LatinLanguageCodes = new List<string>
         {
-            "af",
-            "az",
-            "bs",
-            "cs",
-            "cy",
-            "da",
-            "de",
-            "es",
-            "et",
-            "fr",
-            "ga",
-            "hr",
-            "hu",
-            "id",
-            "is",
-            "it",
-            "ku",
-            "la",
-            "lt",
-            "lv",
-            "mi",
-            "ms",
-            "mt",
-            "nl",
-            "no",
-            "oc",
-            "pi",
-            "pl",
-            "pt",
-            "ro",
-            "rs_latin",
-            "sk",
-            "sl",
-            "sq",
-            "sv",
-            "sw",
-            "tl",
-            "tr",
-            "uz",
-            "vi",
-            "french",
-            "german"
-        };
-        private readonly List<string> ArabicLanguageCodes = new List<string>() { "ar", "fa", "ug", "ur" };
-        private readonly List<string> CyrillicLanguageCodes = new List<string>()
-        {
-            "ru",
-            "rs_cyrillic",
-            "be",
-            "bg",
-            "uk",
-            "mn",
-            "abq",
-            "ady",
-            "kbd",
-            "ava",
-            "dar",
-            "inh",
-            "che",
-            "lbe",
-            "lez",
-            "tab"
+            "af", "az", "bs", "cs", "cy", "da", "de", "es", "et", "fr", "ga",
+            "hr", "hu", "id", "is", "it", "ku", "la", "lt", "lv", "mi", "ms",
+            "mt", "nl", "no", "oc", "pi", "pl", "pt", "ro", "rs_latin", "sk",
+            "sl", "sq", "sv", "sw", "tl", "tr", "uz", "vi", "french", "german"
         };
 
-        private readonly List<string> DevanagariLanguageCodes = new List<string>()
+        private readonly List<string> ArabicLanguageCodes = new List<string>
         {
-            "hi",
-            "mr",
-            "ne",
-            "bh",
-            "mai",
-            "ang",
-            "bho",
-            "mah",
-            "sck",
-            "new",
-            "gom",
-            "bgc",
-            "sa"
+            "ar", "fa", "ug", "ur"
+        };
+
+        private readonly List<string> EslavLanguageCodes = new List<string>
+        {
+            "ru", "be", "uk"
+        };
+
+        private readonly List<string> CyrillicLanguageCodes = new List<string>
+        {
+            "rs_cyrillic", "bg", "mn", "abq", "ady", "kbd", "ava", "dar",
+            "inh", "che", "lbe", "lez", "tab"
+        };
+
+        private readonly List<string> DevanagariLanguageCodes = new List<string>
+        {
+            "hi", "mr", "ne", "bh", "mai", "ang", "bho", "mah",
+            "sck", "new", "gom", "bgc", "sa"
         };
 
         public PaddleOcr()
@@ -119,56 +67,30 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _log.Clear();
             hasErrors = false;
             processingStarted = false;
-            var detFilePrefix = language;
-            if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
-            {
-                detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
-            }
-            else if (language == "ch")
-            {
-                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
-            }
-            else if (LatinLanguageCodes.Contains(language))
-            {
-                detFilePrefix = $"en{Path.DirectorySeparatorChar}en_PP-OCRv3_det_infer";
-            }
-            else
-            {
-                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_det_infer";
-            }
-
-            var recFilePrefix = language;
-            if (LatinLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin_PP-OCRv3_rec_infer";
-            }
-            else if (ArabicLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic_PP-OCRv4_rec_infer";
-            }
-            else if (CyrillicLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic_PP-OCRv3_rec_infer";
-            }
-            else if (DevanagariLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari_PP-OCRv4_rec_infer";
-            }
-            else if (language == "chinese_cht")
-            {
-                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_rec_infer";
-            }
-            else
-            {
-                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
-            }
+            
+            var mode = "mobile"; // could also be "server"
+            var detName = GetDetectionName(language, mode);
+            string recName = GetRecName(language, mode);
 
             var borderedBitmapTemp = AddBorder(bitmap, 10, Color.Black);
             var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
             borderedBitmapTemp.Dispose();
             var tempImage = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
             borderedBitmap.Save(tempImage, System.Drawing.Imaging.ImageFormat.Png);
-            var parameters = $"--image_dir \"{tempImage}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+            var parameters = $"ocr -i \"{tempImage}\" " +
+                "--use_angle_cls true " +
+                "--use_textline_orientation true " +
+                "--use_doc_orientation_classify false " +
+                "--use_doc_unwarping false " +
+                "--show_log false " +
+                $"--use_gpu {useGpu.ToString().ToLowerInvariant()} " +
+                $"--lang {language} " +
+                $"--text_detection_model_dir \"{_detPath}\" " +
+                $"--text_detection_model_name \"{detName}\" " +
+                $"--text_recognition_model_dir \"{_recPath}\" " +
+                $"--text_recognition_model_name \"{recName}\" ";
+            //$"--textline_orientation_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\" " +
+            //$"--textline_orientation_model_name \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
             string PaddleOCRPath = null;
 
             if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
@@ -290,6 +212,69 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
+        private string GetRecName(string language, string mode)
+        {
+            string recName;
+            if (language == "ch" ||
+                language == "chinese_cht" ||
+                language == "en" ||
+                language == "japan")
+            {
+                recName = $"PP-OCRv5_{mode}_rec";
+            }
+            else if (ArabicLanguageCodes.Contains(language))
+            {
+                recName = "arabic_PP-OCRv3_mobile_rec";
+            }
+            else if (ArabicLanguageCodes.Contains(language))
+            {
+                recName = "arabic_PP-OCRv3_mobile_rec";
+            }
+            else if (EslavLanguageCodes.Contains(language))
+            {
+                recName = "eslav_PP-OCRv5_mobile_rec";
+            }
+            else if (CyrillicLanguageCodes.Contains(language))
+            {
+                recName = "cyrillic_PP-OCRv3_mobile_rec";
+            }
+            else if (DevanagariLanguageCodes.Contains(language))
+            {
+                recName = "devanagari_PP-OCRv3_mobile_rec";
+            }
+            else if (DevanagariLanguageCodes.Contains(language))
+            {
+                recName = "devanagari_PP-OCRv3_mobile_rec";
+            }
+            else if (language == "korean")
+            {
+                recName = "korean_PP-OCRv5_mobile_rec";
+            }
+            else
+            {
+                recName = "latin_PP-OCRv5_mobile_rec";
+            }
+
+            return recName;
+        }
+
+        private string GetDetectionName(string language, string mode)
+        {
+            if (language == "ch" ||
+                language == "chinese_cht" ||
+                language == "en" ||
+                language == "japan" ||
+                language == "korean" ||
+                LatinLanguageCodes.Contains(language))
+            {
+                return $"PP-OCRv5_{mode}_det";
+            }
+            else
+            {
+                return "PP-OCRv3_mobile_det";
+            }
+        }
+
         private void SaveText(DataReceivedEventArgs outLine)
         {
             // Note: It's *very* important to keep the box positions
@@ -311,49 +296,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _log.Clear();
             hasErrors = false;
             processingStarted = false;
-            var detFilePrefix = language;
-            if (language != "en" && language != "ch" && !LatinLanguageCodes.Contains(language))
-            {
-                detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
-            }
-            else if (language == "ch")
-            {
-                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
-            }
-            else if (LatinLanguageCodes.Contains(language))
-            {
-                detFilePrefix = $"en{Path.DirectorySeparatorChar}en_PP-OCRv3_det_infer";
-            }
-            else
-            {
-                detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_det_infer";
-            }
 
-            var recFilePrefix = language;
-            if (LatinLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin_PP-OCRv3_rec_infer";
-            }
-            else if (ArabicLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic_PP-OCRv4_rec_infer";
-            }
-            else if (CyrillicLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic_PP-OCRv3_rec_infer";
-            }
-            else if (DevanagariLanguageCodes.Contains(language))
-            {
-                recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari_PP-OCRv4_rec_infer";
-            }
-            else if (language == "chinese_cht")
-            {
-                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_rec_infer";
-            }
-            else
-            {
-                recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
-            }
+            var mode = "mobile"; // could also be "server"
+            var detName = GetDetectionName(language, mode);
+            string recName = GetRecName(language, mode);
 
             var tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempFolder);
@@ -376,7 +322,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     imagePaths.Add(imagePath);
                 }
 
-                var parameters = $"--image_dir \"{tempFolder}\" --ocr_version PP-OCRv4 --use_angle_cls true --use_gpu {useGpu.ToString().ToLowerInvariant()} --lang {language} --show_log false --det_model_dir \"{_detPath}\\{detFilePrefix}\" --rec_model_dir \"{_recPath}\\{recFilePrefix}\" --cls_model_dir \"{_clsPath}\\ch_ppocr_mobile_v2.0_cls_infer\"";
+                var parameters = $"ocr -i \"{tempFolder}\" " +
+                   "--use_angle_cls true " +
+                   "--use_textline_orientation true " +
+                   "--use_doc_orientation_classify false " +
+                   "--use_doc_unwarping false " +
+                   "--show_log false " +
+                   $"--use_gpu {useGpu.ToString().ToLowerInvariant()} " +
+                   $"--lang {language} " +
+                   $"--text_detection_model_dir \"{_detPath}\" " +
+                   $"--text_detection_model_name \"{detName}\" " +
+                   $"--text_recognition_model_dir \"{_recPath}\" " +
+                   $"--text_recognition_model_name \"{recName}\" ";
+
 
                 string PaddleOCRPath = null;
 
