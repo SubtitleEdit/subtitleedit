@@ -10,14 +10,14 @@ using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public sealed partial class DownloadPaddleOcrCpu1 : Form
+    public sealed partial class DownloadPaddleOcrCpu : Form
     {
         public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.3.0/PaddleOCR-CPU-v1.3.0.7z";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         private string _tempFileName;
 
-        public DownloadPaddleOcrCpu1()
+        public DownloadPaddleOcrCpu()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();

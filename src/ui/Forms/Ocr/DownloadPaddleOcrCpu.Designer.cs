@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    sealed partial class DownloadPaddleOcrCpu1
+    sealed partial class DownloadPaddleOcrCpu
     {
         /// <summary>
         /// Required designer variable.
