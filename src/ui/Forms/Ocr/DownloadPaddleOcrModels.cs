@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void CompleteDownload(string downloadStream)
         {
-            if (downloadStream.Length == 0)
+            if (!File.Exists(downloadStream) || new FileInfo(downloadStream).Length == 0)
             {
                 throw new Exception("No content downloaded - missing file or no internet connection!" + Environment.NewLine +
                                     $"For more info see: {Path.Combine(Configuration.DataDirectory, "error_log.txt")}");
