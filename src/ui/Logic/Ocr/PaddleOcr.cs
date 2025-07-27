@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Vosk;
 using static Nikse.SubtitleEdit.Forms.Ocr.VobSubOcr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
@@ -219,10 +218,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 language == "japan")
             {
                 recName = $"PP-OCRv5_{mode}_rec";
-            }
-            else if (ArabicLanguageCodes.Contains(language))
-            {
-                recName = "arabic_PP-OCRv3_mobile_rec";
             }
             else if (ArabicLanguageCodes.Contains(language))
             {
