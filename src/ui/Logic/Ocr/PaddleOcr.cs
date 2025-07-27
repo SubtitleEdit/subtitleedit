@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 $"--text_detection_model_name \"{detName}\" " +
                 $"--text_recognition_model_dir \"{_recPath + Path.DirectorySeparatorChar + recName}\" " +
                 $"--text_recognition_model_name \"{recName}\" " +
-                $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + "PP-LCNet_x1_0_textline_ori"}\" " + 
-                $"--textline_orientation_model_name \"PP-LCNet_x1_0_textline_ori\"";
+                $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + TextlineOrientationModelName}\" " + 
+                $"--textline_orientation_model_name \"{TextlineOrientationModelName}\"";
             string PaddleOCRPath = null;
 
             if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
