@@ -4648,6 +4648,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             textBoxCurrentText.BackColor = SystemColors.ActiveBorder;
+
+            nikseComboBoxPaddleLanguages.SelectedIndexChanged += nikseComboBoxPaddleLanguages_SelectedIndexChanged;
         }
 
         public void DoHide()
@@ -10749,6 +10751,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcr_Activated(object sender, EventArgs e)
         {
             BringToFront();
+        }
+
+        private void nikseComboBoxPaddleLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var language = nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2;
+            if (language != null)
+            {
+                Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode = language.Code;
+            }
         }
     }
 }
