@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
+using SevenZipExtractor;
 using System;
 using System.IO;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadPaddleOcrModels : Form
     {
-        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/PaddleOcr291/PP-OCRv4.zip";
+        public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.3.0/PaddleOCR.PP-OCRv5.support.files.VideOCR.7z";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadPaddleOcrModels()
@@ -92,6 +93,52 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
             DialogResult = DialogResult.OK;
+        }
+
+        private void Extract7Zip(string tempFileName, string dir, string skipFolderLevel)
+        {
+            Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, string.Empty);
+            labelDescription1.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, "PaddleOCR");
+            labelDescription1.Refresh();
+
+            using (var archiveFile = new ArchiveFile(tempFileName))
+            {
+                archiveFile.Extract(entry =>
+                {
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        return null;
+                    }
+
+                    var entryFullName = entry.FileName;
+                    if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
+                    {
+                        entryFullName = entryFullName.Substring(skipFolderLevel.Length);
+                    }
+
+                    entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
+                    entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+
+                    var fullFileName = Path.Combine(dir, entryFullName);
+
+                    var fullPath = Path.GetDirectoryName(fullFileName);
+                    if (fullPath == null)
+                    {
+                        return null;
+                    }
+
+                    var displayName = entryFullName;
+                    if (displayName.Length > 30)
+                    {
+                        displayName = "..." + displayName.Remove(0, displayName.Length - 26).Trim();
+                    }
+
+                    labelPleaseWait.Text = string.Format(LanguageSettings.Current.Settings.ExtractingX, $"{displayName}");
+                    labelPleaseWait.Refresh();
+
+                    return fullFileName;
+                });
+            }
         }
     }
 }
