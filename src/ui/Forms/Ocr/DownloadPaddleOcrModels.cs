@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class DownloadPaddleOcrModels : Form
     {
         public const string DownloadUrl = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.3.0/PaddleOCR.PP-OCRv5.support.files.VideOCR.7z";
+        private string _tempFileName;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadPaddleOcrModels()
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
             Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Paddle OCR models";
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Paddle OCR models";
+            labelDescription1.Text = "Downloading Paddle OCR models";
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -31,8 +32,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             try
             {
                 Utilities.SetSecurityProtocol();
+
+                _tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".7z");
+                using (var downloadStream = new FileStream(_tempFileName, FileMode.Create, FileAccess.Write))
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
-                using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(DownloadUrl, downloadStream, new Progress<float>((progress) =>
                     {
@@ -51,9 +54,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         labelPleaseWait.Refresh();
                         return;
                     }
-
-                    CompleteDownload(downloadStream);
                 }
+                CompleteDownload(_tempFileName);
             }
             catch (Exception exception)
             {
@@ -65,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void CompleteDownload(Stream downloadStream)
+        private void CompleteDownload(string downloadStream)
         {
             if (downloadStream.Length == 0)
             {
@@ -79,20 +81,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            using (var zip = ZipExtractor.Open(downloadStream))
-            {
-                var dir = zip.ReadCentralDir();
-                foreach (var entry in dir)
-                {
-                    var path = Path.Combine(dictionaryFolder, entry.FilenameInZip);
-                    zip.ExtractFile(entry, path);
-                }
-            }
-
+            Extract7Zip(downloadStream, dictionaryFolder, "PaddleOCR.PP-OCRv5.support.files");
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             Cursor = Cursors.Default;
             DialogResult = DialogResult.OK;
+            File.Delete(_tempFileName);
         }
 
         private void Extract7Zip(string tempFileName, string dir, string skipFolderLevel)

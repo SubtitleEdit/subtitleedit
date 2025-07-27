@@ -7816,7 +7816,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                                 if (secondresult == DialogResult.Yes)
                                 {
-                                    using (var form = new DownloadPaddleOcrCpu1())
+                                    using (var form = new DownloadPaddleOcrCpu())
                                     {
                                         if (form.ShowDialog(this) == DialogResult.OK)
                                         {
@@ -7872,7 +7872,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     if (questForm.CpuSelected)
                     {
-                        using (var form = new DownloadPaddleOcrCpu1())
+                        using (var form = new DownloadPaddleOcrCpu())
                         {
                             if (form.ShowDialog(this) == DialogResult.OK)
                             {
