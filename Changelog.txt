@@ -15,6 +15,7 @@
    * Update German translation - thx Joachim
    * Update Russian translation - thx elfriob
    * Update Turksih translation - thx bilimiyorum
+   * Update PaddleOCR to 3.1 - timminator
    * Update Whisper CPP to 1.7.6
    * Add Brazilian Portuguese for LibreTranslate - thx erickcomcek
    * Minor UI improvementx for burn-in - thx Leon
