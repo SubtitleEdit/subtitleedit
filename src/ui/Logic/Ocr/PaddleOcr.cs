@@ -235,10 +235,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 recName = "devanagari_PP-OCRv3_mobile_rec";
             }
-            else if (DevanagariLanguageCodes.Contains(language))
-            {
-                recName = "devanagari_PP-OCRv3_mobile_rec";
-            }
             else if (language == "korean")
             {
                 recName = "korean_PP-OCRv5_mobile_rec";
