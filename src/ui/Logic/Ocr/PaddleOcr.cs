@@ -134,13 +134,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private object LockObject = new object();
 
-        public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
+        public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, string mode, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
             _log.Clear();
             hasErrors = false;
             processingStarted = false;
 
-            var mode = "mobile"; // could also be "server"
             var detName = GetDetectionName(language, mode);
             string recName = GetRecName(language, mode);
 
@@ -154,9 +153,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 for (var i = 0; i < input.Count; i++)
                 {
+                    var borderedBitmapTemp = AddBorder(input[i].Bitmap, 10, Color.Black);
+                    var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
+                    borderedBitmapTemp.Dispose();
+
                     var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i));
-                    input[i].Bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
                     input[i].FileName = imagePath;
+                    borderedBitmap.Dispose();
                     imagePaths.Add(imagePath);
                 }
 
@@ -351,6 +355,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     Error = $"An unexpected error occurred during cleanup: {ex.Message}";
                 }
             }
+        }
+
+        public static Bitmap AddBorder(Bitmap originalBitmap, int borderWidth, Color borderColor)
+        {
+            int newWidth = originalBitmap.Width + 2 * borderWidth;
+            int newHeight = originalBitmap.Height + 2 * borderWidth;
+
+            var borderedBitmap = new Bitmap(newWidth, newHeight);
+
+            using (Graphics graphics = Graphics.FromImage(borderedBitmap))
+            {
+                graphics.Clear(borderColor);
+                graphics.DrawImage(originalBitmap, borderWidth, borderWidth);
+            }
+
+            return borderedBitmap;
         }
 
         private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
