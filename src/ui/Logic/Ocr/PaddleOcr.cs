@@ -255,7 +255,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 language == "en" ||
                 language == "japan" ||
                 language == "korean" ||
-                LatinLanguageCodes.Contains(language))
+                LatinLanguageCodes.Contains(language) ||
+                EslavLanguageCodes.Contains(language))
             {
                 return $"PP-OCRv5_{mode}_det";
             }
