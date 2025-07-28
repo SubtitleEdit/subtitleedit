@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool BinaryAutoDetectBestDb { get; set; }
         public string LastTesseractSpellCheck { get; set; }
         public string PaddleOcrLanguageCode { get; set; }
+        public string PaddleOcrMode { get; set; }
         public bool PaddleOcrUseGpu { get; set; }
         public bool CaptureTopAlign { get; set; }
         public int UnfocusedAttentionBlinkCount { get; set; }
@@ -72,6 +73,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             LastBinaryImageCompareDb = "Latin+Latin";
             BinaryAutoDetectBestDb = true;
             PaddleOcrLanguageCode = "en";
+            PaddleOcrMode = "mobile";
             PaddleOcrUseGpu = true;
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;

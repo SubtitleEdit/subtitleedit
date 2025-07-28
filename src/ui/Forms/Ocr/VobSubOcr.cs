@@ -6753,7 +6753,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void OcrViaPaddleBatch(List<PaddleOcrInput> input, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
         {
             var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
-            _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, progressCallback, abortCheck);
+            var mode = Configuration.Settings.VobSubOcr.PaddleOcrMode;
+            _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, mode, progressCallback, abortCheck);
         }
 
         private string PostFixPaddle(PaddleOcrInput input)
@@ -7711,50 +7712,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
                         return;
                     }
-                }
-
-                // If no version is installed prompt for download
-                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
-                {
-                    if (IntPtr.Size * 8 == 32)
-                    {
-                        MessageBox.Show("Sorry, PaddleOCR requires a 64-bit processor");
-                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                        return;
-                    }
-
-                    var questForm = new DownloadPaddleGpuOrCpu();
-                    var result = questForm.ShowDialog(this);
-                    if (result == DialogResult.Cancel)
-                    {
-                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-                        return;
-                    }
-
-                    if (questForm.CpuSelected)
-                    {
-                        using (var form = new DownloadPaddleOcrCpu())
-                        {
-                            if (form.ShowDialog(this) == DialogResult.OK)
-                            {
-                                buttonDownloadPaddleOCRModels_Click(sender, e);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (var form = new DownloadPaddleOcrGpu())
-                        {
-                            if (form.ShowDialog(this) == DialogResult.OK)
-                            {
-                                buttonDownloadPaddleOCRModels_Click(sender, e);
-                            }
-                        }
-                    }
-
-                    _ocrFixEngine = null;
-                    SubtitleListView1SelectedIndexChanged(null, null);
-                    return;
                 }
             }
             else if (_ocrMethodIndex == _ocrMethodOllama)
