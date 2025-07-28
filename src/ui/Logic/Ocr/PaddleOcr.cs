@@ -301,14 +301,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 for (var i = 0; i < input.Count; i++)
                 {
-                    var borderedBitmapTemp = AddBorder(input[i].Bitmap, 10, Color.Black);
-                    var borderedBitmap = AddBorder(borderedBitmapTemp, 10, Color.Transparent);
-                    borderedBitmapTemp.Dispose();
-
                     var imagePath = Path.Combine(tempFolder, string.Format("{0:D" + width + "}.png", i));
-                    borderedBitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                    input[i].Bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
                     input[i].FileName = imagePath;
-                    borderedBitmap.Dispose();
                     imagePaths.Add(imagePath);
                 }
 
@@ -507,28 +502,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     Error = $"An unexpected error occurred during cleanup: {ex.Message}";
                 }
             }
-        }
-
-        public static Bitmap AddBorder(Bitmap originalBitmap, int borderWidth, Color borderColor)
-        {
-            // Calculate new dimensions
-            int newWidth = originalBitmap.Width + 2 * borderWidth;
-            int newHeight = originalBitmap.Height + 2 * borderWidth;
-
-            // Create a new bitmap with the new dimensions
-            var borderedBitmap = new Bitmap(newWidth, newHeight);
-
-            // Create a canvas to draw on the new bitmap
-            using (Graphics graphics = Graphics.FromImage(borderedBitmap))
-            {
-                // Fill the entire bitmap with the border color
-                graphics.Clear(borderColor);
-
-                // Draw the original bitmap onto the new canvas, offset by the border width
-                graphics.DrawImage(originalBitmap, borderWidth, borderWidth);
-            }
-
-            return borderedBitmap;
         }
 
         private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
