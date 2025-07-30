@@ -49,7 +49,7 @@
    * Fix no-audio-error in "Audio to text" on Linux - thx Kev1n121
    * Fix for VisualSync start/end index when < 4 lines - thx Leif
    * Fix extra "]" character in iTunes-timed-text - thx Silvia
-   * No warning loading SRT with only numbers - thx timminator
+   * Fix warning loading SubRip with only numbers - thx timminator
    * Fix freeze loading some files names - thx Flitskikker
 
 
