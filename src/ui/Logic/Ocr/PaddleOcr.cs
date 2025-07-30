@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             processingStarted = false;
 
             var detName = GetDetectionName(language, mode);
-            string recName = GetRecName(language, mode);
+            var recName = GetRecName(language, mode);
 
             var tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempFolder);
