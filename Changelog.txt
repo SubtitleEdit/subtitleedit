@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.13 (xth July 2025) BETA
+4.0.13 (30th July 2025) 
 * NEW
    * Add Mousepad horzontal scrolling - thx bjorn-ali-goransson
    * Add Tatar translation - thx Ирек
