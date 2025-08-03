@@ -3444,6 +3444,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <ExtendToNext>Rozciągnij do następnej linii</ExtendToNext>
     <PlaySelection>Odtwarzaj zaznaczone</PlaySelection>
     <ShowWaveformAndSpectrogram>Pokaż wykres falowy i spektrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Połącz wykres falowy i spektrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaż tylko wykres falowy</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaż tylko spektrogram</ShowSpectrogramOnly>
     <AddShotChange>Dodaj zmianę ujęcia</AddShotChange>
@@ -3494,5 +3495,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <HighlightCurrentWord>Podświetl bieżące słowo</HighlightCurrentWord>
     <SingleWords>Pojedyncze słowa</SingleWords>
     <Sentence>Zdanie</Sentence>
+    <EnableVad>Włącz VAD</EnableVad>
+    <VadModelNotFound>Nie znaleziono modelu VAD.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
