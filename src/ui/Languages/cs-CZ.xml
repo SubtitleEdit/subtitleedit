@@ -45,7 +45,7 @@
     <Text>Text</Text>
     <HourMinutesSecondsDecimalSeparatorMilliseconds>Hod:min:sek{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Hod:min:sek:snímky</HourMinutesSecondsFrames>
-    <XSeconds>{0:0,0##} sekund</XSeconds>
+    <XSeconds>{0:0.0##} sekund</XSeconds>
     <Bold>Tučné</Bold>
     <Italic>Kurzíva</Italic>
     <Underline>Podtržení</Underline>
@@ -1814,12 +1814,12 @@
     <BeforeImportingBluRaySupFile>Před importováním souboru Blu-ray SUP</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Před importováním souboru BDN XML</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Před zobrazením vybraných titulků dříve/později</BeforeShowSelectedLinesEarlierLater>
-    <ShowAllLinesXSecondsLinesEarlier>Zobrazit všechny řádky o {0:0,0##} sekund dříve</ShowAllLinesXSecondsLinesEarlier>
-    <ShowAllLinesXSecondsLinesLater>Zobrazit všechny řádky o {0:0,0##} sekund později</ShowAllLinesXSecondsLinesLater>
-    <ShowSelectedLinesXSecondsLinesEarlier>Zobrazit vybrané řádky o {0:0,0##} sekund dříve</ShowSelectedLinesXSecondsLinesEarlier>
-    <ShowSelectedLinesXSecondsLinesLater>Zobrazit vybrané řádky o {0:0,0##} sekund později</ShowSelectedLinesXSecondsLinesLater>
-    <ShowSelectionAndForwardXSecondsLinesEarlier>Zobrazit výběr a posunout o {0:0,0##} sekund dříve</ShowSelectionAndForwardXSecondsLinesEarlier>
-    <ShowSelectionAndForwardXSecondsLinesLater>Zobrazit výběr a posunout o {0:0,0##} sekund později</ShowSelectionAndForwardXSecondsLinesLater>
+    <ShowAllLinesXSecondsLinesEarlier>Zobrazit všechny řádky o {0:0.0##} sekund dříve</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Zobrazit všechny řádky o {0:0.0##} sekund později</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Zobrazit vybrané řádky o {0:0.0##} sekund dříve</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Zobrazit vybrané řádky o {0:0.0##} sekund později</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Zobrazit výběr a posunout o {0:0.0##} sekund dříve</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Zobrazit výběr a posunout o {0:0.0##} sekund později</ShowSelectionAndForwardXSecondsLinesLater>
     <DoubleWordsViaRegEx>Zdvojená slova pomocí regulárního výrazu {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Před seřazením: {0}</BeforeSortX>
     <SortedByX>Seřazeno podle: {0}</SortedByX>
