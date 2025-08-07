@@ -111,6 +111,9 @@
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="Icons\BeautifyTimeCodes.png" />
+    <Content Include="Languages\hy-AM.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="Hunspellx64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -302,6 +305,9 @@
   <ItemGroup>
     <Compile Remove="Logic\VideoPlayers\DirectShowLib2005.cs" />
     <EmbeddedResource Remove="Forms\GetDictionaries.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Languages\hy-AM.xml" />
   </ItemGroup>
   <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
     <Exec Condition="'$(OS)' == 'Windows_NT'" Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
