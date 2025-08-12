@@ -177,8 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                    $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + TextlineOrientationModelName}\" " +
                    $"--textline_orientation_model_name \"{TextlineOrientationModelName}\"";
 
-                string PaddleOCRPath = null;
-
+                string PaddleOCRPath = "paddleocr";
                 if (File.Exists(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe")))
                 {
                     PaddleOCRPath = Path.GetFullPath(Path.Combine(Configuration.PaddleOcrDirectory, "paddleocr.exe"));
