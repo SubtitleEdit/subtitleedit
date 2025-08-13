@@ -30,8 +30,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public string UppercaseNouns(string text)
         {
-            var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-            if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
+            if (!text.IsFormattingOnly())
             {
                 var st = new StrippableText(text);
 

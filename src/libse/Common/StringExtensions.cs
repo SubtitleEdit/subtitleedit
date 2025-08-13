@@ -909,5 +909,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u202B", string.Empty) // &rlm;
                 .Replace("\u202A", string.Empty); // &lmr;
         }
+
+        /// <summary>
+        /// Determines whether a given string contains only formatting elements such as HTML tags,
+        /// control characters, or whitespace, and does not include any textual letters.
+        /// </summary>
+        /// <param name="input">The input string to be checked.</param>
+        /// <returns>True if the input string contains only formatting characters or whitespace; otherwise, false.</returns>
+        public static bool IsFormattingOnly(this string input)
+        {
+            string noFormattingText = HtmlUtil.RemoveHtmlTags(input, true);
+            if (string.IsNullOrWhiteSpace(noFormattingText))
+            {
+                return true;
+            }
+
+            return !noFormattingText.ContainsLetter();
+        }
     }
 }
