@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Logic
             path.Dispose();
             brush.Dispose();
             outlineImage.Dispose();
+            shadowImage.Dispose();
             gShadow.Dispose();
             gOutline.Dispose();
             g.Dispose();
@@ -297,6 +298,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             newImage.Dispose();
             outlineImage.Dispose();
+            shadowImage.Dispose();
             gShadow.Dispose();
             gOutline.Dispose();
             g.Dispose();
