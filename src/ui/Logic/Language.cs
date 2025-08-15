@@ -1361,7 +1361,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Formality = "Formality",
                 TranslateCurrentLine = "Translate only current line",
                 ReTranslateCurrentLine = "Re-translate current line",
-                Delay = "Delay between server calls",
+                Delay = "Delay in seconds between server calls",
                 MaxBytes = "Maximum bytes in each server call",
                 MergeSplitStrategy = "Split/merge handling",
                 PromptX = "Prompt for {0}",

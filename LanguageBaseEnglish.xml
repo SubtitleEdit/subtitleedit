@@ -1097,7 +1097,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <TranslateCurrentLine>Translate only current line</TranslateCurrentLine>
     <ReTranslateCurrentLine>Re-translate current line</ReTranslateCurrentLine>
     <MergeSplitStrategy>Split/merge handling</MergeSplitStrategy>
-    <Delay>Delay between server calls</Delay>
+    <Delay>Delay in seconds between server calls</Delay>
     <MaxBytes>Maximum bytes in each server call</MaxBytes>
     <PromptX>Prompt for {0}</PromptX>
     <TranslateLinesSeparately>Translate each line separately</TranslateLinesSeparately>
