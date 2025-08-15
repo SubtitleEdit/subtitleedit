@@ -822,7 +822,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (listView != null && !listView.Enabled)
             {
                 var disabledBackgroundImage = new Bitmap(listView.ClientSize.Width, listView.ClientSize.Height);
-                Graphics.FromImage(disabledBackgroundImage).Clear(Color.DimGray);
+                using (var g = Graphics.FromImage(disabledBackgroundImage))
+                {
+                    g.Clear(Color.DimGray);
+                }
                 listView.BackgroundImage = disabledBackgroundImage;
                 listView.BackgroundImageTiled = true;
             }

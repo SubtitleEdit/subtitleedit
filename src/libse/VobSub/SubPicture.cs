@@ -240,9 +240,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
             if (fourColors[0] != Color.Transparent)
             {
-                var gr = Graphics.FromImage(bmp);
-                gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
-                gr.Dispose();
+                using (var gr = Graphics.FromImage(bmp))
+                using (var brush = new SolidBrush(fourColors[0]))
+                {
+                    gr.FillRectangle(brush, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                }
             }
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
