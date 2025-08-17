@@ -31,6 +31,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
 
+        // Compiled and cached regex to avoid per-call allocations in RemoveUnneededSpaces and related cleaners
+        private static readonly Regex RegexOrdinal1 = new Regex(@"(1) (st)\b", RegexOptions.Compiled);
+        private static readonly Regex RegexOrdinal2 = new Regex(@"(2) (nd)\b", RegexOptions.Compiled);
+        private static readonly Regex RegexOrdinal3 = new Regex(@"(3) (rd)\b", RegexOptions.Compiled);
+        private static readonly Regex RegexOrdinalTh = new Regex(@"([0456789]) (th)\b", RegexOptions.Compiled);
+        private static readonly Regex RegexArabicWaSpace = new Regex(@"\bو ", RegexOptions.Compiled);
+        private static readonly Regex RegexLetterDotLetter = new Regex(@"[a-z] \. [A-Z]", RegexOptions.Compiled);
+
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka", ".opus", ".adts", ".m4b" };
 
@@ -2299,16 +2307,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (language == "en" && text.ContainsNumber())
             {
                 // 1 st => 1st
-                text = new Regex(@"(1) (st)\b").Replace(text, "$1$2");
+                text = RegexOrdinal1.Replace(text, "$1$2");
 
                 // 2 nd => 2nd
-                text = new Regex(@"(2) (nd)\b").Replace(text, "$1$2");
+                text = RegexOrdinal2.Replace(text, "$1$2");
 
                 // 3 rd => 2rd
-                text = new Regex(@"(3) (rd)\b").Replace(text, "$1$2");
+                text = RegexOrdinal3.Replace(text, "$1$2");
 
                 // 4 th => 4th
-                text = new Regex(@"([0456789]) (th)\b").Replace(text, "$1$2");
+                text = RegexOrdinalTh.Replace(text, "$1$2");
             }
 
             if (language != null && "en-da-es-sv-de-nb-cz".Contains(language) && text.ContainsNumber())
@@ -2341,7 +2349,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     text = text.Replace(" \u060C", "\u060C");
                 }
 
-                text = new Regex(@"\bو ").Replace(text, "و");
+                text = RegexArabicWaSpace.Replace(text, "و");
 
                 while (text.Contains("ـ "))
                 {
@@ -2351,12 +2359,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (text.Contains(" . "))
             {
-                var regex = new Regex(@"[a-z] \. [A-Z]");
-                var match = regex.Match(text);
+                var match = RegexLetterDotLetter.Match(text);
                 while (match.Success)
                 {
                     text = text.Remove(match.Index + 1, 1);
-                    match = regex.Match(text);
+                    match = RegexLetterDotLetter.Match(text);
                 }
             }
 
