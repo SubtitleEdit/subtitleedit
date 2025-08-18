@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 25.07.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1097,7 +1097,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <TranslateCurrentLine>Traduci solo riga attuale</TranslateCurrentLine>
     <ReTranslateCurrentLine>Ritraduci riga attuale</ReTranslateCurrentLine>
     <MergeSplitStrategy>Gestione divisione/unione</MergeSplitStrategy>
-    <Delay>Ritardo tra chiamate al server</Delay>
+    <Delay>Ritardo in secondi chiamate al server</Delay>
     <MaxBytes>Numero massimo byte in ciascuna chiamata al server</MaxBytes>
     <PromptX>Prompt per {0}</PromptX>
     <TranslateLinesSeparately>Traduci ogni riga separatamente</TranslateLinesSeparately>
