@@ -15,12 +15,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string DisplayName { get; }
 
-        public TextEncoding(Encoding encoding, string displayName)
+        public TextEncoding(Encoding encoding, string utf8DisplayName)
         {
-            if (displayName != null)
+            if (utf8DisplayName != null)
             {
                 Encoding = Encoding.UTF8;
-                DisplayName = displayName;
+                DisplayName = utf8DisplayName;
             }
             else
             {
@@ -39,27 +39,51 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool Equals(string other)
         {
-            return !ReferenceEquals(other, null) && (
-                   Encoding.WebName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
-                   Encoding.EncodingName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
-                   DisplayName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
-                   Encoding.CodePage.ToString().Equals(other));
+            if (string.IsNullOrEmpty(other))
+            {
+                return false;
+            }
+
+            return Encoding.WebName.Equals(other, StringComparison.Ordinal)
+                || Encoding.EncodingName.Equals(other, StringComparison.Ordinal)
+                || DisplayName.Equals(other, StringComparison.Ordinal)
+                || Encoding.CodePage.ToString().Equals(other, StringComparison.Ordinal);
         }
 
         public bool Equals(Encoding other)
         {
-            return !ReferenceEquals(other, null) && Encoding.CodePage.Equals(other.CodePage);
+            return other != null && Encoding.CodePage == other.CodePage;
         }
 
         public override bool Equals(object obj)
         {
-            var item = obj as TextEncoding;
-            return !ReferenceEquals(item, null) && Equals(item.Encoding);
+            if (obj is TextEncoding te)
+            {
+                return Encoding.CodePage == te.Encoding.CodePage && string.Equals(DisplayName, te.DisplayName, StringComparison.Ordinal);
+            }
+
+            if (obj is Encoding enc)
+            {
+                return Equals(enc);
+            }
+
+            if (obj is string s)
+            {
+                return Equals(s);
+            }
+
+            return false;
         }
 
         public override int GetHashCode()
         {
-            return Encoding.CodePage.GetHashCode();
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 31 + Encoding.CodePage.GetHashCode();
+                hash = hash * 31 + StringComparer.Ordinal.GetHashCode(DisplayName);
+                return hash;
+            }
         }
     }
 }
