@@ -2906,7 +2906,7 @@
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} تصویر ذخیره شده در {1</XImagesSavedInY>
-    <DictionaryX>فرهنگ لغت: {0</DictionaryX>
+    <DictionaryX>دانلود {0}</DictionaryX>
     <RightToLeft>راست به چپ</RightToLeft>
     <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>idx استفاده از زمان‌‌‌های فایل</UseTimeCodesFromIdx>
@@ -2920,7 +2920,7 @@
     <DiscardTitle>از تغییرات ایجاد شده در OCR صرفنظر کنید؟</DiscardTitle>
     <DiscardText>آیا می خواهید از تغییرات ایجاد شده در جلسه فعلی OCR صرفنظر کنید؟</DiscardText>
     <MinLineSplitHeight>حداقل  ارتفاع خط (تقسیم)</MinLineSplitHeight>
-    <FallbackToX>بازپرداخت به {0</FallbackToX>
+    <FallbackToX>بازگشت به {0}</FallbackToX>
     <ImagePreProcessing>پیش پردازش تصویر ...</ImagePreProcessing>
     <EditImageDb>DB تصویر را ویرایش کنید</EditImageDb>
     <OcrTraining>آموزش OCR...</OcrTraining>
