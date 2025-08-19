@@ -1436,7 +1436,7 @@
       <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
       <GoogleTranslate>مترجم گوگل</GoogleTranslate>
       <AutoTranslate>ترجمه خودکار</AutoTranslate>
-      <GoogleIt>گوگل آن را</GoogleIt>
+      <GoogleIt>گوگل کن</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>موقعیت ویدئو :</VideoPosition>
@@ -2579,7 +2579,7 @@
     <AddToUserDictionary>اضافه کردن کاربر به فرهنگ لغت</AddToUserDictionary>
     <AddToNamesAndIgnoreList>اضافه کردن به نام/لیست سر و صدا -حساس به حروف کوچک</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>اضافه کردن جفت به لیست جایگزین OCR</AddToOcrReplaceList>
-    <Abort>سقط جنین</Abort>
+    <Abort>لغو</Abort>
     <Use>استفاده</Use>
     <UseAlways>استفاده از همیشه</UseAlways>
     <Suggestions>پیشنهادات</Suggestions>
