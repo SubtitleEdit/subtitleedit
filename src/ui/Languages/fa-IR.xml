@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1207,7 +1207,7 @@
         <TextTotalLength>متن -- مجموع طول</TextTotalLength>
         <TextNumberOfLines>متن -- تعداد خطوط</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>متن - تعداد حروف/ثانیه</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>متن - کلمات در دقیقه )wpm(</WordsPerMinute>
+        <WordsPerMinute>متن - کلمات در دقیقه (wpm)</WordsPerMinute>
         <Style>سبک</Style>
         <Ascending>صعودی</Ascending>
         <Descending>نزولی</Descending>
@@ -1630,8 +1630,8 @@
     <NumberOfLinesReplacedX>تعداد خطوط با متن جایگزین شده: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNameList>نام فایل '{0}' به نام/لیست و غیره اضافه شده است</NameXAddedToNameList>
     <NameXNotAddedToNameList>نام فایل '{0}' بود نه به نام/لیست و غیره اضافه شده</NameXNotAddedToNameList>
-    <WordXAddedToUserDic>کلمه '}0{' به فرهنگ لغت کاربر اضافه شد</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>کلمه '}0{' به فرهنگ لغت کاربر اضافه نشد</WordXNotAddedToUserDic>
+    <WordXAddedToUserDic>کلمه '{0}' به فرهنگ لغت کاربر اضافه شد</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>کلمه '{0}' به فرهنگ لغت کاربر اضافه نشد</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>جفت لیست جایگزینی OCR "{0} -&gt; {1}" به لیست جایگزین OCR اضافه شد</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>جفت لیست جایگزین OCR "{0} -&gt; {1}" به لیست جایگزین OCR اضافه نشد</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} انتخاب خطوط</XLinesSelected>
@@ -2648,7 +2648,7 @@
     <SavePartTwoAs>بخش 2 ذخیره به عنوان</SavePartTwoAs>
     <Part1>قسمت 1</Part1>
     <Part2>قسمت 2</Part2>
-    <UnableToSaveFileX>to 0} ذخیره نمی شود</UnableToSaveFileX>
+    <UnableToSaveFileX>to {0} ذخیره نمی شود</UnableToSaveFileX>
     <OverwriteExistingFiles>بازنویسی فایل های موجود؟</OverwriteExistingFiles>
     <FolderNotFoundX>پوشه یافت نشد: {0}</FolderNotFoundX>
     <Untitled>بدون عنوان</Untitled>
@@ -2905,7 +2905,7 @@
     <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
-    <XImagesSavedInY>{0} تصویر ذخیره شده در {1</XImagesSavedInY>
+    <XImagesSavedInY>{0} تصویر ذخیره شده در {1}</XImagesSavedInY>
     <DictionaryX>دانلود {0}</DictionaryX>
     <RightToLeft>راست به چپ</RightToLeft>
     <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
@@ -2947,7 +2947,7 @@
     <Spanish>اسپانیایی</Spanish>
     <German>آلمانی</German>
     <AutoSubmitOnFirstChar>اراده دادن خودکار بر روی&amp;اولین کاراکتر</AutoSubmitOnFirstChar>
-    <EditLastX>ویرایش آخر: {0</EditLastX>
+    <EditLastX>ویرایش آخر: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>رسیدگی سنجیدن تطابق ها برای عکس جاری</Title>
