@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.13</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -1097,7 +1097,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <TranslateCurrentLine>Translate only current line</TranslateCurrentLine>
     <ReTranslateCurrentLine>Re-translate current line</ReTranslateCurrentLine>
     <MergeSplitStrategy>Split/merge handling</MergeSplitStrategy>
-    <Delay>Delay between server calls</Delay>
+    <Delay>Delay in seconds between server calls</Delay>
     <MaxBytes>Maximum bytes in each server call</MaxBytes>
     <PromptX>Prompt for {0}</PromptX>
     <TranslateLinesSeparately>Translate each line separately</TranslateLinesSeparately>
@@ -3446,6 +3446,7 @@ Keep changes?</KeepChangesMessage>
     <ExtendToNext>Extend to next</ExtendToNext>
     <PlaySelection>Play selection</PlaySelection>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Combine waveform and spectrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
     <AddShotChange>Add shot change</AddShotChange>

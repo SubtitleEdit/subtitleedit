@@ -1,7 +1,8 @@
 ﻿Subtitle Edit Changelog
 
-4.0.13 (xth July 2025) BETA
+4.0.13 (30th July 2025) 
 * NEW
+   * Add Mousepad horzontal scrolling - thx bjorn-ali-goransson
    * Add Tatar translation - thx Ирек
    * Allow complex number formatting in custom export - thx oph
 * IMPROVED:
@@ -14,6 +15,7 @@
    * Update German translation - thx Joachim
    * Update Russian translation - thx elfriob
    * Update Turksih translation - thx bilimiyorum
+   * Update PaddleOCR to 3.1 - timminator
    * Update Whisper CPP to 1.7.6
    * Add Brazilian Portuguese for LibreTranslate - thx erickcomcek
    * Minor UI improvementx for burn-in - thx Leon
@@ -24,6 +26,11 @@
    * Handle ASSA with milliseconds - thx ixff
    * Update Gemini models to include 2.5 family - thx mehmetsahin06
    * Improve English split list - thx fraternl
+   * Optimize SRT reading
+   * Add Myanmar (Burmese) in translation pairs - thx TwizzyIndy
+   * Add option for combine waveform/spectrogram - thx Flitskikker
+   * Allow non-Latin letters in WebVTT style name - thx linshi963
+   * Update yt-dlp to 2025-07-21
 * FIXED:
    * Enable automatic translation via proxy - thx solidvan
    * Fix crash in undo timer - thx darnn
@@ -39,6 +46,11 @@
    * Fix for Japanese text length calculation - thx Ashita
    * Fix DeepL formality issue - thx rRobis
    * Fix issue with quote for AI auto-translate prompt - thx Zsolt
+   * Fix no-audio-error in "Audio to text" on Linux - thx Kev1n121
+   * Fix for VisualSync start/end index when < 4 lines - thx Leif
+   * Fix extra "]" character in iTunes-timed-text - thx Silvia
+   * Fix warning loading SubRip with only numbers - thx timminator
+   * Fix freeze loading some files names - thx Flitskikker
 
 
 Subtitle Edit Changelog

@@ -525,6 +525,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.General.ShowSpectrogram = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("CombineSpectrogramAndWaveform");
+            if (subNode != null)
+            {
+                settings.General.CombineSpectrogramAndWaveform = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
             {
@@ -5873,6 +5879,24 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VobSubOcr.CaptureTopAlign = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("PaddleOcrUseGpu");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.PaddleOcrUseGpu = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("PaddleOcrLanguageCode");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.PaddleOcrLanguageCode = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("PaddleOcrMode");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.PaddleOcrMode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UnfocusedAttentionBlinkCount");
             if (subNode != null)
             {
@@ -8880,6 +8904,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("CombineSpectrogramAndWaveform", settings.General.CombineSpectrogramAndWaveform.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 xmlWriter.WriteElementString("DefaultSaveAsFormat", settings.General.DefaultSaveAsFormat);
@@ -9849,6 +9874,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
                 xmlWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PaddleOcrUseGpu", settings.VobSubOcr.PaddleOcrUseGpu.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("PaddleOcrLanguageCode", settings.VobSubOcr.PaddleOcrLanguageCode);
+                xmlWriter.WriteElementString("PaddleOcrMode", settings.VobSubOcr.PaddleOcrMode);
                 xmlWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);

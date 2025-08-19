@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string[] Models => new[]
         {
             "gemini-2.5-flash",
+            "gemini-2.5-flash-lite",
             "gemini-2.5-pro",
             "gemini-2.0-flash",
             "gemini-2.0-flash-lite",
@@ -215,6 +216,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Moldovan","ro"),
                MakePair("Mongolian","mn"),
                MakePair("Montenegrin",""),
+               MakePair("Myanmar(Burmese)", "my"),
                MakePair("Nepali","ne"),
                MakePair("Norwegian","no"),
                MakePair("Oriya","or"),

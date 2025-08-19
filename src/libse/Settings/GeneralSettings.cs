@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool ShowAudioVisualizer { get; set; }
         public bool ShowWaveform { get; set; }
         public bool ShowSpectrogram { get; set; }
+        public bool CombineSpectrogramAndWaveform { get; set; }
         public bool ShowFrameRate { get; set; }
         public bool ShowVideoControls { get; set; }
         public bool TextAndOrigianlTextBoxesSwitched { get; set; }
