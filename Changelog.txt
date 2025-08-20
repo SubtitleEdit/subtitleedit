@@ -69,8 +69,6 @@
    * Fix freeze loading some files names - thx Flitskikker
 
 
-Subtitle Edit Changelog
-
 4.0.12 (14th April 2025)
 * NEW
    * Add read support for "OOONA json" format - thx Alfonso
