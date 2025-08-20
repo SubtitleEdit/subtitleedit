@@ -387,13 +387,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
             {
                 return Crop(bmpImage, minX, minY, maxX - minX, maxY - minY);
-                //var bmpCrop = new SKBitmap();
-                //// SKBitmap.ExtractSubset expects (left, top, right, bottom) coordinates
-                //var rect = new SKRectI(minX, minY, maxX, maxY);
-                //if (bmpImage.ExtractSubset(bmpCrop, rect))
-                //{
-                //    return bmpCrop;
-                //}
             }
 
             // In SkiaSharp, we need to create a new bitmap and copy the pixels
