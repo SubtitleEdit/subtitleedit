@@ -1093,7 +1093,7 @@ Command line: {1} {2}
     <TranslateCurrentLine>仅翻译当前行</TranslateCurrentLine>
     <ReTranslateCurrentLine>重新翻译当前行</ReTranslateCurrentLine>
     <MergeSplitStrategy>拆分/合并处理</MergeSplitStrategy>
-    <Delay>服务器调用的延迟</Delay>
+    <Delay>服务器调用的延迟 (秒)</Delay>
     <MaxBytes>每次服务器调用的最大字节数</MaxBytes>
     <PromptX>{0} 的提示词</PromptX>
     <TranslateLinesSeparately>分别翻译每一行</TranslateLinesSeparately>
