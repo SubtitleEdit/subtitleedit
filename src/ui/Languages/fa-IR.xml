@@ -1207,7 +1207,7 @@
         <TextTotalLength>متن -- مجموع طول</TextTotalLength>
         <TextNumberOfLines>متن -- تعداد خطوط</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>متن - تعداد حروف/ثانیه</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>متن - کلمات در دقیقه (wpm)</WordsPerMinute>
+        <WordsPerMinute>متن - کلمات در دقیقه )wpm(</WordsPerMinute>
         <Style>سبک</Style>
         <Ascending>صعودی</Ascending>
         <Descending>نزولی</Descending>
@@ -1436,7 +1436,7 @@
       <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
       <GoogleTranslate>مترجم گوگل</GoogleTranslate>
       <AutoTranslate>ترجمه خودکار</AutoTranslate>
-      <GoogleIt>گوگل کن</GoogleIt>
+      <GoogleIt>گوگل آن را</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>موقعیت ویدئو :</VideoPosition>
@@ -1630,8 +1630,8 @@
     <NumberOfLinesReplacedX>تعداد خطوط با متن جایگزین شده: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNameList>نام فایل '{0}' به نام/لیست و غیره اضافه شده است</NameXAddedToNameList>
     <NameXNotAddedToNameList>نام فایل '{0}' بود نه به نام/لیست و غیره اضافه شده</NameXNotAddedToNameList>
-    <WordXAddedToUserDic>کلمه '{0}' به فرهنگ لغت کاربر اضافه شد</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>کلمه '{0}' به فرهنگ لغت کاربر اضافه نشد</WordXNotAddedToUserDic>
+    <WordXAddedToUserDic>کلمه '}0{' به فرهنگ لغت کاربر اضافه شد</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>کلمه '}0{' به فرهنگ لغت کاربر اضافه نشد</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>جفت لیست جایگزینی OCR "{0} -&gt; {1}" به لیست جایگزین OCR اضافه شد</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>جفت لیست جایگزین OCR "{0} -&gt; {1}" به لیست جایگزین OCR اضافه نشد</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} انتخاب خطوط</XLinesSelected>
@@ -2574,14 +2574,14 @@
     <Language>زبان</Language>
     <Change>تغییر</Change>
     <ChangeAll>تغییر همه</ChangeAll>
-    <SkipOnce>یک بار نادیده بگیر</SkipOnce>
-    <SkipAll>نادیده گرفتن همه</SkipAll>
-    <AddToUserDictionary>اضافه کردن به فرهنگ لغت کاربر</AddToUserDictionary>
+    <SkipOnce>پرش و یک</SkipOnce>
+    <SkipAll>پرش و تمام</SkipAll>
+    <AddToUserDictionary>اضافه کردن کاربر به فرهنگ لغت</AddToUserDictionary>
     <AddToNamesAndIgnoreList>اضافه کردن به نام/لیست سر و صدا -حساس به حروف کوچک</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>اضافه کردن جفت به لیست جایگزین OCR</AddToOcrReplaceList>
-    <Abort>لغو</Abort>
-    <Use>استفاده کن</Use>
-    <UseAlways>همیشه استفاده کن</UseAlways>
+    <Abort>سقط جنین</Abort>
+    <Use>استفاده</Use>
+    <UseAlways>استفاده از همیشه</UseAlways>
     <Suggestions>پیشنهادات</Suggestions>
     <SpellCheckProgress>بررسی املا [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>ویرایش کل متن</EditWholeText>
@@ -2648,7 +2648,7 @@
     <SavePartTwoAs>بخش 2 ذخیره به عنوان</SavePartTwoAs>
     <Part1>قسمت 1</Part1>
     <Part2>قسمت 2</Part2>
-    <UnableToSaveFileX>to {0} ذخیره نمی شود</UnableToSaveFileX>
+    <UnableToSaveFileX>to 0} ذخیره نمی شود</UnableToSaveFileX>
     <OverwriteExistingFiles>بازنویسی فایل های موجود؟</OverwriteExistingFiles>
     <FolderNotFoundX>پوشه یافت نشد: {0}</FolderNotFoundX>
     <Untitled>بدون عنوان</Untitled>
@@ -2874,9 +2874,9 @@
     <MaxErrorPercent>حداکثر خطای٪</MaxErrorPercent>
     <New>جدید</New>
     <Edit>ویرایش</Edit>
-    <StartOcr>شروع Ocr</StartOcr>
+    <StartOcr>شروع او سی آر</StartOcr>
     <Stop>توقف</Stop>
-    <StartOcrFrom>شروع Ocr از شماره:</StartOcrFrom>
+    <StartOcrFrom>او سی آر شروع از هیچ نام :</StartOcrFrom>
     <LoadingVobSubImages>VobSub بارگذاری تصاویر</LoadingVobSubImages>
     <LoadingImageCompareDatabase>بارگیری تصویر مقایسه پایگاه داده...</LoadingImageCompareDatabase>
     <ConvertingImageCompareDatabase>تبدیل پایگاه داده مقایسه تصویر به فرمت جدید (images.db/images.xml)...</ConvertingImageCompareDatabase>
@@ -2892,20 +2892,20 @@
     <TransportStreamGrayscale>سیاه و سفید</TransportStreamGrayscale>
     <TransportStreamGetColor>استفاده از رنگ (تقسیم خطوط ممکن است رخ دهد)</TransportStreamGetColor>
     <PromptForUnknownWords>اعلان کلمات ناشناخته</PromptForUnknownWords>
-    <TryToGuessUnknownWords>سعی کن واژه های ناشناخته رو حدس بزنی</TryToGuessUnknownWords>
-    <AutoBreakSubtitleIfMoreThanTwoLines>اگر پاراگراف بیشتر از دو خط شد، خودکار به خط بعد برو</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>ویرایش شده ها</AllFixes>
-    <GuessesUsed>حدس های استفاده ‌شده</GuessesUsed>
+    <TryToGuessUnknownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnknownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>خودکار بند شکستن اگر بیش از دو خط</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>همه رفع</AllFixes>
+    <GuessesUsed>حدس استفاده</GuessesUsed>
     <UnknownWords>کلمات نامعلوم</UnknownWords>
     <UnknownWordToGuessInLine>{0} ⇒ {1} از طریق «OCRFixReplaceList/WordSplitList» در خط: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>او سی آر اصلاح خودکار / spell checking</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>درست کردن خطاهای Ocr</FixOcrErrors>
+    <FixOcrErrors>تعمیر خطاهای او سی آر</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>باز کردن متن با تطبیق دادن زمان کدها</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>کد های زمان جدید وارد کنید</ImportNewTimeCodes>
     <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
-    <XImagesSavedInY>{0} تصویر ذخیره شده در {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0} تصویر ذخیره شده در {1</XImagesSavedInY>
     <DictionaryX>دانلود {0}</DictionaryX>
     <RightToLeft>راست به چپ</RightToLeft>
     <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
@@ -2947,7 +2947,7 @@
     <Spanish>اسپانیایی</Spanish>
     <German>آلمانی</German>
     <AutoSubmitOnFirstChar>اراده دادن خودکار بر روی&amp;اولین کاراکتر</AutoSubmitOnFirstChar>
-    <EditLastX>ویرایش آخر: {0}</EditLastX>
+    <EditLastX>ویرایش آخر: {0</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>رسیدگی سنجیدن تطابق ها برای عکس جاری</Title>
@@ -3042,4 +3042,24 @@
     <Title>WebVTT - تنظیم صدای جدید</Title>
     <VoiceName>نام صدا</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>از مقدار هدر X-TIMESTAMP-MAP استفاده کن</UseXTimeStamp>
+    <MergeLines>ادغام خطوط تکراری هنگام بارگیری</MergeLines>
+    <MergeStyleTags>ادغام استایل تگ ها</MergeStyleTags>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>استایل های WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>تنظیمات پیشرفته ویسپر - آرگومان‌های command line اضافی</Title>
+    <CommandLineArguments>پارامترهای اضافی برای ویسپر command line:</CommandLineArguments>
+    <Info>توجه: نسخه های متفاوت ویسپر، پارامترهای command line متفاوتی دارند!</Info>
+    <Standard>استاندراد</Standard>
+    <StandardAsia>استاندارد آسیا</StandardAsia>
+    <HighlightCurrentWord>برجسته کردن کلمه فعلی</HighlightCurrentWord>
+    <SingleWords>تک‌ واژه‌ها</SingleWords>
+    <Sentence>جمله</Sentence>
+    <EnableVad>فعال سازی VAD</EnableVad>
+    <VadModelNotFound>مدل VAD یافت نشد.</VadModelNotFound>
+  </WhisperAdvanced>
 </Language>
