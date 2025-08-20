@@ -383,27 +383,49 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             bmp.UnlockImage();
             var bmpImage = bmp.GetBitmap();
+
             if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
             {
-                // In SkiaSharp, we use SKBitmap.ExtractSubset instead of Clone with rectangle
-                var bmpCrop = new SKBitmap();
-
-                var rect = SKRectI.Create(
-                    minX,
-                    minY,
-                    maxX - minX + 1, // width
-                    maxY - minY + 1  // height
-                );
-
-                bmpImage.ExtractSubset(bmpCrop, rect);
-
-                return bmpCrop;
+                return Crop(bmpImage, minX, minY, maxX - minX, maxY - minY);
+                //var bmpCrop = new SKBitmap();
+                //// SKBitmap.ExtractSubset expects (left, top, right, bottom) coordinates
+                //var rect = new SKRectI(minX, minY, maxX, maxY);
+                //if (bmpImage.ExtractSubset(bmpCrop, rect))
+                //{
+                //    return bmpCrop;
+                //}
             }
 
             // In SkiaSharp, we need to create a new bitmap and copy the pixels
             var clone = new SKBitmap(bmpImage.Width, bmpImage.Height);
             bmpImage.CopyTo(clone);
+            
             return clone;
+        }
+
+        private static SKBitmap Crop(SKBitmap source, int x, int y, int width, int height)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (width <= 0 || height <= 0)
+                return null;
+
+            // Clamp to source bounds (avoid out-of-range)
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x + width > source.Width) width = source.Width - x;
+            if (y + height > source.Height) height = source.Height - y;
+
+            var rect = SKRectI.Create(x, y, width, height);
+
+            var target = new SKBitmap(rect.Width, rect.Height, source.ColorType, source.AlphaType);
+            using (var canvas = new SKCanvas(target))
+            {
+                canvas.DrawBitmap(source, rect, new SKRect(0, 0, rect.Width, rect.Height));
+            }
+
+            return target;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
