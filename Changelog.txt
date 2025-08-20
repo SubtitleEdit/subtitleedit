@@ -1,5 +1,21 @@
 ﻿Subtitle Edit Changelog
 
+4.0.14 (xth October 2025) BETA
+* NEW
+   * Add Armenian translation - thx ArsenTech
+* IMPROVED:
+   * Update Persian translation - thx rmtjokar
+   * Update Chinese translation - thx nkh0472
+   * Update Italian translation - thx bovirus
+   * Update Bulgarian translation - thx Калин
+   * Update Polish translation - thx admas
+   * Make auto-translate settings delay label unit clear - thx Hunique
+   * Update GPT model names - thx Elad
+* FIXED:
+   * Fix nOCR italic issue - thx Zoltan
+   * Fix for decimal in Czech language file - thx Lucas
+
+
 4.0.13 (30th July 2025) 
 * NEW
    * Add Mousepad horzontal scrolling - thx bjorn-ali-goransson
