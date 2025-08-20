@@ -387,7 +387,16 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 // In SkiaSharp, we use SKBitmap.ExtractSubset instead of Clone with rectangle
                 var bmpCrop = new SKBitmap();
-                bmpImage.ExtractSubset(bmpCrop, new SKRectI(minX, minY, maxX, maxY));
+
+                var rect = SKRectI.Create(
+                    minX,
+                    minY,
+                    maxX - minX + 1, // width
+                    maxY - minY + 1  // height
+                );
+
+                bmpImage.ExtractSubset(bmpCrop, rect);
+
                 return bmpCrop;
             }
 
