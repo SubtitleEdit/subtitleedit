@@ -1561,23 +1561,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
         {
-            if (listViewSelected == null ||
-                listViewOther == null ||
-                listViewSelected.SelectedItems.Count == 0 ||
-                listViewSelected.TopItem == null)
+            try
             {
-                return;
-            }
-
-            var first = listViewSelected.TopItem.Index;
-            var index = listViewSelected.SelectedItems[0].Index;
-            if (index < listViewOther.Items.Count)
-            {
-                listViewOther.SelectIndexAndEnsureVisible(index, false);
-                if (first >= 0)
+                if (listViewSelected == null ||
+                    listViewOther == null ||
+                    listViewSelected.SelectedItems.Count == 0 ||
+                    listViewSelected.TopItem == null)
                 {
-                    listViewOther.TopItem = listViewOther.Items[first];
+                    return;
                 }
+
+                var first = listViewSelected.TopItem.Index;
+                var index = listViewSelected.SelectedItems[0].Index;
+                if (index < listViewOther.Items.Count)
+                {
+                    listViewOther.SelectIndexAndEnsureVisible(index, false);
+                    if (first >= 0)
+                    {
+                        listViewOther.TopItem = listViewOther.Items[first];
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
             }
         }
 
