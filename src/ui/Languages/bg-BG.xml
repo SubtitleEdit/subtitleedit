@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.13</Version>
-    <TranslatedBy>Последен превод на български 09.08.2025: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 21.08.2025: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1096,7 +1096,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranslateCurrentLine>Превод само на текущия ред</TranslateCurrentLine>
     <ReTranslateCurrentLine>Повторен превод на текущия ред</ReTranslateCurrentLine>
     <MergeSplitStrategy>Разделяне/обединяване - Обработка</MergeSplitStrategy>
-    <Delay>Закъснение между повикванията на сървъра</Delay>
+    <Delay>Забавяне между сървърните повиквания в секунди</Delay>
     <MaxBytes>Макс. брой байтове при всяко повикване на сървъра</MaxBytes>
     <PromptX>Запитване за {0}</PromptX>
     <TranslateLinesSeparately>Превеждане на всеки ред поотделно</TranslateLinesSeparately>
