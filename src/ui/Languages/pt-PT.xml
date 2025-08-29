@@ -1100,7 +1100,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <TranslateCurrentLine>Traduzir apenas a linha atual</TranslateCurrentLine>
     <ReTranslateCurrentLine>Traduzir novamente a linha atual</ReTranslateCurrentLine>
     <MergeSplitStrategy>Tratamento de dividir/combinar</MergeSplitStrategy>
-    <Delay>Atraso entre chamadas ao servidor</Delay>
+    <Delay>Atraso em segundos entre chamadas ao servidor</Delay>
     <MaxBytes>Máximo de bytes em cada chamada ao servidor</MaxBytes>
     <PromptX>Solicitar para {0}</PromptX>
     <TranslateLinesSeparately>Traduzir cada linha separadamente</TranslateLinesSeparately>
