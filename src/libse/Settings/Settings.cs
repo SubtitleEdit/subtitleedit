@@ -5964,6 +5964,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.VobSubOcr.OllamaModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GoogleLensLanguage");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.GoogleLensLanguage = subNode.InnerText;
+            }
+
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
                 var group = new MultipleSearchAndReplaceGroup
@@ -9909,6 +9915,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("OllamaLanguage", settings.VobSubOcr.OllamaLanguage);
                 xmlWriter.WriteElementString("OllamaModel", settings.VobSubOcr.OllamaModel);
+                xmlWriter.WriteElementString("GoogleLensLanguage", settings.VobSubOcr.GoogleLensLanguage);
 
                 xmlWriter.WriteEndElement();
 

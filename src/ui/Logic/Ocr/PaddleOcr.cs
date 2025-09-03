@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private object LockObject = new object();
 
-        public void OcrBatch(List<PaddleOcrInput> input, string language, bool useGpu, string mode, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
+        public void OcrBatch(List<OcrInput> input, string language, bool useGpu, string mode, Action<OcrInput> progressCallback, Func<bool> abortCheck)
         {
             _log.Clear();
             hasErrors = false;

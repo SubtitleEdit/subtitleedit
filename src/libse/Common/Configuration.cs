@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
         public static readonly string PaddleOcrDirectory = DataDirectory + "PaddleOCR3-1";
+        public static readonly string GoogleLensDirectory = DataDirectory + "Google-Lens";
 
         public static readonly string DefaultLinuxFontName = "DejaVu Serif";
 
