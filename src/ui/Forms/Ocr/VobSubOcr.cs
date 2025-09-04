@@ -375,6 +375,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private OllamaOcr _ollamaOcr;
         private string _ollamaModel;
         private string _ollamaLanguage;
+        private GoogleLens _googleLens;
 
         private bool _okClicked;
         private readonly Dictionary<string, int> _unknownWordsDictionary;
@@ -395,6 +396,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodCloudVision = -1;
         private readonly int _ocrMethodPaddle = -1;
         private readonly int _ocrMethodOllama = -1;
+        private readonly int _ocrMethodGoogleLens = -1;
 
         private FindReplaceDialogHelper _findHelper;
         private FindDialog _findDialog;
@@ -551,6 +553,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodCloudVision = comboBoxOcrMethod.Items.Add(language.OcrViaCloudVision);
             _ocrMethodPaddle = comboBoxOcrMethod.Items.Add("Paddle OCR");
             _ocrMethodOllama = comboBoxOcrMethod.Items.Add("Ollama Vision");
+            _ocrMethodGoogleLens = comboBoxOcrMethod.Items.Add("Google Lens");
 
             _paddleOcr = new PaddleOcr();
             checkBoxPaddleOcrUseGpu.Checked = Configuration.Settings.VobSubOcr.PaddleOcrUseGpu;
@@ -561,6 +564,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (paddleLanguage.Code == Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode)
                 {
                     nikseComboBoxPaddleLanguages.SelectedIndex = nikseComboBoxPaddleLanguages.Items.Count - 1;
+                }
+            }
+
+            _googleLens = new GoogleLens();
+            nikseComboBoxGoogleLensLanguages.Items.Clear();
+            foreach (var googleLensLanguage in GoogleLens.GetLanguages())
+            {
+                nikseComboBoxGoogleLensLanguages.Items.Add(googleLensLanguage);
+                if (googleLensLanguage.Code == Configuration.Settings.VobSubOcr.GoogleLensLanguage)
+                {
+                    nikseComboBoxGoogleLensLanguages.SelectedIndex = nikseComboBoxGoogleLensLanguages.Items.Count - 1;
                 }
             }
 
@@ -1040,13 +1054,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
 
             // Collect all remaining bitmaps for PaddleOCR batch processing
-            List<PaddleOcrInput> paddleOcrInputs = null;
+            List<OcrInput> paddleOcrInputs = null;
             if (_ocrMethodIndex == _ocrMethodPaddle)
             {
                 for (var i = 0; i < max; i++)
                 {
                     GetSubtitleTime(i, out var startTime, out var endTime);
-                    paddleOcrInputs.Add(new PaddleOcrInput
+                    paddleOcrInputs.Add(new OcrInput
                     {
                         Bitmap = GetSubtitleBitmap(i),
                         Index = i,
@@ -1711,7 +1725,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color emphasis1;
             Color emphasis2;
 
-            bool makeTransparent = !(_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama);
+            bool makeTransparent = !(_ocrMethodIndex == _ocrMethodCloudVision || _ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama || _ocrMethodIndex == _ocrMethodGoogleLens);
 
             if (_mp4List != null)
             {
@@ -2136,7 +2150,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return nb.GetBitmap();
             }
 
-            if (_ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama)
+            if (_ocrMethodIndex == _ocrMethodPaddle || _ocrMethodIndex == _ocrMethodOllama || _ocrMethodIndex == _ocrMethodGoogleLens)
             {
                 return returnBmp;
             }
@@ -4649,6 +4663,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxCurrentText.BackColor = SystemColors.ActiveBorder;
 
             nikseComboBoxPaddleLanguages.SelectedIndexChanged += nikseComboBoxPaddleLanguages_SelectedIndexChanged;
+            nikseComboBoxGoogleLensLanguages.SelectedIndexChanged += nikseComboBoxGoogleLensLanguages_SelectedIndexChanged;
         }
 
         public void DoHide()
@@ -5332,13 +5347,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             // Collect the bitmaps to process
-            var paddleInput = new List<PaddleOcrInput>();
+            var paddleInput = new List<OcrInput>();
             if (selectedIndices != null)
             {
                 foreach (var index in selectedIndices)
                 {
                     GetSubtitleTime(index, out var startTime, out var endTime);
-                    paddleInput.Add(new PaddleOcrInput
+                    paddleInput.Add(new OcrInput
                     {
                         Index = index,
                         Bitmap = GetSubtitleBitmap(index),
@@ -5351,7 +5366,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 for (var index = i; index < max; index++)
                 {
                     GetSubtitleTime(index, out var startTime, out var endTime);
-                    paddleInput.Add(new PaddleOcrInput
+                    paddleInput.Add(new OcrInput
                     {
                         Index = index,
                         Bitmap = GetSubtitleBitmap(index),
@@ -5388,7 +5403,106 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             ProgressCallback?.Invoke($"{percent}%");
                         }
 
-                        var text = PostFixPaddle(progress);
+                        var text = PostFixOcrResult(progress);
+                        _subtitle.Paragraphs[progress.Index].Text = text;
+
+                        subtitleListView1.SetText(progress.Index, text);
+                        subtitleListView1.EnsureVisible(progress.Index);
+                        subtitleListView1.Items[progress.Index].Selected = true;
+                        subtitleListView1.Items[progress.Index].Focused = true;
+                        if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == progress.Index)
+                        {
+                            textBoxCurrentText.Text = text;
+                        }
+
+                        labelStatus.Refresh();
+                        progressBar1.Refresh();
+                    }));
+                }, () => _abort);
+            };
+
+            worker.RunWorkerCompleted += (sender, e) =>
+            {
+                resetEvent.Set();
+            };
+
+            worker.RunWorkerAsync();
+
+            while (!resetEvent.WaitOne(100))
+            {
+                Application.DoEvents();
+            }
+
+            return true;
+        }
+
+        private bool MainLoopGoogleLensBatch(int max, int i, List<int> selectedIndices = null)
+        {
+            if (selectedIndices == null && i >= max)
+            {
+                SetButtonsEnabledAfterOcrDone();
+                _mainOcrRunning = false;
+                return true;
+            }
+
+            // Collect the bitmaps to process
+            var googleLensInput = new List<OcrInput>();
+            if (selectedIndices != null)
+            {
+                foreach (var index in selectedIndices)
+                {
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    googleLensInput.Add(new OcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
+                }
+            }
+            else
+            {
+                for (var index = i; index < max; index++)
+                {
+                    GetSubtitleTime(index, out var startTime, out var endTime);
+                    googleLensInput.Add(new OcrInput
+                    {
+                        Index = index,
+                        Bitmap = GetSubtitleBitmap(index),
+                        ProgressText = $"{index} / {max}: {startTime} - {endTime}",
+                    });
+                }
+            }
+
+            labelStatus.Text = "Starting Google Lens OCR...";
+            labelStatus.Refresh();
+
+            // Outside background worker before OCRViaPaddleBatch!
+            if (_ocrFixEngine == null)
+            {
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
+            }
+
+            var resetEvent = new ManualResetEvent(false);
+            var worker = new BackgroundWorker();
+            worker.DoWork += (sender, e) =>
+            {
+                OcrViaGoogleLensBatch(googleLensInput, progress =>
+                {
+                    labelStatus.Invoke(new Action(() =>
+                    {
+                        labelStatus.Text = progress.ProgressText;
+
+                        progressBar1.Maximum = max;
+                        progressBar1.Value = progress.Index;
+
+                        if (ProgressCallback != null)
+                        {
+                            var percent = (int)Math.Round(progress.Index * 100.0 / max);
+                            ProgressCallback?.Invoke($"{percent}%");
+                        }
+
+                        var text = PostFixOcrResult(progress);
                         _subtitle.Paragraphs[progress.Index].Text = text;
 
                         subtitleListView1.SetText(progress.Index, text);
@@ -5469,6 +5583,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (_ocrMethodIndex == _ocrMethodPaddle)
             {
                 done = MainLoopPaddleBatch(_mainOcrTimerMax, _mainOcrIndex, _mainOcrSelectedIndices);
+            }
+            else if (_ocrMethodIndex == _ocrMethodGoogleLens)
+            {
+                done = MainLoopGoogleLensBatch(_mainOcrTimerMax, _mainOcrIndex, _mainOcrSelectedIndices);
             }
             else
             {
@@ -6744,7 +6862,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        public class PaddleOcrInput
+        public class OcrInput
         {
             public Bitmap Bitmap { get; set; }
             public int Index { get; set; }
@@ -6753,14 +6871,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public string ProgressText { get; set; }
         }
 
-        private void OcrViaPaddleBatch(List<PaddleOcrInput> input, Action<PaddleOcrInput> progressCallback, Func<bool> abortCheck)
+        private void OcrViaPaddleBatch(List<OcrInput> input, Action<OcrInput> progressCallback, Func<bool> abortCheck)
         {
             var language = (nikseComboBoxPaddleLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
             var mode = Configuration.Settings.VobSubOcr.PaddleOcrMode;
             _paddleOcr.OcrBatch(input, language, checkBoxPaddleOcrUseGpu.Checked, mode, progressCallback, abortCheck);
         }
 
-        private string PostFixPaddle(PaddleOcrInput input)
+        private void OcrViaGoogleLensBatch(List<OcrInput> input, Action<OcrInput> progressCallback, Func<bool> abortCheck)
+        {
+            var language = (nikseComboBoxGoogleLensLanguages.SelectedItem as OcrLanguage2)?.Code ?? "en";
+            _googleLens.OcrBatch(input, language, progressCallback, abortCheck);
+        }
+
+        private string PostFixOcrResult(OcrInput input)
         {
             string processedText = input.Text;
 
@@ -7749,6 +7873,27 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ShowOcrMethodGroupBox(groupBoxOllama);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Ollama";
             }
+            else if (_ocrMethodIndex == _ocrMethodGoogleLens)
+            {
+                ShowOcrMethodGroupBox(groupBoxGoogleLens);
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "GoogleLens";
+
+                if (!File.Exists(Path.Combine(Configuration.GoogleLensDirectory, "Chrome-Lens-CLI.exe")))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, $"Chrome-Lens-CLI"), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var form = new DownloadChromeLensCLI())
+                        {
+                            form.ShowDialog(this);
+                        }
+                    }
+                    else
+                    {
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                }
+            }
 
             _ocrFixEngine = null;
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7773,6 +7918,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             groupBoxCloudVision.Visible = false;
             groupBoxPaddle.Visible = false;
             groupBoxOllama.Visible = false;
+            groupBoxGoogleLens.Visible = false;
 
             groupBox.Visible = true;
             groupBox.BringToFront();
@@ -8315,6 +8461,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodOllama;
             }
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "GoogleLens" && comboBoxOcrMethod.Items.Count > _ocrMethodGoogleLens)
+            {
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodGoogleLens;
+            }
             else
             {
                 comboBoxOcrMethod.SelectedIndex = 0;
@@ -8837,6 +8987,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 Configuration.Settings.VobSubOcr.OllamaLanguage = nikseComboBoxOllamaLanguages.Text;
                 Configuration.Settings.VobSubOcr.OllamaModel = nikseComboBoxOllamaModel.Text;
+            }
+
+            if (_ocrMethodIndex == _ocrMethodGoogleLens)
+            {
+                var language = nikseComboBoxGoogleLensLanguages.SelectedItem as OcrLanguage3;
+                if (language != null)
+                {
+                    Configuration.Settings.VobSubOcr.GoogleLensLanguage = language.Code;
+                }
             }
 
             if (!e.Cancel)
@@ -10578,6 +10737,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (language != null)
             {
                 Configuration.Settings.VobSubOcr.PaddleOcrLanguageCode = language.Code;
+            }
+        }
+
+        private void nikseComboBoxGoogleLensLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var language = nikseComboBoxGoogleLensLanguages.SelectedItem as OcrLanguage2;
+            if (language != null)
+            {
+                Configuration.Settings.VobSubOcr.GoogleLensLanguage = language.Code;
             }
         }
     }
