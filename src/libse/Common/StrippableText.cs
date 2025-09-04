@@ -184,6 +184,32 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        private void ReplacAssaTagsRemove(List<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        {
+            int idName = 1000;
+            var idx = 0;
+            while (StrippedText.IndexOf("{", idx) >= 0 && StrippedText.IndexOf('}', idx) > 0)
+            {
+                var start = StrippedText.IndexOf("{", idx);
+                var end = StrippedText.IndexOf("}", idx);
+                if (end < start)
+                {
+                    return;
+                }
+
+                var tag = StrippedText.Substring(start, end - start + 1);
+                StrippedText = StrippedText.Remove(start, tag.Length);
+                StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, tag, idName++));
+                originalNames.Add(tag);
+
+                idx = end + 1;
+                if (idx >= StrippedText.Length)
+                {
+                    return;
+                }   
+            }
+        }
+
         private void ReplaceNames2Fix(List<string> replaceIds, List<string> replaceNames)
         {
             for (var i = 0; i < replaceIds.Count; i++)
@@ -199,6 +225,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
+            ReplacAssaTagsRemove(nameList, replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {
