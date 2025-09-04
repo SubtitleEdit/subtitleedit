@@ -108,7 +108,7 @@
             this.numericUpDownSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
             this.numericUpDownSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
             this.numericUpDownSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownSeconds.DecimalPlaces = 1;
+            this.numericUpDownSeconds.DecimalPlaces = 3;
             this.numericUpDownSeconds.Increment = new decimal(new int[] {
             1,
             0,
@@ -121,10 +121,10 @@
             0,
             0});
             this.numericUpDownSeconds.Minimum = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
-            65536});
+            196608});
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
             this.numericUpDownSeconds.Size = new System.Drawing.Size(75, 23);
             this.numericUpDownSeconds.TabIndex = 6;
