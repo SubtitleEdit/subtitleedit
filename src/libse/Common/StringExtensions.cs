@@ -510,7 +510,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var sb = new StringBuilder();
             var tags = RemoveAndSaveTags(input, sb, new SubRip());
             var lowercaseText = sb.ToString().ToLowerInvariant();
-            return RestoreSavedTags(lowercaseText, tags);
+            var result = RestoreSavedTags(lowercaseText, tags);
+            return result;
         }
 
         public static string ToggleCasing(this string input, SubtitleFormat format, string overrideFromStringInit = null)
@@ -561,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static string RestoreSavedTags(string input, List<KeyValuePair<int, string>> tags)
         {
             var s = input;
-            for (var index = tags.Count - 1; index >= 0; index--)
+            for (var index = 0; index < tags.Count; index++)
             {
                 var keyValuePair = tags[index];
                 if (keyValuePair.Key >= s.Length)
