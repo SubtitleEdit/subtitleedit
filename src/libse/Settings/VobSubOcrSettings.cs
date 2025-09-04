@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool CloudVisionSendOriginalImages { get; set; }
         public string OllamaLanguage { get; set; }
         public string OllamaModel { get; set; }
+        public string GoogleLensLanguage { get; set; }
 
 
         public VobSubOcrSettings()
@@ -81,6 +82,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             CloudVisionApiKey = string.Empty;
             CloudVisionLanguage = "en";
             CloudVisionSendOriginalImages = false;
+            GoogleLensLanguage = "en";
         }
     }
 }

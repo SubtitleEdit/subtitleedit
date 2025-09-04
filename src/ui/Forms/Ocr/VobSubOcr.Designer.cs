@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;       
+        private System.ComponentModel.IContainer components = null;
 
         #region Windows Form Designer generated code
 
@@ -108,6 +108,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelOllamaModel = new System.Windows.Forms.Label();
             this.labelLanguageOllama = new System.Windows.Forms.Label();
             this.nikseComboBoxOllamaLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.groupBoxGoogleLens = new System.Windows.Forms.GroupBox();
+            this.labelLanguageGoogleLens = new System.Windows.Forms.Label();
+            this.nikseComboBoxGoogleLensLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -195,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxNOCR.SuspendLayout();
             this.groupBoxImageCompareMethod.SuspendLayout();
             this.groupBoxOllama.SuspendLayout();
+            this.groupBoxGoogleLens.SuspendLayout();
             this.groupBoxOCRControls.SuspendLayout();
             this.groupBoxOcrAutoFix.SuspendLayout();
             this.tabControlLogs.SuspendLayout();
@@ -433,7 +437,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // ImagePreProcessingToolStripMenuItem
             // 
             this.ImagePreProcessingToolStripMenuItem.Name = "ImagePreProcessingToolStripMenuItem";
-            this.ImagePreProcessingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.ImagePreProcessingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.P)));
             this.ImagePreProcessingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.ImagePreProcessingToolStripMenuItem.Text = "Image preprocessing...";
@@ -462,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 564);
             this.progressBar1.Name = "progressBar1";
@@ -513,6 +517,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxCloudVision);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxGoogleLens);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -1515,6 +1520,49 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.nikseComboBoxOllamaLanguages.TabIndex = 1;
             this.nikseComboBoxOllamaLanguages.UsePopupWindow = false;
             // 
+            // groupBoxGoogleLens
+            // 
+            this.groupBoxGoogleLens.Controls.Add(this.labelLanguageGoogleLens);
+            this.groupBoxGoogleLens.Controls.Add(this.nikseComboBoxGoogleLensLanguages);
+            this.groupBoxGoogleLens.Location = new System.Drawing.Point(0, 41);
+            this.groupBoxGoogleLens.Name = "groupBoxGoogleLens";
+            this.groupBoxGoogleLens.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxGoogleLens.TabIndex = 9;
+            this.groupBoxGoogleLens.TabStop = false;
+            this.groupBoxGoogleLens.Text = "Google Lens";
+            //
+            // labelLanguageGoogleLens
+            // 
+            this.labelLanguageGoogleLens.AutoSize = true;
+            this.labelLanguageGoogleLens.Location = new System.Drawing.Point(18, 22);
+            this.labelLanguageGoogleLens.Name = "labelLanguageGoogleLens";
+            this.labelLanguageGoogleLens.Size = new System.Drawing.Size(54, 13);
+            this.labelLanguageGoogleLens.TabIndex = 0;
+            this.labelLanguageGoogleLens.Text = "Language";
+            // 
+            // nikseComboBoxGoogleLensLanguages
+            // 
+            this.nikseComboBoxGoogleLensLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxGoogleLensLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxGoogleLensLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxGoogleLensLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxGoogleLensLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxGoogleLensLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxGoogleLensLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxGoogleLensLanguages.DropDownHeight = 400;
+            this.nikseComboBoxGoogleLensLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxGoogleLensLanguages.DropDownWidth = 195;
+            this.nikseComboBoxGoogleLensLanguages.FormattingEnabled = true;
+            this.nikseComboBoxGoogleLensLanguages.Location = new System.Drawing.Point(98, 20);
+            this.nikseComboBoxGoogleLensLanguages.MaxLength = 32767;
+            this.nikseComboBoxGoogleLensLanguages.Name = "nikseComboBoxGoogleLensLanguages";
+            this.nikseComboBoxGoogleLensLanguages.SelectedIndex = -1;
+            this.nikseComboBoxGoogleLensLanguages.SelectedItem = null;
+            this.nikseComboBoxGoogleLensLanguages.SelectedText = "";
+            this.nikseComboBoxGoogleLensLanguages.Size = new System.Drawing.Size(195, 21);
+            this.nikseComboBoxGoogleLensLanguages.TabIndex = 1;
+            this.nikseComboBoxGoogleLensLanguages.UsePopupWindow = false;
+            // 
             // groupBoxOCRControls
             // 
             this.groupBoxOCRControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1639,7 +1687,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxDictionaries
             // 
-            this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDictionaries.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxDictionaries.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
@@ -1677,8 +1725,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // tabControlLogs
             // 
-            this.tabControlLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabControlLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlLogs.ContextMenuStrip = this.contextMenuStripAllFixes;
             this.tabControlLogs.Controls.Add(this.tabPageUnknownWords);
@@ -1768,8 +1816,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // listBoxUnknownWords
             // 
-            this.listBoxUnknownWords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listBoxUnknownWords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxUnknownWords.ContextMenuStrip = this.contextMenuStripUnknownWords;
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1915,7 +1963,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxImagePalette
             // 
-            this.groupBoxImagePalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxImagePalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImagePalette.Controls.Add(this.checkBoxBackgroundTransparent);
             this.groupBoxImagePalette.Controls.Add(this.pictureBoxBackground);
@@ -2035,7 +2083,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxSubtitleImage
             // 
-            this.groupBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSubtitleImage.Controls.Add(this.labelMinAlpha);
             this.groupBoxSubtitleImage.Controls.Add(this.numericUpDownAutoTransparentAlphaMax);
@@ -2103,7 +2151,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxTransportStream
             // 
-            this.groupBoxTransportStream.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxTransportStream.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGetColorAndSplit);
             this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGrayscale);
@@ -2139,8 +2187,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // pictureBoxSubtitleImage
             // 
-            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxSubtitleImage.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripImage;
@@ -2190,7 +2238,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // imagePreprocessingToolStripMenuItem1
             // 
             this.imagePreprocessingToolStripMenuItem1.Name = "imagePreprocessingToolStripMenuItem1";
-            this.imagePreprocessingToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.imagePreprocessingToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.P)));
             this.imagePreprocessingToolStripMenuItem1.Size = new System.Drawing.Size(266, 22);
             this.imagePreprocessingToolStripMenuItem1.Text = "Image preprocessing...";
@@ -2246,8 +2294,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // splitContainerBottom
             // 
-            this.splitContainerBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.splitContainerBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerBottom.Location = new System.Drawing.Point(15, 199);
             this.splitContainerBottom.Name = "splitContainerBottom";
@@ -2273,7 +2321,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // textBoxCurrentText
             // 
             this.textBoxCurrentText.AllowDrop = true;
-            this.textBoxCurrentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxCurrentText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCurrentText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxCurrentText.ContextMenuStrip = this.contextMenuStripTextBox;
@@ -2401,8 +2449,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // subtitleListView1
             // 
             this.subtitleListView1.AllowColumnReorder = true;
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
             this.subtitleListView1.FirstVisibleIndex = -1;
@@ -2473,6 +2521,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxImageCompareMethod.PerformLayout();
             this.groupBoxOllama.ResumeLayout(false);
             this.groupBoxOllama.PerformLayout();
+            this.groupBoxGoogleLens.ResumeLayout(false);
+            this.groupBoxGoogleLens.PerformLayout();
             this.groupBoxOCRControls.ResumeLayout(false);
             this.groupBoxOCRControls.PerformLayout();
             this.groupBoxOcrAutoFix.ResumeLayout(false);
@@ -2677,5 +2727,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Label labelOllamaModel;
         private System.Windows.Forms.Label labelLanguageOllama;
         private NikseComboBox nikseComboBoxOllamaLanguages;
+        private System.Windows.Forms.GroupBox groupBoxGoogleLens;
+        private System.Windows.Forms.Label labelLanguageGoogleLens;
+        private NikseComboBox nikseComboBoxGoogleLensLanguages;
     }
 }
