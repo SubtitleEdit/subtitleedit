@@ -497,7 +497,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var sb = new StringBuilder();
             var tags = RemoveAndSaveTags(input, sb, format);
             var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString().ToLowerInvariant());
-            return RestoreSavedTags(properCaseText, tags);
+            return RestoreSavedAndRemovedTags(properCaseText, tags);
         }
 
         public static string ToLowercaseButKeepTags(this string input)
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var sb = new StringBuilder();
             var tags = RemoveAndSaveTags(input, sb, new SubRip());
             var lowercaseText = sb.ToString().ToLowerInvariant();
-            var result = RestoreSavedTags(lowercaseText, tags);
+            var result = RestoreSavedAndRemovedTags(lowercaseText, tags);
             return result;
         }
 
