@@ -548,15 +548,34 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (containsUppercase && containsLowercase)
             {
-                return RestoreSavedTags(text.ToUpperInvariant(), tags);
+                return RestoreSavedAndRemovedTags(text.ToUpperInvariant(), tags);
             }
 
             if (containsUppercase)
             {
-                return RestoreSavedTags(text.ToLowerInvariant(), tags);
+                return RestoreSavedAndRemovedTags(text.ToLowerInvariant(), tags);
             }
 
-            return RestoreSavedTags(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text), tags);
+            return RestoreSavedAndRemovedTags(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text), tags);
+        }
+
+        private static string RestoreSavedAndRemovedTags(string input, List<KeyValuePair<int, string>> tags)
+        {
+            var s = input;
+            for (var index = tags.Count -1; index >=0; index--)
+            {
+                var keyValuePair = tags[index];
+                if (keyValuePair.Key >= s.Length)
+                {
+                    s += keyValuePair.Value;
+                }
+                else
+                {
+                    s = s.Insert(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+
+            return s;
         }
 
         private static string RestoreSavedTags(string input, List<KeyValuePair<int, string>> tags)
