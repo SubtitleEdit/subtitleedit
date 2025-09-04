@@ -17339,6 +17339,10 @@ namespace Nikse.SubtitleEdit.Forms
                         tb.SelectionStart = start;
                         tb.SelectionLength = length;
                     }
+                    else
+                    {
+                        ShowStatus("Nothing selected", false);
+                    }
                 }
                 else
                 {
