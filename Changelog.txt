@@ -12,11 +12,13 @@
    * Update Polish translation - thx admas
    * Make auto-translate settings delay label unit clear - thx Hunique
    * Update GPT model names - thx Elad
-   * Update ffmpeg to v8
+   * Update ffmpeg to v8.0
 * FIXED:
+   * Fix possible crash in auto-translate - thx Tb3986
+   * Fix possible crash in Binary OCR - thx Codling
    * Fix nOCR italic issue - thx Zoltan
-   * Fix for decimal in Czech language file - thx Lucas
-   * Fix bug in Change casing - Normal casing with ASSA tags - thx eddebaby
+   * Fix for decimals in Czech language file - thx Lucas
+   * Fix bug in "Change casing - Normal casing" with ASSA tags - thx eddebaby
    * Fix alone lowercase 'i' to 'I' issue - thx eddebaby
 
 
