@@ -3,6 +3,7 @@
 4.0.14 (xth October 2025) BETA
 * NEW
    * Add Armenian translation - thx ArsenTech
+   * Add Google-Lens OCR option - thx timminator
 * IMPROVED:
    * Update Persian translation - thx rmtjokar
    * Update Chinese translation - thx nkh0472
@@ -11,9 +12,12 @@
    * Update Polish translation - thx admas
    * Make auto-translate settings delay label unit clear - thx Hunique
    * Update GPT model names - thx Elad
+   * Update ffmpeg to v8
 * FIXED:
    * Fix nOCR italic issue - thx Zoltan
    * Fix for decimal in Czech language file - thx Lucas
+   * Fix bug in Change casing - Normal casing with ASSA tags - thx eddebaby
+   * Fix alone lowercase 'i' to 'I' issue - thx eddebaby
 
 
 4.0.13 (30th July 2025) 
