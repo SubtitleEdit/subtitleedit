@@ -37051,6 +37051,21 @@ namespace Nikse.SubtitleEdit.Forms
             string title = string.Empty;
             var sub = new Subtitle(_subtitle);
             Subtitle target = null;
+
+            var reTranslate = false;
+            if (SubtitleListview1.IsOriginalTextColumnVisible && _subtitleOriginal.Paragraphs.Count > 0)
+            {
+                if (_subtitle.Paragraphs.Count != _subtitleOriginal.Paragraphs.Count)
+                {
+                    MessageBox.Show("Cannot translate subtitles with different line count.");
+                    return;
+                }
+
+                reTranslate = true;
+                sub = new Subtitle(_subtitleOriginal);
+                target = new Subtitle(_subtitle);
+            }
+
             if (onlySelectedLines)
             {
                 title = LanguageSettings.Current.GoogleTranslate.Title + " - " + _language.SelectedLines;
@@ -37097,7 +37112,24 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = -1;
                     var oldFileName = _fileName;
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
-                    if (onlySelectedLines)
+
+                    if (reTranslate)
+                    {
+                        for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                        {
+                            var inputP = _subtitle.GetParagraphOrDefault(i);
+                            var outputP = autoTranslate.TranslatedSubtitle.GetParagraphOrDefault(i);
+                            if (inputP != null && outputP != null)
+                            {
+                                inputP.Text = outputP.Text;
+                            }
+                        }
+
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        RestoreSubtitleListviewIndices();
+                        return;
+                    }
+                    else if (onlySelectedLines)
                     {
                         if (!SubtitleListview1.IsOriginalTextColumnVisible)
                         {
@@ -37171,7 +37203,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndices();
 
                     SetTitle();
-                    SetEncoding(Encoding.UTF8);
+                    SetEncoding(Encoding.UTF8); //TODO: set to default
                     if (!isOriginalVisible)
                     {
                         toolStripMenuItemShowOriginalInPreview.Checked = false;
