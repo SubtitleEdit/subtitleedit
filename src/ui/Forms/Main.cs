@@ -15451,7 +15451,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(format);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
             _oldSubtitleFormat = format;
-            SetEncoding(Encoding.UTF8);
+            SetEncoding(Configuration.Settings.General.DefaultEncoding);
             ShowStatus(_language.SubtitleImportedFromMatroskaFile);
             _subtitle.Renumber();
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
@@ -15505,7 +15505,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
-            SetEncoding(Encoding.UTF8);
+            SetEncoding(Configuration.Settings.General.DefaultEncoding);
             ShowStatus(_language.SubtitleImportedFromMatroskaFile);
             _subtitle.Renumber();
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
@@ -16344,7 +16344,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _subtitle.Paragraphs.AddRange(mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs());
 
-                SetEncoding(Encoding.UTF8);
+                SetEncoding(Configuration.Settings.General.DefaultEncoding);
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber();
                 if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) ||
@@ -16610,7 +16610,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
                     {
                         Encoding encoding = chooseEncoding.GetEncoding();
-                        SetEncoding(Encoding.UTF8);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
                         Interlocked.Increment(ref _openSaveCounter);
                         OpenSubtitle(openFileDialog1.FileName, encoding);
@@ -35920,7 +35920,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RestoreSubtitleListviewIndices();
                 _converted = true;
                 SetTitle();
-                SetEncoding(Encoding.UTF8);
+                SetEncoding(Configuration.Settings.General.DefaultEncoding);
                 if (!isOriginalVisible)
                 {
                     toolStripMenuItemShowOriginalInPreview.Checked = false;
@@ -37203,7 +37203,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndices();
 
                     SetTitle();
-                    SetEncoding(Encoding.UTF8); //TODO: set to default
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
                     if (!isOriginalVisible)
                     {
                         toolStripMenuItemShowOriginalInPreview.Checked = false;
