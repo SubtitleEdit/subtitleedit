@@ -1505,7 +1505,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var result = httpClient.SendAsync(requestMessage).Result;
                     var ms = new MemoryStream();
-                    result.Content.CopyToAsync(ms);
+                    result.Content.CopyToAsync(ms).Wait();
                     if (!result.IsSuccessStatusCode)
                     {
                         var error = Encoding.UTF8.GetString(ms.ToArray()).Trim();
