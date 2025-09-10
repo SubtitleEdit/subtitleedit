@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.EndUpdate();
         }
 
-        private void ButtonGenerateTtsClick(object sender, EventArgs e)
+        private async void ButtonGenerateTtsClick(object sender, EventArgs e)
         {
             SaveConfiguration();
 
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 Directory.CreateDirectory(_waveFolder);
 
-                var generateOk = GenerateParagraphAudio(_subtitle, true, null);
+                var generateOk = await GenerateParagraphAudioAsync(_subtitle, true, null);
                 if (_abort || !generateOk)
                 {
                     HandleAbort();
@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonOK.Enabled = true;
         }
 
-        private bool GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private async Task<bool> GenerateParagraphAudioAsync(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
             if (engine.Id == TextToSpeechEngineId.MsSpeechSynthesizer)
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (engine.Id == TextToSpeechEngineId.Murf)
             {
-                var result = GenerateParagraphAudioMurf(subtitle, showProgressBar, overrideFileName);
+                var result = await GenerateParagraphAudioMurfAsync(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
@@ -1435,7 +1435,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
-        private bool GenerateParagraphAudioMurf(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private async Task<bool> GenerateParagraphAudioMurfAsync(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             if (string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
@@ -1503,9 +1503,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
                     requestMessage.Headers.TryAddWithoutValidation("api-key", nikseTextBoxApiKey.Text.Trim());
 
-                    var result = httpClient.SendAsync(requestMessage).Result;
+                    var result = await httpClient.SendAsync(requestMessage);
                     var ms = new MemoryStream();
-                    result.Content.CopyToAsync(ms);
+                    await result.Content.CopyToAsync(ms);
                     if (!result.IsSuccessStatusCode)
                     {
                         var error = Encoding.UTF8.GetString(ms.ToArray()).Trim();
@@ -1515,14 +1515,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var parser = new SeJsonParser();
                     var fileUrl = parser.GetFirstObject(Encoding.UTF8.GetString(ms.ToArray()), "audioFile");
-                    var audioResult = httpClient.GetAsync(fileUrl).Result;
+                    var audioResult = await httpClient.GetAsync(fileUrl);
                     if (!audioResult.IsSuccessStatusCode)
                     {
                         SeLogger.Error($"Murf TTS failed calling API as base address {fileUrl} : Status code={audioResult.StatusCode}");
                         return false;
                     }
 
-                    var arr = audioResult.Content.ReadAsByteArrayAsync().Result;
+                    var arr = await audioResult.Content.ReadAsByteArrayAsync();
 
                     File.WriteAllBytes(outputFileName, arr);
 
@@ -2585,7 +2585,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.AutoSizeLastColumn();
         }
 
-        public FileNameAndSpeedFactor ReGenerateAudio(Paragraph p, Paragraph next, string voice)
+        public async Task<FileNameAndSpeedFactor> ReGenerateAudioAsync(Paragraph p, Paragraph next, string voice)
         {
             nikseComboBoxVoice.Text = voice;
             var sub = new Subtitle();
@@ -2598,7 +2598,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             var waveFileNameOnly = Guid.NewGuid() + GetEngineAudioExtension();
-            var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
+            var ok = await GenerateParagraphAudioAsync(sub, false, waveFileNameOnly);
             if (!ok)
             {
                 return null;
@@ -2620,7 +2620,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return ".wav";
         }
 
-        private void buttonTestVoice_Click(object sender, EventArgs e)
+        private async void buttonTestVoice_Click(object sender, EventArgs e)
         {
             SaveConfiguration();
 
@@ -2637,7 +2637,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var sub = new Subtitle();
                 sub.Paragraphs.Add(new Paragraph(text, 0, 2500));
                 var waveFileNameOnly = Guid.NewGuid() + ".wav";
-                var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
+                var ok = await GenerateParagraphAudioAsync(sub, false, waveFileNameOnly);
                 if (!ok)
                 {
                     MessageBox.Show(this, "Oops, voice generation failed!");
