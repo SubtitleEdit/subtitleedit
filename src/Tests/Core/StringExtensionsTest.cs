@@ -403,19 +403,27 @@ namespace Tests.Core
         }
 
         [TestMethod]
-        public void ToLowercaseButKeepTags1()
+        public void ToLowercaseExceptAssTags1()
         {
             var input = "<i>HOW ARE YOU?</i>";
-            var res = input.ToLowercaseButKeepTags();
+            var res = input.ToLowercaseExceptAssTags();
             Assert.AreEqual("<i>how are you?</i>", res);
         }
 
         [TestMethod]
-        public void ToLowercaseButKeepTags2()
+        public void ToLowercaseExceptAssTags2()
         {
             var input = "{\\c&H0000FF&}Red";
-            var res = input.ToLowercaseButKeepTags();
+            var res = input.ToLowercaseExceptAssTags();
             Assert.AreEqual("{\\c&H0000FF&}red", res);
+        }
+        
+        [TestMethod]
+        public void ToLowercaseExceptAssTags()
+        {
+            var input = "<I>Foobar</I>";
+            var res = input.ToLowercaseExceptAssTags();
+            Assert.AreEqual("<i>foobar</i>", res);
         }
 
         [TestMethod]

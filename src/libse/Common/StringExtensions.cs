@@ -500,7 +500,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return RestoreSavedAndRemovedTags(properCaseText, tags);
         }
 
-        public static string ToLowercaseButKeepTags(this string input)
+        public static string ToLowercaseExceptAssTags(this string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -508,10 +508,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var sb = new StringBuilder();
-            var tags = RemoveAndSaveTags(input, sb, new SubRip());
-            var lowercaseText = sb.ToString().ToLowerInvariant();
-            var result = RestoreSavedAndRemovedTags(lowercaseText, tags);
-            return result;
+            var l = -1;
+            for (var r = 0; r < input.Length; r++)
+            {
+                if (input[r] == '{' && l == -1)
+                {
+                    l = r;
+                }
+                else if (input[r] == '}' && l >= 0 && input[l] == '{')
+                {
+                    string tag = input.Substring(l, r - l + 1);
+                    sb.Append(tag.StartsWith("{\\", StringComparison.Ordinal) ? tag : tag.ToLower());
+                    l = -1;
+                }
+                else if (l == -1)
+                {
+                    sb.Append(char.IsLetter(input[r]) ? char.ToLower(input[r]) : input[r]);
+                }
+            }
+
+            return sb.ToString();
         }
 
         public static string ToggleCasing(this string input, SubtitleFormat format, string overrideFromStringInit = null)
