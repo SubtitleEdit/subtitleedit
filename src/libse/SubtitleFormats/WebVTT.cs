@@ -36,6 +36,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "yellow", Color.FromArgb(255, 255, 0)
             },
             {
+                "green", Color.FromArgb(0, 255, 0)
+            },
+            {
                 "magenta", Color.FromArgb(255, 0, 255)
             },
             {
