@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseUpDownSimilarity.Left = labelSimilarity.Right + 3;
         }
 
-        private void buttonReGenerate_Click(object sender, EventArgs e)
+        private async void buttonReGenerate_Click(object sender, EventArgs e)
         {
             _libMpv?.Stop();
 
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Cursor = Cursors.WaitCursor;
                 buttonReGenerate.Enabled = false;
-                var fileNameAndSpeedFactor = _textToSpeech.ReGenerateAudio(paragraph, next, nikseComboBoxVoice.Text);
+                var fileNameAndSpeedFactor = await _textToSpeech.ReGenerateAudioAsync(paragraph, next, nikseComboBoxVoice.Text);
                 if (fileNameAndSpeedFactor != null)
                 {
                     FileNameAndSpeedFactor = fileNameAndSpeedFactor;
