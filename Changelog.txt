@@ -20,6 +20,7 @@
    * Fix for decimals in Czech language file - thx Lucas
    * Fix bug in "Change casing - Normal casing" with ASSA tags - thx eddebaby
    * Fix alone lowercase 'i' to 'I' issue - thx eddebaby
+   * Fix for WebVTT green color - thx Saul1980
 
 
 4.0.13 (30th July 2025) 
