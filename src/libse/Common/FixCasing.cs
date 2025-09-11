@@ -247,6 +247,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private string Fix(string original, string lastLine, List<string> nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
         {
+            if (lastLine == null)
+            {
+                lastLine = string.Empty;
+            }
+            lastLine = HtmlUtil.RemoveHtmlTags(lastLine, true).Trim();
+
             var text = original;
             if (FixNormal)
             {
