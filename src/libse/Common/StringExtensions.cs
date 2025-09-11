@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         public static List<string> SplitToLines(this string s) => SplitToLines(s, s.Length);
-        
+
         public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var writeIndex = len - 1;
             var isLineBreakAdjacent = false;
             var buffer = new char[len];
-        
+
             // windows line break style
             var hasCarriageReturn = input.Contains('\r');
 
@@ -330,10 +330,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     isLineBreakAdjacent = false;
                 }
             }
-        
+
             return new string(buffer, writeIndex + 1, len - (writeIndex + 1));
         }
-        
+
         public static bool ContainsLetter(this string s)
         {
             if (s != null)
@@ -562,26 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static string RestoreSavedAndRemovedTags(string input, List<KeyValuePair<int, string>> tags)
         {
             var s = input;
-            for (var index = tags.Count -1; index >=0; index--)
-            {
-                var keyValuePair = tags[index];
-                if (keyValuePair.Key >= s.Length)
-                {
-                    s += keyValuePair.Value;
-                }
-                else
-                {
-                    s = s.Insert(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-
-            return s;
-        }
-
-        private static string RestoreSavedTags(string input, List<KeyValuePair<int, string>> tags)
-        {
-            var s = input;
-            for (var index = 0; index < tags.Count; index++)
+            for (var index = tags.Count - 1; index >= 0; index--)
             {
                 var keyValuePair = tags[index];
                 if (keyValuePair.Key >= s.Length)
@@ -616,8 +597,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var ch = input[index];
 
-                if (!tagOn && isAssa && ch == '\\' 
-                           && (input.Substring(index).StartsWith("\\N") 
+                if (!tagOn && isAssa && ch == '\\'
+                           && (input.Substring(index).StartsWith("\\N")
                                || input.Substring(index).StartsWith("\\n")
                                || input.Substring(index).StartsWith("\\h")))
                 {
@@ -670,7 +651,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (s.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         tagOn = true;
-                        tagIndex = index;
+                        tagIndex = sb.Length;
                     }
                 }
 
