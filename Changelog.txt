@@ -10,6 +10,7 @@
    * Update Italian translation - thx bovirus
    * Update Bulgarian translation - thx Калин
    * Update Polish translation - thx admas
+   * Update Hungarian translation - thx Zityi
    * Make auto-translate settings delay label unit clear - thx Hunique
    * Update GPT model names - thx Elad
    * Update ffmpeg to v8.0
@@ -21,6 +22,7 @@
    * Fix bug in "Change casing - Normal casing" with ASSA tags - thx eddebaby
    * Fix alone lowercase 'i' to 'I' issue - thx eddebaby
    * Fix for WebVTT green color - thx Saul1980
+   * Fix UI selection/focus issue in translation window - thx rRobis 
 
 
 4.0.13 (30th July 2025) 
