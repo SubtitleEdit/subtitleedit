@@ -1576,9 +1576,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 if (index < listViewOther.Items.Count)
                 {
                     listViewOther.SelectIndexAndEnsureVisible(index, false);
+                    listViewSelected.FocusedItem = listViewSelected.Items[index];
                     if (first >= 0)
                     {
                         listViewOther.TopItem = listViewOther.Items[first];
+                        listViewOther.FocusedItem = listViewOther.Items[first];
                     }
                 }
             }
@@ -1788,6 +1790,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void AutoTranslate_Shown(object sender, EventArgs e)
         {
             buttonTranslate.Focus();
+        }
+
+        private void subtitleListViewSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var count = subtitleListViewSource.SelectedItems.Count;
+            if (count == 1 && subtitleListViewSource.Focused)
+            {
+                var idx = subtitleListViewSource.SelectedItems[0].Index;
+                var sourceItem = subtitleListViewSource.Items[idx];
+                subtitleListViewSource.FocusedItem = sourceItem;
+                SyncListViews(subtitleListViewSource, subtitleListViewTarget);
+            }
+        }
+
+        private void subtitleListViewTarget_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var count = subtitleListViewTarget.SelectedItems.Count;
+            if (count == 1 && subtitleListViewTarget.Focused)
+            {
+                var idx = subtitleListViewTarget.SelectedItems[0].Index;
+                var sourceItem = subtitleListViewTarget.Items[idx];
+                subtitleListViewTarget.FocusedItem = sourceItem;
+                SyncListViews(subtitleListViewTarget, subtitleListViewSource);
+            }
         }
     }
 }
