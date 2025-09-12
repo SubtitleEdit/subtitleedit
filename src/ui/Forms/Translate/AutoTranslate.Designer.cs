@@ -314,7 +314,7 @@
             this.comboBoxFormality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFormality.DropDownWidth = 280;
             this.comboBoxFormality.FormattingEnabled = true;
-            this.comboBoxFormality.Items.AddRange(new string[] {
+            this.comboBoxFormality.Items.AddRange(new object[] {
             "default",
             "more",
             "less",
@@ -459,6 +459,7 @@
             this.subtitleListViewTarget.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewTarget.UseSyntaxColoring = true;
             this.subtitleListViewTarget.View = System.Windows.Forms.View.Details;
+            this.subtitleListViewTarget.SelectedIndexChanged += new System.EventHandler(this.subtitleListViewTarget_SelectedIndexChanged);
             this.subtitleListViewTarget.Click += new System.EventHandler(this.subtitleListViewTarget_Click);
             this.subtitleListViewTarget.DoubleClick += new System.EventHandler(this.subtitleListViewTarget_DoubleClick);
             // 
@@ -483,6 +484,7 @@
             this.subtitleListViewSource.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewSource.UseSyntaxColoring = true;
             this.subtitleListViewSource.View = System.Windows.Forms.View.Details;
+            this.subtitleListViewSource.SelectedIndexChanged += new System.EventHandler(this.subtitleListViewSource_SelectedIndexChanged);
             this.subtitleListViewSource.Click += new System.EventHandler(this.subtitleListViewSource_Click);
             this.subtitleListViewSource.DoubleClick += new System.EventHandler(this.subtitleListViewSource_DoubleClick);
             // 
