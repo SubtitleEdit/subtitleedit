@@ -24276,11 +24276,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(fileNameNoExtension))
             {
                 return false;
-            }            
+            }
 
             if (videoFileNamesTried.Contains(fileNameNoExtension))
             {
-                return false; 
+                return false;
             }
             videoFileNamesTried.Add(fileNameNoExtension);
 
@@ -31948,7 +31948,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 catch
-                { 
+                {
                     // ignore
                 }
             }
@@ -35926,7 +35926,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemShowOriginalInPreview.Checked = false;
                     Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
                     audioVisualizer.Invalidate();
-                }                
+                }
             }
         }
 
@@ -37115,13 +37115,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (reTranslate)
                     {
-                        for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                        foreach (var t in autoTranslate.TranslatedSubtitle.Paragraphs)
                         {
-                            var inputP = _subtitle.GetParagraphOrDefault(i);
-                            var outputP = autoTranslate.TranslatedSubtitle.GetParagraphOrDefault(i);
-                            if (inputP != null && outputP != null)
+                            var inputP = _subtitle.Paragraphs.FirstOrDefault(p => p.Id == t.Id);
+                            if (inputP != null && !string.IsNullOrEmpty(t.Text))
                             {
-                                inputP.Text = outputP.Text;
+                                inputP.Text = t.Text;
                             }
                         }
 
