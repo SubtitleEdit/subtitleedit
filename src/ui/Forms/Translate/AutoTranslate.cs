@@ -97,7 +97,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (targetLines != null)
             {
                 TranslatedSubtitle = new Subtitle(targetLines, false);
-                TranslatedSubtitle.Renumber();
                 subtitleListViewTarget.Fill(TranslatedSubtitle);
             }
             else
