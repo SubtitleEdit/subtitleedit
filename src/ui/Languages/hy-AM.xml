@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Հայերեն">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.13</Version>
     <TranslatedBy>Թարգմանությունը՝ ArsenTech-ի (https://github.com/ArsenTech)
 Վերջին անգամ ավելացրել է` ArsenTech (2025-08-06)
-Վերջին անգամ թարմացվել է՝ ArsenTech (2025-08-07)</TranslatedBy>
+Վերջին անգամ թարմացվել է՝ ArsenTech (2025-09-16)</TranslatedBy>
     <CultureName>hy-AM</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -103,7 +103,7 @@
     <ShortcutX>Ստեղն․ կոմբինացիա՝ {0}</ShortcutX>
     <ExampleX>Օրինակ՝ {0}</ExampleX>
     <ViewX>Դիտել {0}</ViewX>
-    <Reset>Վերագործարկել</Reset>
+    <Reset>Վերակայել</Reset>
     <Error>Սխալ</Error>
     <Warning>Զգուշացում</Warning>
     <UseLargerFontForThisWindow>Այս պատուհանի համար օգտագործել մեծ տառատեսակ</UseLargerFontForThisWindow>
@@ -441,7 +441,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <DontChain>Մի՛ կապեք</DontChain>
     <ExtendCrossingShotChange>Երկարացնել, պլանի փոփոխություն խաչմերուկում</ExtendCrossingShotChange>
     <ExtendUntilShotChange>Երկարացնել մինչև պլանի փոփոխութ․</ExtendUntilShotChange>
-    <ResetWarning>Սա կվերագործարկի ձեր ընթացիկ պրոֆիլը և բոլոր արժեքները կփոխարինի ընտրված նախադրված արժեքներով։ Այն հնարավոր չէ չեղարկել։
+    <ResetWarning>Սա կվերակայի ձեր ընթացիկ պրոֆիլը և բոլոր արժեքները կփոխարինի ընտրված նախադրված արժեքներով։ Այն հնարավոր չէ չեղարկել։
 
 Ցանկանո՞ւմ եք շարունակել։</ResetWarning>
     <CreateSimpleTitle>Պարզեցված ռեժիմի ստեղծում</CreateSimpleTitle>
@@ -472,7 +472,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
 Կապվելուց հետո ենթագրերը կամ կապվում են (այսինքն՝ ենթագրերը անհետանում են, և նորը հայտնվում են կարճ դադարից անմիջապես հետո), կամ ոչ։
 Սա դիտողներին որոշակի պատկերացում է տալիս, թե երբ կարող են իրենց ուշադրությունը կրկին սևեռել էկրանին։
 
-Կադրի փոփոխության ժամանակ ենթագրերի անհետացումից հետո կապման միջակայքը կարող է մի փոքր ավելի կարճ լինել, քանի որ կադրի փոփոխությունները «վերագործարկում» են պատկերը։
+Կադրի փոփոխության ժամանակ ենթագրերի անհետացումից հետո կապման միջակայքը կարող է մի փոքր ավելի կարճ լինել, քանի որ կադրի փոփոխությունները «վերակայում» են պատկերը։
 Մենք օգտագործում ենք պատկերի բնական ռիթմը։</CreateSimpleChainingToolTip>
     <CreateSimpleLoadNetflixRules>Բեռնել Netflix-ի կանոնները</CreateSimpleLoadNetflixRules>
     <Frames>կադրեր</Frames>
@@ -721,7 +721,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <DiskSequenceNumber>Սկավառակի հաջորդականության #</DiskSequenceNumber>
     <TotalNumberOfDisks>Ընդհանուր սկավառակների քանակը</TotalNumberOfDisks>
     <Import>Ներմուծել․․․</Import>
-    <TextAndTimingInformation>Տեքստային և համաժամեցման տեղեկատվություն</TextAndTimingInformation>
+    <TextAndTimingInformation>Տեքստային և սինքրոնացման տեղեկատվություն</TextAndTimingInformation>
     <JustificationCode>Տողադասման կոդ</JustificationCode>
     <VerticalPosition>Ուղղահայաց դիրք</VerticalPosition>
     <MarginTop>Վերին լուծաչափ (վերևում դասավորված ենթագրերի համար)</MarginTop>
@@ -1456,7 +1456,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
         <CloseVideo>Փակել տեսանյութը</CloseVideo>
         <OpenSecondSubtitle>Բացել երկրորդ ենթագիրը</OpenSecondSubtitle>
         <SetVideoOffset>Սահմանել տեսանյութի օֆսեթը…</SetVideoOffset>
-        <SmptTimeMode>SMPTE համաժամեցում (ոչ ամբողջ թվով կադր․ հաճախ․)</SmptTimeMode>
+        <SmptTimeMode>SMPTE սինքրոնացում (ոչ ամբողջ թվով կադր․ հաճախ․)</SmptTimeMode>
         <GenerateTextFromVideo>Ստեղծել տեքստ տեսանյութից</GenerateTextFromVideo>
         <GenerateBlankVideo>Ստեղծել դատարկ տեսանյութ․․․</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Ստեղծեք տեսանյութ վերադրված ենթագրերով (Hardsub)․․․</GenerateVideoWithBurnedInSub>
@@ -1467,7 +1467,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
         <GenerateImportShotChanges>Ստեղծել / ներմուծել կադրերի փոփոխությունները</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Հեռացնել / արտածել կադրի փոփոխությունները</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Ստեղծել ալիքաձևեր խմբաքանակով...</WaveformBatchGenerate>
-        <ShowHideWaveformAndSpectrogram>Ցուցադրել/թաքցնել ալիքաձևը և սպեկտոգրամը</ShowHideWaveformAndSpectrogram>
+        <ShowHideWaveformAndSpectrogram>Ցուցադրել/թաքցնել ալիքաձևը և սպեկտրոգրամը</ShowHideWaveformAndSpectrogram>
         <TextToSpeechAndAddToVideo>Տեքստից խոսք և ավելացնել այն տեսանյութում</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Հանել վահանակները</UnDockVideoControls>
         <ReDockVideoControls>Հարմարեցնել վահանակները</ReDockVideoControls>
@@ -1482,11 +1482,11 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
         <AddToNameList>Ավելացնել բառը անունների ցանկին</AddToNameList>
       </SpellCheck>
       <Synchronization>
-        <Title>Համաժամեցում</Title>
+        <Title>Սինքրոնացում</Title>
         <AdjustAllTimes>Կարգավորել բոլոր ժամանակահատվածները (ցույց տվեք ավելի վաղ/ուշ)</AdjustAllTimes>
-        <VisualSync>&amp;Տեսական համաժամեցում</VisualSync>
-        <PointSync>Կետային համաժամեցում...</PointSync>
-        <PointSyncViaOtherSubtitle>Կետային համաժամեցում այլ ենթագրերի հետ...</PointSyncViaOtherSubtitle>
+        <VisualSync>&amp;Տեսական սինքրոնացում</VisualSync>
+        <PointSync>Կետային սինքրոնացում...</PointSync>
+        <PointSyncViaOtherSubtitle>Կետային սինքրոնացում այլ ենթագրերի հետ...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>Ավտոմատ թարգմանություն</Title>
@@ -1522,7 +1522,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
         <Replace>Փոխարինել</Replace>
         <FixCommonErrors>Սխալների շտկում</FixCommonErrors>
         <RemoveTextForHi>Հեռացնել տեքստը լսողութ․ խնդիրներ ունեցողների համար</RemoveTextForHi>
-        <VisualSync>Տես․ համաժամեցում</VisualSync>
+        <VisualSync>Տես․ սինքրոնացում</VisualSync>
         <SpellCheck>Ուղղագրության ստուգում</SpellCheck>
         <NetflixQualityCheck>Netflix-ի որակի ստուգում</NetflixQualityCheck>
         <BeautifyTimeCodes>Գեղեցկացրեք ժամային կոդերը</BeautifyTimeCodes>
@@ -1602,7 +1602,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
         <TypewriterEffect>Գրամեքենայի էֆեկտ․․․</TypewriterEffect>
         <KaraokeEffect>Կարաոկեի էֆեկտ</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Ցուցադրել ընտրված տողերը ավելի վաղ/ուշ</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Տեսական համաժամեցում ընտրված տողերի հետ</VisualSyncSelectedLines>
+        <VisualSyncSelectedLines>Տեսական սինքրոնացում ընտրված տողերի հետ</VisualSyncSelectedLines>
         <BeautifyTimeCodesOfSelectedLines>Գեղեցկացրեք ընտրված տողերի ժամային կոդերը</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft թարգմանել բնօրինակ տողը</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Ընտրված տողեր</SelectedLines>
@@ -1696,11 +1696,11 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <SaveOriginalSubtitleAs>Պահպանել բնօրինակ ենթագրիը․․․</SaveOriginalSubtitleAs>
     <CannotSaveEmptySubtitle>Հնարավոր չէ պահպանել դատարկ ենթագիրը</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Ոչ մի ենթագիր չի բեռնվել</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Տեսական համաժամեցում - ընտրված տողեր</VisualSyncSelectedLines>
-    <VisualSyncTitle>Տեսական համաժամեցում</VisualSyncTitle>
-    <BeforeVisualSync>Տեսական համաժամեցումից առաջ</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Տեսական համաժամեցում կատարված է ընտրված տողերին</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>Տեսական համաժամեցումը կատարված է</VisualSyncPerformed>
+    <VisualSyncSelectedLines>Տեսական սինքրոնացում - ընտրված տողեր</VisualSyncSelectedLines>
+    <VisualSyncTitle>Տեսական սինքրոնացում</VisualSyncTitle>
+    <BeforeVisualSync>Տեսական սինքրոնացումից առաջ</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>Տեսական սինքրոնացում կատարված է ընտրված տողերին</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>Տեսական սինքրոնացումը կատարված է</VisualSyncPerformed>
     <FileXIsLargerThan10MB>Այս ֆայլը 10 ՄԲ-ից մեծ է՝ {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Շարունակե՞լ այնուամենայնիվ։</ContinueAnyway>
     <BeforeLoadOf>{0}-ի բեռնումից առաջ</BeforeLoadOf>
@@ -1770,13 +1770,13 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <TextingForHearingImpairedRemovedOneLine>Լսողութ․ խնդիրներ ունեցող մարդկանց համար նախատեսված տեքստը հեռացվել է՝ մեկ տող</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Լսողութ․ խնդիրներ ունեցող մարդկանց համար նախատեսված տեքստը հեռացվել է՝ {0} տող</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Ենթագիրը բաժանված է</SubtitleSplitted>
-    <SubtitleAppendPrompt>Սա արդեն իսկ բեռնված ենթագրին կավելացնի առկա ենթագիր, որը պետք է արդեն համաժամեցված լինի տեսանյութի ֆայլի հետ։
+    <SubtitleAppendPrompt>Սա արդեն իսկ բեռնված ենթագրին կավելացնի առկա ենթագիր, որը պետք է արդեն սինքրոնացված լինի տեսանյութի ֆայլի հետ։
 
 Շարունակե՞լ։</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Ենթագրի ավելացում</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Բացեք ենթագրերը՝ ավելացնելու համար…</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>Տեսական համաժամեցում - ավելացնել ենթագրի երկրորդ մասը</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>Ավելացնե՞լ այս համաժամեցրած ենթագիրը։</AppendSynchronizedSubtitlePrompt>
+    <AppendViaVisualSyncTitle>Տեսական սինքրոնացում - ավելացնել ենթագրի երկրորդ մասը</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>Ավելացնե՞լ այս սինքրոնացրած ենթագիրը։</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Ավելացնելուց առաջ</BeforeAppend>
     <SubtitleAppendedX>Ավելացված ենթագրեր՝ {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Ենթագրերը ՉԵՆ ավելացվել!</SubtitleNotAppended>
@@ -1896,8 +1896,8 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <XMinimumDisplayTimeBetweenParagraphsChanged>Ենթագրերի միջև նվազագույն ցուցադրման ժամանակով տողերի քանակը փոխվել է՝ {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Սովորական տեքստ ներմուծելուց առաջ</BeforeImportText>
     <TextImported>Ներմուծված տեքստ</TextImported>
-    <BeforePointSynchronization>Մինչև կետային համաժամեցումը</BeforePointSynchronization>
-    <PointSynchronizationDone>Կետային համաժամեցումը կատարված է</PointSynchronizationDone>
+    <BeforePointSynchronization>Մինչև կետային սինքրոնացումը</BeforePointSynchronization>
+    <PointSynchronizationDone>Կետային սինքրոնացումը կատարված է</PointSynchronizationDone>
     <BeforeTimeCodeImport>Ժամային կոդերի ներմուծելուց առաջ</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Ժամային կոդերը ներմուծվել են {0}-ից՝ {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Տեսանյութի դիրքում ենթագրեր տեղադրելուց առաջ</BeforeInsertSubtitleAtVideoPosition>
@@ -2319,8 +2319,8 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <XFrameYisZMilliseconds>{0} կադր(եր)ը {1} կադր/վրկ-ով {2} միլիվայրկյան է</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Սահմանել համաժամեցման կետը {0} տողի համար</Title>
-    <SyncPointTimeCode>Համաժամեցման ժամային կոդը</SyncPointTimeCode>
+    <Title>Սահմանել սինքրոնացման կետը {0} տողի համար</Title>
+    <SyncPointTimeCode>սինքրոնացման ժամային կոդը</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 վրկ</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½ վրկ</HalfASecondBack>
     <HalfASecondForward>½ վրկ &lt;&lt;</HalfASecondForward>
@@ -2332,7 +2332,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <SubtitleFormats>Ենթագրի ձևաչափեր</SubtitleFormats>
     <Toolbar>Գործիքագոտի</Toolbar>
     <VideoPlayer>Վիդեո նվագարկիչ</VideoPlayer>
-    <WaveformAndSpectrogram>Ալիքաձև/Սպեկտոգրամ</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Ալիքաձև/Սպեկտրոգրամ</WaveformAndSpectrogram>
     <Tools>Գործիքներ</Tools>
     <WordLists>Բառերի ցանկ</WordLists>
     <SsaStyle>ASS/SSA Ոճ</SsaStyle>
@@ -2346,7 +2346,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <SaveAs>Պահպանել որպես</SaveAs>
     <Find>Փնտրել</Find>
     <Replace>Փոխարինել</Replace>
-    <VisualSync>Տեսական համաժամեցում</VisualSync>
+    <VisualSync>Տեսական սինքրոնացում</VisualSync>
     <BurnIn>Վերադրված ենթագրեր</BurnIn>
     <SpellCheck>Ուղղագր․ ստուգում</SpellCheck>
     <NetflixQualityCheck>Netflix-ի որակի ստուգում</NetflixQualityCheck>
@@ -2486,8 +2486,8 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <WaveformTextFontSize>Տեքստի տառատեսակի չափ</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Դատարկել «Spectograms» և «Waveforms» պանակները</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' և 'Spectrograms' պանակները պարունակում են {0} ֆայլեր ({1:0.00} ՄԲ)</WaveformAndSpectrogramsFolderInfo>
-    <Spectrogram>Սպեկտոգրամ</Spectrogram>
-    <GenerateSpectrogram>Ստեղծել սպեկտոգրամը</GenerateSpectrogram>
+    <Spectrogram>Սպեկտրոգրամ</Spectrogram>
+    <GenerateSpectrogram>Ստեղծել սպեկտրոգրամը</GenerateSpectrogram>
     <SpectrogramAppearance>Սպեկտրոգրամի արտաքին տեսքը</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Մեկ գունային գրադիենտ</SpectrogramOneColorGradient>
     <SpectrogramClassic>Դասական</SpectrogramClassic>
@@ -2674,8 +2674,8 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <GoToPreviousSubtitleAndFocusWaveform>Անցել նախորդ տողին և կենտրոնանալ ալիքաձևի վրա</GoToPreviousSubtitleAndFocusWaveform>
     <GoToNextSubtitleAndFocusWaveform>Անցել հաջորդ տողին և կենտրոնանալ ալիքաձևի վրա</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Փոխել ֆոկուսը դիտացանկի և ենթագրերի մուտքագրման դաշտի միջև</ToggleFocus>
-    <ToggleFocusWaveform>Փոխել ֆոկուսը դիտացանկի և ալիքաձևի/սպեկտոգրամի միջև</ToggleFocusWaveform>
-    <ToggleFocusWaveformTextBox>Փոխել ֆոկուսը ենթագրերի մուտքագրման դաշտի և ալիքաձևի/սպեկտոգրամի միջև</ToggleFocusWaveformTextBox>
+    <ToggleFocusWaveform>Փոխել ֆոկուսը դիտացանկի և ալիքաձևի/սպեկտրոգրամի միջև</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Փոխել ֆոկուսը ենթագրերի մուտքագրման դաշտի և ալիքաձևի/սպեկտրոգրամի միջև</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Միացնել/անջատել երկխոսության գծիկները</ToggleDialogDashes>
     <ToggleQuotes>Մեջբերումներ</ToggleQuotes>
     <ToggleHiTags>Միացնել/անջատել HI թեգերը</ToggleHiTags>
@@ -2754,7 +2754,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <PlayRateSlower>Ավելի դանդաղ նվագարկման արագություն</PlayRateSlower>
     <PlayRateFaster>Ավելի արագ նվագարկման արագություն</PlayRateFaster>
     <PlayRateToggle>Նվագարկման արագություն (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
-    <VideoResetSpeedAndZoom>Վերագործարկել նվագարկման հաճախականությունը (արագությունը) և ալիքաձևի խոշորացումը</VideoResetSpeedAndZoom>
+    <VideoResetSpeedAndZoom>Վերակայել նվագարկման հաճախականությունը (արագությունը) և ալիքաձևի խոշորացումը</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Միացնել/անջատել տեսանյութի կառավարման տարրերը</MainToggleVideoControls>
     <VideoToggleContrast>Միացնել/անջատել հակադրությունը (միայն mpv-ում)</VideoToggleContrast>
     <AudioToTextX>Աուդիո ֆայլից տեքստ ({0})</AudioToTextX>
@@ -2911,7 +2911,7 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <Description>Տեսանյութի օֆսեթ (ենթագրերը չեն համապատասխանի տեսանյութի իրական ժամանակին, բայց, օրինակ, +10 ժամ)</Description>
     <RelativeToCurrentVideoPosition>Տեսանյութի ներկայիս դիրքի համեմատ</RelativeToCurrentVideoPosition>
     <KeepTimeCodes>Թողեք ժամային կոդերը այնպես, ինչպես կան (մի ավելացրեք տեսանյութի օֆսեթ)</KeepTimeCodes>
-    <Reset>Վերագործարկել</Reset>
+    <Reset>Վերակայել</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Ցուցադրել ընտրված տողերը ավելի վաղ/ուշ</Title>
@@ -3087,8 +3087,8 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <OriginalScript>Բնօրինակ սցենար</OriginalScript>
     <Translation>Թարգմանություն</Translation>
     <Editing>Խմբագրում</Editing>
-    <Timing>Համաժամեցում</Timing>
-    <SyncPoint>Համաժամեցման կետ</SyncPoint>
+    <Timing>սինքրոնացում</Timing>
+    <SyncPoint>սինքրոնացման կետ</SyncPoint>
     <UpdatedBy>Թարմացված է՝</UpdatedBy>
     <UpdateDetails>Թարմացնել մանրամասները</UpdateDetails>
     <Resolution>Լուծաչափ</Resolution>
@@ -3188,13 +3188,13 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <ExportCategoriesTitle>Արտածել կատեգորիաները․․․</ExportCategoriesTitle>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
-    <Title>Կետից կետ համաժամեցում</Title>
-    <TitleViaOtherSubtitle>Կետից կետ համաժամեցում այլ ենթագրերի հետ</TitleViaOtherSubtitle>
-    <SyncHelp>Սահմանեք առնվազն երկու համաժամեցման կետ՝ մոտավոր համաժամեցում կատարելու համար</SyncHelp>
-    <SetSyncPoint>Սահմանել համաժամեցման կետը</SetSyncPoint>
-    <RemoveSyncPoint>Հեռացնել  համաժամեցման կետը</RemoveSyncPoint>
-    <SyncPointsX>Համաժամեցման կետեր՝ {0}</SyncPointsX>
-    <Info>Մեկ համաժամեցման կետը կկարգավորի դիրքը, երկու կամ ավելի կետեր՝ դիրքը և արագությունը</Info>
+    <Title>Կետից կետ սինքրոնացում</Title>
+    <TitleViaOtherSubtitle>Կետից կետ սինքրոնացում այլ ենթագրերի հետ</TitleViaOtherSubtitle>
+    <SyncHelp>Սահմանեք առնվազն երկու սինքրոնացման կետ՝ մոտավոր սինքրոնացում կատարելու համար</SyncHelp>
+    <SetSyncPoint>Սահմանել սինքրոնացման կետը</SetSyncPoint>
+    <RemoveSyncPoint>Հեռացնել  սինքրոնացման կետը</RemoveSyncPoint>
+    <SyncPointsX>սինքրոնացման կետեր՝ {0}</SyncPointsX>
+    <Info>Մեկ սինքրոնացման կետը կկարգավորի դիրքը, երկու կամ ավելի կետեր՝ դիրքը և արագությունը</Info>
     <ApplySync>Կիրառել</ApplySync>
   </PointSync>
   <TextToSpeech>
@@ -3220,9 +3220,9 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <Similarity>Նմանություն</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
-    <Title>SMPTE համաժամեցում</Title>
-    <UseSmpteTiming>Օգտագործե՞լ SMPTE համաժամեցումը ընթացիկ ենթագրերի համար:</UseSmpteTiming>
-    <SmpteTimingInfo>Նշում՝ SMPTE համաժամեցումը կարող է փոխվել «Տեսանյութ» ցանկում։</SmpteTimingInfo>
+    <Title>SMPTE սինքրոնացում</Title>
+    <UseSmpteTiming>Օգտագործե՞լ SMPTE սինքրոնացումը ընթացիկ ենթագրերի համար:</UseSmpteTiming>
+    <SmpteTimingInfo>Նշում՝ SMPTE սինքրոնացումը կարող է փոխվել «Տեսանյութ» ցանկում։</SmpteTimingInfo>
     <YesAlways>Այո, միշտ ոչ ամբողջ թվերի կադր․ հաճախականության համար</YesAlways>
     <NoNever>Ոչ, երբեք</NoNever>
   </TimedTextSmpteTiming>
@@ -3253,20 +3253,20 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <DismissAndNext>Անտեսել և անցել հաջորդին</DismissAndNext>
   </VerifyCompleteness>
   <VisualSync>
-    <Title>Տեսական համաժամեցում</Title>
+    <Title>Տեսական սինքրոնացում</Title>
     <StartScene>Սկզբնական տեսարան</StartScene>
     <EndScene>Ավարտական տեսարանի</EndScene>
-    <Synchronize>Համաժամեցում</Synchronize>
+    <Synchronize>սինքրոնացում</Synchronize>
     <HalfASecondBack>&lt; ½ վրկ</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 վրկ</ThreeSecondsBack>
     <PlayXSecondsAndBack>Նվագարկել {0} վայրկյան և վերադառնալ</PlayXSecondsAndBack>
     <FindText>Փնտրել տեքստ</FindText>
     <GoToSubPosition>Անցել ենթագրի դիրքին</GoToSubPosition>
     <KeepChangesTitle>Պահպանե՞լ փոփոխությունները։</KeepChangesTitle>
-    <KeepChangesMessage>«Տեսական համաժամեցում» բաժնում ենթագրերում փոփոխություններ են կատարվել։
+    <KeepChangesMessage>«Տեսական սինքրոնացում» բաժնում ենթագրերում փոփոխություններ են կատարվել։
 
 Պահպանե՞լ փոփոխությունները։</KeepChangesMessage>
-    <SynchronizationDone>Համաժամեցումը ավարտված է</SynchronizationDone>
+    <SynchronizationDone>սինքրոնացումը ավարտված է</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Սկզբնական տեսարանը պետք է լինի ավարտական տեսարանից առաջ։</StartSceneMustComeBeforeEndScene>
     <Tip>Հուշում. Օգտագործեք &lt;ctrl+←/→&gt; ստեղները՝ 100 մվրկ առաջ/ետ գնալու համար</Tip>
   </VisualSync>
@@ -3430,9 +3430,9 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <ErrorUnicodeEncodingOnly>Ջրանիշը աշխատում է միայն Unicode ֆայլերի կոդավորմամբ։</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
-    <AddWaveformAndSpectrogram>Ավելացնել ալիքաձև/սպեկտոգրամ</AddWaveformAndSpectrogram>
+    <AddWaveformAndSpectrogram>Ավելացնել ալիքաձև/սպեկտրոգրամ</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Սեղմել ալիքաձև ավելացնելու համար</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Սեղմել ալիքաձև/սպեկտոգրամ ավելացնելու համար</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveformAndSpectrogram>Սեղմել ալիքաձև/սպեկտրոգրամ ավելացնելու համար</ClickToAddWaveformAndSpectrogram>
     <Seconds>վայրկյան</Seconds>
     <ZoomIn>Խոշորացնել</ZoomIn>
     <ZoomOut>Փոքրացնել</ZoomOut>
@@ -3451,10 +3451,10 @@ C# ծրագրի սկզբնական կոդը հասանելի է https://github.c
     <ExtendToPrevious>Երկարացնել տևողությունը մինչև նախորդ տողը</ExtendToPrevious>
     <ExtendToNext>Երկարացնել տևողությունը մինչև հաջորդ տողը</ExtendToNext>
     <PlaySelection>Նվագարկել ընտրությունը</PlaySelection>
-    <ShowWaveformAndSpectrogram>Ցուցադրել ալիքաձևը և սպեկտոգրամը</ShowWaveformAndSpectrogram>
-    <CombineWaveformAndSpectrogram>Միավորել ալիքաձևը և սպեկտոգրամը</CombineWaveformAndSpectrogram>
+    <ShowWaveformAndSpectrogram>Ցուցադրել ալիքաձևը և սպեկտրոգրամը</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Միավորել ալիքաձևը և սպեկտրոգրամը</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Ցուցադրել միայն ալիքաձևը</ShowWaveformOnly>
-    <ShowSpectrogramOnly>Ցուցադրել միայն սպեկտոգրամը</ShowSpectrogramOnly>
+    <ShowSpectrogramOnly>Ցուցադրել միայն սպեկտրոգրամը</ShowSpectrogramOnly>
     <AddShotChange>Ավելացնել կադրի փոփոխություն</AddShotChange>
     <RemoveShotChange>Հեռացնել կադրի փոփոխությունը</RemoveShotChange>
     <RemoveShotChangesFromSelection>Հեռացնել կադրի փոփոխությունները ընտրությունից</RemoveShotChangesFromSelection>
