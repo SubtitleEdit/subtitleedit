@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 break;
                             }
 
+                            var removeAfter = true;
                             var temp = text.Remove(index, s.Length);
 
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
@@ -102,6 +103,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             if (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(3, 4);
+                            }
+
+                            if (index > 2 && temp.Substring(index - 2).StartsWith(", ..."))
+                            {
+                                temp = temp.Remove(index - 2, 2);
+                                removeAfter = false;
                             }
 
                             if (index > 2 && " \r\n".Contains(text.Substring(index - 1, 1)) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
@@ -205,7 +212,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 doRepeat = true;
                             }
 
-                            var removeAfter = true;
 
                             if (index > 2 && temp.Length > index)
                             {
