@@ -298,6 +298,7 @@
     <PackageReference Include="ncalc" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NHunspell" />
+    <PackageReference Include="SkiaSharp" />
     <PackageReference Include="System.Security.AccessControl" />
     <PackageReference Include="System.Security.Principal.Windows" />
     <PackageReference Include="Vosk" />
