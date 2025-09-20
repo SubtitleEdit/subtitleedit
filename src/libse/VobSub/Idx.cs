@@ -77,7 +77,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 int b = Convert.ToInt32(hex.Substring(4, 2), 16);
                 return Color.FromArgb(r, g, b);
             }
-            else if (hex.Length == 8)
+
+            if (hex.Length == 8)
             {
                 int a = Convert.ToInt32(hex.Substring(0, 2), 16);
                 int r = Convert.ToInt32(hex.Substring(2, 2), 16);
@@ -94,18 +95,15 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             string[] parts = line.Split(new[] { ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 7)
             {
-                int hours;
-                int minutes;
-                int seconds;
-                int milliseconds;
-                if (int.TryParse(parts[1], out hours) &&
-                    int.TryParse(parts[2], out minutes) &&
-                    int.TryParse(parts[3], out seconds) &&
-                    int.TryParse(parts[4], out milliseconds))
+                if (int.TryParse(parts[1], out var hours) &&
+                    int.TryParse(parts[2], out var minutes) &&
+                    int.TryParse(parts[3], out var seconds) &&
+                    int.TryParse(parts[4], out var milliseconds))
                 {
                     return new IdxParagraph(new TimeSpan(0, hours, minutes, seconds, milliseconds), Convert.ToInt64(parts[6].Trim(), 16));
                 }
             }
+
             return null;
         }
 
