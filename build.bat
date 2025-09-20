@@ -10,7 +10,7 @@ IF /I "%~1" == "-help"  GOTO ShowHelp
 IF /I "%~1" == "--help" GOTO ShowHelp
 IF /I "%~1" == "/?"     GOTO ShowHelp
 IF /I "%~1" == "-?"     GOTO ShowHelp
-.dll
+
 ECHO Getting latest changes...
 git pull
 ECHO.
@@ -131,7 +131,7 @@ IF DEFINED INNOSETUP IF EXIST "%INNOSETUP%" (
 
 
 
-SET "WinGetFix=src\UpdateAssemblyInfo\bin\debug\UpdateAssemblyInfo.exe"
+SET "WinGetFix=src\UpdateAssemblyInfo\bin\Release\net48\win-x64\UpdateAssemblyInfo.exe"
 IF NOT EXIST "%WinGetFix%" (
   ECHO Compile UpdateAssemblyInfo!
 )
