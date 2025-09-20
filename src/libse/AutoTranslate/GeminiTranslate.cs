@@ -213,7 +213,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Marathi","mr"),
                MakePair("Marwari",""),
                MakePair("Min Nan",""),
-               MakePair("Moldovan","ro"),
                MakePair("Mongolian","mn"),
                MakePair("Montenegrin",""),
                MakePair("Myanmar(Burmese)", "my"),
