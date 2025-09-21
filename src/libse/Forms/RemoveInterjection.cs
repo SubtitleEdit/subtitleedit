@@ -121,7 +121,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index, 4);
                             }
 
-                            if (index > 2 && temp.Remove(0, index - 2).StartsWith(". ."))
+                            if (index > 1 && temp.Substring(index - 2) == ", —")
+                            {
+                                temp = temp.Remove(index - 2, 2);
+                            }
+                            else if (index > 2 && temp.Remove(0, index - 2).StartsWith(". ."))
                             {
                                 temp = temp.Remove(index - 2, 2);
                                 removeAfter = false;
