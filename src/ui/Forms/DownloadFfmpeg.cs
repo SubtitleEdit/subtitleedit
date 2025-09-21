@@ -56,10 +56,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2025-03-31/ffmpeg-2025-03-31.zip";
+            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg.zip";
             if (IntPtr.Size == 32)
             {
-                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg-win32.zip";
             }
             else if (IsWindows7())
             {
@@ -68,7 +68,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
             {
-                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-2025-03-31/ffprobe-2025-03-31.zip";
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffprobe.zip";
+                if (IntPtr.Size == 32)
+                {
+                    url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffprobe-win32.zip";
+                }
             }
 
             try
@@ -124,9 +128,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             var sha512Hashes = new[]
             {
-                "18d4d0d9a780292385a088965ddc7c773d9a5c524b1f9ecd6336287f03490b2507d59ce6fa552f1f316168747cd75f93f395de2dab7b2986351783814937d19c", // ffmpeg 32
-                "e715d308a666b8f16cc6585a14316029d905e42e2af8a5ad0a543360d80badfbdf3748080d825149f9e727ae56274f62121f5625929dba3b884b86ecd3a2a139", // ffmpeg 64
-                "72ee50ce0b529d550606c1b1193480a864046888826108249ca94503e892685ea354ea24d603a051fc4c3704895dda04a5e7a9b6f234ade5b29e6c85c1a73591", // ffprobe
+                "3e24d632de0bc0ee01a064354dd334377ea88880ffc5a6801252361db869d413c103cfd459beb4a64aa0b3bea4154e828f111320d9a5b3becf35c3ebba89d451", // ffmpeg 32
+                "5aa9e9bbd88d30408c3a97e05adcc3a3c682d8a53b5fa011a65566bcf10249afa752529c475ce1b7b287f1fee815df4e83a191259de23cfae22f216c9e973084", // ffmpeg 64
+                "41db945aea3a16b2d9f2ec967831cb5da4d22a3567e7be3110a5f64bfd40a84f33be48f5162403c968769101c0a1a5329dabba32968697e927fc5213a37701ff", // ffprobe 32
+                "d2fda9b2abab69b4bbfe57e135dcc38312368c62ce3419476738ac2d96bcecf9e0ec3147b3c131199155ef6bc237b70b9eebe7546e4e5d13b414f20aa54c2a6d", // ffprobe 64
                 "b7fba2d49212660d67652f4ffb5760fdc5c7c4732fa08af630bd2674fd90a9dc5de05cad543204f3846813bb566c708addb8d72b8b5c6c9ff973522b2fe25037", // ffmpeg for Windows 7 
             };
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
-    <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی</TranslatedBy>
+    <Version>4.0.13</Version>
+    <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی، رامتین جوکار</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
     <Ok>تائید</Ok>
@@ -167,13 +167,33 @@
   <AudioToText>
     <Title>صوت/ویدئو به متن</Title>
     <Info>تولید متن از صدا از طریق Vosk/Kaldi تشخیص گفتار</Info>
+    <WhisperInfo>تولید متن از صدا از طریق Whisper تشخیص گفتار</WhisperInfo>
+    <Engine>انجین</Engine>
     <VoskWebsite>وب سایت Vosk</VoskWebsite>
+    <WhisperWebsite>وب سایت Whisper</WhisperWebsite>
     <Models>مدل ها</Models>
-    <ChooseModel>مدل را انتخاب کنید</ChooseModel>
+    <LanguagesAndModels>زبان ها و مدل ها</LanguagesAndModels>
+    <ChooseModel>انتخاب مدل</ChooseModel>
+    <ChooseLanguage>انتخاب زبان</ChooseLanguage>
     <OpenModelsFolder>پوشه مدل ها را باز کنید</OpenModelsFolder>
     <LoadingVoskModel>در حال بارگیری مدل تشخیص گفتار Vosk...</LoadingVoskModel>
     <Transcribing>در حال تبدیل صدا به متن...</Transcribing>
+    <TranscribingXOfY>تبدیل صوت به متن - فایل {0} از {1}...</TranscribingXOfY>
+    <PostProcessing>پس‌پردازش...</PostProcessing>
+    <XFilesSavedToVideoSourceFolder>{0} فایل در پوشه منبع ویدیو ذخیره شد</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>از پس پردازش استفاده کنید (ادغام خط، اصلاح حروف، علائم نگارشی و موارد دیگر)</UsePostProcessing>
+    <AutoAdjustTimings>تنظیم خودکار زمان‌بندی‌ها</AutoAdjustTimings>
+    <BatchMode>حالت گروهی</BatchMode>
+    <KeepPartialTranscription>نگهداری رونوشت جزئی</KeepPartialTranscription>
+    <TranslateToEnglish>ترجمه به انگلیسی</TranslateToEnglish>
+    <RemoveTemporaryFiles>حذف فایل‌های موقت</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>تنظیم پوشه مدل‌های CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>اجرای فقط پس‌پردازش/تنظیم زمان‌بندی‌ها</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>دانلود کتابخانه‌های cuBLAS و cuDNN برای Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>متنی یافت نشد!</NoTextFound>
+    <FixCasing>رفع مشکل بزرگی/کوچکی حروف</FixCasing>
+    <AddPeriods>افزودن نقطه</AddPeriods>
+    <FixShortDuration>تصحیح مدت‌زمان کوتاه</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>پیوست های پیشرفته زیر ایستگاه آلفا</Title>
@@ -321,6 +341,106 @@
     <MkvLanguageStyleThreeLetter>کد زبان سه حرفی</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>بدون کد زبان</MkvLanguageStyleEmpty>
   </BatchConvert>
+    <BeautifyTimeCodes>
+    <Title>زیباسازی کدهای زمانی</Title>
+    <TitleSelectedLines>زیباسازی کدهای زمانی ({0} سطر هایی انتخاب شده)</TitleSelectedLines>
+    <GroupTimeCodes>کدهای زمانی</GroupTimeCodes>
+    <AlignTimeCodes>هم ترازی کدهای زمانی با فریم‌ها</AlignTimeCodes>
+    <ExtractExactTimeCodes>برای استخراج کدهای زمانی فریم از FFprobe استفاده کن</ExtractExactTimeCodes>
+    <ExtractTimeCodes>اسخراج کدهای زمانی</ExtractTimeCodes>
+    <CancelTimeCodes>لغو</CancelTimeCodes>
+    <GroupShotChanges>نماهای تغییریافته</GroupShotChanges>
+    <SnapToShotChanges>اتصال نشانه‌ها به تغییر نما</SnapToShotChanges>
+    <ImportShotChanges>تولید / وارد کردن تغییر نما...</ImportShotChanges>
+    <EditProfile>ویرایش پروفایل...</EditProfile>
+    <NoTimeCodesLoaded>هیچ کد زمانی بارگذاری نشده است</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} کد زمانی بارگذاری شد</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>شما استخراج کدهای زمانی دقیق فریم را انتخاب کرده‌اید، اما هیچ کد زمانی بارگذاری نشده است.
+
+لطفاً برای استخراج کدهای زمانی اول روی "{0}" کلیک کنید، یا این گزینه را غیرفعال کنید.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>هیچ تغییر نمایی بارگذاری نشده</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} تغییر نمایی بارگذاری شده</XShotChangesLoaded>
+    <NoShotChangesLoadedError>شما انتخاب کرده‌اید که نشانه‌ها به تغییر نماها متصل شوند، اما هیچ تغییر نمایی بارگذاری نشده است.
+
+لطفاً اول روی "{0}" کلیک کنید تا تغییر نماها تولید یا وارد شوند، یا این گزینه را غیرفعال کنید.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>همترازی کدهای زمانی با کدفریم‌ها</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>استفاده از کدهای زمانی دقیق (در صورت موجود بودن)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>اتصال نشانه‌ها به تغییر نماها (در صورت موجود بودن)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>بررسی زیرنویس‌های به هم متصل تکمیل نشده</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>تعدادی از زیرنویس‌ها طبق تنظیمات پروفایل شما به هم متصل نشده‌اند. دلیل آن احتمالاً تشخیص بیش از حد تغییر نما در بازه‌های کوتاه (اشتباه) است..
+
+پیشنهاد می‌شود این موارد را به صورت دستی بررسی کنید تا مطمئن شوید نشانه‌ها به تغییر نماهای صحیح (واقعی) متصل شده‌اند..</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>سطر ها</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>فاصله (فریم)</UnfixableParagraphsColumnGap>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>ویرایش پروفایل</Title>
+    <LoadPreset>حالت ساده...</LoadPreset>
+    <PresetDefault>بارگذاری پیش‌ تنظیم</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>حالت ساده...</CreateSimple>
+    <General>عمومی</General>
+    <Gap>فاصله:</Gap>
+    <GapSuffix>فریم‌ها (این کار تنظیمات دستی شما را جایگزین می‌کند)</GapSuffix>
+    <InCues>نشانه‌های ابتدایی</InCues>
+    <SubtitlePreviewText>متن زیرنویس.</SubtitlePreviewText>
+    <Zones>ناحیه‌ها:</Zones>
+    <OutCues>نشانه‌های پایانی</OutCues>
+    <ConnectedSubtitles>زیرنویس های متصل</ConnectedSubtitles>
+    <InCueClosest>نشانهٔ ابتدایی نزدیک‌تر است</InCueClosest>
+    <OutCueClosest>نشانهٔ انتهایی نزدیک‌تر است</OutCueClosest>
+    <TreadAsConnected>به عنوان متصل در نظر بگیر اگر فاصله کوچک‌تر  بود از:</TreadAsConnected>
+    <Milliseconds>میلی ثانیه</Milliseconds>
+    <Chaining>اتصال سازی</Chaining>
+    <InCueOnShot>نشانهٔ ابتدایی روی تغییر نما</InCueOnShot>
+    <OutCueOnShot>نشانهٔ انتهایی روی تغییر نما</OutCueOnShot>
+    <CheckGeneral>در مواردی که تحت تأثیر نیستند، قوانین عمومی همچنان اعمال شوند</CheckGeneral>
+    <MaxGap>حداکثر فاصله:</MaxGap>
+    <ShotChangeBehavior>اگر تغییر نما در میان باشد:</ShotChangeBehavior>
+    <DontChain>اتصال انجام نشود</DontChain>
+    <ExtendCrossingShotChange>با عبور از تغییر نما گسترش بده</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>تا تغییر نما گسترش بده</ExtendUntilShotChange>
+    <ResetWarning>این کار پروفایل فعلی شما را بازنشانی کرده و تمام مقادیر را با مقادیر پیش‌ تنظیم انتخاب شده جایگزین می‌کند. این عمل غیرقابل بازگشت است.
+
+آیا می‌خواهید ادامه دهید؟?</ResetWarning>
+    <CreateSimpleTitle>ایجاد ساده</CreateSimpleTitle>
+    <CreateSimpleInstruction>این قوانین پایه را وارد کنید، پروفایل فعلی مطابق آن به‌روزرسانی خواهد شد.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>حداقل فاصله مجاز بین زیرنویس ها.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>نشانه‌های ابتدایی باید:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>روی تغییر نما</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 فریم پس از تغییر نما</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 فریم پس از تغییر نما</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 فریم پس از تغییر نما</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>نشانه‌های پایانی باید:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>روی تغییر نما</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 فریم پیش از تغییر نما</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 فریم پیش از تغییر نما</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 فریم پیش از تغییر نما</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>حداقل فاصله قبل از تغییر نما</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>برای زیرنویس‌های متصل، نشانهٔ ابتدایی یا انتهایی را - بسته به اینکه کدام نزدیک‌تر است - به یک تغییر نما متصل کن</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>حداکثر جابجایی :</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>نشانه‌های موجود در این فاصله از تغییر نماها، به تغییر نما متصل خواهند شد.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>ناحیه امن:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>نشانه‌های موجود در این فاصله از تغییر نماها، از تغییر نما دور خواهند شد.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>حداکثر فاصله زنجیره‌سازی:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>اگر فاصله بین دو زیرنویس از این مقدار کمتر باشد، زیرنویس‌ها به هم متصل خواهند شد.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>بعد از یک نشانهٔ انتهایی روی تغییر نما، فاصله ممکن است کوچک‌تر باشد</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>اتصال زیرنویس‌ها توصیه می‌شود تا از ریتم یکنواخت در نمایش زیرنویس‌ها اطمینان حاصل شود.
+این کار تجربه تماشای آرام‌تری ارائه می‌دهد.
+
+پس از زنجیره‌سازی، زیرنویس‌ها یا به هم متصل می‌شوند (یعنی یک زیرنویس ناپدید شده و زیرنویس جدید بلافاصله پس از مکثی کوتاه ظاهر می‌شود) یا خیر.
+این به بیننده درک می‌دهد که چه زمانی می‌تواند توجه خود را به صفحه بازگرداند.
+
+طول فاصله زنجیره‌سازی می‌تواند بلافاصله پس از ناپدید شدن زیرنویس در یک تغییر نما کمی کوچک‌تر باشد، زیرا تغییر نما به نوعی تصویر را "ریست" می‌کند.
+ما از ریتم درونی تصویر بهره می‌بریم.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>بارگذاری قوانین Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>فریم</Frames>
+    <Maximum>حداکثر.</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>ناحیه امن باید بزرگ‌تر از حداکثر آفست باشد.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>وارد کردن تصویر...</ImportImage>
     <ExportImage>خروجی گرفتن از تصویر...</ExportImage>
@@ -440,6 +560,15 @@
     <OnlyLookForDifferencesInText>فقط برای تفاوت های موجود در متن نگاه کن</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>نمیتوان با زیرنویسهای تصویری مقایسه کرد</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>تغییر بازیگران</Title>
+    <ConvertActorFrom>تغییر بازیگر از</ConvertActorFrom>
+    <ConvertActorTo>تغییر بازیگر به</ConvertActorTo>
+    <InlineActorViaX>پیاده‌سازی درون‌خطی بازیگران از طریق {0}</InlineActorViaX>
+    <NumberOfConversionsX>تعداد تبدیل‌ های بازیگر: {0}</NumberOfConversionsX>
+    <SetColor>تنظیم رنگ</SetColor>
+    <OnlyNames>فقط اسامی</OnlyNames>
+  </ConvertActor>
   <DCinemaProperties>
     <Title>ویژگی های D-Cinema (اینتروپ)</Title>
     <TitleSmpte>ویژگی های D-Cinema (SMPTE)</TitleSmpte>
@@ -833,6 +962,19 @@
     <TuneFor>کوک برای</TuneFor>
     <AlignRight>راست را تراز کنید</AlignRight>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>تولید ویدئو با زیرنویس‌های توکار اضافه/حذف‌شده</Title>
+    <InputVideoFile>فایل ویدیوی ورودی</InputVideoFile>
+    <SubtitlesX>زیرنویسها ({0})</SubtitlesX>
+    <SetLanguage>تنظیم زبان...</SetLanguage>
+    <LanguageAndTitle>زبان/عنوان</LanguageAndTitle>
+    <ToggleForced>تغییر حالت اجباری</ToggleForced>
+    <ToggleDefault>تغییر حالت پیش‌فرض</ToggleDefault>
+    <Default>پیشفرض</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" تولید شده با زیرنویس‌های توکار</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>حذف فایل ویدیوی ورودی پس از «تولید»</DeleteInputVideo>
+    <OutputFileNameSettings>تنظیمات نام فایل خروجی...</OutputFileNameSettings>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>آیا نیازمند واژه نامه ها هسیتد؟</Title>
     <DescriptionLine1>NHunspell ویرایش نام در طلسم بررسی در موتور بر اساس</DescriptionLine1>
@@ -1122,6 +1264,7 @@
         <CloseOriginal>بستن زیرنویس اصلی</CloseOriginal>
         <OpenContainingFolder>باز شامل پوشه</OpenContainingFolder>
         <Compare>مقایسه</Compare>
+        <VerifyCompleteness>بررسی کامل بودن...</VerifyCompleteness>
         <Statistics>&amp;آماره ها</Statistics>
         <Plugins>&amp;افزونه ها...</Plugins>
         <ImportSubtitleFromVideoFile>زیرنویس فایل ویدئویی...</ImportSubtitleFromVideoFile>
@@ -1187,6 +1330,7 @@
         <FixCommonErrors>اشتباهات رایج و ثابت</FixCommonErrors>
         <StartNumberingFrom>شروع شماره از</StartNumberingFrom>
         <RemoveTextForHearingImpaired>گزارش متن برای ناشنوایان</RemoveTextForHearingImpaired>
+        <ConvertActors>تبدیل بازیگران...</ConvertActors>
         <ChangeCasing>پوشش تغییر</ChangeCasing>
         <ChangeFrameRate>تغییر نرخ فریم</ChangeFrameRate>
         <ChangeSpeedInPercent>تغییر سرعت اعمال شده (درصد)...</ChangeSpeedInPercent>
@@ -1202,12 +1346,13 @@
         <Duration>مدت</Duration>
         <ListErrors>لیست خطاها...</ListErrors>
         <NetflixQualityCheck>بررسی کیفیت نتفلیکس...</NetflixQualityCheck>
+        <BeautifyTimeCodes>زیباسازی کدهای زمانی...</BeautifyTimeCodes>
         <TextAlphabetically>متن -- حروف الفبا</TextAlphabetically>
         <TextSingleLineMaximumLength>متن -- حداکثر خط. طول</TextSingleLineMaximumLength>
         <TextTotalLength>متن -- مجموع طول</TextTotalLength>
         <TextNumberOfLines>متن -- تعداد خطوط</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>متن - تعداد حروف/ثانیه</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>متن - کلمات در دقیقه )wpm(</WordsPerMinute>
+        <WordsPerMinute>متن - کلمات در دقیقه (wpm)</WordsPerMinute>
         <Style>سبک</Style>
         <Ascending>صعودی</Ascending>
         <Descending>نزولی</Descending>
@@ -1232,6 +1377,9 @@
         <GenerateTextFromVideo>ایجاد متن از ویدئو ...</GenerateTextFromVideo>
         <GenerateBlankVideo>تولید ویدیوی خالی...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>تولید ویدیو با زیر سوخته...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>تولید ویدیو با زیرنویس‌های  اضافه/حذف‌شده توکار...</GenerateVideoWithEmbeddedSubs>
+        <GenerateTransparentVideoWithSubs>تولید ویدیوی شفاف با زیرنویس...</GenerateTransparentVideoWithSubs>
+        <VideoAudioToTextX>تبدیل صوت به متن ({0})...</VideoAudioToTextX>
         <VideoAudioToText>ویدئو/صوت به متن...</VideoAudioToText>
         <ImportChaptersFromVideo>وارد کردن فصل ها از ویدئو</ImportChaptersFromVideo>
         <GenerateImportShotChanges>ایجاد / تغییر صحنه وارد کردن ...</GenerateImportShotChanges>
@@ -1240,6 +1388,7 @@
         <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
         <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>نمایش/مخفی شکل موج و طیف نگار</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>تبدیل متن به گفتار و افزودن به ویدیو...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>سازمان ملل متحد کنترل اسکله های ویدئویی</UnDockVideoControls>
         <ReDockVideoControls>دوباره حوض ویدئو کنترل</ReDockVideoControls>
       </Video>
@@ -1267,6 +1416,7 @@
       <Options>
         <Title>گزینه ها</Title>
         <Settings>تنظیمات &amp;</Settings>
+        <WordLists>لیست کلمات...</WordLists>
         <ChooseLanguage>انتخاب زبان</ChooseLanguage>
       </Options>
       <Networking>
@@ -1295,6 +1445,7 @@
         <VisualSync>همگام سازی</VisualSync>
         <SpellCheck>بررسی املا</SpellCheck>
         <NetflixQualityCheck>بررسی کیفیت Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>زیباسازی کدهای زمانی</BeautifyTimeCodes>
         <Settings>تنظیمات</Settings>
         <Help>راهنما</Help>
         <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
@@ -1366,6 +1517,7 @@
         <KaraokeEffect>اثر کارائوکه</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>انتخاب نمایش خطوط قبل/بعد</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>همگام سازی خطوط انتخاب شده</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>زیباسازی کدهای زمانی سطر های انتخاب شده...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>ترجمه اصلی خط توسط گوگل/ماکروسافت</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>خطوط انتخاب شده</SelectedLines>
         <TranslateSelectedLines>ترجمه خطوط انتخاب شده ...</TranslateSelectedLines>
@@ -2071,6 +2223,7 @@
     <VisualSync>همگام سازی</VisualSync>
     <SpellCheck>بررسی املا</SpellCheck>
     <NetflixQualityCheck>بررسی کیفیت Netflix</NetflixQualityCheck>
+    <BeautifyTimeCodes>زیباسازی کدهای زمانی</BeautifyTimeCodes>
     <SettingsName>تنظیمات</SettingsName>
     <ToggleBookmarks>تغییر نشانک ها</ToggleBookmarks>
     <ToggleBookmarksWithComment>تغییر نشانک ها - اضافه کردن نظر</ToggleBookmarksWithComment>
@@ -2783,6 +2936,8 @@
     <Angle>زاویه</Angle>
     <BoxPerLine>کادر در هر خط (استفاده از رنگ طرح کلی)</BoxPerLine>
     <BoxMultiLine>یک جعبه (از رنگ سایه استفاده کنید)</BoxMultiLine>
+    <BoxType>نوع جعبه</BoxType>
+    <DuplicateStyleNames>نام‌های استایل تکراری: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>دسته بندی</Category>
@@ -2808,6 +2963,28 @@
     <Info>همگام یک نقطه تنظیم خواهد شد و موقعیت ، دو یا چند نقطه همگام خواهد شد و موقعیت و سرعت تنظیم</Info>
     <ApplySync>درخواست</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>تبدیل متن به گفتار</Title>
+    <Voice>صدا</Voice>
+    <TestVoice>آزمایش صدا</TestVoice>
+    <DefaultVoice>صدا پیشفرض</DefaultVoice>
+    <AddAudioToVideo>افزودن صدا به فایل ویدیو (فایل جدید)</AddAudioToVideo>
+    <GenerateSpeech>تولید گفتار از متن</GenerateSpeech>
+    <ActorInfo>کلیک راست برای اختصاص بازیگر به صدا</ActorInfo>
+    <AdjustingSpeedXOfY>تنظیم سرعت: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>ادغام ترک صوتی: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>تولید گفتار از متن: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>بازبینی کلیپ‌های صوتی</ReviewAudioClips>
+    <CustomAudioEncoding>رمزگذاری صوت سفارشی</CustomAudioEncoding>
+    <UseVoiceOver>به کارگیری صدا</UseVoiceOver>
+    <ReviewInfo>بازبینی و ویرایش/حذف کلیپ‌های صوتی</ReviewInfo>
+    <Play>پخش</Play>
+    <AutoContinue>ادامه خودکار</AutoContinue>
+    <Regenerate>بازتولید</Regenerate>
+    <Speed>سرعت</Speed>
+    <Stability>پایداری</Stability>
+    <Similarity>همسانی</Similarity>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>زمان بندی SMPTE</Title>
     <UseSmpteTiming>از زمان بندی SMPTE برای زیرنویس فعلی استفاده کنید؟</UseSmpteTiming>
@@ -2906,7 +3083,7 @@
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} تصویر ذخیره شده در {1</XImagesSavedInY>
-    <DictionaryX>فرهنگ لغت: {0</DictionaryX>
+    <DictionaryX>دانلود {0}</DictionaryX>
     <RightToLeft>راست به چپ</RightToLeft>
     <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>idx استفاده از زمان‌‌‌های فایل</UseTimeCodesFromIdx>
@@ -2920,7 +3097,7 @@
     <DiscardTitle>از تغییرات ایجاد شده در OCR صرفنظر کنید؟</DiscardTitle>
     <DiscardText>آیا می خواهید از تغییرات ایجاد شده در جلسه فعلی OCR صرفنظر کنید؟</DiscardText>
     <MinLineSplitHeight>حداقل  ارتفاع خط (تقسیم)</MinLineSplitHeight>
-    <FallbackToX>بازپرداخت به {0</FallbackToX>
+    <FallbackToX>بازگشت به {0}</FallbackToX>
     <ImagePreProcessing>پیش پردازش تصویر ...</ImagePreProcessing>
     <EditImageDb>DB تصویر را ویرایش کنید</EditImageDb>
     <OcrTraining>آموزش OCR...</OcrTraining>
@@ -3042,4 +3219,24 @@
     <Title>WebVTT - تنظیم صدای جدید</Title>
     <VoiceName>نام صدا</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>از مقدار هدر X-TIMESTAMP-MAP استفاده کن</UseXTimeStamp>
+    <MergeLines>ادغام خطوط تکراری هنگام بارگیری</MergeLines>
+    <MergeStyleTags>ادغام استایل تگ ها</MergeStyleTags>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>استایل های WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>تنظیمات پیشرفته ویسپر - آرگومان‌های command line اضافی</Title>
+    <CommandLineArguments>پارامترهای اضافی برای ویسپر command line:</CommandLineArguments>
+    <Info>توجه: نسخه های متفاوت ویسپر، پارامترهای command line متفاوتی دارند!</Info>
+    <Standard>استاندراد</Standard>
+    <StandardAsia>استاندارد آسیا</StandardAsia>
+    <HighlightCurrentWord>برجسته کردن کلمه فعلی</HighlightCurrentWord>
+    <SingleWords>تک‌ واژه‌ها</SingleWords>
+    <Sentence>جمله</Sentence>
+    <EnableVad>فعال سازی VAD</EnableVad>
+    <VadModelNotFound>مدل VAD یافت نشد.</VadModelNotFound>
+  </WhisperAdvanced>
 </Language>

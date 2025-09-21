@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    sealed partial class DownloadPaddleOCR
+    sealed partial class DownloadChromeLensCLI
     {
         /// <summary>
         /// Required designer variable.
@@ -39,7 +39,7 @@
             this.labelDescription1.Name = "labelDescription1";
             this.labelDescription1.Size = new System.Drawing.Size(145, 13);
             this.labelDescription1.TabIndex = 29;
-            this.labelDescription1.Text = "Downloading PaddleOCR";
+            this.labelDescription1.Text = "Downloading Chrome Lens CLI";
             // 
             // labelPleaseWait
             // 
@@ -50,7 +50,7 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
-            // DownloadPaddleOCR
+            // DownloadChrome Lens CLO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -60,11 +60,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DownloadPaddleOCR";
+            this.Name = "DownloadChromeLensCLI";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Download Tesseract";
-            this.Shown += new System.EventHandler(this.DownloadPaddleOcrCpu_Shown);
+            this.Text = "Download Chrome Lens CLI";
+            this.Shown += new System.EventHandler(this.DownloadChromeLensCLI_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

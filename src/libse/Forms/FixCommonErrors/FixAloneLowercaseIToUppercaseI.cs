@@ -45,6 +45,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             s = s.Replace(" i-i ", " I-I ");
             s = s.Replace(" i-i-i ", " I-I-I ");
+            s = s.Replace(" i'm ", " I'm ");
+            s = s.Replace(Environment.NewLine + "i'm ", Environment.NewLine + "I'm ");
+            s = s.Replace(Environment.NewLine + "i'm.", Environment.NewLine + "I'm.");
+            s = s.Replace(" i'm.", " I'm.");
+            s = s.Replace(" i'm,", " I'm,");
+            s = s.Replace("-i'm-", "-I'm-");
+            s = s.Replace("-i'm ", "-I'm ");
+            s = s.Replace("-i'm.", "-I'm.");
 
             // reg-ex
             var match = re.Match(s);

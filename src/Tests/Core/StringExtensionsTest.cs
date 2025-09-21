@@ -419,6 +419,22 @@ namespace Tests.Core
         }
 
         [TestMethod]
+        public void ToLowercaseButKeepTags3()
+        {
+            var input = "{\\i1}TESTING 1.{\\i0} TESTING 2.";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("{\\i1}testing 1.{\\i0} testing 2.", res);
+        }
+
+        [TestMethod]
+        public void ToLowercaseButKeepTags4()
+        {
+            var input = "<i>TESTING 1.</i> TESTING 2.";
+            var res = input.ToLowercaseButKeepTags();
+            Assert.AreEqual("<i>testing 1.</i> testing 2.", res);
+        }
+
+        [TestMethod]
         public void HasSentenceEndingCultureNeutralTest()
         {
             // language two letter language set to null

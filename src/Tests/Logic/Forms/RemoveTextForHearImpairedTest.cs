@@ -67,6 +67,7 @@ namespace Tests.Logic.Forms
                     "Uhh",
                     "Uhhh",
                     "Whew",
+                    "Mm-hmm",
                 }, new List<string>());
             }
         }
@@ -2272,6 +2273,20 @@ namespace Tests.Logic.Forms
         {
             var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- ¡Oh, tiene una reacción alérgica!" + Environment.NewLine + "- ¿Tienen níquel los cubiertos?", onlyInSeparatedLine: false));
             Assert.AreEqual("- ¡Tiene una reacción alérgica!" + Environment.NewLine + "- ¿Tienen níquel los cubiertos?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsPeridPeriodAndNewLine()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- I'm so sorry. Hm." + Environment.NewLine + "- God.", onlyInSeparatedLine: false));
+            Assert.AreEqual("- I'm so sorry." + Environment.NewLine + "- God.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsBothLinesDialog()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Yeah. Mm-hmm." + Environment.NewLine + "- Thank you. Oh, water.", onlyInSeparatedLine: false));
+            Assert.AreEqual("- Yeah." + Environment.NewLine + "- Thank you. Water.", actual);
         }
 
         [TestMethod]
