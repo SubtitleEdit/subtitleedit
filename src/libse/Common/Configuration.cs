@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static readonly string BaseDirectory = GetBaseDirectory();
         public static readonly string DataDirectory = GetDataDirectory();
+        public static string DataDirectoryOverride = string.Empty;
         public static readonly string TesseractOriginalDirectory = BaseDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string DictionariesDirectory = DataDirectory + "Dictionaries" + Path.DirectorySeparatorChar;
         public static readonly string SpectrogramsDirectory = DataDirectory + "Spectrograms" + Path.DirectorySeparatorChar;
@@ -163,6 +164,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 debugOrReleaseFolderName = "Debug";
 #endif
                 return $@"{assembly.Location.Substring(0, srcTestResultsIndex)}\src\Test\bin\{debugOrReleaseFolderName}\";
+            }
+
+            if (!string.IsNullOrEmpty(DataDirectoryOverride) && Directory.Exists(DataDirectoryOverride))
+            {
+                return DataDirectoryOverride.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) ? DataDirectoryOverride : DataDirectoryOverride + Path.DirectorySeparatorChar;
             }
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
