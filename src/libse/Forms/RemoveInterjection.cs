@@ -121,7 +121,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index, 4);
                             }
 
-                            if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
+                            if (index > 2 && temp.Remove(0, index - 2).StartsWith(". ."))
+                            {
+                                temp = temp.Remove(index - 2, 2);
+                                removeAfter = false;
+                            }
+                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
                                 if (temp.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))

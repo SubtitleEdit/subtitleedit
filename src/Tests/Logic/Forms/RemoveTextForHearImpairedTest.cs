@@ -2275,6 +2275,13 @@ namespace Tests.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjectionsPeridPeriodAndNewLine()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- I'm so sorry. Wow." + Environment.NewLine + "- God.", onlyInSeparatedLine: false));
+            Assert.AreEqual("- I'm so sorry." + Environment.NewLine + "- God.", actual);
+        }
+
+        [TestMethod]
         public void DoNotRemoveTime()
         {
             var target = GetRemoveTextForHiLib();
