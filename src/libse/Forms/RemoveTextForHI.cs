@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             if (count == 1 && newText.Length > 1 && removedInFirstLine &&
                                 !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                line != line.ToUpperInvariant())
+                                !line.IsFormattingOnly())
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             }
                             else if (count == 1 && newTextNoHtml.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
                                      !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                     line != line.ToUpperInvariant())
+                                     !line.IsFormattingOnly())
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -302,11 +302,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                 content = content.Remove(0, "</b>".Length);
                                             }
 
-                                            if (count == 0 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            if (count == 0 && !content.IsFormattingOnly())
                                             {
                                                 content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
                                             }
-                                            else if (count == 1 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            else if (count == 1 && !content.IsFormattingOnly())
                                             {
                                                 content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
                                             }
@@ -1555,7 +1555,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                if (lineNoHtml == lineNoHtml.ToUpperInvariant() && lineNoHtml != lineNoHtml.ToLowerInvariant())
+                if (lineNoHtml == lineNoHtml.ToUpperInvariant() && !lineNoHtml.IsFormattingOnly())
                 {
                     var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
                     if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI" || temp == "OK")
