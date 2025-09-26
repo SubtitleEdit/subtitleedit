@@ -2851,6 +2851,20 @@
 		<WordPart from="¤" to="o" />
 		<WordPart from="vx/" to="w" />
 		<WordPart from="O" to="Q" />
+
+		<WordPart from="RlN" to="RIN" />
+		<WordPart from="SlC" to="SIC" />
+		<WordPart from="YlN" to="YIN" />
+		<WordPart from="OlN" to="OIN" />
+		<WordPart from="NlN" to="NIN" />
+		<WordPart from="RlN" to="RIN" />
+		<WordPart from="JlM" to="JIM" />
+		<WordPart from="GlG" to="GIG" />
+		<WordPart from="LlM" to="LIM" />
+		<WordPart from="LlN" to="LIN" />
+		<WordPart from="HlN" to="HIN" />
+
+
 	</PartialWords>
 	<WholeLines>
 		<!-- Whole lines - including -" etc -->
@@ -2870,6 +2884,7 @@
 		<Line from="ISIGHS]" to="[SIGHS]" />
 	</WholeLines>
 	<PartialLinesAlways>
+		<WordPart from="''" to="&quot;" />		
 		<LinePart from="forbest act" to="for best act" />
 		<LinePart from="Apollo 1 3" to="Apollo 13" />
 		<LinePart from=",.," to="..." />
