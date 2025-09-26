@@ -54,12 +54,6 @@
 		<Description>Catalan spellchecking dictionaries, July 2015</Description>
 	</Dictionary>
 	<Dictionary>
-		<EnglishName>Catalan</EnglishName>
-		<NativeName>català-valencià</NativeName>
-		<DownloadLink>http://softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt</DownloadLink>
-		<Description>Spelling dictionary for Catalan (Valencian version)</Description>
-	</Dictionary>
-	<Dictionary>
 		<EnglishName>Croatian</EnglishName>
 		<NativeName>Hrvatski</NativeName>
 		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1052/2/dict-hr.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fcroatian-dictionary-and-hyphenation-patterns&amp;ts=1373918817&amp;use_mirror=surfnet</DownloadLink>
