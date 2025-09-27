@@ -10,7 +10,7 @@ IF /I "%~1" == "-help"  GOTO ShowHelp
 IF /I "%~1" == "--help" GOTO ShowHelp
 IF /I "%~1" == "/?"     GOTO ShowHelp
 IF /I "%~1" == "-?"     GOTO ShowHelp
-.dll
+
 ECHO Getting latest changes...
 git pull
 ECHO.
@@ -131,7 +131,7 @@ IF DEFINED INNOSETUP IF EXIST "%INNOSETUP%" (
 
 
 
-SET "WinGetFix=src\UpdateAssemblyInfo\bin\debug\UpdateAssemblyInfo.exe"
+SET "WinGetFix=src\UpdateAssemblyInfo\bin\Release\net48\win-x64\UpdateAssemblyInfo.exe"
 IF NOT EXIST "%WinGetFix%" (
   ECHO Compile UpdateAssemblyInfo!
 )
@@ -209,13 +209,10 @@ COPY /Y /V "NHunspell.dll"                         "temp_zip\"
 COPY /Y /V "UtfUnknown.dll"                        "temp_zip\"
 COPY /Y /V "Vosk.dll"                              "temp_zip\"
 COPY /Y /V "NCalc.dll"                             "temp_zip\"
-COPY /Y /V "SkiaSharp.dll"                         "temp_zip\"
 MD "temp_zip\x86"
 MD "temp_zip\x64"
 COPY /Y /V "x86\7zxa.dll"                          "temp_zip\x86\"
 COPY /Y /V "x64\7zxa.dll"                          "temp_zip\x64\"
-COPY /Y /V "x86\libSkiaSharp.dll"                  "temp_zip\x86\"
-COPY /Y /V "x64\libSkiaSharp.dll"                  "temp_zip\x64\"
 COPY /Y /V "..\..\..\DLLs\Interop.QuartzTypeLib.dll"  "temp_zip\"
 COPY /Y /V "System.Net.Http.Extensions.dll"        "temp_zip\"
 COPY /Y /V "Newtonsoft.Json.dll"                   "temp_zip\"
