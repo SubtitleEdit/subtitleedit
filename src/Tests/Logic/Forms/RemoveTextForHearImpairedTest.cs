@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests.Logic.Forms
 {
@@ -2127,6 +2128,15 @@ namespace Tests.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("-" + Environment.NewLine + "- Oh. No.", _interjectionsLanguageCode);
             Assert.AreEqual("Oh. No.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiKeepDialog()
+        {           
+            var target = GetRemoveTextForHiLib();
+            var text = "- Have we met? Hm?" + Environment.NewLine + "- No.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual("- Have we met?" + Environment.NewLine + "- No.", actual);
         }
 
         [TestMethod]
