@@ -692,6 +692,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonTypeOnlyLoad3(),
                 new JsonTypeOnlyLoad4(),
                 new JsonTypeOnlyLoad5(),
+                new JsonTypeOnlyLoad6(),
                 new TranscriptiveJson(),
                 new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
