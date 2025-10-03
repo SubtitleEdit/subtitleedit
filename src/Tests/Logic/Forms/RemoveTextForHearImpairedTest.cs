@@ -439,6 +439,33 @@ namespace Tests.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjectionsSecondLineStartDialog()
+        {
+            string expected = "-Yes." + Environment.NewLine + "-No.";
+            string text = "-Yes." + Environment.NewLine + "-Hm, no.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsSecondLineStartDialog2()
+        {
+            string expected = "-and they just covered it up..." + Environment.NewLine + "-You know what, we could,";
+            string text = "-and they just covered it up..." + Environment.NewLine + "-Mm. You know what, we could,";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsFirstLineEnd()
+        {
+            string text = "-What say you? Huh?" + Environment.NewLine + "-Bodie, don't.";
+            string expected = "-What say you?" + Environment.NewLine + "-Bodie, don't.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
         public void RemoveHIDouble()
         {
             var target = GetRemoveTextForHiLib();
@@ -1718,7 +1745,6 @@ namespace Tests.Logic.Forms
             string actual = target.RemoveTextFromHearImpaired("- Ferguson, Kaz..." + Environment.NewLine + "- <i>♪ [Ominous tone plays] ♪</i>", _interjectionsLanguageCode);
             Assert.AreEqual("Ferguson, Kaz...", actual);
         }
-
 
         [TestMethod]
         public void RemoveFirstLineOfTwoColons1()
