@@ -36578,7 +36578,8 @@ namespace Nikse.SubtitleEdit.Forms
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(voskDll));
 
             _hasCurrentVosk = hash == currentVoskDllSha512Hash ||
-                hash == "88271d24efa7d75e0902291c755941c6d4cdd80598d4e2e00b669194d09e527345903c7b57bde9f829796b82ce8f01d142b9f65e133239504d42b042aace593c";
+                              hash == "88271d24efa7d75e0902291c755941c6d4cdd80598d4e2e00b669194d09e527345903c7b57bde9f829796b82ce8f01d142b9f65e133239504d42b042aace593c";
+
             return _hasCurrentVosk;
         }
 
