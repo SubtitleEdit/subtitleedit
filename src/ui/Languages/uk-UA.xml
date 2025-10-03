@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Українська">
   <General>
     <Title>Subtitle Edit</Title>
@@ -3446,6 +3446,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtendToNext>Розширити тривалість до наступного рядка</ExtendToNext>
     <PlaySelection>Відтворити виділене</PlaySelection>
     <ShowWaveformAndSpectrogram>Показати аудіохвилю та спектрограму</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Поєднати форму хвилі та спектрограму</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Показати тільки аудіохвилю</ShowWaveformOnly>
     <ShowSpectrogramOnly>Показати тільки спектрограму</ShowSpectrogramOnly>
     <AddShotChange>Додати зміну плану</AddShotChange>
@@ -3496,5 +3497,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HighlightCurrentWord>Виділення поточного слова</HighlightCurrentWord>
     <SingleWords>Послівно</SingleWords>
     <Sentence>Пропозиція</Sentence>
+    <EnableVad>Увімкнути VAD</EnableVad>
+    <VadModelNotFound>Модель VAD не знайдена.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
