@@ -312,19 +312,29 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (removeAfter && temp.Length > index - s.Length + 2)
                                 {
-                                    var subIndex = index - s.Length + 1;
-                                    var subTemp = temp.Substring(subIndex, 2);
-                                    if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
+                                    var skipDueToAfterNewLine = false;
+                                    if (index - s.Length > 2 && "\r\n".Contains(temp[index - s.Length]))
                                     {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
+                                        skipDueToAfterNewLine = true;
                                     }
 
-                                    subTemp = temp.Substring(subIndex);
-                                    if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
+                                    if (!skipDueToAfterNewLine)
                                     {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
+                                        var subIndex = index - s.Length + 1;
+
+                                        var subTemp = temp.Substring(subIndex, 2);
+                                        if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
+                                        {
+                                            temp = temp.Remove(subIndex, 1);
+                                            removeAfter = false;
+                                        }
+
+                                        subTemp = temp.Substring(subIndex);
+                                        if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
+                                        {
+                                            temp = temp.Remove(subIndex, 1);
+                                            removeAfter = false;
+                                        }
                                     }
                                 }
                             }
