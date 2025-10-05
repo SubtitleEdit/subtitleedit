@@ -413,6 +413,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
+                                     preNoTags == "‐" || // weird dash
                                      preNoTags == "" ||
                                      preNoTags.EndsWith('¡') ||
                                      preNoTags.EndsWith('¿') ||
@@ -421,7 +422,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal) ||
                                      preNoTags.HasSentenceEnding()) &&
-                                    s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
+                                    temp[0].ToString(CultureInfo.InvariantCulture) != temp[0].ToString(CultureInfo.InvariantCulture).ToUpperInvariant())
                                 {
                                     if (temp[0] != '¡' && temp[0] != '¿')
                                     {

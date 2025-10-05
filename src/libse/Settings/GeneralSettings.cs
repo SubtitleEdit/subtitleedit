@@ -464,7 +464,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AddExtraProfiles(Profiles);
         }
 
-        internal static void AddExtraProfiles(List<RulesProfile> profiles)
+        public static void AddExtraProfiles(List<RulesProfile> profiles)
         {
             profiles.Add(new RulesProfile
             {
