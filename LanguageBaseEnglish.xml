@@ -1082,6 +1082,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <CopyPasteMaxSize>Max block size</CopyPasteMaxSize>
     <AutoCopyToClipboard>Auto-copy to clipboard</AutoCopyToClipboard>
     <AutoCopyLineSeparator>Line separator</AutoCopyLineSeparator>
+    <InfiniteRetries>Infinite retries</InfiniteRetries>
     <TranslateBlockXOfY>Translate block {0} of {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Go to translator and paste text, copy result back to clipboard and click the button below</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>Get translated text from clipboard

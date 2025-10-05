@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Logic;
@@ -26,6 +26,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelPrompt.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PromptX, engineName);
             buttonOk.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            checkBoxDeepLxInfiniteRetry.Text = LanguageSettings.Current.GoogleTranslate.InfiniteRetries;
+            checkBoxDeepLxInfiniteRetry.Checked = Configuration.Settings.Tools.AutoTranslateDeepLXInfiniteRetry;
+            checkBoxDeepLxInfiniteRetry.Visible = false;
 
             nikseUpDownDelay.Value = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
 
@@ -148,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 this.FormBorderStyle = FormBorderStyle.FixedSingle;
             }
 
+            checkBoxDeepLxInfiniteRetry.Visible = _engineType == typeof(DeepLXTranslate);
             comboBoxParagraphHandling.Items.Clear();
             comboBoxParagraphHandling.Items.Add(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Default);
             comboBoxParagraphHandling.Items.Add(LanguageSettings.Current.GoogleTranslate.TranslateLinesSeparately);
@@ -228,6 +232,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.GeminiPrompt = nikseTextBoxPrompt.Text;
             }
 
+            if (_engineType == typeof(DeepLXTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLXInfiniteRetry = checkBoxDeepLxInfiniteRetry.Checked;
+            }
             if (comboBoxParagraphHandling.SelectedIndex == 1)
             {
                 Configuration.Settings.Tools.AutoTranslateStrategy = TranslateStrategy.TranslateEachLineSeparately.ToString();
