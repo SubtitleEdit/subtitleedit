@@ -439,6 +439,24 @@ namespace Tests.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveLasterInterjectionFirstLine()
+        {
+            string expected = "‐ What the fuck, Ricky?! Wow!" + Environment.NewLine + "‐ Z‐Money!";
+            string text = "‐ What the fuck, Ricky?!" + Environment.NewLine + "‐ Z‐Money!";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveBadlyFormatDialog()
+        {
+            string expected = "‐ Dude, she likes you." + Environment.NewLine + "What's not to like?";
+            string text = "‐ Ah, dude, she likes you." + Environment.NewLine + "What's not to like?";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionsSecondLineStartDialog()
         {
             string expected = "-Yes." + Environment.NewLine + "-No.";
