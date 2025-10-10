@@ -422,7 +422,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal) ||
                                      preNoTags.HasSentenceEnding()) &&
-                                    temp[0].ToString(CultureInfo.InvariantCulture) != temp[0].ToString(CultureInfo.InvariantCulture).ToUpperInvariant())
+                                     (temp[0].ToString(CultureInfo.InvariantCulture) != temp[0].ToString(CultureInfo.InvariantCulture).ToUpperInvariant())
+                                     || temp[0] == '¡' || temp[0] == '¿')
                                 {
                                     if (temp[0] != '¡' && temp[0] != '¿')
                                     {
