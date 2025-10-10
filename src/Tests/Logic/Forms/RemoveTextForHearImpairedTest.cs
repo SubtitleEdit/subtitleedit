@@ -442,7 +442,7 @@ namespace Tests.Logic.Forms
         [TestMethod]
         public void RemoveLasterInterjectionFirstLine()
         {
-            string expected = "‐ What the fuck, Ricky?! Wow!" + Environment.NewLine + "‐ Z‐Money!";
+            string expected = "‐ What the fuck, Ricky?!" + Environment.NewLine + "‐ Z‐Money!";
             string text = "‐ What the fuck, Ricky?!" + Environment.NewLine + "‐ Z‐Money!";
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
             Assert.AreEqual(expected, actual);
