@@ -15,20 +15,22 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        private const string DownloadUrl64Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-176/whisper176-blas-bin-x64.zip";
-        private const string DownloadUrl32Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-176/whisper176-blas-bin-Win32.zip";
+        private const string DownloadUrl64Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-180/whisper-blas-bin-x64.zip";
+        private const string DownloadUrl32Cpp = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-180/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
         private string _tempFileName;
 
         private static readonly string[] Sha512HashesCpp =
         {
-            "55a951e17d72f62e76d8c97ef6348e74e427f3bde7affab7caf6c2b421e172092eb5f43323117273a41609bd0e5c23e712a0845ed46d18ee48d6f37cdbbaba30", // v176/whisper-blas-bin-x64.zip
-            "84a0b520b2fa9b9e15353c91a14bffb36a5e752a2abadc9c1d4b6412ad3fad9c6b28a07e3d83c8ebde2d8c418052f56299715ea6a0e1e218717430a744774c43", // v176/whisper-blas-bin-Win32.zip
+            "8cffbb1b95723624ed5b89fd747a9a8a2c6d96e34deb34261e76a6c8f2455d22edeb0a2292648cf6ef3cbe637428b3ce911d0fffd76bf0e48a179922decfe854", // v180/whisper-blas-bin-x64.zip
+            "f7df083c8fa0d1723899c5a0bc31a6db161114ddeffa366a77ed7d9474b340609ef7912f8185f70ff491ae7606aff60b16d6e0167863e7294544ba7adf7e25fa", // v180/whisper-blas-bin-Win32.zip
         };
 
         private static readonly string[] OldSha512HashesCpp =
         {
+            "55a951e17d72f62e76d8c97ef6348e74e427f3bde7affab7caf6c2b421e172092eb5f43323117273a41609bd0e5c23e712a0845ed46d18ee48d6f37cdbbaba30", // v176/whisper-blas-bin-x64.zip
+            "84a0b520b2fa9b9e15353c91a14bffb36a5e752a2abadc9c1d4b6412ad3fad9c6b28a07e3d83c8ebde2d8c418052f56299715ea6a0e1e218717430a744774c43", // v176/whisper-blas-bin-Win32.zip
             "055f632cdb2da4ab1c04bc9d0a7ecf76b43999eed66e99d327064dea960ba7105728556c2d276f9703d3940587a38447fe9dbb546372cfbab9b769b790def113", // v175/whisper-blas-bin-x64.zip
             "6c54435370961650d1896eac6b66b2fa42631cf4d27c22d9da2e425c513df7882d7f824290e93397c4cf52fbe96765da913cb14c70b26ff599e0472afcae2774", // v175/whisper-blas-bin-Win32.zip
             "db15572e89c034754022e7542637b2e57f1e8b54484f05fa842bddf943cf41e95bb43a305f30c7a9f1cdd164ba4deca6178eadcb513861f3d470a508b9b385cc", // v173/whisper-blas-bin-x64.zip
@@ -68,10 +70,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-176/whisper176-cublas-11-8-0-x64.7z";
+        private const string DownloadUrl64CppCuBlas = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-180/whisper-cublas-11.8.0-bin-x64.7z";
 
         private static readonly string[] Sha512HashesCppCuBlas =
         {
+            "d3a95aeb7b1607a0f7ab5298b8091fd016947601a2b1ed233d593e35195e8d598e7d897d2aa45a8114795615e2fb2ad7c3e27169a787f0785279c2d5c0e923f5", // v180/whisper-cublas-11.8.0-bin-x64.7z
             "754e110bdb5f4a30e67a683b196e135c968096de68f528ea107fe33d1fd70043cd9011a333e6fbdb322554d811edf301a35667928a9d7d0014bfe5d7fea51afa", // v176/whisper176-cublas-11-8-0-x64.7z
             "f901750abab46791ba91a3a6575f67f368fa01a903028bb35c3f6e347a6d0fd3b36dc6c4b81644250ec12c4ff8e7a4dff605eb87d14aedc3908e1335d8a34194", // v175/whisper-cublas-12.2.0-bin-x64.zip
             "1b105d38702a01ab8e98b31a690040ca54861b5e55773fff9242f33ba7b0718a6e9f25231ed107a7db0292d8349d508b18300f6c95a8e4234faef27cb05887aa", // v172/whisper-cublas-12.2.0-bin-x64.zip
@@ -557,6 +560,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     "acd220872f25e9ba9555ede278b7260fdc65578ff9a933d6cd5aaa31fcfb80ae86a833f2ca84ce3730c30d17cb5311b5de3d4a5215ebcc53a30cb9d184ccd469", // 1.7.2
                     "e49952ecb35c53f0d0dd42d5197962019af088ba48a0a7a10a42d413fa8417f208c486173885a4749ce26f7afb36e1dc2350ff6018486ae4bffa374554e3f41f", // 1.7.3
                     "212e901061962d208479919ae150b28aa29b73d974c73af1eb47b4c6729e87d20101d1c2117fcb091e520d59b5b090ce994f0a75e8276aea78f52faae9df294b", // 1.7.5
+                    "562240d059f8c13d1b4d9be03d54581e3f2844234445a7e604ec88d8b36c6dd282e8648ee87cd326aa86b453c2b3072e87e03acbbf2e99994fe09c1f5475525d", // 1.7.6
+                    //"371deb177ebeda9377da4aab82a82f2553b0f771651d1c00ddd78ee52a12be3b659d084adb9a72e34947ea994f85cb8b9016c88c60f523a0386b98fd2b01f529", // 1.8.0
                 };
 
                 return oldHashes.Contains(hash);
@@ -572,6 +577,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     "129930b4c69c48855a8f21ace3588c2cec2515baf33b9e557ef4f096132c3f4674639fe5d40ef364fcec0a9f1e9d9916ac6d7b9a220f3c9b44a4c1cc6777bd35", // 153WhisperCppCublass
                     "5bcda2b519193c137fd5b2a3d9c0289bf9afd18bb21239c5f9f8f7196a8fb57179da53b23924dfa06fbda32e19ace203177f87c62759b64cdf6f04c2514aec94", // 154WhisperCppCublass
                     "8a78561e4a18d8cc8528028789395b575e952ede6ee36736fa0a15a69b137997c13eb324a2438cbb7e4a6b67c30843a27f9519cb7606ab758710bc33954869bf", // 1.7.3
+                    "5e77cbc42e72dd602ae44af2d043721d061306e7b0d12fd3c52f2ce84152ca5f1972c2aa39ac4ec61cbda1db4b648643481aba1affc3afff06afefe708abbf8a", // 1.7.6
                 };
 
                 return oldHashes.Contains(hash);
