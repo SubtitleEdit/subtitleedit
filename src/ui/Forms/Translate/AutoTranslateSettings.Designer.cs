@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Forms.Translate
+namespace Nikse.SubtitleEdit.Forms.Translate
 {
     sealed partial class AutoTranslateSettings
     {
@@ -238,6 +238,17 @@
             0,
             0});
             // 
+            // checkBoxDeepLxInfiniteRetry
+            // 
+            this.checkBoxDeepLxInfiniteRetry = new System.Windows.Forms.CheckBox();
+            this.checkBoxDeepLxInfiniteRetry.AutoSize = true;
+            this.checkBoxDeepLxInfiniteRetry.Location = new System.Drawing.Point(21, 132);
+            this.checkBoxDeepLxInfiniteRetry.Name = "checkBoxDeepLxInfiniteRetry";
+            this.checkBoxDeepLxInfiniteRetry.Size = new System.Drawing.Size(91, 17);
+            this.checkBoxDeepLxInfiniteRetry.TabIndex = 35;
+            this.checkBoxDeepLxInfiniteRetry.Text = "Infinite retries";
+            this.checkBoxDeepLxInfiniteRetry.UseVisualStyleBackColor = true;
+            this.checkBoxDeepLxInfiniteRetry.Visible = false;
             // comboBoxParagraphHandling
             // 
             this.comboBoxParagraphHandling.BackColor = System.Drawing.SystemColors.Window;
@@ -269,6 +280,7 @@
             this.Controls.Add(this.nikseUpDownTemperature);
             this.Controls.Add(this.labelTemperature);
             this.Controls.Add(this.labelDelay);
+            this.Controls.Add(this.checkBoxDeepLxInfiniteRetry);
             this.Controls.Add(this.nikseUpDownDelay);
             this.Controls.Add(this.nikseTextBoxPrompt);
             this.Controls.Add(this.labelPrompt);
@@ -307,5 +319,6 @@
         private System.Windows.Forms.Label labelDelay;
         private Controls.NikseUpDown nikseUpDownTemperature;
         private System.Windows.Forms.Label labelTemperature;
+        private System.Windows.Forms.CheckBox checkBoxDeepLxInfiniteRetry;
     }
 }

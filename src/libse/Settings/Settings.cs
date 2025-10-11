@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -2129,6 +2129,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateDeepLUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateDeepLXUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateDeepLXUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateDeepLXInfiniteRetry");
+            if (subNode != null && !string.IsNullOrWhiteSpace(subNode.InnerText))
+            {
+                settings.Tools.AutoTranslateDeepLXInfiniteRetry = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("AutoTranslatePapagoApiKeyId");
@@ -9218,6 +9230,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AutoTranslateSeamlessM4TUrl", settings.Tools.AutoTranslateSeamlessM4TUrl);
                 xmlWriter.WriteElementString("AutoTranslateDeepLApiKey", settings.Tools.AutoTranslateDeepLApiKey);
                 xmlWriter.WriteElementString("AutoTranslateDeepLUrl", settings.Tools.AutoTranslateDeepLUrl);
+                xmlWriter.WriteElementString("AutoTranslateDeepLXUrl", settings.Tools.AutoTranslateDeepLXUrl);
+                xmlWriter.WriteElementString("AutoTranslateDeepLXInfiniteRetry", settings.Tools.AutoTranslateDeepLXInfiniteRetry.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslatePapagoApiKeyId", settings.Tools.AutoTranslatePapagoApiKeyId);
                 xmlWriter.WriteElementString("AutoTranslatePapagoApiKey", settings.Tools.AutoTranslatePapagoApiKey);
                 xmlWriter.WriteElementString("AutoTranslateDeepLFormality", settings.Tools.AutoTranslateDeepLFormality);

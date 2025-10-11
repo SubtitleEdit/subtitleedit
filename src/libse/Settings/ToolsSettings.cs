@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateDeepLUrl { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
         public string AutoTranslateDeepLXUrl { get; set; }
+        public bool AutoTranslateDeepLXInfiniteRetry { get; set; }
         public string AutoTranslatePapagoApiKeyId { get; set; }
         public string AutoTranslatePapagoApiKey { get; set; }
         public string AutoTranslateMistralApiKey { get; set; }
@@ -497,6 +498,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             AutoTranslateDeepLXUrl = "http://localhost:1188";
+            AutoTranslateDeepLXInfiniteRetry = false;
             AutoTranslateMistralUrl = "https://api.mistral.ai/v1/chat/completions";
             AutoTranslateMistralModel = MistralTranslate.Models[0];
             AutoTranslateMistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";

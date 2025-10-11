@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -2856,6 +2856,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "GoogleTranslate/AutoCopyLineSeparator":
                     language.GoogleTranslate.AutoCopyLineSeparator = reader.Value;
+                    break;
+                case "GoogleTranslate/InfiniteRetries":
+                    language.GoogleTranslate.InfiniteRetries = reader.Value;
                     break;
                 case "GoogleTranslate/TranslateBlockXOfY":
                     language.GoogleTranslate.TranslateBlockXOfY = reader.Value;

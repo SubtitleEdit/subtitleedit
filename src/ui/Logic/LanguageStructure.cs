@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Logic
 {
     // The language classes are built for easy xml-serialization (makes save/load code simple)
     public static class LanguageStructure
@@ -1167,6 +1167,7 @@
             public string CopyPasteMaxSize { get; set; }
             public string AutoCopyToClipboard { get; set; }
             public string AutoCopyLineSeparator { get; set; }
+            public string InfiniteRetries { get; set; }
             public string TranslateBlockXOfY { get; set; }
             public string TranslateBlockInfo { get; set; }
             public string TranslateBlockGetFromClipboard { get; set; }
