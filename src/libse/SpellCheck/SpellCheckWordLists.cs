@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             string[] wordsWithDash = text.Split(SplitChars2, StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
-                if (w.Contains('-') && _doSpell.DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
+                if (w.Contains('-') && _doSpell.DoSpell(w))
                 {
                     _wordsWithDashesOrPeriods.Add(w);
                 }
@@ -487,8 +487,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         {
             return _namesListUppercase.Contains(word) || 
                    _namesListWithApostrophe.Contains(word) ||
-                   _nameList.IsInNamesMultiWordList(text, word) ||
-                   _namesListUppercase.Contains(word);
+                   _nameList.IsInNamesMultiWordList(text, word);
         }
 
         public bool HasUserWord(string word)
