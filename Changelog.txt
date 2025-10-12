@@ -18,6 +18,7 @@
    * Update ffmpeg to v8.0
    * Allow vosk v0.3.45 - thx vivadavid
    * Add support for Unicode characters in MCC format - thx DavisR
+   * Allow larger prompt for auto-translate - thx leegethas
 * FIXED:
    * Fix possible crash in auto-translate - thx Tb3986
    * Fix possible crash in Binary OCR - thx Codling
