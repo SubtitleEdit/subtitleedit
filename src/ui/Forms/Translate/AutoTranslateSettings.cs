@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
-            if (nikseTextBoxPrompt.Text.Length > 1000)
+            if (nikseTextBoxPrompt.Text.Length > 4000)
             {
                 MessageBox.Show("Too many characters in prompt");
                 return;
