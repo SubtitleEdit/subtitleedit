@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             public ToolStripNikseComboBoxControl()
             {
-                SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+                SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             }
 
             public ToolStripNikseComboBox Owner { get; set; }
