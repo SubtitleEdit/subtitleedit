@@ -28745,9 +28745,13 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxSource.Paste();
                 }
             }
-            else if (GetFocusedTextBox().Enabled)
+            else
             {
-                GetFocusedTextBox().Paste();
+                var tb = GetFocusedTextBox();
+                if (tb.Enabled)
+                {
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1), () => { tb.Paste(); });
+                }
             }
         }
 
