@@ -13,6 +13,7 @@
    * Update Polish translation - thx admas
    * Update Hungarian translation - thx Zityi
    * Update Armenian Translation - thx ArsenTech
+   * Update Czech translation - thx Matěj
    * Make auto-translate settings delay label unit clear - thx Hunique
    * Update GPT model names - thx Elad
    * Update ffmpeg to v8.0
