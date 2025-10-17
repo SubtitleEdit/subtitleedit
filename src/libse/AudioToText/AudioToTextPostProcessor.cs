@@ -595,8 +595,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 var text = paragraph.Text;
-                var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
+                if (!text.IsFormattingOnly())
                 {
                     var st = new StrippableText(text);
                     st.FixCasing(nameListInclMulti, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
