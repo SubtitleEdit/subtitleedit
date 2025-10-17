@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseListBox()
         {
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             _listBox = new ListBox();
             _listBox.BorderStyle = BorderStyle.None;
             _listBox.Padding = new Padding(0);

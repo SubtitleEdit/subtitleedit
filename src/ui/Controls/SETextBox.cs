@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Controls
         public SETextBox(bool justTextBox)
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |
                      ControlStyles.Selectable, true);
