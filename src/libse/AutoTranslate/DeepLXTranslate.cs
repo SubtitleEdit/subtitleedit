@@ -52,18 +52,27 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             int[] retryDelays = { 555, 3007, 7013 };
             HttpResponseMessage result = null;
             string resultContent = null;
-            for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
+            var attempt = 0;
+            var infiniteRetry = Configuration.Settings.Tools.AutoTranslateDeepLXInfiniteRetry;
+            while (true)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = await _httpClient.PostAsync("/translate", postContent, cancellationToken);
                 resultContent = await result.Content.ReadAsStringAsync();
 
-                if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
+                if (!DeepLTranslate.ShouldRetry(result, resultContent))
                 {
                     break;
                 }
 
-                await Task.Delay(retryDelays[attempt], cancellationToken);
+                if (!infiniteRetry && attempt >= retryDelays.Length)
+                {
+                    break;
+                }
+
+                var delayIndex = attempt < retryDelays.Length ? attempt : retryDelays.Length - 1;
+                await Task.Delay(retryDelays[delayIndex], cancellationToken);
+                attempt++;
             }
 
             if (!result.IsSuccessStatusCode)
