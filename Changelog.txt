@@ -20,6 +20,7 @@
    * Allow vosk v0.3.45 - thx vivadavid
    * Add support for Unicode characters in MCC format - thx DavisR
    * Allow larger prompt for auto-translate - thx leegethas
+   * Remember Whisper "Translate to English" state - thx pintelt
 * FIXED:
    * Fix possible crash in auto-translate - thx Tb3986
    * Fix possible crash in Binary OCR - thx Codling
