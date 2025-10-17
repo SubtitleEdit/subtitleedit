@@ -4444,6 +4444,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.WhisperUseLineMaxChars = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("WhisperTranslateToEnglish");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperTranslateToEnglish = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AudioToTextLineMaxChars");
             if (subNode != null)
             {
@@ -9602,6 +9608,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("WhisperPostProcessingMergeLines", settings.Tools.WhisperPostProcessingMergeLines.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WhisperPostProcessingFixCasing", settings.Tools.WhisperPostProcessingFixCasing.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("WhisperPostProcessingFixShortDuration", settings.Tools.WhisperPostProcessingFixShortDuration.ToString(CultureInfo.InvariantCulture));
+                xmlWriter.WriteElementString("WhisperTranslateToEnglish", settings.Tools.WhisperTranslateToEnglish.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
