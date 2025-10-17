@@ -4,7 +4,7 @@
 * NEW
    * Add Armenian translation - thx ArsenTech
    * Add Google-Lens OCR option - thx timminator
-   * Update Whisper CPP to 1.8.0
+   * Update Whisper CPP to 1.8.2
 * IMPROVED:
    * Update Persian translation - thx rmtjokar
    * Update Chinese translation - thx nkh0472
