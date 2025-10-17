@@ -193,6 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelFC.Text = string.Empty;
 
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
+            checkBoxTranslateToEnglish.Checked = Configuration.Settings.Tools.WhisperTranslateToEnglish;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
 
@@ -1489,6 +1490,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
             Configuration.Settings.Tools.WhisperAutoAdjustTimings = checkBoxAutoAdjustTimings.Checked;
+            Configuration.Settings.Tools.WhisperTranslateToEnglish = checkBoxTranslateToEnglish.Checked;
 
             DeleteTemporaryFiles(_filesToDelete);
         }
