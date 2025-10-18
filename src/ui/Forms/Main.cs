@@ -33857,6 +33857,42 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ToolStripMenuItemMergeDuplicatesAndRemoveFormattingClick(object sender, EventArgs e)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            ReloadFromSourceView();
+            var maxMsBetween = Configuration.Settings.Tools.MergeLinesWithSameTextMaxMs;
+            var mergedSubtitle = MergeLinesSameTextUtils.MergeDuplicateLinesAndRemoveFormatting(_subtitle, maxMsBetween, out var numberOfMerges);
+
+            if (numberOfMerges == 0)
+            {
+                MessageBox.Show("No duplicate lines found to merge.", Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var message = string.Format("Merge {0} duplicate lines and remove formatting?", numberOfMerges);
+            if (MessageBox.Show(message, Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                MakeHistoryForUndo("Merge duplicates and remove formatting");
+                _subtitle.Paragraphs.Clear();
+                foreach (var p in mergedSubtitle.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+
+                ShowStatus(string.Format("Merged {0} duplicate lines and removed formatting", numberOfMerges));
+                SaveSubtitleListviewIndices();
+                UpdateSourceView();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                RestoreSubtitleListviewIndices();
+            }
+        }
+
         private void ToolStripMenuItemMergeLinesWithSameTimeCodesClick(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)

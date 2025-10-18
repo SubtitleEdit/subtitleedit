@@ -122,5 +122,64 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             return false;
         }
+
+        /// <summary>
+        /// Merges consecutive duplicate lines and removes formatting tags.
+        /// Uses the start time of the first occurrence and end time of the last occurrence.
+        /// </summary>
+        public static Subtitle MergeDuplicateLinesAndRemoveFormatting(Subtitle subtitle, int maxMsBetween, out int numberOfMerges)
+        {
+            var mergedSubtitle = new Subtitle();
+            var removed = new HashSet<int>();
+            numberOfMerges = 0;
+
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                if (removed.Contains(i))
+                {
+                    continue;
+                }
+
+                var current = subtitle.Paragraphs[i];
+                var p = new Paragraph(current);
+
+                // Remove formatting tags
+                p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
+
+                var textNoTags = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+
+                // Look ahead for consecutive duplicates
+                for (var j = i + 1; j < subtitle.Paragraphs.Count; j++)
+                {
+                    if (removed.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    var next = subtitle.Paragraphs[j];
+                    var nextTextNoTags = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
+
+                    // Check if text matches (case-insensitive) and within time threshold
+                    if (string.Compare(textNoTags, nextTextNoTags, StringComparison.OrdinalIgnoreCase) == 0 &&
+                        next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds <= maxMsBetween)
+                    {
+                        // Extend the end time to the next paragraph's end time
+                        p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
+                        removed.Add(j);
+                        numberOfMerges++;
+                    }
+                    else
+                    {
+                        // Stop looking ahead once we find a non-match
+                        break;
+                    }
+                }
+
+                mergedSubtitle.Paragraphs.Add(p);
+            }
+
+            mergedSubtitle.Renumber();
+            return mergedSubtitle;
+        }
     }
 }

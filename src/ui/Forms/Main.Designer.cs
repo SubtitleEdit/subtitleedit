@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ChangeCasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoMergeShortLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeDuplicateText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLinesWithSameTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoSplitLongLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSortBy = new System.Windows.Forms.ToolStripMenuItem();
@@ -1879,6 +1880,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ChangeCasingToolStripMenuItem,
             this.toolStripMenuItemAutoMergeShortLines,
             this.toolStripMenuItemMergeDuplicateText,
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting,
             this.toolStripMenuItemMergeLinesWithSameTimeCodes,
             this.toolStripMenuItemAutoSplitLongLines,
             this.toolStripMenuItemSortBy,
@@ -1985,12 +1987,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoMergeShortLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoMergeShortLinesClick);
             // 
             // toolStripMenuItemMergeDuplicateText
-            // 
+            //
             this.toolStripMenuItemMergeDuplicateText.Name = "toolStripMenuItemMergeDuplicateText";
             this.toolStripMenuItemMergeDuplicateText.Size = new System.Drawing.Size(338, 22);
             this.toolStripMenuItemMergeDuplicateText.Text = "Merge lines with same text...";
             this.toolStripMenuItemMergeDuplicateText.Click += new System.EventHandler(this.ToolStripMenuItemMergeDuplicateTextClick);
-            // 
+            //
+            // toolStripMenuItemMergeDuplicatesAndRemoveFormatting
+            //
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting.Name = "toolStripMenuItemMergeDuplicatesAndRemoveFormatting";
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting.Size = new System.Drawing.Size(338, 22);
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting.Text = "Merge duplicate lines and remove formatting...";
+            this.toolStripMenuItemMergeDuplicatesAndRemoveFormatting.Click += new System.EventHandler(this.ToolStripMenuItemMergeDuplicatesAndRemoveFormattingClick);
+            //
             // toolStripMenuItemMergeLinesWithSameTimeCodes
             // 
             this.toolStripMenuItemMergeLinesWithSameTimeCodes.Name = "toolStripMenuItemMergeLinesWithSameTimeCodes";
@@ -6373,6 +6382,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBatchConvert;
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicatesAndRemoveFormatting;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheckSuggestions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckSkipOnce;

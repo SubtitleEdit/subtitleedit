@@ -44,12 +44,21 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("HTTP-Referer", "https://github.com/SubtitleEdit/subtitleedit");
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Title", "Subtitle Edit");
             _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.OpenRouterUrl.TrimEnd('/'));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterApiKey))
+            // Try settings first, then fallback to environment variable
+            var apiKey = Configuration.Settings.Tools.OpenRouterApiKey;
+            if (string.IsNullOrEmpty(apiKey))
             {
-                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.OpenRouterApiKey);
+                apiKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY");
+            }
+
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + apiKey);
             }
         }
 

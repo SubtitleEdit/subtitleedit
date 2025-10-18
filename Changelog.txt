@@ -9,12 +9,14 @@
    * Add Mistral AI translate
    * Add KoboldCpp AI translate - thx Oplay66
    * Add AvalAI translate - thx JJHACKER
-   * Add "Chinese traditional" for DeepL - thx rdr44b 
+   * Add "Chinese traditional" for DeepL - thx rdr44b
    * Add voice-over for TTS - thx Chris-656
    * Add new shortcut for "Insert unicode symbol" to main text box - thx davidgaryesp
    * Add "gemini-2.0-flash" model (and allow custom model name) - thx yawoo
    * Allow custom prompt for Gemini + add 'gemini-2.0-flash-lite' - thx LightGrey
    * Add video player logo - thx Leon
+   * Add "Merge duplicate lines and remove formatting" tool
+   * OpenRouter API key can now be read from OPENROUTER_API_KEY environment variable (get API key from https://openrouter.ai/)
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Greek translation - thx PMitsakis
