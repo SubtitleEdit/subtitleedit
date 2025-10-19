@@ -23954,6 +23954,7 @@ namespace Nikse.SubtitleEdit.Forms
                             ShowStatus(string.Empty, false);
                             if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
                             {
+                                Cursor = Cursors.Default;
                                 return;
                             }
 
@@ -28750,7 +28751,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tb = GetFocusedTextBox();
                 if (tb.Enabled)
                 {
-                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => 
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(2), () => 
                     {
                         try
                         {
@@ -28780,6 +28781,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 }
                             });
+                        }
+                        finally
+                        {
+                            Cursor = Cursors.Default;
                         }
                     });
                 }
