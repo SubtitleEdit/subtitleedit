@@ -8598,11 +8598,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void LiveSpellCheckTimer_Tick(object sender, EventArgs e)
         {
             _liveSpellCheckTimer.Stop();
-            InitializeLiveSpellChcek();
+            InitializeLiveSpellCheck();
             _liveSpellCheckTimer.Start();
         }
 
-        private void InitializeLiveSpellChcek()
+        private void InitializeLiveSpellCheck()
         {
             if (IsSubtitleLoaded)
             {
