@@ -2160,7 +2160,7 @@ namespace Nikse.SubtitleEdit.Forms
             NetflixLanguage.GlyphCheckReport = LanguageSettings.Current.NetflixQualityCheck.GlyphCheckReport;
             NetflixLanguage.WhiteSpaceCheckForXReport = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckForXReport;
             NetflixLanguage.WhiteSpaceLineEnding = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceLineEncding;
-            NetflixLanguage.WhiteSpaceCheckconsecutive = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckconsecutive;
+            NetflixLanguage.WhiteSpaceCheckConsecutive = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckconsecutive;
             NetflixLanguage.WhiteSpaceBeforePunctuation = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceBeforePunctuation;
 
             DvdSubtitleLanguage.Language.NotSpecified = LanguageSettings.Current.LanguageNames.NotSpecified;
