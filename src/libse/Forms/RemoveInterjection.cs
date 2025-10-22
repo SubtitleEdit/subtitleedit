@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index - 2, 2);
                                 removeAfter = false;
                             }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
+                            else if (temp.Length > index && temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
                                 if (temp.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     temp = temp.Remove(temp.Length - 1).TrimEnd();
                                 }
                             }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
+                            else if (temp.Length > index && temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
                                 if (temp.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal))
