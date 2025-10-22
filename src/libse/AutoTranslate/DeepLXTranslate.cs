@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -81,17 +81,24 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     data = alternatives[0];
                 }
 
+                if (string.IsNullOrEmpty(data))
+                {
+                    var dataValues = parser.GetAllTagsByNameAsStrings(resultContent, "data");
+                    if (dataValues.Count > 0)
+                    {
+                        data = dataValues[0];
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(data))
                 {
                     var resultText = Json.DecodeJsonText(data);
                     var resultTextWithFixedNewLines = ChatGptTranslate.FixNewLines(resultText);
                     return resultTextWithFixedNewLines.Trim();
                 }
-                else
-                {
-                    SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
-                    throw new Exception("DeepLXTranslate gave empty alternatives: StatusCode=" + result.StatusCode + Environment.NewLine + resultContent);
-                }
+
+                SeLogger.Error("DeepLXTranslate.Translate: " + resultContent);
+                throw new Exception("DeepLXTranslate gave empty alternatives: StatusCode=" + result.StatusCode + Environment.NewLine + resultContent);
             }
             catch (Exception ex)
             {

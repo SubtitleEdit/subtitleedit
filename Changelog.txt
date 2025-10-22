@@ -4,6 +4,7 @@
 * NEW
    * Add Armenian translation - thx ArsenTech
    * Add Google-Lens OCR option - thx timminator
+   * Update Whisper CPP to 1.8.2
 * IMPROVED:
    * Update Persian translation - thx rmtjokar
    * Update Chinese translation - thx nkh0472
@@ -11,9 +12,16 @@
    * Update Bulgarian translation - thx Калин
    * Update Polish translation - thx admas
    * Update Hungarian translation - thx Zityi
+   * Update Armenian Translation - thx ArsenTech
+   * Update Czech translation - thx Matěj
    * Make auto-translate settings delay label unit clear - thx Hunique
    * Update GPT model names - thx Elad
    * Update ffmpeg to v8.0
+   * Allow vosk v0.3.45 - thx vivadavid
+   * Add support for Unicode characters in MCC format - thx DavisR
+   * Allow larger prompt for auto-translate - thx leegethas
+   * Remember Whisper "Translate to English" state - thx pintelt
+   * Add Hebrew for DeepL translate - thx rzeczywistoscia992-web
 * FIXED:
    * Fix possible crash in auto-translate - thx Tb3986
    * Fix possible crash in Binary OCR - thx Codling
@@ -23,6 +31,10 @@
    * Fix alone lowercase 'i' to 'I' issue - thx eddebaby
    * Fix for WebVTT green color - thx Saul1980
    * Fix UI selection/focus issue in translation window - thx rRobis 
+   * Fix saving Google-translate-v2 key in translate window - thx Daniyel
+   * Fix for "Remove text for hearing impaired" - thx psonnosp
+   * Fix crash in "Remove text for hearing impaired" - thx Andrebavila
+   * Fix for Frensh spell check - thx Fannette
 
 
 4.0.13 (30th July 2025) 

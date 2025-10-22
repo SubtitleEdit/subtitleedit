@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
-        public class DoubleBufferedPanel : Panel
+        public sealed class DoubleBufferedPanel : Panel
         {
             public DoubleBufferedPanel()
             {
@@ -2132,7 +2132,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
                         var tc = TimeCode.FromSeconds(v);
-                        v = tc.AlignToFrame().TotalSeconds; ;
+                        v = tc.AlignToFrame().TotalSeconds;
                     }
 
                     VideoPlayer.CurrentPosition = v;

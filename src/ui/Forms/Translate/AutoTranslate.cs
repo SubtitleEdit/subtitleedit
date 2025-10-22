@@ -1243,6 +1243,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void SaveSettings(Type engineType)
         {
+            if (engineType == typeof(GoogleTranslateV2) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.GoogleApiV2Key = nikseTextBoxApiKey.Text.Trim();
+            }
+
             if (engineType == typeof(MicrosoftTranslator) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.MicrosoftTranslatorApiKey = nikseTextBoxApiKey.Text.Trim();

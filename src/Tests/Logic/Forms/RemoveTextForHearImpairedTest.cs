@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests.Logic.Forms
 {
@@ -68,6 +69,7 @@ namespace Tests.Logic.Forms
                     "Uhhh",
                     "Whew",
                     "Mm-hmm",
+                    "Wow",
                 }, new List<string>());
             }
         }
@@ -437,6 +439,51 @@ namespace Tests.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveLasterInterjectionFirstLine()
+        {
+            string expected = "‐ What the fuck, Ricky?!" + Environment.NewLine + "‐ Z‐Money!";
+            string text = "‐ What the fuck, Ricky?!" + Environment.NewLine + "‐ Z‐Money!";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveBadlyFormatDialog()
+        {
+            string expected = "‐ Dude, she likes you." + Environment.NewLine + "What's not to like?";
+            string text = "‐ Ah, dude, she likes you." + Environment.NewLine + "What's not to like?";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsSecondLineStartDialog()
+        {
+            string expected = "-Yes." + Environment.NewLine + "-No.";
+            string text = "-Yes." + Environment.NewLine + "-Hm, no.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsSecondLineStartDialog2()
+        {
+            string expected = "-and they just covered it up..." + Environment.NewLine + "-You know what, we could,";
+            string text = "-and they just covered it up..." + Environment.NewLine + "-Mm. You know what, we could,";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsFirstLineEnd()
+        {
+            string text = "-What say you? Huh?" + Environment.NewLine + "-Bodie, don't.";
+            string expected = "-What say you?" + Environment.NewLine + "-Bodie, don't.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual(expected, actual);
+        }
+        
         [TestMethod]
         public void RemoveHIDouble()
         {
@@ -1718,7 +1765,6 @@ namespace Tests.Logic.Forms
             Assert.AreEqual("Ferguson, Kaz...", actual);
         }
 
-
         [TestMethod]
         public void RemoveFirstLineOfTwoColons1()
         {
@@ -2127,6 +2173,15 @@ namespace Tests.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("-" + Environment.NewLine + "- Oh. No.", _interjectionsLanguageCode);
             Assert.AreEqual("Oh. No.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiKeepDialog()
+        {           
+            var target = GetRemoveTextForHiLib();
+            var text = "- Have we met? Hm?" + Environment.NewLine + "- No.";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
+            Assert.AreEqual("- Have we met?" + Environment.NewLine + "- No.", actual);
         }
 
         [TestMethod]

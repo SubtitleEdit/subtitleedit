@@ -328,8 +328,70 @@ namespace Nikse.SubtitleEdit.Controls
         private const int WM_DBLCLICK = 0xA3;
         private const int WM_LBUTTONDBLCLK = 0x203;
         private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_PASTE = 0x0302;
+
+        private void SafePaste()
+        {
+            if (IsDisposed || !IsHandleCreated || ReadOnly || !Enabled)
+            {
+                return;
+            }
+
+            try
+            {
+                string newText = null;
+                if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
+                {
+                    newText = Clipboard.GetText(TextDataFormat.UnicodeText);
+                }
+                else if (Clipboard.ContainsText(TextDataFormat.Text))
+                {
+                    newText = Clipboard.GetText(TextDataFormat.Text);
+                }
+
+                if (string.IsNullOrEmpty(newText))
+                {
+                    return;
+                }
+
+                if (!Multiline)
+                {
+                    newText = newText.Replace('\r', ' ').Replace('\n', ' ');
+                }
+
+                if (MaxLength > 0)
+                {
+                    var allowed = MaxLength - (TextLength - SelectionLength);
+                    if (allowed <= 0)
+                    {
+                        return;
+                    }
+
+                    if (newText.Length > allowed)
+                    {
+                        newText = newText.Substring(0, allowed);
+                    }
+                }
+
+                SelectedText = newText;
+            }
+            catch
+            {
+                // ignore clipboard/interop errors to avoid crashes
+            }
+        }
+
+        public new void Paste()
+        {
+            SafePaste();
+        }
         protected override void WndProc(ref Message m)
         {
+            if (m.Msg == WM_PASTE)
+            {
+                SafePaste();
+                return;
+            }
             if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
             {
                 UiUtil.SelectWordAtCaret(this);
@@ -347,7 +409,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            base.WndProc(ref m);
+            base.WndProc(ref m); 
         }
     }
 }

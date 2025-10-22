@@ -293,10 +293,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     //The EndOfText command is a Null Command which can be used to flush any buffered text to the current window. All commands force a flush of any buffered text to the current window, so this command is only needed when no other command is pending.
 
-                   if (DebugMode)
-                   {
-                       debugBuilder.Append("{EndOfText}");
-                   }
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append("{EndOfText}");
+                    }
                 }
                 else if (b >= SetCurrentWindow.IdStart && b <= SetCurrentWindow.IdEnd)
                 {
@@ -517,6 +517,20 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         // GR Group: G3:  Future characters and icons
                     }
                 }
+
+                else if (b == 0x18 && i < bytes.Length - 2)
+                {
+                    // Unicode character
+                    char ch = Encoding.BigEndianUnicode.GetChars(bytes, i + 1, 2)[0];
+                    var text = new SetText(lineIndex, ch.ToString());
+                    state.Commands.Add(text);
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append($"{{SetText CL Group Unicode:Text={text.Content}}}");
+                    }
+                    i += 2;
+                }
+
                 else if (b <= 0x1F)
                 {
                     // CL Group: C0: Subset of ASCII Control Codes

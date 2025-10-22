@@ -121,6 +121,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index, 4);
                             }
 
+                            if (index > 2 && temp.Substring(index - 2).StartsWith("? ?", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(index - 2, 2);
+                                removeAfter = false;
+                            }
+
                             if (index > 1 && temp.Substring(index - 2) == ", —")
                             {
                                 temp = temp.Remove(index - 2, 2);
@@ -130,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index - 2, 2);
                                 removeAfter = false;
                             }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
+                            else if (temp.Length > index && temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
                                 if (temp.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))
@@ -138,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     temp = temp.Remove(temp.Length - 1).TrimEnd();
                                 }
                             }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
+                            else if (temp.Length > index && temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
                                 if (temp.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal))
@@ -306,19 +312,29 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (removeAfter && temp.Length > index - s.Length + 2)
                                 {
-                                    var subIndex = index - s.Length + 1;
-                                    var subTemp = temp.Substring(subIndex, 2);
-                                    if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
+                                    var skipDueToAfterNewLine = false;
+                                    if (index - s.Length > 2 && "\r\n".Contains(temp[index - s.Length]))
                                     {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
+                                        skipDueToAfterNewLine = true;
                                     }
 
-                                    subTemp = temp.Substring(subIndex);
-                                    if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
+                                    if (!skipDueToAfterNewLine)
                                     {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
+                                        var subIndex = index - s.Length + 1;
+
+                                        var subTemp = temp.Substring(subIndex, 2);
+                                        if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
+                                        {
+                                            temp = temp.Remove(subIndex, 1);
+                                            removeAfter = false;
+                                        }
+
+                                        subTemp = temp.Substring(subIndex);
+                                        if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
+                                        {
+                                            temp = temp.Remove(subIndex, 1);
+                                            removeAfter = false;
+                                        }
                                     }
                                 }
                             }
@@ -397,6 +413,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
+                                     preNoTags == "‐" || // weird dash
                                      preNoTags == "" ||
                                      preNoTags.EndsWith('¡') ||
                                      preNoTags.EndsWith('¿') ||
@@ -404,8 +421,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                      preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal) ||
-                                     preNoTags.HasSentenceEnding()) &&
-                                    s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
+                                     preNoTags.HasSentenceEnding() &&
+                                     (temp[0].ToString(CultureInfo.InvariantCulture) != temp[0].ToString(CultureInfo.InvariantCulture).ToUpperInvariant())
+                                     || temp[0] == '¡' || temp[0] == '¿'))
                                 {
                                     if (temp[0] != '¡' && temp[0] != '¿')
                                     {

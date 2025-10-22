@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
 
-            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
 
             base.KeyDown += (sender, e) =>
             {
