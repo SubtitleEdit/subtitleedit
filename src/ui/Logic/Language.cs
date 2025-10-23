@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -1348,6 +1348,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CopyPasteMaxSize = "Max block size",
                 AutoCopyToClipboard = "Auto-copy to clipboard",
                 AutoCopyLineSeparator = "Line separator",
+                InfiniteRetries = "Infinite retries",
                 TranslateBlockXOfY = "Translate block {0} of {1}",
                 TranslateBlockInfo = "Go to translator and paste text, copy result back to clipboard and click the button below",
                 TranslateBlockGetFromClipboard = "Get translated text from clipboard" + Environment.NewLine + "(Ctrl + V)",
