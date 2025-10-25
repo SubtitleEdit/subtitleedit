@@ -13,21 +13,6 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public sealed class SETextBox : Panel, ISelectedText
     {
-        // ReSharper disable once InconsistentNaming
-        public new event EventHandler TextChanged;
-        // ReSharper disable once InconsistentNaming
-        public new event KeyEventHandler KeyDown;
-        // ReSharper disable once InconsistentNaming
-        public new event MouseEventHandler MouseClick;
-        // ReSharper disable once InconsistentNaming
-        public new event EventHandler Enter;
-        // ReSharper disable once InconsistentNaming
-        public new event KeyEventHandler KeyUp;
-        // ReSharper disable once InconsistentNaming
-        public new event EventHandler Leave;
-        // ReSharper disable once InconsistentNaming
-        public new event MouseEventHandler MouseMove;
-
         private AdvancedTextBox _uiTextBox;
         private SimpleTextBox _simpleTextBox;
 
@@ -39,54 +24,49 @@ namespace Nikse.SubtitleEdit.Controls
                      ControlStyles.Selectable |
                      ControlStyles.AllPaintingInWmPaint, true);
 
+            BorderStyle = BorderStyle.None;
+            Padding = new Padding(1);
+            BackColor = SystemColors.WindowFrame;
+
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
         }
 
         public void Initialize(bool useSyntaxColoring, bool justTextBox)
         {
-            var currentActiveTextBox = GetActiveTextBox();
-            var oldContextMenuStrip = currentActiveTextBox?.ContextMenuStrip;
-            var oldEnabled = currentActiveTextBox?.Enabled ?? true;
-            var oldText = currentActiveTextBox?.Text ?? string.Empty;
-
-            BorderStyle = BorderStyle.None;
-            Padding = new Padding(1);
-            BackColor = SystemColors.WindowFrame;
-            Controls.Clear();
-            _simpleTextBox?.Dispose();
-            _uiTextBox?.Dispose();
-            _simpleTextBox = null;
-            _uiTextBox = null;
             if (useSyntaxColoring && !justTextBox)
             {
-                _uiTextBox = new AdvancedTextBox { BorderStyle = BorderStyle.None, Multiline = true };
-                InitializeBackingControl(_uiTextBox);
-                UpdateFontAndColors(_uiTextBox);
+                if (_uiTextBox is null)
+                {
+                    _uiTextBox = new AdvancedTextBox();
+                    ConfigureTextBoxEvents(_uiTextBox);
+                }
+
+                _uiTextBox.BorderStyle = BorderStyle.None;
+                _uiTextBox.Multiline = true;
+                ConfigureTextBoxAppearance(_uiTextBox);
             }
             else
             {
-                _simpleTextBox = new SimpleTextBox { BorderStyle = BorderStyle.None, Multiline = true };
-                InitializeBackingControl(_simpleTextBox);
+                if (_simpleTextBox is null)
+                {
+                    _simpleTextBox = new SimpleTextBox();
+                    _simpleTextBox.BorderStyle = BorderStyle.None;
+                    _simpleTextBox.Multiline = true;
+                    ConfigureTextBoxEvents(_simpleTextBox);
+                    _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
+                }
+
                 if (justTextBox)
                 {
                     _simpleTextBox.ForeColor = UiUtil.ForeColor;
                     _simpleTextBox.BackColor = UiUtil.BackColor;
                     BackColor = Color.DarkGray;
-                    _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
                 }
                 else
                 {
-                    UpdateFontAndColors(_simpleTextBox);
+                    ConfigureTextBoxAppearance(_simpleTextBox);
                 }
             }
-
-            if (oldContextMenuStrip != null)
-            {
-                ContextMenuStrip = oldContextMenuStrip;
-            }
-
-            Enabled = oldEnabled;
-            Text = oldText;
         }
 
         private void SimpleTextBox_VisibleChanged(object sender, EventArgs e)
@@ -96,22 +76,22 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        private void InitializeBackingControl(Control textBox)
+        private void ConfigureTextBoxEvents(Control textBox)
         {
             Controls.Add(textBox);
             textBox.Dock = DockStyle.Fill;
-            textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
-            textBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
-            textBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
-            textBox.KeyDown += (sender, args) => { KeyDown?.Invoke(sender, args); };
-            textBox.MouseClick += (sender, args) => { MouseClick?.Invoke(sender, args); };
-            textBox.Enter += (sender, args) => { Enter?.Invoke(sender, args); };
-            textBox.KeyUp += (sender, args) => { KeyUp?.Invoke(sender, args); };
-            textBox.Leave += (sender, args) => { Leave?.Invoke(sender, args); };
-            textBox.MouseMove += (sender, args) => { MouseMove?.Invoke(sender, args); };
+            textBox.Enter += (sender, args) => BackColor = SystemColors.Highlight;
+            textBox.Leave += (sender, args) => BackColor = SystemColors.WindowFrame;
+            textBox.TextChanged += (sender, args) => OnTextChanged(args);
+            textBox.KeyDown += (sender, args) => OnKeyDown(args);
+            textBox.MouseClick += (sender, args) => OnMouseClick(args);
+            textBox.Enter += (sender, args) => OnEnter(args);
+            textBox.KeyUp += (sender, args) => OnKeyUp(args);
+            textBox.Leave += (sender, args) => OnLeave(args);
+            textBox.MouseMove += (sender, args) => OnMouseMove(args);
         }
-
-        public void UpdateFontAndColors(Control textBox)
+        
+        public void ConfigureTextBoxAppearance(Control textBox)
         {
             if (textBox == null)
             {
@@ -586,6 +566,19 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             return _simpleTextBox;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _uiTextBox?.Dispose();
+                _simpleTextBox?.Dispose();
+                _uiTextBox = null;
+                _simpleTextBox = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
