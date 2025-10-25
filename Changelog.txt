@@ -35,6 +35,7 @@
    * Fix for "Remove text for hearing impaired" - thx psonnosp
    * Fix crash in "Remove text for hearing impaired" - thx Andrebavila
    * Fix for Frensh spell check - thx Fannette
+   * Fix Latvian dictionary download - thx Toms200
 
 
 4.0.13 (30th July 2025) 
