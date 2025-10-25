@@ -507,7 +507,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (control is SETextBox seTextBox)
                 {
-                    seTextBox.UpdateFontAndColors(seTextBox);
+                    seTextBox.ConfigureTextBoxAppearance(seTextBox);
                 }
                 else if (control is TextBox)
                 {
