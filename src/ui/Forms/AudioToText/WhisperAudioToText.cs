@@ -931,7 +931,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
             _startTicks = Stopwatch.GetTimestamp();
-            _videoInfo = UiUtil.GetVideoInfo(waveFileName);
+            _videoInfo = UiUtil.GetVideoInfo(videoFileName);
             timer1.Start();
             if (!_batchMode)
             {
