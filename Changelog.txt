@@ -3,6 +3,7 @@
 4.0.14 (xth October 2025) BETA
 * NEW
    * Add Armenian translation - thx ArsenTech
+   * Add Hebrew translation - thx q9411aa
    * Add Google-Lens OCR option - thx timminator
    * Update Whisper CPP to 1.8.2
 * IMPROVED:
