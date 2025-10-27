@@ -188,8 +188,8 @@
 	<Dictionary>
 		<EnglishName>Latvian</EnglishName>
 		<NativeName>Latviešu</NativeName>
-		<DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/hyph_lv_LV.zip</DownloadLink>
-		<Description>Latviešu valodas pareizrakstības pārbaudes modulis 0.9.6</Description>
+		<DownloadLink>http://dict.dv.lv/download/lv_LV-1.4.0.oxt</DownloadLink>		
+		<Description>Latviešu valodas pareizrakstības pārbaudes modulis</Description>
 	</Dictionary>
 	<Dictionary>
 		<EnglishName>Lithuanian</EnglishName>
