@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.13</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی، رامتین جوکار</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -341,7 +341,7 @@
     <MkvLanguageStyleThreeLetter>کد زبان سه حرفی</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>بدون کد زبان</MkvLanguageStyleEmpty>
   </BatchConvert>
-    <BeautifyTimeCodes>
+  <BeautifyTimeCodes>
     <Title>زیباسازی کدهای زمانی</Title>
     <TitleSelectedLines>زیباسازی کدهای زمانی ({0} سطر هایی انتخاب شده)</TitleSelectedLines>
     <GroupTimeCodes>کدهای زمانی</GroupTimeCodes>
