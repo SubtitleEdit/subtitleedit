@@ -1089,7 +1089,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranslateCurrentLine>현재 줄만 번역</TranslateCurrentLine>
     <ReTranslateCurrentLine>현재 줄 다시 번역</ReTranslateCurrentLine>
     <MergeSplitStrategy>분할/병합 처리</MergeSplitStrategy>
-    <Delay>서버 호출 간 지연</Delay>
+    <Delay>서버 호출 간 지연 시간(초)</Delay>
     <MaxBytes>각 서버 호출의 최대 바이트 수</MaxBytes>
     <PromptX>{0}개의 프롬프트</PromptX>
     <TranslateLinesSeparately>각 줄을 개별적으로 번역</TranslateLinesSeparately>
