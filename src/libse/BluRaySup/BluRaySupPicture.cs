@@ -91,6 +91,34 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         public List<List<PaletteInfo>> Palettes { get; set; }
 
+        private static long _lastEndTimeForWrite = -1000;
+        private static uint _lastDtsWritten = 0; // keep DTS monotonic across packets and frames
+        private static uint _lastPtsWritten = 0; // keep PTS monotonic across packets and frames
+
+        private static uint MonotonicDts(uint candidate)
+        {
+            if (candidate < _lastDtsWritten)
+            {
+                candidate = _lastDtsWritten; // keep non-decreasing
+            }
+            _lastDtsWritten = candidate;
+            return candidate;
+        }
+
+        private static uint MonotonicPts(uint candidate, uint minDts)
+        {
+            if (candidate < minDts)
+            {
+                candidate = minDts; // PTS must be >= DTS
+            }
+            if (candidate < _lastPtsWritten)
+            {
+                candidate = _lastPtsWritten; // keep non-decreasing in stream order
+            }
+            _lastPtsWritten = candidate;
+            return candidate;
+        }
+
         /// <summary>
         /// Create RLE buffer from bitmap
         /// </summary>
@@ -152,11 +180,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         }
 
                         bytes.Add(0); // rle id
-                        // commented out due to bug in SupRip
+                                      // commented out due to bug in SupRip
                         /*if (color == 0 && x+len == bm.Width)
                         {
-                            bytes.Add(0);
-                            eol = true;
+                        bytes.Add(0);
+                        eol = true;
                         }
                         else */
                         if (color == 0 && len < 0x40)
@@ -355,7 +383,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return 0x10; // 23.976
         }
 
-        private static long _lastEndTimeForWrite = -1000;
+
+        public static void InitializeCreateSupFrames()
+        {
+            _lastDts = -1;
+        }
+        
+        private static long _lastDts = -1;
 
         /// <summary>
         /// Create the binary stream representation of one caption
@@ -403,59 +437,59 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             var packetHeader = new byte[]
             {
-                0x50, 0x47,             // 0:  "PG"
-                0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
-                0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
-                0x00,                   // 10: segment_type
-                0x00, 0x00              // 11: segment_length (bytes following till next PG)
+        0x50, 0x47,             // 0:  "PG"
+        0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
+        0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
+        0x00,                   // 10: segment_type
+        0x00, 0x00              // 11: segment_length (bytes following till next PG)
             };
             var headerPcsStart = new byte[]
             {
-                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-                0x00, 0x00,             // 5: composition_number (increased by start and end header)
-                0x80,                   // 7: composition_state (0x80: epoch start)
-                                        //      0x00: Normal
-                                        //      0x40: Acquisition Point
-                                        //      0x80: Epoch Start
-                0x00,                   // 8: palette_update_flag (0x80==true, 0x00==false), 7bit reserved
-                0x00,                   // 9: palette_id_ref (0..7)
-                0x01,                   // 10: number_of_composition_objects (0..2)
-                0x00, 0x00,             // 11: 16bit object_id_ref
-                0x00,                   // 13: window_id_ref (0..1)
-                0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
-                0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
+        0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
+        0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
+        0x00, 0x00,             // 5: composition_number (increased by start and end header)
+        0x80,                   // 7: composition_state (0x80: epoch start)
+                                //      0x00: Normal
+                                //      0x40: Acquisition Point
+                                //      0x80: Epoch Start
+        0x00,                   // 8: palette_update_flag (0x80==true, 0x00==false), 7bit reserved
+        0x00,                   // 9: palette_id_ref (0..7)
+        0x01,                   // 10: number_of_composition_objects (0..2)
+        0x00, 0x00,             // 11: 16bit object_id_ref
+        0x00,                   // 13: window_id_ref (0..1)
+        0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
+        0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
             };
             var headerPcsEnd = new byte[]
             {
-                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-                0x00, 0x00,             // 5: composition_number (increased by start and end header)
-                0x00,                   // 7: composition_state (0x00: normal)
-                0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
-                0x00,                   // 9: palette_id_ref (0..7)
-                0x00                    // 10: number_of_composition_objects (0..2)
+        0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
+        0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
+        0x00, 0x00,             // 5: composition_number (increased by start and end header)
+        0x00,                   // 7: composition_state (0x00: normal)
+        0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
+        0x00,                   // 9: palette_id_ref (0..7)
+        0x00                    // 10: number_of_composition_objects (0..2)
             };
             var headerWds = new byte[]
             {
-                0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
-                0x00,                   // 1 : window id (0..1)
-                0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
-                0x00, 0x00, 0x00, 0x00  // 6 : width, height
+        0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
+        0x00,                   // 1 : window id (0..1)
+        0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
+        0x00, 0x00, 0x00, 0x00  // 6 : width, height
             };
             var headerOdsFirst = new byte[]
             {
-                0x00, 0x00,             // 0: object_id
-                0x00,                   // 2: object_version_number
-                0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
-                0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
-                0x00, 0x00, 0x00, 0x00  // 7: object_width, object_height
+        0x00, 0x00,             // 0: object_id
+        0x00,                   // 2: object_version_number
+        0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+        0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
+        0x00, 0x00, 0x00, 0x00  // 7: object_width, object_height
             };
             var headerOdsNext = new byte[]
             {
-                0x00, 0x00,             // 0: object_id
-                0x00,                   // 2: object_version_number
-                0x40                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+        0x00, 0x00,             // 0: object_id
+        0x00,                   // 2: object_version_number
+        0x40                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
             };
 
             var size = packetHeader.Length * (8 + numAddPackets);
@@ -544,6 +578,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /* time (in 90kHz resolution) needed to decode the image
                 based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
             var imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
+
             // write PCS start - Presentation Composition Segment (also called the Control Segment)
             packetHeader[10] = 0x16; // ID
 
@@ -554,11 +589,29 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             _lastEndTimeForWrite = pic.EndTimeForWrite;
-            var dts = (uint)(pts - (frameInitTime + windowInitTime + imageDecodeTime)); //int dts = pic.StartTimeForWrite - windowInitTime; ???
+
+            // FIXED: Ensure DTS is always before PTS and doesn't go negative
+            var totalInitTime = frameInitTime + windowInitTime + imageDecodeTime;
+            var dts = pts - totalInitTime;
+            if (dts < 0)
+            {
+                dts = 0;
+            }
+
+            // FIXED: Ensure DTS is monotonically increasing across all subtitles
+            if (dts <= _lastDts)
+            {
+                dts = _lastDts + 1;
+                // If we had to bump DTS forward, ensure PTS is still after DTS
+                if (pts <= dts)
+                {
+                    pts = dts + 1;
+                }
+            }
 
             ToolBox.SetDWord(packetHeader, 2, (uint)pts);                     // PTS
-            ToolBox.SetDWord(packetHeader, 6, dts);                           // DTS
-            ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);     // size
+            ToolBox.SetDWord(packetHeader, 6, (uint)dts);                     // DTS
+            ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);         // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -576,11 +629,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 buf[index++] = headerPcsStart[i];
             }
 
-            // write WDS
+            // write WDS - Window Definition Segment
             packetHeader[10] = 0x17;                                            // ID
             var timestamp = pts - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);            // PTS (keep DTS)
-            ToolBox.SetWord(packetHeader, 11, headerWds.Length);       // size
+            if (timestamp < dts)  // FIXED: ensure WDS timestamp is after DTS
+            {
+                timestamp = dts;
+            }
+            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                 // PTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)dts);                       // DTS - same as PCS
+            ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -597,9 +655,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // write PDS - Palette Definition Segment
             packetHeader[10] = 0x14;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (=DTS of PCS/WDS)
-            ToolBox.SetDWord(packetHeader, 6, 0);                      // DTS (0)
-            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);        // size
+            ToolBox.SetDWord(packetHeader, 2, (uint)dts);                       // PTS (=DTS)
+            ToolBox.SetDWord(packetHeader, 6, (uint)dts);                       // DTS - FIXED: use dts instead of 0
+            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);                 // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -625,10 +683,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             packetHeader[10] = 0x15;                                                    // ID
-            timestamp = 0;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
-            ToolBox.SetDWord(packetHeader, 6, dts);                                // DTS
-            ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
+            timestamp = dts;  // FIXED: use dts instead of 0
+            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                         // PTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)dts);                               // DTS
+            ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize);         // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -679,19 +737,25 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // write END
             packetHeader[10] = 0x80;                                             // ID
-            ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0) (keep PTS of ODS)
-            ToolBox.SetWord(packetHeader, 11, 0);                       // size
+            ToolBox.SetDWord(packetHeader, 2, (uint)dts);                        // PTS - FIXED: use dts
+            ToolBox.SetDWord(packetHeader, 6, (uint)dts);                        // DTS - FIXED: use dts instead of 0
+            ToolBox.SetWord(packetHeader, 11, 0);                                // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
 
             // write PCS end
-            packetHeader[10] = 0x16;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, (uint)pic.EndTimeForWrite);        // PTS
-            dts = (uint)(pic.EndTimeForWrite - 90);
-            ToolBox.SetDWord(packetHeader, 6, dts);                        // DTS
-            ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);     // size
+            packetHeader[10] = 0x16;                                             // ID
+            var endPts = pic.EndTimeForWrite;
+            var endDts = endPts - 90;
+            if (endDts <= dts)  // FIXED: ensure end DTS is after start DTS
+            {
+                endDts = dts + 1;
+            }
+            ToolBox.SetDWord(packetHeader, 2, (uint)endPts);                     // PTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)endDts);                     // DTS
+            ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);              // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -708,10 +772,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // write WDS - Window Definition Segment
             packetHeader[10] = 0x17;                                                     // ID
-            timestamp = pic.EndTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
-            ToolBox.SetDWord(packetHeader, 6, (uint)(dts - windowInitTime));   // DTS
-            ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
+            timestamp = endPts - windowInitTime;
+            // FIXED: WDS DTS must be monotonically increasing - it should be after endDts, not before
+            var wdsDts = endDts + 1;
+            if (timestamp <= wdsDts)
+            {
+                timestamp = wdsDts + 1;
+            }
+            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                          // PTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)wdsDts);                             // DTS
+            ToolBox.SetWord(packetHeader, 11, headerWds.Length);                         // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -728,13 +798,18 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // write END
             packetHeader[10] = 0x80;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (DTS of end PCS)
-            ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0)
-            ToolBox.SetWord(packetHeader, 11, 0);                       // size
+                                                                                // FIXED: Final END must have DTS >= previous WDS DTS
+            var finalDts = wdsDts + 1;
+            ToolBox.SetDWord(packetHeader, 2, (uint)finalDts);                  // PTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)finalDts);                  // DTS
+            ToolBox.SetWord(packetHeader, 11, 0);                               // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
+
+            // Update the last DTS so next subtitle doesn't go backwards
+            _lastDts = finalDts;
 
             return buf;
         }

@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var tempFolder = Path.GetTempPath();
                     var supFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".sup");
+                    BluRaySupPicture.InitializeCreateSupFrames();
                     using (var binarySubtitleFile = new FileStream(supFileName, FileMode.Create))
                     {
                         labelStatus.Text = "Generating Blu-ray sup file...";

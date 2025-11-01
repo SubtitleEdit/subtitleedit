@@ -13,6 +13,7 @@ namespace Tests.Logic.BluRaySup
         [TestMethod]
         public void BluRaySupWriteAndReadTwoBitmaps()
         {
+            BluRaySupPicture.InitializeCreateSupFrames();
             var fileName = Guid.NewGuid() + ".sup";
             using (var binarySubtitleFile = new FileStream(fileName, FileMode.Create))
             {
