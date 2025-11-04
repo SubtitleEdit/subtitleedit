@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.labelNote = new System.Windows.Forms.Label();
             this.tabControlCommandLineHelp = new System.Windows.Forms.TabControl();
             this.TabPageCPP = new System.Windows.Forms.TabPage();
+            this.buttonCppVad = new System.Windows.Forms.Button();
             this.textBoxCpp = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageConstMe = new System.Windows.Forms.TabPage();
             this.textBoxConstMe = new Nikse.SubtitleEdit.Controls.NikseTextBox();
@@ -57,7 +58,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonXxlSingleWord = new System.Windows.Forms.Button();
             this.nikseTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.buttonCppVad = new System.Windows.Forms.Button();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -137,6 +137,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.TabPageCPP.TabIndex = 0;
             this.TabPageCPP.Text = "CPP";
             this.TabPageCPP.UseVisualStyleBackColor = true;
+            // 
+            // buttonCppVad
+            // 
+            this.buttonCppVad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCppVad.Location = new System.Drawing.Point(6, 389);
+            this.buttonCppVad.Name = "buttonCppVad";
+            this.buttonCppVad.Size = new System.Drawing.Size(148, 24);
+            this.buttonCppVad.TabIndex = 21;
+            this.buttonCppVad.Text = "Enable VAD";
+            this.buttonCppVad.UseVisualStyleBackColor = true;
+            this.buttonCppVad.Click += new System.EventHandler(this.buttonCppVad_Click);
             // 
             // textBoxCpp
             // 
@@ -409,17 +420,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
-            // 
-            // buttonCppVad
-            // 
-            this.buttonCppVad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCppVad.Location = new System.Drawing.Point(6, 389);
-            this.buttonCppVad.Name = "buttonCppVad";
-            this.buttonCppVad.Size = new System.Drawing.Size(148, 24);
-            this.buttonCppVad.TabIndex = 21;
-            this.buttonCppVad.Text = "Enable VAD";
-            this.buttonCppVad.UseVisualStyleBackColor = true;
-            this.buttonCppVad.Click += new System.EventHandler(this.buttonCppVad_Click);
             // 
             // WhisperAdvanced
             // 
