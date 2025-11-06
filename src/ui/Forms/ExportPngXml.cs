@@ -753,7 +753,6 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine();
                 }
 
-                BluRaySupPicture.InitializeCreateSupFrames();
                 if (_vobSubOcr != null)
                 {
                     int i = 0;

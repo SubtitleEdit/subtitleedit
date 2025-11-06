@@ -1861,7 +1861,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         using (var binarySubtitleFile = new FileStream(args.Argument.ToString(), FileMode.Create))
                         {
-                            BluRaySupPicture.InitializeCreateSupFrames();
                             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
                             {
                                 bw.ReportProgress(index);
