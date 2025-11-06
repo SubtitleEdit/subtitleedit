@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             var bottomMargin = (int)Math.Round(screenHeight * 4.0 / 100.0);
             using (var binarySubtitleFile = new FileStream(fileName, FileMode.Create))
             {
-                BluRaySupPicture.InitializeCreateSupFrames();
                 var counter = 0;
                 for (var index = 0; index < sub.Count; index++)
                 {
