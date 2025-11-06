@@ -64,6 +64,8 @@
             this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.labelActors = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.nikseUpDownSpeed = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.nikseLabelSpeed = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuStripVoices.SuspendLayout();
             this.SuspendLayout();
@@ -126,6 +128,8 @@
             // 
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxSettings.Controls.Add(this.nikseUpDownSpeed);
+            this.groupBoxSettings.Controls.Add(this.nikseLabelSpeed);
             this.groupBoxSettings.Controls.Add(this.checkBoxVoiceOver);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownStability);
             this.groupBoxSettings.Controls.Add(this.nikseUpDownSimilarity);
@@ -568,6 +572,53 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // nikseUpDownSpeed
+            // 
+            this.nikseUpDownSpeed.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseUpDownSpeed.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseUpDownSpeed.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseUpDownSpeed.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseUpDownSpeed.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseUpDownSpeed.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseUpDownSpeed.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseUpDownSpeed.DecimalPlaces = 0;
+            this.nikseUpDownSpeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Location = new System.Drawing.Point(251, 325);
+            this.nikseUpDownSpeed.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Name = "nikseUpDownSpeed";
+            this.nikseUpDownSpeed.Size = new System.Drawing.Size(75, 23);
+            this.nikseUpDownSpeed.TabIndex = 100;
+            this.nikseUpDownSpeed.TabStop = false;
+            this.nikseUpDownSpeed.Text = "nikseUpDown1";
+            this.nikseUpDownSpeed.ThousandsSeparator = false;
+            this.nikseUpDownSpeed.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // nikseLabelSpeed
+            // 
+            this.nikseLabelSpeed.AutoSize = true;
+            this.nikseLabelSpeed.Location = new System.Drawing.Point(198, 329);
+            this.nikseLabelSpeed.Name = "nikseLabelSpeed";
+            this.nikseLabelSpeed.Size = new System.Drawing.Size(38, 13);
+            this.nikseLabelSpeed.TabIndex = 101;
+            this.nikseLabelSpeed.Text = "Speed";
+            // 
             // TextToSpeech
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -638,5 +689,7 @@
         private Controls.NikseLabel labelSimilarity;
         private Controls.NikseLabel labelStability;
         private System.Windows.Forms.CheckBox checkBoxVoiceOver;
+        private Controls.NikseUpDown nikseUpDownSpeed;
+        private Controls.NikseLabel nikseLabelSpeed;
     }
 }

@@ -40,6 +40,8 @@
             this.nikseUpDownSimilarity = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSimilarity = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelStability = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.nikseUpDownSpeed = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.nikseLabelSpeed = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -244,11 +246,62 @@
             this.labelStability.TabIndex = 102;
             this.labelStability.Text = "Stability";
             // 
+            // nikseUpDownSpeed
+            // 
+            this.nikseUpDownSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nikseUpDownSpeed.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseUpDownSpeed.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseUpDownSpeed.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseUpDownSpeed.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseUpDownSpeed.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseUpDownSpeed.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseUpDownSpeed.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseUpDownSpeed.DecimalPlaces = 0;
+            this.nikseUpDownSpeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Location = new System.Drawing.Point(384, 179);
+            this.nikseUpDownSpeed.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.nikseUpDownSpeed.Name = "nikseUpDownSpeed";
+            this.nikseUpDownSpeed.Size = new System.Drawing.Size(75, 23);
+            this.nikseUpDownSpeed.TabIndex = 104;
+            this.nikseUpDownSpeed.TabStop = false;
+            this.nikseUpDownSpeed.Text = "nikseUpDownSpeed";
+            this.nikseUpDownSpeed.ThousandsSeparator = false;
+            this.nikseUpDownSpeed.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // nikseLabelSpeed
+            // 
+            this.nikseLabelSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nikseLabelSpeed.AutoSize = true;
+            this.nikseLabelSpeed.Location = new System.Drawing.Point(331, 183);
+            this.nikseLabelSpeed.Name = "nikseLabelSpeed";
+            this.nikseLabelSpeed.Size = new System.Drawing.Size(38, 13);
+            this.nikseLabelSpeed.TabIndex = 105;
+            this.nikseLabelSpeed.Text = "Speed";
+            // 
             // RegenerateAudioClip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(826, 243);
+            this.Controls.Add(this.nikseUpDownSpeed);
+            this.Controls.Add(this.nikseLabelSpeed);
             this.Controls.Add(this.nikseUpDownStability);
             this.Controls.Add(this.nikseUpDownSimilarity);
             this.Controls.Add(this.labelSimilarity);
@@ -288,5 +341,7 @@
         private Controls.NikseUpDown nikseUpDownSimilarity;
         private Controls.NikseLabel labelSimilarity;
         private Controls.NikseLabel labelStability;
+        private Controls.NikseUpDown nikseUpDownSpeed;
+        private Controls.NikseLabel nikseLabelSpeed;
     }
 }
