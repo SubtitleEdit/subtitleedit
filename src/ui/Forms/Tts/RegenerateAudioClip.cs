@@ -44,11 +44,16 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonPlay.Enabled = false;
             nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
             nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
+            nikseUpDownSpeed.Value = 100;
+            nikseUpDownSpeed.Maximum = 200;
 
             if (engine.Id == TextToSpeech.TextToSpeechEngineId.ElevenLabs)
             {
                 return;
             }
+
+            nikseUpDownSpeed.Visible = false;
+            nikseLabelSpeed.Visible = false;
 
             if (engine.Id == TextToSpeech.TextToSpeechEngineId.Murf)
             {
@@ -80,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
                 Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed = (double)nikseUpDownSpeed.Value / 100.0;
             }
             else if (_engine.Id == TextToSpeech.TextToSpeechEngineId.Murf)
             {
