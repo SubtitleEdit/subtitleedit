@@ -1716,6 +1716,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 nikseUpDownSpeed.Minimum = 1;
                 nikseUpDownSpeed.Maximum = 200;
                 nikseUpDownSpeed.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed * 100;
+                nikseUpDownSpeed.Visible = true;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
