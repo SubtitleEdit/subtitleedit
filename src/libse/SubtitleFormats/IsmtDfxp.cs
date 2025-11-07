@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.OriginalFormat = format;
             }
 
-            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 250);
+            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 10);
             if (merged.Paragraphs.Count < subtitle.Paragraphs.Count)
             {
                 subtitle.Paragraphs.Clear();
