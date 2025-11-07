@@ -150,7 +150,19 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int SelectionStart
         {
-            get => GetActiveTextBox()?.SelectionStart ?? 0;
+            get
+            {
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.SelectionStart;
+                }
+                else if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.SelectionStart;
+                }
+
+                return 0;
+            }
             set
             {
                 var tb = GetActiveTextBox();
