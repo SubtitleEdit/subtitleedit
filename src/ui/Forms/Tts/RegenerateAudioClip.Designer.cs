@@ -264,12 +264,12 @@
             0});
             this.nikseUpDownSpeed.Location = new System.Drawing.Point(384, 179);
             this.nikseUpDownSpeed.Maximum = new decimal(new int[] {
-            100,
+            120,
             0,
             0,
             0});
             this.nikseUpDownSpeed.Minimum = new decimal(new int[] {
-            0,
+            70,
             0,
             0,
             0});
@@ -280,7 +280,7 @@
             this.nikseUpDownSpeed.Text = "nikseUpDownSpeed";
             this.nikseUpDownSpeed.ThousandsSeparator = false;
             this.nikseUpDownSpeed.Value = new decimal(new int[] {
-            0,
+            100,
             0,
             0,
             0});

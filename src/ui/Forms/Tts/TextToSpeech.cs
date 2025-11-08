@@ -1713,8 +1713,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 nikseUpDownSimilarity.Visible = true;
 
                 nikseLabelSpeed.Visible = true;
-                nikseUpDownSpeed.Minimum = 1;
-                nikseUpDownSpeed.Maximum = 200;
                 nikseUpDownSpeed.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed * 100;
                 nikseUpDownSpeed.Visible = true;
             }
