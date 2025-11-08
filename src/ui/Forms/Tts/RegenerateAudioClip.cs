@@ -44,8 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonPlay.Enabled = false;
             nikseUpDownStability.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability * 100.0);
             nikseUpDownSimilarity.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity * 100.0);
-            nikseUpDownSpeed.Value = 100;
-            nikseUpDownSpeed.Maximum = 200;
+            nikseUpDownSpeed.Value = (int)Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed * 100.0);
 
             if (engine.Id == TextToSpeech.TextToSpeechEngineId.ElevenLabs)
             {
