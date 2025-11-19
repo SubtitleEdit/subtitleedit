@@ -1691,6 +1691,7 @@
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
+            public string ErrorLoadGZip { get; set; }
             public string ErrorLoad7Zip { get; set; }
             public string ErrorLoadPng { get; set; }
             public string ErrorLoadJpg { get; set; }

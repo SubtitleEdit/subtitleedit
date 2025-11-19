@@ -3773,6 +3773,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // check for .gzip file
+            if (format == null && file.Length > 100 && FileUtil.IsGZip(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadGZip);
+                return;
+            }
+
             // check for .7z file
             if (format == null && file.Length > 100 && FileUtil.Is7Zip(fileName))
             {
