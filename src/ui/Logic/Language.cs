@@ -1878,6 +1878,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
+                ErrorLoadGZip = "This file seems to be a compressed .gzip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoad7Zip = "This file seems to be a compressed 7-Zip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadPng = "This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.",
                 ErrorLoadJpg = "This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.",

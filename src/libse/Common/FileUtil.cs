@@ -156,6 +156,29 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
+        /// Determines whether the specified file is a ZIP archive based on its header bytes.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file is a ZIP archive; otherwise, false.</returns>
+        public static bool IsGZip(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                // 1F 8B 08
+                return buffer[0] == 0x1F  // 1F 8B → GZIP signature
+                    && buffer[1] == 0x8B
+                    && buffer[2] == 0x08; // 08 → compression method = DEFLATE
+            }
+        }
+
+        /// <summary>
         /// Checks if the specified file is a 7-Zip file by reading its signature bytes.
         /// </summary>
         /// <param name="fileName">The path to the file to check.</param>
@@ -218,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                return buffer[0] == 0x52 && 
+                return buffer[0] == 0x52 &&
                        buffer[1] == 0x49 &&
                        buffer[2] == 0x46 &&
                        buffer[2] == 0x46 &&
@@ -913,7 +936,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 videoFileName = Path.GetFileName(videoFileName);
             }
-            
+
             foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
             {
                 if (!Directory.Exists(knownSubtitleDirectory))
