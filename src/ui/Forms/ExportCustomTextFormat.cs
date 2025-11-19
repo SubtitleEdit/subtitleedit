@@ -177,14 +177,68 @@ namespace Nikse.SubtitleEdit.Forms
                 return wholeSeconds.ToString().PadLeft(length, '0');
             });
 
+            // Detect pure-z mode (template contains ONLY z's)
+            bool pureZMode = Regex.IsMatch(template, @"^z+$");
+
             // Replace sequences of 'z' dynamically
             t = Regex.Replace(t, @"z+", match =>
             {
-                int length = match.Value.Length;
-                double fractionalSeconds = Math.Abs(timeCode.TotalSeconds) - Math.Floor(Math.Abs(timeCode.TotalSeconds));
-                double fractionalMs = fractionalSeconds * 1000;
-                double extended = fractionalMs * Math.Pow(10, length - 3);
-                return ((long)extended).ToString().PadLeft(length, '0');
+                int zCount = match.Value.Length;
+
+                if (pureZMode)
+                {
+                    // PURE Z MODE = total milliseconds
+                    long ms = (long)totalMilliseconds;
+
+                    string msString = ms.ToString();
+                    int msLength = msString.Length;
+
+                    if (zCount <= msLength)
+                        return msString;
+                    else
+                        return msString.PadLeft(zCount, '0');
+                }
+                else
+                {
+                    // MIXED MODE = fractional precision expansion
+                    double fractionalSeconds = Math.Abs(timeCode.TotalSeconds) - Math.Floor(Math.Abs(timeCode.TotalSeconds));
+
+                    // Convert fractional seconds into string with max precision available
+                    string fracString;
+
+                    if (fractionalSeconds == 0)
+                    {
+                        // Catch-all: no fractional seconds = default to "000"
+                        fracString = "000";
+                    }
+                    else
+                    {
+                        // Convert fractional seconds to string with full precision
+                        fracString = fractionalSeconds
+                            .ToString("R")           // round-trip format
+                            .Split('.')[1]           // remove leading "0."
+                            .TrimEnd('0');           // optional, keep only meaningful digits
+
+                        // Always show at least 3 digits (ex. ".001")
+                        if (fracString.Length < 3)
+                            fracString = fracString.PadRight(3, '0');
+                    }
+
+                    // Always show at least the existing visible ms (first 3 digits)
+                    // If fewer digits exist, pad
+                    if (fracString.Length < 3)
+                        fracString = fracString.PadRight(3, '0');
+
+                    // Now return exactly zCount digits, padding zeros if needed
+                    if (zCount <= fracString.Length)
+                    {
+                        return fracString.Substring(0, zCount);
+                    }
+                    else
+                    {
+                        return fracString.PadRight(zCount, '0');
+                    }
+                }
             });
 
             // Standard replacements
@@ -192,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("h", $"{Math.Abs(timeCode.Hours)}")
                 .Replace("mm", $"{Math.Abs(timeCode.Minutes):00}")
                 .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
-                .Replace("ff", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}")
+                .Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds):00}")
                 .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
 
             // Prepend minus if negative
