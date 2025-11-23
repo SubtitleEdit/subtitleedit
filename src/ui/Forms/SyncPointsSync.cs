@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             Width = subtitleListView2.Width * 2 + 250;
             MinimumSize = new Size(Width - 50, MinimumSize.Height);
         }
-        
+
         private void RefreshSynchronizationPointsUi()
         {
             buttonApplySync.Enabled = _synchronizationPoints.Count > 0;
@@ -164,8 +164,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SetViewColors( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
-            SetViewColors( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
+            SetViewColors(_otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
+            SetViewColors(_subtitle, subtitleListView1, _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
         }
 
         private void buttonSetSyncPoint_Click(object sender, EventArgs e)
@@ -500,15 +500,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
+
         private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetViewColors( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
+            SetViewColors(_otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
         }
-        
+
         private void subtitleListView2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetViewColors( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
+            SetViewColors(_subtitle, subtitleListView1, _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
         }
 
         private static Paragraph GetSelectedParagraph(Subtitle subtitle, SubtitleListView view)
@@ -516,9 +516,9 @@ namespace Nikse.SubtitleEdit.Forms
             var selectedIndex = view.SelectedIndex;
             return selectedIndex == SubtitleListView.InvalidIndex ? null : subtitle.Paragraphs[selectedIndex];
         }
-        
 
-        private void SetViewColors( Subtitle subtitle,  SubtitleListView view, IEnumerable<int> marked, Paragraph syncParagraph = null )
+
+        private void SetViewColors(Subtitle subtitle, SubtitleListView view, IEnumerable<int> marked, Paragraph syncParagraph = null)
         {
             if (!view.Visible) return;
             var markedHashSet = marked.Where(v => v != SubtitleListView.InvalidIndex).ToHashSet();
@@ -537,7 +537,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (selectedDuration == 0)
                 selectedDuration = 1000;
 
-            
+
             (int Index, double Dinstance) closesIndex = (SubtitleListView.InvalidIndex, 0d);
             for (var i = 0; i < view.Items.Count; i++)
             {
@@ -558,26 +558,26 @@ namespace Nikse.SubtitleEdit.Forms
             view.Items[closesIndex.Index].EnsureVisible();
         }
         private Color MarkedBackgroundColor { get; } = ColorTranslator.FromHtml("#6ebe6e");
-        private Color VisualMarkBackgroundColor { get; } = Configuration.Settings.General.UseDarkTheme ? Color.LightGray: Color.DarkGray;
+        private Color VisualMarkBackgroundColor { get; } = Configuration.Settings.General.UseDarkTheme ? Color.LightGray : Color.DarkGray;
 
         private Color CalculateBackgroundColor(Color baseColor, bool shouldUseSyncColor, double percentageDistance)
         {
             var color = shouldUseSyncColor ? MarkedBackgroundColor : baseColor;
             if (percentageDistance >= 1) return color;
-            
-            var visualMarkedColorWithOffset = VisualMarkBackgroundColor.Blend(baseColor,   percentageDistance);
+
+            var visualMarkedColorWithOffset = VisualMarkBackgroundColor.Blend(baseColor, percentageDistance);
             return shouldUseSyncColor
-                ? visualMarkedColorWithOffset.Blend(MarkedBackgroundColor )
+                ? visualMarkedColorWithOffset.Blend(MarkedBackgroundColor)
                 : visualMarkedColorWithOffset;
         }
-        
+
         private static Color CalculateForegroundColor(Color baseColor, double backGroundColorLuminance, double percentageDistance)
         {
-            if (percentageDistance >= 1 )
+            if (percentageDistance >= 1)
                 return baseColor;
             if (backGroundColorLuminance < 0.5)
             {
-                return Color.White; 
+                return Color.White;
             }
 
             return Color.Black;
