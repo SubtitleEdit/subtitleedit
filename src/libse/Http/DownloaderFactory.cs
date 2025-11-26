@@ -10,7 +10,11 @@ namespace Nikse.SubtitleEdit.Core.Http
     {
         public static IDownloader MakeHttpClient()
         {
-            var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
+            var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy))
+            {
+                Timeout = TimeSpan.FromMinutes(30) // 30 minutes for large downloads
+            };
+
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
                 return new LegacyDownloader(httpClient);
