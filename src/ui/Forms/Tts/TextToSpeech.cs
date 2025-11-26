@@ -1210,7 +1210,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     var stability = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsStability, 1).ToString(CultureInfo.InvariantCulture);
                     var similarity = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity, 1).ToString(CultureInfo.InvariantCulture);
-                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity} }} }}";
+                    var speed = Math.Round(Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed, 1).ToString(CultureInfo.InvariantCulture);
+                    var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarity}, \"speed\": {speed} }} }}";
                     var content = new StringContent(data, Encoding.UTF8);
                     content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
@@ -1566,6 +1567,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelSimilarity.Visible = false;
             nikseUpDownStability.Visible = false;
             nikseUpDownSimilarity.Visible = false;
+            nikseLabelSpeed.Visible = false;
+            nikseUpDownSpeed.Visible = false;
 
             labelRegion.Text = LanguageSettings.Current.General.Region;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
@@ -1708,6 +1711,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 nikseUpDownStability.Visible = true;
                 nikseUpDownSimilarity.Visible = true;
+
+                nikseLabelSpeed.Visible = true;
+                nikseUpDownSpeed.Value = (decimal)Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed * 100;
+                nikseUpDownSpeed.Visible = true;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
@@ -2683,6 +2690,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Configuration.Settings.Tools.TextToSpeechElevenLabsStability = (double)nikseUpDownStability.Value / 100.0;
                 Configuration.Settings.Tools.TextToSpeechElevenLabsSimilarity = (double)nikseUpDownSimilarity.Value / 100.0;
+                Configuration.Settings.Tools.TextToSpeechElevenLabsSpeed = (double)nikseUpDownSpeed.Value / 100.0;
             }
             else if (engine.Id == TextToSpeechEngineId.Murf)
             {

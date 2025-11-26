@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.13</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی، رامتین جوکار</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -93,8 +93,14 @@
     <Height>ارتفاع</Height>
     <Collapse>ریزش</Collapse>
     <ShortcutX>میانبر: {0}</ShortcutX>
+    <ViewX>مشاهده {0}</ViewX>
     <ExampleX>مثال: {0}</ExampleX>
     <Reset>ریست</Reset>
+    <Error>خطا</Error>
+    <Warning>هشدار</Warning>
+    <UseLargerFontForThisWindow>استفاده از فونت بزرگ‌تر برای این پنجره</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>فیلتر زبان...</ChangeLanguageFilter>
+    <MoreInfo>اطلاعات بیشتر</MoreInfo>
   </General>
   <About>
     <Title>درباره Subtitle Edit</Title>
@@ -158,6 +164,9 @@
     <Fixed>حل شده</Fixed>
     <Milliseconds>میلی ثانیه</Milliseconds>
     <ExtendOnly>تنها گسترش</ExtendOnly>
+    <EnforceDurationLimits>اعمال حداقل و حداکثر مدت زمان</EnforceDurationLimits>
+    <CheckShotChanges>از عبور از تغییر نماها جلوگیری کن</CheckShotChanges>
+    <BatchCheckShotChanges>رعایت تغییر نماها (در صورت موجود بودن)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>اعمال محدودیت های زمان</Title>
@@ -292,6 +301,7 @@
     <RemoveFormatting>حذف تگ های قالب بندی</RemoveFormatting>
     <RemoveStyleActor>حذف سبک/بازیگر</RemoveStyleActor>
     <RemoveTextForHI>حذف متن برای HI</RemoveTextForHI>
+    <ConvertColorsToDialog>تبدیل رنگ‌ها به گفتگو</ConvertColorsToDialog>
     <OverwriteOriginalFiles>بازنویسی فایل های اصلی (پسوند جدید اگر فرمت تغییر کند)</OverwriteOriginalFiles>
     <RedoCasing>پوشش مجدد</RedoCasing>
     <Convert>تبدیل کنید</Convert>
@@ -341,7 +351,7 @@
     <MkvLanguageStyleThreeLetter>کد زبان سه حرفی</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>بدون کد زبان</MkvLanguageStyleEmpty>
   </BatchConvert>
-    <BeautifyTimeCodes>
+  <BeautifyTimeCodes>
     <Title>زیباسازی کدهای زمانی</Title>
     <TitleSelectedLines>زیباسازی کدهای زمانی ({0} سطر هایی انتخاب شده)</TitleSelectedLines>
     <GroupTimeCodes>کدهای زمانی</GroupTimeCodes>
@@ -482,6 +492,7 @@
     <OnlyChangeAllUppercaseLines>فقط تمام خطوط با حروف بزرگ را تغییر دهید.</OnlyChangeAllUppercaseLines>
     <AllUppercase>همه با حروف بزرگ</AllUppercase>
     <AllLowercase>حروف با حروف کوچک</AllLowercase>
+    <ProperCase>حروف بزرگ اولیه</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>تغییر کوچک و بزرگی - اسامی</Title>
@@ -505,6 +516,7 @@
     <Custom>سفارشی</Custom>
     <ToDropFrame>به فریم حذفی</ToDropFrame>
     <FromDropFrame>از فریم حذفی</FromDropFrame>
+    <AllowOverlap>اجازه هم‌پوشانی</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>بررسی برای به روز رسانی</Title>
@@ -569,6 +581,12 @@
     <SetColor>تنظیم رنگ</SetColor>
     <OnlyNames>فقط اسامی</OnlyNames>
   </ConvertActor>
+  <ConvertColorsToDialog>
+    <Title>تبدیل رنگ‌ها به گفتگو</Title>
+    <RemoveColorTags>حذف برچسب‌های رنگ</RemoveColorTags>
+    <AddNewLines>قرار دادن هر خط تیره در خط جدید</AddNewLines>
+    <ReBreakLines>بازشکستن خطوط</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>ویژگی های D-Cinema (اینتروپ)</Title>
     <TitleSmpte>ویژگی های D-Cinema (SMPTE)</TitleSmpte>
@@ -853,6 +871,7 @@
     <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
     <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
     <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>ادغام زیرنویس‌هایی که می‌توانند در یک خط جا شوند (بر اساس عرض پیکسل)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
     <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
@@ -1089,6 +1108,8 @@
   </ImportText>
   <Interjections>
     <Title>مداخلات</Title>
+    <EditSkipList>ویرایش فهرست پرشی...</EditSkipList>
+    <EditSkipListInfo>در صورتی که متن مبدأ با موارد زیر شروع شود، ملاحضات نادیده گرفته خواهند شد:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>شروع به زیرنویسها</Title>
@@ -1330,6 +1351,7 @@
         <FixCommonErrors>اشتباهات رایج و ثابت</FixCommonErrors>
         <StartNumberingFrom>شروع شماره از</StartNumberingFrom>
         <RemoveTextForHearingImpaired>گزارش متن برای ناشنوایان</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>تبدیل رنگ‌ها به گفتگو...</ConvertColorsToDialog>
         <ConvertActors>تبدیل بازیگران...</ConvertActors>
         <ChangeCasing>پوشش تغییر</ChangeCasing>
         <ChangeFrameRate>تغییر نرخ فریم</ChangeFrameRate>
@@ -1389,8 +1411,8 @@
         <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>نمایش/مخفی شکل موج و طیف نگار</ShowHideWaveformAndSpectrogram>
         <TextToSpeechAndAddToVideo>تبدیل متن به گفتار و افزودن به ویدیو...</TextToSpeechAndAddToVideo>
-        <UnDockVideoControls>سازمان ملل متحد کنترل اسکله های ویدئویی</UnDockVideoControls>
-        <ReDockVideoControls>دوباره حوض ویدئو کنترل</ReDockVideoControls>
+        <UnDockVideoControls>جدا کردن کنترل‌های ویدئو</UnDockVideoControls>
+        <ReDockVideoControls>بازچسباندن کنترل‌های ویدئو</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>بررسی املا</Title>
@@ -1558,14 +1580,14 @@
       <SelectCurrentElementWhilePlaying>انتخاب زیرنویس جاری در حال اجرا</SelectCurrentElementWhilePlaying>
       <AutoRepeat>تکرار خودکار</AutoRepeat>
       <AutoRepeatOn>تکرار خودکار در</AutoRepeatOn>
-      <AutoRepeatCount>تعداد تکرار (بار)ا</AutoRepeatCount>
+      <AutoRepeatCount>تعداد تکرار (بار)</AutoRepeatCount>
       <AutoContinue>ادامه خودکار</AutoContinue>
       <AutoContinueOn>خودکار ادامه</AutoContinueOn>
-      <DelayInSeconds>تاخیر (ثانیه)ا</DelayInSeconds>
+      <DelayInSeconds>تاخیر (ثانیه)</DelayInSeconds>
       <OriginalText>متن اصلی</OriginalText>
       <Previous>&lt;قبل و بعد از vious</Previous>
       <Stop>و توقف</Stop>
-      <PlayCurrent>و بازی فعلی</PlayCurrent>
+      <PlayCurrent>و پخش فعلی</PlayCurrent>
       <Next>و بعدی&gt;</Next>
       <Playing>... در حال پخش</Playing>
       <RepeatingLastTime>تکرار... زمان آخرین</RepeatingLastTime>
@@ -1573,22 +1595,23 @@
       <AutoContinueInOneSecond>ادامه خودکار در یک ثانیه</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>خودکار ادامه در {0} ثانیه</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>با این حال تایپ کردن است... ادامه خودکار متوقف</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>نام و قرار دادن جدید در استانداردهای فعلی ویدئو</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>درج زیرنویس جدید در جایگاه ویدئو</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>درج زیرنویس جدید در جایگاه ویدیو (بدون فوکوس کادر متنی)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>درج زیرنویس جدید در جایگاه ویدیو (چنانچه ممکن باشد)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>خودکار</Auto>
-      <PlayFromJustBeforeText>بازی از قبل و فقط متن</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>پخش از کمی قبل از متن</PlayFromJustBeforeText>
       <PlayFromBeginning>پخش از ابتدای ویدیو</PlayFromBeginning>
       <Pause>وقفه</Pause>
-      <GoToSubtitlePositionAndPause>به موقعیت فرعی بروید و مکث کنید</GoToSubtitlePositionAndPause>
-      <SetStartTime>تنظیم زمان شروع و</SetStartTime>
+      <GoToSubtitlePositionAndPause>به موقعیت زیرنویس برو و مکث کن</GoToSubtitlePositionAndPause>
+      <SetStartTime>تنظیم زمان شروع</SetStartTime>
       <SetEndTimeAndGoToNext>تنظیم و پایان و و رفتن به آینده</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>تنظیم شده از طریق زمان پایان {0}</AdjustedViaEndTime>
-      <SetEndTime>نامه تنظیم و زمان دوم</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>تنظیم &amp;sta rt افست و استراحت</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>تنظیم زمان پایان</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>تنظیم شروع و جابجایی بقیه</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
       <GoogleTranslate>مترجم گوگل</GoogleTranslate>
       <AutoTranslate>ترجمه خودکار</AutoTranslate>
-      <GoogleIt>گوگل آن را</GoogleIt>
+      <GoogleIt>گوگل کن</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>موقعیت ویدئو :</VideoPosition>
@@ -1596,7 +1619,7 @@
       <BeforeChangingTimeInWaveformX>قبل از تغییر زمان در شکل موج: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>متن جدید وارد شده در {0}</NewTextInsertAtX>
       <Center>مرکز</Center>
-      <PlayRate>سرعت بازی (سرعت)ا</PlayRate>
+      <PlayRate>سرعت پخش (سرعت)ا</PlayRate>
     </VideoControls>
     <SaveChangesToUntitled>ذخیره تغییرات بدون عنوان؟</SaveChangesToUntitled>
     <SaveChangesToX>ذخیره تغییرات را به {0}؟</SaveChangesToX>
@@ -2152,6 +2175,7 @@
     <LinesFoundX>خطوط یافت شده: {0}</LinesFoundX>
     <RemoveTextIfContains>گزارش متن اگر در آن وجود دارد :</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>در صورت بزرگ بودن خط را بردارید</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>حذف فقط در صورت وجود نمادهای موسیقی</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>حذف حروف (سس، هوم، و غیره)</RemoveInterjections>
     <EditInterjections>ویرایش...</EditInterjections>
     <Apply>ا&amp;عمال</Apply>
@@ -2245,6 +2269,7 @@
     <DefaultFrameRate>نرخ فریم پیش فرض</DefaultFrameRate>
     <DefaultFileEncoding>به طور پیش فرض پشتیبانی می کند فایل</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>خودکار تشخیص رمزگذاری مؤسسه</AutoDetectAnsiEncoding>
+    <LanguageFilter>فیلتر زبان</LanguageFilter>
     <Profile>پروفایل</Profile>
     <Profiles>پروفایل ها</Profiles>
     <ImportProfiles>وارد کردن پروفایل ها</ImportProfiles>
@@ -2284,6 +2309,7 @@
     <MainListViewNothing>هیچ</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>برو به استانداردهای فعلی ویدئویی و مکث</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>برو به استانداردهای فعلی ویدئو و اجرا</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>به موقعیت ویدئو، پخش فعلی و توقف</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>برو جعبه متن برای ویرایش</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>برو به موقعیت ویدئو - 1 ثانیه و مکث</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>برو به موقعیت ویدئو - 0.5 ثانیه و مکث</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2298,6 +2324,7 @@
     <AutoBackupDeleteAfter>حذف بعد از</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 ماه</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} ماه</AutoBackupDeleteAfterXMonths>
+    <TranslationAutoSuffix>پسوند خودکار به نام فایل ترجمه</TranslationAutoSuffix>
     <CheckForUpdates>بررسی برای به روز رسانی</CheckForUpdates>
     <AutoSave>ذخیره خودکار</AutoSave>
     <AllowEditOfOriginalSubtitle>اجازه ویرایش از نام اصلی</AllowEditOfOriginalSubtitle>
@@ -2355,7 +2382,11 @@
     <SpectrogramAppearance>نمایش طیف نگار</SpectrogramAppearance>
     <SpectrogramOneColorGradient>یک رنگ متحرک</SpectrogramOneColorGradient>
     <SpectrogramClassic>کلاسیک</SpectrogramClassic>
+    <SpectrogramHeat>گرمی</SpectrogramHeat>
+    <SpectrogramCyanToOrange>فیروزه‌ای تا نارنجی</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>شفافیت طیف‌نما/موج‌نما:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>استفاده از FFmpeg برای استخراج موج</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>استفاده فقط از کانال جلوی مرکز (برای ۵.۱/۷.۱)</WaveformUseCenterChannelOnly>
     <DownloadX>دانلود {0}</DownloadX>
     <WaveformFFmpegPath>مسیر به FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>مرور به FFmpeg</WaveformBrowseToFFmpeg>
@@ -2387,6 +2418,8 @@
     <ProxyUserName>نام کاربری</ProxyUserName>
     <ProxyPassword>رمز عبور</ProxyPassword>
     <ProxyDomain>دامنه</ProxyDomain>
+    <ProxyAuthType>نوع احراز هویت</ProxyAuthType>
+    <ProxyUseDefaultCredentials>استفاده از مشخصات پیش‌فرض</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>تنظیمات نشست شبکه</NetworkSessionSettings>
     <NetworkSessionNewSound>پخش فایل صوتی هنگام دریافت پیام جدید</NetworkSessionNewSound>
     <PlayXSecondsAndBack>ثانیه اجرا ایکس و برگشت ، ایکس است</PlayXSecondsAndBack>
@@ -2408,13 +2441,28 @@
     <ContinuationStyleNoneLeadingTrailingDots>هیچ، نقطه برای مکث</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>نقطه (فقط دنباله دار)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>نقطه ها</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingEllipsis>بیضی ها (فقط دنباله دار)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingEllipsis>بیضی</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>هیچ، بیضی برای مکث</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>هیچ، بیضی برای مکث (فقط دنباله دار)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>هیچ، بیضی برای مکث</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>خط تیره</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>خط تیره، اما نقطه برای مکث</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>سفارشی</ContinuationStyleCustom>
+    <CpsLineLengthStyle>CPS/طول خط</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>شمارش تمام کاراکترها</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>شمارش همه کاراکترها به‌جز فاصله، فقط CPS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>شمارش همه کاراکترها به‌جز فاصله‌ها</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, لاتین 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, لاتین 0.5, فاصله 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIncludeCompositionCharacters>شامل کاراکترهای ترکیبی</CpsLineLengthStyleCalcIncludeCompositionCharacters>
+    <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>شامل کاراکترهای ترکیبی، بدون فاصله</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>بدون فاصله و علائم نگارشی ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>بدون فاصله و علائم نگارشی، فقط CPS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>نماد موسیقی</MusicSymbol>
     <MusicSymbolsReplace>نمادهای موسیقی برای جایگزینی (جدا شده با کاما)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>تعمیر خطاهای او سی آر مشترک -- همچنین hardcoded قوانین استفاده</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>استفاده از فهرست تفکیک کلمات (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>اجتناب از حروف بزرگ اولیه</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>تعمیر زمان نمایش کوتاه - اجازه حرکت زمان شروع</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>پرش از گام اول (انتخاب قانون های تعمیر)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>فرمت پیش فرض</DefaultFormat>
@@ -2682,6 +2730,7 @@
     <BDOpensInOcr>تبدیل متن به گفتار</BDOpensInOcr>
     <BDOpensInEdit>ویرایش</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>میانبرها: یک حرف/عدد را در کادر متنی مجاز کنید</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>میانبر تغییر وضعیت شروع/پایان سفارشی</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>انجمن های نوع فایل را به روز کنید</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>انجمن های نوع فایل به روز شد</FileTypeAssociationsUpdated>
   </Settings>
@@ -2789,6 +2838,7 @@
     <NumberOfSplits>تعداد تقسیم ها: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>طولانی ترین طول یک خط {0} در خط {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>طولانی ترین طول خط در کل برابر است با {0} در {1} خط</LongestLineIsXAtY>
+    <SplitAtLineBreaks>تقسیم در محل شکست خطوط</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>نام اسپلیت</Title>

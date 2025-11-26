@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Feb, 09 2025)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -1518,7 +1518,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
         <Settings>Paramètres</Settings>
         <Help>Aide</Help>
         <Layout>Mise en page</Layout>
-		<AssaDraw>Dessiner Advanced Sub Station Alpha</AssaDraw>
+        <AssaDraw>Dessiner Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ajuster la taille des colonnes</SizeAllColumnsToFit>

@@ -2,7 +2,7 @@
 <Language Name="Ελληνικά">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
@@ -80,9 +80,9 @@
     <UserNameAlreadyInUse>Μη διαθέσιμο όνομα</UserNameAlreadyInUse>
     <WebServiceUrl>Διεύθυνση ιστοσελίδας</WebServiceUrl>
     <IP>Διεύθυνση IP</IP>
-    <VideoWindowTitle>Βίντεο - {0}</VideoWindowTitle>
-    <AudioWindowTitle>Ήχος - {0}</AudioWindowTitle>
-    <ControlsWindowTitle>Στοιχεία ελέγχου - {0}</ControlsWindowTitle>
+    <VideoWindowTitle>Βίντεο-{0}</VideoWindowTitle>
+    <AudioWindowTitle>Ήχος-{0}</AudioWindowTitle>
+    <ControlsWindowTitle>Στοιχεία ελέγχου-{0}</ControlsWindowTitle>
     <Advanced>Προηγμένες</Advanced>
     <Style>Στυλ</Style>
     <StyleLanguage>Στυλ/Γλώσσα</StyleLanguage>
@@ -125,7 +125,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Προσθήκη στη λίστα ονομάτων</Title>
-    <Description>Προσθήκη στη λίστα ονομάτων (διάκριση πεζών - κεφαλαίων)</Description>
+    <Description>Προσθήκη στη λίστα ονομάτων (διάκριση πεζών-κεφαλαίων)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Προσθήκη στη λίστα αντικατάστασης του OCR</Title>
@@ -207,7 +207,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranscribingXOfY>Μετατροπή {0} αρχείου ήχου από {1} σε κείμενο</TranscribingXOfY>
     <PostProcessing>Μετεπεξεργασία…</PostProcessing>
     <XFilesSavedToVideoSourceFolder>Αποθηκεύτηκαν {0} αρχεία στον φάκελο του βίντεο</XFilesSavedToVideoSourceFolder>
-    <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
+    <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών-κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
     <AutoAdjustTimings>Αυτόματη προσαρμογή χρόνων</AutoAdjustTimings>
     <BatchMode>Ομαδική λειτουργία</BatchMode>
     <KeepPartialTranscription>Κράτημα μερικής μετατροπής</KeepPartialTranscription>
@@ -217,7 +217,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyRunPostProcessing>Εκτέλεση μόνο μετεπεξεργασίας/προσαρμογή χρόνων</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Λήψη βιβλιοθηκών cuBLAS και cuDNN για Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Δεν βρέθηκε κείμενο.</NoTextFound>
-    <FixCasing>Διόρθωση κεφαλαίων - πεζών</FixCasing>
+    <FixCasing>Διόρθωση κεφαλαίων-πεζών</FixCasing>
     <AddPeriods>Προσθήκη τελείας</AddPeriods>
     <FixShortDuration>Διόρθωση μικρής διάρκειας</FixShortDuration>
   </AudioToText>
@@ -405,7 +405,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnfixableParagraphsInstructions>Μερικοί υπότιτλοι δεν είναι πλήρως αλυσιδωτοί σύμφωνα με το προφίλ σας, λόγω συνεχόμενων αλλαγών σκηνής.
 Καλό θα ήταν να τους ελέγξετε, για να σιγουρευτείτε ότι εφάπτονται στη σωστή αλλαγή σκηνής.</UnfixableParagraphsInstructions>
     <UnfixableParagraphsColumnParagraphs>Γραμμές</UnfixableParagraphsColumnParagraphs>
-    <UnfixableParagraphsColumnParagraphsFormat>#{0} - #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0}-#{1}</UnfixableParagraphsColumnParagraphsFormat>
     <UnfixableParagraphsColumnGap>Κενό (καρέ)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
@@ -501,9 +501,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Μετάβαση σε σημείωση</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
-    <Title>Αλλαγή πεζών - κεφαλαίων</Title>
-    <ChangeCasingTo>Αλλαγή πεζών - κεφαλαίων σε</ChangeCasingTo>
-    <NormalCasing>Κανονικά πεζά - κεφαλαία. Οι προτάσεις ξεκινούν με κεφαλαίο γράμμα.</NormalCasing>
+    <Title>Αλλαγή πεζών-κεφαλαίων</Title>
+    <ChangeCasingTo>Αλλαγή πεζών-κεφαλαίων σε</ChangeCasingTo>
+    <NormalCasing>Κανονικά πεζά-κεφαλαία. Οι προτάσεις ξεκινούν με κεφαλαίο γράμμα.</NormalCasing>
     <FixNamesCasing>Διόρθωση ονομάτων (μέσω Dictionaries\names.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Διόρθωση μόνο ονομάτων (μέσω Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Αλλαγή μόνο των γραμμών με κεφαλαία.</OnlyChangeAllUppercaseLines>
@@ -512,7 +512,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProperCase>Κανονικά γράμματα</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
-    <Title>Αλλαγή πεζών - κεφαλαίων  ονομάτων</Title>
+    <Title>Αλλαγή πεζών-κεφαλαίων  ονομάτων</Title>
     <NamesFoundInSubtitleX>Εύρεση ονομάτων στον υπότιτλο: {0}</NamesFoundInSubtitleX>
     <Enabled>Ενεργοποιημένο</Enabled>
     <Name>Όνομα</Name>
@@ -525,7 +525,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FromFrameRate>Από ρυθμό καρέ</FromFrameRate>
     <ToFrameRate>Σε ρυθμό καρέ</ToFrameRate>
     <FrameRateNotCorrect>Λανθασμένος ρυθμός καρέ</FrameRateNotCorrect>
-    <FrameRateNotChanged>Ο Ρυθμός καρέ είναι ίδιος - τίποτα για μετατροπή</FrameRateNotChanged>
+    <FrameRateNotChanged>Ο Ρυθμός καρέ είναι ίδιος. Τίποτα για μετατροπή.</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Προσαρμογή ταχύτητας σε ποσοστό</Title>
@@ -678,7 +678,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Επιλογή γλώσσας</Title>
     <ChooseLanguageStreamId>Επιλογή γλώσσας (id ροής)</ChooseLanguageStreamId>
     <UnknownLanguage>Άγνωστη γλώσσα</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Εικόνα υποτίτλου {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Εικόνα υποτίτλου {0}/{1}-{2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Εικόνα υποτίτλου</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -816,8 +816,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDostAs>Επιλογή ονόματος αρχείου DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Μερικές πολύ μεγάλες γραμμές: {0}</SomeLinesWereTooLongX>
     <LineHeight>Ύψος γραμμής</LineHeight>
-    <BoxSingleLine>Πλαίσιο - μονή γραμμή</BoxSingleLine>
-    <BoxMultiLine>Πλαίσιο - πολλαπλή γραμμή</BoxMultiLine>
+    <BoxSingleLine>Πλαίσιο-μονή γραμμή</BoxSingleLine>
+    <BoxMultiLine>Πλαίσιο-πολλαπλή γραμμή</BoxMultiLine>
     <Forced>Εξαναγκασμένοι</Forced>
     <ChooseBackgroundColor>Επιλογή χρώματος φόντου</ChooseBackgroundColor>
     <SaveImageAs>Αποθήκευση εικόνας ως…</SaveImageAs>
@@ -871,14 +871,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Διόρθωση σφαλμάτων</Title>
-    <Step1>Βήμα 1/2 - Επιλογή σφαλμάτων</Step1>
+    <Step1>Βήμα 1/2-Επιλογή σφαλμάτων</Step1>
     <WhatToFix>Προς διόρθωση</WhatToFix>
     <Example>Παράδειγμα</Example>
     <SelectAll>Όλα</SelectAll>
     <InverseSelection>Αντιστροφή</InverseSelection>
     <Back>&lt; &amp;Πίσω</Back>
     <Next>&amp;Επόμενο &gt;</Next>
-    <Step2>Βήμα 2/2 - Επαλήθευση διορθώσεων</Step2>
+    <Step2>Βήμα 2/2-Επαλήθευση διορθώσεων</Step2>
     <Fixes>Διορθώσεις</Fixes>
     <Log>Αρχείο καταγραφής</Log>
     <Function>Λειτουργία</Function>
@@ -905,7 +905,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddPeriods>Προσθήκη τελείας</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Έναρξη με κεφαλαίο γράμμα μετά από παράγραφο</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Έναρξη με κεφαλαίο γράμμα μετά από τελεία</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Έναρξη με κεφαλαίο γράμμα μετά από άνω - κάτω τελεία</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterColon>Έναρξη με κεφαλαίο γράμμα μετά από άνω-κάτω τελεία</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Διόρθωση πεζού 'i' σε 'Ι' (Αγγλικά)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Διόρθωση σφαλμάτων OCR (χρήση καταλόγου αντικατάστασης OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Διορθώσεις σφαλμάτων OCR (χρήση του αρχείου OcrReplaceList): {0}</CommonOcrErrorsFixed>
@@ -988,7 +988,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationInMinutes>Διάρκεια σε λεπτά</DurationInMinutes>
     <Background>Φόντο</Background>
     <FfmpegParameters>Εκτέλεση του FFmpeg με τις ακόλουθες παραμέτρους:</FfmpegParameters>
-    <GenerateWithFfmpegParametersPrompt>Δημιουργία - υπενθύμιση παραμέτρων FFmpeg</GenerateWithFfmpegParametersPrompt>
+    <GenerateWithFfmpegParametersPrompt>Δημιουργία/υπενθύμιση παραμέτρων FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους</Title>
@@ -1126,7 +1126,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportShotChanges>
   <ImportText>
     <Title>Εισαγωγή απλού κειμένου</Title>
-    <OneSubtitleIsOneFile>Πολλαπλά αρχεία - κάθε αρχείο είναι ένας υπότιτλος</OneSubtitleIsOneFile>
+    <OneSubtitleIsOneFile>Πολλαπλά αρχεία. Κάθε αρχείο είναι ένας υπότιτλος.</OneSubtitleIsOneFile>
     <OpenTextFile>Άνοιγμα αρχείου κειμένου…</OpenTextFile>
     <OpenTextFiles>Άνοιγμα αρχείων κειμένου…</OpenTextFiles>
     <ImportOptions>Επιλογές εισαγωγής</ImportOptions>
@@ -1399,7 +1399,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RemoveTextForHearingImpaired>Αφαίρεση κειμένου προβλήματος ακοής…</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Μετατροπή χρωμάτων σε παύλες διαλόγου…</ConvertColorsToDialog>
         <ConvertActors>Μετατροπή ηθοποιών…</ConvertActors>
-        <ChangeCasing>Αλλαγή πεζών - κεφαλαίων…</ChangeCasing>
+        <ChangeCasing>Αλλαγή πεζών-κεφαλαίων…</ChangeCasing>
         <ChangeFrameRate>Αλλαγή ρυθμού καρέ…</ChangeFrameRate>
         <ChangeSpeedInPercent>Αλλαγή ταχύτητας (επί τοις εκατό)…</ChangeSpeedInPercent>
         <MergeShortLines>Συγχώνευση μικρών γραμμών…</MergeShortLines>
@@ -1415,12 +1415,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ListErrors>Λίστα σφαλμάτων…</ListErrors>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix…</NetflixQualityCheck>
         <BeautifyTimeCodes>Ωραιοποίηση χρόνων…</BeautifyTimeCodes>
-        <TextAlphabetically>Κείμενο - αλφαβητικά</TextAlphabetically>
-        <TextSingleLineMaximumLength>Κείμενο - μέγιστο μήκος γραμμής</TextSingleLineMaximumLength>
-        <TextTotalLength>Κείμενο - συνολικό μήκος</TextTotalLength>
-        <TextNumberOfLines>Κείμενο - σύνολο γραμμών</TextNumberOfLines>
-        <TextNumberOfCharactersPerSeconds>Κείμενο - σύνολο χαρακτήρων/δευτ.</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>Κείμενο - λέξεις ανά λεπτό</WordsPerMinute>
+        <TextAlphabetically>Κείμενο-αλφαβητικά</TextAlphabetically>
+        <TextSingleLineMaximumLength>Κείμενο-μέγιστο μήκος γραμμής</TextSingleLineMaximumLength>
+        <TextTotalLength>Κείμενο-συνολικό μήκος</TextTotalLength>
+        <TextNumberOfLines>Κείμενο-σύνολο γραμμών</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Κείμενο-σύνολο χαρακτήρων/δευτ.</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>Κείμενο-λέξεις ανά λεπτό</WordsPerMinute>
         <Style>Στυλ</Style>
         <Ascending>Αύξουσα</Ascending>
         <Descending>Φθίνουσα</Descending>
@@ -1601,7 +1601,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AssaGenerateBackgroundBox>Δημιουργία υπόβαθρου πλαισίου…</AssaGenerateBackgroundBox>
         <ImageColorPicker>Επιλογέας χρώματος εικόνας…</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Διόρθωση σφαλμάτων των γραμμών…</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Αλλαγή πεζών - κεφαλαίων στις γραμμές…</ChangeCasingForSelectedLines>
+        <ChangeCasingForSelectedLines>Αλλαγή πεζών-κεφαλαίων στις γραμμές…</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Αποθήκευση γραμμών ως…</SaveSelectedLines>
         <WebVTTSetNewVoice>Καθορισμός νέας φωνής…</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Αφαίρεση φωνών</WebVTTRemoveVoices>
@@ -1681,7 +1681,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveOriginalSubtitleAs>Αποθήκευση αρχικού υποτίτλου ως…</SaveOriginalSubtitleAs>
     <CannotSaveEmptySubtitle>Αδυναμία αποθήκευσης κενού υποτίτλου</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Μη φορτωμένος υπότιτλος</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Οπτικός συγχρονισμός - επιλεγμένες γραμμές</VisualSyncSelectedLines>
+    <VisualSyncSelectedLines>Οπτικός συγχρονισμός-επιλεγμένες γραμμές</VisualSyncSelectedLines>
     <VisualSyncTitle>Οπτικός συγχρονισμός</VisualSyncTitle>
     <BeforeVisualSync>Πριν οπτικού συγχρονισμού</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Εφαρμόστηκε οπτικός συγχρονισμός στις επιλεγμένες γραμμές</VisualSyncPerformedOnSelectedLines>
@@ -1758,7 +1758,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 είναι ήδη συγχρονισμένος με το αρχείο βίντεο. Συνέχεια;</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Προσάρτηση υποτίτλου</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Άνοιγμα υποτίτλου για προσάρτηση…</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>Οπτικός συγχρονισμός - προσάρτηση δεύτερου μέρους υποτίτλου</AppendViaVisualSyncTitle>
+    <AppendViaVisualSyncTitle>Οπτικός συγχρονισμός-προσάρτηση δεύτερου μέρους υποτίτλου</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Προσάρτηση του συγχρονισμένου υποτίτλου;</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Πριν από προσάρτηση</BeforeAppend>
     <SubtitleAppendedX>Προσάρτηση υποτίτλου: {0}</SubtitleAppendedX>
@@ -1806,7 +1806,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeMergeLines>Πριν από συγχώνευση γραμμών</BeforeMergeLines>
     <LinesMerged>Συγχωνεύτηκαν γραμμές</LinesMerged>
     <MergeSentences>Συγχώνευση προτάσεων…</MergeSentences>
-    <MergeSentencesXLines>Συγχώνευση προτάσεων - συγχωνευμένες γραμμές: {0}</MergeSentencesXLines>
+    <MergeSentencesXLines>Συγχώνευση προτάσεων-συγχωνευμένες γραμμές: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Πριν από ρύθμιση χρώματος</BeforeSettingColor>
     <BeforeSettingFontName>Πριν από ρύθμιση ονόματος γραμματοσειράς</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Πριν από εφέ γραφομηχανής</BeforeTypeWriterEffect>
@@ -1827,10 +1827,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DropSubtitleFileXNotAccepted>Απόρριψη συρμένου αρχείου '{0}'. Το αρχείο είναι πολύ μεγάλο για υπότιτλο.</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Μπορείτε να σύρετε μόνο ένα αρχείο</DropOnlyOneFile>
     <OpenAnsiSubtitle>Άνοιγμα υποτίτλου…</OpenAnsiSubtitle>
-    <BeforeChangeCasing>Πριν από αλλαγή πεζών - κεφαλαίων</BeforeChangeCasing>
-    <CasingCompleteMessageNoNames>Σύνολο γραμμών με αλλαγή πεζών - κεφαλαίων: {0}/{1}</CasingCompleteMessageNoNames>
-    <CasingCompleteMessageOnlyNames>Σύνολο γραμμών με αλλαγή πεζών - κεφαλαίων με ονόματα: {0}/{1}</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>Σύνολο γραμμών με αλλαγή πεζών - κεφαλαίων: {0}/{1}, αλλαγή πεζών-κεφαλαίων με ονόματα: {2}</CasingCompleteMessage>
+    <BeforeChangeCasing>Πριν από αλλαγή πεζών-κεφαλαίων</BeforeChangeCasing>
+    <CasingCompleteMessageNoNames>Σύνολο γραμμών με αλλαγή πεζών-κεφαλαίων: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>Σύνολο γραμμών με αλλαγή πεζών-κεφαλαίων με ονόματα: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>Σύνολο γραμμών με αλλαγή πεζών-κεφαλαίων: {0}/{1}, αλλαγή πεζών-κεφαλαίων με ονόματα: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Πριν από αλλαγή ρυθμού καρέ</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Πριν από προσαρμογή ταχύτητας σε ποσοστό</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Αλλαγή ρυθμού καρέ από {0} σε {1}</FrameRateChangedFromXToY>
@@ -1906,10 +1906,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExportPlainTextAs>Εξαγωγή απλού αρχείου κειμένου ως</ExportPlainTextAs>
     <TextFiles>Αρχεία κειμένου</TextFiles>
     <SubtitleExported>Εξαγωγή υποτίτλου</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Γραμμή {0} - σφάλμα ανάγνωσης: {1}</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Γραμμή {0} - σφάλμα ανάγνωσης χρόνου: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Γραμμή {0} - αναμενόμενος αριθμός υποτίτλου: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Γραμμή {0} - αναμενόμενη κενή γραμμή, αλλά βρέθηκε αριθμός και χρόνος (παραλειπόμενος αριθμός): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXErrorReadingFromSourceLineY>Γραμμή {0}-σφάλμα ανάγνωσης: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Γραμμή {0}-σφάλμα ανάγνωσης χρόνου: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Γραμμή {0}-αναμενόμενος αριθμός υποτίτλου: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Γραμμή {0}-αναμενόμενη κενή γραμμή, αλλά βρέθηκε αριθμός και χρόνος (παραλειπόμενος αριθμός): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Πριν τον υπολογισμό χρόνων</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Πριν την αυτόματη διάρκεια επιλεγμένων γραμμών</BeforeAutoDuration>
     <BeforeColumnPaste>Πριν την επικόλληση στήλης</BeforeColumnPaste>
@@ -2131,8 +2131,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EvenLines>Άρτιος αριθμός χαρακτήρων</EvenLines>
     <DurationLessThan>Διάρκεια μικρότερη από</DurationLessThan>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
-    <CpsLessThan>Χαρ. / δευτ. λιγότεροι από</CpsLessThan>
-    <CpsGreaterThan>Χαρ. / δευτ. περισσότεροι από</CpsGreaterThan>
+    <CpsLessThan>Χαρ./δευτ. λιγότεροι από</CpsLessThan>
+    <CpsGreaterThan>Χαρ./δευτ. περισσότεροι από</CpsGreaterThan>
     <LengthLessThan>Μήκος μικρότερο από</LengthLessThan>
     <LengthGreaterThan>Μήκος μεγαλύτερο από</LengthGreaterThan>
     <ExactlyOneLine>Ακριβώς μία γραμμή</ExactlyOneLine>
@@ -2337,7 +2337,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleBookmarks>Εναλλαγή σημειώσεων</ToggleBookmarks>
     <FocusTextBox>Εστίαση στο πλαίσιο κειμένου</FocusTextBox>
     <CycleAudioTracks>Επανάληψη κομματιών ήχου</CycleAudioTracks>
-    <ToggleBookmarksWithComment>Εναλλαγή σημειώσεων - προσθήκη σχόλιου</ToggleBookmarksWithComment>
+    <ToggleBookmarksWithComment>Εναλλαγή σημειώσεων/προσθήκη σχόλιου</ToggleBookmarksWithComment>
     <ClearBookmarks>Καθαρισμός σημειώσεων</ClearBookmarks>
     <ExportBookmarks>Εξαγωγή σημειώσεων…</ExportBookmarks>
     <GoToBookmark>Μετάβαση σε σημείωση…</GoToBookmark>
@@ -2400,9 +2400,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewVideoGoToPositionAndPlay>Μετάβαση σε θέση βίντεο και αναπαραγωγή</MainListViewVideoGoToPositionAndPlay>
     <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Μετάβαση σε θέση βίντεο, αναπαραγωγή επιλεγμένου και παύση</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Μετάβαση στο πλαίσιο επεξεργασίας κειμένου</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Πήγαινε στη θέση βίντεο - 1 δευτ. και παύση</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Πήγαινε στη θέση βίντεο - 0.5 δευτ. και παύση</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Πήγαινε στη θέση βίντεο - 1 δευτ. και αναπαραγωγή</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Πήγαινε στη θέση βίντεο -1 δευτ. και παύση</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Πήγαινε στη θέση βίντεο -0.5 δευτ. και παύση</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Πήγαινε στη θέση βίντεο -1 δευτ. και αναπαραγωγή</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Μετάβαση σε επεξαργασία πλαίσιου κειμένου και παύση στη θέση</MainListViewEditTextAndPause>
     <VideoFileName>Όνομα αρχείου βίντεο</VideoFileName>
     <ExistingFileName>Υπάρχον όνομα</ExistingFileName>
@@ -2429,7 +2429,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll στον φάκελο system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
-    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpcHcDescription>Media Player Classic-Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io</MpvPlayerDescription>
     <MpvHandlesPreviewText>Προεπισκόπηση κειμένου από mpv</MpvHandlesPreviewText>
@@ -2490,7 +2490,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SsaOpaqueBox>Συμπαγές πλαίσιο</SsaOpaqueBox>
     <Testing123>Δοκιμή 123…</Testing123>
     <Language>Γλώσσα</Language>
-    <NamesIgnoreLists>Λίστα ονομάτων/παραλείψεων (διάκριση πεζών - κεφαλαίων)</NamesIgnoreLists>
+    <NamesIgnoreLists>Λίστα ονομάτων/παραλείψεων (διάκριση πεζών-κεφαλαίων)</NamesIgnoreLists>
     <AddName>Προσθήκη ονόματος</AddName>
     <AddWord>Προσθήκη λέξης</AddWord>
     <Remove>Αφαίρεση</Remove>
@@ -2549,13 +2549,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CpsLineLengthStyleCalcIncludeCompositionCharacters>Συμπερίληψη σύνθετων χαρακτήρων</CpsLineLengthStyleCalcIncludeCompositionCharacters>
     <CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>Συμπερίληψη σύνθετων χαρακτήρων, χωρίς κενό</CpsLineLengthStyleCalcIncludeCompositionCharactersNotSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Χωρίς κενά και σημεία στίξης</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Χωρίς κενά και σημεία στίξης, χαρ. / δευτ. μόνο</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Χωρίς κενά και σημεία στίξης, χαρ./δευτ. μόνο</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Μουσικό σύμβολο</MusicSymbol>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR-χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Χρήση λίστας λέξεων χωρίσματος (OCR + FCE)</UseWordSplitList>
     <AvoidPropercase>Αποφυγή έναρξης πρότασης με κεφαλαίο</AvoidPropercase>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης-αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Προεπιλεγμένη μορφή</DefaultFormat>
     <DefaultSaveAsFormat>Προεπιλεγμένη μορφή αποθήκευσης ως</DefaultSaveAsFormat>
@@ -2663,15 +2663,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleCustomTags>Εναλλαγή ειδικών ετικετών</ToggleCustomTags>
     <ToggleMusicSymbols>Εναλλαγή μουσικών συμβόλων</ToggleMusicSymbols>
     <Alignment>Στοίχιση (επιλεγμένες γραμμές)</Alignment>
-    <AlignmentN1>Στοίχιση κάτω αριστερά - {\an1}</AlignmentN1>
-    <AlignmentN2>Στοίχιση κάτω κεντρικά - {\an2}</AlignmentN2>
-    <AlignmentN3>Στοίχιση κάτω δεξιά - {\an1}</AlignmentN3>
-    <AlignmentN4>Στοίχιση μέση αριστερά - {\an4}</AlignmentN4>
-    <AlignmentN5>Στοίχιση μέση κέντρο - {\an5}</AlignmentN5>
-    <AlignmentN6>Στοίχιση μέση δεξιά - {\an6}</AlignmentN6>
-    <AlignmentN7>Στοίχιση πάνω αριστερά - {\an7}</AlignmentN7>
-    <AlignmentN8>Στοίχιση πάνω κεντρικά - {\an8}</AlignmentN8>
-    <AlignmentN9>Στοίχιση πάνω δεξιά - {\an9}</AlignmentN9>
+    <AlignmentN1>Στοίχιση κάτω αριστερά-{\an1}</AlignmentN1>
+    <AlignmentN2>Στοίχιση κάτω κεντρικά-{\an2}</AlignmentN2>
+    <AlignmentN3>Στοίχιση κάτω δεξιά-{\an1}</AlignmentN3>
+    <AlignmentN4>Στοίχιση μέση αριστερά-{\an4}</AlignmentN4>
+    <AlignmentN5>Στοίχιση μέση κέντρο-{\an5}</AlignmentN5>
+    <AlignmentN6>Στοίχιση μέση δεξιά-{\an6}</AlignmentN6>
+    <AlignmentN7>Στοίχιση πάνω αριστερά-{\an7}</AlignmentN7>
+    <AlignmentN8>Στοίχιση πάνω κεντρικά-{\an8}</AlignmentN8>
+    <AlignmentN9>Στοίχιση πάνω δεξιά-{\an9}</AlignmentN9>
     <ColorX>Χρώμα {0} ({1})</ColorX>
     <CopyTextOnly>Αντιγραφή μόνο του κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyTextOnly>
     <CopyPlainText>Αντιγραφή απλού κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyPlainText>
@@ -2804,7 +2804,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDownCurrent>Μετακίνηση τελευταίας λέξης της άνω γραμμής κάτω</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Επιλογή σε μικρά</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Επιλογή σε κεφαλαία</MainTextBoxSelectionToUpper>
-    <MainTextBoxSelectionToggleCasing>Εναλλαγή πεζών - κεφαλαίων επιλεγμένου (κανονικά/κεφαλαία/πεζά)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToggleCasing>Εναλλαγή πεζών-κεφαλαίων επιλεγμένου (κανονικά/κεφαλαία/πεζά)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Επιλογή σε Ruby (Ιαπωνικά)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Εναλλαγή αυτόματης διάρκειας</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Αυτόματη διάσπαση κειμένου</MainTextBoxAutoBreak>
@@ -2843,7 +2843,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HideContinuationCandidatesWithoutName>Απόκρυψη απίθανων προτάσεων συνέχειας</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Αγνόηση στίχων μεταξύ μουσικών συμβόλων</IgnoreLyrics>
     <ContinuationPause>Όριο παύσης:</ContinuationPause>
-    <Milliseconds>χιλ. / δευτ.</Milliseconds>
+    <Milliseconds>χιλ./δευτ.</Milliseconds>
     <EditCustomContinuationStyle>Επεξεργασία στυλ προσαρμοσμένης συνέχειας…</EditCustomContinuationStyle>
     <MinFrameGap>Ελάχιστο κενό σε καρέ</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} καρέ ανά {1} καρέ είναι {2} χιλ. δευτερολέπτου.</XFramesAtYFrameRateGivesZMs>
@@ -2918,13 +2918,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SkipOnce>Παράλειψη &amp;ενός</SkipOnce>
     <SkipAll>&amp;Παράλειψη όλων</SkipAll>
     <AddToUserDictionary>Προσθήκη στο λεξικό του χρήστη</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Προσθήκη στη λίστα ονομάτων/παραλείψεων (διάκριση πεζών - κεφαλαίων)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Προσθήκη στη λίστα ονομάτων/παραλείψεων (διάκριση πεζών-κεφαλαίων)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Προσθήκη ζεύγους στη λίστα αντικατάστασης του OCR</AddToOcrReplaceList>
     <Abort>Ματαίωση</Abort>
     <Use>Χρήση</Use>
     <UseAlways>&amp;Χρήση πάντα</UseAlways>
     <Suggestions>Προτάσεις</Suggestions>
-    <SpellCheckProgress>Ορθογραφικός έλεγχος [{0}] - {1}</SpellCheckProgress>
+    <SpellCheckProgress>Ορθογραφικός έλεγχος [{0}]-{1}</SpellCheckProgress>
     <EditWholeText>Επεξεργασία ολόκληρου κειμένου</EditWholeText>
     <EditWordOnly>Επεξεργασία λέξης</EditWordOnly>
     <AddXToNames>Προσθήκη '{0}' στη λίστα ονομάτων</AddXToNames>
@@ -2935,8 +2935,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TreatINQuoteAsING>Αντιμετώπιση κατάληξης " in' " ως " ing " (Μόνο Αγγλικά)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Απομνημόνευση λίστας "Χρήση πάντα"</RememberUseAlwaysList>
     <LiveSpellCheck>Απευθείας ορθογραφικός έλεγχος</LiveSpellCheck>
-    <LiveSpellCheckLanguage>Απευθείας ορθογραφικός έλεγχος - Με τη γλώσσα {0}</LiveSpellCheckLanguage>
-    <NoDictionaryForLiveSpellCheck>Απευθείας ορθογραφικός έλεγχος - Αδυναμία εύρεσης λεξικού για [{0}]</NoDictionaryForLiveSpellCheck>
+    <LiveSpellCheckLanguage>Απευθείας ορθογραφικός έλεγχος-Με τη γλώσσα {0}</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Απευθείας ορθογραφικός έλεγχος-Αδυναμία εύρεσης λεξικού για [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Κείμενο εικόνας</ImageText>
     <SpellCheckCompleted>Ολοκλήρωση ορθογραφικού ελέγχου</SpellCheckCompleted>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
@@ -3006,7 +3006,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </StartNumberingFrom>
   <Statistics>
     <Title>Στατιστικά</Title>
-    <TitleWithFileName>Στατιστικά - {0}</TitleWithFileName>
+    <TitleWithFileName>Στατιστικά {0}</TitleWithFileName>
     <GeneralStatistics>Γενικά στατιστικά</GeneralStatistics>
     <MostUsed>Περισσότερη χρήση…</MostUsed>
     <MostUsedLines>Γραμμές</MostUsedLines>
@@ -3203,9 +3203,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoNever>Ποτέ</NoNever>
   </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
-    <Title>Επιλογέας ροής μεταφοράς υποτίτλου - {0}</Title>
-    <PidLineImage>Εικόνες - Αναγνωριστικό πακέτου μεταφοράς = {0}, γλώσσα = {1}, αριθμός υποτίτλων = {2}</PidLineImage>
-    <PidLineTeletext>Τηλεκείμενο - Αναγνωριστικό πακέτου μεταφοράς = {1}, σελίδα = {0}, γλώσσα = {2}, αριθμός υποτίτλων = {3}</PidLineTeletext>
+    <Title>Επιλογέας ροής μεταφοράς υποτίτλου {0}</Title>
+    <PidLineImage>Εικόνες-Αναγνωριστικό πακέτου μεταφοράς = {0}, γλώσσα = {1}, αριθμός υποτίτλων = {2}</PidLineImage>
+    <PidLineTeletext>Τηλεκείμενο-Αναγνωριστικό πακέτου μεταφοράς = {1}, σελίδα = {0}, γλώσσα = {2}, αριθμός υποτίτλων = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} εικόνα(ες)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -3343,7 +3343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SeHandlesTextMerge>Χειρισμός συγχώνευσης κειμένου από το SE</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>OCR - Εικόνα σε κείμενο χειροκίνητα</Title>
+    <Title>OCR-Εικόνα σε κείμενο χειροκίνητα</Title>
     <ShrinkSelection>Σμίκρυνση επιλογής</ShrinkSelection>
     <ExpandSelection>Επέκταση επιλογής</ExpandSelection>
     <SubtitleImage>Εικόνα υποτίτλου</SubtitleImage>
@@ -3428,6 +3428,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtendToNext>Επέκταση μέχρι τον επόμενο υπότιτλο</ExtendToNext>
     <PlaySelection>Αναπαραγωγή επιλογής</PlaySelection>
     <ShowWaveformAndSpectrogram>Εμφάνιση κυματομορφής και φασματογράμματος</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Συνδυασμός κυματομορφής και φασματογράμματος</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Εμφάνιση μόνο κυματομορφής</ShowWaveformOnly>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
     <AddShotChange>Προσθήκη αλλαγής λήψης</AddShotChange>
@@ -3437,8 +3438,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SeekSilence>Αναζήτηση σιωπής…</SeekSilence>
     <InsertSubtitleHere>Εισαγωγή κειμένου…</InsertSubtitleHere>
     <InsertSubtitleFileHere>Εισαγωγή αρχείου υποτίτλου…</InsertSubtitleFileHere>
-    <CharsSecX>Χαρ. / δευτ.: {0:0.00}</CharsSecX>
-    <WordsMinX>Λέξεις / λεπτό: {0:0.00}</WordsMinX>
+    <CharsSecX>Χαρ./δευτ.: {0:0.00}</CharsSecX>
+    <WordsMinX>Λέξεις/λεπτό: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Εικασία χρόνων</Title>
@@ -3458,7 +3459,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Other>Άλλο</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
-    <Title>WebVTT - ορισμός νέας φωνής</Title>
+    <Title>WebVTT-ορισμός νέας φωνής</Title>
     <VoiceName>Όνομα φωνής</VoiceName>
   </WebVttNewVoice>
   <WebVttProperties>
@@ -3478,5 +3479,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HighlightCurrentWord>Επισήμανση λέξης</HighlightCurrentWord>
     <SingleWords>Μοναδικές λέξεις</SingleWords>
     <Sentence>Πρόταση</Sentence>
+    <EnableVad>Ενεργοποίηση Εντοπισμού Δραστηριότητας Φωνής</EnableVad>
+    <VadModelNotFound>Δεν βρέθηκε το μοντέλο Εντοπισμού Δραστηριότητας Φωνής.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

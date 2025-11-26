@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 // 2+ consecutive spaces
                 foreach (Match m in TwoPlusConsequentSpaces.Matches(p.Text))
                 {
-                    AddWhiteSpaceWarning(p, controller, NetflixLanguage.WhiteSpaceCheckconsecutive, m.Index);
+                    AddWhiteSpaceWarning(p, controller, NetflixLanguage.WhiteSpaceCheckConsecutive, m.Index);
                 }
             }
         }

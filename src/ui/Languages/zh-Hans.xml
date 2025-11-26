@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -3432,6 +3432,7 @@ Command line: {1} {2}
     <ExtendToNext>延伸至下一行</ExtendToNext>
     <PlaySelection>播放所选</PlaySelection>
     <ShowWaveformAndSpectrogram>保存波形和频谱图</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>组合波形和频谱图</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>仅显示波形</ShowWaveformOnly>
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
     <AddShotChange>添加场景切换</AddShotChange>

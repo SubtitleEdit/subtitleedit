@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TextToSpeechElevenLabsLanguage { get; set; }
         public double TextToSpeechElevenLabsStability { get; set; }
         public double TextToSpeechElevenLabsSimilarity { get; set; }
+        public double TextToSpeechElevenLabsSpeed { get; set; }
         public bool TextToSpeechPreview { get; set; }
         public bool TextToSpeechCustomAudio { get; set; }
         public bool TextToSpeechCustomAudioStereo { get; set; }
@@ -532,6 +533,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             TextToSpeechAzureRegion = "westeurope";
             TextToSpeechElevenLabsSimilarity = 0.5;
             TextToSpeechElevenLabsStability = 0.5;
+            TextToSpeechElevenLabsSpeed = 1.0;
             AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;

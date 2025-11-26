@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -3449,6 +3449,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <ExtendToNext>Förläng till nästa</ExtendToNext>
     <PlaySelection>Spela urval</PlaySelection>
     <ShowWaveformAndSpectrogram>Visa vågform och spektrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Kombinera vågform och spektrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Visa endast vågform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Visa endast spektrogram</ShowSpectrogramOnly>
     <AddShotChange>Lägg till scenförändring</AddShotChange>
@@ -3499,5 +3500,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <HighlightCurrentWord>Markera aktuellt ord</HighlightCurrentWord>
     <SingleWords>Enstaka ord</SingleWords>
     <Sentence>Mening</Sentence>
+    <EnableVad>Aktivera VAD</EnableVad>
+    <VadModelNotFound>VAD modellen hittades inte.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -605,6 +605,15 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <OnlyLookForDifferencesInText>Alleen verschillen in tekst</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Vergelĳken met op beeld gebaseerde ondertitels is niet mogelĳk</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertActor>
+    <Title>Acteurs omzetten</Title>
+    <ConvertActorFrom>Acteur wijzigen van</ConvertActorFrom>
+    <ConvertActorTo>Acteur wijzigen naar</ConvertActorTo>
+    <InlineActorViaX>Acteur invoegen via {0}</InlineActorViaX>
+    <NumberOfConversionsX>Aantal acteurs omgezet: {0}</NumberOfConversionsX>
+    <SetColor>Kleur instellen</SetColor>
+    <OnlyNames>Alleen namen</OnlyNames>
+  </ConvertActor>
   <ConvertColorsToDialog>
     <Title>Kleuren omzetten naar dialogen</Title>
     <RemoveColorTags>Kleurtags verwijderen</RemoveColorTags>
@@ -1399,6 +1408,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
         <StartNumberingFrom>Beginnen met nummeren vanaf...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Tekst voor slechthorenden verwĳderen...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Kleuren omzetten naar dialogen...</ConvertColorsToDialog>
+        <ConvertActors>Acteurs omzetten...</ConvertActors>
         <ChangeCasing>Hoofd-/kleine letters wĳzigen...</ChangeCasing>
         <ChangeFrameRate>Beeldsnelheid wĳzigen...</ChangeFrameRate>
         <ChangeSpeedInPercent>Snelheid procentueel wĳzigen...</ChangeSpeedInPercent>
@@ -1540,6 +1550,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
         <SplitLineAtCursorPosition>Titel op cursorpositie splitsen</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Titel op cursorpositie splitsen en herverdelen</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Titel op cursor-/golfvormpositie splitsen</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPositionPlay>Titel op cursor-/golfvormpositie splitsen en afspelen</SplitLineAtCursorAndWaveformPositionPlay>
         <AutoDurationCurrentLine>Automatisch tĳdsduur (huidige regel)</AutoDurationCurrentLine>
         <SelectAll>&amp;Alles selecteren</SelectAll>
         <InsertFirstLine>Titel invoegen</InsertFirstLine>
@@ -2143,6 +2154,7 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <ExactlyTwoLines>Precies twee regels</ExactlyTwoLines>
     <MoreThanTwoLines>Meer dan twee regels</MoreThanTwoLines>
     <Bookmarked>Bladwijzer gemaakt</Bookmarked>
+    <BookmarkContains>Bladwijzer bevat</BookmarkContains>
     <BlankLines>Lege regels</BlankLines>
   </ModifySelection>
   <MultipleReplace>
@@ -2339,6 +2351,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <SettingsName>Voorkeuren</SettingsName>
     <ToggleBookmarks>Bladwĳzers in-/uitschakelen</ToggleBookmarks>
     <FocusTextBox>Tekstvak activeren</FocusTextBox>
+    <CycleAudioTracks>Audiosporen wisselen</CycleAudioTracks>
     <ToggleBookmarksWithComment>Bladwĳzers in-/uitschakelen (met omschrĳving)</ToggleBookmarksWithComment>
     <ClearBookmarks>Bladwĳzers wissen</ClearBookmarks>
     <ExportBookmarks>Bladwijzers exporteren...</ExportBookmarks>
@@ -2475,9 +2488,13 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <SpectrogramAppearance>Weergave spectrogram</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Eén kleurverloop</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassiek</SpectrogramClassic>
+    <SpectrogramHeat>Warmtebeeld</SpectrogramHeat>
+    <SpectrogramCyanToOrange>Cyaan naar oranje</SpectrogramCyanToOrange>
+    <SpectrogramWaveformOpacity>Doorzichtigheid spectrogram/golfvorm:</SpectrogramWaveformOpacity>
     <WaveformUseFFmpeg>FFmpeg voor golfvormextractie gebruiken</WaveformUseFFmpeg>
     <WaveformUseCenterChannelOnly>Alleen voor-middenkanaal gebruiken (voor 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>{0} downloaden</DownloadX>
+    <ExtractingX>{0} uitpakken</ExtractingX>
     <WaveformFFmpegPath>Pad naar FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Naar FFmpeg bladeren</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Naar VLC portable bladeren</WaveformBrowseToVLC>
@@ -2653,8 +2670,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoToPreviousSubtitleAndFocusWaveform>Naar vorige ondertitel en golfvorm activeren</GoToPreviousSubtitleAndFocusWaveform>
     <GoToNextSubtitleAndFocusWaveform>Naar volgende ondertitel en golfvorm activeren</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
-    <ToggleFocusWaveform>Tussen lĳstweergave en golfvorm/spectogram wisselen</ToggleFocusWaveform>
-    <ToggleFocusWaveformTextBox>Tussen tekstvak en golfvorm/spectogram wisselen</ToggleFocusWaveformTextBox>
+    <ToggleFocusWaveform>Tussen lĳstweergave en golfvorm/spectrogram wisselen</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Tussen tekstvak en golfvorm/spectrogram wisselen</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Dialoogstreepjes toevoegen/verwĳderen</ToggleDialogDashes>
     <ToggleQuotes>Aanhalingstekens toevoegen/verwĳderen</ToggleQuotes>
     <ToggleHiTags>DSH-tags toevoegen/verwĳderen</ToggleHiTags>
@@ -2798,6 +2815,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Eerste woord uit volgende ondertitel halen</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Eerste woord uit volgende ondertitel halen (huidige ondertitel)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveFromCursorToNext>Tekst na cursus naar volgende ondertitel verplaatsen en naar volgende gaan</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFirstWordToPrev>Eerste woord naar vorige ondertitel verplaatsen</MainTextBoxMoveFirstWordToPrev>
     <MainTextBoxMoveLastWordDownCurrent>Laatste woord naar volgende ondertitel verplaatsen (huidige ondertitel)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selectie naar kleine letters</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selectie naar hoofdletters</MainTextBoxSelectionToUpper>
@@ -2948,7 +2966,10 @@ Probeer het later opnieuw.</XDownloadFailed>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Ongeldig teken ‘{0}’ gevonden in kolom {1}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>Ongeldige witruimte gevonden in kolom {0}</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckForXReport>Ongeldige witruimte ({0}) gevonden in kolom {1}</WhiteSpaceCheckForXReport>
+    <WhiteSpaceLineEncding>regeleinde</WhiteSpaceLineEncding>
+    <WhiteSpaceBeforePunctuation>ontbrekend voor interpunctie</WhiteSpaceBeforePunctuation>
+    <WhiteSpaceCheckconsecutive>twee opeenvolgende</WhiteSpaceCheckconsecutive>
     <ReportPrompt>Zie volledige rapportage hier: {0}</ReportPrompt>
     <OpenReportInFolder>Rapportage in map openen</OpenReportInFolder>
     <FoundXIssues>{0:#,##0} problemen gevonden door Netflix-kwaliteitscontrole.</FoundXIssues>
@@ -3185,11 +3206,14 @@ Probeer het later opnieuw.</XDownloadFailed>
     <GeneratingSpeechFromTextXOfY>Spraak genereren: {0} / {1}...</GeneratingSpeechFromTextXOfY>
     <ReviewAudioClips>Audiofragmenten controleren</ReviewAudioClips>
     <CustomAudioEncoding>Aangepaste audiocodering</CustomAudioEncoding>
+    <UseVoiceOver>Commentaarstem gebruiken</UseVoiceOver>
     <ReviewInfo>Audiofragmenten controleren en bewerken/verwijderen</ReviewInfo>
     <Play>Afspelen</Play>
     <AutoContinue>Automatisch doorgaan</AutoContinue>
     <Regenerate>Opnieuw genereren</Regenerate>
     <Speed>Snelheid</Speed>
+    <Stability>Stabiliteit</Stability>
+    <Similarity>Gelijkheid</Similarity>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
@@ -3424,6 +3448,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <ExtendToNext>Tot volgende verlengen</ExtendToNext>
     <PlaySelection>Selectie afspelen</PlaySelection>
     <ShowWaveformAndSpectrogram>Golfvorm en spectrogram weergeven</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Golfvorm en spectrogram samenvoegen</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Alleen golfvorm weergeven</ShowWaveformOnly>
     <ShowSpectrogramOnly>Alleen spectrogram weergeven</ShowSpectrogramOnly>
     <AddShotChange>Beeldwissel toevoegen</AddShotChange>
@@ -3474,5 +3499,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <HighlightCurrentWord>Huidig woord markeren</HighlightCurrentWord>
     <SingleWords>Afzonderlijke woorden</SingleWords>
     <Sentence>Zinnen</Sentence>
+    <EnableVad>VAD inschakelen</EnableVad>
+    <VadModelNotFound>VAD-model niet gevonden.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

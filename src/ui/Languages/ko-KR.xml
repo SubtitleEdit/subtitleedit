@@ -2,7 +2,7 @@
 <Language Name="Korean (한국어)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -1089,7 +1089,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranslateCurrentLine>현재 줄만 번역</TranslateCurrentLine>
     <ReTranslateCurrentLine>현재 줄 다시 번역</ReTranslateCurrentLine>
     <MergeSplitStrategy>분할/병합 처리</MergeSplitStrategy>
-    <Delay>서버 호출 간 지연</Delay>
+    <Delay>서버 호출 간 지연 시간(초)</Delay>
     <MaxBytes>각 서버 호출의 최대 바이트 수</MaxBytes>
     <PromptX>{0}개의 프롬프트</PromptX>
     <TranslateLinesSeparately>각 줄을 개별적으로 번역</TranslateLinesSeparately>
@@ -3444,6 +3444,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ExtendToNext>다음으로 확장</ExtendToNext>
     <PlaySelection>선택한 영역 재생하기</PlaySelection>
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>파형과 스펙트로그램 결합</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
     <AddShotChange>장면전환 추가</AddShotChange>
@@ -3494,5 +3495,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <HighlightCurrentWord>현재 단어 강조 표시</HighlightCurrentWord>
     <SingleWords>단일 단어</SingleWords>
     <Sentence>문장</Sentence>
+    <EnableVad>VAD 활성화</EnableVad>
+    <VadModelNotFound>VAD 모델을 찾을 수 없습니다.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

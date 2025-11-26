@@ -2158,7 +2158,7 @@ namespace Nikse.SubtitleEdit.Forms
             NetflixLanguage.GlyphCheckReport = LanguageSettings.Current.NetflixQualityCheck.GlyphCheckReport;
             NetflixLanguage.WhiteSpaceCheckForXReport = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckForXReport;
             NetflixLanguage.WhiteSpaceLineEnding = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceLineEncding;
-            NetflixLanguage.WhiteSpaceCheckconsecutive = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckconsecutive;
+            NetflixLanguage.WhiteSpaceCheckConsecutive = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckconsecutive;
             NetflixLanguage.WhiteSpaceBeforePunctuation = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceBeforePunctuation;
 
             DvdSubtitleLanguage.Language.NotSpecified = LanguageSettings.Current.LanguageNames.NotSpecified;
@@ -3768,6 +3768,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (format == null && file.Length > 100 && FileUtil.IsZip(fileName))
             {
                 MessageBox.Show(_language.ErrorLoadZip);
+                return;
+            }
+
+            // check for .gzip file
+            if (format == null && file.Length > 100 && FileUtil.IsGZip(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadGZip);
                 return;
             }
 
@@ -28733,42 +28740,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tb = GetFocusedTextBox();
                 if (tb.Enabled)
                 {
-                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(2), () => 
-                    {
-                        try
-                        {
-                            tb.Paste();
-                        }
-                        catch
-                        {
-                            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
-                            {
-                                try
-                                {
-                                    tb.Paste();
-                                }
-                                catch
-                                {
-                                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
-                                    {
-                                        try
-                                        {
-                                            tb.Paste();
-                                        }
-                                        catch
-                                        {
-                                            // ignore
-                                        }
-                                    });
-
-                                }
-                            });
-                        }
-                        finally
-                        {
-                            Cursor = Cursors.Default;
-                        }
-                    });
+                    tb.Paste();
                 }
             }
         }

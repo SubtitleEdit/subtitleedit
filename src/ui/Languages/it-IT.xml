@@ -2,8 +2,8 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.06.2025</TranslatedBy>
+    <Version>4.0.14</Version>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1097,7 +1097,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <TranslateCurrentLine>Traduci solo riga attuale</TranslateCurrentLine>
     <ReTranslateCurrentLine>Ritraduci riga attuale</ReTranslateCurrentLine>
     <MergeSplitStrategy>Gestione divisione/unione</MergeSplitStrategy>
-    <Delay>Ritardo tra chiamate al server</Delay>
+    <Delay>Ritardo in secondi chiamate al server</Delay>
     <MaxBytes>Numero massimo byte in ciascuna chiamata al server</MaxBytes>
     <PromptX>Prompt per {0}</PromptX>
     <TranslateLinesSeparately>Traduci ogni riga separatamente</TranslateLinesSeparately>
@@ -3446,6 +3446,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <ExtendToNext>Estendi al successivo</ExtendToNext>
     <PlaySelection>Riproduci</PlaySelection>
     <ShowWaveformAndSpectrogram>Visualizza forma onda e spettrogramma</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Combina forma d'onda e spettrogramma</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Visualizza solo la forma d'onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Visualizza solo lo spettrogramma</ShowSpectrogramOnly>
     <AddShotChange>Aggiungi cambio di scena</AddShotChange>

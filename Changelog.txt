@@ -1,8 +1,9 @@
 ﻿Subtitle Edit Changelog
 
-4.0.14 (xth October 2025) BETA
+4.0.14 (28th October 2025)
 * NEW
    * Add Armenian translation - thx ArsenTech
+   * Add Hebrew translation - thx q9411aa
    * Add Google-Lens OCR option - thx timminator
    * Update Whisper CPP to 1.8.2
 * IMPROVED:
@@ -35,6 +36,8 @@
    * Fix for "Remove text for hearing impaired" - thx psonnosp
    * Fix crash in "Remove text for hearing impaired" - thx Andrebavila
    * Fix for Frensh spell check - thx Fannette
+   * Fix Latvian dictionary download - thx Toms200
+   * Fix for copy/paste crash in text box - thx darnn/ivandrofly
 
 
 4.0.13 (30th July 2025) 

@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
@@ -3444,6 +3444,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <ExtendToNext>Rozciągnij do następnej linii</ExtendToNext>
     <PlaySelection>Odtwarzaj zaznaczone</PlaySelection>
     <ShowWaveformAndSpectrogram>Pokaż wykres falowy i spektrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Połącz wykres falowy i spektrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaż tylko wykres falowy</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaż tylko spektrogram</ShowSpectrogramOnly>
     <AddShotChange>Dodaj zmianę ujęcia</AddShotChange>
@@ -3494,5 +3495,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <HighlightCurrentWord>Podświetl bieżące słowo</HighlightCurrentWord>
     <SingleWords>Pojedyncze słowa</SingleWords>
     <Sentence>Zdanie</Sentence>
+    <EnableVad>Włącz VAD</EnableVad>
+    <VadModelNotFound>Nie znaleziono modelu VAD.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>

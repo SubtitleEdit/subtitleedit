@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.12</Version>
+    <Version>4.0.14</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -3437,6 +3437,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ExtendToNext>Udvid til næste</ExtendToNext>
     <PlaySelection>Afspil markering</PlaySelection>
     <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Kombiner bølgeform og spektrogram</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
     <AddShotChange>Tilføj sceneskift</AddShotChange>
@@ -3487,5 +3488,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <HighlightCurrentWord>Fremhæv det aktuelle ord</HighlightCurrentWord>
     <SingleWords>Enkelte ord</SingleWords>
     <Sentence>Sætning</Sentence>
+    <EnableVad>Aktivér VAD</EnableVad>
+    <VadModelNotFound>VAD model ikke fundet.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
