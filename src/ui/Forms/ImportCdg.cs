@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FileName = ffmpegLocation,
                     Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest -s {VideoWidth}x{VideoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
                 }
             };
         }

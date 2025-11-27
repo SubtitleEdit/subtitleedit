@@ -524,7 +524,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var parameters = string.Format(fFmpegWaveTranscodeSettings, videoFileName, outWaveFile, audioParameter);
-            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            return new Process 
+            { 
+                StartInfo = new ProcessStartInfo(exeFilePath, parameters) 
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden, 
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                } 
+            };
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     FileName = ffmpegLocation,
                     Arguments = $"-i \"{inputFileName}\" -hide_banner",
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
                 }
             };
         }

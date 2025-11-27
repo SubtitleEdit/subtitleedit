@@ -81,7 +81,15 @@ namespace Nikse.SubtitleEdit.Forms
                             exeFilePath = "ffmpeg";
                         }
                         var parameters = string.Format(fFmpegWaveTranscodeSettings, _videoFileName, targetFile, audioParameter);
-                        var process = new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+                        var process = new Process 
+                        { 
+                            StartInfo = new ProcessStartInfo(exeFilePath, parameters) 
+                            { 
+                                WindowStyle = ProcessWindowStyle.Hidden, 
+                                CreateNoWindow = true,
+                                UseShellExecute = false,
+                            } 
+                        };
                         process.Start();
                         while (!process.HasExited && !_abort)
                         {
