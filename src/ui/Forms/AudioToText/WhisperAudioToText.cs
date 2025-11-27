@@ -1413,7 +1413,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             SeLogger.WhisperInfo($"{w} {parameters}");
 
-            var process = new Process { StartInfo = new ProcessStartInfo(w, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            var process = new Process 
+            { 
+                StartInfo = new ProcessStartInfo(w, parameters) 
+                { 
+                    WindowStyle = ProcessWindowStyle.Hidden, 
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                } 
+            };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
