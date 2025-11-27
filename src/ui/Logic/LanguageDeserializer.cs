@@ -4312,6 +4312,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadZip":
                     language.Main.ErrorLoadZip = reader.Value;
                     break;
+                case "Main/ErrorLoadGZip":
+                    language.Main.ErrorLoadGZip = reader.Value;
+                    break;
                 case "Main/ErrorLoad7Zip":
                     language.Main.ErrorLoad7Zip = reader.Value;
                     break;
