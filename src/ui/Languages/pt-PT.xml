@@ -1958,6 +1958,7 @@ Continuar mesmo assim?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
+    <ErrorLoadGZip>Este ficheiro parece ser um ficheiro comprimido .gzip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadGZip>
     <ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
