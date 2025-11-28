@@ -1942,6 +1942,7 @@ Yinede devam edilsin mi?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Bu .idx dosyası okunamadı/düzeltilemedi. Idx dosyaları idx/sub dosya parçalarıdır (VobSub olarak da geçer), ve Subtitle Edit .sub dosyasını açabilir.</ErrorLoadIdx>
     <ErrorLoadRar>Bu dosya sıkıştırılmış bir .rar dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoadRar>
     <ErrorLoadZip>Bu dosya sıkıştırılmış bir .zip dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoadZip>
+    <ErrorLoadGZip>Bu dosya sıkıştırılmış bir .gzip dosyası gibi görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoadGZip>
     <ErrorLoad7Zip>Bu dosya sıkıştırılmış bir 7-Zip dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoad7Zip>
     <ErrorLoadPng>Bu dosya bir PNG görüntü dosyası olarak görünüyor. Subtitle Edit PNG dosyalarını açamaz.</ErrorLoadPng>
     <ErrorLoadJpg>Bu dosya bir JPG görüntü dosyası olarak görünüyor. Subtitle Edit JPG dosyalarını açamaz.</ErrorLoadJpg>
@@ -3431,6 +3432,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <ExtendToNext>Sonrakine doğru genişlet</ExtendToNext>
     <PlaySelection>Seçimi oynat...</PlaySelection>
     <ShowWaveformAndSpectrogram>Dalga formu ve spektrogramı göster...</ShowWaveformAndSpectrogram>
+    <CombineWaveformAndSpectrogram>Dalga formunu ve spektrogramı birleştir</CombineWaveformAndSpectrogram>
     <ShowWaveformOnly>Sadece dalga formunu göster...</ShowWaveformOnly>
     <ShowSpectrogramOnly>Sadece spektrogramı göster...</ShowSpectrogramOnly>
     <AddShotChange>Bölüm değişikliği ekle...</AddShotChange>
@@ -3481,5 +3483,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <HighlightCurrentWord>Mevcut kelimeyi vurgula</HighlightCurrentWord>
     <SingleWords>Tek kelimeler</SingleWords>
     <Sentence>Cümle</Sentence>
+    <EnableVad>VAD'yi etkinleştir</EnableVad>
+    <VadModelNotFound>VAD modeli bulunamadı.</VadModelNotFound>
   </WhisperAdvanced>
 </Language>
