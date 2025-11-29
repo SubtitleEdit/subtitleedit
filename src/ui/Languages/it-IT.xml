@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.14</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.11.2025</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1955,9 +1955,10 @@ Vuoi continuare lo stesso?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Impossibile leggere/modificare il file .idx. I file .idx fanno parte di una coppia di file .idx/.sub (chiamati anche VobSub), e Subtitle Edit può aprire il file .sub.</ErrorLoadIdx>
     <ErrorLoadRar>I file sembra essere un file compresso .rar. Subtitle Edit non può aprire file compressi.</ErrorLoadRar>
     <ErrorLoadZip>I file sembra essere un file compresso .zip. Subtitle Edit non può aprire file compressi.</ErrorLoadZip>
-    <ErrorLoad7Zip>Questo file sembra essere un file compresso 7-Zip. Subtitle Edit non può aprire i file compressi.</ErrorLoad7Zip>
+    <ErrorLoadGZip>Questo file sembra essere un file .gzip compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadGZip>
+    <ErrorLoad7Zip>Questo file sembra essere un file compresso 7-Zip. Subtitle Edit non può aprire file compressi.</ErrorLoad7Zip>
     <ErrorLoadPng>I file sembra essere un'immagine PNG. Subtitle Edit non può aprire file PNG.</ErrorLoadPng>
-    <ErrorLoadJpg>Questo file sembra essere un file di immagine JPG. Subtitle Edit non può aprire i file JPG.</ErrorLoadJpg>
+    <ErrorLoadJpg>Questo file sembra essere un file di immagine JPG. Subtitle Edit non può aprire file JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Il file sembra essere un file ReScene .srr - non un file di sottotitoli</ErrorLoadSrr>
     <ErrorLoadTorrent>Il file sembra essere un file BitTorrent - non un file di sottotitoli</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Questo file contiene zero binari!
