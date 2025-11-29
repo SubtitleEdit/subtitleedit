@@ -145,10 +145,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", 
+            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko",
             "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
-            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć", 
-            "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który", 
+            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć",
+            "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który",
             "śmierci", "zabić", "wiedźminie", "przeznaczenie",
         };
 
@@ -386,13 +386,31 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsLatvian =
         {
-            "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt"
+            "paldies", "neesmu", "nezinu", "viņš", "viņa", "viņu", "kungs",
+            "esmu", "velns", "dievs", "pagaidi", "varoņi", "agrāk", "varbūt",
+            "kas", "kur", "kad", "tāpēc", "laikam", "tikai", "ļoti",
+            "jā", "lūdzu", "atvainojiet", "pierādi", "tiešām",
+            "viņš", "viņa", "mēs", "jūs", "viņi", "viņas",
+            "būt", "neesmu", "esmu", "varu", "nevaru", "gribu", "gaidi",
+            "domāju", "zinu", "nezinu",
+            "cilvēks", "pasaulē", "dzīve", "laiks"
         };
 
         private static readonly string[] AutoDetectWordsLithuanian =
         {
             "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties",
             "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta"
+        };
+
+        private static readonly string[] AutoDetectWordsEstonian =
+        {
+            "praegu", "kohe", "või", "kuni", "ainult", "kas", "väga", "selline",
+            "palju", "selle", "nende", "üks", "ikkagi", "tegelikult", "metsad",
+            "tere", "aitäh", "palun", "midagi", "mitte", "miks", "kuidas",
+            "olen", "oota", "tahan", "mees", "naine", "poiss", "tüdruk",
+            "ma", "sa", "tema", "meie", "teie", "nema", "nad",
+            "see", "seda", "siin", "seal", "praegu", "veel", "päris",
+            "tõesti", "muidugi", "vabandust", "hee", "kuule"
         };
 
         private static readonly string[] AutoDetectWordsHindi =
@@ -525,7 +543,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return "cs";
                 }
 
-                return "pl"; 
+                return "pl";
             }
 
             count = GetCount(text, AutoDetectWordsGreek);
@@ -716,7 +734,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount)
             {
                 var lithuanianCount = GetCount(text, AutoDetectWordsLithuanian);
-                int finnishCount = GetCount(text, AutoDetectWordsFinnish);
+                var finnishCount = GetCount(text, AutoDetectWordsFinnish);
+                var estonianCount = GetCount(text, AutoDetectWordsEstonian);
+                if (estonianCount > count && estonianCount > lithuanianCount && estonianCount > finnishCount)
+                {
+                    return "et";
+                }
+
                 if (lithuanianCount <= count && finnishCount < count)
                 {
                     int czechWordsCount = GetCount(text, AutoDetectWordsCzech);
@@ -733,7 +757,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsSlovenian);
             if (count > bestCount)
             {
+                var estonianCount = GetCount(text, AutoDetectWordsEstonian);
+                if (estonianCount > count)
+                {
+                    return "et";
+                }
+
                 return "sl";
+            }
+
+            count = GetCount(text, AutoDetectWordsEstonian);
+            if (count > bestCount)
+            {
+                return "et";
             }
 
             count = GetCount(text, AutoDetectWordsLatvian);
