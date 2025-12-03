@@ -164,96 +164,113 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string GetTimeCode(TimeCode timeCode, string template)
         {
-            bool isNegative = timeCode.TotalMilliseconds < 0;
-            var t = template;
-            var totalSeconds = Math.Abs(Math.Round(timeCode.TotalSeconds, MidpointRounding.AwayFromZero));
-            var totalMilliseconds = Math.Abs(Math.Round(timeCode.TotalMilliseconds, MidpointRounding.AwayFromZero));
+            var isNegative = timeCode.TotalMilliseconds < 0;
+            var result = template;
 
-            // Replace sequences of 's' dynamically
-            t = Regex.Replace(t, @"s+", match =>
+            // Replace milliseconds/fractional seconds (z's)
+            result = ReplaceMilliseconds(result, timeCode);
+
+            // Replace seconds (s's)
+            result = ReplaceSeconds(result, timeCode);
+
+            // Replace standard time components
+            result = ReplaceStandardComponents(result, timeCode);
+
+            // Add negative sign if needed
+            if (isNegative)
             {
-                int length = match.Value.Length;
-                int wholeSeconds = (int)Math.Floor(Math.Abs(timeCode.TotalSeconds));
-                return wholeSeconds.ToString().PadLeft(length, '0');
-            });
+                result = "-" + result;
+            }
 
-            // Detect pure-z mode (template contains ONLY z's)
-            bool pureZMode = Regex.IsMatch(template, @"^z+$");
+            return result;
+        }
 
-            // Replace sequences of 'z' dynamically
-            t = Regex.Replace(t, @"z+", match =>
+        private static string ReplaceMilliseconds(string template, TimeCode timeCode)
+        {
+            var isPureZMode = Regex.IsMatch(template, @"^z+$");
+
+            return Regex.Replace(template, @"z+", match =>
             {
-                int zCount = match.Value.Length;
+                var zCount = match.Value.Length;
 
-                if (pureZMode)
+                if (isPureZMode)
                 {
-                    // PURE Z MODE = total milliseconds
-                    long ms = (long)totalMilliseconds;
-
-                    string msString = ms.ToString();
-                    int msLength = msString.Length;
-
-                    if (zCount <= msLength)
-                        return msString;
-                    else
-                        return msString.PadLeft(zCount, '0');
+                    return FormatTotalMilliseconds(timeCode, zCount);
                 }
                 else
                 {
-                    // MIXED MODE = fractional precision expansion
-                    double fractionalSeconds = Math.Abs(timeCode.TotalSeconds) - Math.Floor(Math.Abs(timeCode.TotalSeconds));
-
-                    // Convert fractional seconds into string with max precision available
-                    string fracString;
-
-                    if (fractionalSeconds == 0)
-                    {
-                        // Catch-all: no fractional seconds = default to "000"
-                        fracString = "000";
-                    }
-                    else
-                    {
-                        // Convert fractional seconds to string with full precision
-                        fracString = fractionalSeconds
-                            .ToString("R")           // round-trip format
-                            .Split('.')[1]           // remove leading "0."
-                            .TrimEnd('0');           // optional, keep only meaningful digits
-
-                        // Always show at least 3 digits (ex. ".001")
-                        if (fracString.Length < 3)
-                            fracString = fracString.PadRight(3, '0');
-                    }
-
-                    // Always show at least the existing visible ms (first 3 digits)
-                    // If fewer digits exist, pad
-                    if (fracString.Length < 3)
-                        fracString = fracString.PadRight(3, '0');
-
-                    // Now return exactly zCount digits, padding zeros if needed
-                    if (zCount <= fracString.Length)
-                    {
-                        return fracString.Substring(0, zCount);
-                    }
-                    else
-                    {
-                        return fracString.PadRight(zCount, '0');
-                    }
+                    return FormatFractionalSeconds(timeCode, zCount);
                 }
             });
+        }
 
-            // Standard replacements
-            t = t.Replace("hh", $"{Math.Abs(timeCode.Hours):00}")
-                .Replace("h", $"{Math.Abs(timeCode.Hours)}")
+        private static string FormatTotalMilliseconds(TimeCode timeCode, int desiredLength)
+        {
+            var totalMilliseconds = Math.Abs(Math.Round(timeCode.TotalMilliseconds, MidpointRounding.AwayFromZero));
+            var ms = (long)totalMilliseconds;
+            var msString = ms.ToString();
+
+            return desiredLength <= msString.Length
+                ? msString
+                : msString.PadLeft(desiredLength, '0');
+        }
+
+        private static string FormatFractionalSeconds(TimeCode timeCode, int desiredLength)
+        {
+            var absoluteSeconds = Math.Abs(timeCode.TotalSeconds);
+            var fractionalSeconds = absoluteSeconds - Math.Floor(absoluteSeconds);
+
+            string fracString;
+
+            if (fractionalSeconds == 0)
+            {
+                fracString = "000";
+            }
+            else
+            {
+                fracString = fractionalSeconds
+                    .ToString(CultureInfo.InvariantCulture)
+                    .Split('.')[1]
+                    .TrimEnd('0');
+
+                // Ensure at least 3 digits for milliseconds
+                if (fracString.Length < 3)
+                {
+                    fracString = fracString.PadRight(3, '0');
+                }
+            }
+
+            // Return exactly the requested number of digits
+            if (desiredLength <= fracString.Length)
+            {
+                return fracString.Substring(0, desiredLength);
+            }
+            else
+            {
+                return fracString.PadRight(desiredLength, '0');
+            }
+        }
+
+        private static string ReplaceSeconds(string template, TimeCode timeCode)
+        {
+            return Regex.Replace(template, @"s+", match =>
+            {
+                var length = match.Value.Length;
+                var seconds = Math.Abs(timeCode.Seconds);
+                return seconds.ToString().PadLeft(length, '0');
+            });
+        }
+
+        private static string ReplaceStandardComponents(string template, TimeCode timeCode)
+        {
+            // Process longer patterns first to avoid partial matches
+            return template
+                .Replace("hh", $"{Math.Abs(timeCode.Hours):00}")
                 .Replace("mm", $"{Math.Abs(timeCode.Minutes):00}")
-                .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
                 .Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds):00}")
+                .Replace("h", $"{Math.Abs(timeCode.Hours)}")
+                .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
                 .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
-
-            // Prepend minus if negative
-            if (isNegative)
-                t = "-" + t;
-
-            return t;
         }
 
         private void InsertTag(object sender, EventArgs e)
