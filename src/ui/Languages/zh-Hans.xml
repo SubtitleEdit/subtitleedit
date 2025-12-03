@@ -1948,7 +1948,8 @@ Command line: {1} {2}
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
-    <ErrorLoad7Zip>从MP4文件中选择字幕</ErrorLoad7Zip>
+    <ErrorLoadGZip>此文件是一个 .gzip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadGZip>
+    <ErrorLoad7Zip>此文件是一个 .7z 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoad7Zip>
     <ErrorLoadPng>此文件是 PNG 图像文件，Subtitle Edit 无法打开 PNG 文件。</ErrorLoadPng>
     <ErrorLoadJpg>此文件是一个 JPG 图像文件。Subtitle Edit 无法打开 JPG 文件。</ErrorLoadJpg>
     <ErrorLoadSrr>此文件是一个 ReScene .srr 文件，而不是字幕文件。</ErrorLoadSrr>
