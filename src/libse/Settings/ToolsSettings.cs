@@ -106,6 +106,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AnthropicPrompt { get; set; }
         public string AnthropicApiKey { get; set; }
         public string AnthropicApiModel { get; set; }
+        public string BaiduUrl { get; set; }
+        public string BaiduApiKey { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public int AutoTranslateMaxBytes { get; set; }
         public string AutoTranslateStrategy { get; set; }
@@ -528,6 +530,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = AnthropicTranslate.Models[0];
+            BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = GeminiTranslate.Models[0];
             GeminiPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, only write the result:";
             TextToSpeechAzureRegion = "westeurope";
