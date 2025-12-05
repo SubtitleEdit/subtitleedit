@@ -2376,6 +2376,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 settings.Tools.AvalAiModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BaiduUrl");
+            if (subNode != null)
+            {
+                settings.Tools.BaiduUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BaiduApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.BaiduApiKey = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
             if (subNode != null)
             {
@@ -9245,6 +9257,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("AvalAiPrompt", settings.Tools.AvalAiPrompt);
                 xmlWriter.WriteElementString("AvalAiApiKey", settings.Tools.AvalAiApiKey);
                 xmlWriter.WriteElementString("AvalAiModel", settings.Tools.AvalAiModel);
+                xmlWriter.WriteElementString("BaiduUrl", settings.Tools.BaiduUrl);
+                xmlWriter.WriteElementString("BaiduApiKey", settings.Tools.BaiduApiKey);
                 xmlWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
                 xmlWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);

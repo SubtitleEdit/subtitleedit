@@ -454,7 +454,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     FileName = ffmpegLocation,
                     Arguments = $"-t 1 -f lavfi -i color=c=blue:s=720x480 -c:v libx264 -tune stillimage -pix_fmt yuv420p \"{outputFileName}\"",
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
                 }
             };
         }

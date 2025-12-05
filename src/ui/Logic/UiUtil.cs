@@ -1277,7 +1277,11 @@ namespace Nikse.SubtitleEdit.Logic
                     var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = "xdg-open", Arguments = item }
+                        StartInfo = 
+                        { 
+                            FileName = "xdg-open", 
+                            Arguments = item,
+                        }
                     };
                     process.Start();
                 }
