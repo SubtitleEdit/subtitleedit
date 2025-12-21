@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -107,14 +108,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonShowEarlierClick(object sender, EventArgs e)
         {
-            var tc = timeUpDownAdjust.TimeCode;
-            if (tc != null && tc.TotalMilliseconds > 0)
-            {
-                _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
-                _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
-                ShowTotalAdjustment();
-                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
-            }
+            TimeCode tc = timeUpDownAdjust.TimeCode;
+            Earlier(tc);
         }
 
         private void ShowTotalAdjustment()
@@ -139,13 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonShowLaterClick(object sender, EventArgs e)
         {
             TimeCode tc = timeUpDownAdjust.TimeCode;
-            if (tc != null && tc.TotalMilliseconds > 0)
-            {
-                _adjustCallback.Invoke(tc.TotalMilliseconds, GetSelectionChoice());
-                _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + tc.TotalMilliseconds);
-                ShowTotalAdjustment();
-                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
-            }
+            Later(tc);
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -179,6 +168,103 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonAllLines.Checked = true;
                 }
             }
+        }
+
+        private void Earlier(TimeCode tc)
+        {
+            Earlier(tc?.TimeSpan ?? TimeSpan.Zero);
+        }
+
+        private void Earlier(TimeSpan offset)
+        {
+            Adjust(offset, -1);
+        }
+
+        private void Later(TimeCode tc)
+        {
+            Later(tc?.TimeSpan ?? TimeSpan.Zero);
+        }
+
+        private void Later(TimeSpan offset)
+        {
+            Adjust(offset);
+        }
+
+        private void Adjust(TimeSpan offset, double scale = 1)
+        {
+            var duration = offset.Duration();
+            var durationMs = duration.TotalMilliseconds;
+            Debug.Assert(durationMs >= 0);
+
+            if (durationMs > 0)
+            {
+                durationMs = scale * durationMs;
+
+                _adjustCallback.Invoke(durationMs, GetSelectionChoice());
+                _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + durationMs);
+                ShowTotalAdjustment();
+                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)Math.Abs(durationMs);
+            }
+        }
+
+        private void buttonQuick10sEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromSeconds(10));
+        }
+
+        private void buttonQuick10sLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromSeconds(10));
+        }
+
+        private void buttonQuick1sEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromSeconds(1));
+        }
+
+        private void buttonQuick1sLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromSeconds(1));
+        }
+
+        private void buttonQuick500msEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromMilliseconds(500));
+        }
+
+        private void buttonQuick500msLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromMilliseconds(500));
+        }
+
+        private void buttonQuick100msEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromMilliseconds(100));
+        }
+
+        private void buttonQuick100msLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromMilliseconds(100));
+        }
+
+        private void buttonQuick10msEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromMilliseconds(10));
+        }
+
+        private void buttonQuick10msLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromMilliseconds(10));
+        }
+
+        private void buttonQuick1msEarlier_Click(object sender, EventArgs e)
+        {
+            Earlier(TimeSpan.FromMilliseconds(1));
+        }
+
+        private void buttonQuick1msLater_Click(object sender, EventArgs e)
+        {
+            Later(TimeSpan.FromMilliseconds(1));
         }
     }
 }
