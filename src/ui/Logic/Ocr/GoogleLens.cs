@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public string Error { get; set; }
         private bool hasErrors = false;
         private StringBuilder _log = new StringBuilder();
+        
+        /// Contains the file names of bitmaps that have OCR errors.
+        private HashSet<string> _bitmapsWithErrors = new HashSet<string>();
 
         public GoogleLens()
         {
@@ -70,6 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
 
                     var results = new Dictionary<string, string>();
+                    _bitmapsWithErrors = new HashSet<string>();
                     string currentFileName = null;
                     bool canCollectText = false;
 
@@ -121,10 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                         if (canCollectText && currentFileName != null)
                         {
-                            if (!outLine.Data.Equals("No OCR text found.", StringComparison.OrdinalIgnoreCase))
-                            {
-                                results[currentFileName] += outLine.Data + Environment.NewLine;
-                            }
+                            AddLineToResult(results, currentFileName, outLine.Data);
                         }
 
                         if (abortCheck != null && abortCheck.Invoke())
@@ -202,6 +203,27 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     Error = $"An unexpected error occurred during cleanup: {ex.Message}";
                 }
             }
+        }
+        
+        private void AddLineToResult(in Dictionary<string, string> results, string fileName, string line)
+        {
+            if (_bitmapsWithErrors.Contains(fileName))
+            {
+                return;
+            }
+            
+            if (line.Equals("No OCR text found.", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (line.Contains("Request error (possibly proxy-related)", StringComparison.OrdinalIgnoreCase))
+            {
+                _bitmapsWithErrors.Add(fileName);
+                return;
+            }
+            
+            results[fileName] += line + Environment.NewLine;
         }
 
         public static List<OcrLanguage3> GetLanguages()
