@@ -14,11 +14,13 @@ namespace Nikse.SubtitleEdit.Forms
             public bool AllowSelection { get; set; }
         }
 
-        public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
+        public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection, bool syncPlayer);
         public delegate void AllowSelectionHandler(object sender, ViewStatus viewStatus);
         public event AllowSelectionHandler AllowSelection;
         private TimeSpan _totalAdjustment;
         private AdjustEventHandler _adjustCallback;
+
+        private bool _canSyncPlayer;
 
         public ShowEarlierLater()
         {
@@ -72,8 +74,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected)
+        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected, bool canSyncPlayer)
         {
+            _canSyncPlayer = canSyncPlayer;
+            checkBoxSyncPlayer.Visible = canSyncPlayer;
+
             if (onlySelected)
             {
                 radioButtonSelectedLinesOnly.Checked = true;
@@ -200,7 +205,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 durationMs = scale * durationMs;
 
-                _adjustCallback.Invoke(durationMs, GetSelectionChoice());
+                var shouldSyncWithPlayer = _canSyncPlayer && checkBoxSyncPlayer.Checked;
+
+                _adjustCallback.Invoke(durationMs, GetSelectionChoice(), shouldSyncWithPlayer);
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + durationMs);
                 ShowTotalAdjustment();
                 Configuration.Settings.General.DefaultAdjustMilliseconds = (int)Math.Abs(durationMs);

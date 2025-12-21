@@ -2145,12 +2145,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             using (var form = new ShowEarlierLater())
             {
-                form.Initialize(ShowEarlierOrLater, subtitleListView1.SelectedItems.Count > 1);
+                form.Initialize(ShowEarlierOrLater, subtitleListView1.SelectedItems.Count > 1, false);
                 form.ShowDialog(this);
             }
         }
 
-        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
+        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection, bool syncWithPlayer)
         {
             if (subtitleListView1.SelectedItems.Count < 1)
             {
@@ -2529,7 +2529,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             using (var form = new ShowEarlierLater())
             {
-                form.Initialize(ShowEarlierOrLater, true);
+                form.Initialize(ShowEarlierOrLater, true, false);
                 form.ShowDialog(this);
             }
         }

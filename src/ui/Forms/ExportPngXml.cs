@@ -6224,12 +6224,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             using (var showEarlierOrLater = new ShowEarlierLater())
             {
-                showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
+                showEarlierOrLater.Initialize(ShowEarlierOrLater, false, false);
                 showEarlierOrLater.ShowDialog(this);
             }
         }
 
-        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
+        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection, bool syncPlayer /* ignored */)
         {
             adjustMilliseconds /= TimeCode.BaseUnit;
             subtitleListView1.BeginUpdate();

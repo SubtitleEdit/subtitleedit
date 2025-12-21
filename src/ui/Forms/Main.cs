@@ -17043,7 +17043,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _showEarlierOrLater.Left = Left + (Width / 2) - (_showEarlierOrLater.Width / 3);
             }
 
-            _showEarlierOrLater.Initialize(ShowEarlierOrLater, true);
+            _showEarlierOrLater.Initialize(ShowEarlierOrLater, true, true);
             MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
             _showEarlierOrLater.Show(this);
 
@@ -19220,12 +19220,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
             {
-                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
             {
-                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly, false);
                 e.SuppressKeyPress = true;
             }
 
@@ -19233,12 +19233,12 @@ namespace Nikse.SubtitleEdit.Forms
             // adjust
             else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
             {
-                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
             {
-                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustAdjustStartXMsBack == e.KeyData)
@@ -25644,7 +25644,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WaveformAlpha = Math.Min(512 - opacity, 255);
         }
 
-        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
+        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection, bool syncPlayer)
         {
             var tc = new TimeCode(adjustMilliseconds);
             MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater + ": " + tc);
@@ -25761,6 +25761,11 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshSelectedParagraph();
             UpdateSourceView();
             UpdateListSyntaxColoring();
+
+            if (syncPlayer)
+            {
+                GotoSubPositionAndPause();
+            }
         }
 
         private void ShowEarlierOrLaterParagraph(double adjustMilliseconds, int i)
@@ -25834,7 +25839,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SaveSubtitleListviewIndices();
-            _showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
+            _showEarlierOrLater.Initialize(ShowEarlierOrLater, false, true);
             _showEarlierOrLater.Show(this);
         }
 
@@ -26271,7 +26276,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var offset = TimeCode.FromSeconds(videoPosition).TotalMilliseconds - p.StartTime.TotalMilliseconds;
-                ShowEarlierOrLater(offset, SelectionChoice.AllLines);
+                ShowEarlierOrLater(offset, SelectionChoice.AllLines, false);
             }
         }
 

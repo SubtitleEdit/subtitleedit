@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonShowLater = new System.Windows.Forms.Button();
             this.buttonShowEarlier = new System.Windows.Forms.Button();
@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonQuick1msLater = new System.Windows.Forms.Button();
             this.buttonQuick1msEarlier = new System.Windows.Forms.Button();
             this.labelQuick1ms = new System.Windows.Forms.Label();
+            this.checkBoxSyncPlayer = new System.Windows.Forms.CheckBox();
             this.panelFooter.SuspendLayout();
             this.flowLayoutPanelMainContent.SuspendLayout();
             this.groupBoxSelection.SuspendLayout();
@@ -174,14 +175,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Size = new System.Drawing.Size(105, 23);
             this.timeUpDownAdjust.TabIndex = 21;
             this.timeUpDownAdjust.TabStop = false;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode4;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode3;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // radioButtonSelectedLineAndForward
@@ -200,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.panelFooter.Controls.Add(this.labelTotalAdjustment);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 266);
+            this.panelFooter.Location = new System.Drawing.Point(0, 350);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Padding = new System.Windows.Forms.Padding(3);
             this.panelFooter.Size = new System.Drawing.Size(391, 24);
@@ -213,19 +214,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.flowLayoutPanelMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelMainContent.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanelMainContent.Name = "flowLayoutPanelMainContent";
-            this.flowLayoutPanelMainContent.Size = new System.Drawing.Size(391, 266);
+            this.flowLayoutPanelMainContent.Size = new System.Drawing.Size(391, 350);
             this.flowLayoutPanelMainContent.TabIndex = 43;
             // 
             // groupBoxSelection
             // 
             this.groupBoxSelection.AutoSize = true;
+            this.groupBoxSelection.Controls.Add(this.checkBoxSyncPlayer);
             this.groupBoxSelection.Controls.Add(this.radioButtonAllLines);
             this.groupBoxSelection.Controls.Add(this.groupBoxCustomOffset);
             this.groupBoxSelection.Controls.Add(this.radioButtonSelectedLinesOnly);
             this.groupBoxSelection.Controls.Add(this.radioButtonSelectedLineAndForward);
             this.groupBoxSelection.Location = new System.Drawing.Point(3, 3);
             this.groupBoxSelection.Name = "groupBoxSelection";
-            this.groupBoxSelection.Size = new System.Drawing.Size(182, 235);
+            this.groupBoxSelection.Size = new System.Drawing.Size(182, 258);
             this.groupBoxSelection.TabIndex = 44;
             this.groupBoxSelection.TabStop = false;
             // 
@@ -538,11 +540,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelQuick1ms.Text = "1ms";
             this.labelQuick1ms.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // checkBoxSyncPlayer
+            // 
+            this.checkBoxSyncPlayer.AutoSize = true;
+            this.checkBoxSyncPlayer.Location = new System.Drawing.Point(16, 221);
+            this.checkBoxSyncPlayer.Name = "checkBoxSyncPlayer";
+            this.checkBoxSyncPlayer.Size = new System.Drawing.Size(105, 17);
+            this.checkBoxSyncPlayer.TabIndex = 46;
+            this.checkBoxSyncPlayer.Text = "Sync with player";
+            this.checkBoxSyncPlayer.UseVisualStyleBackColor = true;
+            // 
             // ShowEarlierLater
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(391, 290);
+            this.ClientSize = new System.Drawing.Size(391, 374);
             this.Controls.Add(this.flowLayoutPanelMainContent);
             this.Controls.Add(this.panelFooter);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -614,5 +626,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonQuick1msLater;
         private System.Windows.Forms.Button buttonQuick1msEarlier;
         private System.Windows.Forms.Label labelQuick1ms;
+        private System.Windows.Forms.CheckBox checkBoxSyncPlayer;
     }
 }
