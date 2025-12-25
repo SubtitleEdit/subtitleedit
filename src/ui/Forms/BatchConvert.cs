@@ -2182,7 +2182,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         subtitleImages.Add(pes);
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
-                        subtitles.Add(new TransportStreamSubtitle { Pes = pes });
+                        subtitles.Add(new TransportStreamSubtitle { Pes = pes, StartMilliseconds = (ulong)msub.Start, EndMilliseconds = (ulong)msub.End });
                     }
                 }
                 catch
