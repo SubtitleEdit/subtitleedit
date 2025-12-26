@@ -5259,7 +5259,7 @@
     <RegEx find="zvaničn" replaceWith="služben" />
     <RegEx find="Zvaničn" replaceWith="Služben" />
     <RegEx find="([zZ])([nv])ać" replaceWith="$1$2at ć" />
-    <RegEx find="([zZ])vj?er(?!s)" r[eplaceWith="$1vijer" />
+    <RegEx find="([zZ])vj?er(?!s)" replaceWith="$1vijer" />
     <RegEx find="([zZ])vezd([ai])" replaceWith="$1vjezd$2" />
     <RegEx find="([žŽ])el[ei]([lz]|ti)" replaceWith="$1elje$2" />
     <RegEx find="([žŽ])eleć(?!i)" replaceWith="$1eljet ć" />
