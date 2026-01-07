@@ -201,6 +201,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Kannada","kn"),
                MakePair("Kashmiri","ks"),
                MakePair("Kazakh","kk"),
+               MakePair("Kurdish","ku"),
+               MakePair("Central Kurdish (Sorani)","ckb"),
+
                MakePair("Konkani",""),
                MakePair("Korean","ko"),
                MakePair("Kyrgyz","ky"),
