@@ -898,6 +898,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.DragDrop += ListViewRulesDragDrop;
             listViewRules.ItemDrag += listView1_ItemDrag;
             listViewRules.DragOver += ListViewRulesOnDragOver;
+
+            buttonOK.Focus();
         }
 
         private void ListViewRulesOnDragOver(object sender, DragEventArgs e)
