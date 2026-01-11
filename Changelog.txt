@@ -10,13 +10,13 @@
    * Update Italian translation - thx bovirus
    * Update Persian translation - thx rmtjokar
    * Update Korean translation - thx domddol
-   * Focus ok button in multiple-replace - thx David
-   * Update AI translate model names
+   * Focus OK button in multiple-replace - thx David
+   * Update translate AI model names
    * Update error messages for gzip and 7z files - thx Robert
    * Only merge lines that are really close (ismt dfxp) - thx OtaStrom
    * Update whisper cpp commad line help - thx nicolaev66
 * FIXED:
-   * Set timeout higher for Downloads (e.g. Purfview's faster whisper)
+   * Set higher timeout for downloads (e.g. Purfview's faster whisper)
    * Allow wave gen of track 0 - thx MikieMikie
    * Fix for timestamps in dvbsub in mkv - thx GH
    * Fix for ffmpeg 8.0.1 - thx gerben
