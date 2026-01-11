@@ -1377,7 +1377,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, DataReceivedEventHandler dataReceivedHandler = null)
         {
             // whisper --model tiny.en --language English --fp16 False a.wav
-
+            
             var translateToEnglish = translate ? WhisperHelper.GetWhisperTranslateParameter() : string.Empty;
             if (language.ToLowerInvariant() == "english" || language.ToLowerInvariant() == "en")
             {

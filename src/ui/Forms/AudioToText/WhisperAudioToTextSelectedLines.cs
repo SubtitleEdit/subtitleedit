@@ -104,6 +104,78 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
+            // Check if chosen whisper implementation is installed
+            if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
+            {
+                if (Configuration.Settings.Tools.WhisperExtraSettings == Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd)
+                {
+                    Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
+                }
+
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.Cpp);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (comboBoxWhisperEngine.Text == WhisperChoice.CppCuBlas)
+            {
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.CppCuBlas);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper " + WhisperChoice.CppCuBlas), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.CppCuBlas))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisperXxl)
+            {
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(comboBoxWhisperEngine.Text);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, comboBoxWhisperEngine.Text), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(comboBoxWhisperEngine.Text))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
             GenerateBatch();
             TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
         }
