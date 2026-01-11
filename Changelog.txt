@@ -21,6 +21,7 @@
    * Fix for timestamps in dvbsub in mkv - thx GH
    * Fix for ffmpeg 8.0.1 - thx gerben
    * Try to fix Papago translate
+   * Prompt for download of Whisper engine when running selected lines - thx ItsMibag 
 
 
 4.0.14 (28th October 2025)
