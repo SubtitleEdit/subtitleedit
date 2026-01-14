@@ -96,8 +96,8 @@ namespace Nikse.SubtitleEdit.Logic
         public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, bool forceStereo = false, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var stereoFilter = forceStereo
-                     ? ";[aout]pan=stereo|c0=c0|c1=c0[aout2]"
-                    : string.Empty;
+                ? ";[aout]pan=stereo|c0=c0|c1=c0[aout2]"
+                : string.Empty;
 
             var mapOut = forceStereo ? "[aout2]" : "[aout]";
 
