@@ -673,7 +673,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
-                var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(inputFileName, pFileName.Filename, outputFileName, (float)p.StartTime.TotalSeconds);
+                var forceStereo = Configuration.Settings.Tools.TextToSpeechCustomAudioStereo && checkBoxAudioEncoding.Checked;
+
+                var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(
+                    inputFileName,
+                    pFileName.Filename,
+                    outputFileName,
+                    (float)p.StartTime.TotalSeconds,
+                    forceStereo);
+
                 var deleteTempFileName = inputFileName;
                 inputFileName = outputFileName;
                 mergeProcess.Start();
