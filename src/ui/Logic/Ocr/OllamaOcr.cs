@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 var modelJson = "\"model\": \"" + model + "\",";
 
-                var prompt = $"Get the text (use '\\n' for new line) from this image in {language}. Return only the text - no commnts or notes. For new line, use '\\n'.";
+                var prompt = $"Get the text (use '\\n' for new line) from this image in {language}. Return only the text - no comments or notes. For new line, use '\\n'.";
                 var input = "{ " + modelJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + Utilities.PngToBase64String(bitmap) + "\"] } ] }";
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
