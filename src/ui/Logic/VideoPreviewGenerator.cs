@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, bool forceStereo, DataReceivedEventHandler? dataReceivedHandler = null)
+        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, bool forceStereo, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var filterSuffix = forceStereo ? ",aformat=channel_layouts=stereo" : string.Empty;
             var stereoParameter = forceStereo ? " -ac 2" : string.Empty;
