@@ -93,14 +93,20 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, bool forceStereo = false, DataReceivedEventHandler dataReceivedHandler = null)
         {
+            var stereoFilter = forceStereo
+                ? ";[aout]pan=stereo|c0=c0|c1=c0[aout2]"
+                : string.Empty;
+
+            var mapOut = forceStereo ? "[aout2]" : "[aout]";
+
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false[aout]\" -map [aout] \"{outputFileName}\"",
+                    Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false[aout]{stereoFilter}\" -map {mapOut} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
