@@ -101,12 +101,12 @@ namespace Nikse.SubtitleEdit.Logic
             var processMakeVideo = new Process
             {
                 StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false{filterSuffix}[aout]\" -map [aout]{stereoParameter} \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false{filterSuffix}[aout]\" -map [aout]{stereoParameter} \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
             };
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
