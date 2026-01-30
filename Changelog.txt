@@ -15,13 +15,16 @@
    * Update error messages for gzip and 7z files - thx Robert
    * Only merge lines that are really close (ismt dfxp) - thx OtaStrom
    * Update whisper cpp commad line help - thx nicolaev66
+   * Update Vosk Breton - thx Pêr
 * FIXED:
    * Set higher timeout for downloads (e.g. Purfview's faster whisper)
-   * Allow wave gen of track 0 - thx MikieMikie
+   * Allow wave generation of track 0 - thx MikieMikie
    * Fix for timestamps in dvbsub in mkv - thx GH
    * Fix for ffmpeg 8.0.1 - thx gerben
    * Try to fix Papago translate
    * Prompt for download of Whisper engine when running selected lines - thx ItsMibag 
+   * Fix for stereo flag in TTS - thx cvrle77
+   * Fix typo in Ollama prompt - thx calvinthefreak
 
 
 4.0.14 (28th October 2025)
