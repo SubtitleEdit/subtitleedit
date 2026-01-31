@@ -1651,7 +1651,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 !string.IsNullOrEmpty(displayAlign))
             {
                 var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
-                if (yPos > 40 && displayAlign == "after")
+                var yExtent = Convert.ToDouble(extentArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                if (yPos + yExtent > 75 && displayAlign == "after")
                 {
                     return true;
                 }
