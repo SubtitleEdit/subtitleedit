@@ -259,6 +259,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyPlainText { get; set; }
+        public string MainListViewCopyOriginalText { get; set; }
+        public string MainListViewCopyOriginalPlainText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }

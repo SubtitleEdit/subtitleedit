@@ -2691,6 +2691,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ColorX>Color {0} ({1})</ColorX>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
     <CopyPlainText>Copy plain text to clipboard (selected lines)</CopyPlainText>
+    <CopyOriginalTextOnly>Copy original text only to clipboard (selected lines)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Copy original plain text to clipboard (selected lines)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Fix RTL via Unicode control characters</FixRTLViaUnicodeChars>
