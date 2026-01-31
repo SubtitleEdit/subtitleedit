@@ -2676,6 +2676,8 @@ Yeni oturum başlatın (iş birliği)</Information>
     <ColorX>Renk {0} ({1})</ColorX>
     <CopyTextOnly>Sadece metni panoya kopyala (seçilen satırlarda)</CopyTextOnly>
     <CopyPlainText>Düz metni panoya kopyala (seçili satırlar)</CopyPlainText>
+    <CopyOriginalTextOnly>Sadece özgün metni panoya kopyala (seçili satırlar)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Özgün düz metni panoya kopyala (seçili satırlar)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Orijinalden geçerliye metin koplala</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Otomatik süre ayarla (seçilen satırlarda))</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>RTL'yi Unicode ile düzelt</FixRTLViaUnicodeChars>
