@@ -7861,6 +7861,18 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainListViewCopyPlainText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewCopyOriginalText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewCopyOriginalText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewCopyOriginalPlainText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewCopyOriginalPlainText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
                 if (subNode != null)
                 {
@@ -10386,6 +10398,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainListViewCopyPlainText", shortcuts.MainListViewCopyPlainText);
+            textWriter.WriteElementString("MainListViewCopyOriginalText", shortcuts.MainListViewCopyOriginalText);
+            textWriter.WriteElementString("MainListViewCopyOriginalPlainText", shortcuts.MainListViewCopyOriginalPlainText);
             textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", shortcuts.MainListViewCopyTextFromOriginalToCurrent);
             textWriter.WriteElementString("MainListViewAutoDuration", shortcuts.MainListViewAutoDuration);
             textWriter.WriteElementString("MainListViewColumnDeleteText", shortcuts.MainListViewColumnDeleteText);

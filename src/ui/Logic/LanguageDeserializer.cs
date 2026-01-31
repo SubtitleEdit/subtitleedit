@@ -7363,6 +7363,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CopyPlainText":
                     language.Settings.CopyPlainText = reader.Value;
                     break;
+                case "Settings/CopyOriginalTextOnly":
+                    language.Settings.CopyOriginalTextOnly = reader.Value;
+                    break;
+                case "Settings/CopyOriginalPlainText":
+                    language.Settings.CopyOriginalPlainText = reader.Value;
+                    break;
                 case "Settings/CopyTextOnlyFromOriginalToCurrent":
                     language.Settings.CopyTextOnlyFromOriginalToCurrent = reader.Value;
                     break;
