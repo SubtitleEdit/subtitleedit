@@ -2680,6 +2680,8 @@ Command line: {1} {2}
     <ColorX>颜色 {0} ({1})</ColorX>
     <CopyTextOnly>仅将文本复制到剪贴板 (所选行)</CopyTextOnly>
     <CopyPlainText>复制纯文本到剪贴板 (所选行)</CopyPlainText>
+    <CopyOriginalTextOnly>仅复制原始文本到剪贴板 (所选行)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>复制原始纯文本到剪贴板 (所选行)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>将文本从原内容复制到当前内容</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>通过Unicode控制符修复RTL</FixRTLViaUnicodeChars>
