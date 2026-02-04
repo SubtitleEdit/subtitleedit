@@ -1814,6 +1814,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewNode, language.Alignment, nameof(Configuration.Settings.Shortcuts.MainListViewAlignment), true);
             AddNode(listViewNode, language.CopyTextOnly, nameof(Configuration.Settings.Shortcuts.MainListViewCopyText));
             AddNode(listViewNode, language.CopyPlainText, nameof(Configuration.Settings.Shortcuts.MainListViewCopyPlainText));
+            AddNode(listViewNode, language.CopyOriginalTextOnly, nameof(Configuration.Settings.Shortcuts.MainListViewCopyOriginalText));
+            AddNode(listViewNode, language.CopyOriginalPlainText, nameof(Configuration.Settings.Shortcuts.MainListViewCopyOriginalPlainText));
             AddNode(listViewNode, language.CopyTextOnlyFromOriginalToCurrent, nameof(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent), true);
             AddNode(listViewNode, language.AutoDurationSelectedLines, nameof(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
             AddNode(listViewNode, language.ListViewColumnDelete, nameof(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText), true);

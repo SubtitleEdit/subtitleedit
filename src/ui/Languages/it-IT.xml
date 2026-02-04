@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.14</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.11.2025</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 31.01.2026</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2691,6 +2691,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ColorX>Colore {0} ({1})</ColorX>
     <CopyTextOnly>Copia il testo negli Appunti (righe selezionate)</CopyTextOnly>
     <CopyPlainText>Copia il testo normale negli Appunti (righe selezionate)</CopyPlainText>
+    <CopyOriginalTextOnly>Copia testo originale solo negli appunti (righe selezionate)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Copia testo originale negli appunti (righe selezionate)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copia testo dall'originale all'attuale</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durata automatica (righe selezionate)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Correggi RTL tramite caratteri di controllo Unicode</FixRTLViaUnicodeChars>
