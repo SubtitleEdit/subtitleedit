@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.14</Version>
-    <TranslatedBy>Последен превод на български 21.08.2025: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 03.02.2026: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1956,6 +1956,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а Subtitle Edit може да отвори .sub файла.</ErrorLoadIdx>
     <ErrorLoadRar>Изглежда това са архивни .rar файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadRar>
     <ErrorLoadZip>Изглежда това са архивни .zip файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadZip>
+    <ErrorLoadGZip>Изглежда това са архивни .gzip файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadGZip>
     <ErrorLoad7Zip>Изглежда това са архивни 7-Zip файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoad7Zip>
     <ErrorLoadPng>Изглежда това е PNG файл. Subtitle Edit не може да отваря PNG файлове.</ErrorLoadPng>
     <ErrorLoadJpg>Изглежда това е JPG файл. Subtitle Edit не може да отваря JPG файлове.</ErrorLoadJpg>
@@ -2689,8 +2690,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <AlignmentN8>Подравняване Горе-Център - {\an8}</AlignmentN8>
     <AlignmentN9>Подравняване Горе-Дясно - {\an9}</AlignmentN9>
     <ColorX>Цвят {0} ({1})</ColorX>
-    <CopyTextOnly>Копиране само на текста в клипборда (избрани редове)</CopyTextOnly>
-    <CopyPlainText>Копиране на обикновен текст в клипборда (избрани редове)</CopyPlainText>
+    <CopyTextOnly>Копиранете само на текста в клипборда (избраните редове)</CopyTextOnly>
+    <CopyPlainText>Копиране на обикновен текст в клипборда (избраните редове)</CopyPlainText>
+    <CopyOriginalTextOnly>Копиране на оригиналния текст само в клипборда (избраните редове)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Копиране на оригиналния обикновен текст в клипборда (избраните редове)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Копиране на текста от оригинал в текущ</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Авт. продължителност (избрани редове)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Поправяне отДясно/наЛяво чрез Unicod контролни символи</FixRTLViaUnicodeChars>
