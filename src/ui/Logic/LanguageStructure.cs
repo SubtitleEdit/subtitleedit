@@ -2871,6 +2871,8 @@
             public string ColorX { get; set; }
             public string CopyTextOnly { get; set; }
             public string CopyPlainText { get; set; }
+            public string CopyOriginalTextOnly { get; set; }
+            public string CopyOriginalPlainText { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
             public string FixRTLViaUnicodeChars { get; set; }

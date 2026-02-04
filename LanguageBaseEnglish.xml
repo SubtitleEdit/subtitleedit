@@ -2691,6 +2691,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ColorX>Color {0} ({1})</ColorX>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
     <CopyPlainText>Copy plain text to clipboard (selected lines)</CopyPlainText>
+    <CopyOriginalTextOnly>Copy original text only to clipboard (selected lines)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Copy original plain text to clipboard (selected lines)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Fix RTL via Unicode control characters</FixRTLViaUnicodeChars>
@@ -2758,7 +2760,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AudioExtractSelectedLines>Extract audio (selected lines)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio to text selected lines ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
-    <AutoTranslateSelectedLines>Auto-translate selected  lines</AutoTranslateSelectedLines>
+    <AutoTranslateSelectedLines>Auto-translate selected lines</AutoTranslateSelectedLines>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
