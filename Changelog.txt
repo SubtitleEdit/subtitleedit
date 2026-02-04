@@ -1,15 +1,18 @@
 ﻿Subtitle Edit Changelog
 
-4.0.15 (xth January 2025) BETA
+4.0.15 (xth February 2025) BETA
 * NEW
    * Add Central Kurdish (Sorani) support to Gemini translation
    * Add Estonian language auto-detect - thx Donat
    * Add speed parameter to ElevenLabs TTS - thx cvrle77
+   * Add "copy original text" keyboard shortcuts
 * IMPROVED:
    * Update Portuguese translation - thx Blackspirits
    * Update Italian translation - thx bovirus
    * Update Persian translation - thx rmtjokar
    * Update Korean translation - thx domddol
+   * Update Chinese translation - thx nkh0472
+   * Update Bulgarian translation - thx KalinM
    * Focus OK button in multiple-replace - thx David
    * Update translate AI model names
    * Update error messages for gzip and 7z files - thx Robert
@@ -25,6 +28,8 @@
    * Prompt for download of Whisper engine when running selected lines - thx ItsMibag 
    * Fix for stereo flag in TTS - thx cvrle77
    * Fix typo in Ollama prompt - thx calvinthefreak
+   * Avoid making empty sc file when using move shortcut - thx OmrSi
+   * Remove double space in shortcut name
 
 
 4.0.14 (28th October 2025)
