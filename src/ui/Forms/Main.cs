@@ -18786,7 +18786,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameForward)
+            else if (audioVisualizer.ShotChanges != null && audioVisualizer.ShotChanges.Count > 0 && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameForward)
             {
                 var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
                 for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
@@ -18797,7 +18797,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.ShotChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameBack)
+            else if (audioVisualizer.ShotChanges != null && audioVisualizer.ShotChanges.Count > 0 && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAllShotChangesOneFrameBack)
             {
                 var frameMs = (double)Math.Round(1000.0 / CurrentFrameRate);
                 for (var i = 0; i < audioVisualizer.ShotChanges.Count; i++)
