@@ -22,6 +22,6 @@
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageVersion Include="MSTest" Version="4.0.2" />
+    <PackageVersion Include="MSTest" Version="4.1.0" />
   </ItemGroup>
 </Project>
