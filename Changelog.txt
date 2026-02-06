@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.15 (xth February 2025) BETA
+4.0.15 (6th February 2025)
 * NEW
    * Add Central Kurdish (Sorani) support to Gemini translation
    * Add Estonian language auto-detect - thx Donat
