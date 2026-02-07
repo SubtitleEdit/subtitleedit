@@ -1942,6 +1942,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 και το Subtitle Edit δεν μπορεί να ανοίξει αρχείο .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Πιθανό συμπιεσμένο αρχείο .rar. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadRar>
     <ErrorLoadZip>Πιθανό συμπιεσμένο αρχείο .zip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadZip>
+    <ErrorLoadGZip>Πιθανό συμπιεσμένο αρχείο .gzip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadGZip>
     <ErrorLoad7Zip>Πιθανό συμπιεσμένο αρχείο 7-Zip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoad7Zip>
     <ErrorLoadPng>Πιθανό αρχείο εικόνας PNG. Το Subtitle Edit δεν μπορεί να ανοίξει αρχεία PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Πιθανό αρχείο εικόνας JPG. Το Subtitle Edit δεν μπορεί να ανοίξει αρχεία JPG.</ErrorLoadJpg>
@@ -2675,6 +2676,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ColorX>Χρώμα {0} ({1})</ColorX>
     <CopyTextOnly>Αντιγραφή μόνο του κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyTextOnly>
     <CopyPlainText>Αντιγραφή απλού κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyPlainText>
+    <CopyOriginalTextOnly>Αντιγραφή αρχικού κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Αντιγραφή αρχικού, απλού κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Αντιγραφή κειμένου από αρχικό στον τρέχων</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Αυτόματη διάρκεια (επιλεγμένες γραμμές)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Διόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRTLViaUnicodeChars>
