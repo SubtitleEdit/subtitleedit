@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.15</Version>
-    <TranslatedBy>譯者: 笙歌 | BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
+    <TranslatedBy>譯者:昇 | BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
     <Ok>確定(&amp;O)</Ok>
@@ -123,11 +123,11 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   </About>
   <AddToNames>
     <Title>新增至名稱清單</Title>
-    <Description>新增至名稱/噪音清單(區分大小寫</Description>
+    <Description>新增至名稱/雜訊清單 (區分大小寫)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>新增至 OCR 替換清單</Title>
-    <Description>新增配對至 OCR 替換清單(區分大小寫</Description>
+    <Title>新增至 OCR 取代清單</Title>
+    <Description>將組合新增至 OCR 取代清單 (區分大小寫)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>新增至使用者字典</Title>
@@ -709,7 +709,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <TranslatedProgramTitle>翻譯節目標題</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>翻譯劇集標題</TranslatedEpisodeTitle>
     <TranslatorsName>譯者名稱</TranslatorsName>
-    <SubtitleListReferenceCode>參考字幕清單代碼</SubtitleListReferenceCode>
+    <SubtitleListReferenceCode>字幕清單參考代碼</SubtitleListReferenceCode>
     <CountryOfOrigin>原產地</CountryOfOrigin>
     <TimeCodeStatus>時間碼狀態</TimeCodeStatus>
     <TimeCodeStartOfProgramme>時間碼：節目開始</TimeCodeStartOfProgramme>
@@ -920,11 +920,11 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>在段落中的句號後以大寫字母開頭</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>在冒號/分號後以大寫字母開頭</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>修復單獨的小寫 'i' 為 'I' (英語)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>修正常見的OCR錯誤(使用OCR替換清單</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>已修正常見的OCR錯誤(已用替換清單檔案：{0}</CommonOcrErrorsFixed>
+    <FixCommonOcrErrors>修正常見 OCR 錯誤 (使用 OCR 取代清單)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>已修正常見的OCR錯誤(已用 OCR 取代清單檔：{0})</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>移除數字之間的空格</RemoveSpaceBetweenNumber>
     <BreakDialogsOnOneLine>修正單行對話</BreakDialogsOnOneLine>
-    <RemoveDialogFirstInNonDialogs>非對話內容第一行移除開頭破折號</RemoveDialogFirstInNonDialogs>
+    <RemoveDialogFirstInNonDialogs>移除非對話中第一行的起始破折號</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>標準化字串</NormalizeStrings>
     <FixTurkishAnsi>修復土耳其語 ANSI (冰島) 字母為 Unicode</FixTurkishAnsi>
     <FixDanishLetterI>修復丹麥語字母 'i'</FixDanishLetterI>
@@ -1669,7 +1669,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
       <Pause>暫停</Pause>
       <GoToSubtitlePositionAndPause>移至字幕位置並暫停</GoToSubtitlePositionAndPause>
       <SetStartTime>設定起始時間(&amp;S)</SetStartTime>
-      <SetEndTimeAndGoToNext>設定結束時間&amp;&amp;移至下一行</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>設定結束時間＆移至下一行</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>已透過結束時間 {0} 調整</AdjustedViaEndTime>
       <SetEndTime>設定結束時間(&amp;N)</SetEndTime>
       <SetStartTimeAndOffsetTheRest>設定起始時間並偏移其餘部份</SetStartTimeAndOffsetTheRest>
@@ -1879,8 +1879,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NameXNotAddedToNameList>名稱 '{0}' 未被加入到 名稱/其它 清單</NameXNotAddedToNameList>
     <WordXAddedToUserDic>單字 '{0}' 已被加入到使用者字典</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>名稱 '{0}' 未被加入到使用者字典</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>OCR 取代清單對 '{0} -&gt; {1}' 已被加入到 OCR 取代清單</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>OCR 取代清單對 '{0} -&gt; {1}' 未被加入到 OCR 取代清單</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>OCR 取代清單組合「{0}＝＞{1}」已新增至 OCR 取代清單</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>OCR 取代清單組合「{0}＝＞{1}」未被新增至 OCR 取代清單</OcrReplacePairXNotAdded>
     <XLinesSelected>已選擇 {0} 行</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>字幕含有 Unicode 音符，使用 ANSI 檔案編碼儲存會遺失這些音符。是否繼續儲存？</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>字幕含有負數時間碼。是否繼續儲存？</NegativeTimeWarning>
@@ -2938,8 +2938,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SkipOnce>略過一個(&amp;O)</SkipOnce>
     <SkipAll>全部略過(&amp;S)</SkipAll>
     <AddToUserDictionary>加入到使用者字典</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>新增至名稱/噪音清單 (區分大小寫)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>將配對新增至 OCR 取代清單</AddToOcrReplaceList>
+    <AddToNamesAndIgnoreList>新增至名稱/雜訊清單 (區分大小寫)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>將組合新增至 OCR 取代清單</AddToOcrReplaceList>
     <Abort>中止</Abort>
     <Use>使用</Use>
     <UseAlways>總是使用(&amp;U)</UseAlways>
