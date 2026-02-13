@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.15</Version>
-    <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
+    <TranslatedBy>Fordító: Zityi's Translator Team (https://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1955,6 +1955,7 @@ Ennek ellenére folytatja?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az Subtitle Edit nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
     <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
     <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
+    <ErrorLoadGZip>Úgy tűnik, ez a fájl egy tömörített .gzip fájl. A Subtitle Edit nem tud megnyitni tömörített fájlokat.</ErrorLoadGZip>
     <ErrorLoad7Zip>Ez a fájl tömörített 7-Zip fájlnak tűnik. A Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoad7Zip>
     <ErrorLoadPng>Ez a fájl úgy tűnik, hogy egy PNG képfájl. A Subtitle Edit nem tudja megnyitni a PNG fájlokat.</ErrorLoadPng>
     <ErrorLoadJpg>Ez a fájl úgy tűnik, hogy egy JPG képfájl. A Subtitle Edit nem tudja megnyitni a JPG fájlokat.</ErrorLoadJpg>
@@ -2690,6 +2691,8 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <ColorX>Szín {0} ({1})</ColorX>
     <CopyTextOnly>Szöveg másolása csak a vágólapra (kijelölt sorok)</CopyTextOnly>
     <CopyPlainText>Sima szöveg másolása a vágólapra (kijelölt sorok)</CopyPlainText>
+    <CopyOriginalTextOnly>Csak az eredeti szöveg másolása a vágólapra (kijelölt sorok)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Az eredeti egyszerű szöveg másolása a vágólapra (kijelölt sorok)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>RtL javítása Unicode vezérlőkarakterekkel</FixRTLViaUnicodeChars>
