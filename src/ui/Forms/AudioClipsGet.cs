@@ -58,7 +58,13 @@ namespace Nikse.SubtitleEdit.Forms
                             audioParameter = $"-map 0:a:{_audioTrackNumber}";
                         }
 
-                        var start = $"{item.StartTime.TotalSeconds:0.000}".Replace(",", ".");
+                        var startTime = item.StartTime.TotalSeconds;
+                        if (Configuration.Settings.General.CurrentVideoIsSmpte)
+                        {
+                            startTime *= 1.001;
+                        }
+
+                        var start = $"{startTime:0.000}".Replace(",", ".");
                         var duration = $"{item.DurationTotalSeconds:0.000}".Replace(",", ".");
                         var fFmpegWaveTranscodeSettings = "-ss " + start + " -t " + duration + " -i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"";
                         if (useCenterChannelOnly)
