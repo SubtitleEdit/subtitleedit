@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
@@ -38,7 +38,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>شماره</Number>
     <Text>متن</Text>
-    <HourMinutesSecondsDecimalSeparatorMilliseconds>Hour:min:sec{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>ساعت:دقیقه:ثانیه{0}میلی ثانیه</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>ساعت : دقیقه : ثانیه : فریم</HourMinutesSecondsFrames>
     <XSeconds>{0:0.0##} seconds</XSeconds>
     <Bold>بولد</Bold>
@@ -388,7 +388,7 @@
     <Title>ویرایش پروفایل</Title>
     <LoadPreset>حالت ساده...</LoadPreset>
     <PresetDefault>بارگذاری پیش‌ تنظیم</PresetDefault>
-    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetNetflix>نتفلیکس</PresetNetflix>
     <PresetSDI>SDI</PresetSDI>
     <CreateSimple>حالت ساده...</CreateSimple>
     <General>عمومی</General>
@@ -1102,7 +1102,7 @@
     <Fixed>ثابت</Fixed>
     <Refresh>و تازه کردن</Refresh>
     <TextFiles>فایل متن</TextFiles>
-    <PreviewLinesModifiedX>Preview - paragraphs modified: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>پیش نمایش - پاراگراف های ویرایش شده: {0}</PreviewLinesModifiedX>
     <TimeCodes>کدهای زمان</TimeCodes>
     <SplitAtEndChars>در کاراکترهای انتهایی تقسیم کنید</SplitAtEndChars>
   </ImportText>
@@ -2098,7 +2098,7 @@
     <RuleInfo>اطلاعات قوانین</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
-    <Title>گپ</Title>
+    <Title>چت</Title>
     <Send>ارسال</Send>
   </NetworkChat>
   <NetworkJoin>
