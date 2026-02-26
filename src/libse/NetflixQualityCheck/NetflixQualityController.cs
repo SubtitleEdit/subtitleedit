@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             public string ToCsvRow()
             {
-                return $"{LineNumber},{TimeCode},{CsvTextEncode(Context)},{CsvTextEncode(Comment)}";
+                return $"{LineNumber},{TimeCode},{CsvTextEncode(Context)},{CsvTextEncode(Comment)},{CsvTextEncode(FixedParagraph?.ToString() ?? "")}";
             }
 
             private static string CsvTextEncode(string s)
@@ -280,7 +280,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             var csvBuilder = new StringBuilder();
 
             // Header
-            csvBuilder.AppendLine("LineNumber,TimeCode,Context,Comment");
+            csvBuilder.AppendLine("LineNumber,TimeCode,Context,Comment,Suggested fix");
 
             // Rows
             Records.ForEach(r => csvBuilder.AppendLine(r.ToCsvRow()));
