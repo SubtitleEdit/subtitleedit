@@ -2694,6 +2694,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ColorX>Cor {0} ({1})</ColorX>
     <CopyTextOnly>Copiar apenas o texto para a àrea de transferência (linhas selecionadas)</CopyTextOnly>
     <CopyPlainText>Copiar texto simples para a àrea de transferência (linhas selecionadas)</CopyPlainText>
+    <CopyOriginalTextOnly>Copiar apenas o texto original para a área de transferência (linhas selecionadas)</CopyOriginalTextOnly>
+    <CopyOriginalPlainText>Copiar texto simples original para a área de transferência (linhas selecionadas)</CopyOriginalPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a atual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas selecionadas)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Corrigir RTL através de controlo de caracteres Unicode</FixRTLViaUnicodeChars>
