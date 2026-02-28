@@ -75,6 +75,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 return string.Empty;
             }
 
+            resultText = resultText.Replace("< br / >", Environment.NewLine);
             resultText = resultText.Replace("<br />", Environment.NewLine);
             resultText = resultText.Replace(". />", "." + Environment.NewLine);
             resultText = resultText.Replace(" /> ", " "); // https://github.com/SubtitleEdit/subtitleedit/issues/8223

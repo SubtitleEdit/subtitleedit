@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -34,6 +35,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xmlAsString = sb.ToString().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
+            {
+                return false;
+            }
+
+            if (xmlAsString.Contains("<rosetta:format>imsc-rosetta</rosetta:format>", StringComparison.Ordinal))
             {
                 return false;
             }
@@ -534,7 +540,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
                 }
-                catch 
+                catch
                 {
                     var guid = Guid.NewGuid().ToString();
                     var tempText = text.Replace("&amp;", guid);
@@ -989,6 +995,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
             var endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
             var durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
+
+            if (string.IsNullOrEmpty(beginAttr) && string.IsNullOrEmpty(endAttr) && string.IsNullOrEmpty(durAttr) && paragraph.ParentNode.Name == "div")
+            {
+                beginAttr = TryGetAttribute(paragraph.ParentNode, "begin", TtmlNamespace);
+                endAttr = TryGetAttribute(paragraph.ParentNode, "end", TtmlNamespace);
+                durAttr = TryGetAttribute(paragraph.ParentNode, "dur", TtmlNamespace);
+            }
 
             begin = new TimeCode();
             if (beginAttr.Length > 0)
@@ -1650,11 +1663,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
                 !string.IsNullOrEmpty(displayAlign))
             {
-                var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
-                var yExtent = Convert.ToDouble(extentArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
-                if (yPos + yExtent > 75 && displayAlign == "after")
+                if (double.TryParse(originArr[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var yPos) &&
+                    double.TryParse(extentArr[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var yExtent))
                 {
-                    return true;
+                    var bottomEdge = yPos + yExtent;
+                    if (bottomEdge >= 80)
+                    {
+                        return true;
+                    }
+
+                    if (displayAlign == "after" && yPos > 50)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

@@ -1,0 +1,16 @@
+﻿[Script Info]
+; This is a Sub Station Alpha v4 script.
+Title: test
+ScriptType: v4.00
+Collisions: Normal
+PlayDepth: 0
+
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+Style: Default,Arial,20,16777215,65535,0,0,0,0,1,1,1,2,10,10,10,0,1
+
+[Events]
+Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: Marked=0,0:00:01.00,0:00:04.00,*Default,NTP,0000,0000,0000,,Hello, World!
+Dialogue: Marked=0,0:00:05.00,0:00:08.00,*Default,NTP,0000,0000,0000,,This is a test subtitle.
+Dialogue: Marked=0,0:00:10.00,0:00:13.00,*Default,NTP,0000,0000,0000,,Testing SeConv subtitle converter.

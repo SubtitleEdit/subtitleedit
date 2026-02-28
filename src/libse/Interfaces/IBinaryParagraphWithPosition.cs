@@ -1,11 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Interfaces
 {
     public interface IBinaryParagraphWithPosition : IBinaryParagraph
     {
-        Size GetScreenSize();
+        SKSize GetScreenSize();
         Position GetPosition();
         TimeCode StartTimeCode { get; }
         TimeCode EndTimeCode { get; }

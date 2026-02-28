@@ -1,4 +1,4 @@
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int FontSize { get; set; }
         public string Alignment { get; set; }
         public int Baseline { get; set; }
-        public Color Color { get; set; }
+        public SKColor Color { get; set; }
 
         public FcpExportSettings()
         {
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             FontSize = 36;
             Alignment = "center";
             Baseline = 29;
-            Color = Color.WhiteSmoke;
+            Color = SKColors.WhiteSmoke;
         }
     }
 }

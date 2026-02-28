@@ -1,138 +1,231 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
-MinimumVisualStudioVersion = 15.2.26430.4
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "src\UI\UI.csproj", "{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateAssemblyInfo", "src\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateLanguageFiles", "src\UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateResourceScript", "src\UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
-		build.bat = build.bat
-		build_beta.bat = build_beta.bat
-		build_helpers.bat = build_helpers.bat
-		Changelog.txt = Changelog.txt
-		Directory.Packages.props = Directory.Packages.props
-		LanguageBaseEnglish.xml = LanguageBaseEnglish.xml
-		LICENSE.txt = LICENSE.txt
-		Privacy.md = Privacy.md
+		.github\workflows\build-seconv.yml = .github\workflows\build-seconv.yml
+		.github\workflows\build-ui.yml = .github\workflows\build-ui.yml
+		Languages\Danish.json = Languages\Danish.json
+		Languages\English.json = Languages\English.json
+		LICENSE = LICENSE
+		installer\LICENSE.rtf = installer\LICENSE.rtf
+		make-installer.bat = make-installer.bat
+		installer\Product.wxs = installer\Product.wxs
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.csproj", "{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winget", "winget", "{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "macBundle", "macBundle", "{20ABFC11-A537-4519-BC53-961E337091C3}"
 	ProjectSection(SolutionItems) = preProject
-		winget\Nikse.SubtitleEdit.installer.yaml = winget\Nikse.SubtitleEdit.installer.yaml
-		winget\Nikse.SubtitleEdit.locale.en-US.yaml = winget\Nikse.SubtitleEdit.locale.en-US.yaml
-		winget\Nikse.SubtitleEdit.yaml = winget\Nikse.SubtitleEdit.yaml
+		installer\macBundle\SubtitleEdit.app\Contents\Info.plist = installer\macBundle\SubtitleEdit.app\Contents\Info.plist
+		installer\macBundle\update-plist-version.sh = installer\macBundle\update-plist-version.sh
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{7137CF3B-7769-4B10-8719-83B1C41F1CB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibSE", "src\libse\LibSE.csproj", "{28555E54-253F-6C49-5DB8-4B2C88F26731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibSETests", "tests\libse\LibSETests.csproj", "{21C390BF-0785-5EC6-6F63-787A969378AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeConv", "src\seconv\SeConv.csproj", "{77D87C12-39A0-C3B3-774C-FC013291D389}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}"
 	ProjectSection(SolutionItems) = preProject
-		installer\Subtitle_Edit_Installer.iss = installer\Subtitle_Edit_Installer.iss
-		installer\Subtitle_Edit_Localization.iss = installer\Subtitle_Edit_Localization.iss
+		docs\faq.md = docs\faq.md
+		docs\index.md = docs\index.md
+		docs\overview.md = docs\overview.md
+		docs\third-party-components.md = docs\third-party-components.md
+		docs\_config.yml = docs\_config.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{E5DFF721-5EFC-4E2A-A678-1884B7BF5BE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "features", "features", "{882DC26E-87FC-41CD-937E-8A187C0C058C}"
 	ProjectSection(SolutionItems) = preProject
-		installer\Languages\Arabic.isl = installer\Languages\Arabic.isl
-		installer\Languages\Armenian.isl = installer\Languages\Armenian.isl
-		installer\Languages\Basque.isl = installer\Languages\Basque.isl
-		installer\Languages\BrazilianPortuguese.isl = installer\Languages\BrazilianPortuguese.isl
-		installer\Languages\Bulgarian.isl = installer\Languages\Bulgarian.isl
-		installer\Languages\Catalan.isl = installer\Languages\Catalan.isl
-		installer\Languages\ChineseSimplified.isl = installer\Languages\ChineseSimplified.isl
-		installer\Languages\ChineseTraditional.isl = installer\Languages\ChineseTraditional.isl
-		installer\Languages\Corsican.isl = installer\Languages\Corsican.isl
-		installer\Languages\Croatian.isl = installer\Languages\Croatian.isl
-		installer\Languages\Czech.isl = installer\Languages\Czech.isl
-		installer\Languages\Danish.isl = installer\Languages\Danish.isl
-		installer\Languages\Dutch.isl = installer\Languages\Dutch.isl
-		installer\Languages\Farsi.isl = installer\Languages\Farsi.isl
-		installer\Languages\Finnish.isl = installer\Languages\Finnish.isl
-		installer\Languages\French.isl = installer\Languages\French.isl
-		installer\Languages\German.isl = installer\Languages\German.isl
-		installer\Languages\Greek.isl = installer\Languages\Greek.isl
-		installer\Languages\Hebrew.isl = installer\Languages\Hebrew.isl
-		installer\Languages\Hungarian.isl = installer\Languages\Hungarian.isl
-		installer\Languages\Icelandic.isl = installer\Languages\Icelandic.isl
-		installer\Languages\Indonesian.isl = installer\Languages\Indonesian.isl
-		installer\Languages\Italian.isl = installer\Languages\Italian.isl
-		installer\Languages\Japanese.isl = installer\Languages\Japanese.isl
-		installer\Languages\Korean.isl = installer\Languages\Korean.isl
-		installer\Languages\Macedonian.isl = installer\Languages\Macedonian.isl
-		installer\Languages\Norwegian.isl = installer\Languages\Norwegian.isl
-		installer\Languages\Polish.isl = installer\Languages\Polish.isl
-		installer\Languages\Portuguese.isl = installer\Languages\Portuguese.isl
-		installer\Languages\Romanian.isl = installer\Languages\Romanian.isl
-		installer\Languages\Russian.isl = installer\Languages\Russian.isl
-		installer\Languages\SerbianCyrillic.isl = installer\Languages\SerbianCyrillic.isl
-		installer\Languages\SerbianLatin.isl = installer\Languages\SerbianLatin.isl
-		installer\Languages\Slovak.isl = installer\Languages\Slovak.isl
-		installer\Languages\Slovenian.isl = installer\Languages\Slovenian.isl
-		installer\Languages\Spanish.isl = installer\Languages\Spanish.isl
-		installer\Languages\Swedish.isl = installer\Languages\Swedish.isl
-		installer\Languages\Thai.isl = installer\Languages\Thai.isl
-		installer\Languages\Turkish.isl = installer\Languages\Turkish.isl
-		installer\Languages\Ukrainian.isl = installer\Languages\Ukrainian.isl
-		installer\Languages\Vietnamese.isl = installer\Languages\Vietnamese.isl
+		docs\features\adjust-all-times.md = docs\features\adjust-all-times.md
+		docs\features\adjust-duration.md = docs\features\adjust-duration.md
+		docs\features\apply-duration-limits.md = docs\features\apply-duration-limits.md
+		docs\features\apply-min-gap.md = docs\features\apply-min-gap.md
+		docs\features\assa-attachments.md = docs\features\assa-attachments.md
+		docs\features\assa-draw.md = docs\features\assa-draw.md
+		docs\features\assa-image-color-picker.md = docs\features\assa-image-color-picker.md
+		docs\features\assa-override-tags.md = docs\features\assa-override-tags.md
+		docs\features\assa-progress-bar.md = docs\features\assa-progress-bar.md
+		docs\features\assa-properties.md = docs\features\assa-properties.md
+		docs\features\assa-resolution-resampler.md = docs\features\assa-resolution-resampler.md
+		docs\features\assa-set-background.md = docs\features\assa-set-background.md
+		docs\features\assa-set-position.md = docs\features\assa-set-position.md
+		docs\features\assa-styles.md = docs\features\assa-styles.md
+		docs\features\audio-visualizer.md = docs\features\audio-visualizer.md
+		docs\features\auto-translate.md = docs\features\auto-translate.md
+		docs\features\batch-convert.md = docs\features\batch-convert.md
+		docs\features\blank-video.md = docs\features\blank-video.md
+		docs\features\bridge-gaps.md = docs\features\bridge-gaps.md
+		docs\features\burn-in.md = docs\features\burn-in.md
+		docs\features\change-casing.md = docs\features\change-casing.md
+		docs\features\change-formatting.md = docs\features\change-formatting.md
+		docs\features\change-frame-rate.md = docs\features\change-frame-rate.md
+		docs\features\change-speed.md = docs\features\change-speed.md
+		docs\features\compare.md = docs\features\compare.md
+		docs\features\copy-paste-translate.md = docs\features\copy-paste-translate.md
+		docs\features\cut-video.md = docs\features\cut-video.md
+		docs\features\edit.md = docs\features\edit.md
+		docs\features\file.md = docs\features\file.md
+		docs\features\find-double-words.md = docs\features\find-double-words.md
+		docs\features\fix-common-errors.md = docs\features\fix-common-errors.md
+		docs\features\join-subtitles.md = docs\features\join-subtitles.md
+		docs\features\main-window.md = docs\features\main-window.md
+		docs\features\merge-same-text.md = docs\features\merge-same-text.md
+		docs\features\merge-same-timecodes.md = docs\features\merge-same-timecodes.md
+		docs\features\merge-short-lines.md = docs\features\merge-short-lines.md
+		docs\features\ocr.md = docs\features\ocr.md
+		docs\features\point-sync-via-other.md = docs\features\point-sync-via-other.md
+		docs\features\point-sync.md = docs\features\point-sync.md
+		docs\features\re-encode-video.md = docs\features\re-encode-video.md
+		docs\features\remove-text-hi.md = docs\features\remove-text-hi.md
+		docs\features\settings.md = docs\features\settings.md
+		docs\features\shortcuts.md = docs\features\shortcuts.md
+		docs\features\shot-changes.md = docs\features\shot-changes.md
+		docs\features\sort-by.md = docs\features\sort-by.md
+		docs\features\speech-to-text.md = docs\features\speech-to-text.md
+		docs\features\spell-check.md = docs\features\spell-check.md
+		docs\features\split-break-long-lines.md = docs\features\split-break-long-lines.md
+		docs\features\split-subtitle.md = docs\features\split-subtitle.md
+		docs\features\statistics.md = docs\features\statistics.md
+		docs\features\subtitle-grid.md = docs\features\subtitle-grid.md
+		docs\features\text-editor.md = docs\features\text-editor.md
+		docs\features\text-to-speech.md = docs\features\text-to-speech.md
+		docs\features\transparent-subtitles.md = docs\features\transparent-subtitles.md
+		docs\features\video-player.md = docs\features\video-player.md
+		docs\features\visual-sync.md = docs\features\visual-sync.md
+		docs\features\word-lists.md = docs\features\word-lists.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Tests\Tests.csproj", "{6B9E7002-6B09-47BF-9246-A22077790344}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITests", "tests\UI\UITests.csproj", "{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "tests\Benchmarks\Benchmarks.csproj", "{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_layouts", "_layouts", "{79A92250-4337-4BB1-B117-1375C220E61E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\_layouts\default.html = docs\_layouts\default.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "reference", "reference", "{F97CA7CF-6808-41F2-A3B7-A4F4033E20AF}"
+	ProjectSection(SolutionItems) = preProject
+		docs\reference\assa-override-tags.md = docs\reference\assa-override-tags.md
+		docs\reference\assa.md = docs\reference\assa.md
+		docs\reference\command-line.md = docs\reference\command-line.md
+		docs\reference\keyboard-shortcuts.md = docs\reference\keyboard-shortcuts.md
+		docs\reference\mouse-controls.md = docs\reference\mouse-controls.md
+		docs\reference\subrip.md = docs\reference\subrip.md
+		docs\reference\supported-formats.md = docs\reference\supported-formats.md
+		docs\reference\webvtt.md = docs\reference\webvtt.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots", "{4F23FA81-26B9-4E5D-A7AC-C5C1CE2654DC}"
+	ProjectSection(SolutionItems) = preProject
+		docs\screenshots\README.md = docs\screenshots\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B9E7002-6B09-47BF-9246-A22077790344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B9E7002-6B09-47BF-9246-A22077790344}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B9E7002-6B09-47BF-9246-A22077790344}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B9E7002-6B09-47BF-9246-A22077790344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|x64.Build.0 = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Debug|x86.Build.0 = Debug|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|x64.ActiveCfg = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|x64.Build.0 = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C27E3654-FA0B-41EB-87C2-9B9A6B27566F}.Release|x86.Build.0 = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|x64.Build.0 = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Debug|x86.Build.0 = Debug|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|x64.ActiveCfg = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|x64.Build.0 = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|x86.ActiveCfg = Release|Any CPU
+		{28555E54-253F-6C49-5DB8-4B2C88F26731}.Release|x86.Build.0 = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|x64.Build.0 = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{21C390BF-0785-5EC6-6F63-787A969378AF}.Release|x86.Build.0 = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|x64.Build.0 = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Debug|x86.Build.0 = Debug|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|x64.ActiveCfg = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|x64.Build.0 = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|x86.ActiveCfg = Release|Any CPU
+		{77D87C12-39A0-C3B3-774C-FC013291D389}.Release|x86.Build.0 = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x64.Build.0 = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x86.Build.0 = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|x64.Build.0 = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
-		{7137CF3B-7769-4B10-8719-83B1C41F1CB1} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
-		{E5DFF721-5EFC-4E2A-A678-1884B7BF5BE6} = {7137CF3B-7769-4B10-8719-83B1C41F1CB1}
+		{20ABFC11-A537-4519-BC53-961E337091C3} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{21C390BF-0785-5EC6-6F63-787A969378AF} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{882DC26E-87FC-41CD-937E-8A187C0C058C} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
+		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{7E238BCD-ED08-4BF3-BF4B-6055D0B30917} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{79A92250-4337-4BB1-B117-1375C220E61E} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
+		{F97CA7CF-6808-41F2-A3B7-A4F4033E20AF} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
+		{4F23FA81-26B9-4E5D-A7AC-C5C1CE2654DC} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = SubtitleEdit.vsmdi
+		SolutionGuid = {27E960EC-896F-428C-95A2-C250321C16D5}
 	EndGlobalSection
 EndGlobal

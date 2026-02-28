@@ -20,23 +20,23 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string DataDirectory = GetDataDirectory();
         public static string DataDirectoryOverride = string.Empty;
         public static readonly string TesseractOriginalDirectory = BaseDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
-        public static readonly string DictionariesDirectory = DataDirectory + "Dictionaries" + Path.DirectorySeparatorChar;
-        public static readonly string SpectrogramsDirectory = DataDirectory + "Spectrograms" + Path.DirectorySeparatorChar;
-        public static readonly string ShotChangesDirectory = DataDirectory + "ShotChanges" + Path.DirectorySeparatorChar;
-        public static readonly string TimeCodesDirectory = DataDirectory + "TimeCodes" + Path.DirectorySeparatorChar;
-        public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
-        public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
-        public static readonly string TesseractDirectory = DataDirectory + "Tesseract550" + Path.DirectorySeparatorChar;
-        public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
-        public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
-        public static readonly string PluginsDirectory = DataDirectory + "Plugins";
-        public static readonly string IconsDirectory = DataDirectory + "Icons" + Path.DirectorySeparatorChar;
-        public static readonly string OcrDirectory = DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
-        public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
-        public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
-        public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
-        public static readonly string PaddleOcrDirectory = DataDirectory + "PaddleOCR3-1";
-        public static readonly string GoogleLensDirectory = DataDirectory + "Google-Lens";
+        public static string DictionariesDirectory => GetDataDirectory() + "Dictionaries" + Path.DirectorySeparatorChar;
+        public static string SpectrogramsDirectory => GetDataDirectory() + "Spectrograms" + Path.DirectorySeparatorChar;
+        public static string ShotChangesDirectory => GetDataDirectory() + "ShotChanges" + Path.DirectorySeparatorChar;
+        public static string TimeCodesDirectory => GetDataDirectory() + "TimeCodes" + Path.DirectorySeparatorChar;
+        public static string AutoBackupDirectory => GetDataDirectory() + "AutoBackup" + Path.DirectorySeparatorChar;
+        public static string VobSubCompareDirectory => GetDataDirectory() + "VobSub" + Path.DirectorySeparatorChar;
+        public static string TesseractDirectory => GetDataDirectory() + "Tesseract550" + Path.DirectorySeparatorChar;
+        public static string Tesseract302Directory => GetDataDirectory() + "Tesseract302" + Path.DirectorySeparatorChar;
+        public static string WaveformsDirectory => GetDataDirectory() + "Waveforms" + Path.DirectorySeparatorChar;
+        public static string PluginsDirectory => GetDataDirectory() + "Plugins";
+        public static string IconsDirectory => GetDataDirectory() + "Icons" + Path.DirectorySeparatorChar;
+        public static string OcrDirectory => GetDataDirectory() + "Ocr" + Path.DirectorySeparatorChar;
+        public static string SettingsFileName => GetDataDirectory() + "Settings.xml";
+        public static string TesseractDataDirectory => GetTesseractDataDirectory();
+        public static string Tesseract302DataDirectory => GetTesseract302DataDirectory();
+        public static string PaddleOcrDirectory => GetDataDirectory() + "PaddleOCR3-1";
+        public static string GoogleLensDirectory => GetDataDirectory() + "Google-Lens";
 
         public static readonly string DefaultLinuxFontName = "DejaVu Serif";
 
@@ -154,6 +154,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string GetDataDirectory()
         {
+            if (!string.IsNullOrEmpty(DataDirectoryOverride) && Directory.Exists(DataDirectoryOverride))
+            {
+                return DataDirectoryOverride.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) ? DataDirectoryOverride : DataDirectoryOverride + Path.DirectorySeparatorChar;
+            }
+
             // hack for unit tests
             var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
             var srcTestResultsIndex = assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal);
@@ -164,11 +169,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 debugOrReleaseFolderName = "Debug";
 #endif
                 return $@"{assembly.Location.Substring(0, srcTestResultsIndex)}\src\Test\bin\{debugOrReleaseFolderName}\";
-            }
-
-            if (!string.IsNullOrEmpty(DataDirectoryOverride) && Directory.Exists(DataDirectoryOverride))
-            {
-                return DataDirectoryOverride.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) ? DataDirectoryOverride : DataDirectoryOverride + Path.DirectorySeparatorChar;
             }
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");

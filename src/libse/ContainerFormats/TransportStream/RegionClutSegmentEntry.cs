@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return i;
         }
 
-        public Color GetColor()
+        public SKColor GetColor()
         {
             double y, cr, cb;
             if (FullRangeFlag)
@@ -45,10 +45,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 cb = ClutEntryCb * 255 / 15.0;
             }
 
-            // Calculate rgb - based on Project X
-            int r = (int)(y + (1.402f * (cr - 128)));
-            int g = (int)(y - (0.34414 * (cb - 128)) - (0.71414 * (cr - 128)));
-            int b = (int)(y + (1.722 * (cb - 128)));
+            // Calculate rgb - using ITU-R BT.601 for DVB subtitles
+            int r = (int)(y + (1.402 * (cr - 128)));
+            int g = (int)(y - (0.34413 * (cb - 128)) - (0.71414 * (cr - 128)));
+            int b = (int)(y + (1.772 * (cb - 128)));
 
             int t = byte.MaxValue - BoundByteRange(ClutEntryT);
             r = BoundByteRange(r);
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 t = 0;
             }
 
-            return Color.FromArgb(t, r, g, b);
+            return new SKColor((byte)r, (byte)g, (byte)b, (byte)t);
         }
     }
 

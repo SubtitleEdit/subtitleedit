@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
@@ -32,17 +33,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public int ContentEncodingType { get; set; }
         public uint ContentEncodingScope { get; set; }
 
-        internal static void CopyStream(Stream input, Stream output)
-        {
-            var buffer = new byte[128 * 1024];
-            int len;
-            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, len);
-            }
-            output.Flush();
-        }
-
         public string GetCodecPrivate()
         {
             if (CodecPrivateRaw == null || CodecPrivateRaw.Length == 0)
@@ -50,29 +40,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return string.Empty;
             }
 
-            if (ContentEncodingType == ContentEncodingTypeCompression &&
-                (ContentEncodingScope & ContentEncodingScopePrivateDate) > 0 && // second bit set = private data encoded
-                CodecPrivateRaw.Length > 2)
+            // ContentEncodingType 0 = Compression
+            // ContentEncodingScope bit 2 (value 2) = Private Data is compressed
+            if (ContentEncodingType == 0 && (ContentEncodingScope & 2) != 0 && CodecPrivateRaw.Length > 2)
             {
-                var outStream = new MemoryStream();
-                var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
-                var inStream = new MemoryStream(CodecPrivateRaw);
                 try
                 {
-                    CopyStream(inStream, outZStream);
-                    var buffer = new byte[outZStream.TotalOut];
-                    outStream.Position = 0;
-                    outStream.Read(buffer, 0, buffer.Length);
-                    return Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+                    // Detect zlib header (usually 0x78 0x9C)
+                    int headerOffset = (CodecPrivateRaw[0] == 0x78 && (CodecPrivateRaw[1] == 0x9C || CodecPrivateRaw[1] == 0x01)) ? 2 : 0;
+
+                    using var inStream = new MemoryStream(CodecPrivateRaw, headerOffset, CodecPrivateRaw.Length - headerOffset);
+                    using var outStream = new MemoryStream();
+                    using (var deflateStream = new DeflateStream(inStream, CompressionMode.Decompress))
+                    {
+                        deflateStream.CopyTo(outStream);
+                    }
+
+                    return Encoding.UTF8.GetString(outStream.ToArray()).TrimEnd('\0');
                 }
                 catch
                 {
+                    // Fallback to raw string if decompression fails
                     return Encoding.UTF8.GetString(CodecPrivateRaw).TrimEnd('\0');
-                }
-                finally
-                {
-                    outZStream.Close();
-                    inStream.Close();
                 }
             }
 

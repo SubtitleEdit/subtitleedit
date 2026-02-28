@@ -73,21 +73,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+
+            // Pre-allocate capacity for better performance
+            var linesCount = lines.Count;
+            subtitle.Paragraphs.Capacity = linesCount / 4; // Rough estimate: 4 lines per paragraph
+
             var line = string.Empty;
-            var next = lines.Count > 0 ? lines[0].TrimEnd().Trim('\u007F') : string.Empty;
-            var nextNext = lines.Count > 1 ? lines[1].TrimEnd().Trim('\u007F') : string.Empty;
-            var nextNextNext = lines.Count > 2 ? lines[2].TrimEnd().Trim('\u007F') : string.Empty;
-            for (var i = 0; i < lines.Count; i++)
+            var next = linesCount > 0 ? lines[0].TrimEnd().Trim('\u007F') : string.Empty;
+            var nextNext = linesCount > 1 ? lines[1].TrimEnd().Trim('\u007F') : string.Empty;
+            var nextNextNext = linesCount > 2 ? lines[2].TrimEnd().Trim('\u007F') : string.Empty;
+            for (var i = 0; i < linesCount; i++)
             {
                 _lineNumber++;
                 line = next;
                 next = nextNext;
                 nextNext = nextNextNext;
-                nextNextNext = (i + 3 < lines.Count) ? lines[i + 3].TrimEnd().Trim('\u007F') : string.Empty; //  007F=127=delete asci
+                nextNextNext = (i + 3 < linesCount) ? lines[i + 3].TrimEnd().Trim('\u007F') : string.Empty; //  007F=127=delete asci
+
+                var trimmedLine = line.Trim(); // Cache trimmed line
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
-                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
-                    Utilities.IsInteger(line) && TryReadTimeCodesLine(line.Trim(), null, false))
+                if (_expecting == ExpectingLine.Text && i + 1 < linesCount && !string.IsNullOrEmpty(_paragraph?.Text) &&
+                    Utilities.IsInteger(line) && TryReadTimeCodesLine(trimmedLine, null, false))
                 {
                     if (!string.IsNullOrEmpty(_paragraph.Text))
                     {
@@ -98,12 +105,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _expecting = ExpectingLine.Number;
                 }
 
-                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(line.Trim(), null, false))
+                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(trimmedLine, null, false))
                 {
                     _expecting = ExpectingLine.TimeCodes;
                     doRenumber = true;
                 }
-                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(line.Trim(), null, false))
+                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(trimmedLine, null, false))
                 {
                     subtitle.Paragraphs.Add(_paragraph);
                     _lastParagraph = _paragraph;
@@ -272,6 +279,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
         {
+            if (string.IsNullOrEmpty(input) || input.Length < 10)
+            {
+                return false;
+            }
+
             var s = input.TrimStart('-', ' ');
             if (s.Length < 10 || !char.IsDigit(s[0]))
             {
@@ -303,7 +315,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // Removed stuff after time codes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
-            if (line.Length > 30)
+            var lineLength = line.Length; // Cache length
+            if (lineLength > 30)
             {
                 if (line[29] == ' ')
                 {
@@ -328,18 +341,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');
-            if (line.Length >= 29 && (line[8] == ':' || line[8] == ';'))
+            lineLength = line.Length; // Update cached length
+            if (lineLength >= 29 && (line[8] == ':' || line[8] == ';'))
             {
-                line = line.Substring(0, 8) + ',' + line.Substring(8 + 1);
+                line = line.Substring(0, 8) + ',' + line.Substring(9);
             }
 
-            if (line.Length >= 29 && line.Length <= 30 && (line[25] == ':' || line[25] == ';'))
+            if (lineLength >= 29 && lineLength <= 30 && (line[25] == ':' || line[25] == ';'))
             {
-                line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
+                line = line.Substring(0, 25) + ',' + line.Substring(26);
             }
 
             // allow missing hours as some (buggy) websites generate these time codes: 04:48,460 --> 04:52,364
-            if (line.Length == 23 && line[2] == ':' && line[5] == ',' && line[9] == ' ' && line[12] == '>' && line[13] == ' ' && line[16] == ':' && line[19] == ',')
+            if (lineLength == 23 && line[2] == ':' && line[5] == ',' && line[9] == ' ' && line[12] == '>' && line[13] == ' ' && line[16] == ':' && line[19] == ',')
             {
                 line = "00:" + line.Insert(14, "00:");
             }

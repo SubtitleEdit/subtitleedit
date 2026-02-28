@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = Layout.Replace("'", "\"");
+            string xmlStructure = GetLayout().Replace("'", "\"");
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             XmlNode div = xml.DocumentElement.SelectSingleNode("Subtitle");
@@ -27,14 +27,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                if (p.Text.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && p.Text.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
-                {
-                    layoutIndex.InnerText = "4";
-                }
-                else
-                {
-                    layoutIndex.InnerText = "0";
-                }
+                var layoutIndexValue = GetLayoutIndexFromAssAlignment(p.Text);
+                layoutIndex.InnerText = layoutIndexValue.ToString();
 
                 paragraph.Attributes.Append(layoutIndex);
 
@@ -57,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string s = ToUtf8XmlString(xml);
             int startPos = s.IndexOf("<Subtitle>", StringComparison.Ordinal) + 10;
             s = s.Substring(startPos, s.IndexOf("</Subtitle>", StringComparison.Ordinal) - startPos).Trim();
-            return Layout.Replace("@", s);
+            return GetLayout().Replace("@", s);
         }
 
         public override bool IsMine(List<string> lines, string fileName)

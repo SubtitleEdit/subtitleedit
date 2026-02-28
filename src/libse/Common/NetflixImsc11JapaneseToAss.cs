@@ -1,9 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -60,14 +61,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             var rubyOn = false;
             var italicOn = false;
             int startX;
-            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            var textToMeasure = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
+
+            float fontSize = 13.8f;
+            string fontFamily = "Arial";
+            using (var typeface = SKTypeface.FromFamilyName(fontFamily))
             {
-                var actualText = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
-                var actualTextSize = g.MeasureString(actualText, new Font("Arial", 13.8f)); // font size up, move text left
-                startX = (int)(width / 2.0 - actualTextSize.Width / 2.0);
-                if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
+                using (var font = new SKFont(typeface, fontSize))
                 {
-                    startY = (int)(height / 2.0 - actualTextSize.Height / 2.0);
+                    using (var blob = SKTextBlob.Create(textToMeasure, font))
+                    {
+                        var bounds = blob.Bounds;
+                        startX = (int)(width / 2.0 - bounds.Width / 2.0);
+                        if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
+                        {
+                            startY = (int)(height / 2.0 - bounds.Height / 2.0);
+                        }
+                    }
                 }
             }
 

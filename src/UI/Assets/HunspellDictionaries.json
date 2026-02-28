@@ -1,0 +1,380 @@
+[
+  {
+    "EnglishName": "Afrikaans",
+    "NativeName": "Afrikaans",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1109/0/dict-af.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fafrikaans-spell-checker&amp;ts=1373917891&amp;use_mirror=kent",
+    "Description": "Afrikaans spell checker"
+  },
+  {
+    "EnglishName": "Albanian",
+    "NativeName": "Shqip",
+    "DownloadLink": "https://sourceforge.net/projects/aoo-extensions/files/3393/1/dict-sq.oxt/download",
+    "Description": "Albanian Spell Checker Dictionary"
+  },
+  {
+    "EnglishName": "Arabic",
+    "NativeName": "عربي",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-ar-3-2.oxt",
+    "Description": "Arabic spell checker 3.2"
+  },
+  {
+    "EnglishName": "Basque",
+    "NativeName": "Euskara",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/xuxeniv-lo4-1-1.oxt",
+    "Description": "Xuxen: Basque spell checking dictionary - v4.0"
+  },
+  {
+    "EnglishName": "Belarusian",
+    "NativeName": "Беларуская мова",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/4611/15/dict-be-0.56.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbelarusian-spell-checking-dictionary-recent-official-orthography&amp;ts=1373918638&amp;use_mirror=kent",
+    "Description": "Belarusian dictionary(spelling, hyphenation) - classic orthography"
+  },
+  {
+    "EnglishName": "Bosnian",
+    "NativeName": "Bosanski",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-bs.oxt",
+    "Description": "Spellchecking dictionary for Bosnian language - 1.0 (Jan 24, 2013)"
+  },
+  {
+    "EnglishName": "Breton",
+    "NativeName": "Brezhoneg",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-br-0-8.oxt",
+    "Description": "An Drouizig Breton Spell Checker"
+  },
+  {
+    "EnglishName": "Bulgarian",
+    "NativeName": "Български",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/744/8/dictionaries-bg.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbulgarian-dictionaries-blgarski-rechnici&amp;ts=1435654358&amp;use_mirror=freefr",
+    "Description": "Bulgarian Dictionaries (български речници) v4.3.2 (22/09/2010)"
+  },
+  {
+    "EnglishName": "Catalan",
+    "NativeName": "català",
+    "DownloadLink": "https://github.com/Softcatala/catalan-dict-tools/releases/download/v3.0.1/ca-valencia.3.0.1.oxt",
+    "Description": "Catalan spellchecking dictionaries, July 2015"
+  },
+  {
+    "EnglishName": "Catalan",
+    "NativeName": "català-valencià",
+    "DownloadLink": "http://softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt",
+    "Description": "Spelling dictionary for Catalan (Valencian version)"
+  },
+  {
+    "EnglishName": "Croatian",
+    "NativeName": "Hrvatski",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1052/2/dict-hr.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fcroatian-dictionary-and-hyphenation-patterns&amp;ts=1373918817&amp;use_mirror=surfnet",
+    "Description": "Croatian dictionary and hyphenation patterns"
+  },
+  {
+    "EnglishName": "Czech",
+    "NativeName": "Čeština",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1078/0/dict-cs-2.0.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fczech-dictionary-pack-%25C4%258Desk%25C3%25A9-slovn%25C3%25ADky&amp;ts=1373918869&amp;use_mirror=freefr",
+    "Description": "Czech dictionary pack / České slovníky"
+  },
+  {
+    "EnglishName": "Danish",
+    "NativeName": "Dansk",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-da-2-4.oxt",
+    "Description": "Stavekontrolden version 2.2 - 2014-12-22"
+  },
+  {
+    "EnglishName": "Dutch",
+    "NativeName": "Nederlands",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1456/6/nl-dict-v2.00g.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fdutch-spelling-and-hyphenation-dictionary&amp;ts=1373918951&amp;use_mirror=garr",
+    "Description": "Dutch spelling and hyphenation Dictionary"
+  },
+  {
+    "EnglishName": "English",
+    "NativeName": "English/British",
+    "DownloadLink": "https://github.com/marcoagpinto/aoo-mozilla-en-dict/archive/master.zip",
+    "Description": "All English dictionaries (AU, CA, GB, US, ZA), 2018-04-16+"
+  },
+  {
+    "EnglishName": "Estonian",
+    "NativeName": "Eesti keel",
+    "DownloadLink": "https://extensions.openoffice.org/en/download/1329",
+    "Description": "Estonian spellchecking and hyphenation (13 October, 2008)"
+  },
+  {
+    "EnglishName": "Farsi (Persian)",
+    "NativeName": "Persian/Farsi",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/2359/1/dict-fa.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fpersian-spellchecker-dictionary-20090707&amp;ts=1435690384&amp;use_mirror=freefr",
+    "Description": "Persian Spellchecker Dictionary - 2009.07.07"
+  },
+  {
+    "EnglishName": "Finnish",
+    "NativeName": "Suomi",
+    "DownloadLink": "https://github.com/fginter/hunspell-fi/releases/download/0.2/fi-spell-0.2.xpi",
+    "Description": "Finnish Spellchecker Dictionary - Dec 6, 2023"
+  },
+  {
+    "EnglishName": "French",
+    "NativeName": "Français",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/lo-oo-ressources-linguistiques-fr-v5-7.oxt",
+    "Description": "Dictionnaires francais 5.3 (28/02/2015)"
+  },
+  {
+    "EnglishName": "German (Austria)",
+    "NativeName": "Deutsch (Österreich)",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-de-at-frami-2017-01-12.oxt",
+    "Description": "German (de-AT frami) dictionaries 2013.12.06 (08/12/2013)"
+  },
+  {
+    "EnglishName": "German (Germany)",
+    "NativeName": "German (de-DE frami) dictionaries - [de] Deutsche (de-DE frami) Rechtschreibung",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-de-de-frami-2017-01-12.oxt",
+    "Description": "German (de-DE igerman98) dictionaries"
+  },
+  {
+    "EnglishName": "Greek",
+    "NativeName": "Ελληνικά",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1411/2/el_gr_v110.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fhellenic-greek-dictionary-spell-check-and-hyphenation-110&amp;ts=1435654652&amp;use_mirror=freefr",
+    "Description": "Hellenic (Greek) Dictionary (Spell Check and Hyphenation) - v1.1.0"
+  },
+  {
+    "EnglishName": "Hebrew",
+    "NativeName": "Hebrew (he) spell check dictionary 2012-08-15",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-he-2012-08-15.oxt",
+    "Description": "Hebrew (he) spell check dictionary (Aug 15, 2012)"
+  },
+  {
+    "EnglishName": "Hindi",
+    "NativeName": "हिंदी",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/2367/1/dict-hi.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhindi-spellchecker-dictionary&amp;ts=1435678775&amp;use_mirror=garr",
+    "Description": "Hindi Spellchecker Dictionary"
+  },
+  {
+    "EnglishName": "Hungarian",
+    "NativeName": "Magyar",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1283/9/dict-hu.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fhungarian-dictionary-pack-20101019&amp;ts=1435690641&amp;use_mirror=freefr",
+    "Description": "Hungarian Dictionary Pack - (2010.10.19)"
+  },
+  {
+    "EnglishName": "Icelandic",
+    "NativeName": "íslenska",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/hunspell-is-2014-08-18.oxt",
+    "Description": "Icelandic spelling dictionary &amp; thesaurus 2013.05.11"
+  },
+  {
+    "EnglishName": "Indonesian",
+    "NativeName": "Indonesia",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/id-id.oxt",
+    "Description": "Indonesian dictionary - Kamus Indonesia 1.0"
+  },
+  {
+    "EnglishName": "Irish",
+    "NativeName": "Gaeilge",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/focloiri-gaeilge-5-0.oxt",
+    "Description": "Irish language spell checker, thesaurus, and hyphenation patterns 4.5"
+  },
+  {
+    "EnglishName": "Italian",
+    "NativeName": "Italiano",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/874d181c_dict-it.oxt",
+    "Description": "Italian and Latin spelling dictionaries 2013.03.31"
+  },
+  {
+    "EnglishName": "Italian",
+    "NativeName": "Italiano",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1204/13/dict-it.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fitalian-dictionary-thesaurus-hyphenation-patterns-20130905&amp;ts=1435690929&amp;use_mirror=freefr",
+    "Description": "Italian dictionary, thesaurus, hyphenation patterns - (2013.09.05)"
+  },
+  {
+    "EnglishName": "Khmer",
+    "NativeName": "Khmer",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/5067/2/dict-km.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fkhmer-spelling-dictionary&amp;ts=1373998173&amp;use_mirror=netcologne",
+    "Description": "Khmer spelling dictionary 2011.05.11"
+  },
+  {
+    "EnglishName": "Korean",
+    "NativeName": "한글",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/korean-spell-checker-0-7-91-libo.oxt",
+    "Description": "Korean spellchecker 0.5.6"
+  },
+  {
+    "EnglishName": "Latin",
+    "NativeName": "Latina",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-la-2013-03-31.oxt",
+    "Description": "Latin spelling and hyphenation dictionaries 2013.03.31"
+  },
+  {
+    "EnglishName": "Latvian",
+    "NativeName": "Latviešu",
+    "DownloadLink": "http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/hyph_lv_LV.zip",
+    "Description": "Latviešu valodas pareizrakstības pārbaudes modulis 0.9.6"
+  },
+  {
+    "EnglishName": "Lithuanian",
+    "NativeName": "Lietuvių",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/openoffice-spellcheck-lt-1-3.oxt",
+    "Description": "Lithuanian spellcheck and hyphenation dictionaries 1.3"
+  },
+  {
+    "EnglishName": "Lower Sorbian",
+    "NativeName": "dolnoserbšćina",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/lower-sorbian-spelling-dictionary-1-5-0.oxt",
+    "Description": "Lower Sorbian dictionary 1.4.6"
+  },
+  {
+    "EnglishName": "Malay",
+    "NativeName": "Malay",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/3904/0/ms_my.oxt",
+    "Description": "Malay Spell Checker v0.1 - 07/10/04"
+  },
+  {
+    "EnglishName": "Malayalam",
+    "NativeName": "Malayalam",
+    "DownloadLink": "https://master.dl.sourceforge.net/project/aoo-extensions/2741/3/ml_in_dict-1-1.oxt",
+    "Description": "Malayalam Spellchecker 1.1.0"
+  },
+  {
+    "EnglishName": "Macedonian",
+    "NativeName": "Macedonian",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/3403/0/dict-mk.oxt",
+    "Description": "Macedonian dictionary was created by Taras Bendik"
+  },
+  {
+    "EnglishName": "Norwegian",
+    "NativeName": "Norsk",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dictionary-no-no-1-0.oxt",
+    "Description": "Norsk stavekontroll (bokmål og nynorsk) 2.0.10"
+  },
+  {
+    "EnglishName": "Polish",
+    "NativeName": "polski",
+    "DownloadLink": "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/pl_PL.zip",
+    "Description": "Polish by https://sjp.pl - 2020-07-18"
+  },
+  {
+    "EnglishName": "Portuguese (Brazilian) - Libreoffice",
+    "NativeName": "Português (do Brasil)",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/veroptbrv320aoc.oxt",
+    "Description": "Brazilian Portuguese Spelling Dictionary V3.2 - Libreoffice"
+  },
+  {
+    "EnglishName": "Portuguese (Brazilian) - Firefox",
+    "NativeName": "Português (do Brasil)",
+    "DownloadLink": "https://hg.mozilla.org/releases/l10n/mozilla-aurora/pt-BR/archive/81d9d556fa78.zip/extensions/spellcheck/hunspell/",
+    "Description": "Brazilian Portuguese Spelling Dictionary 2009 José João de Almeida - Firefox"
+  },
+  {
+    "EnglishName": "Portuguese (European Portuguese Dictionary)",
+    "NativeName": "Português",
+    "DownloadLink": "http://natura.di.uminho.pt/download/sources/Dictionaries/libreoffice/oo3x-pt_PT.oxt",
+    "Description": "Dicionário em versão Acordo Ortográfico para Português de Portugal - LibreOffice"
+  },
+  {
+    "EnglishName": "Romanian",
+    "NativeName": "română",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1392/10/dict-ro.1.7.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fromanian-dictionary-pack-spell-checker-hyphenation-thesaurus-17&amp;ts=1435689394&amp;use_mirror=freefr",
+    "Description": "Romanian Dictionary Pack (spell checker, hyphenation, thesaurus) - v1.7"
+  },
+  {
+    "EnglishName": "Russian",
+    "NativeName": "Русский",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/dict-ru-ru-aot-0-4-3.oxt",
+    "Description": "Russian spellcheck dictionary. Based on works of AOT group. 0.4.0"
+  },
+  {
+    "EnglishName": "Serbian",
+    "NativeName": "српски",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/bb01ff21_dict-sr.oxt",
+    "Description": "Serbian (Cyrillic and Latin) Spelling and Hyphenation, Aug 08, 2019"
+  },
+  {
+    "EnglishName": "Sinhala",
+    "NativeName": "Sinhala",
+    "DownloadLink": "https://extensions.openoffice.org/en/download/3940",
+    "Description": "Sinhala by chamendri"
+  },
+  {
+    "EnglishName": "Slovak",
+    "NativeName": "slovenčina",
+    "DownloadLink": "http://www.sk-spell.sk.cx/files/hunspell-sk-20110228.zip",
+    "Description": "Slovak dictionary package / Slovenské slovníky"
+  },
+  {
+    "EnglishName": "Slovenian",
+    "NativeName": "slovenski",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/8b7ba8bb_pack-sl.oxt",
+    "Description": "Slovenian Dictionary Pack - 2018.01.04"
+  },
+  {
+    "EnglishName": "Spanish",
+    "NativeName": "España",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/spanish-dictionary.oxt",
+    "Description": "Diccionario del idioma español - 1.0 (Dec 28, 2011)"
+  },
+  {
+    "EnglishName": "Spanish",
+    "NativeName": "Español Genérico",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/e217baa9_es-any.oxt",
+    "Description": "Genérico v2.1 (Apr 05, 2016)"
+  },
+  {
+    "EnglishName": "Swahili",
+    "NativeName": "Kiswahili",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/swahilidictionary-2013-03-12.oxt",
+    "Description": "Swahili Dictionary 2013.03.12"
+  },
+  {
+    "EnglishName": "Swedish",
+    "NativeName": "Svenska",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/5959/1/dict-sv.oxt",
+    "Description": "Swedish 2.16"
+  },
+  {
+    "EnglishName": "Thai",
+    "NativeName": "ภาษาไทย",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/2365/0/dict-th.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fthai-spellchecker-dictionary&amp;ts=1373919459&amp;use_mirror=netcologne",
+    "Description": "Thai Spell Checker Dictionary"
+  },
+  {
+    "EnglishName": "Turkish",
+    "NativeName": "Turkish",
+    "DownloadLink": "https://extensions.libreoffice.org/assets/downloads/z/oo-turkish-dict-v1-2.oxt",
+    "Description": "Turkish Spellcheck Dictionary - 1.2"
+  },
+  {
+    "EnglishName": "Ukrainian",
+    "NativeName": "Українська",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/975/6/dict-uk_ua-1.7.1.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fukrainian-dictionary-171&amp;ts=1435691238&amp;use_mirror=freefr",
+    "Description": "Ukrainian Dictionary - v1.7.1 (27/03/2014)"
+  },
+  {
+    "EnglishName": "Valencian",
+    "NativeName": "valencià",
+    "DownloadLink": "http://downloads.sourceforge.net/project/aoo-extensions/1475/1/ca-valencia.3.0.0.oxt",
+    "Description": "Spelling dictionary for Catalan (Valencian version) - v3.0.0 (25/05/2015)"
+  },
+  {
+    "EnglishName": "Vietnamese",
+    "NativeName": "Tiếng Việt",
+    "DownloadLink": "https://downloads.sourceforge.net/project/aoo-extensions/917/3/vi_spellchecker_ooo3.oxt?ts=gAAAAABl8woSclxfXr9wpnYVtNEpNTbz5KrZTMETetNi3tcVaxsJmHo7YC66hYQ9knqcRO317eqyZOCvUsuMyFzTvZwZNk0vZw%3D%3D&amp;r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F917%2F3%2Fvi_spellchecker_ooo3.oxt%2Fdownload%3Fuse_mirror%3Dmaster",
+    "Description": "Vietnamese SpellChecker"
+  },
+  {
+    "EnglishName": "Vietnamese and English",
+    "NativeName": "Tiếng Việt and English",
+    "DownloadLink": "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/vi_VN-and-English.zip",
+    "Description": "Vietnamese/English by MMT Gouenji Tech - 2022-02-12"
+  },
+  {
+    "EnglishName": "Welsh (Wales)",
+    "NativeName": "Welsh (Wales)",
+    "DownloadLink": "https://downloads.sourceforge.net/project/aoo-extensions/1583/1/geiriadur-cy.oxt",
+    "Description": "Xhosa spell checker"
+  },
+  {
+    "EnglishName": "Xhosa (South Africa)",
+    "NativeName": "Xhosa (South Africa)",
+    "DownloadLink": "https://sourceforge.net/projects/aoo-extensions/files/3133/0/dict-xh_za-2009.10.30.oxt/download",
+    "Description": "Xhosa spell checker"
+  },
+  {
+    "EnglishName": "Zulu",
+    "NativeName": "IsiZulu",
+    "DownloadLink": "https://downloads.sourceforge.net/project/aoo-extensions/3132/3/dict-zu_za-2010.01.26.oxt?ts=gAAAAABl8wwk0LSrL-Co9B6dhwP__TVfnFtKRlLCcpi7LQ95GaviSGizVP6yGTHQpmPbvamIUfkt3Pqx79EvbTFP1GSBGlEdGQ%3D%3D&amp;r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F3132%2F3%2Fdict-zu_za-2010.01.26.oxt%2Fdownload",
+    "Description": "Zulu spell checker"
+  }
+]

@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public string FontName { get; set; }
         public int FontSize { get; set; }
         public string FontFace { get; set; }
-        public Color FontColor { get; set; }
+        public SKColor FontColor { get; set; }
         public string Alignment { get; set; }
         public int Baseline { get; set; }
         public bool Italic { get; set; }
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 FontName = "Lucida Sans",
                 FontSize = 36,
                 FontFace = "Regular",
-                FontColor = Color.WhiteSmoke,
+                FontColor = SKColors.WhiteSmoke,
                 Alignment = "center",
                 Baseline = 29,
                 Width = 1980,
@@ -412,14 +412,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string ToColorString(Color fontColor)
+        private static string ToColorString(SKColor fontColor)
         {
             //  0.793266 0.793391 0.793221 1
 
-            var r = (double)fontColor.R / byte.MaxValue;
-            var g = (double)fontColor.G / byte.MaxValue;
-            var b = (double)fontColor.B / byte.MaxValue;
-            var a = (double)fontColor.A / byte.MaxValue;
+            var r = (double)fontColor.Red / byte.MaxValue;
+            var g = (double)fontColor.Green / byte.MaxValue;
+            var b = (double)fontColor.Blue / byte.MaxValue;
+            var a = (double)fontColor.Alpha / byte.MaxValue;
             var result = $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
             return result;
         }

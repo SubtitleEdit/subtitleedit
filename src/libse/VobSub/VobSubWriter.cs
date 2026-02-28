@@ -1,6 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -8,7 +9,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 {
     public class VobSubWriter : IDisposable
     {
-
         private class MemWriter
         {
             private readonly byte[] _buf;
@@ -49,15 +49,15 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private readonly int _bottomMargin;
         private readonly int _leftRightMargin;
         private readonly int _languageStreamId;
-        private readonly Color _background = Color.Transparent;
-        private readonly Color _pattern;
-        private readonly Color _emphasis1;
+        private readonly SKColor _background = SKColors.Transparent;
+        private readonly SKColor _pattern;
+        private readonly SKColor _emphasis1;
         private readonly bool _useInnerAntiAliasing;
-        private Color _emphasis2 = Color.FromArgb(240, Color.Black);
+        private SKColor _emphasis2;
         private readonly string _languageName;
         private readonly string _languageNameShort;
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntiAliasing, DvdSubtitleLanguage language)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, SKColor pattern, SKColor emphasis1, bool useInnerAntiAliasing, DvdSubtitleLanguage language)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, ContentAlignment alignment, Point? overridePosition)
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, SKPoint? overridePosition)
         {
             var ms = new MemoryStream();
 
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return ms.ToArray();
         }
 
-        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment, Point? overridePosition = null) // inspired by code from SubtitleCreator
+        public void WriteParagraph(Paragraph p, SKBitmap bmp, BluRayContentAlignment alignment, SKPoint? overridePosition = null) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
             _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLowerInvariant()}");
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, ContentAlignment alignment, Point? overridePosition)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, SKPoint? overridePosition)
         {
             stream.WriteByte(5);
 
@@ -306,19 +306,19 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             ushort startX = (ushort)((_screenWidth - nbmp.Width) / 2);
             ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
 
-            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+            if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.TopCenter || alignment == BluRayContentAlignment.TopRight)
             {
                 startY = (ushort)_bottomMargin;
             }
-            if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+            if (alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.MiddleCenter || alignment == BluRayContentAlignment.MiddleRight)
             {
                 startY = (ushort)(_screenHeight / 2 - nbmp.Height / 2);
             }
-            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.BottomLeft)
+            if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.BottomLeft)
             {
                 startX = (ushort)_leftRightMargin;
             }
-            if (alignment == ContentAlignment.TopRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.BottomRight)
+            if (alignment == BluRayContentAlignment.TopRight || alignment == BluRayContentAlignment.MiddleRight || alignment == BluRayContentAlignment.BottomRight)
             {
                 startX = (ushort)(_screenWidth - nbmp.Width - _leftRightMargin);
             }
@@ -345,8 +345,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private void WriteContrast(Stream stream)
         {
             stream.WriteByte(4);
-            stream.WriteByte((byte)((_emphasis2.A << 4) | _emphasis1.A)); // emphasis2 + emphasis1
-            stream.WriteByte((byte)((_pattern.A << 4) | _background.A)); // pattern + background
+            stream.WriteByte((byte)((_emphasis2.Alpha << 4) | _emphasis1.Alpha)); // emphasis2 + emphasis1
+            stream.WriteByte((byte)((_pattern.Alpha << 4) | _background.Alpha)); // pattern + background
         }
 
         /// <summary>
@@ -439,9 +439,9 @@ id: " + _languageNameShort + @", index: 0
             return sb;
         }
 
-        private static string ToHexColor(Color c)
+        private static string ToHexColor(SKColor c)
         {
-            return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLowerInvariant();
+            return (c.Red.ToString("X2") + c.Green.ToString("X2") + c.Blue.ToString("X2")).ToLowerInvariant();
         }
 
         private void ReleaseManagedResources()
@@ -466,6 +466,5 @@ id: " + _languageNameShort + @", index: 0
                 ReleaseManagedResources();
             }
         }
-
     }
 }

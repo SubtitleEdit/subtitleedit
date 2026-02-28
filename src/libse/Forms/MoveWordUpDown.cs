@@ -26,63 +26,215 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return;
             }
 
-            var assTagOn = false;
-            var htmlTagOn = false;
-            var sbWord = new StringBuilder();
-            var done = false;
-            var sbS2 = new StringBuilder();
-            for (int i = 0; i < S2.Length; i++)
+            var s2Trimmed = S2.Trim();
+
+            // Parse to find the first word with its surrounding tags
+            var openTags = new System.Collections.Generic.Stack<(string opening, string closing)>();
+            var wordChars = new StringBuilder();
+            var leadingTags = new StringBuilder();
+            var inWord = false;
+            var wordEndPos = -1;
+
+            for (int i = 0; i < s2Trimmed.Length; i++)
             {
-                var ch = S2[i];
-                if (done)
+                var ch = s2Trimmed[i];
+
+                // Check for tag start
+                if (ch == '<' || (ch == '{' && i + 1 < s2Trimmed.Length && s2Trimmed[i + 1] == '\\'))
                 {
-                    sbS2.Append(ch);
-                }
-                else if (assTagOn)
-                {
-                    if (ch == '}')
+                    var tagStart = i;
+                    var endChar = ch == '<' ? '>' : '}';
+                    var tagSb = new StringBuilder();
+                    tagSb.Append(ch);
+                    i++;
+
+                    while (i < s2Trimmed.Length && s2Trimmed[i] != endChar)
                     {
-                        assTagOn = false;
+                        tagSb.Append(s2Trimmed[i]);
+                        i++;
                     }
-                    sbS2.Append(ch);
-                }
-                else if (htmlTagOn)
-                {
-                    if (ch == '>')
+
+                    if (i < s2Trimmed.Length)
                     {
-                        htmlTagOn = false;
+                        tagSb.Append(s2Trimmed[i]);
                     }
-                    sbS2.Append(ch);
+
+                    var tag = tagSb.ToString();
+
+                    // Determine if it's an opening or closing tag
+                    if (tag.StartsWith("</", StringComparison.Ordinal))
+                    {
+                        // HTML closing tag
+                        if (inWord)
+                        {
+                            // We hit a closing tag after the word started
+                            wordEndPos = i + 1;
+                            break;
+                        }
+                        else if (openTags.Count > 0)
+                        {
+                            openTags.Pop();
+                        }
+                    }
+                    else if (tag.StartsWith("<", StringComparison.Ordinal))
+                    {
+                        // HTML opening tag
+                        var tagName = tag.Substring(1, tag.IndexOf('>') > 1 ? tag.IndexOf('>') - 1 : tag.Length - 2).Split(' ')[0].ToLowerInvariant();
+                        var closingTag = $"</{tagName}>";
+                        openTags.Push((tag, closingTag));
+
+                        if (inWord)
+                        {
+                            leadingTags.Append(tag);
+                        }
+                    }
+                    else if (tag.Contains("{\\i0}") || tag.Contains("{\\b0}") || tag.Contains("{\\u0}"))
+                    {
+                        // ASS closing tag
+                        if (inWord)
+                        {
+                            wordEndPos = i + 1;
+                            break;
+                        }
+                        else if (openTags.Count > 0)
+                        {
+                            openTags.Pop();
+                        }
+                    }
+                    else if (tag.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        // ASS opening tag
+                        var closingTag = tag.Contains("\\i1") ? "{\\i0}" : "";
+                        openTags.Push((tag, closingTag));
+
+                        if (inWord)
+                        {
+                            leadingTags.Append(tag);
+                        }
+                    }
                 }
-                else if (ch == '{' && S2.Substring(i).StartsWith("{\\", StringComparison.Ordinal))
+                else if (char.IsWhiteSpace(ch))
                 {
-                    assTagOn = true;
-                    sbS2.Append(ch);
-                }
-                else if (S2.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("</font", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                         S2.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
-                {
-                    htmlTagOn = true;
-                    sbS2.Append(ch);
-                }
-                else if (sbWord.ToString().Trim().Length > 0 && (ch == ' ' || ch == '\r' || ch == '\n'))
-                {
-                    done = true;
+                    if (inWord)
+                    {
+                        // End of word
+                        wordEndPos = i;
+                        break;
+                    }
                 }
                 else
                 {
-                    sbWord.Append(ch);
+                    if (!inWord)
+                    {
+                        inWord = true;
+                        // Capture current open tags
+                        foreach (var (opening, closing) in openTags.Reverse())
+                        {
+                            leadingTags.Append(opening);
+                        }
+                    }
+                    wordChars.Append(ch);
                 }
             }
-            S1 = AddWordAfter(sbWord.ToString().Trim(), S1);
+
+            if (wordChars.Length == 0)
+            {
+                return;
+            }
+
+            if (wordEndPos == -1)
+            {
+                wordEndPos = s2Trimmed.Length;
+            }
+
+            // Build word with tags
+            var closingTags = new StringBuilder();
+            foreach (var (opening, closing) in openTags)
+            {
+                if (!string.IsNullOrEmpty(closing))
+                {
+                    closingTags.Insert(0, closing);
+                }
+            }
+
+            var wordWithTags = leadingTags.ToString() + wordChars.ToString() + closingTags.ToString();
+
+            // Check for tag merging with S1
+            var s1Trimmed = S1.Trim();
+            if (!string.IsNullOrWhiteSpace(s1Trimmed))
+            {
+                if (closingTags.Length > 0 && leadingTags.Length > 0)
+                {
+                    var firstClosing = closingTags.ToString().Split(new[] { '<', '{' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    if (!string.IsNullOrEmpty(firstClosing))
+                    {
+                        var checkTag = (firstClosing.StartsWith("/") ? "<" : "{") + firstClosing;
+                        if (s1Trimmed.EndsWith(checkTag, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Merge: remove closing from S1, remove opening from word
+                            s1Trimmed = s1Trimmed.Substring(0, s1Trimmed.Length - checkTag.Length).TrimEnd();
+                            var firstOpening = openTags.Last().opening;
+                            wordWithTags = wordWithTags.Substring(firstOpening.Length);
+                            S1 = s1Trimmed + " " + wordChars.ToString() + checkTag;
+                        }
+                        else
+                        {
+                            S1 = s1Trimmed + " " + wordWithTags.Trim();
+                        }
+                    }
+                    else
+                    {
+                        S1 = s1Trimmed + " " + wordWithTags.Trim();
+                    }
+                }
+                else
+                {
+                    S1 = s1Trimmed + " " + wordWithTags.Trim();
+                }
+            }
+            else
+            {
+                S1 = wordWithTags.Trim();
+            }
+
             S1 = AutoBreakIfNeeded(S1);
-            S2 = sbS2.ToString().Trim();
+
+            // Remaining S2 content - need to preserve tag structure
+            var s2Remaining = wordEndPos < s2Trimmed.Length ? s2Trimmed.Substring(wordEndPos).Trim() : string.Empty;
+
+            // If we had opening tags and there's remaining content, we need to check if we should re-add those tags
+            if (!string.IsNullOrEmpty(s2Remaining) && openTags.Count > 0)
+            {
+                // If s2Remaining contains a closing tag that matches one of our open tags,
+                // OR if a tag doesn't have a closing equivalent, we need to add back the opening tag
+                var tagsToReopen = new System.Collections.Generic.List<(string opening, string closing)>();
+
+                foreach (var (opening, closing) in openTags.Reverse())
+                {
+                    if (string.IsNullOrEmpty(closing))
+                    {
+                        // ASS positioning tag without closing - always re-add it
+                        tagsToReopen.Add((opening, closing));
+                    }
+                    else if (s2Remaining.Contains(closing))
+                    {
+                        // Has a closing tag in remaining content - re-add opening
+                        tagsToReopen.Add((opening, closing));
+                    }
+                }
+
+                if (tagsToReopen.Count > 0)
+                {
+                    var reopenTagsSb = new StringBuilder();
+                    foreach (var (opening, closing) in tagsToReopen)
+                    {
+                        reopenTagsSb.Append(opening);
+                    }
+                    s2Remaining = reopenTagsSb.ToString() + s2Remaining;
+                }
+            }
+
+            S2 = s2Remaining;
             S2 = RemoveEmptyTags(S2);
         }
 
@@ -96,70 +248,149 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return;
             }
 
-            var assTagOn = false;
-            var htmlTagOn = false;
-            var sbWord = new StringBuilder();
-            var done = false;
-            var sbS1 = new StringBuilder();
-            for (int i = S1.Length - 1; i >= 0; i--)
+            var s1Trimmed = S1.Trim();
+
+            // Find start of last word and any active tags
+            var openTags = new System.Collections.Generic.Stack<(string opening, string closing)>();
+            var lastWordStart = -1;
+            var lastWordTags = new System.Collections.Generic.List<(string opening, string closing)>();
+            var inWord = false;
+
+            for (int i = 0; i < s1Trimmed.Length; i++)
             {
-                var ch = S1[i];
-                if (done)
+                var ch = s1Trimmed[i];
+
+                if (ch == '<' || (ch == '{' && i + 1 < s1Trimmed.Length && s1Trimmed[i + 1] == '\\'))
                 {
-                    sbS1.Append(ch);
-                }
-                else if (assTagOn)
-                {
-                    if (ch == '{' && S2.Substring(i).StartsWith("{\\", StringComparison.Ordinal))
+                    var tagStart = i;
+                    var endChar = ch == '<' ? '>' : '}';
+                    var tagSb = new StringBuilder();
+                    tagSb.Append(ch);
+                    i++;
+
+                    while (i < s1Trimmed.Length && s1Trimmed[i] != endChar)
                     {
-                        assTagOn = false;
+                        tagSb.Append(s1Trimmed[i]);
+                        i++;
                     }
-                    sbS1.Append(ch);
-                }
-                else if (htmlTagOn)
-                {
-                    if (S1.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                        S1.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
+
+                    if (i < s1Trimmed.Length)
                     {
-                        htmlTagOn = false;
+                        tagSb.Append(s1Trimmed[i]);
                     }
-                    sbS1.Append(ch);
+
+                    var tag = tagSb.ToString();
+
+                    if (tag.StartsWith("</", StringComparison.Ordinal)) // HTML closing
+                    {
+                        if (inWord)
+                        {
+                            inWord = false;
+                        }
+                        if (openTags.Count > 0)
+                        {
+                            openTags.Pop();
+                        }
+                    }
+                    else if (tag.StartsWith("<", StringComparison.Ordinal)) // HTML opening
+                    {
+                        var tagName = tag.Substring(1, tag.IndexOf('>') > 1 ? tag.IndexOf('>') - 1 : tag.Length - 2).Split(' ')[0].ToLowerInvariant();
+                        var closingTag = $"</{tagName}>";
+                        openTags.Push((tag, closingTag));
+                    }
+                    else if (tag.Contains("{\\i0}") || tag.Contains("{\\b0}") || tag.Contains("{\\u0}")) // ASS closing
+                    {
+                        if (inWord)
+                        {
+                            inWord = false;
+                        }
+                        if (openTags.Count > 0)
+                        {
+                            openTags.Pop();
+                        }
+                    }
+                    else if (tag.StartsWith("{\\", StringComparison.Ordinal)) // ASS opening
+                    {
+                        var closingTag = tag.Contains("\\i1") ? "{\\i0}" : "";
+                        openTags.Push((tag, closingTag));
+                    }
                 }
-                else if (ch == '}' && S1.StartsWith("{\\", StringComparison.Ordinal))
+                else if (char.IsWhiteSpace(ch))
                 {
-                    assTagOn = true;
-                    sbS1.Append(ch);
-                }
-                else if (ch == '>' && S1.Substring(0, i + 1).Contains("<font ", StringComparison.OrdinalIgnoreCase) && IsPartOfFontTag(S1, i) ||
-                         S1.Substring(0, i + 1).EndsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
-                         S1.Substring(0, i + 1).EndsWith("<u>", StringComparison.OrdinalIgnoreCase))
-                {
-                    htmlTagOn = true;
-                    sbS1.Append(ch);
-                }
-                else if (sbWord.ToString().Trim().Length > 0 && (ch == ' ' || ch == '\r' || ch == '\n'))
-                {
-                    done = true;
+                    if (inWord)
+                    {
+                        inWord = false;
+                    }
                 }
                 else
                 {
-                    sbWord.Append(ch);
+                    if (!inWord)
+                    {
+                        inWord = true;
+                        lastWordStart = i;
+                        lastWordTags = openTags.Reverse().ToList();
+                    }
                 }
             }
-            S1 = string.Join(string.Empty, sbS1.ToString().Trim().ToCharArray().Reverse());
-            S1 = RemoveEmptyTags(S1);
-            S2 = AddWordBefore(string.Join(string.Empty, sbWord.ToString().Trim().ToCharArray().Reverse()), S2);
+
+            if (lastWordStart == -1)
+            {
+                return;
+            }
+
+            var lastWordContent = s1Trimmed.Substring(lastWordStart);
+            var newS1Pre = s1Trimmed.Substring(0, lastWordStart);
+            while (newS1Pre.Contains("  "))
+            {
+                newS1Pre = newS1Pre.Replace("  ", " ");
+            }
+            newS1Pre = newS1Pre.TrimEnd();
+
+            // Close tags for S1
+            var s1ClosingTags = new StringBuilder();
+            var movedWordOpeningTags = new StringBuilder();
+
+            foreach (var (opening, closing) in lastWordTags)
+            {
+                if (!string.IsNullOrEmpty(closing))
+                {
+                    s1ClosingTags.Insert(0, closing);
+                }
+                movedWordOpeningTags.Append(opening);
+            }
+
+            S1 = newS1Pre + s1ClosingTags;
+            S1 = RemoveEmptyTags(S1).Trim();
+
+            var movedWord = movedWordOpeningTags + lastWordContent;
+
+            // Add word to S2
+            var s2Trimmed = S2.Trim();
+            if (!string.IsNullOrWhiteSpace(s2Trimmed))
+            {
+                var movedWordTrimmed = movedWord.Trim();
+                foreach (var tag in lastWordTags)
+                {
+                    if (s2Trimmed.StartsWith(tag.opening, StringComparison.OrdinalIgnoreCase))
+                    {
+                        s2Trimmed = s2Trimmed.Substring(tag.opening.Length).TrimStart();
+                        if (!string.IsNullOrEmpty(tag.closing) && movedWordTrimmed.EndsWith(tag.closing, StringComparison.OrdinalIgnoreCase))
+                        {
+                            movedWordTrimmed = movedWordTrimmed.Substring(0, movedWordTrimmed.Length - tag.closing.Length).TrimEnd();
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                S2 = movedWordTrimmed + " " + s2Trimmed;
+            }
+            else
+            {
+                S2 = movedWord.Trim();
+            }
+
             S2 = AutoBreakIfNeeded(S2);
         }
 
@@ -209,6 +440,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 return pre + s.Insert(3, word.Trim() + " ").Trim();
             }
+            if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</b>", StringComparison.OrdinalIgnoreCase)))
+            {
+                return pre + s.Insert(3, word.Trim() + " ").Trim();
+            }
+            if (s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</u>", StringComparison.OrdinalIgnoreCase)))
+            {
+                return pre + s.Insert(3, word.Trim() + " ").Trim();
+            }
+            if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase) && s.Contains(">") && s.Contains("</font>", StringComparison.OrdinalIgnoreCase))
+            {
+                var endIdx = s.IndexOf('>');
+                return pre + s.Insert(endIdx + 1, word.Trim() + " ").Trim();
+            }
 
             return pre + (word.Trim() + " " + s.Trim()).Trim();
         }
@@ -219,6 +463,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<i>", StringComparison.OrdinalIgnoreCase)))
             {
                 return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
+            }
+            if (s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<b>", StringComparison.OrdinalIgnoreCase)))
+            {
+                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
+            }
+            if (s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<u>", StringComparison.OrdinalIgnoreCase)))
+            {
+                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
+            }
+            if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase) && s.Contains("<font", StringComparison.OrdinalIgnoreCase))
+            {
+                return s.Insert(s.Length - 7, " " + word.Trim()).Trim();
             }
 
             return (s.Trim() + " " + word.Trim()).Trim();

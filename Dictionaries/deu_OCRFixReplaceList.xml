@@ -7055,5 +7055,10 @@
   </PartialLines>
   <BeginLines />
   <EndLines />
+	<RegularExpressionsIfSpelledCorrectly>
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
+	</RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions />
 </OCRFixReplaceList>

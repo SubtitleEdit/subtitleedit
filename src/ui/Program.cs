@@ -1,115 +1,245 @@
-﻿using Nikse.SubtitleEdit.Forms;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Styling;
+using Avalonia.Themes.Fluent;
+using Avalonia.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Nikse.SubtitleEdit.Features.Help;
+using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
+using Projektanker.Icons.Avalonia;
+using Projektanker.Icons.Avalonia.FontAwesome;
+using Projektanker.Icons.Avalonia.MaterialDesign;
 using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows.Forms;
+using System.Text;
 
 namespace Nikse.SubtitleEdit
 {
-    internal static class Program
+    internal class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static string? PendingFileToOpen { get; set; }
+        public static bool FileOpenedViaActivation { get; set; }
+
         [STAThread]
-        private static void Main()
+        public static void Main(string[] args)
         {
-#if !DEBUG
-            // Add the event handler for handling UI thread exceptions to the event.
-            Application.ThreadException += Application_ThreadException;
+            try
+            {
+                // Global exception handling
+                AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+                {
+                    var exception = e.ExceptionObject as Exception;
+                    Se.LogError(exception ?? new Exception(), "Unhandled AppDomain Exception");
+                };
 
-            // Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                // Setup application lifetime
+                var lifetime = new ClassicDesktopStyleApplicationLifetime
+                {
+                    Args = args,
+                    ShutdownMode = ShutdownMode.OnLastWindowClose
+                };
 
-            // Add the event handler for handling non-UI thread exceptions to the event.
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                // Register icon providers
+                IconProvider.Current
+                    .Register<FontAwesomeIconProvider>()
+                    .Register<MaterialDesignIconProvider>();
+
+                // Load settings
+                Se.LoadSettings();
+
+                // Build and configure the app
+                var appBuilder = AppBuilder.Configure<Application>()
+                    .UsePlatformDetect()
+                     .With(new X11PlatformOptions
+                     {
+                         RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
+                     })
+                    .AfterSetup(b => ConfigureApplication(b, lifetime))
+                    .SetupWithLifetime(lifetime);
+
+                // Configure dependency injection
+                SetupDependencyInjection();
+
+                // Register encoding provider
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                // Set current theme
+                UiTheme.SetCurrentTheme();
+
+                // Setup main window
+                SetupMainWindow(lifetime);
+
+#if DEBUG
+                if (lifetime.MainWindow != null)
+                {
+                    lifetime.MainWindow.AttachDevTools();
+                }
 #endif
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+                // Start the application
+                lifetime.Start(args);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Critical error during application startup");
+                Environment.Exit(1);
+            }
         }
 
-        // Handle the UI exceptions by showing a dialog box, and asking the user whether or not they wish to abort execution.
-        private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        private static void ConfigureApplication(AppBuilder b, ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            var exc = e.Exception;
-            // Ignore CultureNotFoundException to avoid error when changing language (on some computers) - see https://github.com/SubtitleEdit/subtitleedit/issues/719
-            if (!(exc is System.Globalization.CultureNotFoundException))
+            // Setup Fluent theme
+            UiTheme.FluentTheme = new FluentTheme();
+            UiTheme.FluentTheme.Palettes.Add(ThemeVariant.Dark, new ColorPaletteResources()
             {
-                var dr = DialogResult.Abort;
-                try
+                RegionColor = UiUtil.GetDarkThemeBackgroundColor(),
+            });
+
+            if (b.Instance != null)
+            {
+                b.Instance.Styles.Add(UiTheme.FluentTheme);
+            }
+
+            // Add DataGrid styles
+            if (b.Instance != null)
+            {
+                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
                 {
-                    var cap = "Windows Forms Thread Exception";
-                    var msg = "An application error occurred in Subtitle Edit " + GetVersion() + ". " +
-                              "\nPlease report at https://github.com/SubtitleEdit/subtitleedit/issues with the following information:" +
-                              "\n\nError Message:\n" + exc.Message +
-                              "\n\nStack Trace:\n" + exc.StackTrace;
-                    dr = MessageBox.Show(msg, cap, MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
-                }
-                catch
+                    Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
+                });
+            }
+
+            if (b.Instance != null)
+            {
+                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
                 {
-                }
-                if (dr == DialogResult.Abort)
+                    Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
+                });
+            }
+
+            // Add ColorPicker styles
+            if (b.Instance != null)
+            {
+                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
                 {
-                    Application.Exit();
-                }
+                    Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
+                });
+            }
+
+            // Set custom font
+            if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
+            {
+                UiUtil.SetFontName(Se.Settings.Appearance.FontName);
+            }
+
+            // Set application name
+            if (b.Instance != null)
+            {
+                b.Instance.Name = "Subtitle Edit";
+            }
+
+            // Setup native menu
+            if (b.Instance != null)
+            {
+                SetupNativeMenu(b.Instance, lifetime);
             }
         }
 
-        private static string GetVersion()
+        private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            try
+            var nativeMenu = new NativeMenu();
+            var aboutMenu = new NativeMenuItem(Se.Language.Help.AboutSubtitleEdit);
+
+            aboutMenu.Click += async (sender, e) =>
             {
-                return $"{System.Reflection.Assembly.GetEntryAssembly().GetName().Version} - {IntPtr.Size * 8}-bit  - {Environment.OSVersion}";
-            }
-            catch
+                var aboutWindow = new AboutWindow(new AboutViewModel());
+                if (lifetime.MainWindow != null)
+                {
+                    await aboutWindow.ShowDialog(lifetime.MainWindow);
+                }
+            };
+
+            nativeMenu.Items.Add(aboutMenu);
+            NativeMenu.SetMenu(app, nativeMenu);
+
+            // mac finder "Send to"
+            if (OperatingSystem.IsMacOS())
             {
-                return string.Empty;
+                if (app.TryGetFeature(typeof(IActivatableLifetime)) is not IActivatableLifetime activatable)
+                {
+                    return;
+                }
+
+                activatable.Activated += (sender, e) =>
+                {
+                    if (e is not FileActivatedEventArgs args || args.Kind != ActivationKind.File)
+                    {
+                        return;
+                    }
+
+                    foreach (var storageItem in args.Files)
+                    {
+                        var filePath = storageItem.Path.LocalPath;
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            FileOpenedViaActivation = true;
+                            if (lifetime.MainWindow?.Content is MainView mainView)
+                            {
+                                Dispatcher.UIThread.Post(async () =>
+                                {
+                                    await mainView.OpenFile(filePath);
+                                });
+                            }
+                            else
+                            {
+                                PendingFileToOpen = filePath;
+                            }
+
+                            break;
+                        }
+                    }
+                };
             }
         }
 
-        // Handle the non-UI exceptions by logging the event to the ThreadException event log before
-        // the system default handler reports the exception to the user and terminates the application.
-        // NOTE: This exception handler cannot prevent the termination of the application.
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void SetupDependencyInjection()
         {
-            try
-            {
-                var exc = e.ExceptionObject as Exception;
-                var msg = "A fatal non-UI error occurred in Subtitle Edit " + GetVersion() + "." +
-                          "\nPlease report at https://github.com/SubtitleEdit/subtitleedit/issues with the following information:" +
-                          "\n\nError Message:\n" + exc.Message +
-                          "\n\nStack Trace:\n" + exc.StackTrace;
-
-                // Since we can't prevent the app from terminating, log this to the event log.
-                if (!EventLog.SourceExists("ThreadException"))
-                {
-                    EventLog.CreateEventSource("ThreadException", "Application");
-                }
-
-                // Create an EventLog instance and assign its source.
-                using (var eventLog = new EventLog { Source = "ThreadException" })
-                {
-                    eventLog.WriteEntry(msg);
-                }
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    var cap = "Non-UI Thread Exception";
-                    var msg = "A fatal non-UI error occurred in Subtitle Edit " + GetVersion() + "." +
-                              "\nCould not write the error to the event log." +
-                              "\nReason: " + ex.Message;
-                    MessageBox.Show(msg, cap, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                }
-                finally
-                {
-                    Application.Exit();
-                }
-            }
+            var collection = new ServiceCollection();
+            collection.AddSubtitleEditServices();
+            Locator.Services = collection.BuildServiceProvider();
         }
 
+        private static void SetupMainWindow(ClassicDesktopStyleApplicationLifetime lifetime)
+        {
+            lifetime.MainWindow = new Window
+            {
+                Title = "Subtitle Edit",
+                Name = "MainWindow",
+                Icon = UiUtil.GetSeIcon(),
+                MinWidth = 800,
+                MinHeight = 500,
+            };
+
+            var mainView = new MainView();
+            lifetime.MainWindow.Content = mainView;
+
+            // Restore window position BEFORE setting content and showing
+            if (Se.Settings.General.RememberPositionAndSize)
+            {
+                UiUtil.RestoreWindowPosition(lifetime.MainWindow);
+            }
+
+            lifetime.Startup += (_, e) =>
+            {
+                if (e.Args.Length > 0 && System.IO.File.Exists(e.Args[0]))
+                {
+                    PendingFileToOpen = e.Args[0];
+                    FileOpenedViaActivation = true;
+                }
+            };
+        }
     }
 }

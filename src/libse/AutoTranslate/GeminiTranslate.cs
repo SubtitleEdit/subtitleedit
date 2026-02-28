@@ -31,14 +31,20 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "gemini-flash-latest",
-            "gemini-flash-lite-latest",
+            // Auto-updating Aliases
+            "gemini-flash-latest", 
+            "gemini-pro-latest",  
+
+            // Gemini 3 - Latest Generation
+            "gemini-3-pro",
+            "gemini-3-flash",
+            "gemini-3-deep-think",
+
+            // Gemini 2.5 - Stable Reasoning Models
+            "gemini-2.5-pro",
             "gemini-2.5-flash",
             "gemini-2.5-flash-lite",
-            "gemini-2.5-pro",
-            "gemini-2.0-flash",
-            "gemini-2.0-flash-lite",
-            "gemini-1.5-pro",
+            "gemini-2.5-flash-image",
         };
 
         public void Initialize()
@@ -203,7 +209,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Kazakh","kk"),
                MakePair("Kurdish","ku"),
                MakePair("Central Kurdish (Sorani)","ckb"),
-
                MakePair("Konkani",""),
                MakePair("Korean","ko"),
                MakePair("Kyrgyz","ky"),

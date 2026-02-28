@@ -1,16 +1,17 @@
-﻿using System.Drawing;
+﻿
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
     public class SccPositionAndStyle
     {
-        public Color ForeColor { get; }
+        public SKColor ForeColor { get; }
         public SccFontStyle Style { get; }
         public int X { get; }
         public int Y { get; }
         public string Code { get; }
 
-        public SccPositionAndStyle(Color color, SccFontStyle style, int y, int x, string code)
+        public SccPositionAndStyle(SKColor color, SccFontStyle style, int y, int x, string code)
         {
             ForeColor = color;
             Style = style;

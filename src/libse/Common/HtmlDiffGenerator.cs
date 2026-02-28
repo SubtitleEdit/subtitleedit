@@ -1,6 +1,6 @@
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -44,10 +44,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             before = before.Replace(Environment.NewLine, "↲");
             after = after.Replace(Environment.NewLine, "↲");
 
-            var beforeColors = new Dictionary<int, Color>();
-            var beforeBackgroundColors = new Dictionary<int, Color>();
-            var afterColors = new Dictionary<int, Color>();
-            var afterBackgroundColors = new Dictionary<int, Color>();
+            var beforeColors = new Dictionary<int, SKColor>();
+            var beforeBackgroundColors = new Dictionary<int, SKColor>();
+            var afterColors = new Dictionary<int, SKColor>();
+            var afterBackgroundColors = new Dictionary<int, SKColor>();
 
             // from start
             int minLength = Math.Min(before.Length, after.Length);
@@ -70,20 +70,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         if (char.IsWhiteSpace(before[i]))
                         {
-                            beforeBackgroundColors.Add(i, Color.Red);
+                            beforeBackgroundColors.Add(i, SKColors.Red);
                         }
                         else
                         {
-                            beforeColors.Add(i, Color.Red);
+                            beforeColors.Add(i, SKColors.Red);
                         }
 
                         if (char.IsWhiteSpace(after[i]))
                         {
-                            afterBackgroundColors.Add(i, Color.Red);
+                            afterBackgroundColors.Add(i, SKColors.Red);
                         }
                         else
                         {
-                            afterColors.Add(i, Color.Red);
+                            afterColors.Add(i, SKColors.Red);
                         }
                     }
                     else
@@ -100,22 +100,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (char.IsWhiteSpace(before[i]))
                     {
-                        beforeBackgroundColors.Add(i, Color.Red);
+                        beforeBackgroundColors.Add(i, SKColors.Red);
                     }
                     else
                     {
-                        beforeColors.Add(i, Color.Red);
+                        beforeColors.Add(i, SKColors.Red);
                     }
                 }
                 if (i < after.Length)
                 {
                     if (char.IsWhiteSpace(after[i]))
                     {
-                        afterBackgroundColors.Add(i, Color.Red);
+                        afterBackgroundColors.Add(i, SKColors.Red);
                     }
                     else
                     {
-                        afterColors.Add(i, Color.Red);
+                        afterColors.Add(i, SKColors.Red);
                     }
                 }
             }

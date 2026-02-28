@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class RulesProfile
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         public string Name { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
         public decimal SubtitleOptimalCharactersPerSeconds { get; set; }
@@ -26,14 +26,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public RulesProfile()
         {
-            Id = Guid.NewGuid();
+            //Id = Guid.NewGuid();
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
         }
 
         public RulesProfile(RulesProfile profile)
         {
-            Id = profile.Id;
+            //Id = profile.Id;
             Name = profile.Name;
             SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
             SubtitleOptimalCharactersPerSeconds = profile.SubtitleOptimalCharactersPerSeconds;

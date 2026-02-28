@@ -1,0 +1,550 @@
+name: Build and release UI
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: 'Build configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      create_release:
+        description: 'Create GitHub release'
+        required: true
+        default: true
+        type: boolean
+      is_prerelease:
+        description: 'Mark as pre-release'
+        required: true
+        default: true
+        type: boolean
+      release_tag:
+        description: 'Release tag (e.g., v1.0.0-beta)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      # - name: Test
+      #   run: dotnet test --no-build --verbosity normal
+
+      - name: Download libmpv for Windows
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2025-01-25/libmpv2-64.zip" -OutFile "libmpv2-64.zip"
+          Expand-Archive -Path "libmpv2-64.zip" -DestinationPath "libmpv-temp"
+
+      - name: Publish Windows x64 app
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true `
+            -o ./publish/windows-x64
+          Copy-Item "libmpv-temp/libmpv-2.dll" "./publish/windows-x64/"
+
+      - name: Publish Windows ARM64 app
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-arm64 --self-contained true `
+            -p:PublishSingleFile=true `
+            -o ./publish/windows-arm64
+
+      - name: Remove PDB files
+        run: |
+          Get-ChildItem -Path "./publish/windows-x64/" -Recurse -Include *.pdb | Remove-Item -Force
+          Get-ChildItem -Path "./publish/windows-arm64/" -Recurse -Include *.pdb | Remove-Item -Force
+
+      - name: Setup WiX
+        run: |
+          dotnet tool install --global wix --version 5.0.1
+          wix extension add -g WixToolset.UI.wixext/5.0.1
+
+      - name: Build MSI Installer for x64
+        run: |
+          wix build ./installer/Product.wxs `
+            -arch x64 `
+            -ext WixToolset.UI.wixext `
+            -d SourceDir="./publish/windows-x64/" `
+            -d ProjectDir="./" `
+            -d ProductVersion="1.0.0" `
+            -o ./SubtitleEdit-Windows-x64.msi
+
+      # - name: Build MSI Installer for ARM64
+      #   run: |
+      #     wix build ./installer/Product.wxs `
+      #       -arch arm64 `
+      #       -ext WixToolset.UI.wixext `
+      #       -d SourceDir="./publish/windows-arm64/" `
+      #       -d ProjectDir="./" `
+      #       -d ProductVersion="1.0.0" `
+      #       -o ./SubtitleEdit-Windows-ARM64.msi
+
+      - name: Create Windows ZIP packages
+        run: |
+          Compress-Archive -Path "./publish/windows-x64/*" -DestinationPath "./SubtitleEdit-Windows-x64.zip"
+          Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SubtitleEdit-Windows-ARM64.zip"
+
+      - name: Upload Windows x64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: se-windows-x64
+          path: ./publish/windows-x64/
+
+      - name: Upload Windows ARM64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: se-windows-arm64
+          path: ./publish/windows-arm64/
+
+      - name: Upload Windows ZIP packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip-packages
+          path: |
+            ./SubtitleEdit-Windows-x64.zip
+            ./SubtitleEdit-Windows-ARM64.zip
+
+      - name: Upload Windows MSI Installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msi-installers
+          path: |
+            ./SubtitleEdit-Windows-x64.msi
+            # ./SubtitleEdit-Windows-ARM64.msi
+
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+      # - name: Test
+      #   run: dotnet test --no-build --verbosity normal
+      - name: Download ffmpeg for macOS
+        run: |
+          curl -L -o ffmpeg8-mac-arm.zip "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg8-mac-arm.zip"
+          unzip ffmpeg8-mac-arm.zip -d ffmpeg-temp
+          rm ffmpeg8-mac-arm.zip  # Clean up immediately after extraction
+      - name: Download libmpv for macOS ARM64
+        run: |
+          curl -L -o libmpv-mac-arm.zip "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2025-01-25/libmpv-mac-arm.zip"
+          unzip libmpv-mac-arm.zip -d libmpv-temp
+          rm libmpv-mac-arm.zip  # Clean up immediately after extraction
+          
+          # Remove __MACOSX folders (not needed, saves space)
+          rm -rf libmpv-temp/__MACOSX 2>/dev/null || true
+
+      - name: Free disk space before builds
+        run: |
+          echo "Before cleanup:"; df -h /
+    
+          # Clear NuGet caches
+          dotnet nuget locals all --clear
+    
+          # Remove Homebrew caches 
+          brew cleanup --prune=all -s
+          rm -rf ~/Library/Caches/Homebrew/* 2>/dev/null || true
+    
+          # Remove Xcode/iOS dev files (not needed for .NET)
+          rm -rf ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || true
+          rm -rf ~/Library/Developer/CoreSimulator/* 2>/dev/null || true
+          rm -rf ~/Library/Developer/Xcode/Archives/* 2>/dev/null || true
+    
+          # Remove Android SDK files if present (not needed for .NET)
+          rm -rf ~/Library/Android/sdk/build-tools/* 2>/dev/null || true
+          rm -rf ~/Library/Android/sdk/platforms/* 2>/dev/null || true
+    
+          # Remove CocoaPods cache (iOS dev tool, not needed)
+          rm -rf ~/Library/Caches/CocoaPods/* 2>/dev/null || true
+    
+          # Remove Carthage cache (Mac dev tool, not needed)
+          rm -rf ~/Library/Caches/org.carthage.CarthageKit/* 2>/dev/null || true
+    
+          # Remove pip/Python caches (not needed for .NET)
+          rm -rf ~/Library/Caches/pip/* 2>/dev/null || true
+          rm -rf ~/Library/Caches/pypoetry/* 2>/dev/null || true
+    
+          # Additional aggressive cleanup for GitHub Actions runners
+    
+          # Remove large tool caches (often 5-10 GB total)
+          sudo rm -rf /usr/local/lib/android 2>/dev/null || true
+          sudo rm -rf /usr/share/dotnet 2>/dev/null || true  # Old .NET versions if present
+          sudo rm -rf /usr/share/swift 2>/dev/null || true
+    
+          # Remove Docker images and containers (can be several GB)
+          docker system prune -a -f 2>/dev/null || true
+    
+          # Remove Gradle caches (Java build tool)
+          rm -rf ~/.gradle/caches/* 2>/dev/null || true
+          rm -rf ~/.gradle/wrapper/* 2>/dev/null || true
+    
+          # Remove Maven caches (Java build tool)
+          rm -rf ~/.m2/repository/* 2>/dev/null || true
+    
+          # Remove npm/yarn caches (JavaScript package managers)
+          npm cache clean --force 2>/dev/null || true
+          rm -rf ~/.npm/* 2>/dev/null || true
+          rm -rf ~/.yarn/cache/* 2>/dev/null || true
+    
+          # Remove Go caches
+          rm -rf ~/go/pkg/* 2>/dev/null || true
+          go clean -cache -modcache -testcache 2>/dev/null || true
+    
+          # Remove Ruby gems cache
+          rm -rf ~/.gem/* 2>/dev/null || true
+    
+          # Remove Rust/Cargo caches
+          rm -rf ~/.cargo/registry/* 2>/dev/null || true
+          rm -rf ~/.cargo/git/* 2>/dev/null || true
+    
+          # Remove browser caches
+          rm -rf ~/Library/Caches/Google/Chrome/* 2>/dev/null || true
+          rm -rf ~/Library/Caches/com.apple.Safari/* 2>/dev/null || true
+    
+          # Remove temporary files
+          sudo rm -rf /tmp/* 2>/dev/null || true
+          sudo rm -rf /var/tmp/* 2>/dev/null || true
+    
+          echo "After cleanup:"; df -h /
+
+      # Setup signing environment if certificates are available
+      - name: Setup code signing (if certificates available)
+        run: |
+          if [ -n "${{ secrets.MACOS_CERTIFICATE }}" ]; then
+            echo "Setting up code signing..."
+            echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+            security create-keychain -p "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" build.keychain
+            security default-keychain -s build.keychain
+            security unlock-keychain -p "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" build.keychain
+            security import certificate.p12 -k build.keychain -P "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" build.keychain
+            rm certificate.p12
+            echo "SIGNING_AVAILABLE=true" >> $GITHUB_ENV
+          else
+            echo "No signing certificates found, apps will be unsigned"
+            echo "SIGNING_AVAILABLE=false" >> $GITHUB_ENV
+          fi
+
+      # Process x64 build first, then clean up before ARM64
+      - name: Publish macOS x64 app
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r osx-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/macos-x64
+          
+          # Remove PDB files immediately
+          find "./publish/macos-x64/" -name "*.pdb" -type f -delete
+          
+          echo "Disk space after x64 publish:"; df -h /
+      
+      - name: Update Info.plist with version from Se.cs
+        run: |
+          chmod +x ./installer/macBundle/update-plist-version.sh
+          ./installer/macBundle/update-plist-version.sh
+      
+      - name: Create, sign, and package x64 DMG
+        run: |
+          echo "Disk space before x64 DMG creation:"; df -h /
+          
+          # Copy template for x64
+          cp -R "./installer/macBundle/SubtitleEdit.app" "./SubtitleEdit-x64.app"
+      
+          # Copy all files (executable + dylibs) to app bundle
+          cp "./publish/macos-x64/SubtitleEdit" "./SubtitleEdit-x64.app/Contents/MacOS/"
+          cp "./publish/macos-x64/"*.dylib "./SubtitleEdit-x64.app/Contents/MacOS/" 2>/dev/null || true
+          chmod +x "./SubtitleEdit-x64.app/Contents/MacOS/SubtitleEdit"
+          
+          # Delete publish directory immediately after copying
+          rm -rf "./publish/macos-x64"
+      
+          # Fix library linking for x64
+          executable="./SubtitleEdit-x64.app/Contents/MacOS/SubtitleEdit"
+          if ! otool -l "$executable" | grep -q "@executable_path/../Frameworks"; then
+            install_name_tool -add_rpath "@executable_path/../Frameworks" "$executable" || true
+          fi
+      
+          # Sign the x64 app if certificates are available
+          if [ "$SIGNING_AVAILABLE" = "true" ]; then
+            echo "Signing x64 app..."
+            codesign --force --options runtime --deep --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-x64.app"
+            codesign --verify --verbose "./SubtitleEdit-x64.app"
+          fi
+      
+          # Create DMG for x64
+          mkdir -p "./dmg-temp-x64"
+          cp -R "./SubtitleEdit-x64.app" "./dmg-temp-x64/Subtitle Edit.app"
+          
+          # Delete app bundle immediately after copying
+          rm -rf "./SubtitleEdit-x64.app"
+          
+          ln -s /Applications "./dmg-temp-x64/Applications"
+          hdiutil create -volname "SubtitleEdit x64" -srcfolder "./dmg-temp-x64" -ov -format UDZO "./SubtitleEdit-macOS-x64.dmg"
+      
+          # Immediate cleanup of x64 temp directory
+          rm -rf "./dmg-temp-x64"
+          
+          echo "Disk space after x64 DMG creation:"; df -h /
+
+      - name: Publish macOS ARM64 app
+        run: |
+          echo "Disk space before ARM64 publish:"; df -h /
+          
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r osx-arm64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/macos-arm64
+          
+          # Remove PDB files immediately
+          find "./publish/macos-arm64/" -name "*.pdb" -type f -delete
+          
+          echo "Disk space after ARM64 publish:"; df -h /
+      
+      - name: Create, sign, and package ARM64 DMG
+        run: |
+          echo "Disk space before ARM64 DMG creation:"; df -h /
+          
+          # Copy template for ARM64
+          cp -R "./installer/macBundle/SubtitleEdit.app" "./SubtitleEdit-ARM64.app"
+      
+          # Copy all files (executable + dylibs) to app bundle
+          cp "./publish/macos-arm64/SubtitleEdit" "./SubtitleEdit-ARM64.app/Contents/MacOS/"
+          cp "./publish/macos-arm64/"*.dylib "./SubtitleEdit-ARM64.app/Contents/MacOS/" 2>/dev/null || true
+          chmod +x "./SubtitleEdit-ARM64.app/Contents/MacOS/SubtitleEdit"
+          
+          # Delete publish directory immediately after copying
+          rm -rf "./publish/macos-arm64"
+      
+          # Copy ffmpeg to ARM64 bundle
+          cp "./ffmpeg-temp/ffmpeg" "./SubtitleEdit-ARM64.app/Contents/MacOS/" 2>/dev/null || true
+          chmod +x "./SubtitleEdit-ARM64.app/Contents/MacOS/ffmpeg" 2>/dev/null || true
+          
+          # Delete ffmpeg temp immediately after copying
+          rm -rf "./ffmpeg-temp"
+      
+          # Create Frameworks directory and copy libmpv for ARM64
+          mkdir -p "./SubtitleEdit-ARM64.app/Contents/Frameworks"
+          cp "./libmpv-temp/"*.dylib "./SubtitleEdit-ARM64.app/Contents/Frameworks/" 2>/dev/null || true
+          cp "./libmpv-temp/"*.framework "./SubtitleEdit-ARM64.app/Contents/Frameworks/" 2>/dev/null || true
+          chmod -R 755 "./SubtitleEdit-ARM64.app/Contents/Frameworks/"
+          
+          # Delete libmpv temp immediately after copying
+          rm -rf "./libmpv-temp"
+      
+          # Fix library linking for ARM64
+          executable="./SubtitleEdit-ARM64.app/Contents/MacOS/SubtitleEdit"
+          if ! otool -l "$executable" | grep -q "@executable_path/../Frameworks"; then
+            install_name_tool -add_rpath "@executable_path/../Frameworks" "$executable" || true
+          fi
+      
+          # Fix any absolute paths to libmpv in the executable
+          otool -L "$executable" | grep -E "libmpv|/opt/local|/usr/local" | awk '{print $1}' | while read lib; do
+            if [ -n "$lib" ] && [[ "$lib" != @* ]]; then
+              lib_name=$(basename "$lib")
+              install_name_tool -change "$lib" "@rpath/$lib_name" "$executable" 2>/dev/null || true
+            fi
+          done
+      
+          # Fix any bundled dylibs in Frameworks
+          frameworks_dir="./SubtitleEdit-ARM64.app/Contents/Frameworks"
+          if [ -d "$frameworks_dir" ]; then
+            for dylib in "$frameworks_dir"/*.dylib; do
+              if [ -f "$dylib" ]; then
+                filename=$(basename "$dylib")
+                install_name_tool -id "@rpath/$filename" "$dylib" 2>/dev/null || true
+            
+                otool -L "$dylib" | grep -E "/opt/local|/usr/local" | awk '{print $1}' | while read dep; do
+                  if [ -n "$dep" ]; then
+                    dep_name=$(basename "$dep")
+                    install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib" 2>/dev/null || true
+                  fi
+                done
+              fi
+            done
+          fi
+      
+          # Sign the ARM64 app if certificates are available
+          if [ "$SIGNING_AVAILABLE" = "true" ]; then
+            echo "Signing ARM64 app..."
+            codesign --force --options runtime --deep --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-ARM64.app"
+            codesign --verify --verbose "./SubtitleEdit-ARM64.app"
+          fi
+      
+          # Create DMG for ARM64
+          mkdir -p "./dmg-temp-arm64"
+          cp -R "./SubtitleEdit-ARM64.app" "./dmg-temp-arm64/Subtitle Edit.app"
+          
+          # Delete app bundle immediately after copying
+          rm -rf "./SubtitleEdit-ARM64.app"
+          
+          ln -s /Applications "./dmg-temp-arm64/Applications"
+          hdiutil create -volname "SubtitleEdit ARM64" -srcfolder "./dmg-temp-arm64" -ov -format UDBZ "./SubtitleEdit-macOS-ARM64.dmg"
+      
+          # Final cleanup
+          rm -rf "./dmg-temp-arm64"
+          
+          echo "Disk space after ARM64 DMG creation:"; df -h /
+
+      - name: Cleanup signing keychain
+        if: env.SIGNING_AVAILABLE == 'true'
+        run: |
+          security delete-keychain build.keychain || true
+
+      # Upload only the DMG files now, not the publish directories
+      - name: Upload macOS DMG packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg-packages
+          path: |
+            ./SubtitleEdit-macOS-x64.dmg
+            ./SubtitleEdit-macOS-ARM64.dmg
+          overwrite: true
+
+ 
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      # - name: Test
+      #   run: dotnet test --no-build --verbosity normal
+
+      - name: Publish Linux x64 app
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/linux-x64
+
+      - name: Remove PDB files from Linux artifacts
+        run: |
+          find "./publish/linux-x64/" -name "*.pdb" -type f -delete
+
+      - name: Create Linux TAR package
+        run: |
+          cd ./publish/linux-x64 && tar -czf ../../SubtitleEdit-Linux-x64.tar.gz . && cd ../..
+
+      - name: Upload Linux x64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: se-linux-x64
+          path: ./publish/linux-x64/
+
+      - name: Upload Linux TAR package
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-tar-package
+          path: ./SubtitleEdit-Linux-x64.tar.gz
+
+  create-release:
+    if: ${{ inputs.create_release }}
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.release_tag }}" ]; then
+            echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
+          else
+            timestamp=$(date +"%Y%m%d-%H%M%S")
+            echo "tag=pre-release-${timestamp}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p ./release-assets
+          
+          # Copy ZIP/TAR packages to release assets
+          cp ./artifacts/windows-msi-installers/*.msi ./release-assets/
+          cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
+          cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
+          cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
+          
+          # List all files that will be uploaded
+          echo "Release assets:"
+          ls -la ./release-assets/
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Subtitle Edit ${{ steps.tag.outputs.tag }}
+          body: |
+            **Build Configuration:** ${{ inputs.build_configuration }}
+            **Build Date:** ${{ steps.date.outputs.date }}
+      
+            ### Downloads
+            - **Windows x64 installer:** [SubtitleEdit-Windows-x64.msi](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.msi)
+            - **Windows x64:** [SubtitleEdit-Windows-x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.zip)
+            - **Windows ARM64:** [SubtitleEdit-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-ARM64.zip)
+            - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
+            - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
+            - **Linux x64:** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
+      
+            ### Installation
+            1. Fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
+            2. Download the appropriate package for your platform
+            3. Extract the archive (or use installer if available)
+            4. Run the executable (might need some permissions on macOS)
+      
+            *This is an automated build from the GitHub Actions workflow.*
+          draft: false
+          prerelease: ${{ inputs.is_prerelease }}
+          files: |
+            ./release-assets/SubtitleEdit-Windows-x64.msi
+            ./release-assets/SubtitleEdit-Windows-x64.zip
+            ./release-assets/SubtitleEdit-Windows-ARM64.zip
+            ./release-assets/SubtitleEdit-macOS-ARM64.dmg
+            ./release-assets/SubtitleEdit-macOS-x64.dmg
+            ./release-assets/SubtitleEdit-Linux-x64.tar.gz

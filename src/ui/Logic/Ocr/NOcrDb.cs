@@ -1,529 +1,551 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
-namespace Nikse.SubtitleEdit.Logic.Ocr
+namespace Nikse.SubtitleEdit.Logic.Ocr;
+
+public class NOcrDb
 {
-    public class NOcrDb
+    public string FileName { get; set; }
+    public List<NOcrChar> OcrCharacters = new();
+    public List<NOcrChar> OcrCharactersExpanded = new();
+
+    public int TotalCharacterCount => OcrCharacters.Count + OcrCharactersExpanded.Count;
+
+    private const string Version = "V2";
+
+    public NOcrDb(string fileName)
     {
-        public string FileName { get; set; }
-        public List<NOcrChar> OcrCharacters = new List<NOcrChar>();
-        public List<NOcrChar> OcrCharactersExpanded = new List<NOcrChar>();
+        FileName = fileName;
+        LoadOcrCharacters();
+    }
 
-        private const string Version = "V2";
+    public NOcrDb(NOcrDb db, string fileName)
+    {
+        FileName = fileName;
 
-        public NOcrDb(string fileName)
-        {
-            FileName = fileName;
-            LoadOcrCharacters();
-        }
+        OcrCharacters = new List<NOcrChar>(db.OcrCharacters);
+        OcrCharactersExpanded = new List<NOcrChar>(db.OcrCharactersExpanded);
+    }
 
-        public NOcrDb(NOcrDb db, string fileName)
-        {
-            FileName = fileName;
+    public List<NOcrChar> OcrCharactersCombined => OcrCharacters.Concat(OcrCharactersExpanded).ToList();
 
-            OcrCharacters = new List<NOcrChar>(db.OcrCharacters);
-            OcrCharactersExpanded = new List<NOcrChar>(db.OcrCharactersExpanded);
-        }
-
-        public void Save()
+    private Lock SaveLock = new();
+    public void Save()
+    {
+        lock (SaveLock)
         {
             if (File.Exists(FileName))
             {
                 File.Delete(FileName);
             }
 
-            using (Stream stream = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
+            using Stream stream = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress);
+            var versionBuffer = Encoding.ASCII.GetBytes(Version);
+            stream.Write(versionBuffer, 0, versionBuffer.Length);
+
+            foreach (var ocrChar in OcrCharacters)
             {
-                var versionBuffer = Encoding.ASCII.GetBytes(Version);
-                stream.Write(versionBuffer, 0, versionBuffer.Length);
+                ocrChar.Save(stream);
+            }
 
-                foreach (var ocrChar in OcrCharacters)
-                {
-                    ocrChar.Save(stream);
-                }
-
-                foreach (var ocrChar in OcrCharactersExpanded)
-                {
-                    ocrChar.Save(stream);
-                }
+            foreach (var ocrChar in OcrCharactersExpanded)
+            {
+                ocrChar.Save(stream);
             }
         }
+    }
 
-        public void LoadOcrCharacters()
+    public void LoadOcrCharacters()
+    {
+        var list = new List<NOcrChar>();
+        var listExpanded = new List<NOcrChar>();
+
+        if (!File.Exists(FileName))
         {
-            var list = new List<NOcrChar>();
-            var listExpanded = new List<NOcrChar>();
-
-            if (!File.Exists(FileName))
-            {
-                OcrCharacters = list;
-                OcrCharactersExpanded = listExpanded;
-                return;
-            }
-
-            using (var stream = new MemoryStream())
-            {
-                using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
-                {
-                    gz.CopyTo(stream);
-                }
-
-                stream.Position = 0;
-                bool isVersion2;
-                var versionBuffer = new byte[Version.Length];
-                stream.Read(versionBuffer, 0, versionBuffer.Length);
-                isVersion2 = Encoding.ASCII.GetString(versionBuffer) == Version;
-                stream.Position = 0;
-                bool done = false;
-                if (isVersion2)
-                {
-                    stream.Read(versionBuffer, 0, versionBuffer.Length);
-                }
-                while (!done)
-                {
-                    var ocrChar = new NOcrChar(stream, isVersion2);
-                    if (ocrChar.LoadedOk)
-                    {
-                        if (ocrChar.ExpandCount > 0)
-                        {
-                            listExpanded.Add(ocrChar);
-                        }
-                        else
-                        {
-                            list.Add(ocrChar);
-                        }
-                    }
-                    else
-                    {
-                        done = true;
-                    }
-                }
-            }
-
             OcrCharacters = list;
             OcrCharactersExpanded = listExpanded;
+            return;
         }
 
-        public void Add(NOcrChar ocrChar)
+        byte[] buffer;
+        using (var stream = new MemoryStream())
         {
-            if (ocrChar.ExpandCount > 0)
+            using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
             {
-                OcrCharactersExpanded.Insert(0, ocrChar);
+                gz.CopyTo(stream);
+            }
+
+            buffer = stream.ToArray();
+        }
+
+        var position = 2;
+        var done = false;
+        while (!done)
+        {
+            var ocrChar = new NOcrChar(ref position, buffer);
+            if (ocrChar.LoadedOk)
+            {
+                if (ocrChar.ExpandCount > 0)
+                {
+                    listExpanded.Add(ocrChar);
+                }
+                else
+                {
+                    list.Add(ocrChar);
+                }
             }
             else
             {
-                OcrCharacters.Insert(0, ocrChar);
+                done = true;
             }
         }
 
-        public void Remove(NOcrChar ocrChar)
+        OcrCharacters = list;
+        OcrCharactersExpanded = listExpanded;
+    }
+
+    public void Add(NOcrChar ocrChar)
+    {
+        if (ocrChar.ExpandCount > 0)
         {
-            if (ocrChar.ExpandCount > 0)
-            {
-                OcrCharactersExpanded.Remove(ocrChar);
-            }
-            else
-            {
-                OcrCharacters.Remove(ocrChar);
-            }
+            OcrCharactersExpanded.Insert(0, ocrChar);
         }
-
-        public NOcrChar GetMatchExpanded(NikseBitmap nikseBitmap, ImageSplitterItem targetItem, int listIndex, List<ImageSplitterItem> list)
+        else
         {
-            int w = targetItem.NikseBitmap.Width;
-            for (var i = 0; i < OcrCharactersExpanded.Count; i++)
-            {
-                var oc = OcrCharactersExpanded[i];
-                if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
-                {
-                    bool ok = true;
-                    var index = 0;
-                    while (index < oc.LinesForeground.Count && ok)
-                    {
-                        var op = oc.LinesForeground[index];
-                        foreach (var point in op.GetPoints())
-                        {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                            {
-                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                                if (a <= 150)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            else if (p.X >= 0 && p.Y >= 0)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
+            OcrCharacters.Insert(0, ocrChar);
+        }
+    }
 
-                        index++;
-                    }
+    public void Remove(NOcrChar ocrChar)
+    {
+        if (ocrChar.ExpandCount > 0)
+        {
+            OcrCharactersExpanded.Remove(ocrChar);
+        }
+        else
+        {
+            OcrCharacters.Remove(ocrChar);
+        }
+    }
 
-                    index = 0;
-                    while (index < oc.LinesBackground.Count && ok)
-                    {
-                        var op = oc.LinesBackground[index];
-                        foreach (var point in op.GetPoints())
-                        {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                            {
-                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                                if (a > 150)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            else if (p.X >= 0 && p.Y >= 0)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-
-                        index++;
-                    }
-
-                    if (ok)
-                    {
-                        var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                        if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
-                        {
-                            return oc;
-                        }
-                    }
-                }
-            }
-
-            for (var i = 0; i < OcrCharactersExpanded.Count; i++)
-            {
-                var oc = OcrCharactersExpanded[i];
-                if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
-                {
-                    bool ok = true;
-                    var index = 0;
-                    while (index < oc.LinesForeground.Count && ok)
-                    {
-                        var op = oc.LinesForeground[index];
-                        foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
-                        {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                            {
-                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                                if (a <= 150)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            else if (p.X >= 0 && p.Y >= 0)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-
-                        index++;
-                    }
-
-                    index = 0;
-                    while (index < oc.LinesBackground.Count && ok)
-                    {
-                        var op = oc.LinesBackground[index];
-                        foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
-                        {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                            {
-                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                                if (a > 150)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            else if (p.X >= 0 && p.Y >= 0)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-
-                        index++;
-                    }
-
-                    if (ok)
-                    {
-                        var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                        var widthPercent = size.Y * 100.0 / size.X;
-                        if (Math.Abs(widthPercent - oc.WidthPercent) < 15 &&
-                            Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
-                        {
-                            return oc;
-                        }
-                    }
-                }
-            }
-
+    public NOcrChar? GetMatchExpanded(NikseBitmap2 nikseBitmap, ImageSplitterItem2 targetItem, int listIndex, List<ImageSplitterItem2> list)
+    {
+        if (targetItem.NikseBitmap == null)
+        {
             return null;
         }
 
-        private static Point GetTotalSize(int listIndex, List<ImageSplitterItem> items, int count)
+        var w = targetItem.NikseBitmap.Width;
+        for (var i = 0; i < OcrCharactersExpanded.Count; i++)
         {
-            if (listIndex + count > items.Count)
+            var oc = OcrCharactersExpanded[i];
+            if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
             {
-                return new Point(-100, -100);
-            }
-
-            var minimumX = int.MaxValue;
-            int maximumX = int.MinValue;
-            int minimumY = int.MaxValue;
-            int maximumY = int.MinValue;
-
-            for (var idx = listIndex; idx < listIndex + count; idx++)
-            {
-                var item = items[idx];
-                if (item.NikseBitmap == null)
+                var ok = true;
+                var index = 0;
+                while (index < oc.LinesForeground.Count && ok)
                 {
-                    return new Point(-100, -100);
+                    var op = oc.LinesForeground[index];
+                    foreach (var point in op.GetPoints())
+                    {
+                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
+                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                        {
+                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                            if (a <= 150)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        else if (p.X >= 0 && p.Y >= 0)
+                        {
+                            ok = false;
+                            break;
+                        }
+                    }
+
+                    index++;
                 }
 
-                if (item.Y < minimumY)
+                index = 0;
+                while (index < oc.LinesBackground.Count && ok)
                 {
-                    minimumY = item.Y;
+                    var op = oc.LinesBackground[index];
+                    foreach (var point in op.GetPoints())
+                    {
+                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
+                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                        {
+                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                            if (a > 150)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        else if (p.X >= 0 && p.Y >= 0)
+                        {
+                            ok = false;
+                            break;
+                        }
+                    }
+
+                    index++;
                 }
 
-                if (item.Y + item.NikseBitmap.Height > maximumY)
+                if (ok)
                 {
-                    maximumY = item.Y + item.NikseBitmap.Height;
-                }
-
-                if (item.X < minimumX)
-                {
-                    minimumX = item.X;
-                }
-
-                if (item.X + item.NikseBitmap.Width > maximumX)
-                {
-                    maximumX = item.X + item.NikseBitmap.Width;
-                }
-            }
-
-            return new Point(maximumX - minimumX, maximumY - minimumY);
-        }
-
-        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, int maxWrongPixels)
-        {
-            // only very very accurate matches
-            foreach (var oc in OcrCharacters)
-            {
-                if (bitmap.Width == oc.Width && bitmap.Height == oc.Height && Math.Abs(oc.MarginTop - topMargin) < 5)
-                {
-                    if (IsMatch(bitmap, oc, 0))
+                    var size = GetTotalSize(listIndex, list, oc.ExpandCount);
+                    if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
                     {
                         return oc;
                     }
                 }
             }
+        }
 
-            // only very accurate matches
-            double widthPercent = bitmap.Height * 100.0 / bitmap.Width;
-            foreach (var oc in OcrCharacters)
+        for (var i = 0; i < OcrCharactersExpanded.Count; i++)
+        {
+            var oc = OcrCharactersExpanded[i];
+            if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
             {
-                if (Math.Abs(widthPercent - oc.WidthPercent) < 15 && Math.Abs(bitmap.Width - oc.Width) < 5 && Math.Abs(bitmap.Height - oc.Height) < 5 && Math.Abs(oc.MarginTop - topMargin) < 5)
+                var ok = true;
+                var index = 0;
+                while (index < oc.LinesForeground.Count && ok)
                 {
-                    if (IsMatch(bitmap, oc, 0))
+                    var op = oc.LinesForeground[index];
+                    foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                    {
+                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
+                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                        {
+                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                            if (a <= 150)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        else if (p.X >= 0 && p.Y >= 0)
+                        {
+                            ok = false;
+                            break;
+                        }
+                    }
+
+                    index++;
+                }
+
+                index = 0;
+                while (index < oc.LinesBackground.Count && ok)
+                {
+                    var op = oc.LinesBackground[index];
+                    foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                    {
+                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
+                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                        {
+                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                            if (a > 150)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        else if (p.X >= 0 && p.Y >= 0)
+                        {
+                            ok = false;
+                            break;
+                        }
+                    }
+
+                    index++;
+                }
+
+                if (ok)
+                {
+                    var size = GetTotalSize(listIndex, list, oc.ExpandCount);
+                    var widthPercent = size.Y * 100.0 / size.X;
+                    if (Math.Abs(widthPercent - oc.WidthPercent) < 15 &&
+                        Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
                     {
                         return oc;
                     }
                 }
             }
+        }
 
-            if (maxWrongPixels >= 1)
+        return null;
+    }
+
+    private static OcrPoint GetTotalSize(int listIndex, List<ImageSplitterItem2> items, int count)
+    {
+        if (listIndex + count > items.Count)
+        {
+            return new OcrPoint(-100, -100);
+        }
+
+        var minimumX = int.MaxValue;
+        var maximumX = int.MinValue;
+        var minimumY = int.MaxValue;
+        var maximumY = int.MinValue;
+
+        for (var idx = listIndex; idx < listIndex + count; idx++)
+        {
+            var item = items[idx];
+            if (item.NikseBitmap == null)
             {
-                foreach (var oc in OcrCharacters)
-                {
-                    if (Math.Abs(bitmap.Width - oc.Width) < 4 && Math.Abs(bitmap.Height - oc.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 8)
-                    {
-                        if (IsMatch(bitmap, oc, 1))
-                        {
-                            return oc;
-                        }
-                    }
-                }
+                return new OcrPoint(-100, -100);
             }
 
-            if (maxWrongPixels >= 1)
+            if (item.Y < minimumY)
             {
-                foreach (var oc in OcrCharacters)
-                {
-                    if (Math.Abs(bitmap.Width - oc.Width) < 8 && Math.Abs(bitmap.Height - oc.Height) < 8 && Math.Abs(oc.MarginTop - topMargin) < 8)
-                    {
-                        if (IsMatch(bitmap, oc, 1))
-                        {
-                            return oc;
-                        }
-                    }
-                }
+                minimumY = item.Y;
             }
 
-            if (maxWrongPixels >= 2)
+            if (item.Y + item.NikseBitmap.Height > maximumY)
             {
-                var errorsAllowed = Math.Min(3, maxWrongPixels);
-                foreach (var oc in OcrCharacters)
-                {
-                    if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15)
-                    {
-                        if (IsMatch(bitmap, oc, errorsAllowed))
-                        {
-                            return oc;
-                        }
-                    }
-                }
+                maximumY = item.Y + item.NikseBitmap.Height;
             }
 
-            if (maxWrongPixels >= 10)
+            if (item.X < minimumX)
             {
-                var errorsAllowed = Math.Min(20, maxWrongPixels);
-                foreach (var oc in OcrCharacters)
-                {
-                    if (!oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
-                    {
-                        if (IsMatch(bitmap, oc, errorsAllowed))
-                        {
-                            return oc;
-                        }
-                    }
-                }
+                minimumX = item.X;
             }
 
-            if (maxWrongPixels >= 10)
+            if (item.X + item.NikseBitmap.Width > maximumX)
             {
-                foreach (var oc in OcrCharacters)
-                {
-                    if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 30 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
-                    {
-                        if (IsMatch(bitmap, oc, 10))
-                        {
-                            return oc;
-                        }
-                    }
-                }
+                maximumX = item.X + item.NikseBitmap.Width;
             }
+        }
 
-            if (deepSeek)
-            {
-                foreach (var oc in OcrCharacters)
-                {
-                    if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
-                    {
-                        if (IsMatch(bitmap, oc, maxWrongPixels))
-                        {
-                            return oc;
-                        }
-                    }
-                }
-            }
+        return new OcrPoint(maximumX - minimumX, maximumY - minimumY);
+    }
 
+    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels)
+    {
+        if (item.NikseBitmap == null)
+        {
             return null;
         }
 
-        public static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
+        var expandedResult = GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list);
+        if (expandedResult != null)
         {
-            var c = new NOcrChar();
-            foreach (var op in oldChar.LinesForeground)
-            {
-                c.LinesForeground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
-            }
-
-            foreach (var op in oldChar.LinesBackground)
-            {
-                c.LinesBackground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
-            }
-
-            c.Text = oldChar.Text;
-            c.Width = oldChar.Width;
-            c.Height = oldChar.Height;
-            c.MarginTop = oldChar.MarginTop;
-            c.Italic = true;
-            return c;
+            return expandedResult;
         }
 
-        private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double italicAngle)
-        {
-            return new Point((int)Math.Round(p.X + (height - p.Y) * italicAngle - moveLeftPixels), p.Y);
-        }
+        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels);
+    }
 
-        public static bool IsMatch(NikseBitmap bitmap, NOcrChar oc, int errorsAllowed)
+    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels)
+    {
+        // only very very accurate matches
+        foreach (var oc in OcrCharacters)
         {
-            var index = 0;
-            var errors = 0;
-            while (index < oc.LinesForeground.Count)
+            if (bitmap.Width == oc.Width && bitmap.Height == oc.Height && Math.Abs(oc.MarginTop - topMargin) < 5)
             {
-                var op = oc.LinesForeground[index];
-                foreach (var point in op.ScaledGetPoints(oc, bitmap.Width, bitmap.Height))
+                if (IsMatch(bitmap, oc, 0))
                 {
-                    if (point.X >= 0 && point.Y >= 0 && point.X < bitmap.Width && point.Y < bitmap.Height)
+                    return oc;
+                }
+            }
+        }
+
+        // only very accurate matches
+        var widthPercent = bitmap.Height * 100.0 / bitmap.Width;
+        foreach (var oc in OcrCharacters)
+        {
+            if (Math.Abs(widthPercent - oc.WidthPercent) < 15 && Math.Abs(bitmap.Width - oc.Width) < 5 && Math.Abs(bitmap.Height - oc.Height) < 5 && Math.Abs(oc.MarginTop - topMargin) < 5)
+            {
+                if (IsMatch(bitmap, oc, 0))
+                {
+                    return oc;
+                }
+            }
+        }
+
+        if (maxWrongPixels >= 1)
+        {
+            foreach (var oc in OcrCharacters)
+            {
+                if (Math.Abs(bitmap.Width - oc.Width) < 4 && Math.Abs(bitmap.Height - oc.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 8)
+                {
+                    if (IsMatch(bitmap, oc, 1))
                     {
-                        var a = bitmap.GetAlpha(point.X, point.Y);
-                        if (a <= 150)
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        if (maxWrongPixels >= 1)
+        {
+            foreach (var oc in OcrCharacters)
+            {
+                if (Math.Abs(bitmap.Width - oc.Width) < 8 && Math.Abs(bitmap.Height - oc.Height) < 8 && Math.Abs(oc.MarginTop - topMargin) < 8)
+                {
+                    if (IsMatch(bitmap, oc, 1))
+                    {
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        if (maxWrongPixels >= 2)
+        {
+            var errorsAllowed = Math.Min(3, maxWrongPixels);
+            foreach (var oc in OcrCharacters)
+            {
+                if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15)
+                {
+                    if (IsMatch(bitmap, oc, errorsAllowed))
+                    {
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        if (maxWrongPixels >= 10)
+        {
+            var errorsAllowed = Math.Min(20, maxWrongPixels);
+            foreach (var oc in OcrCharacters)
+            {
+                if (!oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
+                {
+                    if (IsMatch(bitmap, oc, errorsAllowed))
+                    {
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        if (maxWrongPixels >= 10)
+        {
+            foreach (var oc in OcrCharacters)
+            {
+                if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 30 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
+                {
+                    if (IsMatch(bitmap, oc, 10))
+                    {
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        if (deepSeek)
+        {
+            foreach (var oc in OcrCharacters)
+            {
+                if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
+                {
+                    if (IsMatch(bitmap, oc, maxWrongPixels))
+                    {
+                        return oc;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
+    {
+        var c = new NOcrChar();
+        foreach (var op in oldChar.LinesForeground)
+        {
+            c.LinesForeground.Add(new NOcrLine(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
+        }
+
+        foreach (var op in oldChar.LinesBackground)
+        {
+            c.LinesBackground.Add(new NOcrLine(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
+        }
+
+        c.Text = oldChar.Text;
+        c.Width = oldChar.Width;
+        c.Height = oldChar.Height;
+        c.MarginTop = oldChar.MarginTop;
+        c.Italic = true;
+
+        return c;
+    }
+
+    private static OcrPoint MakePointItalic(OcrPoint p, int height, int moveLeftPixels, double italicAngle)
+    {
+        return new OcrPoint((int)Math.Round(p.X + (height - p.Y) * italicAngle - moveLeftPixels), p.Y);
+    }
+
+    public static bool IsMatch(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed)
+    {
+        var errors = 0;
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        var pixelData = bitmap.GetPixelData();
+        var widthX4 = width * 4;
+
+        foreach (var op in oc.LinesForeground)
+        {
+            foreach (var point in op.ScaledGetPoints(oc, width, height))
+            {
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
+                {
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a <= 150)
+                    {
+                        if (++errors > errorsAllowed)
                         {
-                            errors++;
-                            if (errors > errorsAllowed)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }
-
-                index++;
             }
+        }
 
-            index = 0;
-            while (index < oc.LinesBackground.Count)
+        foreach (var op in oc.LinesBackground)
+        {
+            foreach (var point in op.ScaledGetPoints(oc, width, height))
             {
-                var op = oc.LinesBackground[index];
-                foreach (var point in op.ScaledGetPoints(oc, bitmap.Width, bitmap.Height))
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
                 {
-                    if (point.X >= 0 && point.Y >= 0 && point.X < bitmap.Width && point.Y < bitmap.Height)
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a > 150)
                     {
-                        var a = bitmap.GetAlpha(point.X, point.Y);
-                        if (a > 150)
+                        if (++errors > errorsAllowed)
                         {
-                            errors++;
-                            if (errors > errorsAllowed)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }
-                index++;
             }
-
-            return true;
         }
 
-        public static List<string> GetDatabases()
+        return true;
+    }
+
+    public static List<string> GetDatabases()
+    {
+        if (!Directory.Exists(Se.OcrFolder))
         {
-            return Directory
-                .GetFiles(Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar), "*.nocr")
-                .Select(Path.GetFileNameWithoutExtension)
-                .OrderBy(p => p)
-                .ToList();
+            return [];
         }
+
+        return Directory
+            .GetFiles(Se.OcrFolder.TrimEnd(Path.DirectorySeparatorChar), "*.nocr")
+            .Select(Path.GetFileNameWithoutExtension)
+            .OrderBy(p => p)
+            .ToList()!;
     }
 }

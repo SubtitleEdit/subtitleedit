@@ -1,10 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public Bitmap GetSubtitleBitmap(int index2, bool crop = true)
+        public SKBitmap GetSubtitleBitmap(int index2, bool crop = true)
         {
             var index = 30;
             var paragraphIndex = 0;
@@ -160,7 +160,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _buffer[index + 2] == 0 &&
                             _buffer[index + 3] == 0)
                         {
-                            // read chunk type
                             var chunkType = Encoding.ASCII.GetString(_buffer, index + 4, 4);
                             if (chunkType == "IEND")
                             {
@@ -171,7 +170,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     index += 4; // CRC
                                     var b = new byte[index - start];
                                     Array.Copy(_buffer, start, b, 0, b.Length);
-                                    return new Bitmap(new MemoryStream(b));
+
+                                    using (var stream = new MemoryStream(b))
+                                    {
+                                        var codec = SKCodec.Create(stream);
+                                        if (codec != null)
+                                        {
+                                            var info = codec.Info;
+                                            var bitmap = new SKBitmap(info);
+                                            var result = codec.GetPixels(bitmap.Info, bitmap.GetPixels());
+
+                                            return result == SKCodecResult.Success || result == SKCodecResult.IncompleteInput ? bitmap : new SKBitmap(1, 1);
+                                        }
+
+                                        return new SKBitmap(1, 1); // fallback if codec fails
+                                    }
                                 }
 
                                 paragraphIndex++;
@@ -192,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return new Bitmap(1, 1);
+            return new SKBitmap(1, 1);
         }
 
         public bool GetIsForced(int index)

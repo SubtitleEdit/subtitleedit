@@ -28,10 +28,20 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "llama-3.3-70b-versatile",
-            "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-            "gemma2-9b-it",
+            // Lightweight / Fast Translation
+            "llama-3.1-8b-instant",                        // Lowest latency for short strings
+            "gemma2-9b-it",                                // Optimized for concise outputs
+            "openai/gpt-oss-20b",                           // High-speed reasoning model
+
+            // High-Performance / Frontier Multilingual
+            "meta-llama/llama-4-maverick-17b-128e-instruct", // Best for translation & multilingual
+            "openai/gpt-oss-120b",                         // Extreme reasoning & nuance
+            "llama-3.3-70b-versatile",                     // Proven high-reliability translator
+    
+            // Medium / Efficient Multilingual
+            "qwen/qwen3-32b",                              // Exceptional for Asian & European languages
+            "meta-llama/llama-4-scout-17b-16e-instruct",    // Massive context (good for books/docs)
+            "moonshotai/kimi-k2-instruct",                 // Strong long-context translation
         };
 
         public void Initialize()

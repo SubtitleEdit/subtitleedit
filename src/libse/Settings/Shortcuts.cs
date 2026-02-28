@@ -259,8 +259,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyPlainText { get; set; }
-        public string MainListViewCopyOriginalText { get; set; }
-        public string MainListViewCopyOriginalPlainText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
@@ -406,6 +404,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string Waveform1000MsRight { get; set; }
         public string WaveformAudioToTextVosk { get; set; }
         public string WaveformAudioToTextWhisper { get; set; }
+        public string WaveformToggleSpectrogramStyle { get; set; }
         public string MainCheckFixTimingViaShotChanges { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslateIt { get; set; }

@@ -432,7 +432,7 @@
 	<name>Czechs</name>
 	<name>Côte d’Ivoire</name>
 	<name>D.A.</name>
-	<name>D.E.A.</name>
+	<name>D.E.A.</name>	
 	<name>DR Congo</name>
 	<name>DRC</name>
 	<name>DROC</name>
@@ -1945,7 +1945,7 @@
 	<name>Radisson</name>
 	<name>Maddie</name>
 	<name>Hallander</name>
-	<name>McGrath</name>
+	<name>McGrath</name>	
 	<name>D'arcy</name>
 	<name>San Gimignano</name>
 	<name>Ferrara</name>
@@ -1953,7 +1953,5 @@
 	<name>Rayson</name>
 	<name>Ridgeland</name>
 	<name>Esmerelda</name>
-	<name>Ridgemont</name>
-  <!-- new -->
-	<name>DoD</name>
+	<name>Ridgemont</name>	
 </names>

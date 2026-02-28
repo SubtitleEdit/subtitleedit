@@ -1,8 +1,8 @@
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -81,13 +81,23 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GroqApiKey { get; set; }
         public string GroqModel { get; set; }
         public string DeepSeekUrl { get; set; }
-        public string AvalAiUrl { get; set; }
         public string DeepSeekPrompt { get; set; }
-        public string AvalAiPrompt { get; set; }
         public string DeepSeekApiKey { get; set; }
         public string DeepSeekModel { get; set; }
+        public string AvalAiUrl { get; set; }
+        public string AvalAiPrompt { get; set; }
         public string AvalAiApiKey { get; set; }
         public string AvalAiModel { get; set; }
+        
+        public string PerplexityUrl { get; set; }
+        public string PerplexityPrompt { get; set; }
+        public string PerplexityApiKey { get; set; }
+        public string PerplexityModel { get; set; }
+
+        public string LaraUrl { get; set; }
+        public string LaraApiId { get; set; }
+        public string LaraApiSecret { get; set; }
+
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -95,6 +105,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string LmStudioApiUrl { get; set; }
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
+        public string LlamaCppApiUrl { get; set; }
+        public string LlamaCppModel { get; set; }
+        public string LlamaCppPrompt { get; set; }
+
         public string OllamaApiUrl { get; set; }
         public string OllamaModels { get; set; }
         public string OllamaModel { get; set; }
@@ -140,16 +154,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool ListViewSyntaxColorWideLines { get; set; }
         public bool ListViewSyntaxColorGap { get; set; }
         public bool ListViewSyntaxMoreThanXLines { get; set; }
-        public Color ListViewSyntaxErrorColor { get; set; }
-        public Color ListViewUnfocusedSelectedColor { get; set; }
-        public Color Color1 { get; set; }
-        public Color Color2 { get; set; }
-        public Color Color3 { get; set; }
-        public Color Color4 { get; set; }
-        public Color Color5 { get; set; }
-        public Color Color6 { get; set; }
-        public Color Color7 { get; set; }
-        public Color Color8 { get; set; }
+        public SKColor ListViewSyntaxErrorColor { get; set; }
+        public SKColor ListViewUnfocusedSelectedColor { get; set; }
+        public SKColor Color1 { get; set; }
+        public SKColor Color2 { get; set; }
+        public SKColor Color3 { get; set; }
+        public SKColor Color4 { get; set; }
+        public SKColor Color5 { get; set; }
+        public SKColor Color6 { get; set; }
+        public SKColor Color7 { get; set; }
+        public SKColor Color8 { get; set; }
         public bool ListViewShowColumnStartTime { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
         public bool ListViewShowColumnDuration { get; set; }
@@ -251,9 +265,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool ExportLastFontBold { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
         public string ExportFcpVideoResolution { get; set; }
-        public Color ExportFontColor { get; set; }
-        public Color ExportBorderColor { get; set; }
-        public Color ExportShadowColor { get; set; }
+        public SKColor ExportFontColor { get; set; }
+        public SKColor ExportBorderColor { get; set; }
+        public SKColor ExportShadowColor { get; set; }
         public int ExportBoxBorderSize { get; set; }
         public string ExportBottomMarginUnit { get; set; }
         public int ExportBottomMarginPercent { get; set; }
@@ -277,8 +291,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool ExportFullFrame { get; set; }
         public bool ExportFcpFullPathUrl { get; set; }
         public string ExportPenLineJoin { get; set; }
-        public Color BinEditBackgroundColor { get; set; }
-        public Color BinEditImageBackgroundColor { get; set; }
+        public SKColor BinEditBackgroundColor { get; set; }
+        public SKColor BinEditImageBackgroundColor { get; set; }
         public int BinEditTopMargin { get; set; }
         public int BinEditBottomMargin { get; set; }
         public int BinEditLeftMargin { get; set; }
@@ -360,13 +374,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AssaAttachmentFontTextPreview { get; set; }
         public string AssaSetPositionTarget { get; set; }
         public string VisualSyncStartSize { get; set; }
-        public Color BlankVideoColor { get; set; }
+        public SKColor BlankVideoColor { get; set; }
         public bool BlankVideoUseCheckeredImage { get; set; }
         public int BlankVideoMinutes { get; set; }
         public decimal BlankVideoFrameRate { get; set; }
-        public Color AssaProgressBarForeColor { get; set; }
-        public Color AssaProgressBarBackColor { get; set; }
-        public Color AssaProgressBarTextColor { get; set; }
+        public SKColor AssaProgressBarForeColor { get; set; }
+        public SKColor AssaProgressBarBackColor { get; set; }
+        public SKColor AssaProgressBarTextColor { get; set; }
         public int AssaProgressBarHeight { get; set; }
         public int AssaProgressBarSplitterWidth { get; set; }
         public int AssaProgressBarSplitterHeight { get; set; }
@@ -383,10 +397,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int AssaBgBoxDrawingMarginV { get; set; }
         public int AssaBgBoxDrawingMarginH { get; set; }
         public string AssaBgBoxDrawingAlignment { get; set; }
-        public Color AssaBgBoxColor { get; set; }
-        public Color AssaBgBoxOutlineColor { get; set; }
-        public Color AssaBgBoxShadowColor { get; set; }
-        public Color AssaBgBoxTransparentColor { get; set; }
+        public SKColor AssaBgBoxColor { get; set; }
+        public SKColor AssaBgBoxOutlineColor { get; set; }
+        public SKColor AssaBgBoxShadowColor { get; set; }
+        public SKColor AssaBgBoxTransparentColor { get; set; }
         public string AssaBgBoxStyle { get; set; }
         public int AssaBgBoxStyleRadius { get; set; }
         public int AssaBgBoxStyleCircleAdjustY { get; set; }
@@ -419,9 +433,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool GenTransparentVideoNonAssaBox { get; set; }
         public bool GenTransparentVideoNonAssaBoxPerLine { get; set; }
         public string GenTransparentVideoExtension { get; set; }
-        public Color GenVideoNonAssaBoxColor { get; set; }
-        public Color GenVideoNonAssaTextColor { get; set; }
-        public Color GenVideoNonAssaShadowColor { get; set; }
+        public SKColor GenVideoNonAssaBoxColor { get; set; }
+        public SKColor GenVideoNonAssaTextColor { get; set; }
+        public SKColor GenVideoNonAssaShadowColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public string GenVideoEmbedOutputExt { get; set; }
@@ -463,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int BreakLinesLongerThan { get; set; }
         public int UnbreakLinesLongerThan { get; set; }
         public bool ConvertActorColorAdd { get; set; }
-        public Color ConvertActorColor { get; set; }
+        public SKColor ConvertActorColor { get; set; }
         public bool ConvertActorCasing { get; set; }
 
         public ToolsSettings()
@@ -520,6 +534,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OpenRouterModel = OpenRouterTranslate.Models[0];
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+            LlamaCppPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
             OllamaModel = "llama3.2";
@@ -553,16 +568,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ListViewSyntaxColorWideLines = false;
             ListViewSyntaxMoreThanXLines = true;
             ListViewSyntaxColorGap = true;
-            ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
-            ListViewUnfocusedSelectedColor = Color.LightBlue;
-            Color1 = Color.Yellow;
-            Color2 = Color.FromArgb(byte.MaxValue, 0, 0);
-            Color3 = Color.FromArgb(0, byte.MaxValue, 0);
-            Color4 = Color.Cyan;
-            Color5 = Color.Black;
-            Color6 = Color.White;
-            Color7 = Color.Orange;
-            Color8 = Color.Pink;
+            ListViewSyntaxErrorColor = new SKColor(255, 180, 150);
+            ListViewUnfocusedSelectedColor = SKColors.LightBlue;
+            Color1 = SKColors.Yellow;
+            Color2 = new SKColor(byte.MaxValue, 0, 0);
+            Color3 = new SKColor(0, byte.MaxValue, 0);
+            Color4 = SKColors.Cyan;
+            Color5 = SKColors.Black;
+            Color6 = SKColors.White;
+            Color7 = SKColors.Orange;
+            Color8 = SKColors.Pink;
             ListViewShowColumnStartTime = true;
             ListViewShowColumnEndTime = true;
             ListViewShowColumnDuration = true;
@@ -590,9 +605,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ImportTextFixedDuration = 2500;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
-            ExportFontColor = Color.White;
-            ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
-            ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
+            ExportFontColor = SKColors.White;
+            ExportBorderColor = SKColors.Black;
+            ExportShadowColor = SKColors.Black;
             ExportBoxBorderSize = 8;
             ExportBottomMarginUnit = "%";
             ExportBottomMarginPercent = 5;
@@ -617,8 +632,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ExportFcpImageType = "Bmp";
             ExportFcpPalNtsc = "PAL";
             ExportLastBorderWidth = 4;
-            BinEditBackgroundColor = Color.Black;
-            BinEditImageBackgroundColor = Color.Blue;
+            BinEditBackgroundColor = SKColors.Black;
+            BinEditImageBackgroundColor = SKColors.Blue;
             BinEditTopMargin = 10;
             BinEditBottomMargin = 10;
             BinEditLeftMargin = 10;
@@ -674,13 +689,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 "こんにちは世界" + Environment.NewLine +
                 "你好世界！" + Environment.NewLine +
                 "1234567890";
-            BlankVideoColor = Color.CadetBlue;
+            BlankVideoColor = SKColors.CadetBlue;
             BlankVideoUseCheckeredImage = true;
             BlankVideoMinutes = 2;
             BlankVideoFrameRate = 23.976m;
-            AssaProgressBarForeColor = Color.FromArgb(200, 200, 0, 0);
-            AssaProgressBarBackColor = Color.FromArgb(150, 80, 80, 80);
-            AssaProgressBarTextColor = Color.White;
+            AssaProgressBarForeColor = new SKColor(200, 0, 0, 200);
+            AssaProgressBarBackColor = new SKColor(80, 80, 80, 150);
+            AssaProgressBarTextColor = SKColors.White;
             AssaProgressBarHeight = 40;
             AssaProgressBarSplitterWidth = 2;
             AssaProgressBarSplitterHeight = 40;
@@ -692,10 +707,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AssaBgBoxPaddingRight = 10;
             AssaBgBoxPaddingTop = 6;
             AssaBgBoxPaddingBottom = 6;
-            AssaBgBoxColor = Color.FromArgb(200, 0, 0, 0);
-            AssaBgBoxOutlineColor = Color.FromArgb(200, 80, 80, 80);
-            AssaBgBoxShadowColor = Color.FromArgb(100, 0, 0, 0);
-            AssaBgBoxTransparentColor = Color.Cyan;
+            AssaBgBoxColor = new SKColor(0, 0, 0, 200);
+            AssaBgBoxOutlineColor = new SKColor(80, 80, 80, 200);
+            AssaBgBoxShadowColor = new SKColor(0, 0, 0, 100);
+            AssaBgBoxTransparentColor = SKColors.Cyan;
             AssaBgBoxStyle = "square";
             AssaBgBoxStyleRadius = 30;
             AssaBgBoxStyleCircleAdjustY = 30;
@@ -718,9 +733,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GenVideoOutline = 6;
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
-            GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
-            GenVideoNonAssaTextColor = Color.White;
-            GenVideoNonAssaShadowColor = Color.Black;
+            GenVideoNonAssaBoxColor = new SKColor(0, 0, 0, 150);
+            GenVideoNonAssaTextColor = SKColors.White;
+            GenVideoNonAssaShadowColor = SKColors.Black;
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
             GenVideoOutputFileSuffix = "_new";

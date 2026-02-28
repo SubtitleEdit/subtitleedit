@@ -34,9 +34,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string[] Models => new[]
         {
             "mistral-small-latest",
-            "open-mistral-nemo",
+            "mistral-medium-latest",
+            "open-mistral-nemo-latest",
         };
-
 
         public void Initialize()
         {

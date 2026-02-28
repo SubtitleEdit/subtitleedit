@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             public List<string> PgcStartTimes { get; set; }
             public List<char> AudioStreamsAvailable { get; set; }
             public List<byte[]> SubtitlesAvailable { get; set; }
-            public List<Color> ColorLookupTable { get; set; }
+            public List<SKColor> ColorLookupTable { get; set; }
 
             public ProgramChain()
             {
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 PgcStartTimes = new List<string>();
                 AudioStreamsAvailable = new List<char>();
                 SubtitlesAvailable = new List<byte[]>();
-                ColorLookupTable = new List<Color>();
+                ColorLookupTable = new List<SKColor>();
             }
 
             public bool Has43Subs { get; set; }
@@ -339,11 +339,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int y = colors[1] - 16;
                     int cr = colors[2] - 128;
                     int cb = colors[3] - 128;
-                    int r = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 1.596F * cr), 0), 255);
-                    int g = (int)Math.Min(Math.Max(Math.Round(1.1644F * y - 0.813F * cr - 0.391F * cb), 0), 255);
-                    int b = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 2.018F * cb), 0), 255);
+                    var r = (byte)Math.Min(Math.Max(Math.Round(1.1644F * y + 1.596F * cr), 0), 255);
+                    var g = (byte)Math.Min(Math.Max(Math.Round(1.1644F * y - 0.813F * cr - 0.391F * cb), 0), 255);
+                    var b = (byte)Math.Min(Math.Max(Math.Round(1.1644F * y + 2.018F * cb), 0), 255);
 
-                    programChain.ColorLookupTable.Add(Color.FromArgb(r, g, b));
+                    programChain.ColorLookupTable.Add(new SKColor(r, g, b));
                 }
 
                 //Parse Program Map

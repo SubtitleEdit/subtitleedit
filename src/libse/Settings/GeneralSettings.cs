@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Enums;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -55,13 +55,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string SubtitleFontName { get; set; }
         public int SubtitleTextBoxFontSize { get; set; }
         public bool SubtitleTextBoxSyntaxColor { get; set; }
-        public Color SubtitleTextBoxHtmlColor { get; set; }
-        public Color SubtitleTextBoxAssColor { get; set; }
+        public SKColor SubtitleTextBoxHtmlColor { get; set; }
+        public SKColor SubtitleTextBoxAssColor { get; set; }
         public int SubtitleListViewFontSize { get; set; }
         public bool SubtitleTextBoxFontBold { get; set; }
         public bool SubtitleListViewFontBold { get; set; }
-        public Color SubtitleFontColor { get; set; }
-        public Color SubtitleBackgroundColor { get; set; }
+        public SKColor SubtitleFontColor { get; set; }
+        public SKColor SubtitleBackgroundColor { get; set; }
         public string MeasureFontName { get; set; }
         public int MeasureFontSize { get; set; }
         public bool MeasureFontBold { get; set; }
@@ -185,9 +185,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MpvExtraOptions { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
-        public Color MpvPreviewTextPrimaryColor { get; set; }
-        public Color MpvPreviewTextOutlineColor { get; set; }
-        public Color MpvPreviewTextBackgroundColor { get; set; }
+        public SKColor MpvPreviewTextPrimaryColor { get; set; }
+        public SKColor MpvPreviewTextOutlineColor { get; set; }
+        public SKColor MpvPreviewTextBackgroundColor { get; set; }
         public decimal MpvPreviewTextOutlineWidth { get; set; }
         public decimal MpvPreviewTextShadowWidth { get; set; }
         public bool MpvPreviewTextOpaqueBox { get; set; }
@@ -235,19 +235,19 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool SubtitleTextBoxAutoVerticalScrollBars { get; set; }
         public int SubtitleTextBoxMaxHeight { get; set; }
         public bool AllowLetterShortcutsInTextBox { get; set; }
-        public Color DarkThemeForeColor { get; set; }
-        public Color DarkThemeBackColor { get; set; }
-        public Color DarkThemeSelectedBackgroundColor { get; set; }
-        public Color DarkThemeDisabledColor { get; set; }
-        public Color LastColorPickerColor { get; set; }
-        public Color LastColorPickerColor1 { get; set; }
-        public Color LastColorPickerColor2 { get; set; }
-        public Color LastColorPickerColor3 { get; set; }
-        public Color LastColorPickerColor4 { get; set; }
-        public Color LastColorPickerColor5 { get; set; }
-        public Color LastColorPickerColor6 { get; set; }
-        public Color LastColorPickerColor7 { get; set; }
-        public Color LastColorPickerDropper { get; set; }
+        public SKColor DarkThemeForeColor { get; set; }
+        public SKColor DarkThemeBackColor { get; set; }
+        public SKColor DarkThemeSelectedBackgroundColor { get; set; }
+        public SKColor DarkThemeDisabledColor { get; set; }
+        public SKColor LastColorPickerColor { get; set; }
+        public SKColor LastColorPickerColor1 { get; set; }
+        public SKColor LastColorPickerColor2 { get; set; }
+        public SKColor LastColorPickerColor3 { get; set; }
+        public SKColor LastColorPickerColor4 { get; set; }
+        public SKColor LastColorPickerColor5 { get; set; }
+        public SKColor LastColorPickerColor6 { get; set; }
+        public SKColor LastColorPickerColor7 { get; set; }
+        public SKColor LastColorPickerDropper { get; set; }
         public string ToolbarIconTheme { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
@@ -285,15 +285,15 @@ namespace Nikse.SubtitleEdit.Core.Settings
             SubtitleTextBoxFontSize = 12;
             SubtitleListViewFontSize = 10;
             SubtitleTextBoxSyntaxColor = false;
-            SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
-            SubtitleTextBoxAssColor = Color.BlueViolet;
+            SubtitleTextBoxHtmlColor = SKColors.CornflowerBlue;
+            SubtitleTextBoxAssColor = SKColors.BlueViolet;
             SubtitleTextBoxFontBold = true;
-            SubtitleFontColor = Color.Black;
+            SubtitleFontColor = SKColors.Black;
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
             MeasureFontBold = false;
             SubtitleLineMaximumPixelWidth = 576;
-            SubtitleBackgroundColor = Color.White;
+            SubtitleBackgroundColor = SKColors.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = TextEncoding.Utf8WithBom;
@@ -379,9 +379,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             MpvVideoOutputWindows = string.Empty; // could also be e.g. "gpu" or "directshow"
             MpvVideoOutputLinux = "x11"; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
-            MpvPreviewTextPrimaryColor = Color.White;
-            MpvPreviewTextOutlineColor = Color.Black;
-            MpvPreviewTextBackgroundColor = Color.Black;
+            MpvPreviewTextPrimaryColor = SKColors.White;
+            MpvPreviewTextOutlineColor = SKColors.Black;
+            MpvPreviewTextBackgroundColor = SKColors.Black;
             MpvPreviewTextOutlineWidth = 1;
             MpvPreviewTextShadowWidth = 1;
             MpvPreviewTextOpaqueBox = false;
@@ -406,19 +406,19 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ShowFormatRequiresUtf8Warning = true;
             DefaultVideoOffsetInMs = 10 * 60 * 60 * 1000;
             DefaultVideoOffsetInMsList = "36000000;3600000";
-            DarkThemeForeColor = Color.FromArgb(155, 155, 155);
-            DarkThemeBackColor = Color.FromArgb(30, 30, 30);
-            DarkThemeSelectedBackgroundColor = Color.FromArgb(24, 52, 75);
-            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120);
-            LastColorPickerColor = Color.Yellow;
-            LastColorPickerColor1 = Color.Red;
-            LastColorPickerColor2 = Color.Green;
-            LastColorPickerColor3 = Color.Blue;
-            LastColorPickerColor4 = Color.White;
-            LastColorPickerColor5 = Color.Black;
-            LastColorPickerColor6 = Color.Cyan;
-            LastColorPickerColor7 = Color.DarkOrange;
-            LastColorPickerDropper = Color.Transparent;
+            DarkThemeForeColor = new SKColor(155, 155, 155);
+            DarkThemeBackColor = new SKColor(30, 30, 30);
+            DarkThemeSelectedBackgroundColor = new SKColor(24, 52, 75);
+            DarkThemeDisabledColor = new SKColor(120, 120, 120);
+            LastColorPickerColor = SKColors.Yellow;
+            LastColorPickerColor1 = SKColors.Red;
+            LastColorPickerColor2 = SKColors.Green;
+            LastColorPickerColor3 = SKColors.Blue;
+            LastColorPickerColor4 = SKColors.White;
+            LastColorPickerColor5 = SKColors.Black;
+            LastColorPickerColor6 = SKColors.Cyan;
+            LastColorPickerColor7 = new SKColor(255, 140, 0); // DarkOrange
+            LastColorPickerDropper = SKColors.Transparent;
             ToolbarIconTheme = "Auto";
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;

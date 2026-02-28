@@ -1,7 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
-        private static void GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
+        private static unsafe void GenerateBitmap(SKBitmap bmp, byte[] buf, List<SKColor> fourColors)
         {
             int w = bmp.Width;
             int h = bmp.Height;
@@ -39,10 +40,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             var nibbleEnd = buf.Length * 2;
             var x = 0;
             var y = 0;
+
+            // Get direct access to pixel buffer
+            var pixelsPtr = bmp.GetPixels();
+            var pixels = (uint*)pixelsPtr.ToPointer();
+            var stride = bmp.RowBytes / 4; // Width in pixels
+
+            // Pre-convert colors to uint for faster pixel writing
+            var colorValues = new uint[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var c = fourColors[i];
+                colorValues[i] = (uint)((c.Alpha << 24) | (c.Red << 16) | (c.Green << 8) | c.Blue);
+            }
+
             for (; ; )
             {
                 if (nibbleOffset >= nibbleEnd)
                 {
+                    bmp.NotifyPixelsChanged();
                     return;
                 }
 
@@ -73,8 +89,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                 var color = v & 0x03;
                 if (color > 0)
                 {
-                    var c = fourColors[color];
-                    bmp.SetPixel(x, y, c, len);
+                    var colorValue = colorValues[color];
+                    var pixelIndex = y * stride + x;
+                    for (int i = 0; i < len; i++)
+                    {
+                        pixels[pixelIndex++] = colorValue;
+                    }
                 }
 
                 x += len;
@@ -90,39 +110,45 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                     nibbleOffset += (nibbleOffset & 1);
                 }
             }
+
+            bmp.NotifyPixelsChanged();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int GetNibble(byte[] buf, int nibbleOffset)
         {
             return (buf[nibbleOffset >> 1] >> ((1 - (nibbleOffset & 1)) << 2)) & 0xf;
         }
 
-        public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
+        public SKBitmap GetImage(SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
         {
-            var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
-            var bmp = new Bitmap(Width, Height);
-            if (fourColors[0] != Color.Transparent)
+            var fourColors = new List<SKColor> { background, pattern, emphasis1, emphasis2 };
+            var bmp = new SKBitmap(Width, Height);
+
+            // If background isn't transparent, fill the bitmap with it
+            if (fourColors[0].Alpha != 0)
             {
-                using (var gr = Graphics.FromImage(bmp))
+                using (var canvas = new SKCanvas(bmp))
                 {
-                    gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    using (var paint = new SKPaint { Color = fourColors[0] })
+                    {
+                        canvas.DrawRect(0, 0, bmp.Width, bmp.Height, paint);
+                    }
                 }
             }
-            var fastBmp = new FastBitmap(bmp);
-            fastBmp.LockImage();
-            GenerateBitmap(fastBmp, _rleBuffer, fourColors);
-            fastBmp.UnlockImage();
+
+            GenerateBitmap(bmp, _rleBuffer, fourColors);
             return bmp;
         }
 
-        private Color GetColor(int start)
+        private SKColor GetColor(int start)
         {
-            return Color.FromArgb(_colorBuffer[start], _colorBuffer[start + 1], _colorBuffer[start + 2]);
+            return new SKColor(_colorBuffer[start], _colorBuffer[start + 1], _colorBuffer[start + 2]);
         }
 
-        public Bitmap GetImage()
+        public SKBitmap GetImage()
         {
-            return GetImage(Color.Transparent, GetColor(3), GetColor(6), GetColor(9));
+            return GetImage(SKColors.Transparent, GetColor(3), GetColor(6), GetColor(9));
         }
     }
 }

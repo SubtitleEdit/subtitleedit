@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
 {
     public static class StringWithoutSpaceSplitToWords
     {
-        public static string SplitWord(string[] words, string input)
+        public static string SplitWord(string[] words, string input, string threeLetterIsoLanguageName)
         {
             if (!Configuration.Settings.Tools.OcrUseWordSplitList)
             {
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             var usedWords = new List<string>();
-            var result = SplitWord(words, input, string.Empty, usedWords);
+            var result = SplitWord(words, input, string.Empty, usedWords, threeLetterIsoLanguageName);
             if (result != input)
             {
                 return result;
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             foreach (var usedWord in usedWords)
             {
-                result = SplitWord(words, input, usedWord, new List<string>());
+                result = SplitWord(words, input, usedWord, new List<string>(), threeLetterIsoLanguageName);
                 if (result != input)
                 {
                     return result;
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return input;
         }
 
-        public static string SplitWord(string[] words, string input, string ignoreWord, List<string> usedWords)
+        public static string SplitWord(string[] words, string input, string ignoreWord, List<string> usedWords, string threeLetterIsoLanguageName)
         {
             var s = input;
             var check = s;
@@ -45,13 +45,28 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return input;
             }
 
-            if (Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase && input.Length > 1 &&
+            if (input.Length > 1 && // Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase && 
                 input.StartsWith(input[0].ToString().ToUpperInvariant()) &&
                 input != input.ToLowerInvariant() && input != input.ToUpperInvariant() &&
                 input.Length < 12)
-            { 
-                //TODO: Improve... some better way to detect uncommon/special names
-                return input;
+            {
+                if (input.StartsWith("Mc") || input.StartsWith("Mac"))
+                {
+                    return input;
+                }
+
+                if (input[0] == 'I' && threeLetterIsoLanguageName == "eng")
+                {
+                    // Allow split if the first letter is "I" (e.g. Iam)
+                }
+                else if (input[0] == 'a' && threeLetterIsoLanguageName == "eng")
+                {
+                    // Allow split if the first letter is "a" (e.g. acat)
+                }
+                else
+                {
+                    return input;
+                }
             }
 
             for (var i = 0; i < words.Length; i++)
@@ -94,9 +109,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return s.Trim();
         }
 
-        public static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
+        public static string[] LoadWordSplitList(string dictionaryFolder, string threeLetterIsoLanguageName, List<string> names)
         {
-            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
+            var fileName = Path.Combine(dictionaryFolder, $"{threeLetterIsoLanguageName}_WordSplitList.txt");
             if (!File.Exists(fileName))
             {
                 return Array.Empty<string>();
@@ -110,15 +125,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     // Ignore list
                     "Andor", "honour", "honours", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",
-                    "Atwater", "Lakeview", "Glassman", "Starfleet", "Coulda", "Woulda", "percenters", 
+                    "Atwater", "Lakeview", "Glassman", "Starfleet", "Coulda", "Woulda", "percenters",
                     "starbase", "damnit", "Goddamnit", "Goodfellas", "Stillwater", "ahold", "Coldplay",
                 });
             }
 
-            if (nameList != null)
-            {
-                wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
-            }
+            wordList.AddRange(names.Where(p => p.Length > 4));
 
             return wordList.OrderByDescending(p => p.Length).ToArray();
         }

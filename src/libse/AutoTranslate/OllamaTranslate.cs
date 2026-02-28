@@ -59,6 +59,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{ " + modelJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            if (Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/').EndsWith("v1/chat/completions"))
+            {
+                input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            }
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken).ConfigureAwait(false);
@@ -74,6 +78,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             var parser = new SeJsonParser();
             var resultText = parser.GetFirstObject(json, "response");
+            if (string.IsNullOrEmpty(resultText))
+            {
+                resultText = parser.GetFirstObject(json, "content");
+            }
+
             if (resultText == null)
             {
                 return string.Empty;

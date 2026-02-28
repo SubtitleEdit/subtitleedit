@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _nameListInclMulti = _namesList.GetAllNames();
         }
 
-        public string FixActorsFromActor(Paragraph p, int? changeCasing, Color? color)
+        public string FixActorsFromActor(Paragraph p, int? changeCasing, SKColor? color)
         {
             var actor = p.Actor;
             if (changeCasing.HasValue)
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return p.Text;
         }
 
-        public string FixActorsFromBeforeColon(Paragraph p, char ch, int? changeCasing, Color? color)
+        public string FixActorsFromBeforeColon(Paragraph p, char ch, int? changeCasing, SKColor? color)
         {
             var sb = new StringBuilder();
             foreach (var line in p.Text.SplitToLines())
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Trim();
         }
 
-        public ActorConverterResult FixActors(Paragraph paragraph, char start, char end, int? changeCasing, Color? color)
+        public ActorConverterResult FixActors(Paragraph paragraph, char start, char end, int? changeCasing, SKColor? color)
         {
             var p = new Paragraph(paragraph, false);
             Paragraph nextParagraph = null;
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return actor;
         }
 
-        private static string SetColor(SubtitleFormat format, Color color, string actor)
+        private static string SetColor(SubtitleFormat format, SKColor color, string actor)
         {
             if (format.FriendlyName == AdvancedSubStationAlpha.NameOfFormat)
             {
