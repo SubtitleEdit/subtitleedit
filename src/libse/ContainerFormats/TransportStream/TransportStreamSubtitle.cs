@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// Gets full image if 'ActiveImageIndex' not set, otherwise only gets image by index
         /// </summary>
         /// <returns></returns>
-        public Bitmap GetBitmap()
+        public SKBitmap GetBitmap()
         {
             if (_bdSup != null)
             {
@@ -44,13 +44,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
             {
-                return (Bitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
+                var bitmap = Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]);
+                var clone = new SKBitmap(bitmap.Width, bitmap.Height);
+                bitmap.CopyTo(clone);
+                return clone;
             }
 
             return Pes.GetImageFull();
         }
 
-        public Size GetScreenSize()
+        public SKSize GetScreenSize()
         {
             if (_bdSup != null)
             {
@@ -62,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return Pes.GetScreenSize();
             }
 
-            return new Size(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+            return new SKSize(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
         }
 
         public bool IsForced

@@ -117,14 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="cyan_to_orange.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cyan_to_Orange.Image.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Heat.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Heat.Image.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="netflix_glyphs2_gz" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\netflix_glyphs2_gz;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

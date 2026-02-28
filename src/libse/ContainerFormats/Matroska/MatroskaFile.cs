@@ -1,9 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
 
@@ -13,8 +11,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly MemoryMappedFile _memoryMappedFile;
-        private readonly Stream _stream;
+        private readonly FileStream _stream;
+        private readonly byte[] _buffer = new byte[8];
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
         private string _videoCodecId;
@@ -35,26 +33,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public MatroskaFile(string path)
         {
             Path = path;
-            try
-            {
-                _memoryMappedFile = MemoryMappedFile.CreateFromFile(
-                    File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
-                    null, // no mapping to a name
-                    0L, // use the file's actual size
-                    MemoryMappedFileAccess.Read,
-#if NET40
-                    null, // not configuring security
-#endif
-                    HandleInheritability.None, // adjust as needed
-                    false); // close the previously passed in stream when done
-
-                _stream = _memoryMappedFile.CreateViewStream(0L, 0L, MemoryMappedFileAccess.Read);
-            }
-            catch // fallback, probably out of memory
-            {
-                Dispose(true);
-                _stream = new FastFileStream(path);
-            }
+            _stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 65536);
 
             // read header
             var headerElement = ReadElement();
@@ -79,9 +58,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return new List<MatroskaTrackInfo>();
             }
 
-            return subtitleOnly
-                ? _tracks.Where(t => t.IsSubtitle).ToList()
-                : _tracks;
+            if (!subtitleOnly)
+            {
+                return _tracks;
+            }
+
+            var subtitleTracks = new List<MatroskaTrackInfo>(_tracks.Count);
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].IsSubtitle)
+                {
+                    subtitleTracks.Add(_tracks[i]);
+                }
+            }
+            return subtitleTracks;
         }
 
         /// <summary>
@@ -157,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         break;
                     case ElementId.Timecode:
                         // Absolute timestamp of the cluster (based on TimeCodeScale)
-                        clusterTimeCode = (long)ReadUInt((int)element.DataSize);
+                        clusterTimeCode = ReadUIntAsLong(element.DataSize);
                         break;
                     case ElementId.BlockGroup:
                         ReadBlockGroupElement(element, clusterTimeCode);
@@ -187,10 +177,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 switch (element.Id)
                 {
                     case ElementId.PixelWidth:
-                        _pixelWidth = (int)ReadUInt((int)element.DataSize);
+                        _pixelWidth = ReadUIntAsInt(element.DataSize);
                         break;
                     case ElementId.PixelHeight:
-                        _pixelHeight = (int)ReadUInt((int)element.DataSize);
+                        _pixelHeight = ReadUIntAsInt(element.DataSize);
                         break;
                     default:
                         _stream.Seek(element.DataSize, SeekOrigin.Current);
@@ -222,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 switch (element.Id)
                 {
                     case ElementId.DefaultDuration:
-                        defaultDuration = (int)ReadUInt((int)element.DataSize);
+                        defaultDuration = ReadUIntAsLong(element.DataSize);
                         break;
                     case ElementId.Video:
                         ReadVideoElement(element);
@@ -232,16 +222,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         isAudio = true;
                         break;
                     case ElementId.TrackNumber:
-                        trackNumber = (int)ReadUInt((int)element.DataSize);
+                        trackNumber = ReadUIntAsInt(element.DataSize);
                         break;
                     case ElementId.Name:
-                        name = ReadString((int)element.DataSize, Encoding.UTF8);
+                        name = ReadString(element.DataSize, Encoding.UTF8);
                         break;
                     case ElementId.Language:
-                        language = ReadString((int)element.DataSize, Encoding.ASCII);
+                        language = ReadString(element.DataSize, Encoding.ASCII);
                         break;
                     case ElementId.CodecId:
-                        codecId = ReadString((int)element.DataSize, Encoding.ASCII);
+                        codecId = ReadString(element.DataSize, Encoding.ASCII);
                         break;
                     case ElementId.TrackType:
                         switch (_stream.ReadByte())
@@ -272,12 +262,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         }
                         break;
                     case ElementId.FlagDefault:
-                        var defaultValue = (int)ReadUInt((int)element.DataSize);
-                        isDefault = defaultValue == 1;
+                        isDefault = ReadUIntAsInt(element.DataSize) == 1;
                         break;
                     case ElementId.FlagForced:
-                        var forcedValue = (int)ReadUInt((int)element.DataSize);
-                        isForced = forcedValue == 1;
+                        isForced = ReadUIntAsInt(element.DataSize) == 1;
                         break;
                 }
                 _stream.Seek(element.EndPosition, SeekOrigin.Begin);
@@ -318,15 +306,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 switch (element.Id)
                 {
                     case ElementId.ContentEncodingOrder:
-                        var contentEncodingOrder = ReadUInt((int)element.DataSize);
+                        var contentEncodingOrder = ReadUIntAsInt(element.DataSize);
                         System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder);
                         break;
                     case ElementId.ContentEncodingScope:
-                        contentEncodingScope = (uint)ReadUInt((int)element.DataSize);
+                        contentEncodingScope = (uint)ReadUIntAsInt(element.DataSize);
                         System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope);
                         break;
                     case ElementId.ContentEncodingType:
-                        contentEncodingType = (int)ReadUInt((int)element.DataSize);
+                        contentEncodingType = ReadUIntAsInt(element.DataSize);
                         break;
                     case ElementId.ContentCompression:
                         Element compElement;
@@ -335,10 +323,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                             switch (compElement.Id)
                             {
                                 case ElementId.ContentCompAlgo:
-                                    contentCompressionAlgorithm = (int)ReadUInt((int)compElement.DataSize);
+                                    contentCompressionAlgorithm = ReadUIntAsInt(compElement.DataSize);
                                     break;
                                 case ElementId.ContentCompSettings:
-                                    var contentCompSettings = ReadUInt((int)compElement.DataSize);
+                                    var contentCompSettings = ReadUIntAsInt(compElement.DataSize);
                                     System.Diagnostics.Debug.WriteLine("ContentCompSettings: " + contentCompSettings);
                                     break;
                                 default:
@@ -363,7 +351,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     case ElementId.TimecodeScale:
                         // Timestamp scale in nanoseconds (1.000.000 means all timestamps in the segment are expressed in milliseconds)
-                        _timeCodeScale = (int)ReadUInt((int)element.DataSize);
+                        _timeCodeScale = ReadUIntAsLong(element.DataSize);
                         break;
                     case ElementId.Duration:
                         // Duration of the segment (based on TimeCodeScale)
@@ -404,12 +392,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         {
             ReadChapters();
 
-            if (_chapters == null)
-            {
-                return new List<MatroskaChapter>();
-            }
-
-            return _chapters.Distinct().ToList();
+            return _chapters ?? new List<MatroskaChapter>();
         }
 
         private void ReadChapters()
@@ -474,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 if (element.Id == ElementId.ChapterTimeStart)
                 {
-                    chapter.StartTime = ReadUInt((int)element.DataSize) / 1000000000.0;
+                    chapter.StartTime = ReadUIntAsLong(element.DataSize) / 1000000000.0;
                 }
                 else if (element.Id == ElementId.ChapterDisplay)
                 {
@@ -488,9 +471,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
-
-                _chapters.Add(chapter);
             }
+
+            _chapters.Add(chapter);
         }
 
         private void ReadNestedChaptersTimeStart(Element nestedChpaterAtom)
@@ -505,7 +488,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 if (element.Id == ElementId.ChapterTimeStart)
                 {
-                    chapter.StartTime = ReadUInt((int)element.DataSize) / 1000000000.0;
+                    chapter.StartTime = ReadUIntAsLong(element.DataSize) / 1000000000.0;
                 }
                 else if (element.Id == ElementId.ChapterDisplay)
                 {
@@ -515,9 +498,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
-
-                _chapters.Add(chapter);
             }
+
+            _chapters.Add(chapter);
         }
 
         private string GetChapterName(Element chapterDisplay)
@@ -527,7 +510,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 if (element.Id == ElementId.ChapString)
                 {
-                    return ReadString((int)element.DataSize, Encoding.UTF8);
+                    return ReadString(element.DataSize, Encoding.UTF8);
                 }
                 else
                 {
@@ -568,7 +551,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 switch (element.Id)
                 {
                     case ElementId.Timecode:
-                        clusterTimeCode = (long)ReadUInt((int)element.DataSize);
+                        clusterTimeCode = ReadUIntAsLong(element.DataSize);
                         break;
                     case ElementId.BlockGroup:
                         ReadBlockGroupElement(element, clusterTimeCode);
@@ -605,7 +588,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         _subtitleRip.Add(subtitle);
                         break;
                     case ElementId.BlockDuration:
-                        var duration = (long)ReadUInt((int)element.DataSize);
+                        var duration = ReadUIntAsLong(element.DataSize);
                         if (subtitle != null)
                         {
                             subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration));
@@ -678,7 +661,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             if (disposing)
             {
                 _stream?.Dispose();
-                _memoryMappedFile?.Dispose();
             }
         }
 
@@ -764,15 +746,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private ulong ReadVariableLengthUInt(bool unsetFirstBit = true)
         {
-            // Begin loop with byte set to newly read byte
             var first = _stream.ReadByte();
-            var length = 0;
+            if (first == -1)
+            {
+                return 0;
+            }
 
-            // Begin by counting the bits unset before the highest set bit
+            var length = 0;
             var mask = 0x80;
             for (var i = 0; i < 8; i++)
             {
-                // Start at left, shift to right
                 if ((first & mask) == mask)
                 {
                     length = i + 1;
@@ -785,34 +768,46 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return 0;
             }
 
-            // Read remaining big endian bytes and convert to 64-bit unsigned integer.
             var result = (ulong)(unsetFirstBit ? first & (0xFF >> length) : first);
-            result <<= --length * 8;
-            for (var i = 1; i <= length; i++)
+            if (length > 1)
             {
-                result |= (ulong)_stream.ReadByte() << (length - i) * 8;
+                _stream.Read(_buffer, 0, length - 1);
+                for (var i = 0; i < length - 1; i++)
+                {
+                    result = (result << 8) | _buffer[i];
+                }
             }
             return result;
         }
 
         /// <summary>
-        /// Reads a fixed length unsigned integer from the current stream and advances the current
-        /// position of the stream by the integer length in bytes.
+        /// Reads a fixed length unsigned integer as int from the current stream.
         /// </summary>
         /// <param name="length">The length in bytes of the integer.</param>
-        /// <returns>A 64-bit unsigned integer.</returns>
-        private ulong ReadUInt(int length)
+        /// <returns>An integer.</returns>
+        private int ReadUIntAsInt(long length)
         {
-            var data = new byte[length];
-            _stream.Read(data, 0, length);
-
-            // Convert the big endian byte array to a 64-bit unsigned integer.
-            var result = 0UL;
-            var shift = 0;
-            for (var i = length - 1; i >= 0; i--)
+            _stream.Read(_buffer, 0, (int)length);
+            var result = 0;
+            for (var i = 0; i < length; i++)
             {
-                result |= (ulong)data[i] << shift;
-                shift += 8;
+                result = (result << 8) | _buffer[i];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Reads a fixed length unsigned integer as long from the current stream.
+        /// </summary>
+        /// <param name="length">The length in bytes of the integer.</param>
+        /// <returns>A long integer.</returns>
+        private long ReadUIntAsLong(long length)
+        {
+            _stream.Read(_buffer, 0, (int)length);
+            var result = 0L;
+            for (var i = 0; i < length; i++)
+            {
+                result = (result << 8) | _buffer[i];
             }
             return result;
         }
@@ -824,9 +819,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 2-byte signed integer read from the current stream.</returns>
         private short ReadInt16()
         {
-            var data = new byte[2];
-            _stream.Read(data, 0, 2);
-            return (short)(data[0] << 8 | data[1]);
+            _stream.Read(_buffer, 0, 2);
+            return (short)(_buffer[0] << 8 | _buffer[1]);
         }
 
         /// <summary>
@@ -836,14 +830,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 4-byte floating point value read from the current stream.</returns>
         private float ReadFloat32()
         {
-            var data = new byte[4];
-            _stream.Read(data, 0, 4);
+            _stream.Read(_buffer, 0, 4);
             if (BitConverter.IsLittleEndian)
             {
-                var data2 = new[] { data[3], data[2], data[1], data[0] };
-                return BitConverter.ToSingle(data2, 0);
+                Span<byte> reversed = stackalloc byte[4] { _buffer[3], _buffer[2], _buffer[1], _buffer[0] };
+                return BitConverter.ToSingle(reversed);
             }
-            return BitConverter.ToSingle(data, 0);
+            return BitConverter.ToSingle(_buffer.AsSpan(0, 4));
         }
 
         /// <summary>
@@ -853,14 +846,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 8-byte floating point value read from the current stream.</returns>
         private double ReadFloat64()
         {
-            var data = new byte[8];
-            _stream.Read(data, 0, 8);
+            _stream.Read(_buffer, 0, 8);
             if (BitConverter.IsLittleEndian)
             {
-                var data2 = new[] { data[7], data[6], data[5], data[4], data[3], data[2], data[1], data[0] };
-                return BitConverter.ToDouble(data2, 0);
+                Span<byte> reversed = stackalloc byte[8] { _buffer[7], _buffer[6], _buffer[5], _buffer[4], _buffer[3], _buffer[2], _buffer[1], _buffer[0] };
+                return BitConverter.ToDouble(reversed);
             }
-            return BitConverter.ToDouble(data, 0);
+            return BitConverter.ToDouble(_buffer.AsSpan(0, 8));
         }
 
         /// <summary>
@@ -869,11 +861,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <param name="length">The length in bytes of the string.</param>
         /// <param name="encoding">The encoding of the string.</param>
         /// <returns>The string being read.</returns>
-        private string ReadString(int length, Encoding encoding)
+        private string ReadString(long length, Encoding encoding)
         {
+            if (length <= _buffer.Length)
+            {
+                _stream.Read(_buffer, 0, (int)length);
+                return encoding.GetString(_buffer.AsSpan(0, (int)length));
+            }
+
             var buffer = new byte[length];
-            _stream.Read(buffer, 0, length);
-            return encoding.GetString(buffer);
+            _stream.Read(buffer, 0, (int)length);
+            return encoding.GetString(buffer.AsSpan()); 
         }
     }
 }

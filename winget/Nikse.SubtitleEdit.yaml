@@ -1,9 +1,0 @@
-# Created using wingetcreate 1.6.1.0
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.6.0.schema.json
-
-PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 4.0.13.0
-DefaultLocale: en-US
-ManifestType: version
-ManifestVersion: 1.6.0
-

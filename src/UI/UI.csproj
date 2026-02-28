@@ -1,0 +1,187 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<AssemblyName>SubtitleEdit</AssemblyName>
+		<RootNamespace>Nikse.SubtitleEdit</RootNamespace>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<ApplicationIcon>SE.ico</ApplicationIcon>
+	</PropertyGroup>
+	<ItemGroup>
+	  <AvaloniaXaml Remove="Assets\Themes\**" />
+	  <Compile Remove="Assets\Themes\**" />
+	  <EmbeddedResource Remove="Assets\Themes\**" />
+	  <None Remove="Assets\Themes\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<AvaloniaXaml Remove="Styles.axaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.3.12" />
+		<PackageReference Include="Avalonia.AvaloniaEdit" Version="11.4.1" />
+		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Markup.Declarative" Version="11.1.3" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
+		<PackageReference Include="Simplecto.Avalonia.RichTextBox" Version="1.5.4" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Include="Avalonia.Diagnostics" Version="11.3.12">
+			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="AvaloniaEdit.TextMate" Version="11.4.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.17.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
+		<PackageReference Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.6.2" />
+		<PackageReference Include="SharpCompress" Version="0.46.3" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
+		<!--<PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.2" />-->
+		<!--<PackageReference Include="System.Text.Json" Version="10.0.2" />-->
+		<PackageReference Include="WeCantSpell.Hunspell" Version="7.0.1" />
+		<!--<PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.1.3.1" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+		<PackageReference Include="LibVLCSharp.Avalonia" Version="3.9.3" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\Dictionaries.zip" />
+		<None Remove="Assets\FileTypes\ass.ico" />
+		<None Remove="Assets\FileTypes\dfxp.ico" />
+		<None Remove="Assets\FileTypes\itt.ico" />
+		<None Remove="Assets\FileTypes\lrc.ico" />
+		<None Remove="Assets\FileTypes\sbv.ico" />
+		<None Remove="Assets\FileTypes\smi.ico" />
+		<None Remove="Assets\FileTypes\srt.ico" />
+		<None Remove="Assets\FileTypes\ssa.ico" />
+		<None Remove="Assets\FileTypes\stl.ico" />
+		<None Remove="Assets\FileTypes\sub.ico" />
+		<None Remove="Assets\FileTypes\sup.ico" />
+		<None Remove="Assets\FileTypes\vtt.ico" />
+		<None Remove="Assets\HunspellDictionaries.json" />
+		<None Remove="Assets\Languages\Danish.json" />
+		<None Remove="Assets\Languages\English.json" />
+		<None Remove="Assets\Languages\French.json" />
+		<None Remove="Assets\Languages\German.json" />
+		<None Remove="Assets\NetflixGlyphs.zip" />
+		<None Remove="Assets\SevenZip\7z-linux64.zip" />
+		<None Remove="Assets\SevenZip\7zaWindows64.zip" />
+		<None Remove="Assets\SevenZip\7zrLinux64.zip" />
+		<None Remove="Assets\SevenZip\7zxa.dll" />
+		<None Remove="Assets\TextToSpeech\AllTalkVoices.json" />
+		<None Remove="Assets\TextToSpeech\AzureVoices.json" />
+		<None Remove="Assets\TextToSpeech\ElevenLabsVoices.json" />
+		<None Remove="Assets\TextToSpeech\MurfVoices.json" />
+		<None Remove="Assets\TextToSpeech\PiperVoices.json" />
+		<None Remove="Assets\Themes.zip" />
+		<None Remove="Assets\Whisper\PurfviewFasterWhisper.txt" />
+		<None Remove="Assets\Whisper\PurfviewFasterWhisperXXL.txt" />
+		<None Remove="Assets\Whisper\WhisperCPP.txt" />
+		<None Remove="Assets\Whisper\WhisperOpenAI.txt" />
+		<None Remove="Styles.xaml" />
+		<AvaloniaResource Include="Assets\Dictionaries.zip" />
+		<AvaloniaResource Include="Assets\Languages\Danish.json">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Languages\English.json">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Languages\French.json" />
+		<AvaloniaResource Include="Assets\Languages\German.json" />
+		<AvaloniaResource Include="Assets\Languages\ChineseSimplified.json" />
+		<AvaloniaResource Include="Assets\Layout\Layout01.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout02.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout03.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout04.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout05.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout06.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout07.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout08.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout09.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout10.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout11.png" />
+		<AvaloniaResource Include="Assets\Layout\Layout12.png" />
+		<AvaloniaResource Include="Assets\NetflixGlyphs.zip" />
+		<AvaloniaResource Include="Assets\SevenZip\7zaWindows64.zip" />
+		<AvaloniaResource Include="Assets\SevenZip\7zrLinux64.zip" />
+		<AvaloniaResource Include="Assets\Themes.zip" />
+		<AvaloniaResource Include="Assets\Whisper\PurfviewFasterWhisper.txt">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\PurfviewFasterWhisperXXL.txt">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\WhisperConst-me.txt">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\WhisperCPPcuBLAS.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\WhisperCPPVulkan.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\WhisperCPP.txt">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\ChatLLM.cpp.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\Whisper\WhisperOpenAI.txt">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<Content Include="SE.ico" />
+		<None Remove="Assets\Ocr.zip" />
+		<AvaloniaResource Include="Assets\Ocr.zip" />
+		<None Remove="Assets\about.png" />
+		<AvaloniaResource Include="Assets\about.png" />
+		<None Remove="Assets\Whisper\CTranslate2.txt" />
+		<AvaloniaResource Include="Assets\Whisper\WhisperCTranslate2.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\FileTypes\ass.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\dfxp.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\itt.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\lrc.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\sbv.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\smi.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\srt.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\ssa.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\stl.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\sub.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\sup.ico" />
+		<AvaloniaResource Include="Assets\FileTypes\vtt.ico" />
+		<AvaloniaResource Include="Assets\SE.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\se.ico" />
+		<AvaloniaResource Include="Assets\se.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\HunspellDictionaries.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\AllTalkVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\AzureVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\ElevenLabsVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\MurfVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\GoogleVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\PiperVoices.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\libse\LibSE.csproj" />
+	</ItemGroup>
+</Project>

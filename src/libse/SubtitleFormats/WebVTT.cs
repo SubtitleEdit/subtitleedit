@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -18,34 +18,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
-        public static readonly Dictionary<string, Color> DefaultColorClasses = new Dictionary<string, Color>
+        public static readonly Dictionary<string, SKColor> DefaultColorClasses = new Dictionary<string, SKColor>
         {
             {
-                "white", Color.FromArgb(255, 255, 255)
+                "white", ColorUtils.FromArgb(255, 255, 255)
             },
             {
-                "lime", Color.FromArgb(0, 255, 0)
+                "lime", ColorUtils.FromArgb(0, 255, 0)
             },
             {
-                "cyan", Color.FromArgb(0, 255, 255)
+                "cyan", ColorUtils.FromArgb(0, 255, 255)
             },
             {
-                "red", Color.FromArgb(255, 0, 0)
+                "red", ColorUtils.FromArgb(255, 0, 0)
             },
             {
-                "yellow", Color.FromArgb(255, 255, 0)
+                "yellow", ColorUtils.FromArgb(255, 255, 0)
             },
             {
-                "green", Color.FromArgb(0, 255, 0)
+                "green", ColorUtils.FromArgb(0, 255, 0)
             },
             {
-                "magenta", Color.FromArgb(255, 0, 255)
+                "magenta", ColorUtils.FromArgb(255, 0, 255)
             },
             {
-                "blue", Color.FromArgb(0, 0, 255)
+                "blue", ColorUtils.FromArgb(0, 0, 255)
             },
             {
-                "black", Color.FromArgb(0, 0, 0)
+                "black", ColorUtils.FromArgb(0, 0, 0)
             },
         };
 
@@ -906,24 +906,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 while (match.Success)
                 {
                     var colorName = match.Value.Substring(13, match.Value.Length - 15);
-                    var color = Color.FromName(colorName);
-                    if (color.IsKnownColor)
+                    var color = HtmlUtil.GetColorFromString(colorName);
+
+                    var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
+                    var fontString = "<c" + tag + ">";
+                    var closeColor = GetCloseColor(tag);
+                    if (closeColor != null)
                     {
-                        var tag = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#');
-                        var fontString = "<c" + tag + ">";
-                        var closeColor = GetCloseColor(tag);
-                        if (closeColor != null)
-                        {
-                            fontString = "<c." + closeColor + ">";
-                        }
-                        fontString = fontString.Trim('"').Trim('\'');
-                        res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                        match = RegexHtmlColor4.Match(res);
+                        fontString = "<c." + closeColor + ">";
                     }
-                    else
-                    {
-                        break;
-                    }
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    match = RegexHtmlColor4.Match(res);
                 }
             }
 
@@ -938,9 +932,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 const int maxDiff = 25;
                 foreach (var kvp in DefaultColorClasses)
                 {
-                    if (Math.Abs(kvp.Value.R - c.R) <= maxDiff &&
-                        Math.Abs(kvp.Value.G - c.G) <= maxDiff &&
-                        Math.Abs(kvp.Value.B - c.B) <= maxDiff)
+                    if (Math.Abs(kvp.Value.Red - c.Red) <= maxDiff &&
+                        Math.Abs(kvp.Value.Green - c.Green) <= maxDiff &&
+                        Math.Abs(kvp.Value.Blue - c.Blue) <= maxDiff)
                     {
                         return kvp.Key;
                     }

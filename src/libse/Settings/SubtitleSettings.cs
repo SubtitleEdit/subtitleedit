@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -32,9 +32,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string CurrentDCinemaStartTime { get; set; }
         public string CurrentDCinemaFontId { get; set; }
         public string CurrentDCinemaFontUri { get; set; }
-        public Color CurrentDCinemaFontColor { get; set; }
+        public SKColor CurrentDCinemaFontColor { get; set; }
         public string CurrentDCinemaFontEffect { get; set; }
-        public Color CurrentDCinemaFontEffectColor { get; set; }
+        public SKColor CurrentDCinemaFontEffectColor { get; set; }
         public int CurrentDCinemaFontSize { get; set; }
 
         public int CurrentCavena890LanguageIdLine1 { get; set; }
@@ -215,9 +215,9 @@ $HorzAlign          =   Center
             CurrentDCinemaIssueDate = DateTime.Now.ToString("s");
             CurrentDCinemaMovieTitle = "title";
             CurrentDCinemaReelNumber = "1";
-            CurrentDCinemaFontColor = Color.White;
+            CurrentDCinemaFontColor = SKColors.White;
             CurrentDCinemaFontEffect = "border";
-            CurrentDCinemaFontEffectColor = Color.Black;
+            CurrentDCinemaFontEffectColor = SKColors.Black;
             CurrentDCinemaFontSize = DCinemaFontSize;
             CurrentCavena890LanguageIdLine1 = -1;
             CurrentCavena890LanguageIdLine2 = -1;

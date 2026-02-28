@@ -215,6 +215,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Three letter language code in lowercase, string.Empty if not found</returns>
         public static string GetThreeLetterCodeFromTwoLetterCode(string twoLetterCode)
         {
+            if (string.IsNullOrEmpty(twoLetterCode))
+            {
+                return string.Empty;
+            }
+
             var lookupResult = List.FirstOrDefault(p => p.TwoLetterCode == twoLetterCode.ToLowerInvariant());
             return lookupResult == null ? string.Empty : lookupResult.ThreeLetterCode;
         }
@@ -226,12 +231,22 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Two letter language code in lowercase, string.Empty if not found</returns>
         public static string GetTwoLetterCodeFromThreeLetterCode(string threeLetterCode)
         {
+            if (string.IsNullOrEmpty(threeLetterCode))
+            {
+                return string.Empty;
+            }
+
             var lookupResult = List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode.ToLowerInvariant());
             return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
         }
 
         public static string GetTwoLetterCodeFromEnglishName(string englishName)
         {
+            if (string.IsNullOrEmpty(englishName))
+            {
+                return string.Empty;
+            }
+
             var lookupResult = List.FirstOrDefault(p => string.Equals(p.EnglishName, englishName, StringComparison.InvariantCultureIgnoreCase));
             return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
         }

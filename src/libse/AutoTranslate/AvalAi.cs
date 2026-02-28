@@ -28,27 +28,49 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "gpt-4o-mini",
+            // OpenAI GPT Series
+            "gpt-5.2",
+            "gpt-5.1",
+            "gpt-5.1-codex-max",
+            "gpt-5-mini",
+            "gpt-5-nano",
+            "gpt-4.1",
+            "gpt-4.1-mini",
             "gpt-4o",
-            "o1-mini",
-            "o3-mini",
-            "gemini-2.0-pro-exp-02-05",
+            "gpt-4o-mini",
+            "o4-mini",
+            // OpenAI OSS releases
+            "gpt-oss-120b",
+            "gpt-oss-20b",
+
+            // Google / Gemini
+            "gemini-3-pro",
+            "gemini-3-flash",
+            "gemini-2.5-pro",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite",
             "gemini-2.0-flash",
-            "gemini-2.0-flash-lite-preview-02-05",
-            "gemini-2.0-flash-thinking-exp-01-21",
-            "gemini-2.0-flash-thinking-exp",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-            "cohere.command-light-text-v14",
-            "cohere.command-r-v1:0",
-            "deepseek-reasoner",
+
+            // Anthropic Claude
+            "claude-opus-4.5",
+            "claude-sonnet-4.5",
+            "claude-haiku-4.5",
+            "claude-4-5-opus",
+            "claude-4-5-sonnet",
+
+            // xAI / Grok
+            "grok-4",
+            "grok-3",
+            "grok-3-mini",
+
+            // DeepSeek
+            "deepseek-r1",
+            "deepseek-v3.1",
+            "deepseek-v3.1-thinking",
             "deepseek-chat",
-            "anthropic.claude-3-5-sonnet-20240620-v1:0",
-            "anthropic.claude-3-5-haiku-20241022-v1:0",
-            "meta.llama3-1-70b-instruct-v1:0",
-            "meta.llama3-1-405b-instruct-v1:0",
-            "meta.llama3-3-70b-instruct-v1:0",
-            "mistral.mistral-large-2407-v1:0"
+
+            // Other notable models
+            "qwen-3-235b"
         };
 
         public void Initialize()

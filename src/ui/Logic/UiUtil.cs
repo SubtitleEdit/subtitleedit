@@ -1,1440 +1,2301 @@
-﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Data.Converters;
+using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Markup.Xaml.Templates;
+using Avalonia.Media;
+using Avalonia.Platform;
+using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Projektanker.Icons.Avalonia;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Settings;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Logic;
+
+public static class UiUtil
 {
-    internal static class UiUtil
+    public const int WindowMarginWidth = 12;
+    public const int CornerRadius = 4;
+    public const int SplitterWidthOrHeight = 4;
+
+    public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
+
+    private static ControlTheme GetDataGridNoBorderCellTheme()
     {
-        public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString() ||
+            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString();
 
-        public static VideoInfo GetVideoInfo(string fileName)
+        var compactMode = Se.Settings.Appearance.GridCompactMode;
+
+        return new ControlTheme(typeof(DataGridCell))
         {
-            var info = FileUtil.TryReadVideoInfoViaAviHeader(fileName);
-            if (info.Success)
+            Setters =
             {
-                return info;
+                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(DataGridCell.FocusAdornerProperty, null),
+                new Setter(DataGridCell.PaddingProperty, new Thickness(compactMode ? 0 : 4)),
+                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
+                new Setter(DataGridCell.BorderThicknessProperty,
+                    new Thickness(0, 0, showVertical ? 1 : 0, 0)), // 1px vertical line
             }
+        };
+    }
 
-            info = FileUtil.TryReadVideoInfoViaMatroskaHeader(fileName);
-            if (info.Success)
+    public static ControlTheme DataGridNoBorderNoPaddingCellTheme => GetDataGridNoBorderNoPaddingCellTheme();
+
+    private static ControlTheme GetDataGridNoBorderNoPaddingCellTheme()
+    {
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString() ||
+            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString();
+
+        return new ControlTheme(typeof(DataGridCell))
+        {
+            Setters =
             {
-                return info;
+                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(DataGridCell.FocusAdornerProperty, null),
+                new Setter(DataGridCell.PaddingProperty, new Thickness(0)),
+                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
+                new Setter(DataGridCell.BorderThicknessProperty,
+                    new Thickness(0, 0, showVertical ? 1 : 0, 0)), // 1px vertical line
             }
+        };
+    }
 
-            info = FileUtil.TryReadVideoInfoViaMp4(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
+    public static Button MakeButton(string text)
+    {
+        return MakeButton(text, null);
+    }
 
-            info = TryReadVideoInfoViaDirectShow(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
-
-            info = TryReadVideoInfoViaLibMpv(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
-
-            return new VideoInfo { VideoCodec = "Unknown" };
+    public static string GetDefaultFontName()
+    {
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
+        {
+            return Se.Settings.Appearance.FontName;
         }
 
-        private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
+        var systemFontNames = FontHelper.GetSystemFonts();
+        var goodFontNames = new List<string>()
         {
-            return QuartsPlayer.GetVideoInfo(fileName);
-        }
+            "Segoe UI",
+            "San Francisco",
+            "SF Pro Text",
+            "Roboto",
+            "Open Sans",
+            "Lato",
+            "Source Sans Pro",
+            "Calibri",
+            "Verdana",
+            "Tahoma",
+            "Inter",
+            "Noto Sans",
+            "System UI",
+            "Arial",
+        };
 
-        private static VideoInfo TryReadVideoInfoViaLibMpv(string fileName)
+        foreach (var goodFontName in goodFontNames)
         {
-            return LibMpvDynamic.GetVideoInfo(fileName);
-        }
-
-        private static long _lastShowSubTicks = Stopwatch.GetTimestamp();
-        private static int _lastShowSubHash;
-
-        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
-        {
-            if (videoPlayerContainer.VideoPlayer == null)
+            if (systemFontNames.Contains(goodFontName))
             {
-                return -1;
-            }
-
-            double positionInMilliseconds = videoPlayerContainer.CurrentPosition * TimeCode.BaseUnit;
-            var max = subtitle.Paragraphs.Count;
-            for (int i = 0; i < max; i++)
-            {
-                var p = subtitle.Paragraphs[i];
-                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds + 0.01 && p.EndTime.TotalMilliseconds >= positionInMilliseconds - 0.01)
-                {
-                    string text = p.Text.Replace("|", Environment.NewLine);
-                    bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.DurationTotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
-                    if (!isInfo)
-                    {
-                        if (videoPlayerContainer.LastParagraph != p)
-                        {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
-                        }
-                        else if (videoPlayerContainer.SubtitleText != text)
-                        {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
-                        }
-                        TimeOutRefresh(subtitle, videoPlayerContainer, format, p);
-                        return i;
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-            {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
-            }
-            else
-            {
-                TimeOutRefresh(subtitle, videoPlayerContainer, format);
-            }
-            return -1;
-        }
-
-        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph p = null)
-        {
-            if (Stopwatch.GetTimestamp() - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
-            {
-                var newHash = subtitle.GetFastHashCode(string.Empty);
-                if (newHash != _lastShowSubHash)
-                {
-                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle, format);
-                    _lastShowSubHash = newHash;
-                }
-
-                _lastShowSubTicks = Stopwatch.GetTimestamp();
+                return goodFontName;
             }
         }
 
-        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
+        return systemFontNames.First();
+    }
+
+    public static IBrush GetTextColor(double opacity = 1.0)
+    {
+        var app = Application.Current;
+        if (app == null)
         {
-            if (videoPlayerContainer.VideoPlayer == null)
-            {
-                return -1;
-            }
-
-            double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 15;
-            var max = subtitle.Paragraphs.Count;
-            for (int i = 0; i < max; i++)
-            {
-                var p = subtitle.Paragraphs[i];
-                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds && p.EndTime.TotalMilliseconds > positionInMilliseconds)
-                {
-                    var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
-                    string text = p.Text.Replace("|", Environment.NewLine);
-                    if (op != null)
-                    {
-                        text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
-                    }
-
-                    bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
-                    if (!isInfo)
-                    {
-                        if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
-                        {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
-                        }
-                        return i;
-                    }
-                }
-            }
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-            {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
-            }
-            return -1;
+            return new SolidColorBrush(Colors.Black, opacity);
         }
 
-        public static bool IsQuartsDllInstalled
+        var theme = app.ActualThemeVariant;
+        if (theme == ThemeVariant.Dark)
         {
-            get
-            {
-                if (Utilities.IsRunningOnMono())
-                {
-                    return false;
-                }
-
-                string quartzFileName = Environment.GetFolderPath(Environment.SpecialFolder.System).TrimEnd('\\') + @"\quartz.dll";
-                return File.Exists(quartzFileName);
-            }
+            return new SolidColorBrush(Colors.White, opacity);
         }
 
-        public static bool IsMpcInstalled
-        {
-            get
-            {
-                if (Utilities.IsRunningOnMono())
-                {
-                    return false;
-                }
+        return new SolidColorBrush(Colors.Black, opacity);
+    }
 
-                try
-                {
-                    return MpcHc.GetMpcFileName() != null;
-                }
-                catch (FileNotFoundException)
-                {
-                    return false;
-                }
+    public static IBrush GetBorderBrush()
+    {
+        var app = Application.Current;
+        if (app == null)
+        {
+            return new SolidColorBrush(Colors.Black);
+        }
+
+        var theme = app.ActualThemeVariant;
+        if (theme == ThemeVariant.Dark)
+        {
+            return new SolidColorBrush(Colors.White, 0.5);
+        }
+
+        return new SolidColorBrush(Colors.Black, 0.5);
+    }
+
+    public static Color GetBorderColor()
+    {
+        var color = Colors.Black;
+
+        var app = Application.Current;
+        if (app != null)
+        {
+            var theme = app.ActualThemeVariant;
+            if (theme == ThemeVariant.Dark)
+            {
+                color = Colors.White;
             }
         }
 
-        public static VideoPlayer GetVideoPlayer()
+        return new Color(128, color.R, color.G, color.B);
+    }
+
+    public static Separator MakeVerticalSeperator(double height = 0.5, double opacity = 0.5, Thickness? margin = null,
+        IBrush? backgroud = null)
+    {
+        return new Separator
         {
-            var gs = Configuration.Settings.General;
+            Height = height,
+            Margin = margin ?? new Thickness(5, 1),
+            Background = backgroud ?? GetBorderBrush(),
+            Opacity = opacity,
+        };
+    }
 
-            if (Configuration.IsRunningOnLinux)
-            {
-                if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
-                {
-                    return new LibVlcDynamic();
-                }
-                if (LibMpvDynamic.IsInstalled)
-                {
-                    return new LibMpvDynamic();
-                }
-                throw new NotSupportedException("You need 'libmpv-dev' or 'libvlc-dev' (on Ubuntu) and X11 to use the video player on Linux!");
-            }
-            // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
-            // folder as Subtitle Edit and add this to the app.config inside the
-            // "configuration" element:
-            // <dllmap dll="libvlc" target="VLC.app/Contents/MacOS/lib/libvlc.dylib" />
-            if (Configuration.IsRunningOnMac)
-            {
-                return new LibVlcMono();
-            }
+    public static Border MakeHorizontalSeperator(double width = 2.5, double opacity = 0.5, Thickness? margin = null,
+        IBrush? backgroud = null)
+    {
+        return new Border
+        {
+            Width = width,
+            Margin = margin ?? new Thickness(1, 5),
+            Background = backgroud ?? GetBorderBrush(),
+            Opacity = opacity,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+    }
 
-            if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
-            {
-                return new LibVlcDynamic();
-            }
+    public static Button MakeButton(string text, IRelayCommand? command, object? parameter = null)
+    {
+        var button = new Button
+        {
+            Content = text,
+            Margin = new Thickness(4, 0),
+            Padding = new Thickness(12, 6),
+            MinWidth = 80,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+            CommandParameter = parameter
+        };
 
-            if (gs.VideoPlayer == "MPV" && LibMpvDynamic.IsInstalled)
-            {
-                return new LibMpvDynamic();
-            }
-
-            if (gs.VideoPlayer == "MPC-HC" && MpcHc.IsInstalled)
-            {
-                return new MpcHc();
-            }
-
-            if (IsQuartsDllInstalled)
-            {
-                return new QuartsPlayer();
-            }
-
-            throw new NotSupportedException("You need DirectX, or mpv media player, or VLC media player installed as well as Subtitle Edit dll files in order to use the video player!");
+        if (Se.Settings.Appearance.UseFocusedButtonBackgroundColor)
+        {
+            var focusStyle = new Style(x => x.OfType<Button>().Class(":focus"));
+            focusStyle.Setters.Add(new Setter(Button.BackgroundProperty, new SolidColorBrush(Se.Settings.Appearance.FocusedButtonBackgroundColor.FromHexToColor())));
+            //focusStyle.Setters.Add(new Setter(Button.ForegroundProperty, Brushes.White));
+            button.Styles.Add(focusStyle);
         }
 
-        public static bool InitializeVideoPlayerAndContainer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        return button;
+    }
+
+    public static Button MakeBrowseButton(IRelayCommand? command)
+    {
+        return new Button
         {
-            try
+            Content = "...",
+            Margin = new Thickness(4, 0),
+            Padding = new Thickness(6, 6),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+        };
+    }
+
+    public static Button MakeButtonOk(IRelayCommand? command)
+    {
+        return MakeButton(Se.Language.General.Ok, command);
+    }
+
+    public static Button MakeButtonDone(IRelayCommand? command)
+    {
+        return MakeButton(Se.Language.General.Done, command);
+    }
+
+    public static Button MakeButtonCancel(IRelayCommand? command)
+    {
+        return MakeButton(Se.Language.General.Cancel, command);
+    }
+
+    public static Button MakeButton(IRelayCommand? command, string iconName)
+    {
+        var button = new Button
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+        };
+
+        Attached.SetIcon(button, iconName);
+
+        return button;
+    }
+
+    public static Button MakeButton(IRelayCommand? command, string iconName, int fontSize)
+    {
+        var button = new Button
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+            FontSize = fontSize,
+        };
+
+        Attached.SetIcon(button, iconName);
+
+        return button;
+    }
+
+    public static Button MakeButton(IRelayCommand? command, string iconName, string hint)
+    {
+        var button = new Button
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+            [ToolTip.TipProperty] = hint,
+        };
+
+        Attached.SetIcon(button, iconName);
+
+        return button;
+    }
+
+
+    public static Button MakeButtonBrowse(IRelayCommand? command, string? propertyIsVisiblePath = null)
+    {
+        var button = new Button
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Command = command,
+        };
+
+        if (propertyIsVisiblePath != null)
+        {
+            button.Bind(Button.IsVisibleProperty, new Binding
             {
-                DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
-                return true;
+                Path = propertyIsVisiblePath,
+            });
+        }
+
+        Attached.SetIcon(button, IconNames.DotsHorizontal);
+
+        return button;
+    }
+
+    public static Button BindIsEnabled(this Button control, object viewModal, string propertyIsEnabledPath)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        });
+
+        return control;
+    }
+
+    public static ComboBox BindIsEnabled(this ComboBox control, object viewModal, string propertyIsEnabledPath)
+    {
+        control.Bind(ComboBox.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        });
+
+        return control;
+    }
+
+    public static ComboBox BindIsEnabled(this ComboBox control, object viewModal, string propertyIsEnabledPath,
+        IValueConverter converter)
+    {
+        control.Bind(ComboBox.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static Button BindIsEnabled(this Button control, object viewModal, string propertyIsEnabledPath,
+        IValueConverter converter)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static TextBox BindIsEnabled(this TextBox control, object viewModal, string propertyIsEnabledPath,
+        IValueConverter converter)
+    {
+        control.Bind(TextBox.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static ComboBox MakeComboBox<T>(
+        ObservableCollection<T> sourceItems,
+        object viewModal,
+        string? propertySelectedPath,
+        string? propertyIsVisiblePath)
+    {
+        var comboBox = new ComboBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+        comboBox.ItemsSource = sourceItems;
+        comboBox.DataContext = viewModal;
+
+        if (propertySelectedPath != null)
+        {
+            comboBox.Bind(ComboBox.SelectedItemProperty, new Binding
+            {
+                Path = propertySelectedPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        if (propertyIsVisiblePath != null)
+        {
+            comboBox.Bind(ComboBox.IsVisibleProperty, new Binding
+            {
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return comboBox;
+    }
+
+    internal static ComboBox MakeComboBoxBindText<T>(ObservableCollection<T> sourceItems, object vm, string textPath,
+        string propertySelectedIndexPath)
+    {
+        var comboBox = new ComboBox
+        {
+            ItemsSource = sourceItems,
+            DataContext = vm,
+            DisplayMemberBinding = new Binding(textPath),
+        };
+
+        comboBox.Bind(ComboBox.SelectedIndexProperty, new Binding
+        {
+            Path = propertySelectedIndexPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+
+        return comboBox;
+    }
+
+    public static ComboBox MakeComboBox<T>(
+        ObservableCollection<T> sourceItems,
+        object viewModal,
+        string? propertySelectedPath)
+    {
+        return MakeComboBox(sourceItems, viewModal, propertySelectedPath, null);
+    }
+
+    public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
+    {
+        return MakeTextBox(width, viewModel, propertyTextPath, null);
+    }
+
+    public static TextBox MakeTextBox(double width, object viewModel, string? propertyTextPath,
+        string? propertyIsVisiblePath)
+    {
+        var textBox = new TextBox
+        {
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        textBox.DataContext = viewModel;
+
+        if (propertyTextPath != null)
+        {
+            textBox.Bind(TextBox.TextProperty, new Binding
+            {
+                Path = propertyTextPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        if (propertyIsVisiblePath != null)
+        {
+            textBox.Bind(TextBox.IsVisibleProperty, new Binding
+            {
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return textBox;
+    }
+
+    public static TextBlock MakeTextBlock(string text)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+    }
+
+    public static TextBlock MakeTextBlock(string text, object viewModel, string? textPropertyPath,
+        string? visibilityPropertyPath)
+    {
+        var textBlock = new TextBlock
+        {
+            Text = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+        };
+
+        if (textPropertyPath != null)
+        {
+            textBlock.Bind(TextBlock.TextProperty, new Binding
+            {
+                Path = textPropertyPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        if (visibilityPropertyPath != null)
+        {
+            textBlock.Bind(TextBlock.IsVisibleProperty, new Binding
+            {
+                Path = visibilityPropertyPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return textBlock;
+    }
+
+    public static CheckBox MakeCheckBox()
+    {
+        return new CheckBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+    }
+
+    public static CheckBox MakeCheckBox(object viewModel, string? isCheckedPropertyPath)
+    {
+        var checkBox = new CheckBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+        };
+
+        if (isCheckedPropertyPath != null)
+        {
+            checkBox.Bind(CheckBox.IsCheckedProperty, new Binding
+            {
+                Path = isCheckedPropertyPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return checkBox;
+    }
+
+    public static CheckBox MakeCheckBox(string text, object viewModel, string? isCheckedPropertyPath)
+    {
+        var checkBox = new CheckBox
+        {
+            Content = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+        };
+
+        if (isCheckedPropertyPath != null)
+        {
+            checkBox.Bind(CheckBox.IsCheckedProperty, new Binding
+            {
+                Path = isCheckedPropertyPath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return checkBox;
+    }
+
+
+    public static TextBlock MakeLink(string text, IRelayCommand command)
+    {
+        var link = new TextBlock
+        {
+            Text = text,
+            Foreground = MakeLinkForeground(),
+            TextDecorations = TextDecorations.Underline,
+            Cursor = new Cursor(StandardCursorType.Hand),
+            Margin = new Thickness(0),
+            Padding = new Thickness(0),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        link.PointerPressed += (_, __) =>
+        {
+            if (command.CanExecute(null))
+            {
+                command.Execute(null);
             }
-            catch (Exception exception)
+        };
+
+        return link;
+    }
+
+    public static SolidColorBrush MakeLinkForeground()
+    {
+        return new SolidColorBrush(Color.FromArgb(255, 30, 144, 255));
+    }
+
+    public static TextBlock MakeLink(string text, IRelayCommand command, object viewModel, string propertyTextPath)
+    {
+        var link = new TextBlock
+        {
+            Text = text,
+            Foreground = MakeLinkForeground(),
+            TextDecorations = TextDecorations.Underline,
+            Cursor = new Cursor(StandardCursorType.Hand),
+            Margin = new Thickness(0),
+            Padding = new Thickness(0),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        link.PointerPressed += (_, __) =>
+        {
+            if (command.CanExecute(null))
             {
-                videoPlayerContainer.VideoPlayer = null;
-                var videoError = new VideoError();
-                videoError.Initialize(fileName);
-                videoError.ShowDialog();
-                SeLogger.Error(exception, "InitializeVideoPlayerAndContainer failed to load video player");
+                command.Execute(null);
+            }
+        };
 
-                if (videoError.VideoPlayerInstalled)
-                {
-                    try
-                    {
-                        DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
-                        return true;
-                    }
-                    catch
-                    {
-                        // ignore second error
-                    }
-                }
+        link.Bind(TextBlock.TextProperty, new Binding
+        {
+            Path = propertyTextPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-                return false;
+        return link;
+    }
+
+    public static TextBlock WithMarginRight(this TextBlock control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static TextBox WithMarginRight(this TextBox control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static TextBox WithMarginLeft(this TextBox control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static TextBox WithMargin(this TextBox control, int margin)
+    {
+        control.Margin = new Thickness(margin);
+        return control;
+    }
+
+    public static SplitButton WithMarginLeft(this SplitButton control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static TextBox WithHeight(this TextBox control, double height)
+    {
+        var m = control.Margin;
+        control.Height = height;
+        return control;
+    }
+
+    public static TextBlock WithMarginLeft(this TextBlock control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static TextBlock WithAlignmentLeft(this TextBlock control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static TextBlock WithAlignmentTop(this TextBlock control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static TextBlock WithMarginBottom(this TextBlock control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static Label WithMarginBottom(this Label control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static Border WithMarginBottom(this Border control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static Border WithMinWidth(this Border control, int minWidth)
+    {
+        control.MinWidth = minWidth;
+        return control;
+    }
+
+    public static Border WithMinHeight(this Border control, int minHeight)
+    {
+        control.MinHeight = minHeight;
+        return control;
+    }
+
+    public static Border WithHeight(this Border control, int height)
+    {
+        control.Height = height;
+        return control;
+    }
+
+    public static Border WithMarginRight(this Border control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static TextBlock WithMarginTop(this TextBlock control, int topBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, topBottom, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static ComboBox WithMarginBottom(this ComboBox control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static ComboBox WithMargin(this ComboBox control, int left, int top, int right, int bottom)
+    {
+        control.Margin = new Thickness(left, top, right, bottom);
+        return control;
+    }
+
+    public static Button WithMarginBottom(this Button control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static TextBlock WithBackgroundColor(this TextBlock control, IBrush brush)
+    {
+        control.Background = brush;
+        return control;
+    }
+
+    public static Button WithLeftAlignment(this Button control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static SplitButton WithLeftAlignment(this SplitButton control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static Button WithRightAlignment(this Button control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Right;
+        return control;
+    }
+
+    public static Button WithTopAlignment(this Button control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static Button WithCenterAlignment(this Button control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Center;
+        return control;
+    }
+
+    public static Button WithBottomAlignment(this Button control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Bottom;
+        return control;
+    }
+
+    public static Button WithIconRight(this Button control, string iconName)
+    {
+        var label = new TextBlock() { Text = control.Content?.ToString(), Padding = new Thickness(0, 0, 4, 0) };
+        var image = new ContentControl();
+        Attached.SetIcon(image, iconName);
+        var stackPanelApplyFixes = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { label, image }
+        };
+
+        control.Content = stackPanelApplyFixes;
+
+        return control;
+    }
+
+    public static Button WithIconLeft(this Button control, string iconName)
+    {
+        var label = new TextBlock() { Text = control.Content?.ToString(), Padding = new Thickness(4, 0, 0, 0) };
+        var image = new ContentControl();
+        Attached.SetIcon(image, iconName);
+        var stackPanelApplyFixes = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { image, label }
+        };
+
+        control.Content = stackPanelApplyFixes;
+
+        return control;
+    }
+
+    public static Button WithCommandParameter<T>(this Button control, T parameter)
+    {
+        control.CommandParameter = parameter;
+        return control;
+    }
+
+    public static ComboBox WithLeftAlignment(this ComboBox control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static ComboBox WithTopAlignment(this ComboBox control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static Button WithBindEnabled(this Button control, string isEnabledPropertyPath)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static SplitButton WithBindEnabled(this SplitButton control, string isEnabledPropertyPath)
+    {
+        control.Bind(SplitButton.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static SplitButton WithBindIsVisible(this SplitButton control, string isVisiblePropertyPath)
+    {
+        control.Bind(SplitButton.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static ComboBox WithBindEnabled(this ComboBox control, string isEnabledPropertyPath)
+    {
+        control.Bind(ComboBox.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static ComboBox WithBindVisible(this ComboBox control, string isVisiblePropertyPath)
+    {
+        control.Bind(ComboBox.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static T WithHorizontalAlignmentStretch<T>(this T control) where T : Control
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Stretch;
+        return control;
+    }
+
+    public static NumericUpDown WithBindEnabled(this NumericUpDown control, string isEnabledPropertyPath)
+    {
+        control.Bind(NumericUpDown.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindContent(this Button control, string contentPropertyPath)
+    {
+        control.Bind(Button.ContentProperty, new Binding
+        {
+            Path = contentPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static CheckBox WithBindEnabled(this CheckBox control, string isEnabledPropertyPath)
+    {
+        control.Bind(CheckBox.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static TextBox WithBindEnabled(this TextBox control, string isEnabledPropertyPath)
+    {
+        control.Bind(TextBox.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static TextBox WithBindEnabled(this TextBox control, string isEnabledPropertyPath, IValueConverter converter)
+    {
+        control.Bind(TextBox.IsEnabledProperty, new Binding
+        {
+            Converter = converter,
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindEnabled(this Button control, string isEnabledPropertyPath, IValueConverter converter)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Converter = converter,
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static TextBox WithBindIsVisible(this TextBox control, string isVisiblePropertyPath)
+    {
+        control.Bind(TextBox.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static TextBox WithBindIsVisible(this TextBox control, string isEnabledPropertyPath,
+        IValueConverter converter)
+    {
+        control.Bind(TextBox.IsVisibleProperty, new Binding
+        {
+            Converter = converter,
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindIsVisible(this Button control, string isVisiblePropertyPath)
+    {
+        control.Bind(Button.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindIsVisible(this Button control, object viewModel, string isVisiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Button.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindIsVisible(this Button control, string isVisiblePropertyPath, IValueConverter converter)
+    {
+        control.Bind(Button.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static Border WithBindIsVisible(this Border control, string isVisiblePropertyPath, IValueConverter converter)
+    {
+        control.Bind(Border.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static Border WithBindIsVisible(this Border control, string isVisiblePropertyPath)
+    {
+        control.Bind(Border.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindIsEnabled(this Button control, string isEnabledPropertyPath)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static Button WithBindIsEnabled(this Button control, string isEnabledPropertyPath, IValueConverter converter)
+    {
+        control.Bind(Button.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
+    public static ComboBox WithBindSelected(this ComboBox control, string selectedPropertyBinding)
+    {
+        control.Bind(ComboBox.SelectedItemProperty, new Binding
+        {
+            Path = selectedPropertyBinding,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static TextBlock WithMargin(this TextBlock control, int margin)
+    {
+        control.Margin = new Thickness(margin);
+        return control;
+    }
+
+    public static TextBlock WithPadding(this TextBlock control, int padding)
+    {
+        control.Padding = new Thickness(padding);
+        return control;
+    }
+
+    public static TextBlock WithFontSize(this TextBlock control, double fontSize)
+    {
+        control.FontSize = fontSize;
+        return control;
+    }
+
+    public static StackPanel WithMarginTop(this StackPanel control, int marginTop)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static StackPanel WithMarginBottom(this StackPanel control, int marginBottom)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        return control;
+    }
+
+    public static StackPanel WithAlignmentLeft(this StackPanel control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static StackPanel WithSpacing(this StackPanel control, int spacing)
+    {
+        control.Spacing = spacing;
+        return control;
+    }
+
+    public static StackPanel WithAlignmentTop(this StackPanel control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static Label WithAlignmentTop(this Label control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static Label WithAlignmentBottom(this Label control)
+    {
+        control.VerticalAlignment = VerticalAlignment.Bottom;
+        return control;
+    }
+
+    public static Label WithAlignmentRight(this Label control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Right;
+        return control;
+    }
+
+    public static Label WithAlignmentCenter(this Label control)
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Center;
+        return control;
+    }
+
+    public static Label HorizontalContentAlignmentCenter(this Label control)
+    {
+        control.HorizontalContentAlignment = HorizontalAlignment.Center;
+        return control;
+    }
+
+    public static Label WithBold(this Label control)
+    {
+        control.FontWeight = FontWeight.Bold;
+        return control;
+    }
+
+    public static Label WithMarginLeft(this Label control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static Label WithOpacity(this Label control, double opacity)
+    {
+        control.Opacity = opacity;
+        return control;
+    }
+
+    public static Label WithMinWidth(this Label control, int minWidth)
+    {
+        control.MinWidth = minWidth;
+        return control;
+    }
+
+    public static Label WithMinHeight(this Label control, int minHeight)
+    {
+        control.MinHeight = minHeight;
+        return control;
+    }
+
+    public static Label WithMarginRight(this Label control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static Label WithMarginTop(this Label control, int marginTop)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static Label WithFontSize(this Label control, int fontSize)
+    {
+        control.FontSize = fontSize;
+        return control;
+    }
+
+    public static ComboBox WithMarginTop(this ComboBox control, int marginTop)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static ComboBox WithMarginLeft(this ComboBox control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static ComboBox WithMarginRight(this ComboBox control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static Button WithMarginTop(this Button control, int marginTop)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static SplitButton WithMarginTop(this SplitButton control, int marginTop)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static Button WithFontSize(this Button control, double fontSize)
+    {
+        control.FontSize = fontSize;
+        return control;
+    }
+
+    public static Button WithMarginLeft(this Button control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static CheckBox WithMarginLeft(this CheckBox control, int marginLeft)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        return control;
+    }
+
+    public static Button WithMarginRight(this Button control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static CheckBox WithMarginRight(this CheckBox control, int marginRight)
+    {
+        var m = control.Margin;
+        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
+        return control;
+    }
+
+    public static Button Compact(this Button control)
+    {
+        var m = control.Padding;
+        control.Padding = new Thickness(8, m.Top, 8, m.Bottom);
+        control.MinWidth = 0;
+        return control;
+    }
+
+    public static Button WithMargin(this Button control, int margin)
+    {
+        control.Margin = new Thickness(margin);
+        return control;
+    }
+
+    public static Button WithPadding(this Button control, int padding)
+    {
+        control.Padding = new Thickness(padding);
+        return control;
+    }
+
+    public static Button WithMargin(this Button control, int left, int top, int right, int bottom)
+    {
+        control.Margin = new Thickness(left, top, right, bottom);
+        return control;
+    }
+
+    public static Button WithBold(this Button control)
+    {
+        control.FontWeight = FontWeight.Bold;
+        return control;
+    }
+
+    public static TextBlock WithMinwidth(this TextBlock control, int width)
+    {
+        control.MinWidth = width;
+        return control;
+    }
+
+    public static Button WithMinWidth(this Button control, int width)
+    {
+        control.MinWidth = width;
+        return control;
+    }
+
+    public static SplitButton WithMinWidth(this SplitButton control, int width)
+    {
+        control.MinWidth = width;
+        return control;
+    }
+
+    public static Button WithMinHeight(this Button control, int height)
+    {
+        control.MinHeight = height;
+        return control;
+    }
+
+    public static Button WithParameter(this Button control, object parameter)
+    {
+        control.CommandParameter = parameter;
+        return control;
+    }
+
+    public static ComboBox WithMinWidth(this ComboBox control, int width)
+    {
+        control.MinWidth = width;
+        return control;
+    }
+
+    public static ComboBox WithWidth(this ComboBox control, int width)
+    {
+        control.Width = width;
+        return control;
+    }
+
+    public static StackPanel MakeButtonBar(params Control[] buttons)
+    {
+        var stackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(10, 20, 10, 10),
+            Spacing = 0,
+            Height = double.NaN, // Allow it to grow vertically if needed
+        };
+
+        stackPanel.Children.AddRange(buttons);
+
+        return stackPanel;
+    }
+
+    public static StackPanel MakeControlBarLeft(params Control[] buttons)
+    {
+        var stackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(10),
+            Spacing = 0,
+        };
+
+        stackPanel.Children.AddRange(buttons);
+
+        return stackPanel;
+    }
+
+    public static Border MakeSeparatorForHorizontal(object vm)
+    {
+        return new Border
+        {
+            DataContext = vm,
+            Width = 1,
+            Background = GetBorderBrush(),
+            Margin = new Thickness(5, 5, 5, 5),
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
+    }
+
+    public static Border MakeBorderForControl(Control control)
+    {
+        return new Border
+        {
+            Child = control,
+            BorderThickness = new Thickness(1),
+            BorderBrush = GetTextColor(0.3d),
+            Padding = new Thickness(5),
+            CornerRadius = new CornerRadius(CornerRadius),
+        };
+    }
+
+    public static Border MakeBorderForControlNoPadding(Control control)
+    {
+        return new Border
+        {
+            Child = control,
+            BorderThickness = new Thickness(1),
+            BorderBrush = GetTextColor(0.3d),
+            CornerRadius = new CornerRadius(CornerRadius),
+        };
+    }
+
+    public static T BindIsVisible<T>(this T control, object vm, string visibilityPropertyPath) where T : Visual
+    {
+        control.DataContext = vm;
+        control.Bind(Visual.IsVisibleProperty, new Binding
+        {
+            Path = visibilityPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static T BindText<T>(this T control, object vm, string textPropertyPath) where T : TextBox
+    {
+        control.DataContext = vm;
+        control.Bind(TextBox.TextProperty, new Binding
+        {
+            Path = textPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static WindowIcon? GetSeIcon()
+    {
+        return new WindowIcon(AssetLoader.Open(new Uri("avares://SubtitleEdit/Assets/se.ico")));
+    }
+
+    public static Control RemoveControlFromParent(this Control control)
+    {
+        if (control.Parent is Panel parent)
+        {
+            parent.Children.Remove(control);
+        }
+        else if (control.Parent is Decorator decorator)
+        {
+            if (decorator.Child == control)
+            {
+                decorator.Child = null;
+            }
+        }
+        else if (control.Parent is ContentControl contentControl)
+        {
+            if (contentControl.Content == control)
+            {
+                contentControl.Content = null;
             }
         }
 
-        private static void DoInitializeVideoPlayer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        return control;
+    }
+
+    public static Control AddControlToParent(this Control control, Control parent)
+    {
+        if (parent is Panel panel)
         {
-            videoPlayerContainer.VideoPlayer = GetVideoPlayer();
-            videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
-            videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
-            videoPlayerContainer.ShowFullscreenButton = false;
-            videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
-            videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
-            videoPlayerContainer.EnableMouseWheelStep();
-            if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
-            {
-                // we don't have videoInfo for streams...
-            }
-            else
-            {
-                videoPlayerContainer.VideoWidth = videoInfo.Width;
-                videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer?.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
-            }
+            panel.Children.Add(control);
+        }
+        else if (parent is Decorator decorator)
+        {
+            decorator.Child = control;
+        }
+        else if (parent is ContentControl contentControl2)
+        {
+            contentControl2.Content = control;
         }
 
-        public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        return control;
+    }
+
+    internal static Thickness MakeWindowMargin()
+    {
+        return new Thickness(WindowMarginWidth, WindowMarginWidth * 2, WindowMarginWidth, WindowMarginWidth);
+    }
+
+    internal static ColorPicker MakeColorPicker(object vm, string colorPropertyPath)
+    {
+        return new ColorPicker
         {
-            // Do not auto-break lines more than 1 line.
-            if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsAlphaEnabled = true,
+            IsAlphaVisible = true,
+            IsColorSpectrumSliderVisible = false,
+            IsColorComponentsVisible = true,
+            IsColorModelVisible = false,
+            IsColorPaletteVisible = false,
+            IsAccentColorsVisible = false,
+            IsColorSpectrumVisible = true,
+            IsComponentTextInputVisible = true,
+            [!ColorPicker.ColorProperty] = new Binding(colorPropertyPath)
             {
-                return;
-            }
+                Source = vm,
+                Mode = BindingMode.TwoWay
+            },
+        };
+    }
 
-            int length = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Length;
-            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
+    internal static Label MakeLabel(string text = "")
+    {
+        return new Label
+        {
+            Content = text,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+    }
+
+    internal static Label MakeLabel(string text, string propertyIsVisiblePath)
+    {
+        var label = new Label
+        {
+            Content = text,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        label.Bind(ComboBox.IsVisibleProperty, new Binding
+        {
+            Path = propertyIsVisiblePath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return label;
+    }
+
+    internal static Label MakeLabel(Binding binding)
+    {
+        var label = new Label
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        label.Bind(Label.ContentProperty, binding);
+
+        return label;
+    }
+
+    internal static RadioButton MakeRadioButton(string text, object viewModel, string isCheckedPropertyPath)
+    {
+        return MakeRadioButton(text, viewModel, isCheckedPropertyPath, null);
+    }
+
+    internal static RadioButton MakeRadioButton(string text, object viewModel, string isCheckedPropertyPath,
+        string? groupName)
+    {
+        var control = new RadioButton
+        {
+            Content = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            GroupName = groupName,
+        };
+
+        if (isCheckedPropertyPath != null)
+        {
+            control.Bind(RadioButton.IsCheckedProperty, new Binding
             {
-                string newText;
-                if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                {
-                    newText = Utilities.AutoBreakLine(textBox.Text);
-                }
-                else
-                {
-                    int lastSpace = textBox.Text.LastIndexOf(' ');
-                    if (lastSpace > 0)
-                    {
-                        newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                    }
-                    else
-                    {
-                        newText = textBox.Text;
-                    }
-                }
-
-                int autoBreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                if (autoBreakIndex > 0)
-                {
-                    int selectionStart = textBox.SelectionStart;
-                    textBox.Text = newText;
-                    if (selectionStart > autoBreakIndex)
-                    {
-                        selectionStart += Environment.NewLine.Length - 1;
-                    }
-                    if (selectionStart >= 0)
-                    {
-                        textBox.SelectionStart = selectionStart;
-                    }
-                }
-            }
+                Path = isCheckedPropertyPath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        public static void CheckAutoWrap(SETextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        return control;
+    }
+
+    public static NumericUpDown MakeNumericUpDownInt(int min, int max, int defaultValue, double width, object viewModel,
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+    {
+        var control = new NumericUpDown
         {
-            // Do not auto-break lines more than 1 line.
-            if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)
-            {
-                return;
-            }
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            Minimum = min,
+            Maximum = max,
+            Increment = 1,
+            FormatString = "F0",
+            Foreground = GetTextColor(),
+        };
 
-            var length = textBox.Text.CountCharacters(false);
-            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
+        if (propertyValuePath != null)
+        {
+            control.Bind(NumericUpDown.ValueProperty, new Binding
             {
-                string newText;
-                if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                {
-                    newText = Utilities.AutoBreakLine(textBox.Text);
-                }
-                else
-                {
-                    int lastSpace = textBox.Text.LastIndexOf(' ');
-                    if (lastSpace > 0)
-                    {
-                        newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                    }
-                    else
-                    {
-                        newText = textBox.Text;
-                    }
-                }
-
-                int autoBreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                if (autoBreakIndex > 0)
-                {
-                    int selectionStart = textBox.SelectionStart;
-                    textBox.Text = newText;
-                    if (selectionStart > autoBreakIndex)
-                    {
-                        selectionStart += Environment.NewLine.Length - 1;
-                    }
-                    if (selectionStart >= 0)
-                    {
-                        textBox.SelectionStart = selectionStart;
-                    }
-                }
-            }
+                Path = propertyValuePath,
+                Mode = BindingMode.TwoWay,
+                Converter = new NullableIntConverter { DefaultValue = defaultValue },
+            });
         }
 
-        private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
-        private static Keys _helpKeys;
-
-        public static Keys GetKeys(string keysInString)
+        if (propertyIsVisiblePath != null)
         {
-            if (string.IsNullOrEmpty(keysInString))
+            control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
-                return Keys.None;
-            }
-
-            if (AllKeys.Count == 0)
-            {
-                foreach (Keys val in Enum.GetValues(typeof(Keys)))
-                {
-                    var k = val.ToString().ToLowerInvariant();
-                    if (!AllKeys.ContainsKey(k))
-                    {
-                        AllKeys.Add(k, val);
-                    }
-                }
-                if (!AllKeys.ContainsKey("pagedown"))
-                {
-                    AllKeys.Add("pagedown", Keys.RButton | Keys.Space);
-                }
-
-                if (!AllKeys.ContainsKey("home"))
-                {
-                    AllKeys.Add("home", Keys.MButton | Keys.Space);
-                }
-
-                if (!AllKeys.ContainsKey("capslock"))
-                {
-                    AllKeys.Add("capslock", Keys.CapsLock);
-                }
-            }
-
-            var parts = keysInString.ToLowerInvariant().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
-            var resultKeys = Keys.None;
-            foreach (var k in parts)
-            {
-                if (AllKeys.ContainsKey(k))
-                {
-                    resultKeys |= AllKeys[k];
-                }
-            }
-
-            return resultKeys;
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        public static Keys HelpKeys
+        return control;
+    }
+
+
+    public static NumericUpDown MakeNumericUpDownTwoDecimals(decimal min, decimal max, double width, object viewModel,
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+    {
+        var control = new NumericUpDown
         {
-            get
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            Minimum = min,
+            Maximum = max,
+            Increment = 0.01m,
+            FormatString = "F2", // Force two decimals
+            Foreground = GetTextColor(),
+        };
+
+        if (propertyValuePath != null)
+        {
+            control.Bind(NumericUpDown.ValueProperty, new Binding
             {
-                if (_helpKeys == Keys.None)
-                {
-                    _helpKeys = GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
-                }
-                return _helpKeys;
-            }
-            set => _helpKeys = value;
+                Path = propertyValuePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        public static void SetButtonHeight(Control control, int newHeight, int level)
+        if (propertyIsVisiblePath != null)
         {
-            if (level > 6)
+            control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
-                return;
-            }
-
-            if (control.HasChildren)
-            {
-                foreach (Control subControl in control.Controls)
-                {
-                    if (subControl.HasChildren)
-                    {
-                        SetButtonHeight(subControl, newHeight, level + 1);
-                    }
-                    else if (subControl is Button)
-                    {
-                        subControl.Height = newHeight;
-                    }
-                }
-            }
-            else if (control is Button)
-            {
-                control.Height = newHeight;
-            }
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        public static void InitializeSubtitleFont(Control control)
+        return control;
+    }
+
+    public static NumericUpDown MakeNumericUpDownThreeDecimals(decimal min, decimal max, double width, object viewModel,
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+    {
+        var control = new NumericUpDown
         {
-            var gs = Configuration.Settings.General;
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            Minimum = min,
+            Maximum = max,
+            Increment = 0.01m,
+            FormatString = "F3" // Force three decimals
+        };
 
-            if (string.IsNullOrEmpty(gs.SubtitleFontName))
+        if (propertyValuePath != null)
+        {
+            control.Bind(NumericUpDown.ValueProperty, new Binding
             {
-                gs.SubtitleFontName = DefaultSystemFont.Name;
-            }
-
-            try
-            {
-                if (control is ListView)
-                {
-                    if (gs.SubtitleListViewFontBold)
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize);
-                    }
-                }
-                else if (control is SETextBox seTextBox)
-                {
-                    seTextBox.ConfigureTextBoxAppearance(seTextBox);
-                }
-                else if (control is TextBox)
-                {
-                    if (gs.SubtitleTextBoxFontBold)
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
-                    }
-                }
-
-                control.BackColor = gs.SubtitleBackgroundColor;
-                control.ForeColor = gs.SubtitleFontColor;
-            }
-            catch
-            {
-                // ignored
-            }
+                Path = propertyValuePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        private static Font _defaultSystemFont;
-        private static Font DefaultSystemFont
+        if (propertyIsVisiblePath != null)
         {
-            get
+            control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
-                if (_defaultSystemFont != null)
-                {
-                    return _defaultSystemFont;
-                }
-
-                var font = SystemFonts.MessageBoxFont;
-                if (Configuration.IsRunningOnLinux && IsFontPresent(Configuration.DefaultLinuxFontName))
-                {
-                    font = new Font(Configuration.DefaultLinuxFontName, 8F);
-                }
-
-                _defaultSystemFont = IsFontPresent(font.Name) ? font : SystemFonts.DefaultFont;
-                return _defaultSystemFont;
-            }
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        private static bool IsFontPresent(string fontName)
+        return control;
+    }
+
+    public static NumericUpDown MakeNumericUpDownOneDecimal(decimal min, decimal max, double width, object viewModel,
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+    {
+        var control = new NumericUpDown
         {
-            var fontStyles = new[] { FontStyle.Bold, FontStyle.Italic, FontStyle.Regular };
-            Font font = null;
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            Minimum = min,
+            Maximum = max,
+            Increment = 0.1m,
+            FormatString = "F1",
+        };
 
-            foreach (var style in fontStyles)
+        if (propertyValuePath != null)
+        {
+            control.Bind(NumericUpDown.ValueProperty, new Binding
             {
-                try
-                {
-                    font = new Font(fontName, 9, style);
-                }
-                catch
-                {
-                    return false;
-                }
-                finally
-                {
-                    font?.Dispose();
-                }
-            }
-
-            return true;
+                Path = propertyValuePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        public static Font GetDefaultFont()
+        if (propertyIsVisiblePath != null)
         {
-            var gs = Configuration.Settings.General;
-            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
-                return DefaultSystemFont;
-            }
-
-            try
-            {
-                return new Font(gs.SystemSubtitleFontNameOverride, gs.SystemSubtitleFontSizeOverride);
-            }
-            catch
-            {
-                return DefaultSystemFont;
-            }
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
         }
 
-        internal static void PreInitialize(Form form)
+        return control;
+    }
+
+    public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Label.ContentProperty, new Binding
         {
-            form.AutoScaleMode = AutoScaleMode.Dpi;
-            form.Font = GetDefaultFont();
-            form.Icon = Properties.Resources.SEIcon;
-        }
+            Path = contentPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-        public static void FixFonts(Control form, int iterations = 5)
+        return control;
+    }
+
+    public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath, IValueConverter valueConverter)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Label.ContentProperty, new Binding
         {
-            if (form == null)
-            {
-                return;
-            }
+            Path = contentPropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = valueConverter,
+        });
 
-            FixFontsInner(form, iterations);
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                DarkTheme.SetDarkTheme(form, 1500);
-            }
-        }
+        return control;
+    }
 
-        internal static void FixFonts(ToolStripItem item)
+
+    public static Label WithBindText(this Label control, object viewModel, Binding binding)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Label.ContentProperty, binding);
+
+        return control;
+    }
+
+    public static TextBlock WithBindText(this TextBlock control, object viewModel, string contentPropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(TextBlock.TextProperty, new Binding
         {
-            item.Font = GetDefaultFont();
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                DarkTheme.SetDarkTheme(item);
-            }
-        }
+            Path = contentPropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-        private static void FixFontsInner(Control form, int iterations = 5)
+        return control;
+    }
+
+    public static Label WithBindVisible(this Label control, object viewModel, string visiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Label.IsVisibleProperty, new Binding
         {
-            if (iterations < 1 || form is SETextBox)
-            {
-                return;
-            }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-            if (form is ContextMenuStrip cms)
-            {
-                foreach (var item in cms.Items)
-                {
-                    if (item is ToolStripMenuItem tsmi)
-                    {
-                        tsmi.Font = GetDefaultFont();
-                        if (tsmi.HasDropDownItems)
-                        {
-                            foreach (var innerItem in tsmi.DropDownItems)
-                            {
-                                if (innerItem is ToolStripMenuItem innerTsmi)
-                                {
-                                    innerTsmi.Font = GetDefaultFont();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        return control;
+    }
 
-            foreach (Control c in form.Controls)
-            {
-                if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
-                {
-                    c.Font = GetDefaultFont();
-                }
+    public static Label WithBorderColorAsColor(this Label control)
+    {
+        control.Foreground = GetBorderBrush();
 
-                foreach (Control inner in c.Controls)
-                {
-                    FixFontsInner(inner, iterations - 1);
-                }
-            }
-        }
+        return control;
+    }
 
-        public static void FixLargeFonts(Control mainCtrl, Control ctrl)
+    public static Grid WithBindVisible(this Grid control, object viewModel, string visiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Grid.IsVisibleProperty, new Binding
         {
-            if (mainCtrl == null || ctrl == null)
-            {
-                return;
-            }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-            using (var graphics = mainCtrl.CreateGraphics())
-            {
-                var textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
-                if (textSize.Height > ctrl.Height - 4)
-                {
-                    SetButtonHeight(mainCtrl, (int)Math.Round(textSize.Height + 7.5), 1);
-                }
-            }
-        }
+        return control;
+    }
 
-        public static void SetSaveDialogFilter(SaveFileDialog saveFileDialog, SubtitleFormat currentFormat)
+    public static TextBlock WithBindVisible(this TextBlock control, object viewModel, string visiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(TextBlock.IsVisibleProperty, new Binding
         {
-            var sb = new StringBuilder();
-            var index = 0;
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-            {
-                sb.Append(format.Name + "|*" + format.Extension + "|");
-                if (currentFormat.Name == format.Name)
-                {
-                    saveFileDialog.FilterIndex = index + 1;
-                }
-                index++;
-            }
-            saveFileDialog.Filter = sb.ToString().TrimEnd('|');
-        }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-        public static void GetLineLengths(Label label, string text)
+        return control;
+    }
+
+    public static TextBlock WithBindEnabed(this TextBlock control, object viewModel, string visiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(TextBlock.IsEnabledProperty, new Binding
         {
-            label.ForeColor = ForeColor;
-            var lines = text.SplitToLines();
-            const int max = 3;
-            var sb = new StringBuilder();
-            for (var i = 0; i < lines.Count; i++)
-            {
-                var line = lines[i];
-                if (i > 0)
-                {
-                    sb.Append('/');
-                }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-                if (i > max)
-                {
-                    sb.Append("...");
-                    label.Text = sb.ToString();
-                    return;
-                }
+        return control;
+    }
 
-                var count = line.CountCharacters(false);
-                sb.Append(count);
-                if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
-                {
-                    label.ForeColor = Color.Red;
-                }
-            }
-            label.Text = sb.ToString();
-        }
-
-        public static void GetLinePixelWidths(Label label, string text)
+    public static Label WithBindVisible(this Label control, object viewModel, string visiblePropertyPath,
+        IValueConverter converter)
+    {
+        control.DataContext = viewModel;
+        control.Bind(Label.IsVisibleProperty, new Binding
         {
-            label.ForeColor = ForeColor;
-            var lines = text.SplitToLines();
-            const int max = 3;
-            var sb = new StringBuilder();
-            for (var i = 0; i < lines.Count; i++)
-            {
-                var line = lines[i];
-                if (i > 0)
-                {
-                    sb.Append('/');
-                }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = converter,
+        });
 
-                if (i > max)
-                {
-                    sb.Append("...");
-                    label.Text = sb.ToString();
-                    return;
-                }
+        return control;
+    }
 
-                var lineWidth = TextWidth.CalcPixelWidth(line);
-                sb.Append(lineWidth);
-                if (lineWidth > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
-                {
-                    label.ForeColor = Color.Red;
-                }
-            }
-
-            label.Text = sb.ToString();
-        }
-
-        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, SubtitleFormat format)
+    public static StackPanel WithBindVisible(this StackPanel control, object viewModel, string visiblePropertyPath)
+    {
+        control.DataContext = viewModel;
+        control.Bind(StackPanel.IsVisibleProperty, new Binding
         {
-            InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
-        }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
 
-        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, string selectedName)
+        return control;
+    }
+
+    public static StackPanel WithBindVisible(this StackPanel control, object viewModel, string visiblePropertyPath,
+        IValueConverter converter)
+    {
+        control.DataContext = viewModel;
+        control.Bind(StackPanel.IsVisibleProperty, new Binding
         {
-            var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
-            InitializeSubtitleFormatComboBox(comboBox, formatNames.ToList(), selectedName);
-        }
+            Path = visiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+            Converter = converter,
+        });
 
-        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, List<string> formatNames, string selectedName)
+        return control;
+    }
+
+    private static bool IsDarkTheme()
+    {
+        var app = Application.Current;
+        if (app == null)
         {
-            var selectedIndex = 0;
-            using (var graphics = comboBox.CreateGraphics())
-            {
-                var maxWidth = (float)comboBox.DropDownWidth;
-                var max = formatNames.Count;
-                for (var index = 0; index < max; index++)
-                {
-                    var name = formatNames[index];
-                    if (name.Equals(selectedName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        selectedIndex = index;
-                    }
-                    if (name.Length > 30)
-                    {
-                        var width = graphics.MeasureString(name, comboBox.Font).Width;
-                        if (width > maxWidth)
-                        {
-                            maxWidth = width;
-                        }
-                    }
-                }
-
-                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 17.5);
-            }
-
-            comboBox.BeginUpdate();
-            comboBox.Items.Clear();
-            comboBox.Items.AddItems(formatNames);
-            comboBox.SelectedIndex = selectedIndex;
-            comboBox.EndUpdate();
-        }
-
-        public static void InitializeTextEncodingComboBox(NikseComboBox comboBox)
-        {
-            var defaultEncoding = Configuration.Settings.General.DefaultEncoding;
-            var selectedItem = (TextEncoding)null;
-            comboBox.BeginUpdate();
-            comboBox.Items.Clear();
-            var encList = new List<TextEncoding>();
-            using (var graphics = comboBox.CreateGraphics())
-            {
-                var maxWidth = 0.0F;
-                foreach (var encoding in Configuration.AvailableEncodings)
-                {
-                    if (encoding.CodePage >= 874 && !encoding.IsEbcdic())
-                    {
-                        var item = new TextEncoding(encoding, null);
-                        if (selectedItem == null && item.Equals(defaultEncoding))
-                        {
-                            selectedItem = item;
-                        }
-                        var width = graphics.MeasureString(item.DisplayName, comboBox.Font).Width;
-                        if (width > maxWidth)
-                        {
-                            maxWidth = width;
-                        }
-                        if (encoding.CodePage.Equals(Encoding.UTF8.CodePage))
-                        {
-                            item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
-                            encList.Insert(TextEncoding.Utf8WithBomIndex, item);
-                            if (item.Equals(defaultEncoding))
-                            {
-                                selectedItem = item;
-                            }
-
-                            item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
-                            encList.Insert(TextEncoding.Utf8WithoutBomIndex, item);
-                            if (item.Equals(defaultEncoding))
-                            {
-                                selectedItem = item;
-                            }
-                        }
-                        else
-                        {
-                            encList.Add(item);
-                        }
-                    }
-                }
-                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
-            }
-            comboBox.Items.AddItems(encList);
-            if (selectedItem == null)
-            {
-                comboBox.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 if DefaultEncoding is not found
-            }
-            else if (selectedItem.DisplayName == TextEncoding.Utf8WithoutBom)
-            {
-                comboBox.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
-            }
-            else
-            {
-                comboBox.SelectedItem = selectedItem;
-            }
-            comboBox.EndUpdate();
-            if (comboBox.SelectedItem is TextEncoding textEncodingListItem)
-            {
-                Configuration.Settings.General.DefaultEncoding = textEncodingListItem.DisplayName;
-            }
-        }
-
-        public static TextEncoding GetTextEncodingComboBoxCurrentEncoding(NikseComboBox comboBox)
-        {
-            if (comboBox.SelectedIndex > 0 && comboBox.SelectedItem is TextEncoding textEncodingListItem)
-            {
-                return textEncodingListItem;
-            }
-
-            return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
-        }
-
-        public static void SetTextEncoding(NikseComboBox comboBoxEncoding, string encodingName)
-        {
-            if (encodingName == TextEncoding.Utf8WithBom)
-            {
-                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex;
-                return;
-            }
-
-            if (encodingName == TextEncoding.Utf8WithoutBom)
-            {
-                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
-                return;
-            }
-
-            foreach (TextEncoding item in comboBoxEncoding.Items)
-            {
-                if (item.Equals(encodingName))
-                {
-                    comboBoxEncoding.SelectedItem = item;
-                    return;
-                }
-            }
-
-            comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
-        }
-
-        public static void BeginRichTextBoxUpdate(this RichTextBox richTextBox)
-        {
-            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)0, IntPtr.Zero);
-        }
-
-        public static void EndRichTextBoxUpdate(this RichTextBox richTextBox)
-        {
-            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
-            richTextBox.Invalidate();
-        }
-
-        private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|؟،";
-
-        public static void ApplyControlBackspace(TextBox textBox)
-        {
-            if (textBox.SelectionLength == 0)
-            {
-                var text = textBox.Text;
-                var deleteUpTo = textBox.SelectionStart;
-                if (deleteUpTo > 0 && deleteUpTo <= text.Length)
-                {
-                    text = text.Substring(0, deleteUpTo);
-                    var textElementIndices = StringInfo.ParseCombiningCharacters(text);
-                    var index = textElementIndices.Length;
-                    var textIndex = deleteUpTo;
-                    var deleteFrom = -1;
-                    while (index > 0)
-                    {
-                        index--;
-                        textIndex = textElementIndices[index];
-                        if (!IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text, textIndex)))
-                        {
-                            break;
-                        }
-                    }
-                    if (index > 0) // HTML tag?
-                    {
-                        if (text[textIndex] == '>')
-                        {
-                            var openingBracketIndex = text.LastIndexOf('<', textIndex - 1);
-                            if (openingBracketIndex >= 0 && text.IndexOf('>', openingBracketIndex + 1) == textIndex)
-                            {
-                                deleteFrom = openingBracketIndex; // delete whole tag
-                            }
-                        }
-                        else if (text[textIndex] == '}')
-                        {
-                            var startIdx = text.LastIndexOf(@"{\", textIndex - 1, StringComparison.Ordinal);
-                            if (startIdx >= 0 && text.IndexOf('}', startIdx + 1) == textIndex)
-                            {
-                                deleteFrom = startIdx;
-                            }
-                        }
-                    }
-                    if (deleteFrom < 0)
-                    {
-                        if (BreakChars.Contains(text[textIndex]))
-                        {
-                            deleteFrom = -2;
-                        }
-
-                        while (index > 0)
-                        {
-                            index--;
-                            textIndex = textElementIndices[index];
-                            if (IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text, textIndex)))
-                            {
-                                if (deleteFrom > -2)
-                                {
-                                    if (deleteFrom < 0)
-                                    {
-                                        deleteFrom = textElementIndices[index + 1];
-                                    }
-                                    break;
-                                }
-                                deleteFrom = textElementIndices[index + 1];
-                                if (!":!?".Contains(text[deleteFrom]))
-                                {
-                                    break;
-                                }
-                            }
-                            else if (BreakChars.Contains(text[textIndex]))
-                            {
-                                if (deleteFrom > -2)
-                                {
-                                    if (deleteFrom < 0)
-                                    {
-                                        deleteFrom = textElementIndices[index + 1];
-                                    }
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                deleteFrom = -1;
-                            }
-                        }
-                    }
-                    if (deleteFrom < deleteUpTo)
-                    {
-                        if (deleteFrom < 0)
-                        {
-                            deleteFrom = 0;
-                        }
-                        textBox.Select(deleteFrom, deleteUpTo - deleteFrom);
-                        textBox.Paste(string.Empty);
-                    }
-                }
-            }
-        }
-
-        public static void SelectWordAtCaret(TextBox textBox)
-        {
-            var text = textBox.Text;
-            var endIndex = textBox.SelectionStart;
-            var startIndex = endIndex;
-
-            while (startIndex > 0 && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[startIndex - 1])) && !BreakChars.Contains(text[startIndex - 1]))
-            {
-                startIndex--;
-            }
-            textBox.SelectionStart = startIndex;
-
-            while (endIndex < text.Length && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[endIndex])) && !BreakChars.Contains(text[endIndex]))
-            {
-                endIndex++;
-            }
-            textBox.SelectionLength = endIndex - startIndex;
-        }
-
-        private static bool IsSpaceCategory(UnicodeCategory c)
-        {
-            return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
-        }
-
-        public static void AddExtension(StringBuilder sb, string extension)
-        {
-            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
-            {
-                sb.Append('*');
-                sb.Append(extension.TrimStart('*'));
-                sb.Append(';');
-            }
-        }
-
-        private static string GetOpenDialogFilter()
-        {
-            var sb = new StringBuilder();
-            sb.Append(LanguageSettings.Current.General.SubtitleFiles + "|");
-            foreach (var s in SubtitleFormat.AllSubtitleFormats.Concat(SubtitleFormat.GetTextOtherFormats()))
-            {
-                AddExtension(sb, s.Extension);
-                foreach (var ext in s.AlternateExtensions)
-                {
-                    AddExtension(sb, ext);
-                }
-            }
-            AddExtension(sb, new Pac().Extension);
-            AddExtension(sb, new Cavena890().Extension);
-            AddExtension(sb, new Spt().Extension);
-            AddExtension(sb, new Sptx().Extension);
-            AddExtension(sb, new Wsb().Extension);
-            AddExtension(sb, new CheetahCaption().Extension);
-            AddExtension(sb, ".chk");
-            AddExtension(sb, new CaptionsInc().Extension);
-            AddExtension(sb, new Ultech130().Extension);
-            AddExtension(sb, new ELRStudioClosedCaption().Extension);
-            AddExtension(sb, ".uld"); // Ultech drop frame
-            AddExtension(sb, new SonicScenaristBitmaps().Extension);
-            AddExtension(sb, ".mks");
-            AddExtension(sb, ".mxf");
-            AddExtension(sb, ".sup");
-            AddExtension(sb, new FinalDraftTemplate2().Extension);
-            AddExtension(sb, new Ayato().Extension);
-            AddExtension(sb, new PacUnicode().Extension);
-            AddExtension(sb, new WinCaps32().Extension);
-            AddExtension(sb, new IsmtDfxp().Extension);
-            AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
-            AddExtension(sb, ".cdg"); // karaoke
-            AddExtension(sb, ".pns"); // karaoke
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
-            {
-                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string ext in extraExtensions)
-                {
-                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
-                    {
-                        AddExtension(sb, ext);
-                    }
-                }
-            }
-            AddExtension(sb, ".son");
-            AddExtension(sb, ".mts");
-            AddExtension(sb, ".m2ts");
-            AddExtension(sb, ".m4s");
-            AddExtension(sb, ".se-job");
-
-            sb.Append('|');
-            sb.Append(LanguageSettings.Current.General.AllFiles);
-            sb.Append("|*.*");
-            return sb.ToString();
-        }
-
-        public static string GetListViewTextFromString(string s) =>
-            s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
-
-        public static string GetStringFromListViewText(string lviText) =>
-            lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
-
-        public static void AutoSizeLastColumn(this ListView listView) =>
-            listView.Columns[listView.Columns.Count - 1].Width = -2;
-
-        public static void CheckAll(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Checked = true;
-            }
-            lv.EndUpdate();
-        }
-
-        public static void InvertCheck(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-            lv.EndUpdate();
-        }
-
-        public static void UncheckAll(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Checked = false;
-            }
-            lv.EndUpdate();
-        }
-
-        public static void SelectAll(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Selected = true;
-            }
-            lv.EndUpdate();
-        }
-
-        public static void SelectFirstSelectedItemOnly(this ListView lv)
-        {
-            if (lv.SelectedIndices.Count > 1)
-            {
-                var first = lv.SelectedIndices[0];
-                lv.BeginUpdate();
-                lv.SelectedIndices.Clear();
-                lv.EnsureVisible(first);
-                lv.FocusedItem = lv.Items[first];
-                lv.Items[first].Selected = true;
-                lv.EndUpdate();
-            }
-        }
-
-        public static void InverseSelection(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Selected = !item.Selected;
-            }
-            lv.EndUpdate();
-        }
-
-        public static void SelectAll(this ListBox listbox)
-        {
-            listbox.BeginUpdate();
-            for (int i = 0; i < listbox.Items.Count; i++)
-            {
-                listbox.SetSelected(i, true);
-            }
-            listbox.EndUpdate();
-        }
-
-        public static void InverseSelection(this ListBox listbox)
-        {
-            listbox.BeginUpdate();
-            for (int i = 0; i < listbox.Items.Count; i++)
-            {
-                listbox.SetSelected(i, !listbox.GetSelected(i));
-            }
-            listbox.EndUpdate();
-        }
-
-        internal static void CleanUpMenuItemPlugin(ToolStripMenuItem tsmi)
-        {
-            if (tsmi == null)
-            {
-                return;
-            }
-            for (int k = tsmi.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = tsmi.DropDownItems[k];
-                var fileName = (string)x.Tag;
-                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                {
-                    tsmi.DropDownItems.Remove(x);
-                }
-            }
-        }
-
-        public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeBackColor : Control.DefaultBackColor;
-
-        public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Control.DefaultForeColor;
-
-        public static Color WarningColor => Configuration.Settings.General.UseDarkTheme ? Color.Yellow : Color.DarkGoldenrod;
-
-        public static void OpenFolderFromFileName(string fileName)
-        {
-            string folderName = Path.GetDirectoryName(fileName);
-            if (Configuration.IsRunningOnWindows)
-            {
-                var argument = @"/select, " + fileName;
-                Process.Start("explorer.exe", argument);
-            }
-            else
-            {
-                OpenFolder(folderName);
-            }
-        }
-
-        public static void OpenFolder(string folder)
-        {
-            OpenItem(folder, "folder");
-        }
-
-        public static void OpenUrl(string url)
-        {
-            OpenItem(url, "url");
-        }
-
-        public static void OpenFile(string file)
-        {
-            OpenItem(file, "file");
-        }
-
-        public static void OpenItem(string item, string type)
-        {
-            try
-            {
-                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
-                {
-                    var startInfo = new ProcessStartInfo(item)
-                    {
-                        UseShellExecute = true
-                    };
-
-                    Process.Start(startInfo);
-                }
-                else if (Configuration.IsRunningOnLinux)
-                {
-                    var process = new Process
-                    {
-                        EnableRaisingEvents = false,
-                        StartInfo = 
-                        { 
-                            FileName = "xdg-open", 
-                            Arguments = item,
-                        }
-                    };
-                    process.Start();
-                }
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($"Cannot open {type}: {item}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        public static string GetVideoFileFilter(bool includeAudioFiles)
-        {
-            var sb = new StringBuilder();
-            sb.Append(LanguageSettings.Current.General.VideoFiles + "|*");
-            sb.Append(string.Join(";*", Utilities.VideoFileExtensions));
-
-            if (includeAudioFiles)
-            {
-                sb.Append("|" + LanguageSettings.Current.General.AudioFiles + "|*");
-                sb.Append(string.Join(";*", Utilities.AudioFileExtensions));
-            }
-
-            sb.Append("|" + LanguageSettings.Current.General.AllFiles + "|*.*");
-            return sb.ToString();
-        }
-
-        public static void ShowHelp(string parameter)
-        {
-            var helpFile = LanguageSettings.Current.General.HelpFile;
-            if (string.IsNullOrEmpty(helpFile))
-            {
-                helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
-            }
-
-            try
-            {
-                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
-                {
-                    Process.Start(helpFile + parameter);
-                }
-                else if (Configuration.IsRunningOnLinux)
-                {
-                    var process = new Process
-                    {
-                        EnableRaisingEvents = false,
-                        StartInfo = { FileName = "xdg-open", Arguments = helpFile + parameter }
-                    };
-                    process.Start();
-                }
-            }
-            catch
-            {
-                //Don't do anything
-            }
-        }
-
-        public static string GetContinuationStyleName(ContinuationStyle continuationStyle)
-        {
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.NoneTrailingDots:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots;
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots;
-                case ContinuationStyle.NoneTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
-                case ContinuationStyle.NoneLeadingTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingEllipsis;
-                case ContinuationStyle.OnlyTrailingDots:
-                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots;
-                case ContinuationStyle.LeadingTrailingDots:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots;
-                case ContinuationStyle.OnlyTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
-                case ContinuationStyle.LeadingTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
-                case ContinuationStyle.LeadingTrailingDash:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
-                case ContinuationStyle.Custom:
-                    return LanguageSettings.Current.Settings.ContinuationStyleCustom;
-                default:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNone;
-            }
-        }
-
-        public static string GetBeautifyTimeCodesProfilePresetName(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset)
-        {
-            switch (preset)
-            {
-                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default:
-                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetDefault;
-                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Netflix:
-                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetNetflix;
-                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI:
-                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetSDI;
-                default:
-                    return preset.ToString();
-            }
-        }
-
-        public static string DecimalSeparator => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-        public static Color GreenBackgroundColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.GreenBackColor : ColorTranslator.FromHtml("#6ebe6e");
-        public static Color GreenBackgroundColorAlternate => Configuration.Settings.General.UseDarkTheme ? DarkTheme.GreenBackColorAlternate : ColorTranslator.FromHtml("#6ecf5e");
-        public static Control FindFocusedControl(Control control)
-        {
-            var container = control as ContainerControl;
-            while (container != null)
-            {
-                control = container.ActiveControl;
-                container = control as ContainerControl;
-            }
-
-            return control;
-        }
-
-        public static void SetNumericUpDownValue(NikseUpDown numericUpDown, int value)
-        {
-            if (value < numericUpDown.Minimum)
-            {
-                numericUpDown.Value = numericUpDown.Minimum;
-            }
-            else if (value > numericUpDown.Maximum)
-            {
-                numericUpDown.Value = numericUpDown.Maximum;
-            }
-            else
-            {
-                numericUpDown.Value = value;
-            }
-        }
-
-        public static bool SkipSingleLetterShortcut(string typeName, KeyEventArgs e)
-        {
-            // do not check for shortcuts if text is being entered and a textbox is focused
-            var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "NikseTextBox", "TextBox", "RichTextBox" };
-            if (textBoxTypes.Contains(typeName) &&
-                ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
-                 (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) ||
-                 e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 ||
-                 e.KeyValue >= 48 && e.KeyValue <= 57 ||
-                 e.KeyCode == Keys.Multiply ||
-                 e.KeyCode == Keys.Add ||
-                 e.KeyCode == Keys.Subtract ||
-                 e.KeyCode == Keys.Divide ||
-                 e.KeyCode == Keys.Space) &&
-                !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
-            {
-                return true;
-            }
-
             return false;
         }
+
+        var theme = app.ActualThemeVariant;
+        return theme == ThemeVariant.Dark;
+    }
+
+    public static void DrawCheckerboardBackground(SKCanvas canvas, int width, int height, int squareSize = 16)
+    {
+        // Define colors for the checkerboard pattern        
+        var lightColor = SKColor.Parse("#EEEEEE");
+        var darkColor = SKColor.Parse("#BBBBBB");
+
+        if (UiUtil.IsDarkTheme())
+        {
+            lightColor = SKColor.Parse("#333333"); // Darker color for light squares in dark theme
+            darkColor = SKColor.Parse("#555555"); // Lighter color for dark squares in dark theme
+        }
+
+        using (var lightPaint = new SKPaint { Color = lightColor, Style = SKPaintStyle.Fill })
+        using (var darkPaint = new SKPaint { Color = darkColor, Style = SKPaintStyle.Fill })
+        {
+            // Calculate number of squares needed
+            var cols = (int)Math.Ceiling((double)width / squareSize);
+            var rows = (int)Math.Ceiling((double)height / squareSize);
+
+            for (var row = 0; row < rows; row++)
+            {
+                for (var col = 0; col < cols; col++)
+                {
+                    // Determine if this square should be light or dark
+                    var isLight = (row + col) % 2 == 0;
+                    var paint = isLight ? lightPaint : darkPaint;
+
+                    // Calculate square position and size
+                    var rect = new SKRect(
+                        col * squareSize,
+                        row * squareSize,
+                        Math.Min((col + 1) * squareSize, width),
+                        Math.Min((row + 1) * squareSize, height)
+                    );
+
+                    canvas.DrawRect(rect, paint);
+                }
+            }
+        }
+    }
+
+    public static void SetFontName(string fontName)
+    {
+        if (Application.Current == null || string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
+        {
+            return;
+        }
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<TextBlock>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<TextBox>())
+        {
+            Setters =
+            {
+                new Setter(TextBox.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<Button>())
+        {
+            Setters =
+            {
+                new Setter(Button.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<Avalonia.Controls.MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<Label>())
+        {
+            Setters =
+            {
+                new Setter(Label.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+
+        Application.Current.Styles.Add(new Style(x => x.OfType<ComboBox>())
+        {
+            Setters =
+            {
+                new Setter(ComboBox.FontFamilyProperty, new FontFamily(fontName)),
+            }
+        });
+    }
+
+    public static StackPanel MakeHorizontalPanel(params Control[] controls)
+    {
+        var stackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 5,
+        };
+
+        stackPanel.Children.AddRange(controls);
+
+        return stackPanel;
+    }
+
+    public static StackPanel MakeVerticalPanel(params Control[] controls)
+    {
+        var stackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 5,
+        };
+
+        stackPanel.Children.AddRange(controls);
+
+        return stackPanel;
+    }
+
+    public static Color LightenColor(Color color, byte adjustValue)
+    {
+        var r = (byte)Math.Min(255, color.R + adjustValue);
+        var g = (byte)Math.Min(255, color.G + adjustValue);
+        var b = (byte)Math.Min(255, color.B + adjustValue);
+
+        return Color.FromArgb(color.A, r, g, b);
+    }
+
+    internal static DataGridGridLinesVisibility GetGridLinesVisibility()
+    {
+        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Horizontal.ToString())
+        {
+            return DataGridGridLinesVisibility.Horizontal;
+        }
+
+        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString())
+        {
+            return DataGridGridLinesVisibility.Vertical;
+        }
+
+        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString())
+        {
+            return DataGridGridLinesVisibility.All;
+        }
+
+        return DataGridGridLinesVisibility.None;
+    }
+
+    internal static Color GetDarkThemeBackgroundColor()
+    {
+        return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
+    }
+
+    internal static void ReplaceControl(Control old, Control replacement)
+    {
+        var replacementParent = replacement.Parent;
+        if (replacementParent != null)
+        {
+            if (replacementParent is Panel panelReplacement)
+            {
+                panelReplacement.Children.Remove(replacement);
+            }
+            else if (replacementParent is ContentControl contentControl)
+            {
+                contentControl.Content = null;
+            }
+            else if (replacementParent is Grid grid)
+            {
+                grid.Children.Remove(replacement);
+            }
+        }
+
+        var parent = old.Parent;
+        if (parent is Panel panel)
+        {
+            var index = panel.Children.IndexOf(old);
+            if (index >= 0)
+            {
+                panel.Children[index] = replacement;
+            }
+        }
+        else if (parent is ContentControl contentControl)
+        {
+            contentControl.Content = replacement;
+        }
+        else if (parent is Grid grid)
+        {
+            var index = grid.Children.IndexOf(old);
+            if (index >= 0)
+            {
+                grid.Children[index] = replacement;
+            }
+        }
+    }
+
+    public static string? MakeToolTip(string hint, List<ShortCut> shortcuts, string shortcutName = "")
+    {
+        string shortcutString = MakeShortcutsString(shortcuts, shortcutName);
+
+        return Se.Settings.Appearance.ShowHints
+            ? string.Format(hint, shortcutString).Trim()
+            : null;
+    }
+
+    public static string MakeShortcutsString(List<ShortCut> shortcuts, string shortcutName)
+    {
+        var shortcut = shortcuts.FirstOrDefault(s => s.Name == shortcutName);
+        var shortcutString = string.Empty;
+        if (shortcut is { Keys.Count: > 0 })
+        {
+            shortcutString = string.Join("+", shortcut.Keys.Select(k => ShortcutManager.GetKeyDisplayName(k.ToString())));
+            shortcutString = $"({shortcutString})";
+        }
+
+        return shortcutString;
+    }
+
+    internal static void InitializeWindow(Window window, string name)
+    {
+        window.Icon = GetSeIcon();
+        window.Name = name;
+    }
+
+    public static void SaveWindowPosition(Window? window)
+    {
+        if (!Se.Settings.General.RememberPositionAndSize || window == null || window.Name == null)
+        {
+            return;
+        }
+
+        var state = SeWindowPosition.SaveState(window);
+
+        var existing = Se.Settings.General.WindowPositions.FirstOrDefault(wp => wp.WindowName == state.WindowName);
+        if (existing != null)
+        {
+            Se.Settings.General.WindowPositions.Remove(existing);
+        }
+
+        Se.Settings.General.WindowPositions.Add(state);
+    }
+
+    public static void RestoreWindowPosition(Window? window)
+    {
+        if (!Se.Settings.General.RememberPositionAndSize || window == null)
+        {
+            return;
+        }
+
+        var existing = Se.Settings.General.WindowPositions.FirstOrDefault(wp => wp.WindowName == window.Name);
+        if (existing == null)
+        {
+            return;
+        }
+
+        // Reconstruct the last known rect
+        var desired = new PixelPoint(existing.X, existing.Y);
+        var windowRect = new PixelRect(desired, new PixelSize((int)existing.Width, (int)existing.Height));
+
+        var screens = window.Screens.All;
+        bool fits = screens.Any(s => s.Bounds.Intersects(windowRect));
+
+        if (!fits)
+        {
+            // fallback: check if the old screen bounds still exist
+            var targetScreen = screens.FirstOrDefault(s =>
+                s.Bounds.X == existing.ScreenX &&
+                s.Bounds.Y == existing.ScreenY &&
+                s.Bounds.Width == existing.ScreenWidth &&
+                s.Bounds.Height == existing.ScreenHeight);
+
+            if (targetScreen != null)
+            {
+                // center on that screen
+                var px = targetScreen.Bounds.X + (targetScreen.Bounds.Width - (int)existing.Width) / 2;
+                var py = targetScreen.Bounds.Y + (targetScreen.Bounds.Height - (int)existing.Height) / 2;
+                desired = new PixelPoint(px, py);
+            }
+            else
+            {
+                // ultimate fallback: center on primary screen
+                var primary = window.Screens.Primary;
+                if (primary != null)
+                {
+                    var px = primary.Bounds.X + (primary.Bounds.Width - (int)existing.Width) / 2;
+                    var py = primary.Bounds.Y + (primary.Bounds.Height - (int)existing.Height) / 2;
+                    desired = new PixelPoint(px, py);
+                }
+            }
+        }
+
+        window.Position = desired;
+
+        if (existing.IsFullScreen)
+        {
+            window.WindowState = WindowState.FullScreen;
+        }
+        else if (existing.IsMaximized)
+        {
+            window.WindowState = WindowState.Maximized;
+        }
+        else
+        {
+            if (existing.Width > 0 && existing.Height > 0)
+            {
+                window.Width = existing.Width;
+                window.Height = existing.Height;
+            }
+
+            window.WindowState = WindowState.Normal;
+        }
+    }
+
+    public static void ShowHelp(string helpName)
+    {
+        var helpUrl = string.Format($"https://niksedk.github.io/subtitleedit-avalonia/{helpName}.html");
+        OpenUrl(helpUrl);
+    }
+
+    public static void ShowHelp()
+    {
+        var helpUrl = string.Format($"https://niksedk.github.io/subtitleedit-avalonia");
+        OpenUrl(helpUrl);
+    }
+
+    public static void OpenUrl(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            // UseShellExecute might not work on some platforms, try platform-specific commands
+            if (OperatingSystem.IsLinux())
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
+    internal static bool IsHelp(KeyEventArgs e)
+    {
+        return e.Key == Key.F1;
     }
 }

@@ -1,4 +1,4 @@
-using System.Drawing;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -6,16 +6,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
     {
         public string FontName { get; set; }
         public int FontSize { get; set; }
-        public Color FontColor { get; set; }
-        public Color BorderColor { get; set; }
+        public SKColor FontColor { get; set; }
+        public SKColor BorderColor { get; set; }
         public int BorderWidth { get; set; }
 
         public SubtitleBeaming()
         {
             FontName = "Verdana";
             FontSize = 30;
-            FontColor = Color.White;
-            BorderColor = Color.DarkGray;
+            FontColor = SKColors.White;
+            BorderColor = SKColors.DarkGray;
             BorderWidth = 2;
         }
     }

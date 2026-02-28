@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -810,7 +810,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return _styleLookup.TryGetValue(code, out var style) ? style : null;
         }
 
-        public static string GetCodeFromPositionAndColor(int x, int y, SccFontStyle fontStyle, Color color)
+        public static string GetCodeFromPositionAndColor(int x, int y, SccFontStyle fontStyle, SKColor color)
         {
             var match = SccPositionAndStyleTable.SccPositionAndStyles.FirstOrDefault(p => p.X == x && p.Y == y && p.Style == fontStyle && p.ForeColor == color);
             return match == null ? string.Empty : match.Code;
@@ -967,7 +967,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 alignment = "{\\an5}";
                             }
 
-                            if (cp.ForeColor == Color.Green)
+                            if (cp.ForeColor == SKColors.Green)
                             {
                                 if (fontOn)
                                 {
@@ -976,7 +976,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Green\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.Blue)
+                            else if (cp.ForeColor == SKColors.Blue)
                             {
                                 if (fontOn)
                                 {
@@ -985,7 +985,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Blue\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.Cyan)
+                            else if (cp.ForeColor == SKColors.Cyan)
                             {
                                 if (fontOn)
                                 {
@@ -994,7 +994,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Cyan\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.Red)
+                            else if (cp.ForeColor == SKColors.Red)
                             {
                                 if (fontOn)
                                 {
@@ -1003,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Red\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.Yellow)
+                            else if (cp.ForeColor == SKColors.Yellow)
                             {
                                 if (fontOn)
                                 {
@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Yellow\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.Magenta)
+                            else if (cp.ForeColor == SKColors.Magenta)
                             {
                                 if (fontOn)
                                 {
@@ -1021,13 +1021,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<font color=\"Magenta\">");
                                 fontOn = true;
                             }
-                            else if (cp.ForeColor == Color.White && fontOn)
+                            else if (cp.ForeColor == SKColors.White && fontOn)
                             {
                                 sb.Append("</font>");
                                 sb.Append("</font>");
                                 fontOn = false;
                             }
-                            else if (cp.ForeColor == Color.Black && fontOn)
+                            else if (cp.ForeColor == SKColors.Black && fontOn)
                             {
                                 sb.Append("</font>");
                                 fontOn = false;

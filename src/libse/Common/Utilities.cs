@@ -1,10 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,9 +14,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -742,51 +741,133 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveSsaTags(string input, bool removeDrawingTags = false)
         {
-            var s = input;
-
-            if (removeDrawingTags && s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
+            if (string.IsNullOrEmpty(input))
             {
-                s = AdvancedSubStationAlpha.RemoveDrawingTag(s);
+                return input;
             }
 
-            var k = s.IndexOf("{\\", StringComparison.Ordinal);
-            var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
-            if (k == -1 || karaokeStart >= 0 && karaokeStart < k)
-            {
-                k = karaokeStart;
-            }
+            // Fast check: if no tags or backslashes, return immediately
+            var firstBrace = input.IndexOf('{');
+            var firstSlash = input.IndexOf('\\');
+            if (firstBrace == -1 && firstSlash == -1) return input;
 
-            while (k >= 0)
+            // Use a pooled buffer to avoid allocations
+            char[] rented = ArrayPool<char>.Shared.Rent(input.Length * 2);
+            try
             {
-                var l = s.IndexOf('}', k + 1);
-                if (l < k)
+                var writeIdx = 0;
+                var currentIdx = 0;
+
+                while (currentIdx < input.Length)
                 {
-                    break;
+                    // Find the next interesting character
+                    var nextBrace = input.IndexOf('{', currentIdx);
+                    var nextSlash = input.IndexOf('\\', currentIdx);
+
+                    // Determine which one comes first
+                    var nextInterest = -1;
+                    if (nextBrace != -1 && nextSlash != -1)
+                    {
+                        nextInterest = Math.Min(nextBrace, nextSlash);
+                    }
+                    else if (nextBrace != -1)
+                    {
+                        nextInterest = nextBrace;
+                    }
+                    else if (nextSlash != -1)
+                    {
+                        nextInterest = nextSlash;
+                    }
+
+                    // If no more tags/slashes, copy the rest and break
+                    if (nextInterest == -1)
+                    {
+                        int remaining = input.Length - currentIdx;
+                        input.CopyTo(currentIdx, rented, writeIdx, remaining);
+                        writeIdx += remaining;
+                        break;
+                    }
+
+                    // Copy the clean text up to the point of interest
+                    var cleanLength = nextInterest - currentIdx;
+                    if (cleanLength > 0)
+                    {
+                        input.CopyTo(currentIdx, rented, writeIdx, cleanLength);
+                        writeIdx += cleanLength;
+                    }
+
+                    currentIdx = nextInterest;
+
+                    // Handle Tag {
+                    if (input[currentIdx] == '{')
+                    {
+                        var closingBrace = input.IndexOf('}', currentIdx + 1);
+                        if (closingBrace != -1)
+                        {
+                            ReadOnlySpan<char> tagContent = input.AsSpan(currentIdx, closingBrace - currentIdx + 1);
+                            if (tagContent.StartsWith("{\\") || tagContent.StartsWith("{Kara Effector"))
+                            {
+                                currentIdx = closingBrace + 1;
+                                continue;
+                            }
+                        }
+                    }
+                    // Handle Escape \
+                    else if (input[currentIdx] == '\\' && currentIdx + 1 < input.Length)
+                    {
+                        char next = input[currentIdx + 1];
+                        if (next == 'n' || next == 'N')
+                        {
+                            foreach (char c in Environment.NewLine)
+                            {
+                                rented[writeIdx++] = c;
+                            }
+
+                            currentIdx += 2;
+                            continue;
+                        }
+                        if (next == 'h')
+                        {
+                            rented[writeIdx++] = ' ';
+                            currentIdx += 2;
+                            continue;
+                        }
+                    }
+
+                    // If it wasn't a tag we care about, copy the char and move on
+                    rented[writeIdx++] = input[currentIdx++];
                 }
 
-                s = s.Remove(k, l - k + 1);
-                k = s.IndexOf('{', k);
-            }
+                var result = new string(rented, 0, writeIdx);
 
-            if (s.IndexOf('\\') >= 0)
-            {
-                s = s.Replace("\\n", Environment.NewLine); // Soft line break
-                s = s.Replace("\\N", Environment.NewLine); // Hard line break
-                s = s.Replace("\\h", " "); // Hard space
-            }
-
-            if (removeDrawingTags && s.StartsWith("m ", StringComparison.Ordinal))
-            {
-                var test = s.Remove(0, 2)
-                    .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'l', 'm', ' ', '.');
-                if (test.Length == 0)
+                if (removeDrawingTags && result.StartsWith("m ", StringComparison.Ordinal))
                 {
-                    return string.Empty;
+                    if (IsOnlyDrawingCharacters(result.AsSpan(2)))
+                    {
+                        return string.Empty;
+                    }
                 }
-            }
 
-            return s;
+                return result;
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(rented);
+            }
         }
+
+        private static bool IsOnlyDrawingCharacters(ReadOnlySpan<char> span)
+        {
+            // Check if remaining string is just coordinates/commands
+            foreach (char c in span)
+            {
+                if (!char.IsDigit(c) && "-lm .".IndexOf(c) == -1)
+                    return false;
+            }
+
+            return true;
+        }
+
 
         public static string DictionaryFolder => Configuration.DictionariesDirectory;
 
@@ -919,14 +1000,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return duration;
         }
 
-        public static string ColorToHex(Color c)
+        public static string ColorToHex(SKColor c)
         {
-            return $"#{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.Red:x2}{c.Green:x2}{c.Blue:x2}";
         }
 
-        public static string ColorToHexWithTransparency(Color c)
+        public static string ColorToHexWithTransparency(SKColor c)
         {
-            return $"#{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}";
+            return $"#{c.Red:x2}{c.Green:x2}{c.Blue:x2}{c.Alpha:x2}";
         }
 
         public static int GetMaxLineLength(string text)
@@ -1114,11 +1195,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
-        public static Color GetColorFromUserName(string userName)
+        public static SKColor GetColorFromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
             {
-                return Color.Pink;
+                return SKColors.Pink;
             }
 
             byte[] buffer = Encoding.UTF8.GetBytes(userName);
@@ -1130,28 +1211,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             switch (number % 20)
             {
-                case 0: return Color.Red;
-                case 1: return Color.Blue;
-                case 2: return Color.Green;
-                case 3: return Color.DarkCyan;
-                case 4: return Color.DarkGreen;
-                case 5: return Color.DarkBlue;
-                case 6: return Color.DarkTurquoise;
-                case 7: return Color.DarkViolet;
-                case 8: return Color.DeepPink;
-                case 9: return Color.DodgerBlue;
-                case 10: return Color.ForestGreen;
-                case 11: return Color.Fuchsia;
-                case 12: return Color.DarkOrange;
-                case 13: return Color.GreenYellow;
-                case 14: return Color.IndianRed;
-                case 15: return Color.Indigo;
-                case 16: return Color.LawnGreen;
-                case 17: return Color.LightBlue;
-                case 18: return Color.DarkGoldenrod;
-                case 19: return Color.Magenta;
+                case 0: return SKColors.Red;
+                case 1: return SKColors.Blue;
+                case 2: return SKColors.Green;
+                case 3: return SKColors.DarkCyan;
+                case 4: return SKColors.DarkGreen;
+                case 5: return SKColors.DarkBlue;
+                case 6: return SKColors.DarkTurquoise;
+                case 7: return SKColors.DarkViolet;
+                case 8: return SKColors.DeepPink;
+                case 9: return SKColors.DodgerBlue;
+                case 10: return SKColors.ForestGreen;
+                case 11: return SKColors.Fuchsia;
+                case 12: return SKColors.DarkOrange;
+                case 13: return SKColors.GreenYellow;
+                case 14: return SKColors.IndianRed;
+                case 15: return SKColors.Indigo;
+                case 16: return SKColors.LawnGreen;
+                case 17: return SKColors.LightBlue;
+                case 18: return SKColors.DarkGoldenrod;
+                case 19: return SKColors.Magenta;
                 default:
-                    return Color.Black;
+                    return SKColors.Black;
             }
         }
 
@@ -1778,7 +1859,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text.Replace("\"\"", "\"");
         }
 
-        public static Color GetColorFromAssa(string text, Color defaultColor)
+        public static SKColor GetColorFromAssa(string text, SKColor defaultColor)
         {
             var start = text.IndexOf(@"\c", StringComparison.Ordinal);
             if (start < 0)
@@ -1834,7 +1915,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (int.TryParse(alpha, NumberStyles.HexNumber, null, out var a))
                         {
                             var realAlpha = byte.MaxValue - a;
-                            c = Color.FromArgb(realAlpha, c);
+                            c = new SKColor(c.Red, c.Green, c.Blue, (byte)realAlpha);
                         }
                     }
                 }
@@ -1845,7 +1926,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return defaultColor;
         }
 
-        public static Color GetColorFromFontString(string text, Color defaultColor)
+        public static SKColor GetColorFromFontString(string text, SKColor defaultColor)
         {
             var s = text.TrimEnd();
             var start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
@@ -1853,25 +1934,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return defaultColor;
             }
-
             var end = s.IndexOf('>', start);
             if (end <= 0)
             {
                 return defaultColor;
             }
-
             var f = s.Substring(start, end - start);
             if (!f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
             {
                 return defaultColor;
             }
-
             var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
             if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
             {
                 end = s.IndexOf('"', colorStart + " color=".Length + 1);
             }
-
             s = s.Substring(colorStart, end - colorStart);
             s = s.Replace(" color=", string.Empty);
             s = s.Trim('\'').Trim('"').Trim('\'');
@@ -1880,17 +1957,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                 {
                     var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(
+                        (byte)int.Parse(arr[0].Trim()),
+                        (byte)int.Parse(arr[1].Trim()),
+                        (byte)int.Parse(arr[2].Trim()),
+                        255); // Full opacity
                 }
-
                 if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
                 {
                     var arr = s
-                        .RemoveChar(' ')
+                        .Replace(" ", "")
                         .Remove(0, 5)
                         .TrimEnd(')')
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
                     var alpha = byte.MaxValue;
                     if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
                     {
@@ -1899,28 +1978,39 @@ namespace Nikse.SubtitleEdit.Core.Common
                             alpha = (byte)(f2 * byte.MaxValue);
                         }
                     }
-
-                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    return new SKColor(
+                        (byte)int.Parse(arr[0]),
+                        (byte)int.Parse(arr[1]),
+                        (byte)int.Parse(arr[2]),
+                        alpha);
                 }
-
                 if (s.Length == 9 && s.StartsWith("#"))
                 {
                     if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
                     {
                         alpha = 255; // full solid color
                     }
-
                     s = s.Substring(1, 6);
-                    var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    var color = SKColor.Parse("#" + s);
+                    return new SKColor(color.Red, color.Green, color.Blue, (byte)alpha);
                 }
-
-                return ColorTranslator.FromHtml(s);
+                return SKColor.Parse(s);
             }
             catch
             {
                 return defaultColor;
             }
+        }
+
+        // Helper method to replace RemoveChar extension method
+        private static string Replace(this string input, char oldChar, string newString)
+        {
+            return input.Replace(oldChar.ToString(), newString);
+        }
+
+        public static SKColor FromHtml(string htmlColor)
+        {
+            return ColorTranslator.FromHtml(htmlColor);
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
@@ -3362,12 +3452,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             throw new NotImplementedException();
         }
 
-        public static string PngToBase64String(Bitmap bitmap)
+        public static string PngToBase64String(SKBitmap bitmap)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (SKData data = bitmap.Encode(SKEncodedImageFormat.Png, 100))
             {
-                bitmap.Save(memoryStream, ImageFormat.Png);
-                return Convert.ToBase64String(memoryStream.ToArray());
+                return Convert.ToBase64String(data.ToArray());
             }
         }
     }

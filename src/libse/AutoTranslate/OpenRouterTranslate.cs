@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
@@ -8,7 +9,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -28,15 +28,21 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "google/gemini-flash-1.5-8b",
-            "google/gemini-2.0-flash-001",
-            "deepseek/deepseek-r1",
-            "deepseek/deepseek-r1:free",
-            "microsoft/phi-4",
-            "mistralai/mistral-nemo",
-            "meta-llama/llama-3.3-70b-instruct",
-            "openai/gpt-4o-mini",
-            "anthropic/claude-3.5-sonnet",
+            // High-Reasoning & Multilingual (The Leaders)
+            "openai/gpt-5.2",                  // Top-tier reasoning for complex linguistics
+            "anthropic/claude-4.5-sonnet",     // Exceptional nuance and formal tone preservation
+            "google/gemini-3-pro",             // Massive context for translating whole books
+            "deepseek/deepseek-v3.2",          // The most cost-effective reasoning translator
+
+            // Efficient / Fast Translation
+            "google/gemini-3-flash",           // Speed-optimized with 2026 multimodal capabilities
+            "meta-llama/llama-4-maverick",     // Meta's new MoE architecture, strong in 12+ languages
+            "openai/gpt-5.2-mini",             // Replaces 4o-mini; faster and more accurate
+
+            // Specialized & Open-Weight (High Translation Performance)
+            "qwen/qwen3-32b",                  // Specifically dominant for Asian & Middle Eastern languages
+            "mistralai/mistral-large-3",       // Superior for European romance languages
+            "deepseek/deepseek-v3.2:free",     // High-quality free-tier alternative to R1
         };
 
         public void Initialize()

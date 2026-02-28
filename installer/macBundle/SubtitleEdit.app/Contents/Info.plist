@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>SubtitleEdit</string>
+    <key>CFBundleIdentifier</key>
+    <string>dk.nikse.subtitleedit</string>
+    <key>CFBundleName</key>
+    <string>Subtitle Edit</string>
+    <key>CFBundleDisplayName</key>
+    <string>Subtitle Edit</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>SBED</string>
+    <key>CFBundleIconFile</key>
+    <string>SE.icns</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.video</string>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>srt</string>
+                <string>ass</string>
+                <string>ssa</string>
+                <string>sub</string>
+                <string>sup</string>
+                <string>vtt</string>
+                <string>sbv</string>
+                <string>stl</string>
+                <string>xml</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>Subtitle Files</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+        </dict>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>mp4</string>
+                <string>mkv</string>
+                <string>avi</string>
+                <string>mov</string>
+                <string>wmv</string>
+                <string>flv</string>
+                <string>webm</string>
+                <string>m4v</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>Video Files</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+        </dict>
+    </array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+</dict>
+</plist>

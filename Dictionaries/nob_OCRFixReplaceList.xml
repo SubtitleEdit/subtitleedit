@@ -53,5 +53,12 @@
   <PartialLines />
   <BeginLines />
   <EndLines />
+	<RegularExpressionsIfSpelledCorrectly>
+		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- David's (spell check "David") -->
+		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- there's  (spell check "there") -->
+		<RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
+	</RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions />
 </OCRFixReplaceList>

@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         public PaletteInfo()
         {
+            PaletteBuffer = new byte[0];
         }
 
         public PaletteInfo(PaletteInfo paletteInfo)
@@ -45,6 +46,5 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             PaletteBuffer = new byte[paletteInfo.PaletteBuffer.Length];
             Buffer.BlockCopy(paletteInfo.PaletteBuffer, 0, PaletteBuffer, 0, PaletteBuffer.Length);
         }
-
     }
 }

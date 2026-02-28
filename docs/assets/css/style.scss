@@ -1,0 +1,19 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+/* Hide the GitHub fork ribbon/header */
+#forkme_banner {
+  display: none !important;
+}
+
+/* Hide the download/GitHub buttons in header if any */
+.downloads {
+  display: none !important;
+}
+
+/* Hide the GitHub corner ribbon */
+.github-corner {
+  display: none !important;
+}

@@ -25,17 +25,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public int MaxCharacters => 900;
 
         /// <summary>
-        /// See https://docs.anthropic.com/en/docs/about-claude/models
+        /// See https://platform.claude.com/docs/en/about-claude/models/overview
         /// </summary>
         public static string[] Models => new[]
         {
-            "claude-sonnet-4-0",
-            "claude-3-7-sonnet-latest",
-            "claude-3-5-sonnet-latest",
-            "claude-3-5-haiku-latest", 
-            "claude-3-opus-20240229", 
-            "claude-3-sonnet-20240229", 
-            "claude-3-haiku-20240307"
+            "claude-sonnet-4-5",
+            "claude-haiku-4-5",
+            "claude-opus-4-5",
         };
 
         public void Initialize()

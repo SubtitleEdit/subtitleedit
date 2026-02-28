@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             catch (Exception ex)
             {
-                throw new Exception("Unable to read name list file: " + fileNameOrUrl, ex);
+                throw new Exception("NameList: Unable to read name list file: " + fileNameOrUrl, ex);
             }
         }
 

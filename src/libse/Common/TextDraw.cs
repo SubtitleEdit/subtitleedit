@@ -1,34 +1,32 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using SkiaSharp;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class TextDraw
     {
-
         public static double GetFontSize(double fontSize)
         {
             return fontSize * 0.895d; // font rendered in video players like vlc/mpv are a little smaller than .net, so we adjust font size a bit down
         }
 
-        public static void DrawText(Font font, StringFormat sf, GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
+        public static void DrawText(SKTypeface typeface, SKPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
         {
-            var next = new PointF(left, top);
+            var next = new SKPoint(left, top);
 
             if (path.PointCount > 0)
             {
                 var k = 0;
-                var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                for (var i = list.Length - 1; i >= 0; i--)
+                var points = path.Points;
+                for (var i = points.Length - 1; i >= 0; i--)
                 {
-                    if (list[i].X > next.X)
+                    if (points[i].X > next.X)
                     {
-                        next.X = list[i].X;
+                        next.X = points[i].X;
                     }
 
                     k++;
-                    if (k > 60 || i <= pathPointsStart && pathPointsStart != -1)
+                    if (k > 60 || (i <= pathPointsStart && pathPointsStart != -1))
                     {
                         break;
                     }
@@ -42,141 +40,78 @@ namespace Nikse.SubtitleEdit.Core.Common
                 pathPointsStart = path.PointCount;
             }
 
-            var fontStyle = FontStyle.Regular;
-            if (isItalic)
-            {
-                fontStyle |= FontStyle.Italic;
-            }
+            var fontStyle = new SKFontStyle(
+                isBold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                isItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
+            );
 
-            if (isBold)
-            {
-                fontStyle |= FontStyle.Bold;
-            }
+            var actualTypeface = SKTypeface.FromFamilyName(typeface.FamilyName, fontStyle);
+            var font = new SKFont(actualTypeface, (float)GetFontSize(20));
 
-            if (isUnderline)
-            {
-                fontStyle |= FontStyle.Underline;
-            }
+            var text = sb.ToString();
+            var glyphs = font.GetGlyphs(text);
+            var widths = font.GetGlyphWidths(glyphs);
 
-            var fontSize = (float)GetFontSize(font.Size);
-            try
+            float x = next.X;
+
+            for (int i = 0; i < glyphs.Length; i++)
             {
-                path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);
-            }
-            catch
-            {
-                fontStyle = FontStyle.Regular;
-                try
+                var glyphPath = font.GetGlyphPath(glyphs[i]);
+                if (glyphPath != null)
                 {
-                    path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);
+                    var translatedPath = new SKPath();
+                    translatedPath.AddPath(glyphPath, x, next.Y);
+                    path.AddPath(translatedPath);
                 }
-                catch
-                {
-                    path.AddString(sb.ToString(), new FontFamily("Arial"), (int)fontStyle, fontSize, next, sf);
-                }
+
+                x += widths[i];
             }
-            sb.Length = 0;
+
+            if (isUnderline && glyphs.Length > 0)
+            {
+                float totalWidth = 0;
+                foreach (var w in widths)
+                {
+                    totalWidth += w;
+                }
+
+                var underlineY = (float)(next.Y + font.Metrics.UnderlinePosition);
+                path.MoveTo(next.X, underlineY);
+                path.LineTo(next.X + totalWidth, underlineY);
+            }
+
+            sb.Clear();
         }
 
-        public static float MeasureTextWidth(Font font, string text, bool bold)
+
+        public static float MeasureTextWidth(SKTypeface typeface, float fontSize, string text, bool bold)
         {
-            using (var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near })
-            {
-                using (var path = new GraphicsPath())
-                {
-                    var sb = new StringBuilder(text);
-                    var newLine = false;
-                    const int leftMargin = 0;
-                    var pathPointsStart = -1;
-                    DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
-                    if (path.PathData.Points.Length == 0)
-                    {
-                        return 0;
-                    }
+            var fontStyle = new SKFontStyle(
+                bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                SKFontStyleSlant.Upright
+            );
 
-                    float width = 0;
-                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    var max = list.Length;
-                    if (max <= 500)
-                    {
-                        for (var i = 0; i < max; i++)
-                        {
-                            if (list[i].X > width)
-                            {
-                                width = list[i].X;
-                            }
-                        }
-                        return width;
-                    }
+            var styledTypeface = SKTypeface.FromFamilyName(typeface.FamilyName, fontStyle);
+            var font = new SKFont(styledTypeface, fontSize);
 
-                    int interval;
-                    if (max > 1500)
-                    {
-                        interval = 5;
-                    }
-                    else if (max > 1000)
-                    {
-                        interval = 3;
-                    }
-                    else
-                    {
-                        interval = 2;
-                    }
-
-                    for (var i = 0; i < max; i += interval)
-                    {
-                        if (list[i].X > width)
-                        {
-                            width = list[i].X;
-                        }
-                    }
-                    if (list[1].X > width)
-                    {
-                        width = list[1].X;
-                    }
-                    if (list[2].X > width)
-                    {
-                        width = list[2].X;
-                    }
-                    if (list[max - 1].X > width)
-                    {
-                        width = list[max - 1].X;
-                    }
-                    if (list[max - 2].X > width)
-                    {
-                        width = list[max - 2].X;
-                    }
-
-                    return width;
-                }
-            }
+            return font.MeasureText(text);
         }
 
-        public static float MeasureTextHeight(Font font, string text, bool bold)
+        public static float MeasureTextHeight(SKTypeface typeface, float fontSize, string text, bool bold)
         {
-            using (var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near })
-            {
-                using (var path = new GraphicsPath())
-                {
-                    var sb = new StringBuilder(text);
-                    var newLine = false;
-                    const int leftMargin = 0;
-                    var pathPointsStart = -1;
-                    DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
+            var fontStyle = new SKFontStyle(
+                bold? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                SKFontStyleSlant.Upright
+            );
 
-                    float height = 0;
-                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    for (var i = 0; i < list.Length; i ++)
-                    {
-                        if (list[i].Y > height)
-                        {
-                            height = list[i].Y;
-                        }
-                    }
+            var styledTypeface = SKTypeface.FromFamilyName(typeface.FamilyName, fontStyle);
+            var font = new SKFont(styledTypeface, fontSize);
 
-                    return height;
-                }
-            }
+            var metrics = font.Metrics;
+            return metrics.Descent - metrics.Ascent;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
@@ -389,14 +389,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return null; // TODO: Return default clut
         }
 
-        public Point GetImagePosition(ObjectDataSegment ods)
+        public SKPoint GetImagePosition(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
             {
                 ParseSegments();
             }
 
-            var p = new Point(0, 0);
+            var p = new SKPoint(0, 0);
 
             foreach (var rcs in RegionCompositions)
             {
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return p;
         }
 
-        public Bitmap GetImage(ObjectDataSegment ods)
+        public SKBitmap GetImage(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
             {
@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return ods.Image;
         }
 
-        public Bitmap GetImageFull()
+        public SKBitmap GetImageFull()
         {
             if (SubtitleSegments == null)
             {
@@ -451,7 +451,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             int width = DefaultScreenWidth;
             int height = DefaultScreenHeight;
-
             var segments = SubtitleSegments;
             foreach (var ss in segments)
             {
@@ -462,19 +461,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            var bmp = new Bitmap(width, height);
-            foreach (var ods in ObjectDataList)
+            var bmp = new SKBitmap(width, height);
+            using (var canvas = new SKCanvas(bmp))
             {
-                var odsImage = GetImage(ods);
-                if (odsImage != null)
+                canvas.Clear(SKColors.Transparent);
+                foreach (var ods in ObjectDataList)
                 {
-                    var odsPoint = GetImagePosition(ods);
-                    using (var g = Graphics.FromImage(bmp))
+                    var odsImage = GetImage(ods); // Assuming GetImage returns SKBitmap now
+                    if (odsImage != null)
                     {
-                        g.DrawImageUnscaled(odsImage, odsPoint);
+                        var odsPoint = GetImagePosition(ods); // Assuming this returns an SKPoint or similar
+                        canvas.DrawBitmap(odsImage, odsPoint.X, odsPoint.Y);
                     }
                 }
             }
+
             return bmp;
         }
 
@@ -485,8 +486,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 ParseSegments();
             }
 
-            var minX = int.MaxValue;
-            var minY = int.MaxValue;
+            var minX = float.MaxValue;
+            var minY = float.MaxValue;
             foreach (var ods in ObjectDataList)
             {
                 var cds = GetClutDefinitionSegment(ods);
@@ -509,11 +510,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            return new Position(minX == int.MaxValue ? 0 : minX, minY == int.MaxValue ? 0 : minY);
+            return new Position(minX == float.MaxValue ? 0 : (int)Math.Round(minX, MidpointRounding.AwayFromZero), minY == float.MaxValue ? 0 : (int)Math.Round(minY, MidpointRounding.AwayFromZero));
         }
 
 
-        public Size GetScreenSize()
+        public SKSize GetScreenSize()
         {
             if (SubtitleSegments == null)
             {
@@ -533,7 +534,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            return new Size(width, height);
+            return new SKSize(width, height);
         }
 
         public static string GetStreamIdDescription(int streamId)

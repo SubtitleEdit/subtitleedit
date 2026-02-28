@@ -1095,34 +1095,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        //TODO: improve... a lot ;)
-        public static string AutoDetectGoogleLanguageOrNull2(Subtitle subtitle)
-        {
-            var s = new Subtitle(subtitle);
-            s.RemoveEmptyLines();
-            var allText = s.GetAllTexts(500000).TrimEnd();
-            var languagesAndWords = GetLanguagesWithCount(allText);
-            var languageAndWordHitsOrdered = languagesAndWords
-                .Where(p => p.WordCount > 0)
-                .OrderByDescending(p => p.WordCount);
-            var languageIdFromWordCount = languageAndWordHitsOrdered
-                .FirstOrDefault(p => p.LanguageCode != "-")?.LanguageCode;
-
-            var languageIdViaLetters = GetEncodingViaLetter(allText);
-
-            if (languageIdFromWordCount != null)
-            {
-                return languageIdFromWordCount;
-            }
-
-            if (languageIdViaLetters != null)
-            {
-                return languageIdViaLetters;
-            }
-
-            return null;
-        }
-
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
         {
             var s = new Subtitle(subtitle);
@@ -1140,6 +1112,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return languageId;
+        }
+
+        /// <summary>
+        /// Alias for AutoDetectGoogleLanguageOrNull for backward compatibility.
+        /// </summary>
+        public static string AutoDetectGoogleLanguageOrNull2(Subtitle subtitle)
+        {
+            return AutoDetectGoogleLanguageOrNull(subtitle);
         }
 
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
@@ -1970,76 +1950,103 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetEncodingViaLetter(string text)
         {
-            var dictionary = new Dictionary<string, int>(6);
-
-            // Arabic
-            var count = 0;
-            foreach (var letter in Letters.Arabic)
+            if (string.IsNullOrEmpty(text))
             {
-                if (text.Contains(letter))
+                return null;
+            }
+
+            var languageScores = new Dictionary<string, int>
+            {
+                { "ar", 0 }, { "ko", 0 }, { "ja", 0 }, { "th", 0 }, { "si", 0 },
+                { "ur", 0 }, { "ru", 0 }, { "el", 0 }, { "he", 0 }, { "hi", 0 },
+                { "bn", 0 }, { "hy", 0 }, { "ka", 0 }, { "zh", 0 }, { "am", 0 },
+                { "km", 0 }, { "de", 0 }, { "sv", 0 }, { "fr", 0 }, { "es", 0 }
+            };
+
+            // Define unique characters for each language
+            var germanUnique = new HashSet<char>("üßÜ");
+            var swedishOnly = new HashSet<char>("åÅ");  // å is unique to Swedish among these languages
+            var frenchUnique = new HashSet<char>("çÇœŒâêîôûÂÊÎÔÛŸ");
+            var spanishUnique = new HashSet<char>("ñÑ¡¿");
+            var urduUnique = new HashSet<char>("ﭖﭘﭙﭗﭦﭨﭩﭧﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﹱﹷﹹپچگےھیںۓڑ");
+
+            // Check for unique characters first
+            var hasGermanUnique = text.Any(c => germanUnique.Contains(c));
+            var hasSwedishUnique = text.Any(c => swedishOnly.Contains(c));
+            var hasFrenchUnique = text.Any(c => frenchUnique.Contains(c));
+            var hasSpanishUnique = text.Any(c => spanishUnique.Contains(c));
+            var hasUrduUnique = text.Any(c => urduUnique.Contains(c));
+
+            // Count all special characters
+            foreach (var c in text)
+            {
+                if (Letters.Arabic.Contains(c)) languageScores["ar"]++;
+                if (Letters.Korean.Contains(c)) languageScores["ko"]++;
+                if (Letters.Japanese.Contains(c)) languageScores["ja"]++;
+                if (Letters.Thai.Contains(c)) languageScores["th"]++;
+                if (Letters.Sinhalese.Contains(c)) languageScores["si"]++;
+                if (Letters.Urdu.Contains(c)) languageScores["ur"]++;
+                if (Letters.Russian.Contains(c)) languageScores["ru"]++;
+                if (Letters.Greek.Contains(c)) languageScores["el"]++;
+                if (Letters.Hebrew.Contains(c)) languageScores["he"]++;
+                if (Letters.Devanagari.Contains(c)) languageScores["hi"]++;
+                if (Letters.Bengali.Contains(c)) languageScores["bn"]++;
+                if (Letters.Armenian.Contains(c)) languageScores["hy"]++;
+                if (Letters.Georgian.Contains(c)) languageScores["ka"]++;
+                if (Letters.Chinese.Contains(c)) languageScores["zh"]++;
+                if (Letters.Amharic.Contains(c)) languageScores["am"]++;
+                if (Letters.Khmer.Contains(c)) languageScores["km"]++;
+                if (Letters.Deutsch.Contains(c)) languageScores["de"]++;
+                if (Letters.Swedish.Contains(c)) languageScores["sv"]++;
+                if (Letters.French.Contains(c)) languageScores["fr"]++;
+                if (Letters.Spanish.Contains(c)) languageScores["es"]++;
+            }
+
+            // Apply unique character bonuses for disambiguation
+            if (hasUrduUnique && languageScores["ur"] > 0)
+            {
+                languageScores["ur"] += 100;  // Strong boost for Urdu
+            }
+            if (hasGermanUnique && languageScores["de"] > 0)
+            {
+                languageScores["de"] += 50;
+            }
+            if (hasSwedishUnique && languageScores["sv"] > 0)
+            {
+                languageScores["sv"] += 50;
+            }
+            if (hasFrenchUnique && languageScores["fr"] > 0)
+            {
+                languageScores["fr"] += 50;
+            }
+            if (hasSpanishUnique && languageScores["es"] > 0)
+            {
+                languageScores["es"] += 50;
+            }
+
+            var maxScore = languageScores.Values.Max();
+            if (maxScore < 1)
+            {
+                return null;
+            }
+
+            var topLanguages = languageScores.Where(x => x.Value == maxScore).ToList();
+            if (topLanguages.Count == 1)
+            {
+                return topLanguages[0].Key;
+            }
+
+            // Priority order for tie-breaking
+            var priorityOrder = new[] { "zh", "ja", "ko", "th", "ur", "ar", "he", "ru", "el", "hi", "de", "fr", "es", "sv" };
+            foreach (var lang in priorityOrder)
+            {
+                if (topLanguages.Any(x => x.Key == lang))
                 {
-                    count++;
+                    return lang;
                 }
             }
-            dictionary.Add("ar", count);
 
-            // Korean
-            count = 0;
-            foreach (var letter in Letters.Korean)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ko", count);
-
-            // Japanese
-            count = 0;
-            foreach (var letter in Letters.Japanese)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ja", count);
-
-            // Thai
-            count = 0;
-            foreach (var letter in Letters.Thai)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("th", count);
-
-            // Sinhalese
-            count = 0;
-            foreach (var letter in Letters.Sinhalese)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("si", count);
-
-            // Urdu
-            count = 0;
-            foreach (var letter in Letters.Urdu)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ur", count);
-
-            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == dictionary.Values.Max());
-            return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
+            return topLanguages[0].Key;
         }
 
         public static bool IsLanguageWithoutPeriods(string language)
@@ -2055,6 +2062,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             public const string Thai = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ";
             public const string Urdu = "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ";
             public const string Sinhalese = "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯";
+            public const string Russian = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+            public const string Greek = "αβγδεζηθικλμνξοπρσςτυφχψωάέήίόύώ";
+            public const string Hebrew = "אבגדהוזחטיכלמנסעפצקרשתךםןףץ";
+            public const string Devanagari = "अआइईउऊऋएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह";
+            public const string Bengali = "অআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ";
+            public const string Armenian = "աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ";
+            public const string Georgian = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ";
+            public const string Chinese = "的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也";
+            public const string Amharic = "ሀሁሂሃሄህሆለሉሊላሌልሎመሙሚማሜምሞሰሱሲሳሴስሶ";
+            public const string Khmer = "កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវសហឡអ";
+            public const string Swedish = "äö";
+            public const string Deutsch = "äöüß";
+            public const string Spanish = "ñÑáéíóúÁÉÍÓÚ¡¿";
+            public const string French = "çÇœŒàâæéèêëîïôùûüÿÀÂÆÉÈÊËÎÏÔÙÛÜŸ";
         }
     }
 }

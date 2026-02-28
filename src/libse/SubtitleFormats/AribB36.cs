@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public class AribTextATag
         {
-            public Point Location { get; set; }
+            public SKPoint Location { get; set; }
             public byte[] Data { get; set; }
             public string Text { get; set; }
         }
@@ -196,9 +196,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             private static readonly Regex ATag = new Regex(@"\d+;\d+ a", RegexOptions.Compiled);
 
             public double DurationInSeconds { get; set; }
-            public Point AreaSize { get; set; }
-            public Point AreaLocation { get; set; }
-            public Point FontWidthAndHeight { get; set; }
+            public SKPoint AreaSize { get; set; }
+            public SKPoint AreaLocation { get; set; }
+            public SKPoint FontWidthAndHeight { get; set; }
             public int CharacterSpacing { get; set; }
             public int LineSpacing { get; set; }
             public List<AribTextATag> Texts { get; set; }
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 var decodedText = AribB24Decoder.AribToString(buffer, start, len);
                                 Texts.Add(new AribTextATag
                                 {
-                                    Location = new Point(x, y),
+                                    Location = new SKPoint(x, y),
                                     Text = decodedText
                                 });
                             }
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int x, y;
                             if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                             {
-                                AreaSize = new Point(x, y);
+                                AreaSize = new SKPoint(x, y);
                             }
                         }
                         else if (code.EndsWith(" _"))
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int x, y;
                             if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                             {
-                                AreaLocation = new Point(x, y);
+                                AreaLocation = new SKPoint(x, y);
                             }
                         }
                         else if (code.EndsWith(" W"))
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int x, y;
                             if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                             {
-                                FontWidthAndHeight = new Point(x, y);
+                                FontWidthAndHeight = new SKPoint(x, y);
                             }
                         }
                         else if (code.EndsWith(" X"))

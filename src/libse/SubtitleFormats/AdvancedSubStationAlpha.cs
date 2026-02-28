@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -60,6 +60,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public const string NameOfFormat = "Advanced Sub Station Alpha";
         public override string Name => NameOfFormat;
+
+        public const int DefaultWidth = 384;
+        public const int DefaultHeight = 288;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -1097,7 +1100,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     if (tag.Contains("color"))
                     {
                         var c = HtmlUtil.GetColorFromString(subTag);
-                        subTag = (c.B.ToString("X2") + c.G.ToString("X2") + c.R.ToString("X2")).ToLowerInvariant(); // use bbggrr
+                        subTag = (c.Blue.ToString("X2") + c.Green.ToString("X2") + c.Red.ToString("X2")).ToLowerInvariant(); // use bbggrr
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
                     if (start < text.Length)
@@ -1510,9 +1513,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             foreach (var line in lines)
             {
                 lineNumber++;
+                var trimmedLine = line.Trim();
+                
                 if (!eventsStarted && !fontsStarted && !graphicsStarted &&
-                    !line.Trim().Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
-                    !line.Trim().Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
+                    !trimmedLine.Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
+                    !trimmedLine.Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
                 {
                     header.AppendLine(line);
                 }
@@ -1521,14 +1526,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     // skip empty and comment lines
                 }
-                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
+                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
                 }
 
-                if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
+                if (trimmedLine.Equals("[events]", StringComparison.OrdinalIgnoreCase))
                 {
                     if (header.ToString().IndexOf(Environment.NewLine + "[events]", StringComparison.OrdinalIgnoreCase) < 0)
                     {
@@ -1542,7 +1547,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     fontsStarted = false;
                     graphicsStarted = false;
                 }
-                else if (line.Trim().Equals("[fonts]", StringComparison.OrdinalIgnoreCase))
+                else if (trimmedLine.Equals("[fonts]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = false;
                     fontsStarted = true;
@@ -1550,7 +1555,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     footer.AppendLine();
                     footer.AppendLine("[Fonts]");
                 }
-                else if (line.Trim().Equals("[graphics]", StringComparison.OrdinalIgnoreCase))
+                else if (trimmedLine.Equals("[graphics]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = false;
                     fontsStarted = false;
@@ -1558,7 +1563,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     footer.AppendLine();
                     footer.AppendLine("[Graphics]");
                 }
-                else if (line.Trim().Equals("[Aegisub Extradata]", StringComparison.OrdinalIgnoreCase))
+                else if (trimmedLine.Equals("[Aegisub Extradata]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = false;
                     fontsStarted = false;
@@ -1576,7 +1581,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
                 else if (eventsStarted)
                 {
-                    string s = line.Trim().ToLowerInvariant();
+                    var s = trimmedLine.ToLowerInvariant();
                     if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         indexLayer = -1;
@@ -1595,49 +1600,41 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         for (int i = 0; i < format.Length; i++)
                         {
                             var formatTrimmed = format[i].Trim();
-                            if (formatTrimmed.Equals("start", StringComparison.Ordinal))
+                            switch (formatTrimmed)
                             {
-                                indexStart = i;
-                            }
-                            else if (formatTrimmed.Equals("end", StringComparison.Ordinal))
-                            {
-                                indexEnd = i;
-                            }
-                            else if (formatTrimmed.Equals("text", StringComparison.Ordinal))
-                            {
-                                indexText = i;
-                            }
-                            else if (formatTrimmed.Equals("style", StringComparison.Ordinal))
-                            {
-                                indexStyle = i;
-                            }
-                            else if (formatTrimmed.Equals("actor", StringComparison.Ordinal))
-                            {
-                                indexActor = i;
-                            }
-                            else if (formatTrimmed.Equals("name", StringComparison.Ordinal))
-                            {
-                                indexName = i;
-                            }
-                            else if (formatTrimmed.Equals("marginl", StringComparison.Ordinal))
-                            {
-                                indexMarginL = i;
-                            }
-                            else if (formatTrimmed.Equals("marginr", StringComparison.Ordinal))
-                            {
-                                indexMarginR = i;
-                            }
-                            else if (formatTrimmed.Equals("marginv", StringComparison.Ordinal))
-                            {
-                                indexMarginV = i;
-                            }
-                            else if (formatTrimmed.Equals("effect", StringComparison.Ordinal))
-                            {
-                                indexEffect = i;
-                            }
-                            else if (formatTrimmed.Equals("layer", StringComparison.Ordinal))
-                            {
-                                indexLayer = i;
+                                case "start":
+                                    indexStart = i;
+                                    break;
+                                case "end":
+                                    indexEnd = i;
+                                    break;
+                                case "text":
+                                    indexText = i;
+                                    break;
+                                case "style":
+                                    indexStyle = i;
+                                    break;
+                                case "actor":
+                                    indexActor = i;
+                                    break;
+                                case "name":
+                                    indexName = i;
+                                    break;
+                                case "marginl":
+                                    indexMarginL = i;
+                                    break;
+                                case "marginr":
+                                    indexMarginR = i;
+                                    break;
+                                case "marginv":
+                                    indexMarginV = i;
+                                    break;
+                                case "effect":
+                                    indexEffect = i;
+                                    break;
+                                case "layer":
+                                    indexLayer = i;
+                                    break;
                             }
                         }
                     }
@@ -2019,7 +2016,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         /// <param name="f">Input string</param>
         /// <param name="defaultColor">Default color</param>
         /// <returns>Input string as color, or default color if problems</returns>
-        public static Color GetSsaColor(string f, Color defaultColor)
+        public static SKColor GetSsaColor(string f, SKColor defaultColor)
         {
             //Red = &H0000FF&
             //Green = &H00FF00&
@@ -2064,7 +2061,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 try
                 {
                     var c = ColorTranslator.FromHtml(hexColor);
-                    return Color.FromArgb(alpha, c);
+                    return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);
                 }
                 catch
                 {
@@ -2074,23 +2071,23 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
             if (int.TryParse(f, out var number))
             {
-                var temp = Color.FromArgb(number);
-                return Color.FromArgb(255, temp.B, temp.G, temp.R);
+                var temp = ColorUtils.FromArgb(number);
+                return ColorUtils.FromArgb(255, temp.Blue, temp.Green, temp.Red);
             }
 
             return defaultColor;
         }
 
-        public static string GetSsaColorString(Color c)
+        public static string GetSsaColorString(SKColor c)
         {
-            return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
+            return $"&H{255 - c.Alpha:X2}{c.Blue:X2}{c.Green:X2}{c.Red:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
-        public static string GetSsaColorStringForEvent(Color c, string tag = "c")
+        public static string GetSsaColorStringForEvent(SKColor c, string tag = "c")
         {
-            if (c.A >= 255)
+            if (c.Alpha >= 255)
             {
-                return $"{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+                return $"{tag}&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
             }
 
             var alphaName = "alpha";
@@ -2107,11 +2104,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 alphaName = "4a";
             }
 
-            var alpha = 255 - c.A; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
-            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            var alpha = 255 - c.Alpha; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
+            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
         }
 
-        public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";
+        public static string GetSsaColorStringNoTransparency(SKColor c) => $"&H{c.Blue:X2}{c.Green:X2}{c.Red:X2}";
 
         public static string CheckForErrors(string header)
         {
@@ -2264,7 +2261,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                         else
                         {
-                            var dummyColor = Color.FromArgb(9, 14, 16, 26);
+                            var dummyColor = ColorUtils.FromArgb(9, 14, 16, 26);
                             for (int i = 0; i < format.Length; i++)
                             {
                                 string f = format[i].Trim().ToLowerInvariant();
@@ -2671,23 +2668,23 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == primaryColourIndex)
                             {
-                                style.Primary = GetSsaColor(f, Color.White);
+                                style.Primary = GetSsaColor(f, SKColors.White);
                             }
                             else if (i == secondaryColourIndex)
                             {
-                                style.Secondary = GetSsaColor(f, Color.Yellow);
+                                style.Secondary = GetSsaColor(f, SKColors.Yellow);
                             }
                             else if (i == tertiaryColourIndex)
                             {
-                                style.Tertiary = GetSsaColor(f, Color.Yellow);
+                                style.Tertiary = GetSsaColor(f, SKColors.Yellow);
                             }
                             else if (i == outlineColourIndex)
                             {
-                                style.Outline = GetSsaColor(f, Color.Black);
+                                style.Outline = GetSsaColor(f, SKColors.Black);
                             }
                             else if (i == backColourIndex)
                             {
-                                style.Background = GetSsaColor(f, Color.Black);
+                                style.Background = GetSsaColor(f, SKColors.Black);
                             }
                             else if (i == boldIndex)
                             {
@@ -2796,6 +2793,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var styles = GetSsaStylesFromHeader(header).Where(p => p.Name != style.Name).ToList();
             styles.Add(style);
             return GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+        }
+
+        public static string SetResolution(string header, int width, int height)
+        {
+            var h = (string.IsNullOrEmpty(header) || !header.Contains("[V4+ Styles]")) ? DefaultHeader : header;
+
+            h = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", h);
+            h = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", h);
+
+            return h;
         }
     }
 }

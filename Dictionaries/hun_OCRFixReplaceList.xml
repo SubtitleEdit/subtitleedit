@@ -8,24 +8,7 @@
     <Word from="Káris" to="Kár is" />
     <Word from="kétszeris" to="kétszer is" />
     <Word from="tegyéljégre" to="tegyél jégre" />
-    <Word from="Üij" to="Ülj" />
-    <Word from="Üisz" to="Ülsz" />
-    <Word from="hogynagy" to="hogy nagy" />
-    <Word from="azértjött" to="azért jött" />
-    <Word from="márszemet" to="már szemet" />
-    <Word from="azjól" to="az jól" />
-    <Word from="dejó" to="de jó" />
-    <Word from="Mégjó" to="Még jó" />
-    <Word from="mikorjön" to="mikor jön" />
-    <Word from="Mikorjössz" to="Mikor jössz" />
-    <Word from="mikorjössz" to="mikor jössz" />
-    <Word from="ajövő" to="a jövő" />
-    <Word from="ajobb" to="a jobb" />
-    <Word from="isjó" to="is jó" />
-    <Word from="Akkormeg" to="Akkor meg" />
-    <Word from="Akkormég" to="Akkor még" />
-    <Word from="márbe" to="már be" />
-	</WholeWords>
+  </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
   <WholeLines />
@@ -47,29 +30,5 @@
     <RegEx find="\bI([aáeéiíoóöuúüy\xf5\xfb])" replaceWith="l$1" />
     <RegEx find="\b(?:II|ll)" replaceWith="Il" />
     <RegEx find="([\xf5\xfb])I" replaceWith="$1l" />
-    <RegEx find="([^0-9]-)(és )([^0-9])" replaceWith="$1 $2$3" />
-    <RegEx find="([^0-9]-)(vagy )([^0-9])" replaceWith="$1 $2$3" />
-	<RegEx find="([0-9],)([0-9][0-9][0-9][0-9])" replaceWith="$1 $2" />
-	<RegEx find="([0-9],)([0-9][0-9]\.)" replaceWith="$1 $2" />
-	<RegEx find="([0-9],)([0-9][0-9],)" replaceWith="$1 $2" />
-	<RegEx find="([0-9],)(\.[0-9])" replaceWith="$1 $2" />
-	<RegEx find="([0-9])\s\-\s*([0-9])" replaceWith="$1-$2" />
-	<RegEx find="([0-9])\s*-\s*([0-9])" replaceWith="$1-$2" />
-	<RegEx find="([0-9])\s(°)" replaceWith="$1$2" />
-	<RegEx find="([aA]kkor)(jobb)" replaceWith="$1 $2" />
-	<RegEx find="([aA]kkor)(jó)" replaceWith="$1 $2" />
-	<RegEx find="([bBmM]ár)(jobb)" replaceWith="$1 $2" />
-	<RegEx find="([bBmM]ár)(jó)" replaceWith="$1 $2" />
-	<RegEx find="([bBmM]ár)(nem?)" replaceWith="$1 $2" />
-	<RegEx find="([bB]ár)\s(csak)" replaceWith="$1$2" />
-	<RegEx find="([mM]ár)(csak)" replaceWith="$1 $2" />
-	<RegEx find="([nN]agyon)(jó)" replaceWith="$1 $2" />
-	<RegEx find="([mM]ikor)(jött)" replaceWith="$1 $2" />
-	<RegEx find="\b(a)(jót?)\b" replaceWith="$1 $2" />
-	<RegEx find="([nNsS]em)(jön)" replaceWith="$1 $2" />
-	<RegEx find="([Mm]indenki)(az)" replaceWith="$1 $2" />
-	<RegEx find="([A-Za-z])(:)(\b)" replaceWith="$1$2 $3" />
-	<RegEx find="(\x3Ci>)(-)([A-Z])" replaceWith="$1$2 $3" />
-	<RegEx find="([A-Za-z]&quot;)\s(-[nv])" replaceWith="$1$2" />
   </RegularExpressions>
 </OCRFixReplaceList>

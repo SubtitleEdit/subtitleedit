@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LmStudioPrompt))
             {
-                Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().LmStudioPrompt;
+                Configuration.Settings.Tools.LmStudioPrompt = new ToolsSettings().LmStudioPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.LmStudioPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";

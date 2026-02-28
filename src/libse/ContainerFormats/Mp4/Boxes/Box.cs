@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
+using System.Runtime.CompilerServices;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -12,46 +13,64 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public string Name;
         public ulong Size;
 
-        public static uint GetUInt(byte[] buffer, int index)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint GetUInt(ReadOnlySpan<byte> span)
         {
-            return (uint)((buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3]);
+            // Big-endian byte order (network byte order)
+            return (uint)(span[0] << 24 | span[1] << 16 | span[2] << 8 | span[3]);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetUInt(int index)
         {
-            return (uint)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
+            return GetUInt(Buffer.AsSpan(index));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetInt(int index)
         {
-            return (int)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
+            return (int)GetUInt(Buffer.AsSpan(index));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong GetUInt64(ReadOnlySpan<byte> span)
+        {
+            // Big-endian byte order
+            return (ulong)span[0] << 56 | (ulong)span[1] << 48 | (ulong)span[2] << 40 | (ulong)span[3] << 32 |
+                   (ulong)span[4] << 24 | (ulong)span[5] << 16 | (ulong)span[6] << 8 | span[7];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong GetUInt64(int index)
         {
-            return (ulong)Buffer[index] << 56 | (ulong)Buffer[index + 1] << 48 | (ulong)Buffer[index + 2] << 40 | (ulong)Buffer[index + 3] << 32 |
-                   (ulong)Buffer[index + 4] << 24 | (ulong)Buffer[index + 5] << 16 | (ulong)Buffer[index + 6] << 8 | Buffer[index + 7];
+            return GetUInt64(Buffer.AsSpan(index));
         }
 
-        public static ulong GetUInt64(byte[] buffer, int index)
-        {
-            return (ulong)buffer[index] << 56 | (ulong)buffer[index + 1] << 48 | (ulong)buffer[index + 2] << 40 | (ulong)buffer[index + 3] << 32 |
-                   (ulong)buffer[index + 4] << 24 | (ulong)buffer[index + 5] << 16 | (ulong)buffer[index + 6] << 8 | buffer[index + 7];
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetWord(byte[] buffer, int index)
         {
-            return (buffer[index] << 8) + buffer[index + 1];
+            return GetWord(buffer.AsSpan(index));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetWord(ReadOnlySpan<byte> span)
+        {
+            return (span[0] << 8) | span[1];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetWord(int index)
         {
-            return (Buffer[index] << 8) + Buffer[index + 1];
+            return GetWord(Buffer.AsSpan(index));
         }
 
         public string GetString(int index, int count)
         {
-            return Encoding.UTF8.GetString(Buffer, index, count);
+            if (count <= 0)
+            {
+                return string.Empty;
+            }
+            return Encoding.UTF8.GetString(Buffer.AsSpan(index, count));
         }
 
         public static string GetString(byte[] buffer, int index, int count)
@@ -61,43 +80,57 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 return string.Empty;
             }
 
-            return string.Join(Environment.NewLine, Encoding.UTF8.GetString(buffer, index, count).SplitToLines());
+            var text = Encoding.UTF8.GetString(buffer.AsSpan(index, count));
+
+            // Only normalize line endings if they exist
+            if (text.IndexOfAny(new[] { '\r', '\n' }) >= 0)
+            {
+                return string.Join(Environment.NewLine, text.SplitToLines());
+            }
+
+            return text;
         }
 
         internal bool InitializeSizeAndName(System.IO.Stream fs)
         {
             if (StartPosition == 0)
             {
-                StartPosition = (ulong)fs.Position -8;
+                StartPosition = (ulong)fs.Position - 8;
             }
 
-            Buffer = new byte[8];
-            var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
-            if (bytesRead < Buffer.Length)
+            // Reuse existing buffer if available and correct size
+            if (Buffer == null || Buffer.Length != 8)
+            {
+                Buffer = new byte[8];
+            }
+
+            var bytesRead = fs.Read(Buffer, 0, 8);
+            if (bytesRead < 8)
             {
                 return false;
             }
 
-            Size = GetUInt(0);
-            Name = GetString(4, 4);
+            var span = Buffer.AsSpan(0, 8);
+            Size = GetUInt(span);
+            Name = Encoding.UTF8.GetString(span.Slice(4, 4));
 
             if (Size == 0)
             {
                 Size = (ulong)(fs.Length - fs.Position);
             }
-            if (Size == 1)
+            else if (Size == 1)
             {
-                bytesRead = fs.Read(Buffer, 0, Buffer.Length);
-                if (bytesRead < Buffer.Length)
+                bytesRead = fs.Read(Buffer, 0, 8);
+                if (bytesRead < 8)
                 {
                     return false;
                 }
 
-                Size = GetUInt64(0) - 8;
+                Size = GetUInt64(Buffer.AsSpan(0, 8)) - 8;
             }
+
             Position = (ulong)fs.Position + Size - 8;
             return true;
         }
-
     }
 }

@@ -1,5 +1,5 @@
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Common.TextEffect
 {
@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
 
         public KaraokeEffect(TextEffectBase splitStrategy) => _splitStrategy = splitStrategy;
 
-        public IEnumerable<Paragraph> Transform(Paragraph paragraph, Color color, double delay)
+        public IEnumerable<Paragraph> Transform(Paragraph paragraph, SKColor color, double delay)
         {
             // remove any coloring tag already in text
             var text = HtmlUtil.RemoveColorTags(paragraph.Text);
@@ -71,6 +71,6 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
             return 0;
         }
 
-        private string GetColor(Color color) => $"<font color=\"{Utilities.ColorToHex(color)}\">";
+        private string GetColor(SKColor color) => $"<font color=\"{Utilities.ColorToHex(color)}\">";
     }
 }

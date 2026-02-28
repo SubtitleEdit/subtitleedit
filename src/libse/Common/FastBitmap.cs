@@ -1,9 +1,6 @@
-﻿//Downloaded from Visual C# Kicks - http://www.vcskicks.com/
-
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System;
 using System.IO;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -16,12 +13,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             public byte Red;
             public byte Alpha;
 
-            public PixelData(Color c)
+            public PixelData(SKColor c)
             {
-                Alpha = c.A;
-                Red = c.R;
-                Green = c.G;
-                Blue = c.B;
+                Alpha = c.Alpha;
+                Red = c.Red;
+                Green = c.Green;
+                Blue = c.Blue;
             }
 
             public override string ToString()
@@ -33,12 +30,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int Width { get; set; }
         public int Height { get; set; }
 
-        private readonly Bitmap _workingBitmap;
+        private readonly SKBitmap _workingBitmap;
         private int _width;
-        private BitmapData _bitmapData;
+        private IntPtr _pixelsPtr;
         private byte* _pBase = null;
+        private bool _isLocked = false;
 
-        public FastBitmap(Bitmap inputBitmap)
+        public FastBitmap(SKBitmap inputBitmap)
         {
             _workingBitmap = inputBitmap;
 
@@ -48,40 +46,44 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void LockImage()
         {
-            var bounds = new Rectangle(Point.Empty, _workingBitmap.Size);
+            if (_isLocked)
+            {
+                return;
+            }
 
-            _width = bounds.Width * sizeof(PixelData);
+            _width = _workingBitmap.Width * sizeof(PixelData);
             if (_width % 4 != 0)
             {
                 _width = 4 * (_width / 4 + 1);
             }
 
-            //Lock Image
-            _bitmapData = _workingBitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-            _pBase = (Byte*)_bitmapData.Scan0.ToPointer();
+            // Get direct access to the pixel buffer
+            _pixelsPtr = _workingBitmap.GetPixels();
+            _pBase = (byte*)_pixelsPtr.ToPointer();
+            _isLocked = true;
         }
 
         private PixelData* _pixelData = null;
 
-        public Color GetPixel(int x, int y)
+        public SKColor GetPixel(int x, int y)
         {
             _pixelData = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
-            return Color.FromArgb(_pixelData->Alpha, _pixelData->Red, _pixelData->Green, _pixelData->Blue);
+            return new SKColor(_pixelData->Red, _pixelData->Green, _pixelData->Blue, _pixelData->Alpha);
         }
 
-        public Color GetPixelNext()
+        public SKColor GetPixelNext()
         {
             _pixelData++;
-            return Color.FromArgb(_pixelData->Alpha, _pixelData->Red, _pixelData->Green, _pixelData->Blue);
+            return new SKColor(_pixelData->Red, _pixelData->Green, _pixelData->Blue, _pixelData->Alpha);
         }
 
-        public void SetPixel(int x, int y, Color color)
+        public void SetPixel(int x, int y, SKColor color)
         {
             var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
-            data->Alpha = color.A;
-            data->Red = color.R;
-            data->Green = color.G;
-            data->Blue = color.B;
+            data->Alpha = color.Alpha;
+            data->Red = color.Red;
+            data->Green = color.Green;
+            data->Blue = color.Blue;
         }
 
         public void SetPixel(int x, int y, PixelData color)
@@ -90,29 +92,36 @@ namespace Nikse.SubtitleEdit.Core.Common
             *data = color;
         }
 
-        public void SetPixel(int x, int y, Color color, int length)
+        public void SetPixel(int x, int y, SKColor color, int length)
         {
             var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
             for (int i = 0; i < length; i++)
             {
-                data->Alpha = color.A;
-                data->Red = color.R;
-                data->Green = color.G;
-                data->Blue = color.B;
+                data->Alpha = color.Alpha;
+                data->Red = color.Red;
+                data->Green = color.Green;
+                data->Blue = color.Blue;
                 data++;
             }
         }
 
-        public Bitmap GetBitmap()
+        public SKBitmap GetBitmap()
         {
             return _workingBitmap;
         }
 
         public void UnlockImage()
         {
-            _workingBitmap.UnlockBits(_bitmapData);
-            _bitmapData = null;
+            if (!_isLocked)
+            {
+                return;
+            }
+
+            // Notify the bitmap that we've changed its pixels (if needed)
+            _workingBitmap.NotifyPixelsChanged();
+            _pixelsPtr = IntPtr.Zero;
             _pBase = null;
+            _isLocked = false;
         }
 
         public static PixelData[] ConvertByteArrayToPixelData(byte[] byteArray)
@@ -126,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 using (var ms = new MemoryStream(byteArray))
                 {
-                    using (var bitmap = new Bitmap(ms))
+                    using (var bitmap = SKBitmap.Decode(ms))
                     {
                         var sampleCount = 256;
                         var pixelData = new PixelData[sampleCount];

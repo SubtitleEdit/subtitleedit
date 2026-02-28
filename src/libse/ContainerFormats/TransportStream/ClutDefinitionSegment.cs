@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 else
                 {
                     rcse.ClutEntryY = buffer[k + 2] >> 2;
-                    rcse.ClutEntryCr = ((buffer[k + 2] & 0b00000011) << 2) + (buffer[k + 2]) >> 6;
+                    rcse.ClutEntryCr = ((buffer[k + 2] & 0b00000011) << 2) + (buffer[k + 3] >> 6);
                     rcse.ClutEntryCb = ((buffer[k + 3] & 0b00111111) >> 2);
                     rcse.ClutEntryT = buffer[k + 3] & 0b00000011;
                     k += 4;

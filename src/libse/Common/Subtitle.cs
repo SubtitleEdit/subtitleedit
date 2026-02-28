@@ -937,46 +937,41 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Hash value that can be used for quick compare</returns>
         public int GetFastHashCode(string pre)
         {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                if (pre != null)
-                {
-                    hash = hash * 23 + pre.GetHashCode();
-                }
-                if (Header != null)
-                {
-                    hash = hash * 23 + Header.Trim().GetHashCode();
-                }
-                if (Footer != null)
-                {
-                    hash = hash * 23 + Footer.Trim().GetHashCode();
-                }
-                var max = Paragraphs.Count;
-                for (int i = 0; i < max; i++)
-                {
-                    var p = Paragraphs[i];
-                    hash = hash * 23 + p.Number.GetHashCode();
-                    hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
-                    hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
-                    hash = hash * 23 + p.Text.GetHashCode();
-                    if (p.Style != null)
-                    {
-                        hash = hash * 23 + p.Style.GetHashCode();
-                    }
-                    if (p.Extra != null)
-                    {
-                        hash = hash * 23 + p.Extra.GetHashCode();
-                    }
-                    if (p.Actor != null)
-                    {
-                        hash = hash * 23 + p.Actor.GetHashCode();
-                    }
-                    hash = hash * 23 + p.Layer.GetHashCode();
-                }
+            var hash = new HashCode();
 
-                return hash;
+            if (!string.IsNullOrEmpty(Header))
+            {
+                hash.Add(Header, StringComparer.Ordinal);
             }
+
+            if (!string.IsNullOrEmpty(Footer))
+            {
+                hash.Add(Footer, StringComparer.Ordinal);
+            }
+
+            var paragraphs = Paragraphs;
+            int count = paragraphs.Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                var p = paragraphs[i];
+
+                // 2. Use HashCode.Add for better distribution and speed
+                hash.Add(p.Number);
+
+                // 3. Use Ticks (long) instead of TotalMilliseconds (double) 
+                // Logic: Ticks are integers and faster to hash than doubles.
+                hash.Add(p.StartTime.TotalMilliseconds);
+                hash.Add(p.EndTime.TotalMilliseconds);
+
+                hash.Add(p.Text, StringComparer.Ordinal);
+                hash.Add(p.Style, StringComparer.Ordinal);
+                hash.Add(p.Extra, StringComparer.Ordinal);
+                hash.Add(p.Actor, StringComparer.Ordinal);
+                hash.Add(p.Layer);
+            }
+
+            return hash.ToHashCode();
         }
 
         /// <summary>

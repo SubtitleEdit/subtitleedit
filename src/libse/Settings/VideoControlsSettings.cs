@@ -1,4 +1,5 @@
-using System.Drawing;
+using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
@@ -29,13 +30,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int WaveformShotChangeEndTimeBeforeMs { get; set; }
         public int WaveformShotChangeEndTimeAfterMs { get; set; }
         public int WaveformBorderHitMs { get; set; }
-        public Color WaveformGridColor { get; set; }
-        public Color WaveformColor { get; set; }
-        public Color WaveformSelectedColor { get; set; }
-        public Color WaveformBackgroundColor { get; set; }
-        public Color WaveformTextColor { get; set; }
-        public Color WaveformCursorColor { get; set; }
-        public Color WaveformChaptersColor { get; set; }
+        public SKColor WaveformGridColor { get; set; }
+        public SKColor WaveformColor { get; set; }
+        public SKColor WaveformSelectedColor { get; set; }
+        public SKColor WaveformBackgroundColor { get; set; }
+        public SKColor WaveformTextColor { get; set; }
+        public SKColor WaveformCursorColor { get; set; }
+        public SKColor WaveformChaptersColor { get; set; }
         public int WaveformTextSize { get; set; }
         public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
@@ -66,13 +67,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             WaveformDrawGrid = true;
             WaveformAllowOverlap = false;
             WaveformBorderHitMs = 15;
-            WaveformGridColor = Color.FromArgb(255, 20, 20, 18);
-            WaveformColor = Color.FromArgb(255, 160, 240, 30);
-            WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
-            WaveformBackgroundColor = Color.Black;
-            WaveformTextColor = Color.Gray;
-            WaveformCursorColor = Color.Turquoise;
-            WaveformChaptersColor = Color.FromArgb(255, 104, 33, 122);
+            WaveformGridColor = ColorUtils.FromArgb(255, 20, 20, 18);
+            WaveformColor = ColorUtils.FromArgb(255, 160, 240, 30);
+            WaveformSelectedColor = ColorUtils.FromArgb(255, 230, 0, 0);
+            WaveformBackgroundColor = SKColors.Black;
+            WaveformTextColor = SKColors.Gray;
+            WaveformCursorColor = SKColors.Turquoise;
+            WaveformChaptersColor = ColorUtils.FromArgb(255, 104, 33, 122);
             WaveformTextSize = 9;
             WaveformTextBold = true;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";

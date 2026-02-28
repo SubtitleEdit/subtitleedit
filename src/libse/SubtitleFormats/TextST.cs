@@ -2,9 +2,9 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -78,12 +78,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public int Cb { get; set; }
             public int T { get; set; }
 
-            public Color Color
+            public SKColor Color
             {
                 get
                 {
                     var arr = BluRaySupPalette.YCbCr2Rgb(Y, Cb, Cr, false);
-                    return Color.FromArgb(T, arr[0], arr[1], arr[2]);
+                    return ColorUtils.FromArgb(T, (byte)arr[0], (byte)arr[1], (byte)arr[2]);
                 }
             }
         }

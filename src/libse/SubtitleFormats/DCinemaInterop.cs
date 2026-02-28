@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -582,11 +582,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return c;
         }
 
-        internal static Color GetColorFromString(string s)
+        internal static SKColor GetColorFromString(string s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
-                return Color.Black;
+                return SKColors.Black;
             }
 
             s = s.TrimStart('#');
@@ -600,7 +600,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Substring(2);
 
                 var c = ColorTranslator.FromHtml("#" + s);
-                return Color.FromArgb(alpha, c);
+                return ColorUtils.FromArgb(alpha, c);
             }
 
             return ColorTranslator.FromHtml("#" + s.TrimStart('#'));
@@ -1137,9 +1137,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 4:000}";
         }
 
-        public static string ColorToHexWithTransparency(Color c)
+        public static string ColorToHexWithTransparency(SKColor c)
         {
-            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.Alpha:x2}{c.Red:x2}{c.Green:x2}{c.Blue:x2}";
         }
     }
 }

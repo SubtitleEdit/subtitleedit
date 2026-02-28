@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public TimeSpan Delay;
         public int BufferSize => _data.Length;
         private readonly byte[] _data;
-        public Rectangle ImageDisplayArea;
+        public SKRectI ImageDisplayArea;
         public bool Forced { get; private set; }
         private readonly int _pixelDataAddressOffset;
         private readonly int _startDisplayControlSequenceTableAddress;
@@ -67,16 +67,16 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         /// <param name="useCustomColors">Use custom colors instead of lookup table</param>
         /// <param name="crop">Crop result image</param>
         /// <returns>Subtitle image</returns>
-        public Bitmap GetBitmap(List<Color> colorLookupTable, Color background, Color pattern, Color emphasis1, Color emphasis2, bool useCustomColors, bool crop = true)
+        public SKBitmap GetBitmap(List<SKColor> colorLookupTable, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2, bool useCustomColors, bool crop = true)
         {
-            var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
+            var fourColors = new List<SKColor> { background, pattern, emphasis1, emphasis2 };
             return ParseDisplayControlCommands(true, colorLookupTable, fourColors, useCustomColors, crop);
         }
 
-        private Bitmap ParseDisplayControlCommands(bool createBitmap, List<Color> colorLookUpTable, List<Color> fourColors, bool useCustomColors, bool crop)
+        private SKBitmap ParseDisplayControlCommands(bool createBitmap, List<SKColor> colorLookUpTable, List<SKColor> fourColors, bool useCustomColors, bool crop)
         {
-            ImageDisplayArea = new Rectangle();
-            Bitmap bmp = null;
+            ImageDisplayArea = new SKRectI();
+            SKBitmap bmp = null;
             var displayControlSequenceTableAddresses = new List<int>();
             var imageTopFieldDataAddress = 0;
             var imageBottomFieldDataAddress = 0;
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 var endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
                                 var startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
                                 var endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
-                                ImageDisplayArea = new Rectangle(startingX, startingY, endingX - startingX, endingY - startingY);
+                                ImageDisplayArea = new SKRectI(startingX, startingY, endingX, endingY);
                             }
                             commandIndex += 7;
                             break;
@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void SetColor(List<Color> fourColors, int fourColorIndex, int clutIndex, List<Color> colorLookUpTable)
+        private static void SetColor(List<SKColor> fourColors, int fourColorIndex, int clutIndex, List<SKColor> colorLookUpTable)
         {
             if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
             {
@@ -220,32 +220,35 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             }
         }
 
-        private static void SetTransparency(List<Color> fourColors, int fourColorIndex, int alpha)
+        private static void SetTransparency(List<SKColor> fourColors, int fourColorIndex, int alpha)
         {
             // alpha: 0x0 = transparent, 0xF = opaque (in C# 0 is fully transparent, and 255 is fully opaque so we have to multiply by 17)
 
             if (fourColorIndex >= 0)
             {
-                fourColors[fourColorIndex] = Color.FromArgb(alpha * 17, fourColors[fourColorIndex].R, fourColors[fourColorIndex].G, fourColors[fourColorIndex].B);
+                fourColors[fourColorIndex] = ColorUtils.FromArgb(alpha * 17, fourColors[fourColorIndex].Red, fourColors[fourColorIndex].Green, fourColors[fourColorIndex].Blue);
             }
         }
 
-        private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors, bool crop)
+        private SKBitmap GenerateBitmap(SKRectI imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<SKColor> fourColors, bool crop)
         {
             if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
             {
-                return new Bitmap(1, 1);
+                return new SKBitmap(1, 1);
             }
 
-            var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
-            if (fourColors[0] != Color.Transparent)
+            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
+            if (fourColors[0] != SKColors.Transparent)
             {
-                using (var gr = Graphics.FromImage(bmp))
-                using (var brush = new SolidBrush(fourColors[0]))
+                using (var canvas = new SKCanvas(bmp))
                 {
-                    gr.FillRectangle(brush, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    using (var paint = new SKPaint { Color = fourColors[0] })
+                    {
+                        canvas.DrawRect(new SKRect(0, 0, bmp.Width, bmp.Height), paint);
+                    }
                 }
             }
+
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
             GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors, 2);
@@ -255,7 +258,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return cropped;
         }
 
-        private static Bitmap CropBitmapAndUnlock(FastBitmap bmp, Color backgroundColor, bool crop)
+        private static SKBitmap CropBitmapAndUnlock(FastBitmap bmp, SKColor backgroundColor, bool crop)
         {
             var y = 0;
             var c = backgroundColor;
@@ -266,7 +269,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             if (crop)
             {
-
                 // Crop top
                 int x;
                 while (y < bmp.Height && IsBackgroundColor(c))
@@ -277,7 +279,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         for (x = 1; x < bmp.Width; x++)
                         {
                             c = bmp.GetPixelNext();
-                            if (c.A > 1)
+                            if (c.Alpha > 1)
                             {
                                 break;
                             }
@@ -323,7 +325,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 }
                 else
                 {
-                    minX -= 0;
+                    minX = 0;
                 }
 
                 // Crop bottom
@@ -381,22 +383,51 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             bmp.UnlockImage();
             var bmpImage = bmp.GetBitmap();
+
             if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
             {
-                var bmpCrop = bmpImage.Clone(new Rectangle(minX, minY, maxX - minX, maxY - minY), bmpImage.PixelFormat);
-                return bmpCrop;
+                return Crop(bmpImage, minX, minY, maxX - minX, maxY - minY);
             }
 
-            return (Bitmap)bmpImage.Clone();
+            // In SkiaSharp, we need to create a new bitmap and copy the pixels
+            var clone = new SKBitmap(bmpImage.Width, bmpImage.Height);
+            bmpImage.CopyTo(clone);
+            
+            return clone;
+        }
+
+        private static SKBitmap Crop(SKBitmap source, int x, int y, int width, int height)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (width <= 0 || height <= 0)
+                return null;
+
+            // Clamp to source bounds (avoid out-of-range)
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x + width > source.Width) width = source.Width - x;
+            if (y + height > source.Height) height = source.Height - y;
+
+            var rect = SKRectI.Create(x, y, width, height);
+
+            var target = new SKBitmap(rect.Width, rect.Height, source.ColorType, source.AlphaType);
+            using (var canvas = new SKCanvas(target))
+            {
+                canvas.DrawBitmap(source, rect, new SKRect(0, 0, rect.Width, rect.Height));
+            }
+
+            return target;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsBackgroundColor(Color c)
+        private static bool IsBackgroundColor(SKColor c)
         {
-            return c.A < 2;
+            return c.Alpha < 2;
         }
 
-        public static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<Color> fourColors, int addY)
+        public static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<SKColor> fourColors, int addY)
         {
             var index = 0;
             var onlyHalf = false;

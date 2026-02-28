@@ -237,8 +237,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new VoskModel
             {
                 TwoLetterLanguageCode = "br",
-                LanguageName = "Breton (small, 84 MB)",
-                Url = "https://github.com/gweltou/patromou/releases/download/vosk-models/vosk-model-br-26.01.zip",
+                LanguageName = "Breton (small, 70 MB)",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-br-0.8.zip",
             },
         };
     }

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
-		<Word from="tñere" to="there" />
-		<Word from="ri9ht" to="right" />
+        <Word from="tñere" to="there" />
+        <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
 		<Word from="$ergei" to="Sergei" />
 		<Word from="$lighnly" to="Slightly" />
@@ -148,7 +148,7 @@
 		<Word from="agreetowaive" to="agree to waive" />
 		<Word from="aH" to="all" />
 		<Word from="ahd" to="and" />
-		<!-- corrects valid spelling! <Word from="ahold" to="a hold" /> -->
+		<Word from="ahold" to="a hold" />
 		<Word from="ahsolutes" to="absolutes" />
 		<Word from="AI_I_" to="ALL" />
 		<Word from="AIarm" to="Alarm" />
@@ -366,10 +366,10 @@
 		<Word from="BuZZes" to="Buzzes" />
 		<Word from="byJack" to="by Jack" />
 		<Word from="byjust" to="by just" />
-		<!-- corrects valid spelling! <Word from="Byproduct" to="By-product" /> -->
-		<!-- corrects valid spelling! <Word from="byproduct" to="by-product" /> -->
-		<!-- corrects valid spelling! <Word from="byproducts" to="by-products" /> -->
-		<!-- corrects valid spelling! <Word from="Byproducts" to="By-products" /> -->
+		<Word from="Byproduct" to="By-product" />
+		<Word from="byproduct" to="by-product" />
+		<Word from="byproducts" to="by-products" />
+		<Word from="Byproducts" to="By-products" />
 		<Word from="bythe" to="by the" />
 		<Word from="byyourself" to="by yourself" />
 		<Word from="C/latter/'/7g" to="Chattering" />
@@ -543,7 +543,7 @@
 		<Word from="direwolves" to="dire wolves" />
 		<Word from="disasterlockdown" to="disaster lockdown" />
 		<Word from="discusting" to="disgusting" />
-		<!-- corrects valid spelling! <Word from="dissention" to="dissension" /> -->
+		<Word from="dissention" to="dissension" />
 		<Word from="divorcing_" to="divorcing." />
 		<Word from="diwied" to="divvied" />
 		<Word from="dld" to="did" />
@@ -693,7 +693,7 @@
 		<Word from="forAmerica's" to="for America's" />
 		<Word from="forArthur" to="for Arthur" />
 		<Word from="forbad" to="forbid" />
-		<!-- corrects valid spelling! <Word from="forevermore" to="for evermore" /> -->
+		<Word from="forevermore" to="for evermore" />
 		<Word from="forgetyourname" to="forget your name" />
 		<Word from="forJack" to="for Jack" />
 		<Word from="forjoining" to="for joining" />
@@ -1284,7 +1284,7 @@
 		<Word from="l_AuGHING" to="LAUGHING" />
 		<Word from="l‘m" to="I'm" />
 		<Word from="l0ng's" to="long's" />
-		<!-- corrects valid spelling! <Word from="lam" to="I am" /> -->
+		<Word from="lam" to="I am" />
 		<Word from="Laml6" to="I am 16" />
 		<Word from="lasagna" to="lasagne" />
 		<Word from="Lcad" to="Load" />
@@ -1817,9 +1817,9 @@
 		<Word from="outjust" to="out just" />
 		<Word from="outlool&lt;'s" to="outlook's" />
 		<Word from="outthe" to="out the" />
-		<!-- corrects valid spelling! <Word from="outthink" to="out think" /> -->
+		<Word from="outthink" to="out think" />
 		<Word from="outwith" to="out with" />
-		<!-- corrects valid spelling! <Word from="overactive" to="over active" /> -->
+		<Word from="overactive" to="over active" />
 		<Word from="overme" to="over me" />
 		<Word from="overthat" to="over that" />
 		<Word from="overthe" to="over the" />
@@ -2798,946 +2798,12 @@
 		<Word from="Mclntyre" to="McIntyre" />
 		<Word from="Ifi" to="If I" />
 		<Word from="Isjust" to="Is just" />
-		<Word from="Ofmaking" to="Of making" />
-		<Word from="everjust" to="ever just" />
-		<Word from="Everjust" to="Ever just" />
-		<Word from="makejust" to="make just" />
-		<Word from="Makejust" to="Make just" />
-		<Word from="hearhim" to="hear him" />
-		<Word from="Hearhim" to="Hear him" />
-		<Word from="hearher" to="hear her" />
-		<Word from="Hearher" to="Hear her" />
-		<Word from="screwyour" to="screw your" />
-		<Word from="Screwyour" to="Screw your" />
-		<Word from="I'amour" to="l'amour" />
-		<Word from="Tminus" to="T minus" />
-		<Word from="butlgota" to="but I got a" />
-		<Word from="Butlgota" to="But I got a" />
-		<Word from="butlgotta" to="but I gotta" />
-		<Word from="Butlgotta" to="But I gotta" />
-		<Word from="anda" to="and a" />
-		<Word from="fuckthat" to="fuck that" />
-		<Word from="Fuckthat" to="Fuck that" />
-		<Word from="howthe" to="how the" />
-		<Word from="Howthe" to="How the" />
-		<Word from="howwas" to="how was" />
-		<Word from="Howwas" to="How was" />
-		<Word from="howwere" to="how were" />
-		<Word from="Howwere" to="How were" />
-		<Word from="nowwe" to="now we" />
-		<Word from="Nowwe" to="Now we" />
-		<Word from="greatjob" to="great job" />
-		<Word from="Greatjob" to="Great job" />
-		<Word from="blowthe" to="blow the" />
-		<Word from="Blowthe" to="Blow the" />
-		<Word from="nowthere's" to="now there's" />
-		<Word from="Nowthere's" to="Now there's" />
-		<Word from="ofjaywalking" to="of jaywalking" />
-		<Word from="forjaywalking" to="for jaywalking" />
-		<Word from="beefjerky" to="beef jerky" />
-		<Word from="Foryou" to="For you" />
-		<Word from="foryou" to="for you" />
-		<Word from="Ifhe" to="If he" />
-		<Word from="Ifshe" to="If she" />
-		<Word from="Ifthat" to="If that" />
-		<Word from="Ifthis" to="If this" />
-		<Word from="Iffound" to="If found" />
-		<Word from="Ilove" to="I love" />
-		<Word from="Iloved" to="I loved" />
-		<Word from="Imade" to="I made" />
-		<Word from="Ofa" to="Of a" />
-		<Word from="ofa" to="of a" />
-		<Word from="Ofan" to="Of an" />
-		<Word from="ofan" to="of an" />
-		<Word from="Betterslow" to="Better slow" />
-		<Word from="betterslow" to="better slow" />
-		<Word from="Overthe" to="Over the" />
-		<Word from="overthe" to="over the" />
-		<Word from="Thathe" to="That he" />
-		<Word from="thathe" to="that he" />
-		<Word from="Thatshe" to="That she" />
-		<Word from="thatshe" to="that she" />
-		<Word from="Buthe" to="But he" />
-		<Word from="buthe" to="but he" />
-		<Word from="Butshe" to="But she" />
-		<Word from="butshe" to="but she" />
-		<Word from="Andhe" to="And he" />
-		<Word from="andhe" to="and he" />
-		<Word from="Andshe" to="And she" />
-		<Word from="andshe" to="and she" />
-		<Word from="Andthe" to="And the" />
-		<Word from="andthe" to="and the" />
-		<Word from="Andthat" to="And that" />
-		<Word from="andthat" to="and that" />
-		<Word from="Orhe" to="Or he" />
-		<Word from="orhe" to="or he" />
-		<Word from="Orshe" to="Or she" />
-		<Word from="orshe" to="or she" />
-		<Word from="Orthe" to="Or the" />
-		<Word from="orthe" to="or the" />
-		<Word from="Orthat" to="Or that" />
-		<Word from="orthat" to="or that" />
-		<Word from="Allthat" to="All that" />
-		<Word from="allthat" to="all that" />
-		<Word from="Allthis" to="All this" />
-		<Word from="allthis" to="all this" />
-		<Word from="Allthese" to="All these" />
-		<Word from="allthese" to="all these" />
-		<Word from="Andl" to="And I" />
-		<Word from="andl" to="and I" />
-		<Word from="Buta" to="But a" />
-		<Word from="buta" to="but a" />
-		<Word from="Itwas" to="It was" />
-		<Word from="itwas" to="it was" />
-		<Word from="Itwon't" to="It won't" />
-		<Word from="itwon't" to="it won't" />
-		<Word from="Don'tgive" to="Don't give" />
-		<Word from="don'tgive" to="don't give" />
-		<Word from="Ordid" to="Or did" />
-		<Word from="Itdoesn't" to="It doesn't" />
-		<Word from="itdoesn't" to="it doesn't" />
-		<Word from="Whatdo" to="What do" />
-		<Word from="whatdo" to="what do" />
-		<Word from="Howcould" to="How could" />
-		<Word from="howcould" to="how could" />
-		<Word from="Can'tyou" to="Can't you" />
-		<Word from="can'tyou" to="can't you" />
-		<Word from="Can'the" to="Can't he" />
-		<Word from="can'the" to="can't he" />
-		<Word from="Can'tshe" to="Can't se" />
-		<Word from="can'tshe" to="can't se" />
-		<Word from="Can'tthe" to="Can't the" />
-		<Word from="can'tthe" to="can't the" />
-		<Word from="Mydear" to="My dear" />
-		<Word from="mydear" to="my dear" />
-		<Word from="Haven'tI" to="Haven't I" />
-		<Word from="haven'tI" to="haven't I" />
-		<Word from="Haven'tl" to="Haven't I" />
-		<Word from="haven'tl" to="haven't I" />
-		<Word from="Haven'tyou" to="Haven't you" />
-		<Word from="haven'tyou" to="haven't you" />
-		<Word from="Hasn'the" to="Hasn't he" />
-		<Word from="hasn'the" to="hasn't he" />
-		<Word from="Hasn'tshe" to="Hasn't she" />
-		<Word from="hasn'tshe" to="hasn't she" />
-		<Word from="Stickto" to="Stick to" />
-		<Word from="stickto" to="stick to" />
-		<Word from="Don'tgive" to="Don't give" />
-		<Word from="don'tgive" to="don't give" />
-		<Word from="Wherewould" to="Where would" />
-		<Word from="wherewould" to="where would" />
-		<Word from="Won'tyou" to="Won't you" />
-		<Word from="won'tyou" to="won't you" />
-		<Word from="Won'the" to="Won't he" />
-		<Word from="won'the" to="won't he" />
-		<Word from="Won'tshe" to="Won't she" />
-		<Word from="won'tshe" to="won't she" />
-		<Word from="Won'tthe" to="Won't the" />
-		<Word from="won'tthe" to="won't the" />
-		<Word from="WhateverI" to="Whatever I" />
-		<Word from="whateverI" to="whatever I" />
-		<Word from="Whateverl" to="Whatever I" />
-		<Word from="whateverl" to="whatever I" />
-		<Word from="Whateveryou" to="Whatever you" />
-		<Word from="whateveryou" to="whatever you" />
-		<Word from="Whateverhe" to="Whatever he" />
-		<Word from="whateverhe" to="whatever he" />
-		<Word from="Whatevershe" to="Whatever she" />
-		<Word from="whatevershe" to="whatever she" />
-		<Word from="Whateverthe" to="Whatever the" />
-		<Word from="whateverthe" to="whatever the" />
-		<Word from="Nowthat" to="Now that" />
-		<Word from="nowthat" to="now that" />
-		<Word from="Nowwhat" to="Now what" />
-		<Word from="nowwhat" to="now what" />
-		<Word from="Nowwhere" to="Now where" />
-		<Word from="nowwhere" to="now where" />
-		<Word from="Wouldn'tyou" to="Wouldn't you" />
-		<Word from="wouldn'tyou" to="wouldn't you" />
-		<Word from="Wouldn'the" to="Wouldn't he" />
-		<Word from="wouldn'the" to="wouldn't he" />
-		<Word from="Wouldn'tshe" to="Wouldn't she" />
-		<Word from="wouldn'tshe" to="wouldn't she" />
-		<Word from="Wouldn'tthe" to="Wouldn't the" />
-		<Word from="wouldn'tthe" to="wouldn't the" />
-		<Word from="Wouldn'tthat" to="Wouldn't that" />
-		<Word from="wouldn'tthat" to="wouldn't that" />
-		<Word from="Wouldn'tit" to="Wouldn't it" />
-		<Word from="wouldn'tit" to="wouldn't it" />
-		<Word from="Don'ttell" to="Don't tell" />
-		<Word from="don'ttell" to="don't tell" />
-		<Word from="Whowill" to="Who will" />
-		<Word from="whowill" to="who will" />
-		<Word from="Ifno" to="If no" />
-		<Word from="ifno" to="if no" />
-		<Word from="Notyet" to="Not yet" />
-		<Word from="notyet" to="not yet" />
-		<Word from="Iwill" to="I will" />
-		<Word from="Youwill" to="You will" />
-		<Word from="youwill" to="you will" />
-		<Word from="Hewill" to="He will" />
-		<Word from="hewill" to="he will" />
-		<Word from="Hiswill" to="His will" />
-		<Word from="hiswill" to="his will" />
-		<Word from="Shewill" to="She will" />
-		<Word from="shewill" to="she will" />
-		<Word from="Herwill" to="Her will" />
-		<Word from="herwill" to="her will" />
-		<Word from="Itwill" to="It will" />
-		<Word from="itwill" to="it will" />
-		<Word from="Thatwill" to="That will" />
-		<Word from="thatwill" to="that will" />
-		<Word from="Thiswill" to="This will" />
-		<Word from="thiswill" to="this will" />
-		<Word from="anysum" to="any sum" />
-		<Word from="What'smy" to="What's my" />
-		<Word from="what'smy" to="what's my" />
-		<Word from="What'syour" to="What's your" />
-		<Word from="what'syour" to="what's your" />
-		<Word from="What'shis" to="What's his" />
-		<Word from="what'shis" to="what's his" />
-		<Word from="What'sher" to="What's her" />
-		<Word from="what'sher" to="what's her" />
-		<Word from="What'sthis" to="What's this" />
-		<Word from="what'sthis" to="what's this" />
-		<Word from="What'sthat" to="What's that" />
-		<Word from="what'sthat" to="what's that" />
-		<Word from="What'swith" to="What's with" />
-		<Word from="what'swith" to="what's with" />
-		<Word from="Didn'tI" to="Didn't I" />
-		<Word from="didn'tI" to="didn't I" />
-		<Word from="Didn'tl" to="Didn't I" />
-		<Word from="didn'tl" to="didn't I" />
-		<Word from="Didn'tyou" to="Didn't you" />
-		<Word from="didn'tyou" to="didn't you" />
-		<Word from="Didn'the" to="Didn't he" />
-		<Word from="didn'the" to="didn't he" />
-		<Word from="Didn'tshe" to="Didn't she" />
-		<Word from="didn'tshe" to="didn't she" />
-		<Word from="Didn'tit" to="Didn't it" />
-		<Word from="didn'tit" to="didn't it" />
-		<Word from="Didn'tthis" to="Didn't this" />
-		<Word from="didn'tthis" to="didn't this" />
-		<Word from="Didn'tthat" to="Didn't that" />
-		<Word from="didn'tthat" to="didn't that" />
-		<Word from="Therewas" to="There was" />
-		<Word from="therewas" to="there was" />
-		<Word from="Therewasn't" to="There wasn't" />
-		<Word from="therewasn't" to="there wasn't" />
-		<Word from="Howdid" to="How did" />
-		<Word from="howdid" to="how did" />
-		<Word from="Ofyou" to="Of you" />
-		<Word from="ofyou" to="of you" />
-		<Word from="Ofyour" to="Of your" />
-		<Word from="ofyour" to="of your" />
-		<Word from="Ofhim" to="Of him" />
-		<Word from="ofhim" to="of him" />
-		<Word from="Ofher" to="Of her" />
-		<Word from="ofher" to="of her" />
-		<Word from="Ofit" to="Of it" />
-		<Word from="ofit" to="of it" />
-		<Word from="Ofits" to="Of its" />
-		<Word from="ofits" to="of its" />
-		<Word from="Ofit's" to="Of it's" />
-		<Word from="ofit's" to="of it's" />
-		<Word from="Iwould" to="I would" />
-		<Word from="Youwould" to="You would" />
-		<Word from="youwould" to="you would" />
-		<Word from="Hewould" to="He would" />
-		<Word from="hewould" to="he would" />
-		<Word from="Shewould" to="She would" />
-		<Word from="shewould" to="she would" />
-		<Word from="Itwould" to="It would" />
-		<Word from="itwould" to="it would" />
-		<Word from="Thiswould" to="This would" />
-		<Word from="thiswould" to="this would" />
-		<Word from="Thatwould" to="That would" />
-		<Word from="thatwould" to="that would" />
-		<Word from="Wewould" to="We would" />
-		<Word from="wewould" to="we would" />
-		<Word from="Theywould" to="They would" />
-		<Word from="theywould" to="they would" />
-		<Word from="Iwouldn't" to="I wouldn't" />
-		<Word from="Hewouldn't" to="He wouldn't" />
-		<Word from="hewouldn't" to="he wouldn't" />
-		<Word from="Shewouldn't" to="She wouldn't" />
-		<Word from="shewouldn't" to="she wouldn't" />
-		<Word from="Itwouldn't" to="It wouldn't" />
-		<Word from="itwouldn't" to="it wouldn't" />
-		<Word from="Youwouldn't" to="You wouldn't" />
-		<Word from="youwouldn't" to="you wouldn't" />
-		<Word from="Thiswouldn't" to="This wouldn't" />
-		<Word from="thiswouldn't" to="this wouldn't" />
-		<Word from="Thatwouldn't" to="That wouldn't" />
-		<Word from="thatwouldn't" to="that wouldn't" />
-		<Word from="Wewouldn't" to="We wouldn't" />
-		<Word from="wewouldn't" to="we wouldn't" />
-		<Word from="Theywouldn't" to="They wouldn't" />
-		<Word from="theywouldn't" to="they wouldn't" />
-		<Word from="Ishould" to="I should" />
-		<Word from="Youshould" to="You should" />
-		<Word from="youshould" to="you should" />
-		<Word from="Heshould" to="He should" />
-		<Word from="heshould" to="he should" />
-		<Word from="Sheshould" to="She should" />
-		<Word from="sheshould" to="she should" />
-		<Word from="Itshould" to="It should" />
-		<Word from="itshould" to="it should" />
-		<Word from="Thisshould" to="This should" />
-		<Word from="thisshould" to="this should" />
-		<Word from="Thatshould" to="That should" />
-		<Word from="thatshould" to="that should" />
-		<Word from="Weshould" to="We should" />
-		<Word from="weshould" to="we should" />
-		<Word from="Theyshould" to="They should" />
-		<Word from="theyshould" to="they should" />
-		<Word from="Ishouldn't" to="I shouldn't" />
-		<Word from="Youshouldn't" to="You shouldn't" />
-		<Word from="youshouldn't" to="you shouldn't" />
-		<Word from="Heshouldn't" to="He shouldn't" />
-		<Word from="heshouldn't" to="he shouldn't" />
-		<Word from="Sheshouldn't" to="She shouldn't" />
-		<Word from="sheshouldn't" to="she shouldn't" />
-		<Word from="Itshouldn't" to="It shouldn't" />
-		<Word from="itshouldn't" to="it shouldn't" />
-		<Word from="Thisshouldn't" to="This shouldn't" />
-		<Word from="thisshouldn't" to="this shouldn't" />
-		<Word from="Thatshouldn't" to="That shouldn't" />
-		<Word from="thatshouldn't" to="that shouldn't" />
-		<Word from="Weshouldn't" to="We shouldn't" />
-		<Word from="weshouldn't" to="we shouldn't" />
-		<Word from="Theyshouldn't" to="They shouldn't" />
-		<Word from="theyshouldn't" to="they shouldn't" />
-		<Word from="Imust" to="I must" />
-		<Word from="Youmust" to="You must" />
-		<Word from="youmust" to="you must" />
-		<Word from="Hemust" to="He must" />
-		<Word from="hemust" to="he must" />
-		<Word from="Shemust" to="She must" />
-		<Word from="shemust" to="she must" />
-		<Word from="Itmust" to="It must" />
-		<Word from="itmust" to="it must" />
-		<Word from="Thismust" to="This must" />
-		<Word from="thismust" to="this must" />
-		<Word from="Thatmust" to="That must" />
-		<Word from="thatmust" to="that must" />
-		<Word from="Wemust" to="we must" />
-		<Word from="wemust" to="we must" />
-		<Word from="Theymust" to="They must" />
-		<Word from="theymust" to="they must" />
-		<Word from="Imustn't" to="I mustn't" />
-		<Word from="Youmustn't" to="You mustn't" />
-		<Word from="youmustn't" to="you mustn't" />
-		<Word from="Hemustn't" to="He mustn't" />
-		<Word from="hemustn't" to="he mustn't" />
-		<Word from="Shemustn't" to="She mustn't" />
-		<Word from="shemustn't" to="she mustn't" />
-		<Word from="Itmustn't" to="It mustn't" />
-		<Word from="itmustn't" to="it mustn't" />
-		<Word from="Thismustn't" to="This mustn't" />
-		<Word from="thismustn't" to="this mustn't" />
-		<Word from="Thatmustn't" to="That mustn't" />
-		<Word from="thatmustn't" to="that mustn't" />
-		<Word from="Wemustn't" to="We mustn't" />
-		<Word from="wemustn't" to="we mustn't" />
-		<Word from="Theymustn't" to="They mustn't" />
-		<Word from="theymustn't" to="they mustn't" />
-		<Word from="Iwas" to="I was" />
-		<Word from="Youwere" to="You were" />
-		<Word from="youwere" to="you were" />
-		<Word from="Hewas" to="He was" />
-		<Word from="hewas" to="he was" />
-		<Word from="Shewas" to="She was" />
-		<Word from="shewas" to="she was" />
-		<Word from="Itwas" to="It was" />
-		<Word from="itwas" to="it was" />
-		<Word from="Thiswas" to="This was" />
-		<Word from="thiswas" to="this was" />
-		<Word from="Thatwas" to="That was" />
-		<Word from="thatwas" to="that was" />
-		<Word from="Wewere" to="we were" />
-		<Word from="wewere" to="we were" />
-		<Word from="Theywere" to="They were" />
-		<Word from="theywere" to="they were" />
-		<Word from="Iwasn't" to="I wasn't" />
-		<Word from="Youwere't" to="You weren't" />
-		<Word from="youweren't" to="you weren't" />
-		<Word from="Hewasn't" to="He wasn't" />
-		<Word from="hewasn't" to="he wasn't" />
-		<Word from="Shewasn't" to="She wasn't" />
-		<Word from="shewasn't" to="she wasn't" />
-		<Word from="Itwasn't" to="It wasn't" />
-		<Word from="itwasn't" to="it wasn't" />
-		<Word from="Thiswasn't" to="This wasn't" />
-		<Word from="thiswasn't" to="this wasn't" />
-		<Word from="Thatwasn't" to="That wasn't" />
-		<Word from="thatwasn't" to="that wasn't" />
-		<Word from="Weweren't" to="We weren't" />
-		<Word from="weweren't" to="we weren't" />
-		<Word from="Theywasn't" to="They weren't" />
-		<Word from="theyweren't" to="they weren't" />
-		<Word from="Idid" to="I did" />
-		<Word from="Ido" to="I do" />
-		<Word from="Youdid" to="You did" />
-		<Word from="youdid" to="you did" />
-		<Word from="Youdo" to="You do" />
-		<Word from="youdo" to="you do" />
-		<Word from="Hedid" to="He did" />
-		<Word from="hedid" to="he did" />
-		<Word from="Hedoes" to="He does" />
-		<Word from="hedoes" to="he does" />
-		<Word from="Shedid" to="She did" />
-		<Word from="shedid" to="she did" />
-		<Word from="Shedoes" to="She does" />
-		<Word from="shedoes" to="she does" />
-		<Word from="Itdid" to="It did" />
-		<Word from="itdid" to="it did" />
-		<Word from="Itdoes" to="It does" />
-		<Word from="itdoes" to="it does" />
-		<Word from="Thisdid" to="This did" />
-		<Word from="thisdid" to="this did" />
-		<Word from="Thisdoes" to="This does" />
-		<Word from="thisdoes" to="this does" />
-		<Word from="Thatdid" to="That did" />
-		<Word from="thatdid" to="that did" />
-		<Word from="Thatdoes" to="That does" />
-		<Word from="thatdoes" to="that does" />
-		<Word from="Wedid" to="We did" />
-		<Word from="wedid" to="we did" />
-		<Word from="Weddo" to="We do" />
-		<Word from="weddo" to="we do" />
-		<Word from="Theydid" to="They did" />
-		<Word from="theydid" to="they did" />
-		<Word from="Theydo" to="They do" />
-		<Word from="theydo" to="they do" />
-		<Word from="Ididn't" to="I didn't" />
-		<Word from="Youdidn't" to="You didn't" />
-		<Word from="youdidn't" to="you didn't" />
-		<Word from="Hedidn't" to="He didn't" />
-		<Word from="hedidn't" to="he didn't" />
-		<Word from="Hedoesn't" to="He doesn't" />
-		<Word from="hedoesn't" to="he doesn't" />
-		<Word from="Shedidn't" to="She didn't" />
-		<Word from="shedidn't" to="she didn't" />
-		<Word from="Shedoesn't" to="She doesn't" />
-		<Word from="shedoesn't" to="she doesn't" />
-		<Word from="Itdidn't" to="It didn't" />
-		<Word from="itdidn't" to="it didn't" />
-		<Word from="Itdoesn't" to="It doesn't" />
-		<Word from="itdoesn't" to="it doesn't" />
-		<Word from="Thisdidn't" to="This didn't" />
-		<Word from="thisdidn't" to="this didn't" />
-		<Word from="Thisdoesn't" to="This doesn't" />
-		<Word from="thisdoesn't" to="this doesn't" />
-		<Word from="Thatdidn't" to="That didn't" />
-		<Word from="thatdidn't" to="that didn't" />
-		<Word from="Thatdoesn't" to="That doesn't" />
-		<Word from="thatdoesn't" to="that doesn't" />
-		<Word from="Wedidn't" to="We didn't" />
-		<Word from="wedidn't" to="we didn't" />
-		<Word from="Wedon't" to="We don't" />
-		<Word from="wedon't" to="we don't" />
-		<Word from="Theydidn't" to="They didn't" />
-		<Word from="theydidn't" to="they didn't" />
-		<Word from="Theydon't" to="They don't" />
-		<Word from="theydon't" to="they don't" />
-		<Word from="Howwould" to="How would" />
-		<Word from="howwould" to="how would" />
-		<Word from="Whatwould" to="What would" />
-		<Word from="whatwould" to="what would" />
-		<Word from="Wherewould" to="Where would" />
-		<Word from="Wherewould" to="where would" />
-		<Word from="Forthe" to="For the" />
-		<Word from="for the" to="for the" />
-		<Word from="Forthese" to="For these" />
-		<Word from="for these" to="for these" />
-		<Word from="Justwhen" to="Just when" />
-		<Word from="justwhen" to="just when" />
-		<Word from="Myyoung" to="My young" />
-		<Word from="myyoung" to="my young" />
-		<Word from="Verywell" to="Very well" />
-		<Word from="verywell" to="very well" />
-		<Word from="Thewhole" to="The whole" />
-		<Word from="thewhole" to="the whole" />
-		<Word from="Nowyou" to="Now you" />
-		<Word from="nowyou" to="now you" />
-		<Word from="Nowyour" to="Now your" />
-		<Word from="nowyour" to="now your" />
-		<Word from="Theysay" to="They say" />
-		<Word from="theysay" to="they say" />
-		<Word from="Isthere" to="Is there" />
-		<Word from="isthere" to="is there" />
-		<Word from="Arethere" to="Are there" />
-		<Word from="arethere" to="are there" />
-		<Word from="Howdare" to="How dare" />
-		<Word from="Whatwill" to="What will" />
-		<Word from="whatwill" to="what will" />
-		<Word from="Whatdid" to="What did" />
-		<Word from="whatdid" to="what did" />
-		<Word from="Whatdo" to="What do" />
-		<Word from="whatdo" to="what do" />
-		<Word from="Whatdoes" to="What does" />
-		<Word from="whatdoes" to="what does" />
-		<Word from="Whatwere" to="What were" />
-		<Word from="whatwere" to="what were" />
-		<Word from="Whenwill" to="When will" />
-		<Word from="whenwill" to="when will" />
-		<Word from="Whendid" to="When did" />
-		<Word from="whendid" to="when did" />
-		<Word from="Whendo" to="When do" />
-		<Word from="whendo" to="when do" />
-		<Word from="Whendoes" to="When does" />
-		<Word from="whendoes" to="when does" />
-		<Word from="Whenwere" to="When were" />
-		<Word from="whenwere" to="when were" />
-		<Word from="Wherewill" to="Where will" />
-		<Word from="wherewill" to="where will" />
-		<Word from="Wheredid" to="Where did" />
-		<Word from="wheredid" to="where did" />
-		<Word from="Wheredo" to="Where do" />
-		<Word from="wheredo" to="where do" />
-		<Word from="Wheredoes" to="Where does" />
-		<Word from="wheredoes" to="where does" />
-		<Word from="Wherewere" to="Where were" />
-		<Word from="wherewere" to="where were" />
-		<Word from="ThatI" to="That I" />
-		<Word from="thatI" to="that I" />
-		<Word from="Thatl" to="That l" />
-		<Word from="thatl" to="that l" />
-		<Word from="Thatmy" to="That my" />
-		<Word from="thatmy" to="that my" />
-		<Word from="That'smy" to="That's my" />
-		<Word from="that'smy" to="that's my" />
-		<Word from="That'smine" to="That's mine" />
-		<Word from="that'smine" to="that's mine" />
-		<Word from="Thatyou" to="That you" />
-		<Word from="thatyou" to="that you" />
-		<Word from="Thatyour" to="That your" />
-		<Word from="thatyour" to="that your" />
-		<Word from="That'syour" to="That's your" />
-		<Word from="that'syour" to="that's your" />
-		<Word from="That'syours" to="That's yours" />
-		<Word from="that'syours" to="that's yours" />
-		<Word from="Thathe" to="That he" />
-		<Word from="thathe" to="that he" />
-		<Word from="Thathis" to="That his" />
-		<Word from="thathis" to="that his" />
-		<Word from="Thatis" to="That is" />
-		<Word from="thatis" to="that is" />
-		<Word from="That'shis" to="That's his" />
-		<Word from="that'shis" to="that's his" />
-		<Word from="Thather" to="That her" />
-		<Word from="thather" to="that her" />
-		<Word from="That'sher" to="That's her" />
-		<Word from="that'sher" to="that's her" />
-		<Word from="That'shers" to="That's hers" />
-		<Word from="that'shers" to="that's hers" />
-		<Word from="Thatwe" to="That we" />
-		<Word from="thatwe" to="that we" />
-		<Word from="Thatour" to="That our" />
-		<Word from="thatour" to="that our" />
-		<Word from="That'sour" to="That's our" />
-		<Word from="that'sour" to="that's our" />
-		<Word from="That'sours" to="That's ours" />
-		<Word from="that'sours" to="that's ours" />
-		<Word from="Thatthey" to="That they" />
-		<Word from="thatthey" to="that they" />
-		<Word from="Thattheir" to="That their" />
-		<Word from="thattheir" to="that their" />
-		<Word from="That'stheir" to="That's their" />
-		<Word from="that'stheir" to="that's their" />
-		<Word from="That'stheirs" to="That's theirs" />
-		<Word from="that'stheirs" to="that's theirs" />
-		<Word from="Doesthis" to="Does this" />
-		<Word from="doesthis" to="does this" />
-		<Word from="Doesthat" to="Does that" />
-		<Word from="doesthat" to="does that" />
-		<Word from="Doesit" to="Does it" />
-		<Word from="doesit" to="does it" />
-		<Word from="It'sthe" to="It's the" />
-		<Word from="it'sthe" to="it's the" />
-		<Word from="It'sa" to="It's a" />
-		<Word from="it'sa" to="it's a" />
-		<Word from="It'smy" to="It's my" />
-		<Word from="it'smy" to="it's my" />
-		<Word from="It'smine" to="It's mine" />
-		<Word from="it'smine" to="it's mine" />
-		<Word from="It'syour" to="It's your" />
-		<Word from="it'syour" to="it's your" />
-		<Word from="It'syours" to="It's yours" />
-		<Word from="it'syours" to="it's yours" />
-		<Word from="It'shis" to="It's his" />
-		<Word from="it'shis" to="it's his" />
-		<Word from="It'sher" to="It's her" />
-		<Word from="it'sher" to="it's her" />
-		<Word from="It'shers" to="It's hers" />
-		<Word from="it'shers" to="it's hers" />
-		<Word from="It'sour" to="It's our" />
-		<Word from="it'sour" to="it's our" />
-		<Word from="It'sours" to="It's ours" />
-		<Word from="it'sours" to="it's ours" />
-		<Word from="It'stheir" to="It's their" />
-		<Word from="it'stheir" to="it's their" />
-		<Word from="It'stheirs" to="It's theirs" />
-		<Word from="it'stheirs" to="it's theirs" />
-		<Word from="Butthe" to="But the" />
-		<Word from="butthe" to="but the" />
-		<Word from="Veryfunny" to="Very funny" />
-		<Word from="veryfunny" to="very funny" />
-		<Word from="lf" to="If" />
-		<Word from="lfl" to="If I" />
-		<Word from="lfyou" to="If you" />
-		<Word from="lfhe" to="If he" />
-		<Word from="lfshe" to="If she" />
-		<Word from="lfit" to="If it" />
-		<Word from="lfwe" to="If we" />
-		<Word from="lfthey" to="If they" />
-		<Word from="lfany" to="If any" />
-		<Word from="lfanything" to="If anything" />
-		<Word from="lflgo" to="If I go" />
-		<Word from="Iflgo" to="If I go" />
-		<Word from="iflgo" to="if I go" />
-		<Word from="Yourleft" to="Your left" />
-		<Word from="yourleft" to="your left" />
-		<Word from="Gulfof" to="Gulf of" />
-		<Word from="mytardiness" to="my tardiness" />
-		<Word from="envyyou" to="envy you" />
-		<Word from="obeythis" to="obey this" />
-		<Word from="obeythat" to="obey that" />
-		<Word from="bythe" to="by the" />
-		<Word from="Bythe" to="By the" />
-		<Word from="thinkyou" to="thinkyou" />
-		<Word from="Thinkyou" to="Thinkyou" />
-		<Word from="ajewel" to="a jewel" />
-		<Word from="ajeweled" to="a jeweled" />
-		<Word from="mytouch" to="my touch" />
-		<Word from="Mytouch" to="My touch" />
-		<Word from="myhome" to="my home" />
-		<Word from="Myhome" to="My home" />
-		<Word from="callme" to="call me" />
-		<Word from="Callme" to="Call me" />
-		<Word from="ourpeople" to="our people" />
-		<Word from="Ourpeople" to="Our people" />
-		<Word from="ofourpeople" to="of our people" />
-		<Word from="Ofourpeople" to="Of our people" />
-		<Word from="ofour" to="of our" />
-		<Word from="Ofour" to="Of our" />
-		<Word from="ofyour" to="of your" />
-		<Word from="Ofyour" to="Of your" />
-		<Word from="andget" to="and get" />
-		<Word from="Andget" to="And get" />
-		<Word from="andlose" to="and lose" />
-		<Word from="Andlose" to="And lose" />
-		<Word from="forme" to="for me" />
-		<Word from="Forme" to="For me" />
-		<Word from="formy" to="for my" />
-		<Word from="Formy" to="For my" />
-		<Word from="forjust" to="for just" />
-		<Word from="Forjust" to="For just" />
-		<Word from="yourgame" to="your game" />
-		<Word from="Yourgame" to="Your game" />
-		<Word from="andyou're" to="and you're" />
-		<Word from="Andyou're" to="And you're" />
-		<Word from="can'tgive" to="can't give" />
-		<Word from="Can'tgive" to="Can't give" />
-		<Word from="Wheneveryou" to="Wheneveryou" />
-		<Word from="wheneveryou" to="wheneveryou" />
-		<Word from="Offofyou" to="Off of you" />
-		<Word from="offofyou" to="off of you" />
-		<Word from="Offyou" to="Off you" />
-		<Word from="offyou" to="off you" />
-		<Word from="Ofyou" to="Of you" />
-		<Word from="ofyou" to="of you" />
-		<Word from="Andgo" to="And go" />
-		<Word from="andgo" to="and go" />
-		<Word from="Findyou" to="Find you" />
-		<Word from="findyou" to="find you" />
-		<Word from="Findyour" to="Find your" />
-		<Word from="findyour" to="find your" />
-		<Word from="Butyou've" to="But you've" />
-		<Word from="butyou've" to="but you've" />
-		<Word from="Butyou're" to="But you're" />
-		<Word from="butyou're" to="but you're" />
-		<Word from="Butyou" to="But you" />
-		<Word from="butyou" to="but you" />
-		<Word from="Butyour" to="But your" />
-		<Word from="butyour" to="but your" />
-		<Word from="ofme's" to="of me's" />
-		<Word from="ifit" to="if it" />
-		<Word from="Ifit" to="If it" />
-		<Word from="ifits" to="if its" />
-		<Word from="Ifits" to="If its" />
-		<Word from="ifit's" to="if it's" />
-		<Word from="Ifit's" to="If it's" />
-		<Word from="ofit" to="of it" />
-		<Word from="Ofit" to="Of it" />
-		<Word from="ofits" to="of its" />
-		<Word from="Ofits" to="Of its" />
-		<Word from="ofit's" to="of it's" />
-		<Word from="Ofit's" to="Of it's" />
-		<Word from="ifanybody" to="if anybody" />
-		<Word from="Ifanybody" to="If anybody" />
-		<Word from="ifanyone" to="if anyone" />
-		<Word from="Ifanyone" to="If anyone" />
-		<Word from="iflife" to="if life" />
-		<Word from="Iflife" to="If life" />
-		<Word from="ofso" to="of so" />
-		<Word from="Ofso" to="Of so" />
-		<Word from="HAWAll" to="HAWAII" />
-		<Word from="ALEKSEl" to="ALEKSEI" />
-		<Word from="Thisjust" to="This just" />
-		<Word from="thisjust" to="this just" />
-		<Word from="Thatjust" to="That just" />
-		<Word from="thatjust" to="that just" />
-		<Word from="Eversince" to="Ever since" />
-		<Word from="eversince" to="ever since" />
-		<Word from="Italso" to="It also" />
-		<Word from="italso" to="it also" />
-		<Word from="Doyou" to="Do you" />
-		<Word from="doyou" to="do you" />
-		<Word from="Justhit" to="Just hit" />
-		<Word from="justhit" to="just hit" />
-		<Word from="Buthow" to="But how" />
-		<Word from="buthow" to="but how" />
-		<Word from="Copythat" to="Copy that" />
-		<Word from="copythat" to="copy that" />
-		<Word from="Welldone" to="Well done" />
-		<Word from="welldone" to="well done" />
-		<Word from="Rotin" to="Rot in" />
-		<Word from="rotin" to="rot in" />
-		<Word from="Imiss" to="I miss" />
-		<Word from="Ihelpedyou" to="I helped you" />
-		<Word from="Ineedyou" to="I need you" />
-		<Word from="Ishouldhave" to="I should have" />
-		<Word from="whatl" to="what I" />
-		<Word from="meatpopsicle" to="meat popsicle" />
-		<Word from="Forreal" to="For real" />
-		<Word from="forreal" to="for real" />
-		<Word from="Ifone" to="If one" />
-		<Word from="ifone" to="if one" />
-		<Word from="Coveryour" to="Cover your" />
-		<Word from="coveryour" to="cover your" />
-		<Word from="Allnew" to="All new" />
-		<Word from="allnew" to="all new" />
-		<Word from="Manyyears" to="Many years" />
-		<Word from="manyyears" to="many years" />Iflmake
-		<Word from="Iflmake" to="If I make" />
-		<Word from="iflmake" to="if I make" />
-		<Word from="Forl" to="For I" />
-		<Word from="forl" to="for I" />
-		<Word from="Forlknow" to="For I know" />
-		<Word from="forlknow" to="for I know" />
-		<Word from="I'dbe" to="I'd be" />
-		<Word from="Andso" to="And so" />
-		<Word from="andso" to="and so" />
-		<Word from="Andan" to="And an" />
-		<Word from="andan" to="and an" />
-		<Word from="Andlet's" to="And let's" />
-		<Word from="andlet's" to="and let's" />
-		<Word from="Don'tbe" to="Don't be" />
-		<Word from="don'tbe" to="don't be" />
-		<Word from="Won'tbe" to="Won't be" />
-		<Word from="won'tbe" to="won't be" />
-		<Word from="Isn'the" to="Isn't he" />
-		<Word from="Isn'tshe" to="Isn't she" />
-		<Word from="Isn'tit" to="Isn't it" />
-		<Word from="I'dlike" to="I'd like" />
-		<Word from="Justyou" to="Just you" />
-		<Word from="justyou" to="just you" />
-		<Word from="Justyour" to="Just your" />
-		<Word from="justyour" to="just your" />
-		<Word from="Withyou" to="With you" />
-		<Word from="withyou" to="with you" />
-		<Word from="Withyour" to="With your" />
-		<Word from="withyour" to="with your" />
-		<Word from="Air Drop" to="AirDrop" />
-		<Word from="So Ho" to="SoHo" />
-		<Word from="ofhonour" to="of honour" />
-		<Word from="It'sgot" to="It's got" />
-		<Word from="it'sgot" to="it's got" />
-		<Word from="I'vegot" to="I've got" />
-		<Word from="Mightbe" to="Might be" />
-		<Word from="mightbe" to="might be" />
-		<Word from="I'dlikeyou" to="I'd like you" />
-		<Word from="Let'sgo" to="Let's go" />
-		<Word from="let'sgo" to="let's go" />
-		<Word from="It'sgood" to="It's good" />
-		<Word from="I'mgood" to="I'm good" />
-		<Word from="Howmany" to="How many" />
-		<Word from="Lookhere" to="Look here" />
-		<Word from="Itsays" to="It says" />
-		<Word from="ofammo" to="of ammo" />
-		<Word from="Alll" to="All I" />
-		<Word from="alll" to="all I" />
-		<Word from="Alll'd" to="All I'd" />
-		<Word from="alll'd" to="all I'd" />
-		<Word from="Alll've" to="All I've" />
-		<Word from="alll've" to="all I've" />
-		<Word from="Andyou'll" to="And you'll" />
-		<Word from="andyou'll" to="and you'll" />
-		<Word from="G.I.Joe" to="G.I. Joe" />
-		<Word from="Pleasejust" to="Please just" />
-		<Word from="pleasejust" to="please just" />
-		<Word from="No.Just" to="No. Just" />
-		<Word from="Oh.Jesus" to="Oh. Jesus" />
-		<Word from="oflthaca" to="of Ithaca" />
-		<Word from="Li'I" to="Li'l" />
-		<Word from="Geton" to="Get on" />
-		<Word from="Getup" to="Get up" />
-		<Word from="Stayon" to="Stay on" />
-		<Word from="Ineed" to="I need" />
-		<Word from="Waita" to="Wait a" />
-		<Word from="waita" to="wait a" />
-		<Word from="Waitan" to="Wait an" />
-		<Word from="waitan" to="wait an" />
-		<Word from="Yougotto" to="You got to" />
-		<Word from="Howlong" to="How long" />
-		<Word from="Ididthe" to="I did the" />
-		<Word from="bestlcould" to="best I could" />
-		<Word from="Imetyou" to="I met you" />
-		<Word from="Rogerthat" to="Roger that" />
-		<Word from="Whyis" to="Why is" />
-		<Word from="Haveyou" to="Have you" />
-		<Word from="whatlmean" to="what I mean" />
-		<Word from="whatlmeant" to="what I meant" />
-		<Word from="Tellyou" to="Tell you" />
-		<Word from="tellyou" to="tell you" />
-		<Word from="Andlknow" to="And I know" />
-		<Word from="andlknow" to="and I know" />
-		<Word from="Knowthatl" to="Know that I" />
-		<Word from="knowthatl" to="know that I" />
-		<Word from="Whatif" to="What if" />
-		<Word from="Sayyou'll" to="Say you'll" />
-		<Word from="sayyou'll" to="say you'll" />
-		<Word from="Thatyou've" to="That you've" />
-		<Word from="thatyou've" to="that you've" />
-		<Word from="Andbe" to="And be" />
-		<Word from="andbe" to="and be" />
-		<Word from="Likeyou're" to="Like you're" />
-		<Word from="likeyou're" to="like you're" />
-		<Word from="Couldthis" to="Could this" />
-		<Word from="Willhe" to="Will he" />
-		<Word from="Willshe" to="Will she" />
-		<Word from="Willthey" to="Will they" />
-		<Word from="Iflknow" to="If I know" />
-		<Word from="iflknow" to="if I know" />
-		<Word from="Iflknew" to="If I knew" />
-		<Word from="iflknew" to="if I knew" />
-		<Word from="Iknowthe" to="I know the" />
-		<Word from="Iknowthese" to="I know these" />
-		<Word from="Iknowthat" to="I know that" />
-		<Word from="IhopeI" to="I hope I" />
-		<Word from="Ihopeyou" to="I hope you" />
-		<Word from="Ihopehe" to="I hope he" />
-		<Word from="Ihopeshe" to="I hope she" />
-		<Word from="Ihopeit" to="I hope it" />
-		<Word from="Ofwhat's" to="Of what's" />
-		<Word from="ofwhat's" to="of what's" />
-		<Word from="Feelthe" to="Feel the" />
-		<Word from="feelthe" to="feel the" />
-		<Word from="Feelthat" to="Feel that" />
-		<Word from="feelthat" to="feel that" />
-		<Word from="butlam" to="but I am" />
-		<Word from="Yougot" to="You got" />
-		<Word from="Ican'thelp" to="I can't help" />
-		<Word from="Didhe" to="Did he" />
-		<Word from="Didshe" to="Did she" />
-		<Word from="Didit" to="Did it" />
-		<Word from="Didthey" to="Did they" />
-		<Word from="I'mgonna" to="I'm gonna" />
-		<Word from="Letme" to="Let me" />
-		<Word from="Ionce" to="I once" />
-		<Word from="hada" to="had a" />
-		<Word from="agod" to="a god" />
-		<Word from="aguru" to="a guru" />
-		<Word from="Igetthat" to="I get that" />
-		<Word from="Oryou" to="Or you" />
-		<Word from="andl'll" to="and I'll" />
-		<Word from="Itain't" to="It ain't" />
-		<Word from="Itain'ttoo" to="It ain't too" />
-		<Word from="Thatcan" to="That can" />
-		<Word from="thatcan" to="that can" />
-		<Word from="Offthe" to="Off the" />
-		<Word from="offthe" to="off the" />
-		<Word from="andl'm" to="and I'm" />
-		<Word from="Whatlsee" to="What I see" />
-		<Word from="whatlsee" to="what I see" />
-		<Word from="Thatlsee" to="That I see" />
-		<Word from="thatlsee" to="that I see" />
-		<Word from="Ilike" to="I like" />
-		<Word from="Loveyou" to="Love you" />
-		<Word from="loveyou" to="love you" />
-		<Word from="Myguess" to="My guess" />
-		<Word from="myguess" to="my guess" />
-		<Word from="Ireada" to="I read a" />
-		<Word from="Ireadan" to="I read an" />
-		<Word from="Tellme" to="Tell me" />
-		<Word from="tellme" to="tell me" />
-		<Word from="Butcan'tdo" to="But can't do" />
-		<Word from="butcan'tdo" to="but can't do" />
-		<Word from="Butl'm" to="But I'm" />
-		<Word from="butl'm" to="but I'm" />
-		<Word from="knowllove" to="know I love" />
-		<Word from="Onceyou" to="Once you" />
-		<Word from="onceyou" to="once you" />
-		<Word from="Onceyour" to="Once your" />
-		<Word from="onceyour" to="once your" />
-		<Word from="Andthis" to="And this" />
-		<Word from="andthis" to="and this" />
-		<Word from="Andifthis" to="And if this" />
-		<Word from="andifthis" to="and if this" />
-		<Word from="Andifthat" to="And if that" />
-		<Word from="andifthat" to="and if that" />
-		<Word from="Andifthey" to="And if they" />
-		<Word from="andifthey" to="and if they" />
-		<Word from="Andifthose" to="And if those" />
-		<Word from="andifthose" to="and if those" />
-		<Word from="Thepress" to="The press" />
-		<Word from="thepress" to="the press" />
-		<Word from="Ineedisyou" to="I need is you" />
-		<Word from="Andall" to="And all" />
-		<Word from="andall" to="and all" />
-		<Word from="Oryour" to="Or your" />
-		<Word from="Sojoin" to="So join" />
-		<Word from="ofjava" to="of java" />
-		<Word from="Forthis" to="For this" />
-		<Word from="forthis" to="for this" />
-		<Word from="Forthat" to="For that" />
-		<Word from="forthat" to="for that" />
-		<Word from="Ofthis" to="Of this" />
-		<Word from="Ofthat" to="Of that" />
-		<Word from="Ifl've" to="If I've" />
-		<Word from="lfl've" to="If I've" />
-		<Word from="ifl've" to="if I've" />
-		<Word from="offun" to="of fun" />
-		<Word from="Forhis" to="For his" />
-		<Word from="Forher" to="For her" />
-		<Word from="Forits" to="For its" />
-		<Word from="Offto" to="Off to" />
-		<Word from="Don'tknow" to="Don't know" />
-		<Word from="doin'to" to="doin' to" />
-		<Word from="Ourjobs" to="Our jobs" />
-		<Word from="Ourjob's" to="Our job's" />
-		<Word from="Butit'll" to="But it'll" />
-		<Word from="Butl'll" to="But l'll" />
-		<Word from="ButI'll" to="But I'll" />
-		<Word from="ithas" to="it has" />
-		<Word from="Ithas" to="It has" />
-		<Word from="Ifeelmy" to="I feel my" />
-		<Word from="Setme" to="Set me" />
-		<Word from="Mybody" to="My body" />
-		<Word from="Ofgold" to="Of gold" />
-		<Word from="NARRA TOR" to="NARRATOR" />
-		<Word from="athis" to="at his" />
-		<Word from="thejugular" to="the jugular" />
-		<Word from="losef" to="Iosef" />
-		<Word from="Couldbe" to="Could be" />
-		<Word from="Andnow" to="And now" />
-		<Word from="Aroundhere" to="Around here" />
-		<Word from="bya" to="by a" />
-		<Word from="ofus" to="of us" />
-		<Word from="ofltaly" to="of Italy" />
-		</WholeWords>
+		<Word from="Ofmaking" to="Of making" />		
+		<Word from="you'II" to="you'll" />		
+		<Word from="he'II" to="he'll" />
+		<Word from="we'II" to="we'll" />
+		<Word from="I'II" to="I'll" />
+	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->
 		<WordPart from="¤" to="o" />
@@ -3789,22 +2855,6 @@
 		<WordPart from="¤" to="o" />
 		<WordPart from="vx/" to="w" />
 		<WordPart from="O" to="Q" />
-
-		<WordPart from="RlN" to="RIN" />
-		<WordPart from="SlC" to="SIC" />
-		<WordPart from="YlN" to="YIN" />
-		<WordPart from="OlN" to="OIN" />
-		<WordPart from="NlN" to="NIN" />
-		<WordPart from="RlN" to="RIN" />
-		<WordPart from="JlM" to="JIM" />
-		<WordPart from="GlG" to="GIG" />
-		<WordPart from="LlM" to="LIM" />
-		<WordPart from="LlN" to="LIN" />
-		<WordPart from="HlN" to="HIN" />
-
-
-		<WordPart from="l&lt;" to="k" />
-		<WordPart from="I&lt;" to="k" />
 	</PartialWords>
 	<WholeLines>
 		<!-- Whole lines - including -" etc -->
@@ -3824,7 +2874,6 @@
 		<Line from="ISIGHS]" to="[SIGHS]" />
 	</WholeLines>
 	<PartialLinesAlways>
-		<WordPart from="''" to="&quot;" />		
 		<LinePart from="forbest act" to="for best act" />
 		<LinePart from="Apollo 1 3" to="Apollo 13" />
 		<LinePart from=",.," to="..." />
@@ -3834,9 +2883,6 @@
 		<LinePart from=". lf " to=". If " />
 		<LinePart from=" . " to=". " />
 		<LinePart from=". Lt " to=". It " />
-		<LinePart from="♪ ♪ ♪" to="♪♪♪" />
-		<LinePart from="♪ ♪" to="♪♪" />
-		<LinePart from="Whats App" to="WhatsApp" />
 	</PartialLinesAlways>
 	<PartialLines>
 		<LinePart from=" /be " to=" I be " />
@@ -4125,8 +3171,8 @@
 		<LinePart from=" l'll " to=" I'll " />
 		<LinePart from="&quot;uns " to="'uns " />
 		<LinePart from="'L " to="I " />
-		<!-- Do not correct slang <LinePart from="D'you" to="Do you" /> -->
-		<!-- Do not correct slang <LinePart from="d'you" to="do you" /> -->
+		<LinePart from="D'you" to="Do you" />
+		<LinePart from="d'you" to="do you" />
 		<LinePart from="He' ll" to="He'll" />
 		<LinePart from="he' ll" to="he'll" />
 		<LinePart from="I' ll" to="I'll" />
@@ -4161,7 +3207,6 @@
 		<LinePart from="ofb" to="of b" />
 		<LinePart from="ofM" to="of M" />
 		<LinePart from="ofS" to="of S" />
-		<LinePart from="Epi Pen" to="EpiPen" />
 	</PartialLines>
 	<BeginLines>
 		<Beginning from="lgot it" to="I got it" />
@@ -4256,6 +3301,7 @@
 		<Beginning from="lt'syour" to="It's your" />
 		<Beginning from="It'syour" to="It's your" />
 		<Beginning from="Ls " to="Is " />
+		<Beginning from="ls " to="Is " />
 		<Beginning from="I ve " to="I've " />
 		<Beginning from="I ii " to="I'll " />
 		<Beginning from="I m " to="I'm " />
@@ -4321,6 +3367,9 @@
 		<Ending from=" ." to="." />
 		<Ending from=" !" to="!" />
 		<Ending from=" lf " to=" if " />
+		<Ending from="Therel" to="There!" />
+		<Ending from=" therel" to=" there!" />
+		<Ending from=" herel" to=" here!" />
 	</EndLines>
 	<RegularExpressions>
 		<RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
@@ -4346,14 +3395,24 @@
 		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
 		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
 		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
-		<RegEx find="([^0-9],)([0-9].*)" replaceWith="$1 $2" />
-		<RegEx find="([0-9])\s\-(inch)" replaceWith="$1-$2" />
-		<RegEx find="([0-9])\s*\-\s*([0-9])" replaceWith="$1-$2" />
-		<RegEx find="([0-9])\s(°)" replaceWith="$1$2" />
-		<RegEx find="([fF]or|[aA]fter|[dD]uring|been)([0-9].*)([yY]ears?)" replaceWith="$1 $2 $3" />
-		<RegEx find="(?i)(hawaii)\s(an\b)" replaceWith="$1$2" />
-		<RegEx find="(?i)(hawaii)\s(an\b)" replaceWith="$1$2" />
-		<RegEx find="\bSo\sHo\b" replaceWith="SoHo" />
-		<RegEx find="([A-Za-z]+)(0)([A-Za-z]+)" replaceWith="$1o$3" />
 	</RegularExpressions>
+	<RegularExpressionsIfSpelledCorrectly>
+		<RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />		
+		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)I([a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- David's (spell check "David") -->
+		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- there's  (spell check "there") -->
+		<RegEx find="\bl([a-zæøåöääöéèàùâêîôûëï]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+		<RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
+    	<RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    	<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
+		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)II([a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" /> <!-- chaIIenge → challenge -->
+		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)I([a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" /> <!-- traiIing → trailing -->		
+		<RegEx find="\bI([a-zæøåöääöéèàùâêîôûëï]{3,})\b" spellCheck="l$1" replaceWith="l$1" /> <!-- Iaunch → launch, but NOT Is -->
+        <RegEx find="\bof([A-Z][a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1" replaceWith="of $1" /> <!-- ofDavid → of David -->
+        <RegEx find="\bin([A-Z][a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1" replaceWith="in $1" /> <!-- inLondon → in London -->
+		<RegEx find="\bl\b" replaceWith="I" /> <!-- lowercase l (L) to I (i) -->
+		<RegEx find="\[([A-Z ]*)l([A-Z ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" /> <!-- [GEARS GRlNDlNG] to [GEARS GRINDING] -->
+		<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+	</RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

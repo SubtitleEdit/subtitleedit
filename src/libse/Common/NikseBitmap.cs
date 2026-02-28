@@ -1,7 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -47,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _bitmapData = bitmapData;
         }
 
-        public NikseBitmap(Bitmap inputBitmap)
+        public NikseBitmap(SKBitmap inputBitmap)
         {
             if (inputBitmap == null)
             {
@@ -57,21 +56,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             Width = inputBitmap.Width;
             Height = inputBitmap.Height;
             bool createdNewBitmap = false;
-            if (inputBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+            if (inputBitmap.ColorType != SKColorType.Bgra8888)
             {
-                var newBitmap = new Bitmap(inputBitmap.Width, inputBitmap.Height, PixelFormat.Format32bppArgb);
-                using (var gr = Graphics.FromImage(newBitmap))
+                var info = new SKImageInfo(inputBitmap.Width, inputBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+                var newBitmap = new SKBitmap(info);
+                using (var canvas = new SKCanvas(newBitmap))
                 {
-                    gr.DrawImage(inputBitmap, 0, 0);
+                    canvas.DrawBitmap(inputBitmap, 0, 0);
                 }
                 inputBitmap = newBitmap;
                 createdNewBitmap = true;
             }
 
-            var bitmapData = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            _bitmapData = new byte[bitmapData.Stride * Height];
-            Marshal.Copy(bitmapData.Scan0, _bitmapData, 0, _bitmapData.Length);
-            inputBitmap.UnlockBits(bitmapData);
+            // Copy pixel data from SKBitmap.
+            int byteCount = inputBitmap.ByteCount;
+            _bitmapData = new byte[byteCount];
+            // GetPixels returns pointer to the underlying byte array.
+            Marshal.Copy(inputBitmap.GetPixels(), _bitmapData, 0, byteCount);
             if (createdNewBitmap)
             {
                 inputBitmap.Dispose();
@@ -153,13 +154,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public void ReplaceTransparentWith(Color c)
+        public void ReplaceTransparentWith(SKColor c)
         {
             var buffer = new byte[4];
-            buffer[0] = c.B;
-            buffer[1] = c.G;
-            buffer[2] = c.R;
-            buffer[3] = c.A;
+            buffer[0] = c.Blue;
+            buffer[1] = c.Green;
+            buffer[2] = c.Red;
+            buffer[3] = c.Alpha;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 if (_bitmapData[i + 3] < 10)
@@ -169,13 +170,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public void MakeOneColor(Color c)
+        public void MakeOneColor(SKColor c)
         {
             var buffer = new byte[4];
-            buffer[0] = c.B;
-            buffer[1] = c.G;
-            buffer[2] = c.R;
-            buffer[3] = c.A;
+            buffer[0] = c.Blue;
+            buffer[1] = c.Green;
+            buffer[2] = c.Red;
+            buffer[3] = c.Alpha;
 
             var bufferTransparent = new byte[4];
             bufferTransparent[0] = 0;
@@ -188,14 +189,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private static Color GetOutlineColor(Color borderColor)
+        private static SKColor GetOutlineColor(SKColor borderColor)
         {
-            if (borderColor.R + borderColor.G + borderColor.B < 30)
+            if (borderColor.Red + borderColor.Green + borderColor.Blue < 30)
             {
-                return Color.FromArgb(200, 75, 75, 75);
+                return new SKColor(75, 75, 75, 200);
             }
 
-            return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
+            return new SKColor(borderColor.Red, borderColor.Green, borderColor.Blue, 150);
         }
 
         /// <summary>
@@ -205,34 +206,34 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="pattern">Pattern color, normally white or yellow</param>
         /// <param name="emphasis1">Emphasis 1, normally black or near black (border)</param>
         /// <param name="useInnerAntialize"></param>
-        public Color ConvertToFourColors(Color background, Color pattern, Color emphasis1, bool useInnerAntialize)
+        public SKColor ConvertToFourColors(SKColor background, SKColor pattern, SKColor emphasis1, bool useInnerAntialize)
         {
             var backgroundBuffer = new byte[4];
-            backgroundBuffer[0] = background.B;
-            backgroundBuffer[1] = background.G;
-            backgroundBuffer[2] = background.R;
-            backgroundBuffer[3] = background.A;
+            backgroundBuffer[0] = background.Blue;
+            backgroundBuffer[1] = background.Green;
+            backgroundBuffer[2] = background.Red;
+            backgroundBuffer[3] = background.Alpha;
 
             var patternBuffer = new byte[4];
-            patternBuffer[0] = pattern.B;
-            patternBuffer[1] = pattern.G;
-            patternBuffer[2] = pattern.R;
-            patternBuffer[3] = pattern.A;
+            patternBuffer[0] = pattern.Blue;
+            patternBuffer[1] = pattern.Green;
+            patternBuffer[2] = pattern.Red;
+            patternBuffer[3] = pattern.Alpha;
 
             var emphasis1Buffer = new byte[4];
-            emphasis1Buffer[0] = emphasis1.B;
-            emphasis1Buffer[1] = emphasis1.G;
-            emphasis1Buffer[2] = emphasis1.R;
-            emphasis1Buffer[3] = emphasis1.A;
+            emphasis1Buffer[0] = emphasis1.Blue;
+            emphasis1Buffer[1] = emphasis1.Green;
+            emphasis1Buffer[2] = emphasis1.Red;
+            emphasis1Buffer[3] = emphasis1.Alpha;
 
             var emphasis2Buffer = new byte[4];
             var emphasis2 = GetOutlineColor(emphasis1);
             if (!useInnerAntialize)
             {
-                emphasis2Buffer[0] = emphasis2.B;
-                emphasis2Buffer[1] = emphasis2.G;
-                emphasis2Buffer[2] = emphasis2.R;
-                emphasis2Buffer[3] = emphasis2.A;
+                emphasis2Buffer[0] = emphasis2.Blue;
+                emphasis2Buffer[1] = emphasis2.Green;
+                emphasis2Buffer[2] = emphasis2.Red;
+                emphasis2Buffer[3] = emphasis2.Alpha;
             }
 
             for (int i = 0; i < _bitmapData.Length; i += 4)
@@ -289,32 +290,32 @@ namespace Nikse.SubtitleEdit.Core.Common
             return emphasis2;
         }
 
-        private Color VobSubAntialize(Color pattern, Color emphasis1)
+        private SKColor VobSubAntialize(SKColor pattern, SKColor emphasis1)
         {
-            int r = (int)Math.Round(((pattern.R * 2.0 + emphasis1.R) / 3.0));
-            int g = (int)Math.Round(((pattern.G * 2.0 + emphasis1.G) / 3.0));
-            int b = (int)Math.Round(((pattern.B * 2.0 + emphasis1.B) / 3.0));
-            var antializeColor = Color.FromArgb(r, g, b);
+            int r = (int)Math.Round(((pattern.Red * 2.0 + emphasis1.Red) / 3.0));
+            int g = (int)Math.Round(((pattern.Green * 2.0 + emphasis1.Green) / 3.0));
+            int b = (int)Math.Round(((pattern.Blue * 2.0 + emphasis1.Blue) / 3.0));
+            var antializeColor = new SKColor((byte)r, (byte)g, (byte)b, 255);
 
             for (int y = 1; y < Height - 1; y++)
             {
                 for (int x = 1; x < Width - 1; x++)
                 {
-                    if (GetPixel(x, y) == pattern)
+                    if (GetPixel(x, y).Equals(pattern))
                     {
-                        if (GetPixel(x - 1, y) == emphasis1 && GetPixel(x, y - 1) == emphasis1)
+                        if (GetPixel(x - 1, y).Equals(emphasis1) && GetPixel(x, y - 1).Equals(emphasis1))
                         {
                             SetPixel(x, y, antializeColor);
                         }
-                        else if (GetPixel(x - 1, y) == emphasis1 && GetPixel(x, y + 1) == emphasis1)
+                        else if (GetPixel(x - 1, y).Equals(emphasis1) && GetPixel(x, y + 1).Equals(emphasis1))
                         {
                             SetPixel(x, y, antializeColor);
                         }
-                        else if (GetPixel(x + 1, y) == emphasis1 && GetPixel(x, y + 1) == emphasis1)
+                        else if (GetPixel(x + 1, y).Equals(emphasis1) && GetPixel(x, y + 1).Equals(emphasis1))
                         {
                             SetPixel(x, y, antializeColor);
                         }
-                        else if (GetPixel(x + 1, y) == emphasis1 && GetPixel(x, y - 1) == emphasis1)
+                        else if (GetPixel(x + 1, y).Equals(emphasis1) && GetPixel(x, y - 1).Equals(emphasis1))
                         {
                             SetPixel(x, y, antializeColor);
                         }
@@ -325,31 +326,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             return antializeColor;
         }
 
-        public RunLengthTwoParts RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
+        public RunLengthTwoParts RunLengthEncodeForDvd(SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
         {
             var backgroundBuffer = new byte[4];
-            backgroundBuffer[0] = background.B;
-            backgroundBuffer[1] = background.G;
-            backgroundBuffer[2] = background.R;
-            backgroundBuffer[3] = background.A;
+            backgroundBuffer[0] = background.Blue;
+            backgroundBuffer[1] = background.Green;
+            backgroundBuffer[2] = background.Red;
+            backgroundBuffer[3] = background.Alpha;
 
             var patternBuffer = new byte[4];
-            patternBuffer[0] = pattern.B;
-            patternBuffer[1] = pattern.G;
-            patternBuffer[2] = pattern.R;
-            patternBuffer[3] = pattern.A;
+            patternBuffer[0] = pattern.Blue;
+            patternBuffer[1] = pattern.Green;
+            patternBuffer[2] = pattern.Red;
+            patternBuffer[3] = pattern.Alpha;
 
             var emphasis1Buffer = new byte[4];
-            emphasis1Buffer[0] = emphasis1.B;
-            emphasis1Buffer[1] = emphasis1.G;
-            emphasis1Buffer[2] = emphasis1.R;
-            emphasis1Buffer[3] = emphasis1.A;
+            emphasis1Buffer[0] = emphasis1.Blue;
+            emphasis1Buffer[1] = emphasis1.Green;
+            emphasis1Buffer[2] = emphasis1.Red;
+            emphasis1Buffer[3] = emphasis1.Alpha;
 
             var emphasis2Buffer = new byte[4];
-            emphasis2Buffer[0] = emphasis2.B;
-            emphasis2Buffer[1] = emphasis2.G;
-            emphasis2Buffer[2] = emphasis2.R;
-            emphasis2Buffer[3] = emphasis2.A;
+            emphasis2Buffer[0] = emphasis2.Blue;
+            emphasis2Buffer[1] = emphasis2.Green;
+            emphasis2Buffer[2] = emphasis2.Red;
+            emphasis2Buffer[3] = emphasis2.Alpha;
 
             var bufferEqual = new byte[Width * Height];
             var bufferUnEqual = new byte[Width * Height];
@@ -682,7 +683,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <returns>Pixels cropped left</returns>
-        public int CropSidesAndBottom(int maximumCropping, Color transparentColor, bool bottom)
+        public int CropSidesAndBottom(int maximumCropping, SKColor transparentColor, bool bottom)
         {
             int leftStart = 0;
             bool done = false;
@@ -694,7 +695,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 while (!done && y < Height)
                 {
                     var c = GetPixel(x, y);
-                    if (c != transparentColor)
+                    if (!c.Equals(transparentColor))
                     {
                         done = true;
                         leftStart = x;
@@ -720,7 +721,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 while (!done && y < Height)
                 {
                     var c = GetPixel(x, y);
-                    if (c != transparentColor)
+                    if (!c.Equals(transparentColor))
                     {
                         done = true;
                         rightEnd = x;
@@ -749,7 +750,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     while (!done && x < Width)
                     {
                         var c = GetPixel(x, y);
-                        if (c != transparentColor)
+                        if (!c.Equals(transparentColor))
                         {
                             done = true;
                             newHeight = y + maximumCropping;
@@ -793,7 +794,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return leftStart;
         }
 
-        public void CropTop(int maximumCropping, Color transparentColor)
+        public void CropTop(int maximumCropping, SKColor transparentColor)
         {
             bool done = false;
             int newTop = 0;
@@ -804,7 +805,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 while (!done && x < Width)
                 {
                     var c = GetPixel(x, y);
-                    if (c != transparentColor && !(c.A == 0 && transparentColor.A == 0))
+                    if (!c.Equals(transparentColor) && !(c.Alpha == 0 && transparentColor.Alpha == 0))
                     {
                         done = true;
                         newTop = y - maximumCropping;
@@ -886,7 +887,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newTop;
         }
 
-        public int CalcTopCropping(Color color)
+        public int CalcTopCropping(SKColor color)
         {
             var y = 0;
             for (; y < Height; y++)
@@ -900,7 +901,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return y;
         }
 
-        public int CalcBottomCropping(Color color)
+        public int CalcBottomCropping(SKColor color)
         {
             var y = Height - 1;
             for (; y > 0; y--)
@@ -928,7 +929,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Height - y;
         }
 
-        public int CalcLeftCropping(Color color)
+        public int CalcLeftCropping(SKColor color)
         {
             var x = 0;
             for (; x < Width; x++)
@@ -942,7 +943,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             return x;
         }
 
-        public int CalcRightCropping(Color color)
+        public int CalcLeftCroppingTransparent()
+        {
+            var x = 0;
+            for (; x < Width; x++)
+            {
+                if (!IsVerticalLineTransparent(x))
+                {
+                    break;
+                }
+            }
+
+            return x;
+        }
+
+        public int CalcRightCropping(SKColor color)
         {
             var x = Width - 1;
             for (; x > 0; x--)
@@ -956,7 +971,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Width - x;
         }
 
-        public bool IsVerticalLineColor(int x, Color color)
+        public bool IsVerticalLineColor(int x, SKColor color)
         {
             for (var y = 0; y < Height; y++)
             {
@@ -969,7 +984,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public bool IsHorizontalLineColor(int y, Color color)
+        public bool IsHorizontalLineColor(int y, SKColor color)
         {
             for (var x = 0; x < Width; x++)
             {
@@ -995,13 +1010,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public void Fill(Color color)
+        public void Fill(SKColor color)
         {
             var buffer = new byte[4];
-            buffer[0] = color.B;
-            buffer[1] = color.G;
-            buffer[2] = color.R;
-            buffer[3] = color.A;
+            buffer[0] = color.Blue;
+            buffer[1] = color.Green;
+            buffer[2] = color.Red;
+            buffer[3] = color.Alpha;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
@@ -1018,10 +1033,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return _bitmapData[index];
         }
 
-        public Color GetPixel(int x, int y)
+        public SKColor GetPixel(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);
-            return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
+            return new SKColor(
+                _bitmapData[_pixelAddress + 2], // red
+                _bitmapData[_pixelAddress + 1], // green
+                _bitmapData[_pixelAddress],     // blue
+                _bitmapData[_pixelAddress + 3]  // alpha
+            );
         }
 
         public byte[] GetPixelColors(int x, int y)
@@ -1030,39 +1050,42 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
-        public Color GetPixelNext()
+        public SKColor GetPixelNext()
         {
             _pixelAddress += 4;
-            return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
+            return new SKColor(
+                _bitmapData[_pixelAddress + 2], // red
+                _bitmapData[_pixelAddress + 1], // green
+                _bitmapData[_pixelAddress],     // blue
+                _bitmapData[_pixelAddress + 3]  // alpha
+            );
         }
 
-        public void SetPixel(int x, int y, Color color)
+        public void SetPixel(int x, int y, SKColor color)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);
-            _bitmapData[_pixelAddress] = color.B;
-            _bitmapData[_pixelAddress + 1] = color.G;
-            _bitmapData[_pixelAddress + 2] = color.R;
-            _bitmapData[_pixelAddress + 3] = color.A;
+            _bitmapData[_pixelAddress] = color.Blue;
+            _bitmapData[_pixelAddress + 1] = color.Green;
+            _bitmapData[_pixelAddress + 2] = color.Red;
+            _bitmapData[_pixelAddress + 3] = color.Alpha;
         }
 
-        public Bitmap GetBitmap()
+        public SKBitmap GetBitmap()
         {
-            var bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            var destination = bitmapData.Scan0;
-            Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
-            bitmap.UnlockBits(bitmapData);
-            return bitmap;
+            var skBitmap = new SKBitmap(Width, Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            var pixels = skBitmap.GetPixels();
+            Marshal.Copy(_bitmapData, 0, pixels, _bitmapData.Length);
+            return skBitmap;
         }
 
-        private static int FindBestMatch(Color color, List<Color> palette, out int maxDiff)
+        private static int FindBestMatch(SKColor color, List<SKColor> palette, out int maxDiff)
         {
             int smallestDiff = 1000;
             int smallestDiffIndex = -1;
             int i = 0;
             foreach (var pc in palette)
             {
-                int diff = Math.Abs(pc.A - color.A) + Math.Abs(pc.R - color.R) + Math.Abs(pc.G - color.G) + Math.Abs(pc.B - color.B);
+                int diff = Math.Abs(pc.Alpha - color.Alpha) + Math.Abs(pc.Red - color.Red) + Math.Abs(pc.Green - color.Green) + Math.Abs(pc.Blue - color.Blue);
                 if (diff < smallestDiff)
                 {
                     smallestDiff = diff;
@@ -1081,29 +1104,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             return smallestDiffIndex;
         }
 
-        public Bitmap ConvertTo8BitsPerPixel()
+        public SKBitmap ConvertTo8BitsPerPixel()
         {
-            var newBitmap = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
-            var palette = new List<Color> { Color.Transparent };
-            var bPalette = newBitmap.Palette;
-            var entries = bPalette.Entries;
-            for (int i = 0; i < newBitmap.Palette.Entries.Length; i++)
-            {
-                entries[i] = Color.Transparent;
-            }
-
-            var data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
-            var bytes = new byte[data.Height * data.Stride];
-            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+            var newBitmap = new SKBitmap(Width, Height, SKColorType.Gray8, SKAlphaType.Opaque);
+            var palette = new List<SKColor> { SKColors.Transparent };
+            var pixels = new byte[Width * Height];
 
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
                     var c = GetPixel(x, y);
-                    if (c.A < 5)
+                    if (c.Alpha < 5)
                     {
-                        bytes[y * data.Stride + x] = 0;
+                        pixels[y * Width + x] = 0;
                     }
                     else
                     {
@@ -1112,48 +1126,52 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (index == -1 && palette.Count < 255)
                         {
                             index = palette.Count;
-                            entries[index] = c;
                             palette.Add(c);
-                            bytes[y * data.Stride + x] = (byte)index;
+                            pixels[y * Width + x] = (byte)index;
                         }
                         else if (palette.Count < 200 && maxDiff > 5)
                         {
                             index = palette.Count;
-                            entries[index] = c;
                             palette.Add(c);
-                            bytes[y * data.Stride + x] = (byte)index;
+                            pixels[y * Width + x] = (byte)index;
                         }
                         else if (palette.Count < 255 && maxDiff > 15)
                         {
                             index = palette.Count;
-                            entries[index] = c;
                             palette.Add(c);
-                            bytes[y * data.Stride + x] = (byte)index;
+                            pixels[y * Width + x] = (byte)index;
                         }
                         else if (index >= 0)
                         {
-                            bytes[y * data.Stride + x] = (byte)index;
+                            pixels[y * Width + x] = (byte)index;
                         }
                     }
                 }
             }
 
-            Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
-            newBitmap.UnlockBits(data);
-            newBitmap.Palette = bPalette;
+            // Copy pixels to the new bitmap
+            IntPtr destPtr = newBitmap.GetPixels();
+            Marshal.Copy(pixels, 0, destPtr, pixels.Length);
+
             return newBitmap;
         }
 
-        public NikseBitmap CopyRectangle(Rectangle section)
+        public NikseBitmap CopyRectangle(SKRect section)
+        {
+            var rect = new SKRectI((int)section.Left, (int)section.Top, (int)section.Width, (int)section.Height);
+            return CopyRectangle(rect);
+        }
+
+        public NikseBitmap CopyRectangle(SKRectI section)
         {
             if (section.Bottom > Height)
             {
-                section = new Rectangle(section.Left, section.Top, section.Width, Height - section.Top);
+                section = new SKRectI(section.Left, section.Top, section.Width, Height - section.Top);
             }
 
             if (section.Width + section.Left > Width)
             {
-                section = new Rectangle(section.Left, section.Top, Width - section.Left, section.Height);
+                section = new SKRectI(section.Left, section.Top, Width - section.Left, section.Height);
             }
 
             var newBitmapData = new byte[section.Width * section.Height * 4];
@@ -1173,28 +1191,28 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <summary>
         /// Returns brightest color (not white though)
         /// </summary>
-        /// <returns>Brightest color, if not found or if brightes color is white, then Color.Transparent is returned</returns>
-        public Color GetBrightestColorWhiteIsTransparent()
+        /// <returns>Brightest color, if not found or if brightes color is white, then transparent color is returned</returns>
+        public SKColor GetBrightestColorWhiteIsTransparent()
         {
             int max = Width * Height - 4;
-            var brightest = Color.Black;
+            var brightest = SKColors.Black;
             for (int i = 0; i < max; i++)
             {
                 var c = GetPixelNext();
-                if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
+                if (c.Alpha > 220 && c.Red + c.Green + c.Blue > 200 && c.Red + c.Green + c.Blue > brightest.Red + brightest.Green + brightest.Blue)
                 {
                     brightest = c;
                 }
             }
 
-            if (IsColorClose(Color.White, brightest, 40))
+            if (IsColorClose(SKColors.White, brightest, 40))
             {
-                return Color.Transparent;
+                return SKColors.Transparent;
             }
 
-            if (IsColorClose(Color.Black, brightest, 10))
+            if (IsColorClose(SKColors.Black, brightest, 10))
             {
-                return Color.Transparent;
+                return SKColors.Transparent;
             }
 
             return brightest;
@@ -1204,14 +1222,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Returns brightest color
         /// </summary>
         /// <returns>Brightest color</returns>
-        public Color GetBrightestColor()
+        public SKColor GetBrightestColor()
         {
             int max = Width * Height - 4;
-            var brightest = Color.Black;
+            var brightest = SKColors.Black;
             for (int i = 0; i < max; i++)
             {
                 var c = GetPixelNext();
-                if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
+                if (c.Alpha > 220 && c.Red + c.Green + c.Blue > 200 && c.Red + c.Green + c.Blue > brightest.Red + brightest.Green + brightest.Blue)
                 {
                     brightest = c;
                 }
@@ -1220,9 +1238,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return brightest;
         }
 
-        private static bool IsColorClose(Color color1, Color color2, int maxDiff)
+        private static bool IsColorClose(SKColor color1, SKColor color2, int maxDiff)
         {
-            if (Math.Abs(color1.R - color2.R) < maxDiff && Math.Abs(color1.G - color2.G) < maxDiff && Math.Abs(color1.B - color2.B) < maxDiff)
+            if (Math.Abs(color1.Red - color2.Red) < maxDiff &&
+                Math.Abs(color1.Green - color2.Green) < maxDiff &&
+                Math.Abs(color1.Blue - color2.Blue) < maxDiff)
             {
                 return true;
             }
@@ -1289,17 +1309,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public void MakeTwoColor(int minRgb, Color background, Color foreground)
+        public void MakeTwoColor(int minRgb, SKColor background, SKColor foreground)
         {
             var bufferBackground = new byte[4];
-            bufferBackground[0] = background.B; // B
-            bufferBackground[1] = background.G; // G
-            bufferBackground[2] = background.R; // R
+            bufferBackground[0] = background.Blue; // B
+            bufferBackground[1] = background.Green; // G
+            bufferBackground[2] = background.Red; // R
             bufferBackground[3] = 255; // A
             var bufferForeground = new byte[4];
-            bufferForeground[0] = foreground.B; // B
-            bufferForeground[1] = foreground.G; // G
-            bufferForeground[2] = foreground.R; // R
+            bufferForeground[0] = foreground.Blue; // B
+            bufferForeground[1] = foreground.Green; // G
+            bufferForeground[2] = foreground.Red; // R
             bufferForeground[3] = 255; // A
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
@@ -1351,7 +1371,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _bitmapData = newBitmapData;
             for (int y = 0; y < Height; y++)
             {
-                SetPixel(Width - 1, y, Color.Transparent);
+                SetPixel(Width - 1, y, SKColors.Transparent);
             }
         }
 
@@ -1402,10 +1422,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 for (int x = 0; x < Width; x++)
                 {
                     var c = GetPixel(x, y);
-                    pixels[offsetDest] = c.B;
-                    pixels[offsetDest + 1] = c.G;
-                    pixels[offsetDest + 2] = c.R;
-                    pixels[offsetDest + 3] = c.A;
+                    pixels[offsetDest] = c.Blue;
+                    pixels[offsetDest + 1] = c.Green;
+                    pixels[offsetDest + 2] = c.Red;
+                    pixels[offsetDest + 3] = c.Alpha;
                     offsetDest += 4;
                 }
             }
@@ -1436,9 +1456,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool IsVerticalLineTransparent(int x)
         {
+            int xOffset = x * 4 + 3;
             for (int y = 0; y < Height; y++)
             {
-                if (GetAlpha(x, y) > 0)
+                if (_bitmapData[xOffset + (y * _widthX4)] > 0)
                 {
                     return false;
                 }
@@ -1511,7 +1532,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Width - startX - transparentPixelsRight;
         }
 
-        public void EnsureEvenLines(Color fillColor)
+        public void EnsureEvenLines(SKColor fillColor)
         {
             if (Width % 2 == 0 && Height % 2 == 0)
             {
@@ -1588,13 +1609,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public void SetTransparentTo(Color transparent)
+        public void SetTransparentTo(SKColor transparent)
         {
             var buffer = new byte[4];
-            buffer[0] = transparent.B;
-            buffer[1] = transparent.G;
-            buffer[2] = transparent.R;
-            buffer[3] = transparent.A;
+            buffer[0] = transparent.Blue;
+            buffer[1] = transparent.Green;
+            buffer[2] = transparent.Red;
+            buffer[3] = transparent.Alpha;
             for (var i = 0; i < _bitmapData.Length; i += 4)
             {
                 if (_bitmapData[i + 3] == 0)

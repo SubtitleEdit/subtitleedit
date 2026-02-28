@@ -1,10 +1,10 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Interfaces
 {
     public interface IBinaryParagraphList
     {
-        Bitmap GetSubtitleBitmap(int index, bool crop = true);
+        SKBitmap GetSubtitleBitmap(int index, bool crop = true);
         bool GetIsForced(int index);
     }
 }

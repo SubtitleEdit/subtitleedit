@@ -64,6 +64,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            if (text.Contains("<rosetta:format>imsc-rosetta</rosetta:format>", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
             return text.Contains("profile/imsc1") && base.IsMine(lines, fileName);
         }
 

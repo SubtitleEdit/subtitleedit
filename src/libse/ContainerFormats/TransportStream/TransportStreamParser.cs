@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public long TotalNumberOfPackets { get; private set; }
         public long TotalNumberOfPrivateStream1 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
+        private HashSet<int> _subtitlePacketIdsLookup;
         public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; } // teletext
 
         private List<Packet> SubtitlePackets { get; set; }
@@ -47,6 +49,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             TotalNumberOfPackets = 0;
             TotalNumberOfPrivateStream1 = 0;
             SubtitlePacketIds = new List<int>();
+            _subtitlePacketIdsLookup = new HashSet<int>();
             SubtitlePackets = new List<Packet>();
             ms.Position = 0;
             const int packetLength = 188;
@@ -64,7 +67,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
             ms.Read(m2TsTimeCodeBuffer, 0, 3);
-            if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
+            var topfieldCheck = m2TsTimeCodeBuffer.AsSpan(0, 3);
+            if (topfieldCheck[0] == 0x54 && topfieldCheck[1] == 0x46 && topfieldCheck[2] == 0x72)
             {
                 position = 3760;
             }
@@ -111,11 +115,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         }
                     }
 
-                    else if (packet.IsPrivateStream1 || SubtitlePacketIds.Contains(packet.PacketId))
+                    else if (packet.IsPrivateStream1 || _subtitlePacketIdsLookup.Contains(packet.PacketId))
                     {
                         TotalNumberOfPrivateStream1++;
 
-                        if (!SubtitlePacketIds.Contains(packet.PacketId))
+                        if (_subtitlePacketIdsLookup.Add(packet.PacketId))
                         {
                             SubtitlePacketIds.Add(packet.PacketId);
                         }
@@ -182,7 +186,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             foreach (var id in TeletextSubtitlesLookup.Keys)
             {
-                SubtitlePacketIds = SubtitlePacketIds.Where(p => p != id).ToList();
+                SubtitlePacketIds.Remove(id);
+                _subtitlePacketIdsLookup.Remove(id);
                 SubtitlesLookup.Remove(id);
             }
 
@@ -231,15 +236,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (subList.Count > 0)
                     {
                         DvbSubtitlesLookup.Add(pid, subList);
-                        SubtitlePacketIds = SubtitlePacketIds.Where(p => p != pid).ToList();
+                        SubtitlePacketIds.Remove(pid);
+                        _subtitlePacketIdsLookup.Remove(pid);
                     }
                 }
             }
 
             SubtitlePacketIds.Clear();
-            foreach (int key in SubtitlesLookup.Keys)
+            _subtitlePacketIdsLookup.Clear();
+            SubtitlePacketIds.AddRange(SubtitlesLookup.Keys);
+            foreach (var key in SubtitlesLookup.Keys)
             {
-                SubtitlePacketIds.Add(key);
+                _subtitlePacketIdsLookup.Add(key);
             }
             SubtitlePacketIds.Sort();
 
@@ -307,11 +315,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             SubtitlePacketIds.Clear();
-            foreach (int key in DvbSubtitlesLookup.Keys)
+            _subtitlePacketIdsLookup.Clear();
+            foreach (var key in DvbSubtitlesLookup.Keys)
             {
-                if (DvbSubtitlesLookup[key].Count > 0 && !SubtitlePacketIds.Contains(key))
+                if (DvbSubtitlesLookup[key].Count > 0)
                 {
                     SubtitlePacketIds.Add(key);
+                    _subtitlePacketIdsLookup.Add(key);
                 }
             }
             SubtitlePacketIds.Sort();
@@ -327,8 +337,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 foreach (var inner in dic.Value)
                 {
-                    foreach (var p in inner.Value.Where(p => p.Text.IndexOf('<') >= 0))
+                    foreach (var p in inner.Value)
                     {
+                        if (p.Text.IndexOf('<') < 0)
+                        {
+                            continue;
+                        }
+
                         var sb = new StringBuilder();
                         foreach (var line in p.Text.SplitToLines())
                         {
@@ -521,18 +536,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         private static void AddPesPacket(List<DvbSubPes> list, List<Packet> packetList)
         {
-            int bufferSize = 0;
+            var bufferSize = 0;
             foreach (var p in packetList)
             {
                 bufferSize += p.Payload.Length;
             }
 
             var pesData = new byte[bufferSize];
-            int pesIndex = 0;
+            var span = pesData.AsSpan();
+            var offset = 0;
             foreach (var p in packetList)
             {
-                Buffer.BlockCopy(p.Payload, 0, pesData, pesIndex, p.Payload.Length);
-                pesIndex += p.Payload.Length;
+                p.Payload.AsSpan().CopyTo(span.Slice(offset));
+                offset += p.Payload.Length;
             }
 
             DvbSubPes pes;
@@ -553,30 +569,53 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public static bool IsM2TransportStream(Stream ms)
         {
-            if (ms.Length > 192 + 192 + 5)
+            const int requiredLength = 192 + 192 + 5;
+            if (ms.Length <= requiredLength)
             {
-                ms.Seek(0, SeekOrigin.Begin);
-                var buffer = new byte[192 + 192 + 5];
-                ms.Read(buffer, 0, buffer.Length);
-                if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
+                return false;
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+            var buffer = ArrayPool<byte>.Shared.Rent(requiredLength);
+            try
+            {
+                ms.Read(buffer, 0, requiredLength);
+                var span = buffer.AsSpan(0, requiredLength);
+                
+                // Check for standard 188-byte packets
+                if (span[0] == Packet.SynchronizationByte && span[188] == Packet.SynchronizationByte)
                 {
                     return false;
                 }
 
-                if (buffer[4] == Packet.SynchronizationByte && buffer[192 + 4] == Packet.SynchronizationByte && buffer[192 + 192 + 4] == Packet.SynchronizationByte)
+                // Check for M2TS 192-byte packets (4-byte timestamp + 188-byte packet)
+                if (span[4] == Packet.SynchronizationByte && 
+                    span[192 + 4] == Packet.SynchronizationByte && 
+                    span[192 + 192 + 4] == Packet.SynchronizationByte)
                 {
                     return true;
                 }
+
+                return false;
             }
-            return false;
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
         }
 
         public static bool IsDvbSup(string fileName)
         {
             try
             {
-                byte[] pesData = File.ReadAllBytes(fileName);
-                if (pesData[0] != 0x20 || pesData[1] != 0 || pesData[2] != 0x0F)
+                var pesData = File.ReadAllBytes(fileName);
+                if (pesData.Length < 3)
+                {
+                    return false;
+                }
+
+                var header = pesData.AsSpan(0, 3);
+                if (header[0] != 0x20 || header[1] != 0 || header[2] != 0x0F)
                 {
                     return false;
                 }

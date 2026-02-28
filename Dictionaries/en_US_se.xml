@@ -53,6 +53,7 @@
 	<word>accelerant</word>
 	<word>acidotic</word>
 	<word>actinium</word>
+	<word>adenocarcinoma</word>
 	<word>adenosine</word>
 	<word>adjustability</word>
 	<word>adorkable</word>
@@ -97,6 +98,7 @@
 	<word>arsons</word>
 	<word>arteritis</word>
 	<word>arthralgia</word>
+	<word>arthroplasty</word>
 	<word>artisanal</word>
 	<word>asshat</word>
 	<word>asshats</word>
@@ -123,6 +125,7 @@
 	<word>backways</word>
 	<word>badass</word>
 	<word>badasses</word>
+	<word>bam</word>
 	<word>barcode</word>
 	<word>barista</word>
 	<word>barium</word>
@@ -220,6 +223,7 @@
 	<word>cluelessness</word>
 	<word>co2</word>
 	<word>cobalt</word>
+	<word>codenames</word>
 	<word>colectomy</word>
 	<word>collywobbles</word>
 	<word>colonoscopy</word>
@@ -305,7 +309,6 @@
 	<word>dysesthesia</word>
 	<word>dysprosium</word>
 	<word>déjà vu</word>
-	<word>émigré</word>
 	<word>easy-peasy</word>
 	<word>einsteinium</word>
 	<word>electrocautery</word>
@@ -318,6 +321,7 @@
 	<word>enzymatically</word>
 	<word>episiotomy</word>
 	<word>erbium</word>
+	<word>esophagectomy</word>
 	<word>esophaguses</word>
 	<word>et cetera</word>
 	<word>euro</word>
@@ -432,8 +436,10 @@
 	<word>helium</word>
 	<word>heloooooo</word>
 	<word>hematoma</word>
+	<word>hemodynamically</word>
 	<word>hemodynamics</word>
 	<word>hemostasis</word>
+	<word>hemothorax</word>
 	<word>hentai</word>
 	<word>hiei</word>
 	<word>hijab</word>
@@ -460,6 +466,7 @@
 	<word>hypothermic</word>
 	<word>hypoxic</word>
 	<word>ileostomy</word>
+	<word>inadequates</word>
 	<word>imidazopyridine</word>
 	<word>immersive</word>
 	<word>immunotherapy</word>
@@ -537,6 +544,7 @@
 	<word>magnesium</word>
 	<word>magnetar</word>
 	<word>majordome</word>
+	<word>malunion</word>
 	<word>malware</word>
 	<word>manganese</word>
 	<word>manmade</word>
@@ -557,6 +565,7 @@
 	<word>meself</word>
 	<word>mesenteric</word>
 	<word>mesentery</word>
+	<word>mesocaval</word>
 	<word>mesothelioma</word>
 	<word>metadata</word>
 	<word>methodic</word>
@@ -599,6 +608,7 @@
 	<word>neighbour</word>
 	<word>neighbourhood</word>
 	<word>neighbours</word>
+	<word>neoadjuvant</word>
 	<word>neodymium</word>
 	<word>neon</word>
 	<word>nephrologist</word>
@@ -649,6 +659,7 @@
 	<word>osmium</word>
 	<word>osseointegrated</word>
 	<word>osseointegration</word>
+	<word>osteotomy</word>
 	<word>other's</word>
 	<word>otolaryngologist</word>
 	<word>oughta</word>
@@ -669,6 +680,7 @@
 	<word>p.m.</word>
 	<word>paddleboarding</word>
 	<word>palladium</word>
+	<word>pancreatitis</word>
 	<word>paprikash</word>
 	<word>paralyze</word>
 	<word>parents'</word>
@@ -678,6 +690,7 @@
 	<word>percutaneous</word>
 	<word>percutaneously</word>
 	<word>perfusionist</word>
+	<word>periarterial</word>
 	<word>pericardial</word>
 	<word>perimortem</word>
 	<word>periorbital</word>
@@ -762,6 +775,7 @@
 	<word>repurposed</word>
 	<word>repurposing</word>
 	<word>resect</word>
+	<word>resected</word>
 	<word>resecting</word>
 	<word>retargeting</word>
 	<word>retractor</word>
@@ -785,7 +799,9 @@
 	<word>saké</word>
 	<word>saltimbocca</word>
 	<word>samarium</word>
+	<word>saphenous</word>
 	<word>sayonara</word>
+	<word>scammer</word>	
 	<word>scandium</word>
 	<word>scarecop</word>
 	<word>scattershot</word>
@@ -918,9 +934,9 @@
 	<word>taxies</word>
 	<word>teardown</word>
 	<word>technetium</word>
-	<word>teleportation</word>
-	<word>teleportation</word>
 	<word>teleport</word>
+	<word>teleportation</word>
+	<word>teleportation</word>
 	<word>teleporting</word>
 	<word>tellurium</word>
 	<word>temporoparietal</word>
@@ -1075,184 +1091,25 @@
 	<word>zinc</word>
 	<word>zipline</word>
 	<word>zirconium</word>
-	<word>bam</word>
+	<word>émigré</word>
   	<word>besties</word>
+  	<word>chatbot</word>
+  	<word>chatbots</word>
   	<word>cholangitis</word>
   	<word>crepitus</word>
+  	<word>hybristophilia</word>
   	<word>hydrocelectomy</word>
+  	<word>hyperviolent</word>
+  	<word>impulsivity</word>
   	<word>joined'ed</word>
   	<word>mentation</word>
   	<word>mercs</word>
   	<word>nannied</word>
+  	<word>noogie</word>
   	<word>stents</word>
   	<word>tamponade</word>
   	<word>thoracolumbar</word>
-  	<word>chatbot</word>
-  	<word>chatbots</word>
-  	<word>hybristophilia</word>
-  	<word>hyperviolent</word>
-  	<word>impulsivity</word>
-  	<word>noogie</word>
-	<word>videographer</word>
-	<word>adenocarcinoma</word>
-	<word>arthroplasty</word>
-	<word>esophagectomy</word>
-	<word>hemodynamically</word>
-	<word>hemothorax</word>
-	<word>malunion</word>
-	<word>mesocaval</word>
-	<word>neoadjuvant</word>
-	<word>osteotomy</word>
-	<word>pancreatitis</word>
-	<word>periarterial</word>
-	<word>resected</word>
-	<word>saphenous</word>
-	<word>scammer</word>
-	<word>supersize</word>
-	<word>smackdown</word>
-	<word>raghead</word>
-	<word>ragheads</word>
-	<word>youse</word>
-	<word>travelled</word>
-	<word>mindfuck</word>
-	<word>mindfucked</word>
-	<word>standoff</word>
-	<word>winnerless</word>
-	<word>takedown</word>
-	<word>takedowns</word>
-	<word>bioactive</word>
-	<word>throwable</word>
-	<word>superyacht</word>
-	<word>outtie</word>
-	<word>breachable</word>
-	<word>widthways</word>
-	<word>townstone</word>
-	<word>jetpack</word>
-	<word>brushback</word>
-	<word>narrowboat</word>
-	<word>fuckstick</word>
-	<word>armour</word>
-	<word>beachmaster</word>
-	<word>coulda</word>
-	<word>shoulda</word>
-	<word>woulda</word>
-	<word>filmmaking</word>
-	<word>cheesesteak</word>
-	<word>lakebed</word>
-	<word>underdressed</word>
-	<word>flashbang</word>
-	<word>broadhead</word>
-	<word>outdoorswoman</word>
-	<word>outdoorsman</word>
-	<word>shitbag</word>
-	<word>crowdfund</word>
-	<word>forego</word>
-	<word>timestamp</word>
-	<word>timestamped</word>
-	<word>microtransaction</word>
-	<word>microtransactions</word>
-	<word>scrubland</word>
-	<word>Hawaiian</word>
-	<word>HAWAIIAN</word>
-	<word>blowjob</word>
-	<word>douchebag</word>
-	<word>jumpstart</word>
-	<word>wakeboard</word>
-	<word>biomarker</word>
-	<word>playa</word>
-	<word>agender</word>
-	<word>ladyboy</word>
-	<word>stepdad</word>
-	<word>screwup</word>
-	<word>malefact</word>
-	<word>labour</word>
-	<word>compadre</word>
-	<word>traceroute</word>
-	<word>slipup</word>
-	<word>offences</word>
-	<word>grab-assing</word>
-	<word>handloads</word>
-	<word>barebacking</word>
-	<word>shitcan</word>
-	<word>tightass</word>
-	<word>pigfuck</word>
-	<word>pigfucks</word>
-	<word>radioactivity</word>
-	<word>shitkicking</word>
-	<word>frontlines</word>
-	<word>kneeled</word>
-	<word>marginatus</word>
-	<word>curveball</word>
-	<word>hitmen</word>
-	<word>bagmen</word>
-	<word>stankin</word>
-	<word>sixpack</word>
-	<word>choirless</word>
-	<word>fuckhole</word>
-	<word>asswipe</word>
-	<word>ballsack</word>
-	<word>thataway</word>
-	<word>prospectless</word>
-	<word>buttheads</word>
-	<word>traineeship</word>
-	<word>showerhead</word>
-	<word>overchallenged</word>
-	<word>microinjections</word>
-	<word>bughouse</word>
-	<word>birdcalls</word>
-	<word>downsides</word>
-	<word>hoofbeat</word>
-	<word>hoofbeats</word>
-	<word>coppertop</word>
-	<word>bioelectric</word>
-	<word>bioelectricity</word>
-	<word>Stonekeeper</word>
-	<word>Stonekeepers</word>
-	<word>bigfeet</word>
-	<word>bigfoot</word>
-	<word>smallfeet</word>
-	<word>smallfoot</word>
-	<word>fishbone</word>
-	<word>divebomb</word>
-	<word>divebombs</word>
-	<word>divebombing</word>
-	<word>leglock</word>
-	<word>babycakes</word>
-	<word>whooha</word>
-	<word>lockpick</word>
-	<word>moonwalk</word>
-	<word>moonwalking</word>
-	<word>interdimensional</word>
-	<word>metahuman</word>
-	<word>metahumans</word>
-	<word>antiproton</word>
-	<word>mindread</word>
-	<word>sleepaway</word>
-	<word>beatboxes</word>
-	<word>supercriminal</word>
-	<word>kickass</word>
-	<word>laidback</word>
-	<word>interspecies</word>
-	<word>shapeshift</word>
-	<word>shapeshifted</word>
-	<word>shapeshifter</word>
-	<word>shapeshifting</word>
-	<word>dodgeball</word>
-	<word>seatbelts</word>
-	<word>outfly</word>
-	<word>projectionalist</word>
-	<word>fuckface</word>
-	<word>flatlines</word>
-	<word>bumfuck</word>
-	<word>gearhead</word>
-	<word>supercriminals</word>
-	<word>dokey</word>
-	<word>motherfuck</word>
-	<word>workbag</word>
-	<word>batshit</word>
-	<word>lockbox</word>
-	<word>overstand</word>
-	<word>scammer</word>	
-	<word>reticle</word>
-	<word>tranquillity</word>
+  	<word>videographer</word>
+	<word>doozy</word>
+	<word>cryo-beds</word>
 </words>

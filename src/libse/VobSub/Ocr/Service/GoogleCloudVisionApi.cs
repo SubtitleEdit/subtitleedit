@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return "https://cloud.google.com/vision/docs/ocr";
         }
 
-        public List<string> PerformOcr(string language, List<Bitmap> images)
+        public List<string> PerformOcr(string language, List<SKBitmap> images)
         {
             var requestBody = new RequestBody();
 
@@ -172,7 +172,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 string imageBase64;
                 using (var memoryStream = new MemoryStream())
                 {
-                    image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+                    using (var skImage = SKImage.FromBitmap(image))
+                    using (var data = skImage.Encode(SKEncodedImageFormat.Png, 100))
+                    {
+                        data.SaveTo(memoryStream);
+                    }
+
                     imageBase64 = Convert.ToBase64String(memoryStream.ToArray());
                 }
 
@@ -384,14 +389,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                                 detectedBreak = jsonParser.GetFirstObject(detectedBreak, "type");
                             }
 
-                            var vertices = new List<Point>();
+                            var vertices = new List<SKPointI>();
                             foreach (var point in jsonParser.GetArrayElementsByName(symbol, "vertices"))
                             {
                                 var x = jsonParser.GetFirstObject(point, "x");
                                 var y = jsonParser.GetFirstObject(point, "y");
                                 if (int.TryParse(x, out var xNumber) && int.TryParse(y, out var yNumber))
                                 {
-                                    vertices.Add(new Point(xNumber, yNumber));
+                                    vertices.Add(new SKPointI(xNumber, yNumber));
                                 }
                             }
 
@@ -415,7 +420,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public class Annotation
         {
             public string Text { get; set; }
-            public List<Point> Vertices { get; set; }
+            public List<SKPointI> Vertices { get; set; }
             public string DetectedBreak { get; set; }
 
             public int Width

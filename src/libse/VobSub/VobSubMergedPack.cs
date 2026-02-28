@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
 {
@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public TimeSpan EndTime { get; set; }
         public int StreamId { get; private set; }
         public IdxParagraph IdxLine { get; private set; }
-        public List<Color> Palette { get; set; }
+        public List<SKColor> Palette { get; set; }
 
 
         public VobSubMergedPack(byte[] subPictureData, TimeSpan presentationTimestamp, int streamId, IdxParagraph idxLine)
@@ -26,14 +26,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public bool IsForced => SubPicture.Forced;
 
-        public Bitmap GetBitmap()
+        public SKBitmap GetBitmap()
         {
-            return SubPicture.GetBitmap(Palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, true);
+            return SubPicture.GetBitmap(Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, true);
         }
 
-        public Size GetScreenSize()
+        public SKSize GetScreenSize()
         {
-            return new Size(720, 480);
+            return new SKSize(720, 480);
         }
 
         public Position GetPosition()
