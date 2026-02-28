@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\build-seconv.yml = .github\workflows\build-seconv.yml
 		.github\workflows\build-ui.yml = .github\workflows\build-ui.yml
 		Languages\Danish.json = Languages\Danish.json
+		.github\workflows\deploy-docs.yml = .github\workflows\deploy-docs.yml
 		Languages\English.json = Languages\English.json
 		LICENSE = LICENSE
 		installer\LICENSE.rtf = installer\LICENSE.rtf
