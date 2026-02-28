@@ -18,7 +18,7 @@ Subtitle Edit 5 is built with Avalonia UI and runs on:
 Subtitle Edit stores settings and data in a platform-specific data folder. You can open it via **File → Open data folder** or the keyboard shortcut.
 
 ### How do I report a bug or request a feature?
-Please open an issue on the [GitHub repository](https://github.com/niksedk/subtitleedit-avalonia/issues).
+Please open an issue on the [GitHub repository](https://github.com/SubtitleEdit/subtitleedit/issues).
 
 ---
 

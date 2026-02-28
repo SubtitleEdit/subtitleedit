@@ -1,19 +1,12 @@
-﻿# Subtitle Edit (Avalonia)
+﻿# Subtitle Edit
 
-Welcome to **subtitleedit-avalonia** — the early preview of the next major release of **Subtitle Edit**!
-
-This version is being rebuilt using [Avalonia UI](https://avaloniaui.net/) to enable true cross-platform support.
-
-> ⚙️ **Note:** Some features may still be missing, incomplete, or experimental as we actively develop this version.  
-> Your feedback is invaluable in shaping the future of Subtitle Edit.
-
-Thank you for testing and supporting Subtitle Edit! 😊
+Thank you for using Subtitle Edit! 😊
 
 ---
 
 ## 🚀 Automated Builds
 You can find the latest cross-platform builds here:  
-👉 [Releases](https://github.com/niksedk/subtitleedit-avalonia/releases)
+👉 [Releases](https://github.com/SubtitleEdit/subtitleedit/releases)
 
 ---
 

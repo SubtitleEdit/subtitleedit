@@ -30,7 +30,7 @@ public partial class AboutViewModel : ObservableObject
             return;
         }
 
-        await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/niksedk/subtitleedit-avalonia"));
+        await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/SubtitleEdit/subtitleedit"));
     }
 
     [RelayCommand]
