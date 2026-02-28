@@ -22,11 +22,13 @@ jobs:
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./docs
+          # We build to a clean folder at the root of the workspace
           destination: ./_site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # This must match the destination above
           path: ./_site
 
       - name: Deploy to GitHub Pages
