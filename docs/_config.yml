@@ -8,7 +8,7 @@ title: Subtitle Edit
 tagline: A free and open source subtitle editor
 description: the subtitle editor :)
 url: https://niksedk.github.io
-baseurl: /subtitleedit-avalonia
+baseurl: /subtitleedit
 
 # UI settings
 show_downloads: false
