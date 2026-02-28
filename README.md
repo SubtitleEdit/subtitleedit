@@ -1,6 +1,11 @@
 ﻿# Subtitle Edit
 
-Thank you for using Subtitle Edit! 😊
+- the subtitle editor :)
+
+---
+
+## 🌐 Documentation & FAQ
+http://subtitleedit.github.io/subtitleedit/
 
 ---
 
