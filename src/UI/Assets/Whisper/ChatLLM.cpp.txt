@@ -1,0 +1,7 @@
+﻿Qwen3-ASR family includes Qwen3-ASR-1.7B and Qwen3-ASR-0.6B, 
+which support language identification and ASR (Automatic Speech Recognition).
+
+Qwen3-ForcedAligner-0.6B, which supports timestamp prediction 
+for arbitrary units within up to 5 minutes of speech.
+
+https://github.com/foldl/chatllm.cpp
