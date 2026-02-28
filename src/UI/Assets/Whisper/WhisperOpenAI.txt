@@ -1,0 +1,52 @@
+﻿ --device DEVICE       device to use for PyTorch inference (default: cpu)
+ --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF     number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE
+                        number of beams in beam search, only applicable when temperature is zero (default: 5)
+  --patience PATIENCE   optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+                        default (1.0) is equivalent to conventional beam search (default: None)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
+                        simple length normalization by default (default: None)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+                        characters except common punctuations (default: -1)
+  --initial_prompt INITIAL_PROMPT
+                        optional text to provide as a prompt for the first window. (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output of the model as a prompt for the next window; disabling
+                        may make the text inconsistent across windows, but the model becomes less prone to getting
+                        stuck in a failure loop (default: True)
+  --fp16 FP16           whether to perform inference in fp16; True by default (default: True)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back when the decoding fails to meet either of the
+                        thresholds below (default: 0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed
+                        (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if the average log probability is lower than this value, treat the decoding as failed
+                        (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the probability of the <|nospeech|> token is higher than this value AND the decoding has
+                        failed due to `logprob_threshold`, consider the segment as silence (default: 0.6)
+  --word_timestamps WORD_TIMESTAMPS
+                        (experimental) extract word-level timestamps and refine the results based on them (default:
+                        False)
+  --prepend_punctuations PREPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
+                        "'“¿([{-)
+  --append_punctuations APPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
+                        "'.。,，!！?？:：”)]}、)
+  --highlight_words HIGHLIGHT_WORDS
+                        (requires --word_timestamps True) underline each word as it is spoken in srt and vtt (default:
+                        False)
+  --max_line_width MAX_LINE_WIDTH
+                        (requires --word_timestamps True) the maximum number of characters in a line before breaking
+                        the line (default: None)
+  --max_line_count MAX_LINE_COUNT
+                        (requires --word_timestamps True) the maximum number of lines in a segment (default: None)
+  --threads THREADS     number of threads used by torch for CPU inference; supercedes MKL_NUM_THREADS/OMP_NUM_THREADS
+                        (default: 0)

@@ -1,0 +1,181 @@
+usage: whisper-ctranslate2 [-h]
+        [--model {tiny,tiny.en,base,base.en,small,small.en,medium,medium.en,large-v1,large-v2,large-v3,large-v3-turbo,turbo,distil-large-v2,distil-large-v3,distil-large-v3.5,distil-medium.en,distil-small.en}]
+        [--model_directory MODEL_DIRECTORY] [--model_dir MODEL_DIR] [--local_files_only LOCAL_FILES_ONLY]
+        [--output_dir OUTPUT_DIR] [--output_format {txt,vtt,srt,tsv,json,all}] [--pretty_json PRETTY_JSON]
+        [--print_colors PRINT_COLORS] [--verbose VERBOSE] [--highlight_words HIGHLIGHT_WORDS]
+        [--max_line_width MAX_LINE_WIDTH] [--max_line_count MAX_LINE_COUNT]
+        [--max_words_per_line MAX_WORDS_PER_LINE] [--device {auto,cpu,cuda}] [--threads THREADS]
+        [--device_index DEVICE_INDEX]
+        [--compute_type {default,auto,int8,int8_float16,int8_bfloat16,int8_float32,int16,float16,float32,bfloat16}]
+        [--task {transcribe,translate}]
+        [--language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}]
+        [--temperature TEMPERATURE]
+        [--temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK]
+        [--prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE] [--prefix PREFIX] [--best_of BEST_OF]
+        [--beam_size BEAM_SIZE] [--patience PATIENCE] [--length_penalty LENGTH_PENALTY]
+        [--suppress_blank SUPPRESS_BLANK] [--suppress_tokens SUPPRESS_TOKENS]
+        [--initial_prompt INITIAL_PROMPT] [--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT]
+        [--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
+        [--logprob_threshold LOGPROB_THRESHOLD] [--no_speech_threshold NO_SPEECH_THRESHOLD]
+        [--word_timestamps WORD_TIMESTAMPS] [--prepend_punctuations PREPEND_PUNCTUATIONS]
+        [--append_punctuations APPEND_PUNCTUATIONS] [--repetition_penalty REPETITION_PENALTY]
+        [--no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE]
+        [--hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD] [--hotwords HOTWORDS]
+        [--batched BATCHED] [--batch_size BATCH_SIZE] [--multilingual MULTILINGUAL]
+        [--vad_filter VAD_FILTER] [--vad_threshold VAD_THRESHOLD]
+        [--vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS]
+        [--vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S]
+        [--vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS] [--version] [--hf_token HF_TOKEN]
+        [--speaker_name SPEAKER_NAME] [--speaker_num SPEAKER_NUM] [--live_transcribe LIVE_TRANSCRIBE]
+        [--live_volume_threshold LIVE_VOLUME_THRESHOLD] [--live_input_device LIVE_INPUT_DEVICE]
+        [--live_input_device_sample_rate LIVE_INPUT_DEVICE_SAMPLE_RATE]
+        [audio ...]
+
+        positional arguments:
+        audio                 Audio file(s) to transcribe (default: None)
+
+        options:
+        -h, --help            show this help message and exit
+        --version             Show program's version number and exit
+
+        Model selection options:
+        --model {tiny,tiny.en,base,base.en,small,small.en,medium,medium.en,large-v1,large-v2,large-v3,large-v3-turbo,turbo,distil-large-v2,distil-large-v3,distil-large-v3.5,distil-medium.en,distil-small.en}
+        Name of the Whisper model to use (default: small)
+        --model_directory MODEL_DIRECTORY
+        Directory where to find a CTranslate2 Whisper model (e.g. fine-tuned model) (default: None)
+
+        Model caching control options:
+        --model_dir MODEL_DIR
+        Path to save model files; uses ~/.cache/huggingface/ by default (default: None)
+        --local_files_only LOCAL_FILES_ONLY
+        Use only models in cache without connecting to Internet to check for newer versions (default: False)
+
+        Configuration options to control generated outputs:
+        --output_dir, -o OUTPUT_DIR
+        Directory to save the outputs (default: .)
+        --output_format, -f {txt,vtt,srt,tsv,json,all}
+        Format of the output file; if not specified, all available formats will be produced (default: all)
+        --pretty_json, -p PRETTY_JSON
+        Produce JSON in a human readable format (default: False)
+        --print_colors PRINT_COLORS
+        Print the transcribed text using an experimental color coding strategy to highlight words with high
+        or low confidence (default: False)
+        --verbose VERBOSE     Print out the progress and debug messages (default: True)
+        --highlight_words HIGHLIGHT_WORDS
+        Underline each word as it is spoken in SRT and VTT output formats (requires --word_timestamps True)
+        (default: False)
+        --max_line_width MAX_LINE_WIDTH
+        Maximum number of characters in a line before breaking the line in SRT and VTT output formats
+        (requires --word_timestamps True) (default: None)
+        --max_line_count MAX_LINE_COUNT
+        Maximum number of lines in a segment in SRT and VTT output formats (requires --word_timestamps True)
+        (default: None)
+        --max_words_per_line MAX_WORDS_PER_LINE
+        Maximum number of words in a segment (requires --word_timestamps True, no effect with
+        --max_line_width) (default: None)
+
+        Computing configuration options:
+        --device {auto,cpu,cuda}
+        Device to use for CTranslate2 inference (default: auto)
+        --threads THREADS     Number of threads used for CPU inference (default: 0)
+        --device_index DEVICE_INDEX
+        Device ID where to place this model (default: 0)
+        --compute_type {default,auto,int8,int8_float16,int8_bfloat16,int8_float32,int16,float16,float32,bfloat16}
+        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html) (default: auto)
+
+        Algorithm execution options:
+        --task {transcribe,translate}
+        Whether to perform X->X speech recognition ('transcribe') or X->English translation ('translate')
+        (default: transcribe)
+        --language {af,am,ar,as,az,ba,be,bg,bn,bo,br,bs,ca,cs,cy,da,de,el,en,es,et,eu,fa,fi,fo,fr,gl,gu,ha,haw,he,hi,hr,ht,hu,hy,id,is,it,ja,jw,ka,kk,km,kn,ko,la,lb,ln,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,nn,no,oc,pa,pl,ps,pt,ro,ru,sa,sd,si,sk,sl,sn,so,sq,sr,su,sv,sw,ta,te,tg,th,tk,tl,tr,tt,uk,ur,uz,vi,yi,yo,yue,zh,Afrikaans,Albanian,Amharic,Arabic,Armenian,Assamese,Azerbaijani,Bashkir,Basque,Belarusian,Bengali,Bosnian,Breton,Bulgarian,Burmese,Cantonese,Castilian,Catalan,Chinese,Croatian,Czech,Danish,Dutch,English,Estonian,Faroese,Finnish,Flemish,French,Galician,Georgian,German,Greek,Gujarati,Haitian,Haitian Creole,Hausa,Hawaiian,Hebrew,Hindi,Hungarian,Icelandic,Indonesian,Italian,Japanese,Javanese,Kannada,Kazakh,Khmer,Korean,Lao,Latin,Latvian,Letzeburgesch,Lingala,Lithuanian,Luxembourgish,Macedonian,Malagasy,Malay,Malayalam,Maltese,Mandarin,Maori,Marathi,Moldavian,Moldovan,Mongolian,Myanmar,Nepali,Norwegian,Nynorsk,Occitan,Panjabi,Pashto,Persian,Polish,Portuguese,Punjabi,Pushto,Romanian,Russian,Sanskrit,Serbian,Shona,Sindhi,Sinhala,Sinhalese,Slovak,Slovenian,Somali,Spanish,Sundanese,Swahili,Swedish,Tagalog,Tajik,Tamil,Tatar,Telugu,Thai,Tibetan,Turkish,Turkmen,Ukrainian,Urdu,Uzbek,Valencian,Vietnamese,Welsh,Yiddish,Yoruba}
+        Language spoken in the audio; specify None to perform language detection (default: None)
+        --temperature TEMPERATURE
+        Temperature to use for sampling (default: 0)
+        --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+        Temperature to increase when falling back if the decoding fails to meet either of the thresholds
+        below (default: 0.2)
+        --prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE
+        Reset prompt if temperature is above this value. Arg has effect only if condition_on_previous_text is
+        True (default: 0.5)
+        --prefix PREFIX       Optional text to provide as a prefix for the first window (default: None)
+        --best_of BEST_OF     Number of candidates when sampling with non-zero temperature (default: 5)
+        --beam_size BEAM_SIZE
+        Number of beams in beam search; only applicable when temperature is zero (default: 5)
+        --patience PATIENCE   Optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424; the default
+        (1.0) is equivalent to conventional beam search (default: 1.0)
+        --length_penalty LENGTH_PENALTY
+        Optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144; uses simple
+        length normalization by default (default: 1.0)
+        --suppress_blank SUPPRESS_BLANK
+        Suppress blank outputs at the beginning of the sampling (default: True)
+        --suppress_tokens SUPPRESS_TOKENS
+        Comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+        characters except common punctuations (default: -1)
+        --initial_prompt INITIAL_PROMPT
+        Optional text to provide as a prompt for the first window (default: None)
+        --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
+        If True, provide the previous output of the model as a prompt for the next window; disabling may make
+        the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure
+        loop (default: True)
+        --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+        If the gzip compression ratio is higher than this value, treat the decoding as failed (default: 2.4)
+        --logprob_threshold LOGPROB_THRESHOLD
+        If the average log probability is lower than this value, treat the decoding as failed (default: -1.0)
+        --no_speech_threshold NO_SPEECH_THRESHOLD
+        If the probability of the <|nospeech|> token is higher than this value AND the decoding has failed
+        due to `logprob_threshold`, consider the segment as silence (default: 0.6)
+        --word_timestamps WORD_TIMESTAMPS
+        (Experimental) Extract word-level timestamps and refine the results based on them (default: False)
+        --prepend_punctuations PREPEND_PUNCTUATIONS
+        If word_timestamps is True, merge these punctuation symbols with the next word (default: "'“¿([{-)
+        --append_punctuations APPEND_PUNCTUATIONS
+        If word_timestamps is True, merge these punctuation symbols with the previous word (default:
+        "'.。,，!！?？:：”)]}、)
+        --repetition_penalty REPETITION_PENALTY
+        Penalty applied to the score of previously generated tokens (set > 1 to penalize) (default: 1.0)
+        --no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE
+        Prevent repetitions of ngrams with this size (set 0 to disable) (default: 0)
+        --hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD
+        When word_timestamps is True, skip silent periods longer than this threshold (in seconds) when a
+        possible hallucination is detected (default: None)
+        --hotwords HOTWORDS   Hotwords/hint phrases to the model. Useful for names you want the model to prioritize (default: None)
+        --batched BATCHED     Use batched transcription which can provide an additional 2x-4x speed increase (default: False)
+        --batch_size BATCH_SIZE
+        When using batched transcription, maximum number of parallel requests to model for decoding.
+        (default: None)
+        --multilingual MULTILINGUAL
+        Perform language detection on every segment (default: False)
+
+        VAD filter arguments:
+        --vad_filter VAD_FILTER
+        Enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step
+        uses the Silero VAD model https://github.com/snakers4/silero-vad. (default: False)
+        --vad_threshold VAD_THRESHOLD
+        When `vad_filter` is enabled, probabilities above this value are considered as speech. (default:
+        None)
+        --vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS
+        When `vad_filter` is enabled, final speech chunks shorter than min_speech_duration_ms are discarded.
+        (default: None)
+        --vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S
+        When `vad_filter` is enabled, maximum duration of speech chunks in seconds. Longer chunks will be
+        split at the timestamp of the last silence. (default: None)
+        --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
+        When `vad_filter` is enabled, time to wait at the end of each speech chunk before separating it.
+        (default: None)
+
+        Diarization options:
+        --hf_token HF_TOKEN   HuggingFace token which enables downloading the diarization models. (default: )
+        --speaker_name SPEAKER_NAME
+        Name to use to identify the speaker (e.g. SPEAKER_00). (default: SPEAKER)
+        --speaker_num SPEAKER_NUM
+        Number of speakers to use for diarization. (default: 2)
+
+        Live transcribe options:
+        --live_transcribe LIVE_TRANSCRIBE
+        Enable live transcribe mode (default: False)
+        --live_volume_threshold LIVE_VOLUME_THRESHOLD
+        Minimum volume threshold to activate listening in live transcribe mode (default: 0.2)
+        --live_input_device LIVE_INPUT_DEVICE
+        Set live stream input device ID (see python -m sounddevice for a list) (default: None)
+        --live_input_device_sample_rate LIVE_INPUT_DEVICE_SAMPLE_RATE
+        Set live sample rate of input device (default: 16000)
