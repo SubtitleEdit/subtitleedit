@@ -7,7 +7,7 @@ plugins:
 title: Subtitle Edit
 tagline: A free and open source subtitle editor
 description: the subtitle editor :)
-url: https://niksedk.github.io
+url: https://subtitleedit.github.io
 baseurl: /subtitleedit
 
 # UI settings
