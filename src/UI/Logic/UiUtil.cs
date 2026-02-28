@@ -2256,13 +2256,13 @@ public static class UiUtil
 
     public static void ShowHelp(string helpName)
     {
-        var helpUrl = string.Format($"https://niksedk.github.io/subtitleedit-avalonia/{helpName}.html");
+        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit/{helpName}.html");
         OpenUrl(helpUrl);
     }
 
     public static void ShowHelp()
     {
-        var helpUrl = string.Format($"https://niksedk.github.io/subtitleedit-avalonia");
+        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit");
         OpenUrl(helpUrl);
     }
 

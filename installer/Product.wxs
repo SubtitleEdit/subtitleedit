@@ -34,8 +34,8 @@
 		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
 		<!-- Add/Remove Programs -->
-		<Property Id="ARPHELPLINK" Value="https://github.com/niksedk/subtitleedit-avalonia" />
-		<Property Id="ARPURLINFOABOUT" Value="https://github.com/niksedk/subtitleedit-avalonia" />
+		<Property Id="ARPHELPLINK" Value="https://github.com/SubtitleEdit/subtitleedit" />
+		<Property Id="ARPURLINFOABOUT" Value="https://github.com/SubtitleEdit/subtitleedit" />
 
 		<StandardDirectory Id="ProgramFiles6432Folder">
 			<Directory Id="INSTALLFOLDER" Name="Subtitle Edit">
