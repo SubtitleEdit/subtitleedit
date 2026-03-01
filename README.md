@@ -1,6 +1,6 @@
 ﻿# Subtitle Edit
 
-the subtitle editor :)
+The subtitle editor :)
 
 ---
 
