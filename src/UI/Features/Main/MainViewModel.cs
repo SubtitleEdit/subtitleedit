@@ -4242,13 +4242,13 @@ public partial class MainViewModel :
             return;
         }
 
-        ResetSubtitle();
-
         var result =
             await ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(vm => { vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1); });
 
         if (result.OkPressed && !result.IsBatchMode)
         {
+            ResetSubtitle();
+            
             _subtitle = result.TranscribedSubtitle;
             if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
             {
