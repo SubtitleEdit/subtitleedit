@@ -112,6 +112,7 @@ public static partial class InitListViewAndEditBox
         var cpsWmpConverter = new DoubleToOneDecimalHideMaxConverter();
         var notNullConverter = new NotNullConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
         var gapConverter = new DoubleToNoDecimalHideMaxConverter();
         var inverseBooleanConverter = new InverseBooleanConverter();
         var textOneLineShortConverter = new TextOneLineShortConverter();

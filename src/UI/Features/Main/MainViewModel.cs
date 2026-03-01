@@ -129,6 +129,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
@@ -347,6 +348,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemActors { get; set; }
     public Button ButtonWaveformPlay { get; set; }
     public MenuItem AudioTraksMenuItem { get; set; }
+    public TextWithSubtitleSyntaxHighlightingConverter SubtitleDataGridSyntaxHighlighting { get; internal set; }
 
     public MainViewModel(
         IFileHelper fileHelper,
@@ -426,6 +428,7 @@ public partial class MainViewModel :
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
+        SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
         ButtonWaveformPlay = new Button();
         _subtitle = new Subtitle();
@@ -9964,6 +9967,7 @@ public partial class MainViewModel :
                     {
                         _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
                         wrapper.EnableSpellCheck(_spellCheckManager);
+                        SubtitleDataGridSyntaxHighlighting.EnableSpellCheck(_spellCheckManager);
                     }
                 }
             }
