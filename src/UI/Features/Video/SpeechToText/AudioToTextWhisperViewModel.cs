@@ -864,9 +864,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         var whisperFolder = engine.GetAndCreateWhisperFolder();
         var srtCandidates = GetResultFileCandidates(".srt", waveFileName, videoFileName, whisperFolder, outputText);
         var vttCandidates = GetResultFileCandidates(".vtt", waveFileName, videoFileName, whisperFolder, outputText);
+        var assaCandidates = GetResultFileCandidates(".ass", waveFileName, videoFileName, whisperFolder, outputText);
 
         var srtFileName = srtCandidates.FirstOrDefault(File.Exists);
         var vttFileName = vttCandidates.FirstOrDefault(File.Exists);
+        var assaFileName = assaCandidates.FirstOrDefault(File.Exists);
 
         if (string.IsNullOrEmpty(srtFileName) && string.IsNullOrEmpty(vttFileName))
         {
@@ -905,6 +907,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (!string.IsNullOrEmpty(vttFileName))
         {
             filesToDelete?.Add(vttFileName);
+        }
+        if (!string.IsNullOrEmpty(assaFileName))
+        {
+            filesToDelete?.Add(assaFileName);
         }
 
         return true;
