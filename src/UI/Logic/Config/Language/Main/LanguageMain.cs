@@ -92,6 +92,16 @@ public class LanguageMain
     public string ColorHint { get; set; }
     public string RemoveFormattingHint { get; set; }
     public string AssaResolutionResamplerDone { get; set; }
+    public string LanguageFileSavedToX { get; set; }
+    public string FileExportedInFormatXToY { get; set; }
+    public string FileExportedInFormatXToFileY { get; set; }
+    public string FixedXLines { get; set; }
+    public string TranscriptionCompletedWithXLines { get; set; }
+    public string ReplacedXOccurrences { get; set; }
+    public string FfmpegDownloadedAndInstalledToX { get; set; }
+    public string NothingToSave { get; set; }
+    public string NothingToSaveOriginal { get; set; }
+    public string LiveSpellCheckLanguageXLoaded { get; set; }
 
     public LanguageMain()
     {
@@ -178,5 +188,15 @@ public class LanguageMain
         ColorHint = "Color selected lines";
         RemoveFormattingHint = "Remove formatting from selected lines";
         AssaResolutionResamplerDone = "ASSA resolution changed.";
+        LanguageFileSavedToX = "Language file saved to {0}";
+        FileExportedInFormatXToY = "File exported in format {0} to {1}";
+        FileExportedInFormatXToFileY = "File exported in format \"{0}\" to file \"{1}\"";
+        FixedXLines = "Fixed {0} lines";
+        TranscriptionCompletedWithXLines = "Transcription completed with {0} lines";
+        ReplacedXOccurrences = "Replaced {0} occurrences";
+        FfmpegDownloadedAndInstalledToX = "ffmpeg downloaded and installed to {0}";
+        NothingToSave = "Nothing to save";
+        NothingToSaveOriginal = "Nothing to save (original)";
+        LiveSpellCheckLanguageXLoaded = "Live spell check language {0} loaded";
     }
 }

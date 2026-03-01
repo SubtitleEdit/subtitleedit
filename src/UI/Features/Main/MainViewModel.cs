@@ -1132,7 +1132,7 @@ public partial class MainViewModel :
         var currentDirectory = Directory.GetCurrentDirectory();
         var fileName = Path.Combine(currentDirectory, "English.json");
         await File.WriteAllTextAsync(fileName, json, Encoding.UTF8);
-        ShowStatus($"Language file saved to {fileName}");
+        ShowStatus(string.Format(Se.Language.Main.LanguageFileSavedToX, fileName));
         await _folderHelper.OpenFolderWithFileSelected(Window, fileName);
 
         _shortcutManager.ClearKeys();
@@ -1946,7 +1946,7 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(fileName))
         {
             File.WriteAllBytes(fileName, ms.ToArray());
-            ShowStatus($"File exported in format {format.Name} to {fileName}");
+            ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
 
@@ -1980,12 +1980,12 @@ public partial class MainViewModel :
 
         using (var ms = new MemoryStream())
         {
-            cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
-            ms.Position = 0;
-            File.WriteAllBytes(fileName, ms.ToArray());
-        }
+                cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
+                ms.Position = 0;
+                File.WriteAllBytes(fileName, ms.ToArray());
+            }
 
-        ShowStatus($"File exported in format {cavena.Name} to {fileName}");
+            ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
     }
 
     [RelayCommand]
@@ -2022,7 +2022,7 @@ public partial class MainViewModel :
         ms.Position = 0;
         await File.WriteAllBytesAsync(fileName, ms.ToArray());
 
-        ShowStatus($"File exported in format {pac.Name} to {fileName}");
+        ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, pac.Name, fileName));
     }
 
     [RelayCommand]
@@ -2052,7 +2052,7 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(fileName))
         {
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
-            ShowStatus($"File exported in format {format.Name} to {fileName}");
+            ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
 
         _shortcutManager.ClearKeys();
@@ -2096,7 +2096,7 @@ public partial class MainViewModel :
         }
 
         format.Save(fileName, result.Subtitle);
-        ShowStatus($"File exported in format \"{format.Name}\" to file \"{fileName}\"");
+        ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToFileY, format.Name, fileName));
     }
 
     [RelayCommand]
@@ -3770,7 +3770,7 @@ public partial class MainViewModel :
         {
             SetSubtitles(viewModel.FixedSubtitle);
             SelectAndScrollToRow(0);
-            ShowStatus($"Fixed {viewModel.FixedSubtitle.Paragraphs.Count} lines");
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
 
@@ -3794,7 +3794,7 @@ public partial class MainViewModel :
         {
             SetSubtitles(viewModel.FixedSubtitle);
             SelectAndScrollToRow(0);
-            ShowStatus($"Fixed {viewModel.FixedSubtitle.Paragraphs.Count} lines");
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
 
@@ -4263,7 +4263,7 @@ public partial class MainViewModel :
 
             SetSubtitles(_subtitle);
             SelectAndScrollToRow(0);
-            ShowStatus($"Transcription completed with {result.TranscribedSubtitle.Paragraphs.Count} lines");
+            ShowStatus(string.Format(Se.Language.Main.TranscriptionCompletedWithXLines, result.TranscribedSubtitle.Paragraphs.Count));
         }
     }
 
@@ -7194,7 +7194,7 @@ public partial class MainViewModel :
         {
             SetSubtitles(result.FixedSubtitle);
             SelectAndScrollToRow(0);
-            ShowStatus($"Replaced {result.TotalReplaced} occurrences");
+            ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, result.TotalReplaced));
         }
     }
 
@@ -9276,7 +9276,7 @@ public partial class MainViewModel :
             if (!string.IsNullOrEmpty(result.FfmpegFileName))
             {
                 Se.Settings.General.FfmpegPath = result.FfmpegFileName;
-                ShowStatus($"ffmpeg downloaded and installed to {result.FfmpegFileName}");
+                ShowStatus(string.Format(Se.Language.Main.FfmpegDownloadedAndInstalledToX, result.FfmpegFileName));
                 return true;
             }
         }
@@ -10917,7 +10917,7 @@ public partial class MainViewModel :
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus("Nothing to save");
+            ShowStatus(Se.Language.Main.NothingToSave);
             return false;
         }
 
@@ -10982,7 +10982,7 @@ public partial class MainViewModel :
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus("Nothing to save (original)");
+            ShowStatus(Se.Language.Main.NothingToSaveOriginal);
             return false;
         }
 
@@ -14040,7 +14040,7 @@ public partial class MainViewModel :
                 var twoLetterLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(result.SelectedDictionary.GetThreeLetterCode());
                 _spellCheckManager.Initialize(result.SelectedDictionary.DictionaryFileName, twoLetterLanguageCode);
                 wrapper.RefreshSpellCheck();
-                ShowStatus("Live spell check language " + result.SelectedDictionary.Name + " loaded");
+                ShowStatus(string.Format(Se.Language.Main.LiveSpellCheckLanguageXLoaded, result.SelectedDictionary.Name));
             }
         });
     }
