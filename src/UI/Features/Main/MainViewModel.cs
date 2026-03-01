@@ -4235,6 +4235,14 @@ public partial class MainViewModel :
         {
             return;
         }
+        
+        var doContinue = await HasChangesContinue();
+        if (!doContinue)
+        {
+            return;
+        }
+
+        ResetSubtitle();
 
         var result =
             await ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(vm => { vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1); });
@@ -4249,6 +4257,9 @@ public partial class MainViewModel :
                     p.Text = AdvancedSubStationAlpha.FormatText(p.Text);
                 }
             }
+
+            _subtitleFileName = Path.ChangeExtension(_videoFileName ?? "transcription", SelectedSubtitleFormat.Extension);
+            _converted = true;
 
             SetSubtitles(_subtitle);
             SelectAndScrollToRow(0);
