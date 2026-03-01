@@ -2,16 +2,20 @@
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 
 public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 {
+    private ISpellCheckManager? _spellCheckManager;
+
     // Pastel color scheme for HTML and ASS/SSA syntax highlighting
     private static readonly Color ElementColor = Color.FromRgb(183, 89, 155);    // Soft purple - HTML element tags / ASS tag names
     private static readonly Color AttributeColor = Color.FromRgb(86, 156, 214);  // Soft blue - HTML attribute names
@@ -305,18 +309,263 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
         {
-            return MakeShowFormatting(str);
+            var lines = MakeShowFormatting(str);
+            return SpellCheckLines(lines);
         }
 
         if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowTags)
         {
-            return MakeShowTags(str);
+            var lines = MakeShowTags(str);
+            return SpellCheckLines(lines);
         }
 
         // No formatting (default)
         var inlines = new InlineCollection();
         inlines.Add(new Run(str));
-        return inlines;
+        return SpellCheckLines(inlines);
+    }
+
+    private InlineCollection SpellCheckLines(InlineCollection lines)
+    {
+        if (_spellCheckManager == null || !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck)
+        {
+            return lines;
+        }
+
+        try
+        {
+            var newInlines = new InlineCollection();
+
+            foreach (var inline in lines)
+            {
+                if (inline is not Run run || string.IsNullOrWhiteSpace(run.Text))
+                {
+                    newInlines.Add(inline);
+                    continue;
+                }
+
+                var runText = run.Text;
+                var words = SpellCheckWordLists2.Split(runText);
+
+                if (words.Count == 0)
+                {
+                    newInlines.Add(run);
+                    continue;
+                }
+
+                // First pass: check if there are any misspelled words in this run
+                var hasMisspelledWords = false;
+                foreach (var word in words)
+                {
+                    if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
+                    {
+                        continue;
+                    }
+
+                    if (!IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word.Text))
+                    {
+                        hasMisspelledWords = true;
+                        break;
+                    }
+                }
+
+                // If no misspelled words, keep the run as-is to preserve color inheritance
+                if (!hasMisspelledWords)
+                {
+                    newInlines.Add(run);
+                    continue;
+                }
+
+                // Second pass: break up the run and add underlines to misspelled words
+                var lastIndex = 0;
+                foreach (var word in words)
+                {
+                    if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
+                    {
+                        continue;
+                    }
+
+                    // Add any text before this word
+                    if (word.Index > lastIndex)
+                    {
+                        var beforeText = runText.Substring(lastIndex, word.Index - lastIndex);
+                        var beforeRun = CreateRunFromTemplate(run, beforeText);
+                        newInlines.Add(beforeRun);
+                    }
+
+                    // Check if word is misspelled and not a special pattern
+                    var isMisspelled = !IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word.Text);
+
+                    // Create run for the word
+                    var wordRun = CreateRunFromTemplate(run, word.Text);
+                    if (isMisspelled)
+                    {
+                        // Apply wavy red underline for misspelled words
+                        var wavyUnderline = new TextDecoration
+                        {
+                            Location = TextDecorationLocation.Underline,
+                            Stroke = new SolidColorBrush(Colors.Red),
+                            StrokeThickness = 1.5,
+                            StrokeLineCap = PenLineCap.Round
+                        };
+
+                        // Add to existing decorations instead of replacing them
+                        if (wordRun.TextDecorations == null || wordRun.TextDecorations.Count == 0)
+                        {
+                            wordRun.TextDecorations = new TextDecorationCollection { wavyUnderline };
+                        }
+                        else
+                        {
+                            var decorations = new List<TextDecoration>(wordRun.TextDecorations)
+                            {
+                                wavyUnderline
+                            };
+                            wordRun.TextDecorations = new TextDecorationCollection(decorations);
+                        }
+                    }
+
+                    newInlines.Add(wordRun);
+                    lastIndex = word.Index + word.Length;
+                }
+
+                // Add any remaining text after the last word
+                if (lastIndex < runText.Length)
+                {
+                    var remainingText = runText.Substring(lastIndex);
+                    var remainingRun = CreateRunFromTemplate(run, remainingText);
+                    newInlines.Add(remainingRun);
+                }
+            }
+
+            return newInlines;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex);
+            return lines; // Return original lines if spell check fails
+        }
+    }
+
+    private static Run CreateRunFromTemplate(Run template, string text)
+    {
+        var run = new Run(text);
+
+        // Use IsSet() to only copy properties that were explicitly set locally,
+        // not inherited/resolved values - this preserves the inheritance chain
+        if (template.IsSet(TextElement.ForegroundProperty))
+            run.Foreground = template.Foreground;
+
+        if (template.IsSet(TextElement.FontStyleProperty))
+            run.FontStyle = template.FontStyle;
+
+        if (template.IsSet(TextElement.FontWeightProperty))
+            run.FontWeight = template.FontWeight;
+
+        if (template.IsSet(TextElement.FontFamilyProperty))
+            run.FontFamily = template.FontFamily;
+
+        if (template.IsSet(TextElement.FontSizeProperty))
+            run.FontSize = template.FontSize;
+
+        if (template.IsSet(Inline.TextDecorationsProperty) &&
+            template.TextDecorations != null && template.TextDecorations.Count > 0)
+        {
+            run.TextDecorations = new TextDecorationCollection(template.TextDecorations);
+        }
+
+        return run;
+    }
+
+    private static bool IsSpecialPattern(SpellCheckWord word, string text)
+    {
+        // Skip numbers
+        if (word.Text.All(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-'))
+        {
+            return true;
+        }
+
+        // Skip URLs
+        if (word.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) ||
+            word.Text.Contains("https://", StringComparison.OrdinalIgnoreCase) ||
+            word.Text.Contains("www.", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        // Skip email-like patterns
+        if (word.Text.Contains('@'))
+        {
+            return true;
+        }
+
+        // Skip hashtags
+        if (word.Text.StartsWith('#'))
+        {
+            return true;
+        }
+
+        // Skip words inside ASS/SSA tags
+        if (IsBetweenAssaTags(word, text))
+        {
+            return true;
+        }
+
+        // Skip words inside HTML tags
+        if (IsInsideHtmlTag(word, text))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsBetweenAssaTags(SpellCheckWord word, string text)
+    {
+        if (word == null || string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        // Find the last occurrence of an opening brace before the word starts
+        var openBrace = text.LastIndexOf('{', word.Index);
+
+        // Find the first occurrence of a closing brace after the word starts
+        var closeBrace = text.IndexOf('}', word.Index);
+
+        // If both exist, check if there is another closing brace between
+        // the opening brace and our word.
+        if (openBrace != -1 && closeBrace != -1 && openBrace < closeBrace)
+        {
+            // Check if there's a '}' between the '{' and the word.
+            var closingBeforeWord = text.IndexOf('}', openBrace, word.Index - openBrace);
+            return closingBeforeWord == -1;
+        }
+
+        return false;
+    }
+
+    private static bool IsInsideHtmlTag(SpellCheckWord word, string text)
+    {
+        if (word == null || string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        // Find the last opening bracket before the word
+        var openBracket = text.LastIndexOf('<', word.Index);
+
+        // Find the next closing bracket after the word starts
+        var closeBracket = text.IndexOf('>', word.Index);
+
+        // If both exist in the correct order
+        if (openBracket != -1 && closeBracket != -1 && openBracket < closeBracket)
+        {
+            // Ensure there isn't a '>' between the opening '<' and the word
+            var closingBeforeWord = text.IndexOf('>', openBracket, word.Index - openBracket);
+            return closingBeforeWord == -1;
+        }
+
+        return false;
     }
 
     private static InlineCollection MakeShowTags(string str)
@@ -1103,5 +1352,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
+    }
+
+    internal void EnableSpellCheck(ISpellCheckManager spellCheckManager)
+    {
+        _spellCheckManager = spellCheckManager;
     }
 }
