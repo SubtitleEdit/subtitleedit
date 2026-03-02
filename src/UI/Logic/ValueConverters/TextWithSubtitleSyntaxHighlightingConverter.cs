@@ -327,7 +327,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private InlineCollection SpellCheckLines(InlineCollection lines)
     {
-        if (_spellCheckManager == null || !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck)
+        if (_spellCheckManager == null || !Se.Settings.Appearance.SubtitleGridLiveSpellCheck)
         {
             return lines;
         }
@@ -1354,7 +1354,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         throw new NotImplementedException();
     }
 
-    internal void EnableSpellCheck(ISpellCheckManager spellCheckManager)
+    internal void SetSpellCheck(ISpellCheckManager? spellCheckManager)
     {
         _spellCheckManager = spellCheckManager;
     }

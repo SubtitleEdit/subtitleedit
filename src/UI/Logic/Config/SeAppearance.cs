@@ -16,6 +16,7 @@ public class SeAppearance
     public bool SubtitleTextBoxFontBold { get; set; }
     public bool SubtitleTextBoxColorTags { get; set; }
     public int SubtitleGridFormattingType { get; set; }
+    public bool SubtitleGridLiveSpellCheck { get; set; }
 
     public bool SubtitleTextBoxCenterText { get; set; }
     public bool SubtitleTextBoxLiveSpellCheck { get; set; }
