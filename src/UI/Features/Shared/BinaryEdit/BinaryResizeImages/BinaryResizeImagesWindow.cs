@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
@@ -13,7 +14,7 @@ public class BinaryResizeImagesWindow : Window
     public BinaryResizeImagesWindow(BinaryResizeImagesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Resize images";
+        Title = Se.Language.Tools.ImageBasedEdit.ResizeImages;
         Width = 800;
         Height = 600;
         CanResize = true;
@@ -74,7 +75,7 @@ public class BinaryResizeImagesWindow : Window
         // Percentage
         var percentageLabel = new TextBlock
         {
-            Text = "Percentage:",
+            Text = Se.Language.Tools.ImageBasedEdit.Percentage,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Thickness(0, 0, 0, 5),
         };
@@ -109,8 +110,7 @@ public class BinaryResizeImagesWindow : Window
         // Info text
         var infoText = new TextBlock
         {
-            Text = "Enter the percentage to resize images.\n" +
-                   "Preview updates automatically.",
+            Text = Se.Language.Tools.ImageBasedEdit.ResizeImagesInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 20, 0, 0),
             FontSize = 11,
