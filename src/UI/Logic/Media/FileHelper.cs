@@ -263,6 +263,9 @@ namespace Nikse.SubtitleEdit.Logic.Media
             string suggestedFileName,
             string title)
         {
+            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName); 
+            suggestedFileName = Path.GetFileName(suggestedFileName);
+            
             var topLevel = TopLevel.GetTopLevel(sender)!;
             var filePickerFileTypes = MakeSaveFilePickerAllFileTypes(currentFormat);
             var defaultChoice = filePickerFileTypes
@@ -274,6 +277,21 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
+
+            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
+            {
+                try
+                {
+                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
+                    if (folder != null)
+                    {
+                        options.SuggestedStartLocation = folder;
+                    }
+                }
+                catch
+                {
+                }
+            }
 
             // Use SaveFilePickerWithResultAsync instead of SaveFilePickerAsync
             var result = await topLevel.StorageProvider.SaveFilePickerWithResultAsync(options);
@@ -305,6 +323,23 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
                 DefaultExtension = extension.TrimStart('.')
             };
+
+            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
+            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
+            {
+                try
+                {
+                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
+                    if (folder != null)
+                    {
+                        options.SuggestedStartLocation = folder;
+                    }
+                }
+                catch
+                {
+                }
+            }
+
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(options);
 
             if (file != null)
@@ -329,6 +364,23 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
                 DefaultExtension = extension.TrimStart('.'),
             };
+
+            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
+            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
+            {
+                try
+                {
+                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
+                    if (folder != null)
+                    {
+                        options.SuggestedStartLocation = folder;
+                    }
+                }
+                catch
+                {
+                }
+            }
+
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(options);
 
             if (file != null)
@@ -390,10 +442,8 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         public async Task<string> PickOpenVideoFile(Visual sender, string title)
         {
-            // Get top level from the current control. Alternatively, you can use Window reference instead.
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            // Start async operation to open the dialog.
             var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = title,
@@ -411,10 +461,8 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         public async Task<string[]> PickOpenVideoFiles(Visual sender, string title)
         {
-            // Get top level from the current control. Alternatively, you can use Window reference instead.
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            // Start async operation to open the dialog.
             var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = title,
