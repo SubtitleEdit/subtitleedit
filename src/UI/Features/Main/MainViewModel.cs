@@ -2918,6 +2918,25 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ColumnCopyTextFromOriginalToCurrent()
+    {
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (!ShowColumnOriginalText || selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        _undoRedoManager.StopChangeDetection();
+        foreach (var selectedItem in selectedItems)
+        {
+            selectedItem.Text = selectedItem.OriginalText;
+        }
+        _undoRedoManager.StartChangeDetection();
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private async Task ColumnPasteFromClipboard()
     {
         if (Window == null || SelectedSubtitle == null)
