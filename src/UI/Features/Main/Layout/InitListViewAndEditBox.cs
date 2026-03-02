@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -1462,15 +1463,7 @@ public static partial class InitListViewAndEditBox
 
         vm.EditTextBox = wrapper;
 
-        // Set up Mac context menu support
-        textEditor.PointerReleased += vm.ControlMacPointerReleased;
-        textEditor.PointerPressed += (sender, e) =>
-        {
-            if (e.GetCurrentPoint(textEditor).Properties.IsRightButtonPressed)
-            {
-                vm.StoreTextEditorPointerArgs(e);
-            }
-        };
+        SetupMacContextMenu(textEditor, vm);
 
         var helper = new TextEditorBindingHelper(vm, textEditor, wrapper, textEditorBorder, defaultBorderBrush, focusedBorderBrush, isOriginal: false);
         helper.Initialize();
@@ -1568,20 +1561,55 @@ public static partial class InitListViewAndEditBox
 
         vm.EditTextBoxOriginal = wrapper;
 
-        // Set up Mac context menu support
-        textEditor.PointerReleased += vm.ControlMacPointerReleased;
-        textEditor.PointerPressed += (sender, e) =>
-        {
-            if (e.GetCurrentPoint(textEditor).Properties.IsRightButtonPressed)
-            {
-                vm.StoreTextEditorPointerArgs(e);
-            }
-        };
+        SetupMacContextMenu(textEditor, vm);
 
         var helper = new TextEditorBindingHelper(vm, textEditor, wrapper, textEditorBorder, defaultBorderBrush, focusedBorderBrush, isOriginal: true);
         helper.Initialize();
         vm.EditTextBoxOriginalHelper = helper;
 
         return textEditorBorder;
+    }
+
+    /// <summary>
+    /// On macOS, Ctrl+Click is the right-click / context menu gesture.
+    /// AvaloniaEdit's SelectionMouseHandler attaches to TextArea.PointerPressed (bubble phase)
+    /// and treats Ctrl+Click as whole-word selection, clearing the selection in the process.
+    /// We intercept in the tunnel phase (before AvaloniaEdit) to mark the event as handled,
+    /// preventing selection loss, and then open the context menu on pointer release.
+    /// </summary>
+    private static void SetupMacContextMenu(TextEditor textEditor, MainViewModel vm)
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        // Tunnel phase fires before AvaloniaEdit's bubble-phase SelectionMouseHandler.
+        textEditor.TextArea.AddHandler(
+            InputElement.PointerPressedEvent,
+            (_, e) =>
+            {
+                var point = e.GetCurrentPoint(textEditor.TextArea);
+                if (point.Properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+                {
+                    // Block AvaloniaEdit from treating this as a word-selection gesture.
+                    e.Handled = true;
+                }
+            },
+            RoutingStrategies.Tunnel);
+
+        // Now handle the release to actually show the context menu.
+        textEditor.TextArea.AddHandler(
+            InputElement.PointerReleasedEvent,
+            (_, e) =>
+            {
+                if (e.InitialPressMouseButton == MouseButton.Left &&
+                    e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+                    !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    vm.ControlMacPointerReleased(textEditor, e);
+                }
+            },
+            RoutingStrategies.Tunnel);
     }
 }

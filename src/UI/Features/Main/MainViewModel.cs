@@ -14441,6 +14441,7 @@ public partial class MainViewModel :
         if (OperatingSystem.IsMacOS() &&
             e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
             !e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
+            (e.InitialPressMouseButton == MouseButton.Left || e.InitialPressMouseButton == MouseButton.Right) &&
             sender is Control control)
         {
             var args = new ContextRequestedEventArgs(e);
