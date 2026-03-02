@@ -198,6 +198,7 @@ public class WaveHeader2
     }
 }
 
+[StructLayout(LayoutKind.Sequential)]
 public struct WavePeak2
 {
     public readonly short Max;
@@ -497,7 +498,7 @@ public class WavePeakGenerator2 : IDisposable
     /// </summary>
     /// <param name="fileName">Wave file name</param>
     public WavePeakGenerator2(string fileName)
-        : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 65536, FileOptions.SequentialScan))
     {
     }
 
@@ -536,12 +537,12 @@ public class WavePeakGenerator2 : IDisposable
         // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
         delaySampleCount = Math.Max(delaySampleCount, 0);
 
-        var peaks = new List<WavePeak2>();
         var readSampleDataValue = GetSampleDataReader();
         float sampleAndChannelScale = (float)GetSampleAndChannelScale();
         long fileSampleCount = Header.LengthInSamples;
         long fileSampleOffset = -delaySampleCount;
         int chunkSampleCount = Header.SampleRate / peaksPerSecond;
+        var peaks = new List<WavePeak2>((int)((fileSampleCount + delaySampleCount + chunkSampleCount - 1) / chunkSampleCount));
         byte[] data = new byte[chunkSampleCount * Header.BlockAlign];
         float[] chunkSamples = new float[chunkSampleCount * 2];
 
@@ -553,56 +554,107 @@ public class WavePeakGenerator2 : IDisposable
             _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
         }
 
-        while (fileSampleOffset < fileSampleCount)
+        if (Header.BytesPerSample == 2 && Header.NumberOfChannels == 2) // optimized path for 16-bit stereo PCM
         {
-            // calculate how many samples to skip at the beginning (for positive delays)
-            int startSkipSampleCount = 0;
-            if (fileSampleOffset < 0)
+            while (fileSampleOffset < fileSampleCount)
             {
-                startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
-                fileSampleOffset += startSkipSampleCount;
-            }
-
-            // calculate how many samples to read from the file
-            long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
-            int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
-
-            // read samples from the file
-            if (fileReadSampleCount > 0)
-            {
-                int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
-                _ = _stream.Read(data, 0, fileReadByteCount);
-                fileSampleOffset += fileReadSampleCount;
-
-                int chunkSampleOffset = 0;
-                int dataByteOffset = 0;
-                while (dataByteOffset < fileReadByteCount)
+                // calculate how many samples to skip at the beginning (for positive delays)
+                int startSkipSampleCount = 0;
+                if (fileSampleOffset < 0)
                 {
-                    float valuePositive = 0F;
-                    float valueNegative = -0F;
-                    for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
-                    {
-                        var v = readSampleDataValue(data, ref dataByteOffset);
-                        if (v < 0)
-                        {
-                            valueNegative += v;
-                        }
-                        else
-                        {
-                            valuePositive += v;
-                        }
-                    }
-
-                    chunkSamples[chunkSampleOffset] = valueNegative * sampleAndChannelScale;
-                    chunkSampleOffset++;
-                    chunkSamples[chunkSampleOffset] = valuePositive * sampleAndChannelScale;
-                    chunkSampleOffset++;
+                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startSkipSampleCount;
                 }
+
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
+                    _ = _stream.Read(data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int chunkSampleOffset = 0;
+                    // Fast path for 16-bit PCM - avoid delegate overhead via direct span cast
+                    var shorts = MemoryMarshal.Cast<byte, short>(data.AsSpan(0, fileReadByteCount));
+                    int sIdx = 0;
+                    while (sIdx < shorts.Length)
+                    {
+                        short v1 = shorts[sIdx++];
+                        short v2 = shorts[sIdx++];
+
+                        float pos = 0, neg = 0;
+
+                        if (v1 < 0) neg += v1; else pos += v1;
+                        if (v2 < 0) neg += v2; else pos += v2;
+
+                        chunkSamples[chunkSampleOffset++] = neg * sampleAndChannelScale;
+                        chunkSamples[chunkSampleOffset++] = pos * sampleAndChannelScale;
+                    }
+                }
+
+                // calculate peaks
+                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
+            }
+        }
+        else
+        {
+            while (fileSampleOffset < fileSampleCount)
+            {
+                // calculate how many samples to skip at the beginning (for positive delays)
+                int startSkipSampleCount = 0;
+                if (fileSampleOffset < 0)
+                {
+                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startSkipSampleCount;
+                }
+
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
+                    _ = _stream.Read(data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int chunkSampleOffset = 0;
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
+                    {
+                        float valuePositive = 0F;
+                        float valueNegative = -0F;
+                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
+                        {
+                            var v = readSampleDataValue(data, ref dataByteOffset);
+                            if (v < 0)
+                            {
+                                valueNegative += v;
+                            }
+                            else
+                            {
+                                valuePositive += v;
+                            }
+                        }
+
+                        chunkSamples[chunkSampleOffset] = valueNegative * sampleAndChannelScale;
+                        chunkSampleOffset++;
+                        chunkSamples[chunkSampleOffset] = valuePositive * sampleAndChannelScale;
+                        chunkSampleOffset++;
+                    }
+                }
+
+                // calculate peaks
+                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
             }
 
-            // calculate peaks
-            peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
         }
+
 
         // save results to file
         if (!string.IsNullOrWhiteSpace(peakFileName))
@@ -619,13 +671,7 @@ public class WavePeakGenerator2 : IDisposable
     public static void WriteWaveformData(Stream stream, int sampleRate, List<WavePeak2> peaks)
     {
         WaveHeader2.WriteHeader(stream, sampleRate, 2, 16, peaks.Count);
-        var buffer = new byte[4];
-        foreach (var peak in peaks)
-        {
-            WriteValue16Bit(buffer, 0, peak.Max);
-            WriteValue16Bit(buffer, 2, peak.Min);
-            stream.Write(buffer, 0, 4);
-        }
+        stream.Write(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(peaks)));
     }
 
     public static WavePeakData2 GenerateEmptyPeaks(string peakFileName, int totalSeconds)
@@ -674,7 +720,7 @@ public class WavePeakGenerator2 : IDisposable
         float max = chunk[0];
         float min = chunk[0];
 
-        for (var i = 1; i < chunk.Length; i++)
+        for (var i = 1; i < count; i++)
         {
             float value = chunk[i];
             max = Math.Max(max, value);
