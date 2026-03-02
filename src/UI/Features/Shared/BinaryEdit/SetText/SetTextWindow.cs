@@ -64,7 +64,7 @@ public class SetTextWindow : Window
 
     private static Border MakeTextView(SetTextViewModel vm)
     {
-        var labelText = UiUtil.MakeLabel("Text:");
+        var labelText = UiUtil.MakeLabel(Se.Language.General.Text);
         var textBoxText = new TextBox
         {
             MinWidth = 550,

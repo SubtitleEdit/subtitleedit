@@ -176,7 +176,7 @@ public class BinaryEditWindow : Window
                 new Separator(),
                 new MenuItem
                 {
-                    Header = "Import time codes...",
+                    Header = Se.Language.Tools.ImageBasedEdit.ImportTimeCodes,
                     Command = vm.ImportTimeCodesCommand,
                 },
                 new Separator(),
@@ -594,7 +594,7 @@ public class BinaryEditWindow : Window
         buttonsPanel.Children.Add(importImageButton);
 
         var setTextButton = UiUtil.MakeButton(vm.SetTextCommand, IconNames.NewText);
-        ToolTip.SetTip(setTextButton, "Set text for subtitle");
+        ToolTip.SetTip(setTextButton, Se.Language.Tools.ImageBasedEdit.SetTextForSubtitle);
         buttonsPanel.Children.Add(setTextButton);
 
         secondRowPanel.Children.Add(buttonsPanel);
@@ -613,7 +613,7 @@ public class BinaryEditWindow : Window
         var screenWidthPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         screenWidthPanel.Children.Add(new TextBlock
         {
-            Text = "Screen Width",
+            Text = Se.Language.Tools.ImageBasedEdit.ScreenWidth,
             FontWeight = FontWeight.Bold,
             VerticalAlignment = VerticalAlignment.Center,
         });
@@ -637,7 +637,7 @@ public class BinaryEditWindow : Window
         var screenHeightPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         screenHeightPanel.Children.Add(new TextBlock
         {
-            Text = "Screen Height",
+            Text = Se.Language.Tools.ImageBasedEdit.ScreenHeight,
             FontWeight = FontWeight.Bold,
             VerticalAlignment = VerticalAlignment.Center,
         });

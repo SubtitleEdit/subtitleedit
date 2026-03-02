@@ -14,7 +14,7 @@ public class BinaryAdjustBrightnessWindow : Window
     public BinaryAdjustBrightnessWindow(BinaryAdjustBrightnessViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Adjust brightness";
+        Title = Se.Language.Tools.ImageBasedEdit.AdjustBrightness;
         Width = 800;
         Height = 600;
         CanResize = true;
@@ -75,7 +75,7 @@ public class BinaryAdjustBrightnessWindow : Window
         // Brightness slider
         var brightnessLabel = new TextBlock
         {
-            Text = "Brightness:",
+            Text = Se.Language.Tools.ImageBasedEdit.Brightness,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Thickness(0, 0, 0, 5),
         };
@@ -107,7 +107,7 @@ public class BinaryAdjustBrightnessWindow : Window
         // Contrast slider
         var contrastLabel = new TextBlock
         {
-            Text = "Contrast:",
+            Text = Se.Language.Tools.ImageBasedEdit.Contrast,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Thickness(0, 20, 0, 5),
         };
@@ -139,7 +139,7 @@ public class BinaryAdjustBrightnessWindow : Window
         // Gamma slider
         var gammaLabel = new TextBlock
         {
-            Text = "Gamma:",
+            Text = Se.Language.Tools.ImageBasedEdit.Gamma,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Thickness(0, 20, 0, 5),
         };
@@ -169,7 +169,7 @@ public class BinaryAdjustBrightnessWindow : Window
         panel.Children.Add(gammaValueLabel);
 
         // Reset button
-        var resetButton = UiUtil.MakeButton("Reset to defaults",vm.ResetCommand);
+        var resetButton = UiUtil.MakeButton(Se.Language.Tools.ImageBasedEdit.ResetToDefaults, vm.ResetCommand);
         resetButton.Margin = new Thickness(0, 20, 0, 0);
         resetButton.HorizontalAlignment = HorizontalAlignment.Stretch;
         panel.Children.Add(resetButton);
@@ -177,8 +177,7 @@ public class BinaryAdjustBrightnessWindow : Window
         // Info text
         var infoText = new TextBlock
         {
-            Text = "Adjust the sliders to modify brightness, contrast, and gamma. " +
-                   "Preview updates automatically and shows the first selected subtitle.",
+            Text = Se.Language.Tools.ImageBasedEdit.BrightnessAdjustmentInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 20, 0, 0),
             FontSize = 11,

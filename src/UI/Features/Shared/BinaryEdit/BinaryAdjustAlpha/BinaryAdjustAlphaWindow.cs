@@ -137,7 +137,7 @@ public class BinaryAdjustAlphaWindow : Window
 
         var thresholdInfo = new TextBlock
         {
-            Text = "Pixels with alpha below threshold become fully transparent",
+            Text = Se.Language.Tools.ImageBasedEdit.AlphaThresholdInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             FontSize = 10,
             Foreground = Avalonia.Media.Brushes.Gray,
@@ -146,7 +146,7 @@ public class BinaryAdjustAlphaWindow : Window
         panel.Children.Add(thresholdInfo);
 
         // Reset button
-        var resetButton = UiUtil.MakeButton("Reset to defaults", vm.ResetCommand);
+        var resetButton = UiUtil.MakeButton(Se.Language.Tools.ImageBasedEdit.ResetToDefaults, vm.ResetCommand);
         resetButton.Margin = new Thickness(0, 20, 0, 0);
         resetButton.HorizontalAlignment = HorizontalAlignment.Stretch;
         panel.Children.Add(resetButton);
@@ -154,8 +154,7 @@ public class BinaryAdjustAlphaWindow : Window
         // Info text
         var infoText = new TextBlock
         {
-            Text = "Alpha adjustment: Add/subtract from alpha channel.\n" +
-                   "Preview updates automatically and shows with checkered background to visualize transparency.",
+            Text = Se.Language.Tools.ImageBasedEdit.AlphaAdjustmentInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 20, 0, 0),
             FontSize = 11,
