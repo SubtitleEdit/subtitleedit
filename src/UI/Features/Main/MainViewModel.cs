@@ -1194,12 +1194,12 @@ public partial class MainViewModel :
         if (format != null)
         {
             SetSubtitleFormat(SubtitleFormats.FirstOrDefault(f => f.FriendlyName == format.FriendlyName)
-                ?? SubtitleFormats[0]);
+                              ?? SubtitleFormats[0]);
         }
         else
         {
             SetSubtitleFormat(
-                 SubtitleFormats.FirstOrDefault(f => f.FriendlyName == Se.Settings.General.DefaultSubtitleFormat) ??
+                SubtitleFormats.FirstOrDefault(f => f.FriendlyName == Se.Settings.General.DefaultSubtitleFormat) ??
                 SubtitleFormats[0]);
         }
 
@@ -1546,10 +1546,7 @@ public partial class MainViewModel :
             Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffectColor = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffectColor.ToHex();
             Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontSize = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontSize;
 
-            var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => 
-            {
-                vm.Initialize(format);
-            });
+            var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => { vm.Initialize(format); });
 
             Configuration.Settings.SubtitleSettings.CurrentDCinemaSubtitleId = Se.Settings.File.DCinemaSmpte.CurrentDCinemaSubtitleId;
             Configuration.Settings.SubtitleSettings.CurrentDCinemaMovieTitle = Se.Settings.File.DCinemaSmpte.CurrentDCinemaMovieTitle;
@@ -1983,12 +1980,12 @@ public partial class MainViewModel :
 
         using (var ms = new MemoryStream())
         {
-                cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
-                ms.Position = 0;
-                File.WriteAllBytes(fileName, ms.ToArray());
-            }
+            cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
+            ms.Position = 0;
+            File.WriteAllBytes(fileName, ms.ToArray());
+        }
 
-            ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
+        ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
     }
 
     [RelayCommand]
@@ -3370,7 +3367,7 @@ public partial class MainViewModel :
         ResetSubtitle();
         SetSubtitles(result.JoinedSubtitle);
         SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == result.JoinedFormat.Name) ??
-                                 SubtitleFormats[0]);
+                          SubtitleFormats[0]);
         SelectAndScrollToRow(0);
         ShowStatus(Se.Language.Main.JoinedSubtitleLoaded);
     }
@@ -4238,7 +4235,7 @@ public partial class MainViewModel :
         {
             return;
         }
-        
+
         var doContinue = await HasChangesContinue();
         if (!doContinue)
         {
@@ -4251,7 +4248,7 @@ public partial class MainViewModel :
         if (result.OkPressed && !result.IsBatchMode)
         {
             ResetSubtitle();
-            
+
             _subtitle = result.TranscribedSubtitle;
             if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
             {
@@ -9884,7 +9881,7 @@ public partial class MainViewModel :
             ResetSubtitle();
 
             SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == subtitle.OriginalFormat.Name) ??
-                                     SelectedSubtitleFormat);
+                              SelectedSubtitleFormat);
 
             if (fileEncoding.WebName.StartsWith("utf-8", StringComparison.OrdinalIgnoreCase))
             {
@@ -9953,28 +9950,39 @@ public partial class MainViewModel :
 
     private void SetupLiveSpellCheck()
     {
+        var dictionaryFound = false;
+        var twoLetterLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+        var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
+        if (!string.IsNullOrEmpty(threeLetterLanguageCode))
+        {
+            var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
+            var dictionary = spellCheckLanguages.FirstOrDefault(p => p.GetThreeLetterCode() == threeLetterLanguageCode);
+            if (dictionary != null)
+            {
+                _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
+                dictionaryFound = true;
+            }
+        }
+
         if (EditTextBox is TextEditorWrapper wrapper)
         {
-            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck)
+            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryFound)
             {
-                var twoLetterLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
-                var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
-                if (!string.IsNullOrEmpty(threeLetterLanguageCode))
-                {
-                    var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
-                    var dictionary = spellCheckLanguages.FirstOrDefault(p => p.GetThreeLetterCode() == threeLetterLanguageCode);
-                    if (dictionary != null)
-                    {
-                        _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
-                        wrapper.EnableSpellCheck(_spellCheckManager);
-                        SubtitleDataGridSyntaxHighlighting.EnableSpellCheck(_spellCheckManager);
-                    }
-                }
+                wrapper.EnableSpellCheck(_spellCheckManager);
             }
-            else if (!Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck)
+            else
             {
                 wrapper.DisableSpellCheck();
             }
+        }
+
+        if (Se.Settings.Appearance.SubtitleGridLiveSpellCheck && dictionaryFound)
+        {
+            SubtitleDataGridSyntaxHighlighting.SetSpellCheck(_spellCheckManager);
+        }
+        else
+        {
+            SubtitleDataGridSyntaxHighlighting.SetSpellCheck(null);
         }
     }
 
@@ -10253,7 +10261,7 @@ public partial class MainViewModel :
             {
                 ResetSubtitle();
                 SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == new WebVTT().Name) ??
-                                         SelectedSubtitleFormat);
+                                  SelectedSubtitleFormat);
                 _subtitle = mp4Parser.VttcSubtitle;
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
@@ -10690,7 +10698,7 @@ public partial class MainViewModel :
         Utilities.ParseMatroskaTextSt(matroskaSubtitleInfo, sub, _subtitle);
 
         SetSubtitleFormat(
-             SubtitleFormats.FirstOrDefault(p => p.Name == Se.Settings.General.DefaultSubtitleFormat) ??
+            SubtitleFormats.FirstOrDefault(p => p.Name == Se.Settings.General.DefaultSubtitleFormat) ??
             SelectedSubtitleFormat);
         _converted = true;
         ShowStatus(Se.Language.Main.SubtitleImportedFromMatroskaFile);
@@ -12328,7 +12336,7 @@ public partial class MainViewModel :
         var firstLine = Subtitles.GetOrNull(sortedIndices.FirstOrDefault());
 
         var areLinesConsecutive = sortedIndices.Count == 1 ||
-            sortedIndices.Zip(sortedIndices.Skip(1), (a, b) => b - a).All(diff => diff == 1);
+                                  sortedIndices.Zip(sortedIndices.Skip(1), (a, b) => b - a).All(diff => diff == 1);
 
         var nextLine = Subtitles.GetOrNull(idx + selectedItems.Count);
 
@@ -13567,7 +13575,8 @@ public partial class MainViewModel :
             }
 
             Subtitles[Subtitles.Count - 1].Gap = double.MaxValue;
-            Subtitles[Subtitles.Count - 1].IsHidden = hasLayers && !_visibleLayers!.Contains(Subtitles.Last().Layer); ;
+            Subtitles[Subtitles.Count - 1].IsHidden = hasLayers && !_visibleLayers!.Contains(Subtitles.Last().Layer);
+            ;
         }
         catch
         {
@@ -13946,7 +13955,7 @@ public partial class MainViewModel :
         {
             var itemsToRemove = flyout.Items.Where(item => item is MenuItem mi && mi.Tag?.ToString() == "SpellCheck" ||
                                                            item is Separator sep && sep.Tag?.ToString() == "SpellCheck")
-                                             .ToList();
+                .ToList();
             foreach (var item in itemsToRemove)
             {
                 flyout.Items.Remove(item);
@@ -13977,7 +13986,7 @@ public partial class MainViewModel :
                             {
                                 var text = wrapper.Text;
                                 wrapper.Text = text.Remove(word.Index, word.Length)
-                                                  .Insert(word.Index, suggestion);
+                                    .Insert(word.Index, suggestion);
                                 wrapper.CaretIndex = word.Index + suggestion.Length;
                             };
                             flyout.Items.Insert(insertIndex++, suggestionItem);
@@ -14017,10 +14026,7 @@ public partial class MainViewModel :
                             Header = Se.Language.SpellCheck.PickSpellCheckDictionaryDotDotDot,
                             Tag = "SpellCheck"
                         };
-                        changeDictionary.Click += (_, _) =>
-                        {
-                            PickLiveSpellCheckDictionary(wrapper);
-                        };
+                        changeDictionary.Click += (_, _) => { PickLiveSpellCheckDictionary(wrapper); };
                         flyout.Items.Insert(insertIndex++, changeDictionary);
 
                         // Add separator after spell check items
@@ -14145,10 +14151,7 @@ public partial class MainViewModel :
                         var clipboardText = await ClipboardHelper.GetTextAsync(Window);
                         if (!string.IsNullOrEmpty(clipboardText))
                         {
-                            await Dispatcher.UIThread.InvokeAsync(() =>
-                            {
-                                MenuItemAudioVisualizerPasteFromClipboardMenuItem.IsVisible = !string.IsNullOrEmpty(clipboardText);
-                            });
+                            await Dispatcher.UIThread.InvokeAsync(() => { MenuItemAudioVisualizerPasteFromClipboardMenuItem.IsVisible = !string.IsNullOrEmpty(clipboardText); });
                         }
                     }
                 }

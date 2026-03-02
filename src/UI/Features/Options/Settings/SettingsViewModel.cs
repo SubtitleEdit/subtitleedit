@@ -220,6 +220,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxFontBold;
     [ObservableProperty] private bool _textBoxColorTags;
     [ObservableProperty] private bool _textBoxLiveSpellCheck;
+    [ObservableProperty] private bool _subtitleGridLiveSpellCheck;
     [ObservableProperty] private bool _textBoxCenterText;
     [ObservableProperty] private bool _showButtonHints;
     [ObservableProperty] private bool _gridCompactMode;
@@ -596,6 +597,7 @@ public partial class SettingsViewModel : ObservableObject
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
         SubtitleGridFormatting = MapGridFormattingToText(appearance.SubtitleGridFormattingType);
+        SubtitleGridLiveSpellCheck = appearance.SubtitleGridLiveSpellCheck;
         SubtitleTextBoxAndGridFontName = appearance.SubtitleTextBoxAndGridFontName;
         TextBoxFontSize = appearance.SubtitleTextBoxFontSize;
         TextBoxFontBold = appearance.SubtitleTextBoxFontBold;
@@ -1145,6 +1147,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
         appearance.SubtitleGridFormattingType = MapGridFormattingToCode(SubtitleGridFormatting);
+        appearance.SubtitleGridLiveSpellCheck = SubtitleGridLiveSpellCheck;
         appearance.SubtitleTextBoxAndGridFontName = string.IsNullOrEmpty(SubtitleTextBoxAndGridFontName) ? new Label().FontFamily.Name : SubtitleTextBoxAndGridFontName;
         appearance.SubtitleTextBoxFontSize = TextBoxFontSize;
         appearance.SubtitleTextBoxFontBold = TextBoxFontBold;
