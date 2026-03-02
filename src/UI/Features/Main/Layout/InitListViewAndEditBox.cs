@@ -613,6 +613,9 @@ public static partial class InitListViewAndEditBox
         insertAfterMenuItem.Command = vm.InsertLineAfterCommand;
         flyout.Items.Add(insertAfterMenuItem);
 
+        var copyOriginal = new MenuItem { Header = Se.Language.Main.CopyTextFromOriginalToCurrent, Command = vm.ColumnCopyTextFromOriginalToCurrentCommand };
+        copyOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
+
         var columnMenuItem = new MenuItem
         {
             Header = Se.Language.General.Column,
@@ -623,6 +626,7 @@ public static partial class InitListViewAndEditBox
                 new MenuItem { Header = Se.Language.Main.DeleteTextAndShiftCellsUp, Command = vm.ColumnDeleteTextAndShiftCellsUpCommand},
                 new MenuItem { Header = Se.Language.Main.InsertEmptyTextAndShiftCellsDown, Command = vm.ColumnInsertEmptyTextAndShiftCellsDownCommand },
                 new MenuItem { Header = Se.Language.Main.InsertTextFromSubtitleDotDotDot, Command = vm.ColumnInsertTextFromSubtitleCommand },
+                copyOriginal,
                 new MenuItem { Header = Se.Language.Main.PasteFromClipboardDotDotDot, Command = vm.ColumnPasteFromClipboardCommand},
                 new MenuItem { Header = Se.Language.Main.TextUp, Command = vm.ColumnTextUpCommand },
                 new MenuItem { Header = Se.Language.Main.TextDown, Command = vm.ColumnTextDownCommand },
@@ -1391,7 +1395,7 @@ public static partial class InitListViewAndEditBox
         return mainGrid;
     }
 
-    private static Control MakeTextBox(MainViewModel vm)
+    private static Avalonia.Controls.Control MakeTextBox(MainViewModel vm)
     {
         UiUtil.RemoveControlFromParent(vm.EditTextBox.ContentControl);
 
@@ -1502,7 +1506,7 @@ public static partial class InitListViewAndEditBox
         return textEditor;
     }
 
-    private static Control MakeTextBoxOriginal(MainViewModel vm)
+    private static Avalonia.Controls.Control MakeTextBoxOriginal(MainViewModel vm)
     {
         if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
         {

@@ -36,6 +36,7 @@ public class LanguageMain
     public string GeneratingWaveformDotDotDot { get; set; }
     public string InsertEmptyTextAndShiftCellsDown { get; set; }
     public string InsertTextFromSubtitleDotDotDot { get; set; }
+    public string CopyTextFromOriginalToCurrent { get; set; }
     public string InsertedXTextsFromSubtitleY { get; set; }
     public string ItalicHint { get; set; }
     public string JoinedSubtitleLoaded { get; set; }
@@ -132,6 +133,7 @@ public class LanguageMain
         GeneratingWaveformDotDotDot = "Generating waveform...";
         InsertEmptyTextAndShiftCellsDown = "Insert empty text and shift cells down";
         InsertTextFromSubtitleDotDotDot = "Insert text from subtitle...";
+        CopyTextFromOriginalToCurrent = "Copy text from original to current subtitle";
         InsertedXTextsFromSubtitleY = "Inserted {0} texts from subtitle file \"{1}\"";
         ItalicHint = "Italic selected lines/text";
         JoinedSubtitleLoaded = "Joined subtitle loaded";
