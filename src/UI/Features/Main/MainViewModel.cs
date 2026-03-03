@@ -3770,6 +3770,7 @@ public partial class MainViewModel :
         }
     }
 
+    [RelayCommand]
     private async Task ShowToolsConvertActors()
     {
         if (Window == null)
