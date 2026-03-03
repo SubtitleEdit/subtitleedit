@@ -23,6 +23,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Batch Convert](features/batch-convert.md) — Convert multiple subtitle files
 - [Change Casing](features/change-casing.md) — Fix casing issues
 - [Change Formatting](features/change-formatting.md) — Modify subtitle formatting
+- [Convert Actors](features/convert-actors.md) — Convert actor/voice labels between styles
 - [Adjust Duration](features/adjust-duration.md) — Adjust subtitle display durations
 - [Apply Duration Limits](features/apply-duration-limits.md) — Enforce min/max duration rules
 - [Bridge Gaps](features/bridge-gaps.md) — Bridge gaps between subtitles
