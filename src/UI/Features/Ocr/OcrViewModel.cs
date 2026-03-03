@@ -3278,16 +3278,45 @@ public partial class OcrViewModel : ObservableObject
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
     }
 
+    private bool _subtitleGridIsLeftClick = false;
+    private bool _subtitleGridIsControlPressed = false;
+
+    internal void DataGridSubtitleMacPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _subtitleGridIsLeftClick = false;
+        _subtitleGridIsControlPressed = false;
+
+        if (!OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        if (sender is Control control)
+        {
+            var props = e.GetCurrentPoint(control).Properties;
+            _subtitleGridIsLeftClick = props.IsLeftButtonPressed;
+            _subtitleGridIsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+
+            // Block the DataGrid's default Ctrl+Click deselect behavior on Mac
+            if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed)
+            {
+                e.Handled = true;
+            }
+        }
+    }
+
     internal void DataGridSubtitleMacPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (OperatingSystem.IsMacOS() &&
-            e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
-            !e.Pointer.IsPrimary &&
-            sender is Control control)
+        if (!OperatingSystem.IsMacOS())
         {
-            var args = new ContextRequestedEventArgs(e);
-            control.RaiseEvent(args);
-            e.Handled = args.Handled;
+            return;
+        }
+
+        if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed &&
+            sender is Control { ContextFlyout: MenuFlyout menuFlyout } ctrl)
+        {
+            menuFlyout.ShowAt(ctrl, true);
+            e.Handled = true;
         }
     }
 }
