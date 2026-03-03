@@ -12,6 +12,7 @@ public class LanguageTools
     public LanguageBatchConvert BatchConvert { get; set; } = new();
     public LanguageChangeCasing ChangeCasing { get; set; } = new();
     public LanguageChangeFormatting ChangeFormatting { get; set; } = new();
+    public LanguageConvertActors ConvertActors { get; set; } = new();
     public LanguageJoinSubtitles JoinSubtitles { get; set; } = new();
     public LanguageSplitSubtitle SplitSubtitle { get; set; } = new();
     public LanguageSplitBreakLongLines SplitBreakLongLines { get; set; } = new();

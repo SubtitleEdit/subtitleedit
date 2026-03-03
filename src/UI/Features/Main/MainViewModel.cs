@@ -101,6 +101,7 @@ using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
+using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 using Nikse.SubtitleEdit.Features.Tools.JoinSubtitles;
@@ -3755,6 +3756,35 @@ public partial class MainViewModel :
 
         var result =
             await ShowDialogAsync<ChangeFormattingWindow, ChangeFormattingViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        var idx = SelectedSubtitleIndex ?? 0;
+        if (result.OkPressed)
+        {
+            SetSubtitles(result.FixedSubtitle);
+            SelectAndScrollToRow(idx);
+        }
+    }
+
+    private async Task ShowToolsConvertActors()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var result =
+            await ShowDialogAsync<ConvertActorsWindow, ConvertActorsViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
 
         if (!result.OkPressed)
         {
