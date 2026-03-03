@@ -2,6 +2,8 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -621,6 +623,10 @@ public class InitWaveform
 
         mainGrid.Children.Add(controlsPanel);
         Grid.SetRow(controlsPanel, 1);
+
+        DragDrop.SetAllowDrop(vm.AudioVisualizer, true);
+        vm.AudioVisualizer.AddHandler(DragDrop.DragOverEvent, vm.VideoOnDragOver, RoutingStrategies.Bubble);
+        vm.AudioVisualizer.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
         return mainGrid;
     }
