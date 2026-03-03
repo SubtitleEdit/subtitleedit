@@ -77,6 +77,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _ollamaUrl;
+    [ObservableProperty] private string _llamaCppUrl;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private Bitmap? _currentImageSource;
@@ -85,6 +86,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isOcrRunning;
     [ObservableProperty] private bool _isNOcrVisible;
     [ObservableProperty] private bool _isOllamaVisible;
+    [ObservableProperty] private bool _isLlamaCppVisible;
     [ObservableProperty] private bool _isTesseractVisible;
     [ObservableProperty] private bool _isBinaryImageCompareVisible;
     [ObservableProperty] private bool _isPaddleOcrVisible;
@@ -183,6 +185,7 @@ public partial class OcrViewModel : ObservableObject
         ProgressText = string.Empty;
         OllamaModel = string.Empty;
         OllamaUrl = string.Empty;
+        LlamaCppUrl = string.Empty;
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         GoogleVisionApiKey = string.Empty;
         MistralApiKey = string.Empty;
@@ -231,6 +234,7 @@ public partial class OcrViewModel : ObservableObject
             BinaryOcrMaxErrorPercent = ocr.BinaryOcrMaxErrorPercent;
             OllamaModel = ocr.OllamaModel;
             OllamaUrl = ocr.OllamaUrl;
+            LlamaCppUrl = ocr.LlamaCppUrl;
             SelectedOllamaLanguage = ocr.OllamaLanguage;
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
@@ -272,6 +276,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.OllamaModel = OllamaModel;
         ocr.OllamaUrl = OllamaUrl;
         ocr.OllamaLanguage = SelectedOllamaLanguage ?? "English";
+        ocr.LlamaCppUrl = LlamaCppUrl;
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
@@ -1499,6 +1504,10 @@ public partial class OcrViewModel : ObservableObject
         {
             RunOllamaOcr(selectedIndices, _cancellationTokenSource.Token);
         }
+        else if (ocrEngine.EngineType == OcrEngineType.LlamaCpp)
+        {
+            RunLlamaCppOcr(selectedIndices, _cancellationTokenSource.Token);
+        }
         else if (ocrEngine.EngineType == OcrEngineType.Mistral)
         {
             if (string.IsNullOrEmpty(MistralApiKey))
@@ -2654,6 +2663,37 @@ public partial class OcrViewModel : ObservableObject
         });
     }
 
+    private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
+    {
+        var engine = new LlamaCppOcr();
+
+        _ = Task.Run(async () =>
+        {
+            foreach (var i in selectedIndices)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
+                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+
+                var item = OcrSubtitleItems[i];
+                var bitmap = item.GetSkBitmap();
+
+                SelectAndScrollToRow(i);
+
+                var text = await engine.Ocr(bitmap, LlamaCppUrl, "", SelectedOllamaLanguage ?? "English", cancellationToken);
+                item.Text = text;
+
+                OcrFixLineAndSetText(i, item);
+            }
+
+            PauseOcr();
+        });
+    }
+
     private void RunMistralOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var mistralOcr = new MistralOcr(MistralApiKey);
@@ -3068,6 +3108,7 @@ public partial class OcrViewModel : ObservableObject
         IsNOcrVisible = et == OcrEngineType.nOcr;
         IsInspectLineVisible = et == OcrEngineType.nOcr || et == OcrEngineType.BinaryImageCompare;
         IsOllamaVisible = et == OcrEngineType.Ollama;
+        IsLlamaCppVisible = et == OcrEngineType.LlamaCpp;
         IsTesseractVisible = et == OcrEngineType.Tesseract;
         IsPaddleOcrVisible = et == OcrEngineType.PaddleOcrStandalone || et == OcrEngineType.PaddleOcrPython;
         IsGoogleVisionVisible = et == OcrEngineType.GoogleVision;
