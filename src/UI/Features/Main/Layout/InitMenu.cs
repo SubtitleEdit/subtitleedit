@@ -435,6 +435,11 @@ public static class InitMenu
                 Header = l.RemoveTextForHearingImpaired,
                 Command = vm.ShowToolsRemoveTextForHearingImpairedCommand,
             },
+            new MenuItem
+            {
+                Header = l.ConvertActors,
+                Command = vm.ShowToolsConvertActorsCommand,
+            },
         };
         foreach (var item in tools.OrderBy(p => p.Header?.ToString()?.TrimStart('_', ' ')))
         {

@@ -53,6 +53,7 @@ public class LanguageMainMenu
     public string SplitBreakLongLines { get; set; }
     public string MergeShortLines { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
+    public string ConvertActors { get; set; }
     public string JoinSubtitles { get; set; }
     public string SplitSubtitle { get; set; }
 
@@ -166,6 +167,7 @@ public class LanguageMainMenu
         SplitBreakLongLines = "Split/rebalance long lines...";
         MergeShortLines = "Merge short lines...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
+        ConvertActors = "Convert actors...";
         ChangeCasing = "_Change casing...";
         ChangeFormatting = "Change formatting...";
         BridgeGaps = "Bridge _gaps...";
