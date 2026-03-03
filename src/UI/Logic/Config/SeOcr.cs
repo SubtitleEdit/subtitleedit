@@ -16,6 +16,7 @@ public class SeOcr
     public string OllamaModel { get; set; }
     public string OllamaUrl { get; set; }
     public string OllamaLanguage { get; set; }
+    public string LlamaCppUrl { get; set; }
     public string GoogleVisionApiKey { get; set; }
     public string GoogleVisionLanguage { get; set; }
     public string MistralApiKey { get; set; }

@@ -267,6 +267,25 @@ public class OcrWindow : Window
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
+                 // Ollama settings
+                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsLlamaCppVisible)),
+                UiUtil.MakeComboBox(vm.OllamaLanguages, vm, nameof(vm.SelectedOllamaLanguage),
+                        nameof(vm.IsLlamaCppVisible))
+                    .WithWidth(100)
+                    .WithMarginRight(10)
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                //UiUtil.MakeLabel(Se.Language.General.Model, nameof(vm.IsLlamaCppVisible)),
+                //UiUtil.MakeTextBox(160, vm, nameof(vm.OllamaModel))
+                //    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
+                //    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                //UiUtil.MakeBrowseButton(vm.PickOllamaModelCommand)
+                //    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
+                //    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                UiUtil.MakeLabel(Se.Language.General.Url, nameof(vm.IsLlamaCppVisible)),
+                UiUtil.MakeTextBox(220, vm, nameof(vm.LlamaCppUrl))
+                    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+
                 // Google vision settings
                 UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsGoogleVisionVisible)),
                 UiUtil.MakeComboBox(vm.GoogleVisionLanguages, vm, nameof(vm.SelectedGoogleVisionLanguage),

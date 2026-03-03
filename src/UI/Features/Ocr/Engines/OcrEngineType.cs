@@ -7,6 +7,7 @@ public enum OcrEngineType
     PaddleOcrStandalone,
     PaddleOcrPython,
     Ollama,
+    LlamaCpp,
     GoogleVision,
     GoogleLens,
     GoogleLensSharp,
