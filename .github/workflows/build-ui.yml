@@ -533,7 +533,7 @@ jobs:
             - **Linux x64:** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
       
             ### Installation
-            1. Fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
+            1. Read and fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
             2. Download the appropriate package for your platform
             3. Extract the archive (or use installer if available)
             4. Run the executable (on macOS, the app is unsigned - see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements) for how to allow it).
