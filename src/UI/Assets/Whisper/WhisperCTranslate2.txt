@@ -1,7 +1,6 @@
 usage: whisper-ctranslate2 [-h]
         [--model {tiny,tiny.en,base,base.en,small,small.en,medium,medium.en,large-v1,large-v2,large-v3,large-v3-turbo,turbo,distil-large-v2,distil-large-v3,distil-large-v3.5,distil-medium.en,distil-small.en}]
         [--model_directory MODEL_DIRECTORY] [--model_dir MODEL_DIR] [--local_files_only LOCAL_FILES_ONLY]
-        [--output_dir OUTPUT_DIR] [--output_format {txt,vtt,srt,tsv,json,all}] [--pretty_json PRETTY_JSON]
         [--print_colors PRINT_COLORS] [--verbose VERBOSE] [--highlight_words HIGHLIGHT_WORDS]
         [--max_line_width MAX_LINE_WIDTH] [--max_line_count MAX_LINE_COUNT]
         [--max_words_per_line MAX_WORDS_PER_LINE] [--device {auto,cpu,cuda}] [--threads THREADS]
