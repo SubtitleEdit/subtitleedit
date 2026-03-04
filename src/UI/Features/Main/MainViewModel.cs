@@ -9312,8 +9312,8 @@ public partial class MainViewModel :
         {
             var answer = await MessageBox.Show(
                 Window!,
-                "Download ffmpeg?",
-                $"{Environment.NewLine}Some functions in Subtitle Edit requires ffmpeg.{Environment.NewLine}{Environment.NewLine}Download and use ffmpeg?",
+                Se.Language.Main.DownloadFfmpegTitle,
+                Se.Language.Main.DownloadFfmpegQuestion,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 

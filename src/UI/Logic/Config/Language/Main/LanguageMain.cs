@@ -103,6 +103,8 @@ public class LanguageMain
     public string NothingToSave { get; set; }
     public string NothingToSaveOriginal { get; set; }
     public string LiveSpellCheckLanguageXLoaded { get; set; }
+    public string DownloadFfmpegTitle { get; set; }
+    public string DownloadFfmpegQuestion { get; set; }
 
     public LanguageMain()
     {
@@ -200,5 +202,7 @@ public class LanguageMain
         NothingToSave = "Nothing to save";
         NothingToSaveOriginal = "Nothing to save (original)";
         LiveSpellCheckLanguageXLoaded = "Live spell check language {0} loaded";
+        DownloadFfmpegTitle = "Download FFmpeg?";
+        DownloadFfmpegQuestion = "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?";
     }
 }
