@@ -59,6 +59,8 @@ public class SeOcr
         OllamaModel = OllamaModels.First();
         OllamaUrl = "http://localhost:11434/api/chat/";
 
+        LlamaCppUrl = "http://127.0.0.1:8080/v1/chat/completions";
+
         GoogleVisionApiKey = string.Empty;
         GoogleVisionLanguage = "en";
 

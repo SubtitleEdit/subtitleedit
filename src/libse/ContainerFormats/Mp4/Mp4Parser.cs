@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Cea608;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Cea608;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         public Subtitle TrunCea608Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
+        public string DebugInfo { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
         {
@@ -158,6 +159,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     return;
                 }
 
+                var savedPos = fs.Position;
+                var bytesToRead = (int)Math.Min(100L, Math.Max(0L, (long)Size - 8));
+                if (bytesToRead > 0)
+                {
+                    var headerBytes = new byte[bytesToRead];
+                    var headerBytesRead = fs.Read(headerBytes, 0, bytesToRead);
+                    fs.Seek(savedPos, SeekOrigin.Begin);
+                }
+
                 if (Name == "moov" && Moov == null)
                 {
                     Moov = new Moov(fs, Position); // only scan first "moov" element
@@ -252,6 +262,166 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
 
             CheckForTrunCea608();
+            CheckForMoovVideoCea608();
+        }
+
+        private void CheckForMoovVideoCea608()
+        {
+            try
+            {
+                if (TrunCea608Subtitle?.Paragraphs.Count > 0)
+                {
+                    //debugInfo.AppendLine("CheckForMoovVideoCea608: skipped (fragmented path already found data)");
+                    return;
+                }
+
+                var videoTracks = GetVideoTracks();
+                if (videoTracks.Count == 0)
+                {
+                    //debugInfo.AppendLine("CheckForMoovVideoCea608: no video tracks found");
+                    return;
+                }
+
+                var stbl = videoTracks[0].Mdia?.Minf?.Stbl;
+                if (stbl?.ChunkOffsets == null || stbl.ChunkOffsets.Count == 0 ||
+                    stbl.SampleSizes.Count == 0 || stbl.Ssts.Count == 0)
+                {
+                    //debugInfo.AppendLine($"CheckForMoovVideoCea608: stbl incomplete (chunks={stbl?.ChunkOffsets?.Count ?? 0}, sizes={stbl?.SampleSizes?.Count ?? 0}, ssts={stbl?.Ssts?.Count ?? 0})");
+                    return;
+                }
+
+                //debugInfo.AppendLine($"CheckForMoovVideoCea608: chunks={stbl.ChunkOffsets.Count}, sizes={stbl.SampleSizes.Count}, ssts={stbl.Ssts.Count}, stsc={stbl.Stsc.Count}");
+
+                var timeScale = stbl.TimeScale > 0 ? stbl.TimeScale : (Moov?.Mvhd?.TimeScale ?? 1000UL);
+                var ccDataList = new List<CcData>();
+                var samplesScanned = 0;
+                var ccTypeCounts = new int[4];
+
+                using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    uint samplesPerChunk = 1;
+                    var index = 0;
+                    ulong totalTicks = 0;
+                    var stscLookup = stbl.Stsc.ToDictionary(p => p.FirstChunk);
+                    var done = false;
+
+                    for (var chunkIndex = 0; chunkIndex < stbl.ChunkOffsets.Count && !done; chunkIndex++)
+                    {
+                        if (stscLookup.TryGetValue((uint)chunkIndex + 1, out var newSpc))
+                        {
+                            samplesPerChunk = newSpc.SamplesPerChunk;
+                        }
+
+                        var chunkOffset = stbl.ChunkOffsets[chunkIndex];
+
+                        for (var i = 0; i < samplesPerChunk; i++)
+                        {
+                            if (index >= stbl.SampleSizes.Count || index >= stbl.Ssts.Count)
+                            {
+                                done = true;
+                                break;
+                            }
+
+                            var sampleSize = stbl.SampleSizes[index];
+                            var sampleTicks = stbl.Ssts[index];
+
+                            if (sampleSize > 4)
+                            {
+                                var scanSize = Math.Min((ulong)sampleSize, 1000UL);
+                                var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset, scanSize);
+                                foreach (var cc in ccData)
+                                {
+                                    cc.Time = totalTicks;
+                                    ccDataList.Add(cc);
+                                    if (cc.Type >= 0 && cc.Type < ccTypeCounts.Length)
+                                    {
+                                        ccTypeCounts[cc.Type]++;
+                                    }
+                                }
+
+                                if (samplesScanned == 0)
+                                {
+                                    CountRawCcTypes(fs, chunkOffset, scanSize, ccTypeCounts);
+                                }
+                            }
+
+                            totalTicks += sampleTicks;
+                            samplesScanned++;
+                            index++;
+                            chunkOffset += sampleSize;
+                        }
+                    }
+                }
+
+                //debugInfo.AppendLine($"CheckForMoovVideoCea608: scanned={samplesScanned}, cea608entries={ccDataList.Count} (type0={ccTypeCounts[0]}, type1={ccTypeCounts[1]}, type2={ccTypeCounts[2]}, type3={ccTypeCounts[3]})");
+
+                if (ccDataList.Count == 0)
+                {
+                    return;
+                }
+
+                TrunCea608Subtitle = new Subtitle();
+                var cea608Parser = new CcDataC608Parser();
+                cea608Parser.DisplayScreen += data =>
+                {
+                    var startMs = data.Start / (double)timeScale * 1000.0;
+                    var endMs = data.End / (double)timeScale * 1000.0;
+                    TrunCea608Subtitle.Paragraphs.Add(new Paragraph(GetText(data.Screen), startMs, endMs));
+                };
+                foreach (var cc in ccDataList)
+                {
+                    cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                }
+
+                //debugInfo.AppendLine($"CheckForMoovVideoCea608: paragraphs={TrunCea608Subtitle.Paragraphs.Count}");
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-608");
+            }
+        }
+
+        private static void CountRawCcTypes(Stream fs, ulong chunkOffset, ulong scanSize, int[] ccTypeCounts)
+        {
+            try
+            {
+                var atscId = new byte[] { 0xB5, 0x00, 0x31, 0x47, 0x41, 0x39, 0x34, 0x03 };
+                var buf = new byte[scanSize];
+                fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                var read = fs.Read(buf, 0, buf.Length);
+
+                for (var pos = 0; pos < read - 20; pos++)
+                {
+                    var match = true;
+                    for (var k = 0; k < atscId.Length; k++)
+                    {
+                        if (buf[pos + k] != atscId[k]) { match = false; break; }
+                    }
+
+                    if (!match)
+                    {
+                        continue;
+                    }
+
+                    var flagsByte = buf[pos + 8];          // byte after 8-byte ATSC id: cc_data_flags
+                    var ccCount = flagsByte & 0x1F;
+                    var emDataPresent = (flagsByte >> 7) & 1; // process_em_data_flag
+                    var ccStart = pos + 9 + emDataPresent; // skip id(8) + flags(1) + optional em_data(1)
+                    var rawTypeCounts = new int[4];
+                    for (var j = 0; j < ccCount && ccStart + j * 3 + 2 < read; j++)
+                    {
+                        var marker = buf[ccStart + j * 3];
+                        var ccType = marker & 0x3;
+                        if (ccType < 4) rawTypeCounts[ccType]++;
+                    }
+
+                    break;
+                }
+            }
+            catch
+            {
+                // ignore debug errors
+            }
         }
 
         private void CheckForTrunCea608()
