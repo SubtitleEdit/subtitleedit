@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Cea608;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
@@ -150,6 +151,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var max = ChunkOffsets.Count;
             var index = 0;
             double totalTime = 0;
+            ulong totalTicks = 0;
             var stscLookup = Stsc.ToDictionary(p => p.FirstChunk);
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
@@ -170,7 +172,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     var sampleSize = SampleSizes[index];
                     var sampleTime = Ssts[index];
                     var before = totalTime;
+                    var beforeTicks = totalTicks;
                     totalTime += sampleTime / (double)TimeScale;
+                    totalTicks += sampleTime;
 
                     if (sampleSize > 2)
                     {
@@ -185,22 +189,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                         else if (handlerType == "clcp" && Stsd?.Name == "c608")
                         {
-                            //TODO: decode cea 608... but what is the content?
-
-                            //var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset + 4, sampleSize);
-
-                            //var fieldData = new List<CcData>();
-                            //// var seiData = GetCcDataHelper.GetSeiData(fs, chunkOffset , chunkOffset + sampleSize);
-
-                            //var seiData = new byte[sampleSize];
-                            //fs.Seek((long)chunkOffset, SeekOrigin.Begin);
-                            //fs.Read(seiData, 0, seiData.Length);
-                            //GetCcDataHelper.ParseCcDataFromSei(seiData, fieldData);
-
-                            //if (fieldData.Count > 0)
-                            //{
-                            //    _cea608CcData.AddRange(fieldData);
-                            //}
+                            var sampleData = new byte[sampleSize];
+                            fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                            if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                            {
+                                for (var j = 0; j + 1 < sampleData.Length; j += 2)
+                                {
+                                    var d1 = sampleData[j];
+                                    var d2 = sampleData[j + 1];
+                                    if (d1 != 0 || d2 != 0)
+                                    {
+                                        _cea608CcData.Add(new CcData(0, d1, d2) { Time = beforeTicks });
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -252,7 +254,40 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
             }
 
+            if (_cea608CcData.Count > 0)
+            {
+                var cea608Parser = new CcDataC608Parser();
+                cea608Parser.DisplayScreen += data =>
+                {
+                    var startMs = data.Start / (double)TimeScale * 1000.0;
+                    var endMs = data.End / (double)TimeScale * 1000.0;
+                    var text = GetC608Text(data.Screen);
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        paragraphs.Add(new Paragraph(text, startMs, endMs));
+                    }
+                };
+                foreach (var cc in _cea608CcData)
+                {
+                    cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                }
+            }
+
             return paragraphs;
+        }
+
+        private static string GetC608Text(SerializedRow[] screen)
+        {
+            var sb = new StringBuilder();
+            foreach (var row in screen)
+            {
+                foreach (var column in row.Columns)
+                {
+                    sb.Append(column.Character);
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString().Trim();
         }
 
         private static string MakeScenaristText(byte[] buffer)

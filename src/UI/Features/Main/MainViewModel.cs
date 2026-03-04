@@ -10339,6 +10339,12 @@ public partial class MainViewModel :
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
+
+                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                {
+                    await VideoOpenFile(fileName);
+                }
+
                 return;
             }
 
@@ -10354,6 +10360,12 @@ public partial class MainViewModel :
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
+
+                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                {
+                    await VideoOpenFile(fileName);
+                }
+
                 return;
             }
 
