@@ -9798,6 +9798,24 @@ public partial class MainViewModel :
                 }
             }
 
+            if (ext == ".mcc")
+            {
+                var lines = FileUtil.ReadAllTextShared(fileName, Encoding.ASCII).SplitToLines();
+                var f = new MacCaption10();
+                if (f.IsMine(lines, fileName))
+                {
+                    ResetSubtitle();
+                    f.LoadSubtitle(_subtitle, lines, fileName);
+                    SetSubtitles(_subtitle);
+                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
+                                        SelectedSubtitleFormat.Extension;
+                    ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+                    SelectAndScrollToRow(0);
+                    _converted = true;
+                    return;
+                }
+            }
+
             if (ext == ".divx" || ext == ".avi")
             {
                 if (ImportSubtitleFromDivX(fileName))
