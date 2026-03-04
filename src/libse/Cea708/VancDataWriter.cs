@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             var commands = new List<ICea708Command>
             {
-                new HideWindows(true),
                 new ToggleWindows(true),
                 new HideWindows(true),
                 new DeleteWindows(true),
