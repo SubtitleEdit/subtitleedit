@@ -112,9 +112,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 counter += lines.Length;
                 foreach (var line in lines)
                 {
-                    sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{CompressHex(line)}");
+                    sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(line)}");
+                    frameNo = StepToNextFrame(frameNo, timeCode);
                 }
-                frameNo = StepToNextFrame(frameNo, timeCode);
 
                 // filler between start/end text
                 while (timeCode.TotalMilliseconds < p.EndTime.TotalMilliseconds)
@@ -127,29 +127,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // write end text
                 var endTimeText = VancDataWriter.GenerateTextInit(counter++);
-                sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
+                sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
                 frameNo = StepToNextFrame(frameNo, timeCode);
                 i++;
             }
-
-            //int counter = 0;
-            //for (int i = 0; i < subtitle.Paragraphs.Count; i++)
-            //{
-            //    var p = subtitle.Paragraphs[i];
-            //    if (i == 0)
-            //    {
-            //        var firstText = VancDataWriter.GenerateTextInit(counter++);
-            //        sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{CompressHex(firstText)}");
-            //    }
-            //    var lines = VancDataWriter.GenerateLinesFromText(p.Text, counter);
-            //    counter += lines.Length;
-            //    foreach (var line in lines)
-            //    {
-            //        sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{CompressHex(line)}");
-            //    }
-            //    var endTimeText = VancDataWriter.GenerateTextInit(counter++);
-            //    sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
-            //}
 
             var lastLine = VancDataWriter.GenerateEmpty(counter);
             sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(lastLine)}");
@@ -164,6 +145,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 timeCode.TotalMilliseconds = new TimeCode(timeCode.Hours, timeCode.Minutes, timeCode.Seconds + 1, 0).TotalMilliseconds;
                 frameNo = 0;
+                // Drop-frame (29.97DF): skip frames 0 and 1 at every minute boundary except multiples of 10
+                if (timeCode.Seconds == 0 && timeCode.Minutes % 10 != 0)
+                {
+                    frameNo = 2;
+                    timeCode.TotalMilliseconds += FramesToMilliseconds(2);
+                }
             }
             else
             {
