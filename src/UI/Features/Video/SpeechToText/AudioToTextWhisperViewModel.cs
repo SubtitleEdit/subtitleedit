@@ -1901,9 +1901,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         return process;
     }
 
-    public static string GetWhisperTranslateParameter(ISpeechToTextEngine engine)
+    private static string GetWhisperTranslateParameter(ISpeechToTextEngine engine)
     {
-        if (engine.Choice == new WhisperEnginePurfviewFasterWhisperXxl().Choice || engine.Choice == new WhisperEngineOpenAi().Choice)
+        if (engine.Choice == new WhisperEnginePurfviewFasterWhisperXxl().Choice || 
+            engine.Choice == new WhisperEngineOpenAi().Choice || 
+            engine.Choice == new WhisperEngineCTranslate2().Choice)
         {
             return "--task translate ";
         }
