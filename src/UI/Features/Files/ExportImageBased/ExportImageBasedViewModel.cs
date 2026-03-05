@@ -83,6 +83,7 @@ public partial class ExportImageBasedViewModel : ObservableObject
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
     private IExportHandler? _exportImageHandler;
+    private string? _subtitleFileName;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly System.Timers.Timer _timerUpdatePreview;
     private readonly IFileHelper _fileHelper;
@@ -327,8 +328,14 @@ public partial class ExportImageBasedViewModel : ObservableObject
         string fileOrFolderName;
         if (_exportImageHandler.UseFileName)
         {
+            var suggestedFileName = string.Empty;
+            if (!string.IsNullOrWhiteSpace(_subtitleFileName))
+            {
+                suggestedFileName = System.IO.Path.GetFileNameWithoutExtension(_subtitleFileName);
+            }
+                
             fileOrFolderName = await _fileHelper.PickSaveSubtitleFile(Window!, _exportImageHandler.Extension,
-                string.Empty, _exportImageHandler.Title);
+                suggestedFileName, _exportImageHandler.Title);
         }
         else
         {
@@ -607,6 +614,7 @@ public partial class ExportImageBasedViewModel : ObservableObject
         Subtitles.AddRange(subtitles);
         IsExportButtonVisible = !hideExportButton;
         _exportImageHandler = exportHandler;
+        _subtitleFileName = subtitleFileName;
         Title = exportHandler.Title;
 
         SelectedSubtitle = Subtitles.FirstOrDefault();
