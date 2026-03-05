@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -94,6 +95,8 @@ public static class UiTheme
         {
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         }
+
+        ApplyLayoutScaleToAllWindows();
     }
 
     private static void OnActualThemeVariantChanged(object? sender, EventArgs e)
@@ -106,6 +109,57 @@ public static class UiTheme
                 ApplyLighterDark();
             }
         }
+    }
+
+    public const double ScaleStep = 0.1;
+    public const double MinScale = 0.5;
+    public const double MaxScale = 2.0;
+
+    public static void ApplyScaleToWindow(Window window)
+    {
+        var factor = Se.Settings.Appearance.LayoutScale;
+
+        if (window.Content is LayoutTransformControl ltc)
+        {
+            ltc.LayoutTransform = Math.Abs(factor - 1.0) < 0.0001
+                ? null
+                : new ScaleTransform(factor, factor);
+            return;
+        }
+
+        if (Math.Abs(factor - 1.0) < 0.0001)
+        {
+            return;
+        }
+
+        if (window.Content is Control content)
+        {
+            window.Content = null;
+            window.Content = new LayoutTransformControl
+            {
+                Child = content,
+                LayoutTransform = new ScaleTransform(factor, factor)
+            };
+        }
+    }
+
+    public static void ApplyLayoutScaleToAllWindows()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+
+        foreach (var window in desktop.Windows)
+        {
+            ApplyScaleToWindow(window);
+        }
+    }
+
+    public static void SetLayoutScale(double factor)
+    {
+        Se.Settings.Appearance.LayoutScale = factor;
+        ApplyLayoutScaleToAllWindows();
     }
 
     public static void UpdateRegionColor()

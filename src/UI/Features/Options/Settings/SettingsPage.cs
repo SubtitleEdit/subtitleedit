@@ -566,6 +566,15 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.Appearance,
         [
             new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
+            new SettingsItem(Se.Language.Options.Settings.UiScale, () => new NumericUpDown
+            {
+                Width = 150,
+                Minimum = (decimal)UiTheme.MinScale,
+                Maximum = (decimal)UiTheme.MaxScale,
+                Increment = (decimal)UiTheme.ScaleStep,
+                FormatString = "F1",
+                [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.LayoutScale)) { Source = _vm, Mode = BindingMode.TwoWay },
+            }),
             new SettingsItem(Se.Language.Options.Settings.DarkThemeForegroundColor, () => new StackPanel
             {
                 Orientation = Orientation.Horizontal,

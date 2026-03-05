@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class SeAppearance
 {
     public string Theme { get; set; }
+    public double LayoutScale { get; set; }
     public string FontName { get; set; }
     public double SubtitleGridFontSize { get; set; }
     public bool SubtitleGridTextSingleLine { get; set; }
@@ -62,6 +63,7 @@ public class SeAppearance
     {
         CurrentLayoutPositions = new LayoutPositions();
         Theme = "System";
+        LayoutScale = 1.0;
         FontName = "Default";
         SubtitleTextBoxAndGridFontName = "Default";
         SubtitleGridFontSize = 13d;
