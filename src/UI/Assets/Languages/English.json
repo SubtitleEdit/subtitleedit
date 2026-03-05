@@ -684,6 +684,7 @@
       "splitBreakLongLines": "Split/rebalance long lines...",
       "mergeShortLines": "Merge short lines...",
       "removeTextForHearingImpaired": "_Remove text for hearing impaired...",
+      "convertActors": "Convert actors...",
       "joinSubtitles": "_Join subtitles...",
       "splitSubtitle": "_Split subtitle...",
       "assaTools": "_ASSA tools",
@@ -872,7 +873,9 @@
     "ffmpegDownloadedAndInstalledToX": "ffmpeg downloaded and installed to {0}",
     "nothingToSave": "Nothing to save",
     "nothingToSaveOriginal": "Nothing to save (original)",
-    "liveSpellCheckLanguageXLoaded": "Live spell check language {0} loaded"
+    "liveSpellCheckLanguageXLoaded": "Live spell check language {0} loaded",
+    "downloadFfmpegTitle": "Download FFmpeg?",
+    "downloadFfmpegQuestion": "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?"
   },
   "file": {
     "ebuSaveOptions": {
@@ -1367,6 +1370,15 @@
     },
     "changeFormatting": {
       "title": "Change formatting"
+    },
+    "convertActors": {
+      "title": "Convert actors",
+      "convertActorFrom": "Convert actor from",
+      "convertActorTo": "Convert actor to",
+      "inlineActorViaX": "Inline actor via {0}",
+      "setColor": "Set color",
+      "onlyNames": "Only names",
+      "numberOfConversionsX": "Number of conversions: {0}"
     },
     "joinSubtitles": {
       "title": "Join subtitles",
@@ -1915,7 +1927,8 @@
       "textBoxButtonShowRemoveFormatting": "Text box: show remove formatting button",
       "waveformSingleClickAction": "Waveform single-click action",
       "waveformDoubleClickAction": "Waveform double-click action (after single-click action)",
-      "allSettings": "All settings"
+      "allSettings": "All settings",
+      "uiScale": "UI scale (%)"
     },
     "shortcuts": {
       "title": "Shortcuts",
@@ -2165,7 +2178,9 @@
       "recalculateDurationSelectedLines": "Recalculate duration (selected lines)",
       "toggleWaveformAndSpectrogramHeight": "Toggle waveform/spectrogram divided height",
       "toggleSpectrogramStyle": "Toggle spectrogram style",
-      "copyMsRelativeToCurrentSubtitleLineToClipboard": "Copy milliseconds relative to current subtitle line to clipboard"
+      "copyMsRelativeToCurrentSubtitleLineToClipboard": "Copy milliseconds relative to current subtitle line to clipboard",
+      "layoutZoomIn": "Layout zoom in (scale UI)",
+      "layoutZoomOut": "Layout zoom out (scale UI)"
     },
     "wordLists": {
       "title": "Word lists",
