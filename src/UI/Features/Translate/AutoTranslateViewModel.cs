@@ -554,11 +554,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private async Task Translate()
     {
         _onlyCurrentLine = false;
-        bool flowControl = await DoTranslate();
-        if (!flowControl)
-        {
-            return;
-        }
+        await DoTranslate();
     }
 
     [RelayCommand]
