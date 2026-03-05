@@ -8103,6 +8103,16 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ZoomLayoutIn()
+    {
+    }
+
+    [RelayCommand]
+    private void ZoomLayoutOut()
+    {
+    }
+
+    [RelayCommand]
     private void VideoSetPositionCurrentSubtitleStart()
     {
         var s = SelectedSubtitle;

@@ -262,6 +262,8 @@ public class LanguageSettingsShortcuts
     public string ToggleWaveformAndSpectrogramHeight { get; set; }
     public string ToggleSpectrogramStyle { get; set; }
     public string CopyMsRelativeToCurrentSubtitleLineToClipboard { get; set; }
+    public string LayoutZoomIn { get; set; }
+    public string LayoutZoomOut { get; set; }
 
     public LanguageSettingsShortcuts()
     {
@@ -526,5 +528,7 @@ public class LanguageSettingsShortcuts
         ToggleWaveformAndSpectrogramHeight = "Toggle waveform/spectrogram divided height";
         ToggleSpectrogramStyle = "Toggle spectrogram style";
         CopyMsRelativeToCurrentSubtitleLineToClipboard = "Copy milliseconds relative to current subtitle line to clipboard";
+        LayoutZoomIn = "Layout zoom in (scale UI)";
+        LayoutZoomOut = "Layout zoom out (scale UI)";
     }
 }
