@@ -8,6 +8,7 @@ public interface ISpellCheckManager
 {
     event SpellCheckManager.SpellCheckWordChangedHandler? OnWordChanged;
     bool IsWordCorrect(string word);
+    bool IsWordCorrect(SpellCheckWord word, string allText);
     List<SpellCheckResult> CheckSpelling(ObservableCollection<SubtitleLineViewModel> subtitles, SpellCheckResult? startFrom = null);
     int NoOfChangedWords { get; set; }
     int NoOfSkippedWords { get; set; }

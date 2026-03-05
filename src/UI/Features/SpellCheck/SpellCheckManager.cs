@@ -248,6 +248,51 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);
     }
 
+    public bool IsWordCorrect(SpellCheckWord spellCheckWord, string text)
+    {
+        var word = spellCheckWord.Text;
+
+        if (_skipAllList.Contains(word.ToUpperInvariant()) ||
+            (word.StartsWith('\'') || word.EndsWith('\'')) && _skipAllList.Contains(word.Trim('\'').ToUpperInvariant()))
+        {
+            NoOfSkippedWords++;
+            return true;
+        }
+
+        if (IsEmailUrlOrHashTag(word))
+        {
+            return true;
+        }
+
+        if (IsNumber(word))
+        {
+            return true;
+        }
+
+        if (IsName(word, text))
+        {
+            return true;
+        }
+
+        if (IsPartOfHtmlOrAssaTag(spellCheckWord, text))
+        {
+            return true;
+        }
+
+        if (_spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(word))
+        {
+            return true;
+        }
+
+        var isCorrect = false;
+        if (_hunspellWeCantSpell != null)
+        {
+            isCorrect = _hunspellWeCantSpell.Check(word);
+        }
+
+        return isCorrect;
+    }
+
     public bool DoSpell(string word)
     {
         return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);

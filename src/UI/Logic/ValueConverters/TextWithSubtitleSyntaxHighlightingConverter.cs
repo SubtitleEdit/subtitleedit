@@ -362,7 +362,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         continue;
                     }
 
-                    if (!IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word.Text))
+                    if (!IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word, runText))
                     {
                         hasMisspelledWords = true;
                         break;

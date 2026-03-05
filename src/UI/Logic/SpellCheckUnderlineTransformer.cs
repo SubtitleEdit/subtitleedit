@@ -89,8 +89,10 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
                 }
 
                 // Check if word is correct
-                if (!_spellCheckManager.IsWordCorrect(word.Text))
+                if (!_spellCheckManager.IsWordCorrect(word, lineText))
                 {
+                    //System.Diagnostics.Debug.WriteLine($"Misspelled word: '{word.Text}' at index {word.Index} in line: '{lineText}'");
+
                     var startOffset = line.Offset + word.Index;
                     var endOffset = startOffset + word.Length;
 
@@ -148,14 +150,14 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
         }
 
         if (IsBetweenAssaTags(word, text))
-        { 
+        {
             return true;
         }
 
-        if (IsInsideHtmlTag(word, text)) 
+        if (IsInsideHtmlTag(word, text))
         {
             return true;
-        }   
+        }
 
         return false;
     }
@@ -229,17 +231,17 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
             return false;
         }
 
-        return !_spellCheckManager.IsWordCorrect(word.Text);
+        return !_spellCheckManager.IsWordCorrect(word, text);
     }
 
     /// <summary>
     /// Gets spelling suggestions for a word.
     /// </summary>
-    public List<string>? GetSuggestions(string word)
+    public List<string> GetSuggestions(string word)
     {
         if (_spellCheckManager == null || string.IsNullOrWhiteSpace(word))
         {
-            return null;
+            return new List<string>();
         }
 
         return _spellCheckManager.GetSuggestions(word);
