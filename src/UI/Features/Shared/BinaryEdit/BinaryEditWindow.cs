@@ -105,8 +105,8 @@ public class BinaryEditWindow : Window
         mainGrid.Add(bottomPanel, 2);
 
         Content = mainGrid;
-        KeyDown += (_, args) => vm.OnKeyDown(args);
-        KeyUp += (_, args) => vm.OnKeyUp(args);
+        AddHandler(KeyDownEvent, (_, args) => vm.OnKeyDown(args), handledEventsToo: true);
+        AddHandler(KeyUpEvent, (_, args) => vm.OnKeyUp(args), handledEventsToo: true);
         Loaded += (_, _) => vm.Loaded();
         Closing += (_, _) => vm.Closing();
     }
