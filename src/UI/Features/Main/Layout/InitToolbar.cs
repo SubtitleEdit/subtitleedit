@@ -26,14 +26,15 @@ public static class InitToolbar
         };
     }
 
+    private static string _imagePath = string.Empty;
     private static Grid CreateToolbar(MainViewModel vm)
     {
-        var path = Path.Combine(Se.ThemesFolder, UiTheme.ThemeName);
-        if (!Directory.Exists(path))
+        _imagePath = Path.Combine(Se.ThemesFolder, UiTheme.ThemeName);
+        if (!Directory.Exists(_imagePath))
         {
-            path = Path.Combine(Se.ThemesFolder, "Black");
+            _imagePath = Path.Combine(Se.ThemesFolder, "Black");
         }
-
+        
         var stackPanelLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -52,12 +53,7 @@ public static class InitToolbar
             var shortcut = shortcuts.FirstOrDefault(s => s.Name == nameof(vm.CommandFileNewCommand));
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "New.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("New"),
                 Command = vm.CommandFileNewCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.NewHint, shortcuts, nameof(vm.CommandFileNewCommand)),
@@ -69,12 +65,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Open.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Open"),
                 Command = vm.CommandFileOpenCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenHint, shortcuts, nameof(vm.CommandFileOpenCommand)),
@@ -86,12 +77,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Save.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Save"),
                 Command = vm.CommandFileSaveCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SaveHint, shortcuts, nameof(vm.CommandFileSaveCommand)),
@@ -103,12 +89,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "SaveAs.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("SaveAs"),
                 Command = vm.CommandFileSaveAsCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SaveAsHint, shortcuts, nameof(vm.CommandFileSaveAsCommand)),
@@ -126,12 +107,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Find.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Find"),
                 Command = vm.ShowFindCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.FindHint, shortcuts, nameof(vm.ShowFindCommand)),
@@ -143,12 +119,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Replace.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Replace"),
                 Command = vm.ShowReplaceCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.ReplaceHint, shortcuts, nameof(vm.ShowReplaceCommand)),
@@ -167,12 +138,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "SpellCheck.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("SpellCheck"),
                 Command = vm.ShowSpellCheckCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SpellCheckHint, shortcuts, nameof(vm.ShowSpellCheckCommand)),
@@ -184,12 +150,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Settings.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Settings"),
                 Command = vm.CommandShowSettingsCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SettingsHint, shortcuts, nameof(vm.CommandShowSettingsCommand)),
@@ -201,12 +162,7 @@ public static class InitToolbar
         {
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Layout.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Layout"),
                 Command = vm.CommandShowLayoutCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.LayoutHint, shortcuts, nameof(vm.CommandShowLayoutCommand)),
@@ -224,12 +180,7 @@ public static class InitToolbar
 
             stackPanelLeft.Children.Add(new Button
             {
-                Content = new Image
-                {
-                    Source = MakeOneColor(System.IO.Path.Combine(path, "Help.png")),
-                    Width = 32,
-                    Height = 32,
-                },
+                Content = MakeImage("Help"),
                 Command = vm.ShowHelpCommand,
                 Background = Brushes.Transparent,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.HelpHint, shortcuts, nameof(vm.ShowHelpCommand)),
@@ -248,12 +199,7 @@ public static class InitToolbar
 
         stackPanelLeft.Children.Add(new Button
         {
-            Content = new Image
-            {
-                Source = MakeOneColor(System.IO.Path.Combine(path, "AssaStyle.png")),
-                Width = 32,
-                Height = 32,
-            },
+            Content = MakeImage("AssaStyle"),
             Command = vm.ShowAssaStylesCommand,
             Background = Brushes.Transparent,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaStylesHint, shortcuts, nameof(vm.ShowAssaStylesCommand)),
@@ -265,12 +211,7 @@ public static class InitToolbar
 
         stackPanelLeft.Children.Add(new Button
         {
-            Content = new Image
-            {
-                Source = MakeOneColor(System.IO.Path.Combine(path, "AssaProperties.png")),
-                Width = 32,
-                Height = 32,
-            },
+            Content = MakeImage("AssaProperties"),
             Command = vm.ShowAssaPropertiesCommand,
             Background = Brushes.Transparent,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowAssaPropertiesCommand)),
@@ -282,12 +223,7 @@ public static class InitToolbar
 
         stackPanelLeft.Children.Add(new Button
         {
-            Content = new Image
-            {
-                Source = MakeOneColor(System.IO.Path.Combine(path, "AssaAttachments.png")),
-                Width = 32,
-                Height = 32,
-            },
+            Content = MakeImage("AssaAttachments"),
             Command = vm.ShowAssaAttachmentsCommand,
             Background = Brushes.Transparent,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowAssaAttachmentsCommand)),
@@ -299,12 +235,7 @@ public static class InitToolbar
 
         stackPanelLeft.Children.Add(new Button
         {
-            Content = new Image
-            {
-                Source = MakeOneColor(System.IO.Path.Combine(path, "AssaDraw.png")),
-                Width = 32,
-                Height = 32,
-            },
+            Content = MakeImage("AssaDraw"),
             Command = vm.ShowAssaDrawCommand,
             Background = Brushes.Transparent,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaDrawHint, shortcuts, nameof(vm.ShowAssaDrawCommand)),
@@ -333,7 +264,6 @@ public static class InitToolbar
         var comboBoxSubtitleFormat = new ComboBox
         {
             Width = 200,
-            Height = 30,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.SubtitleFormats)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedSubtitleFormat)),
             DataContext = vm,
@@ -361,7 +291,6 @@ public static class InitToolbar
             var comboBoxEncoding = new ComboBox
             {
                 Width = 200,
-                Height = 30,
                 [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Encodings)),
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
                 DataContext = vm,
@@ -380,7 +309,6 @@ public static class InitToolbar
             var comboBoxFrameRate = new ComboBox
             {
                 Width = 110,
-                Height = 30,
                 [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.FrameRates)),
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
                 DataContext = vm,
@@ -409,6 +337,15 @@ public static class InitToolbar
         grid.Add(stackPanelRight, 0, 1);
 
         return grid;
+    }
+
+    private static Image MakeImage(string image)
+    {
+        return new Image
+        {
+            Source = MakeOneColor(System.IO.Path.Combine(_imagePath, image+ ".png")),
+            Stretch = Stretch.Uniform,
+        };
     }
 
     private static unsafe Bitmap MakeOneColor(string filePath)
