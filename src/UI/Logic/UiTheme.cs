@@ -2,9 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -15,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic;
 public static class UiTheme
 {
     private static IStyle? _lighterDarkStyle;
+    private static IStyle? _layoutScaleMenuStyle;
     private static ResourceDictionary? _resourceOverrides;
     private static object? _themeChangeSubscription;
 
@@ -96,6 +99,7 @@ public static class UiTheme
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         }
 
+        ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyLayoutScaleToAllWindows();
     }
 
@@ -159,7 +163,150 @@ public static class UiTheme
     public static void SetLayoutScale(double factor)
     {
         Se.Settings.Appearance.LayoutScale = factor;
+        ApplyMenuScaleStyle(factor);
         ApplyLayoutScaleToAllWindows();
+        ApplyScaleToExistingMenus(factor);
+    }
+
+    private static void ApplyMenuScaleStyle(double factor)
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        // Remove previous style to force Avalonia to re-evaluate all styled controls
+        if (_layoutScaleMenuStyle != null)
+        {
+            Application.Current.Styles.Remove(_layoutScaleMenuStyle);
+            _layoutScaleMenuStyle = null;
+        }
+
+        // Create a new style each time with the scaled values baked in.
+        // This forces re-evaluation on all controls including popup menus.
+        var styles = new Styles();
+
+        // Scale MenuItems in popups/context menus (outside LayoutTransformControl)
+        var menuItemStyle = new Style(x => x.OfType<MenuItem>());
+        menuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0 * factor));
+        menuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0 * factor));
+        styles.Add(menuItemStyle);
+
+        // Reset MenuItems inside LayoutTransformControl (already scaled by transform)
+        var ltcMenuItemStyle = new Style(x => x.OfType<LayoutTransformControl>().Descendant().OfType<MenuItem>());
+        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0));
+        ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
+        styles.Add(ltcMenuItemStyle);
+
+        _layoutScaleMenuStyle = styles;
+        Application.Current.Styles.Add(styles);
+    }
+
+    /// <summary>
+    /// Walk all open windows, find Menu, ContextMenu, and MenuFlyout instances,
+    /// and directly set FontSize/MinHeight on their items. Also register Opened
+    /// handlers so dynamic items get scaled when the menu opens.
+    /// </summary>
+    private static void ApplyScaleToExistingMenus(double factor)
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+
+        foreach (var window in desktop.Windows)
+        {
+            foreach (var visual in window.GetVisualDescendants())
+            {
+                if (visual is Menu menu)
+                {
+                    // Scale submenu items only (top-level items are inside LTC and already scaled)
+                    foreach (var obj in menu.Items)
+                    {
+                        if (obj is MenuItem topItem)
+                        {
+                            ScaleChildMenuItems(topItem, factor);
+                        }
+                    }
+                }
+
+                if (visual is not Control control)
+                {
+                    continue;
+                }
+
+                if (control.ContextMenu is { } contextMenu)
+                {
+                    ScaleMenuItems(contextMenu, factor);
+                    contextMenu.Opened -= OnContextMenuOpened;
+                    contextMenu.Opened += OnContextMenuOpened;
+                }
+
+                if (control.ContextFlyout is MenuFlyout menuFlyout)
+                {
+                    ScaleMenuFlyoutItems(menuFlyout, factor);
+                    menuFlyout.Opened -= OnMenuFlyoutOpened;
+                    menuFlyout.Opened += OnMenuFlyoutOpened;
+                }
+            }
+        }
+    }
+
+    private static void ScaleChildMenuItems(MenuItem parent, double factor)
+    {
+        foreach (var obj in parent.Items)
+        {
+            if (obj is MenuItem item)
+            {
+                item.FontSize = 14.0 * factor;
+                item.MinHeight = 32.0 * factor;
+                ScaleChildMenuItems(item, factor);
+            }
+        }
+    }
+
+    private static void ScaleMenuItems(ItemsControl parent, double factor)
+    {
+        foreach (var obj in parent.Items)
+        {
+            if (obj is MenuItem item)
+            {
+                item.FontSize = 14.0 * factor;
+                item.MinHeight = 32.0 * factor;
+                ScaleMenuItems(item, factor);
+            }
+        }
+    }
+
+    private static void ScaleMenuFlyoutItems(MenuFlyout flyout, double factor)
+    {
+        foreach (var obj in flyout.Items)
+        {
+            if (obj is MenuItem item)
+            {
+                item.FontSize = 14.0 * factor;
+                item.MinHeight = 32.0 * factor;
+                ScaleMenuItems(item, factor);
+            }
+        }
+    }
+
+    private static void OnContextMenuOpened(object? sender, EventArgs e)
+    {
+        if (sender is ContextMenu cm)
+        {
+            var factor = Se.Settings.Appearance.LayoutScale;
+            ScaleMenuItems(cm, factor);
+        }
+    }
+
+    private static void OnMenuFlyoutOpened(object? sender, EventArgs e)
+    {
+        if (sender is MenuFlyout flyout)
+        {
+            var factor = Se.Settings.Appearance.LayoutScale;
+            ScaleMenuFlyoutItems(flyout, factor);
+        }
     }
 
     public static void UpdateRegionColor()
