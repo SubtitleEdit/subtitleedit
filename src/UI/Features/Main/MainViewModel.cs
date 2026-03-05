@@ -441,7 +441,9 @@ public partial class MainViewModel :
 
         SubtitleFormats = [.. SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop()];
         _changingFormatProgrammatically = true;
-        SelectedSubtitleFormat = SubtitleFormats[0];
+        SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p => 
+            p.FriendlyName == Se.Settings.General.DefaultSubtitleFormat ||
+            p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
         _changingFormatProgrammatically = false;
 
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
@@ -5774,6 +5776,13 @@ public partial class MainViewModel :
         SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == selectedSubtitleFormatName) ?? SubtitleFormats.First());
 
         SetupLiveSpellCheck();
+
+        if (Subtitles.Count == 0 && string.IsNullOrEmpty(_subtitleFileName))
+        {
+            SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p => 
+                p.FriendlyName == Se.Settings.General.DefaultSubtitleFormat ||
+                p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
+        }
     }
 
     public VideoPlayerControl? GetVideoPlayerControl()
