@@ -91,8 +91,6 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
                 // Check if word is correct
                 if (!_spellCheckManager.IsWordCorrect(word, lineText))
                 {
-                    //System.Diagnostics.Debug.WriteLine($"Misspelled word: '{word.Text}' at index {word.Index} in line: '{lineText}'");
-
                     var startOffset = line.Offset + word.Index;
                     var endOffset = startOffset + word.Length;
 

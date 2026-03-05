@@ -394,7 +394,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                     }
 
                     // Check if word is misspelled and not a special pattern
-                    var isMisspelled = !IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word.Text);
+                    var isMisspelled = !IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word, runText);
 
                     // Create run for the word
                     var wordRun = CreateRunFromTemplate(run, word.Text);
@@ -625,7 +625,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         {
                             var tagName = str.Substring(tagNameStart, tagNameEnd - tagNameStart);
                             var tagValue = str.Substring(tagNameEnd, thisTagEnd - tagNameEnd);
-                            
+
                             // Check if this is a color tag (c, 1c, 2c, 3c, 4c)
                             if (tagName.Equals("c", StringComparison.OrdinalIgnoreCase) ||
                                 tagName.Equals("1c", StringComparison.OrdinalIgnoreCase) ||
@@ -743,11 +743,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // Track current formatting state
         var state = new FormattingState();
         var inlines = new InlineCollection();
-        
+
         // Limit iterations to prevent infinite loops (should never exceed string length)
         var maxIterations = str.Length * 2; // Safety margin
         var iterations = 0;
-        
+
         int i = 0;
         while (i < str.Length && iterations < maxIterations)
         {
@@ -873,24 +873,24 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Regular text - collect characters until we hit special markup
             var textStart = i;
             var textLength = 0;
-            
+
             // Scan ahead efficiently
             while (i < str.Length)
             {
                 var ch = str[i];
-                
+
                 // Check for special characters that require immediate handling
                 if (ch == '<' || ch == '\r' || ch == '\n')
                 {
                     break;
                 }
-                
+
                 // Check for ASS tag start
                 if (ch == '{' && i + 1 < str.Length && str[i + 1] == '\\')
                 {
                     break;
                 }
-                
+
                 // Skip standalone '{' that are not ASS tags
                 if (ch == '{' && (i + 1 >= str.Length || str[i + 1] != '\\'))
                 {
@@ -898,7 +898,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                     textLength++;
                     continue;
                 }
-                
+
                 i++;
                 textLength++;
             }
@@ -1028,7 +1028,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         // Split by backslash to get individual tags
         var tags = tagContent.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-        
+
         // Limit number of tags to prevent excessive processing
         var maxTags = Math.Min(tags.Length, 50);
 
@@ -1163,13 +1163,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             var green = System.Convert.ToByte(colorStr.Substring(colorStr.Length - 4, 2), 16);
             var red = System.Convert.ToByte(colorStr.Substring(colorStr.Length - 2, 2), 16);
             byte alpha = 255;
-            
+
             if (colorStr.Length >= 8)
             {
                 var alphaValue = System.Convert.ToByte(colorStr.Substring(0, 2), 16);
                 alpha = (byte)(255 - alphaValue); // ASSA alpha is inverted (0 = opaque, 255 = transparent)
             }
-            
+
             return Color.FromArgb(alpha, red, green, blue);
         }
         catch
