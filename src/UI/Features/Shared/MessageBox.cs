@@ -227,6 +227,8 @@ public class MessageBox : Window
         grid.ContextFlyout = contextMenu;
 
         Activated += delegate { buttonPanel.Children[0].Focus(); }; // hack to make OnKeyDown work
+
+        UiTheme.ApplyScaleToWindow(this);
     }
 
     public static async Task<MessageBoxResult> Show(
