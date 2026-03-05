@@ -38,8 +38,8 @@ public static class InitToolbar
         var stackPanelLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 2,
-            Margin = new Thickness(3),
+            Spacing = 1,
+            Margin = new Thickness(2),
             VerticalAlignment = VerticalAlignment.Top,
         };
 
@@ -248,8 +248,8 @@ public static class InitToolbar
         var stackPanelRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 2,
-            Margin = new Thickness(3),
+            Spacing = 1,
+            Margin = new Thickness(2),
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
         };
@@ -343,7 +343,7 @@ public static class InitToolbar
     {
         return new Image
         {
-            Source = MakeOneColor(System.IO.Path.Combine(_imagePath, image+ ".png")),
+            Source = MakeOneColor(Path.Combine(_imagePath, image+ ".png")),
             Stretch = Stretch.Uniform,
         };
     }
@@ -371,12 +371,12 @@ public static class InitToolbar
         int srcStride = skBitmap.RowBytes;
         int dstStride = result.RowBytes;
 
-        for (int y = 0; y < height; y++)
+        for (var y = 0; y < height; y++)
         {
             uint* srcRow = (uint*)(srcBase + y * srcStride);
             uint* dstRow = (uint*)(dstBase + y * dstStride);
 
-            for (int x = 0; x < width; x++)
+            for (var x = 0; x < width; x++)
             {
                 uint pixel = srcRow[x];
                 byte b = (byte)(pixel & 0xFF);
