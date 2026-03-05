@@ -8105,11 +8105,15 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ZoomLayoutIn()
     {
+        var newFactor = Math.Round(Se.Settings.Appearance.LayoutScale + UiTheme.ScaleStep, 1);
+        UiTheme.SetLayoutScale(Math.Min(newFactor, UiTheme.MaxScale));
     }
 
     [RelayCommand]
     private void ZoomLayoutOut()
     {
+        var newFactor = Math.Round(Se.Settings.Appearance.LayoutScale - UiTheme.ScaleStep, 1);
+        UiTheme.SetLayoutScale(Math.Max(newFactor, UiTheme.MinScale));
     }
 
     [RelayCommand]

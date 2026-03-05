@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
             window.Focus();
 
             ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
 
             return window;
         }
@@ -103,6 +104,7 @@ namespace Nikse.SubtitleEdit.Logic
             window.Focus();
 
             ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
 
             return viewModel;
         }
@@ -115,6 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
             configure?.Invoke(window);
 
             ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
 
             await window.ShowDialog(owner);
 
@@ -143,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic
             configureWindow?.Invoke(window);
 
             ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
 
             await window.ShowDialog(owner);
 

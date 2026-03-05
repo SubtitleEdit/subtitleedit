@@ -260,6 +260,7 @@ public class LanguageSettings
     public string WaveformSingleClickAction { get; set; }
     public string WaveformDoubleClickAction { get; set; }
     public string AllSettings { get; set; }
+    public string UiScale { get; set; }
 
     public LanguageSettings()
     {
@@ -516,6 +517,7 @@ public class LanguageSettings
         WaveformSingleClickAction = "Waveform single-click action";
         WaveformDoubleClickAction = "Waveform double-click action (after single-click action)";
         AllSettings = "All settings";
+        UiScale = "UI scale (factor)";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)
