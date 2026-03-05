@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
@@ -17,6 +18,7 @@ using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -54,14 +56,16 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
+    private readonly IShortcutManager _shortcutManager;
 
     private string _loadFileName = string.Empty;
 
-    public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper)
+    public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
+        _shortcutManager = shortcutManager;
         _fileName = string.Empty;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
@@ -85,6 +89,16 @@ public partial class BinaryEditViewModel : ObservableObject
                 Subtitles.Add(newItem);
             }
             Renumber();
+        }
+    }
+
+    public void RegisterVideoShortcuts()
+    {
+        var shortcuts = BinaryEditShortcuts.GetVideoShortcuts(this);
+
+        foreach (var shortcut in shortcuts)
+        {
+            _shortcutManager.RegisterShortcut(shortcut);
         }
     }
 
@@ -232,6 +246,139 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         await DoFileOpen(fileName);
+    }
+
+    [RelayCommand]
+    private void VideoOneSecondBack()
+    {
+        MoveVideoPositionMs(-1000);
+    }
+
+    [RelayCommand]
+    private void VideoOneSecondForward()
+    {
+        MoveVideoPositionMs(1000);
+    }
+
+    [RelayCommand]
+    private void Video500MsBack()
+    {
+        MoveVideoPositionMs(-500);
+    }
+
+    [RelayCommand]
+    private void Video500MsForward()
+    {
+        MoveVideoPositionMs(500);
+    }
+
+    [RelayCommand]
+    private void Video100MsBack()
+    {
+        MoveVideoPositionMs(-100);
+    }
+
+    [RelayCommand]
+    private void Video100MsForward()
+    {
+        MoveVideoPositionMs(100);
+    }
+
+    [RelayCommand]
+    private void VideoOneFrameBack()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        {
+            mpv.StepOneFrameBack();
+            return;
+        }
+
+        if (Se.Settings.General.CurrentFrameRate >= 10)
+        {
+            var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
+            MoveVideoPositionMs(-frameInMs);
+            return;
+        }
+
+        MoveVideoPositionMs(-40);
+    }
+
+    [RelayCommand]
+    private void VideoOneFrameForward()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        {
+            mpv.StepOneFrameForward();
+            return;
+        }
+
+        if (Se.Settings.General.CurrentFrameRate >= 10)
+        {
+            var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
+            MoveVideoPositionMs(frameInMs);
+            return;
+        }
+
+        MoveVideoPositionMs(40);
+    }
+
+    private VideoPlayerControl? GetVideoPlayerControl()
+    {
+        return VideoPlayerControl;
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom1Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom1Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom1Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom1Forward);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom2Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom2Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom2Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom2Forward);
+    }
+
+
+    private void MoveVideoPositionMs(int ms)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(vp.VideoPlayerInstance.FileName))
+        {
+            return;
+        }
+
+        var newPosition = vp.Position + (ms / 1000.0);
+        if (newPosition < 0)
+        {
+            newPosition = 0;
+        }
+
+        if (newPosition > vp.Duration)
+        {
+            newPosition = vp.Duration;
+        }
+
+        vp.Position = newPosition;
+
+        if (vp.IsPlaying)
+        {
+            return;
+        }
     }
 
     private async Task DoFileOpen(string fileName)
@@ -1335,12 +1482,34 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             e.Handled = true;
             Cancel();
+            return;
         }
-        else if (e.Key == Key.Enter && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+
+        if (e.Key == Key.Enter && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
             Ok();
+            return;
         }
+
+        // Handle shortcuts
+        _shortcutManager.OnKeyPressed(this, e);
+        if (_shortcutManager.GetActiveKeys().Count == 0)
+        {
+            return;
+        }
+
+        var relayCommand = _shortcutManager.CheckShortcuts(e, "General");
+        if (relayCommand != null)
+        {
+            e.Handled = true;
+            relayCommand.Execute(null);
+        }
+    }
+
+    public void OnKeyUp(KeyEventArgs e)
+    {
+        _shortcutManager.OnKeyReleased(this, e);
     }
 
     public void Closing()
@@ -1362,6 +1531,8 @@ public partial class BinaryEditViewModel : ObservableObject
     public void Loaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+
+        RegisterVideoShortcuts();
 
         if (string.IsNullOrEmpty(_loadFileName))
         {
@@ -1473,3 +1644,4 @@ public partial class BinaryEditViewModel : ObservableObject
         IsInsertSubtitleVisible = selectedCount == 1 && selectedIndex == Subtitles.Count - 1;
     }
 }
+
