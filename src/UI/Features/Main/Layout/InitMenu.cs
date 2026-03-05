@@ -29,7 +29,6 @@ public static class InitMenu
         UpdateRecentFiles(vm);
 
         var menu = vm.Menu;
-        menu.Height = 30;
         menu.DataContext = vm;
         menu.Items.Clear();
         menu.Opened += (s, e) => DisplayShortcuts(menu, vm);
