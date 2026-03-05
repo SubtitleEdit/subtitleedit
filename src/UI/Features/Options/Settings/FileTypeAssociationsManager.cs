@@ -108,7 +108,20 @@ public static class FileTypeAssociationsManager
             return;
         }
 
-        var needsAssociation = fileTypeAssociations.Where(item => item.IsAssociated).ToList();
+        var items = fileTypeAssociations.ToList();
+        var needsAssociation = items.Where(item => item.IsAssociated).ToList();
+        var needsRemoval = items.Where(item => !item.IsAssociated).ToList();
+
+        // Remove associations using the same registry approach as legacy
+        foreach (var item in needsRemoval)
+        {
+            FileTypeAssociationsHelper.DeleteFileAssociationViaRegistry(item.Extension, "SubtitleEdit5");
+        }
+
+        if (needsRemoval.Count > 0)
+        {
+            FileTypeAssociationsHelper.Refresh();
+        }
 
         if (needsAssociation.Count == 0)
         {
