@@ -11,7 +11,6 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Projektanker.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
@@ -566,15 +565,13 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.Appearance,
         [
             new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
-            new SettingsItem(Se.Language.Options.Settings.UiScale, () => new NumericUpDown
-            {
-                Width = 150,
-                Minimum = (decimal)UiTheme.MinScale,
-                Maximum = (decimal)UiTheme.MaxScale,
-                Increment = (decimal)UiTheme.ScaleStep,
-                FormatString = "F1",
-                [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.LayoutScale)) { Source = _vm, Mode = BindingMode.TwoWay },
-            }),
+            new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
+                (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) , 
+                (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero), 
+                100, 
+                120, 
+                _vm, 
+                nameof(_vm.LayoutScale))),
             new SettingsItem(Se.Language.Options.Settings.DarkThemeForegroundColor, () => new StackPanel
             {
                 Orientation = Orientation.Horizontal,
