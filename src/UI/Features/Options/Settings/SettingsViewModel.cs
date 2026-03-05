@@ -209,7 +209,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformRightClickSelectsSubtitle;
     [ObservableProperty] private ObservableCollection<string> _themes;
     [ObservableProperty] private string _selectedTheme;
-    [ObservableProperty] private double _layoutScale;
+    [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
     [ObservableProperty] private double _subtitleGridFontSize;
@@ -582,7 +582,7 @@ public partial class SettingsViewModel : ObservableObject
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
-        LayoutScale = appearance.LayoutScale;
+        LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         ShowToolbarNew = appearance.ToolbarShowFileNew;
         ShowToolbarOpen = appearance.ToolbarShowFileOpen;
@@ -1131,7 +1131,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
-        appearance.LayoutScale = LayoutScale;
+        appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontName = SelectedFontName == FontNames.First()
             ? new Label().FontFamily.Name
             : SelectedFontName;
