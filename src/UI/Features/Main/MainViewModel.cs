@@ -8933,12 +8933,40 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoOneFrameBack()
     {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        {
+            mpv.StepOneFrameBack(); 
+            return;
+        }
+
+        if (Se.Settings.General.CurrentFrameRate >= 10)
+        {
+            var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
+            MoveVideoPositionMs(-frameInMs);
+            return;
+        }
+
         MoveVideoPositionMs(-40);
     }
 
     [RelayCommand]
     private void VideoOneFrameForward()
     {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        {
+            mpv.StepOneFrameForward(); 
+            return;
+        }
+
+        if (Se.Settings.General.CurrentFrameRate >= 10)
+        {
+            var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
+            MoveVideoPositionMs(frameInMs);
+            return;
+        }
+
         MoveVideoPositionMs(40);
     }
 

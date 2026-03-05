@@ -957,6 +957,38 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayerInstance
         }
     }
 
+    public void StepOneFrameForward()
+    {
+        _pausedValue = null;
+        EnsureNotDisposed();
+        if (_mpv == IntPtr.Zero)
+        {
+            return;
+        }
+
+        var err = DoMpvCommand("frame-step");
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer StepOneFrameForward");
+        }
+    }
+
+    public void StepOneFrameBack()
+    {
+        _pausedValue = null;
+        EnsureNotDisposed();
+        if (_mpv == IntPtr.Zero)
+        {
+            return;
+        }
+
+        var err = DoMpvCommand("frame-back-step");
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer StepOneFrameBack");
+        }
+    }
+
     public AudioTrackInfo? ToggleAudioTrack()
     {
         EnsureNotDisposed();
