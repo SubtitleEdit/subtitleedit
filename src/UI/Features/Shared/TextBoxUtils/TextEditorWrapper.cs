@@ -31,7 +31,7 @@ public class TextEditorWrapper : ITextBoxWrapper
 
         _alignmentTransformer = new SubtitleTextAlignmentTransformer();
         _textEditor.TextArea.TextView.LineTransformers.Add(_alignmentTransformer);
-        
+
         // Update alignment when text changes
         _textEditor.TextChanged += (_, _) =>
         {
@@ -123,21 +123,21 @@ public class TextEditorWrapper : ITextBoxWrapper
     {
         _alignmentTransformer.Alignment = alignment;
         _currentAlignment = alignment;
-        
+
         var textArea = _textEditor.TextArea;
         var textView = textArea.TextView;
-        
+
         // Remove old handler if exists
         if (_alignmentUpdateHandler != null)
         {
             textView.LayoutUpdated -= _alignmentUpdateHandler;
             _alignmentUpdateHandler = null;
         }
-        
+
         // Keep the TextView and TextArea stretched to ensure proper hit testing
         textArea.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
         textView.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
-        
+
         // For centered or right alignment, use RenderTransform on TextArea
         if (alignment == TextAlignment.Center || alignment == TextAlignment.Right)
         {
@@ -145,9 +145,9 @@ public class TextEditorWrapper : ITextBoxWrapper
             {
                 UpdateAlignmentTransform();
             };
-            
+
             textView.LayoutUpdated += _alignmentUpdateHandler;
-            
+
             // Trigger initial update
             UpdateAlignmentTransform();
         }
@@ -155,7 +155,7 @@ public class TextEditorWrapper : ITextBoxWrapper
         {
             textArea.RenderTransform = null;
         }
-        
+
         textView.Redraw();
     }
 
@@ -163,7 +163,7 @@ public class TextEditorWrapper : ITextBoxWrapper
     {
         var textArea = _textEditor.TextArea;
         var textView = textArea.TextView;
-        
+
         if (textView.Bounds.Width <= 0 || textArea.Bounds.Width <= 0)
         {
             return;
@@ -171,19 +171,19 @@ public class TextEditorWrapper : ITextBoxWrapper
 
         // Measure the actual text width using FormattedText
         double maxLineWidth = 0;
-        
+
         if (!string.IsNullOrEmpty(_textEditor.Text))
         {
             var typeface = new Typeface(_textEditor.FontFamily);
             var lines = _textEditor.Text.Split('\n');
-            
+
             foreach (var line in lines)
             {
                 if (string.IsNullOrEmpty(line))
                 {
                     continue;
                 }
-                
+
                 var formattedText = new FormattedText(
                     line,
                     System.Globalization.CultureInfo.CurrentCulture,
@@ -191,7 +191,7 @@ public class TextEditorWrapper : ITextBoxWrapper
                     typeface,
                     _textEditor.FontSize,
                     Brushes.Black);
-                
+
                 if (formattedText.Width > maxLineWidth)
                 {
                     maxLineWidth = formattedText.Width;
@@ -200,13 +200,13 @@ public class TextEditorWrapper : ITextBoxWrapper
         }
 
         var availableWidth = textArea.Bounds.Width;
-        
+
         if (maxLineWidth > 0 && maxLineWidth < availableWidth)
         {
             double offset = _currentAlignment == TextAlignment.Center
                 ? (availableWidth - maxLineWidth) / 2
                 : availableWidth - maxLineWidth;
-            
+
             textArea.RenderTransform = new TranslateTransform(offset, 0);
         }
         else
