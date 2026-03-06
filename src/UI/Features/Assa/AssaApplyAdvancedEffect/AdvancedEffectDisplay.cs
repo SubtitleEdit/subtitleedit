@@ -50,34 +50,66 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
         var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        int screenWidth = width > 0 ? width : 1356;
+        int screenHeight = height > 0 ? height : 678;
+        int centerX = screenWidth / 2;
+
+        string swYellow = "&H00D7FF&";
+
+        // PHYSICS SETTINGS
+        double travelDurationMs = 22000;
+        // REDUCED: Decreasing this makes the text appear LATER in the video
+        double leadTimeMs = 4000;
+
+        // Spacing between lines in a single dialogue block
+        int timeGapBetweenLinesMs = 700;
+
+        int yStart = screenHeight + 80;
+        int yEnd = -550;
 
         foreach (var sub in subtitles)
         {
-            // 15 seconds is the sweet spot for a crawl
-            double crawlMs = 15000;
-            var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
+            string processedText = sub.Text.Replace("\\N", "\n").Replace("\\n", "\n");
+            var clean = Utilities.RemoveSsaTags(processedText);
+            if (string.IsNullOrWhiteSpace(clean)) continue;
 
-            string swYellow = "&H00D7FF&"; // BGR format for Yellow-Gold
+            var lines = clean.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            // Let's use hard-coded safe percentages of the screen
-            int midX = width / 2;
-            int lowY = (int)(height * 0.9);  // Starts at the bottom
-            int highY = (int)(height * 0.1); // Ends near the top
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 
-            // THE ULTIMATE SAFE CRAWL STRING
-            // \an2 - Bottom center anchor
-            // \frx55 - The tilt (not too steep to avoid clipping)
-            // \move - The path from bottom to top
-            // \t - The "Shrink" into the distance
-            string tags = $@" \an2\1c{swYellow}\frx55\move({midX},{lowY},{midX},{highY},0,{(int)crawlMs})\t(0,{(int)crawlMs},\fscx40\fscy20)";
+                // STAGGERED TIMING
+                double startTimeMs = sub.StartTime.TotalMilliseconds - leadTimeMs + (i * timeGapBetweenLinesMs);
+                if (startTimeMs < 0) startTimeMs = 0;
 
-            charLine.Text = "{" + tags + "}" + sub.Text;
+                charLine.StartTime = TimeSpan.FromMilliseconds(startTimeMs);
+                charLine.EndTime = charLine.StartTime.Add(TimeSpan.FromMilliseconds(travelDurationMs));
 
-            // Update the duration so the player keeps the line active
-            charLine.Duration = TimeSpan.FromMilliseconds(crawlMs);
+                // THE TAGS
+                string tags =
+                    $@"\an5\b1\bord2\blur0.6\1c{swYellow}" +
+                    $@"\frx52\fscy70" +
 
-            result.Add(charLine);
+                    // SMOOTH FADES
+                    $@"\fad(800,800)" +
+
+                    $@"\fscx140\fscy140" +
+                    $@"\move({centerX},{yStart},{centerX},{yEnd},0,{(int)travelDurationMs})" +
+
+                    // PERSPECTIVE SHRINK
+                    $@"\t(0,{(int)travelDurationMs},\fscx35\fscy15)" +
+
+                    // FINAL ALPHA DISSOLVE
+                    $@"\t({(int)(travelDurationMs * 0.85)},{(int)travelDurationMs},\alpha&HFF&)";
+
+                charLine.Text = "{" + tags + "}" + lines[i].Trim();
+                result.Add(charLine);
+            }
         }
+
         return result;
     }
 }
