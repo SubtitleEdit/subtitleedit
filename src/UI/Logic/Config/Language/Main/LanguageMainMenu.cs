@@ -61,6 +61,7 @@ public class LanguageMainMenu
     public string AssaProgressBar { get; set; }
     public string AssaChangeResolution { get; set; }
     public string AssaGenerateBackground { get; set; }
+    public string AssaApplyAdvancedEffects { get; set; }
     public string AssaApplyCustomOverrideTags { get; set; }
     public string AssaSetPosition { get; set; }
     public string AssaImageColorPicker { get; set; }
@@ -180,6 +181,7 @@ public class LanguageMainMenu
         AssaChangeResolution = "Change _resolution...";
         AssaGenerateBackground = "Generate background _boxes...";
         AssaProgressBar = "Generate _progress bar...";
+        AssaApplyAdvancedEffects = "Apply advanced _effects...";
         AssaApplyCustomOverrideTags = "Apply _override tags...";
         AssaSetPosition = "_Set position...";
         AssaImageColorPicker = "_Image color picker...";

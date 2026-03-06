@@ -31,6 +31,8 @@ public class OverrideTagDisplay
             new OverrideTagDisplay(Se.Language.Assa.RotateTilt, "{\\t(\\fr5\\fr0)}"),
             new OverrideTagDisplay(Se.Language.General.Fade, "{\\fad(300,300}"),
             new OverrideTagDisplay(Se.Language.Assa.SpaceIncrease, "{\\t(\\fsp4)}"),
+            new OverrideTagDisplay(Se.Language.Assa.PopIn, "{\\fscx20\\fscy20\\alpha&HFF&\\blur8\\t(0,300,\\fscx100\\fscy100\\alpha&H00&\\blur0)}"),
+            new OverrideTagDisplay(Se.Language.Assa.SpinIn, "{\\frz360\\fscx30\\fscy30\\t(0,400,\\frz0\\fscx100\\fscy100)}"),
         };
     }   
 }

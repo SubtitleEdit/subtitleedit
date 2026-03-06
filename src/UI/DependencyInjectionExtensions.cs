@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Assa.AssaImageColorPicker;
 using Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
@@ -210,6 +211,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ApplyDurationLimitsViewModel>();
         collection.AddTransient<ApplyMinGapViewModel>();
         collection.AddTransient<AssSetBackgroundViewModel>();
+        collection.AddTransient<AssaApplyAdvancedEffectViewModel>();
         collection.AddTransient<AssaApplyCustomOverrideTagsViewModel>();
         collection.AddTransient<AssaAttachmentsViewModel>();
         collection.AddTransient<AssaDrawViewModel>();

@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Assa.AssaImageColorPicker;
@@ -1100,6 +1101,22 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowAssaApplyAdvancedEffect()
+    {
+        var result = await ShowDialogAsync<AssaApplyAdvancedEffectWindow, AssaApplyAdvancedEffectViewModel>(vm =>
+        {
+            var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
+            var selectedParagraphs = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            vm.Initialize(GetUpdateSubtitle(), paragraphs, selectedParagraphs, _videoFileName, _mediaInfo);
+        });
+
+        if (result.OkPressed)
+        {
+            SetSubtitles(result.UpdatedSubtitle);
+        }
+    }
+
+    [RelayCommand]
     private async Task ShowAssaApplyCustomOverrideTags()
     {
         var result = await ShowDialogAsync<AssaApplyCustomOverrideTagsWindow, AssaApplyCustomOverrideTagsViewModel>(vm =>
@@ -1119,7 +1136,6 @@ public partial class MainViewModel :
             _updateAudioVisualizer = true;
         }
     }
-
 
     [RelayCommand]
     private async Task SaveLanguageFile()
