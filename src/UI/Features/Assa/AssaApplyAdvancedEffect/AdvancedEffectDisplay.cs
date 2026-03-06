@@ -56,16 +56,10 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
         int screenHeight = height > 0 ? height : 678;
         int centerX = screenWidth / 2;
 
-        // PHYSICS SETTINGS
         double travelDurationMs = 12000;
-
-        // REDUCED: Only a 0.5s head start. 
-        // If it's STILL too early, set this to 0.
         double leadTimeMs = 500;
+        int internalLineSpacing = 60; // Slightly increased for the bigger font
 
-        int internalLineSpacing = 55;
-
-        // We start just 20 pixels below the screen to minimize the "travel" time
         int yStartBase = screenHeight + 20;
         int yEndBase = -150;
 
@@ -90,7 +84,7 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
                 int yOffset = i * internalLineSpacing;
 
                 string tags =
-                    $@"\an8\b1\fs50\fad(300,300)" +
+                    $@"\an8\b1\fs52\fsp2\blur0.6\bord1.5\shad1\fad(300,300)" +
                     $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})";
 
                 charLine.Text = "{" + tags + "}" + lines[i].Trim();
@@ -133,8 +127,6 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
         int internalLineSpacing = 80;
 
         int yStartBase = screenHeight + 50;
-        // FIXED: Brining the end point lower (-300 instead of -850) 
-        // ensures the fade happens where you can see it.
         int yEndBase = -300;
 
         foreach (var sub in subtitles)
@@ -166,7 +158,7 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
                     $@"\fscx140\fscy140" +
                     $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})" +
 
-                    // SCALE: Shrink to 35% instead of 15% so it stays readable for longer
+                    // SCALE
                     $@"\t(0,{(int)travelDurationMs},\fscx35\fscy20)" +
 
                     // FADE: Start turning transparent at 60% of the journey (around the upper-middle)
