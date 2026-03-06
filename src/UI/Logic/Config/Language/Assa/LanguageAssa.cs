@@ -239,6 +239,8 @@ public class LanguageAssa
         RotateY = "Rotate Y";
         RotateTilt = "Rotate tilt";
         SpaceIncrease = "Space increase";
+        PopIn = "Pop in";
+        SpinIn = "Spin in";
         PlayCurrent = "Play current";
         SetPosition = "Set position";
         ImageColorPicker = "Image color picker";
