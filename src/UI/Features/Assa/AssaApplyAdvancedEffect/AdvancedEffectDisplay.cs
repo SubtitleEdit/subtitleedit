@@ -28,8 +28,77 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectRainbowPulse("Rainbow pulse"),
             new AdvancedEffectWave("Wave"),
             new AdvancedEffectWaveBlue("Wave (blue)"),
-            new AdvancedEffectStarWarsScroll("Star Wars credits"),
+            new AdvancedEffectStarWarsScroll("Star Wars crawl"),
+            new AdvancedEffectEndCreditsScroll("Credits scroll"),
         };
+    }
+}
+
+public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
+{
+    public string Name { get; set; }
+    public string Tag => string.Empty;
+    public string Description => "Reveals text one character at a time over the subtitle duration";
+
+    public AdvancedEffectEndCreditsScroll(string name)
+    {
+        Name = name;
+    }
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        int screenWidth = width > 0 ? width : 1356;
+        int screenHeight = height > 0 ? height : 678;
+        int centerX = screenWidth / 2;
+
+        // PHYSICS SETTINGS
+        double travelDurationMs = 12000;
+
+        // REDUCED: Only a 0.5s head start. 
+        // If it's STILL too early, set this to 0.
+        double leadTimeMs = 500;
+
+        int internalLineSpacing = 55;
+
+        // We start just 20 pixels below the screen to minimize the "travel" time
+        int yStartBase = screenHeight + 20;
+        int yEndBase = -150;
+
+        foreach (var sub in subtitles)
+        {
+            string processedText = sub.Text.Replace("\\N", "\n").Replace("\\n", "\n");
+            var clean = Utilities.RemoveSsaTags(processedText);
+            if (string.IsNullOrWhiteSpace(clean)) continue;
+
+            var lines = clean.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
+
+                double startTimeMs = sub.StartTime.TotalMilliseconds - leadTimeMs;
+                if (startTimeMs < 0) startTimeMs = 0;
+
+                charLine.StartTime = TimeSpan.FromMilliseconds(startTimeMs);
+                charLine.EndTime = charLine.StartTime.Add(TimeSpan.FromMilliseconds(travelDurationMs));
+
+                int yOffset = i * internalLineSpacing;
+
+                string tags =
+                    $@"\an8\b1\fs50\fad(300,300)" +
+                    $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})";
+
+                charLine.Text = "{" + tags + "}" + lines[i].Trim();
+                result.Add(charLine);
+            }
+        }
+
+        return result;
     }
 }
 
