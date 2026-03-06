@@ -103,6 +103,8 @@ public class LanguageAssa
     public string RotateY { get; set; }
     public string RotateTilt { get; set; }
     public string SpaceIncrease { get; set; }
+    public string PopIn { get; set; }
+    public string SpinIn { get; set; }
     public string PlayCurrent { get; set; }
     public string SetPosition { get; set; }
     public string ImageColorPicker { get; set; }

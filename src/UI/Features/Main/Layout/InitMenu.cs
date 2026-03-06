@@ -440,7 +440,7 @@ public static class InitMenu
                 Command = vm.ShowToolsConvertActorsCommand,
             },
         };
-        foreach (var item in tools.OrderBy(p => p.Header?.ToString()?.TrimStart('_', ' ')))
+        foreach (var item in tools.OrderBy(p => p.Header?.ToString()?.Replace("_", string.Empty)))
         {
             menuItemTools.Items.Add(item);
         }
@@ -751,6 +751,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.AssaApplyAdvancedEffects,
+                Command = vm.ShowAssaApplyAdvancedEffectCommand,
+            },
+            new MenuItem
+            {
                 Header = l.AssaApplyCustomOverrideTags,
                 Command = vm.ShowAssaApplyCustomOverrideTagsCommand,
             },
@@ -782,7 +787,7 @@ public static class InitMenu
             [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa)),
         };
 
-        foreach (var item in assaTools.OrderBy(p => p.Header?.ToString()?.TrimStart('_', ' ')))
+        foreach (var item in assaTools.OrderBy(p => p.Header?.ToString()?.Replace("_", string.Empty)))
         {
             menuItemAssaTools.Items.Add(item);
         }
