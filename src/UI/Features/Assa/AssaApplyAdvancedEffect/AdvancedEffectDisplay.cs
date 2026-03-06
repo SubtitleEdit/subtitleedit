@@ -59,15 +59,14 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
         string swYellow = "&H00D7FF&";
 
         // PHYSICS SETTINGS
-        double travelDurationMs = 22000;
-        // REDUCED: Decreasing this makes the text appear LATER in the video
-        double leadTimeMs = 4000;
+        double travelDurationMs = 25000;
+        double leadTimeMs = 1500; // Even lower to ensure it hits dialogue timing
+        int internalLineSpacing = 80;
 
-        // Spacing between lines in a single dialogue block
-        int timeGapBetweenLinesMs = 700;
-
-        int yStart = screenHeight + 80;
-        int yEnd = -550;
+        int yStartBase = screenHeight + 50;
+        // FIXED: Brining the end point lower (-300 instead of -850) 
+        // ensures the fade happens where you can see it.
+        int yEndBase = -300;
 
         foreach (var sub in subtitles)
         {
@@ -81,29 +80,29 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
             {
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 
-                // STAGGERED TIMING
-                double startTimeMs = sub.StartTime.TotalMilliseconds - leadTimeMs + (i * timeGapBetweenLinesMs);
+                double startTimeMs = sub.StartTime.TotalMilliseconds - leadTimeMs;
                 if (startTimeMs < 0) startTimeMs = 0;
 
                 charLine.StartTime = TimeSpan.FromMilliseconds(startTimeMs);
-                charLine.EndTime = charLine.StartTime.Add(TimeSpan.FromMilliseconds(travelDurationMs));
+                // We give it an extra 2 seconds of life to ensure the fade finishes
+                charLine.EndTime = charLine.StartTime.Add(TimeSpan.FromMilliseconds(travelDurationMs + 2000));
+
+                int yOffset = i * internalLineSpacing;
 
                 // THE TAGS
                 string tags =
                     $@"\an5\b1\bord2\blur0.6\1c{swYellow}" +
-                    $@"\frx52\fscy70" +
-
-                    // SMOOTH FADES
-                    $@"\fad(800,800)" +
-
+                    $@"\frx52\fscy75" +
+                    $@"\fad(1200,0)" +
                     $@"\fscx140\fscy140" +
-                    $@"\move({centerX},{yStart},{centerX},{yEnd},0,{(int)travelDurationMs})" +
+                    $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})" +
 
-                    // PERSPECTIVE SHRINK
-                    $@"\t(0,{(int)travelDurationMs},\fscx35\fscy15)" +
+                    // SCALE: Shrink to 35% instead of 15% so it stays readable for longer
+                    $@"\t(0,{(int)travelDurationMs},\fscx35\fscy20)" +
 
-                    // FINAL ALPHA DISSOLVE
-                    $@"\t({(int)(travelDurationMs * 0.85)},{(int)travelDurationMs},\alpha&HFF&)";
+                    // FADE: Start turning transparent at 60% of the journey (around the upper-middle)
+                    // and finish by 90% of the journey.
+                    $@"\t({(int)(travelDurationMs * 0.6)},{(int)(travelDurationMs * 0.9)},\alpha&HFF&)";
 
                 charLine.Text = "{" + tags + "}" + lines[i].Trim();
                 result.Add(charLine);
