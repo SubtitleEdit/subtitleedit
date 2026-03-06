@@ -75,7 +75,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Slovak", "sk"),
                 MakeTranslationPair("Slovenian", "sl"),
                 MakeTranslationPair("Spanish", "es", true),
+                MakeTranslationPair("Spanish (Latin American)", "es-419", true),
                 MakeTranslationPair("Swedish", "sv"),
+                MakeTranslationPair("Thai", "th"),
                 MakeTranslationPair("Turkish", "tr"),
                 MakeTranslationPair("Ukrainian", "uk"),
             };
@@ -116,7 +118,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Slovak", "sk"),
                 MakeTranslationPair("Slovenian", "sl"),
                 MakeTranslationPair("Spanish", "es", true),
+                MakeTranslationPair("Spanish (Latin American)", "es-419", true),
                 MakeTranslationPair("Swedish", "sv"),
+                MakeTranslationPair("Thai", "th"),
                 MakeTranslationPair("Turkish", "tr"),
                 MakeTranslationPair("Ukrainian", "uk"),
             };
