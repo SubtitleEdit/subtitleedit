@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -47,39 +47,52 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new List<TranslationPair>
             {
-                MakeTranslationPair("Arabic", "ar"),
-                MakeTranslationPair("Bulgarian", "bg"),
-                MakeTranslationPair("Chinese", "zh"),
-                MakeTranslationPair("Czech", "cs"),
-                MakeTranslationPair("Danish", "da"),
+                // European Languages
+                MakeTranslationPair("Bulgarian", "bg", false),
+                MakeTranslationPair("Czech", "cs", false),
+                MakeTranslationPair("Danish", "da", false),
                 MakeTranslationPair("Dutch", "nl", true),
-                MakeTranslationPair("English", "en", true),
-                MakeTranslationPair("Estonian", "et"),
-                MakeTranslationPair("Finnish", "fi"),
+                MakeTranslationPair("Estonian", "et", false),
+                MakeTranslationPair("Finnish", "fi", false),
                 MakeTranslationPair("French", "fr", true),
                 MakeTranslationPair("German", "de", true),
-                MakeTranslationPair("Greek", "el"),
-                MakeTranslationPair("Hebrew", "he"),
-                MakeTranslationPair("Hungarian", "hu"),
-                MakeTranslationPair("Indonesian", "id"),
+                MakeTranslationPair("Greek", "el", false),
+                MakeTranslationPair("Hungarian", "hu", false),
                 MakeTranslationPair("Italian", "it", true),
-                MakeTranslationPair("Japanese", "ja", true),
-                MakeTranslationPair("Korean", "ko"),
-                MakeTranslationPair("Latvian", "lv"),
-                MakeTranslationPair("Lithuanian", "lt"),
-                MakeTranslationPair("Norwegian (Bokmål)", "nb"),
+                MakeTranslationPair("Latvian", "lv", false),
+                MakeTranslationPair("Lithuanian", "lt", false),
+                MakeTranslationPair("Norwegian (Bokmål)", "nb", false),
                 MakeTranslationPair("Polish", "pl", true),
-                MakeTranslationPair("Portuguese", "pt", true),
-                MakeTranslationPair("Romanian", "ro"),
+                MakeTranslationPair("Romanian", "ro", false),
                 MakeTranslationPair("Russian", "ru", true),
-                MakeTranslationPair("Slovak", "sk"),
-                MakeTranslationPair("Slovenian", "sl"),
+                MakeTranslationPair("Slovak", "sk", false),
+                MakeTranslationPair("Slovenian", "sl", false),
+                MakeTranslationPair("Swedish", "sv", false),
+                MakeTranslationPair("Ukrainian", "uk", false),
+
+                // English Variants (Formality is NOT supported for English)
+                MakeTranslationPair("English (British)", "en-GB", false),
+                MakeTranslationPair("English (American)", "en-US", false),
+
+                // Spanish Variants
                 MakeTranslationPair("Spanish", "es", true),
                 MakeTranslationPair("Spanish (Latin American)", "es-419", true),
-                MakeTranslationPair("Swedish", "sv"),
-                MakeTranslationPair("Thai", "th"),
-                MakeTranslationPair("Turkish", "tr"),
-                MakeTranslationPair("Ukrainian", "uk"),
+
+                // Portuguese Variants
+                MakeTranslationPair("Portuguese (European)", "pt-PT", true),
+                MakeTranslationPair("Portuguese (Brazilian)", "pt-BR", true),
+
+                // Asian & Middle Eastern Languages
+                MakeTranslationPair("Arabic", "ar", false),
+                MakeTranslationPair("Chinese (Simplified)", "zh-hans", false),
+                MakeTranslationPair("Chinese (Traditional)", "zh-hant", false),
+                MakeTranslationPair("Hebrew", "he", false),
+                MakeTranslationPair("Indonesian", "id", false),
+                MakeTranslationPair("Japanese", "ja", true),
+                MakeTranslationPair("Korean", "ko", false),
+                MakeTranslationPair("Thai", "th", false),
+                MakeTranslationPair("Turkish", "tr", false),
+                MakeTranslationPair("Vietnamese", "vi", false)
             };
         }
 
@@ -87,48 +100,53 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new List<TranslationPair>
             {
-                MakeTranslationPair("Arabic", "ar"),
-                MakeTranslationPair("Bulgarian", "bg"),
-                MakeTranslationPair("Chinese (simplified)", "zh-hans"),
-                MakeTranslationPair("Chinese (traditional)", "zh-hant"),
-                MakeTranslationPair("Czech", "cs"),
-                MakeTranslationPair("Danish", "da"),
+                // European Languages
+                MakeTranslationPair("Bulgarian", "bg", false),
+                MakeTranslationPair("Czech", "cs", false),
+                MakeTranslationPair("Danish", "da", false),
                 MakeTranslationPair("Dutch", "nl", true),
-                MakeTranslationPair("English (British)", "en-gb", true),
-                MakeTranslationPair("English (American)", "en-us", true),
-                MakeTranslationPair("Estonian", "et"),
-                MakeTranslationPair("Finnish", "fi"),
+                MakeTranslationPair("Estonian", "et", false),
+                MakeTranslationPair("Finnish", "fi", false),
                 MakeTranslationPair("French", "fr", true),
                 MakeTranslationPair("German", "de", true),
-                MakeTranslationPair("Greek", "el"),
-                MakeTranslationPair("Hebrew", "he"),
-                MakeTranslationPair("Hungarian", "hu"),
-                MakeTranslationPair("Indonesian", "id"),
+                MakeTranslationPair("Greek", "el", false),
+                MakeTranslationPair("Hungarian", "hu", false),
                 MakeTranslationPair("Italian", "it", true),
-                MakeTranslationPair("Japanese", "ja", true),
-                MakeTranslationPair("Korean", "ko"),
-                MakeTranslationPair("Latvian", "lv"),
-                MakeTranslationPair("Lithuanian", "lt"),
-                MakeTranslationPair("Norwegian (Bokmål)", "nb"),
+                MakeTranslationPair("Latvian", "lv", false),
+                MakeTranslationPair("Lithuanian", "lt", false),
+                MakeTranslationPair("Norwegian (Bokmål)", "nb", false),
                 MakeTranslationPair("Polish", "pl", true),
-                MakeTranslationPair("Portuguese", "pt-pt", true),
-                MakeTranslationPair("Portuguese (Brazil)", "pt-br", true),
-                MakeTranslationPair("Romanian", "ro"),
+                MakeTranslationPair("Romanian", "ro", false),
                 MakeTranslationPair("Russian", "ru", true),
-                MakeTranslationPair("Slovak", "sk"),
-                MakeTranslationPair("Slovenian", "sl"),
+                MakeTranslationPair("Slovak", "sk", false),
+                MakeTranslationPair("Slovenian", "sl", false),
+                MakeTranslationPair("Swedish", "sv", false),
+                MakeTranslationPair("Ukrainian", "uk", false),
+
+                // English Variants (Formality is NOT supported for English)
+                MakeTranslationPair("English (British)", "en-GB", false),
+                MakeTranslationPair("English (American)", "en-US", false),
+
+                // Spanish Variants
                 MakeTranslationPair("Spanish", "es", true),
                 MakeTranslationPair("Spanish (Latin American)", "es-419", true),
-                MakeTranslationPair("Swedish", "sv"),
-                MakeTranslationPair("Thai", "th"),
-                MakeTranslationPair("Turkish", "tr"),
-                MakeTranslationPair("Ukrainian", "uk"),
-            };
-        }
 
-        private static TranslationPair MakeTranslationPair(string name, string code)
-        {
-            return new TranslationPair(name, code, code);
+                // Portuguese Variants
+                MakeTranslationPair("Portuguese (European)", "pt-PT", true),
+                MakeTranslationPair("Portuguese (Brazilian)", "pt-BR", true),
+
+                // Asian & Middle Eastern Languages
+                MakeTranslationPair("Arabic", "ar", false),
+                MakeTranslationPair("Chinese (Simplified)", "zh-hans", false),
+                MakeTranslationPair("Chinese (Traditional)", "zh-hant", false),
+                MakeTranslationPair("Hebrew", "he", false),
+                MakeTranslationPair("Indonesian", "id", false),
+                MakeTranslationPair("Japanese", "ja", true),
+                MakeTranslationPair("Korean", "ko", false),
+                MakeTranslationPair("Thai", "th", false),
+                MakeTranslationPair("Turkish", "tr", false),
+                MakeTranslationPair("Vietnamese", "vi", false)
+            };
         }
 
         private static TranslationPair MakeTranslationPair(string name, string code, bool hasFormality)
