@@ -1,6 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,8 +9,7 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 
 public interface IAdvancedEffectDisplay
 {
-    string Name { get; set; }
-    string Tag { get; }
+    string Name { get; }
     string Description { get; }
     List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height);
 }
@@ -21,29 +20,24 @@ public static class AdvancedEffectDisplayFactory
     {
         return new List<IAdvancedEffectDisplay>
         {
-            new AdvancedEffectTypewriter("Typewriter"),
-            new AdvancedEffectWordByWord("Word by word"),
-            new AdvancedEffectKaraoke("Karaoke"),
-            new AdvancedEffectScrambleReveal("Scramble reveal"),
-            new AdvancedEffectRainbowPulse("Rainbow pulse"),
-            new AdvancedEffectWave("Wave"),
-            new AdvancedEffectWaveBlue("Wave (blue)"),
-            new AdvancedEffectStarWarsScroll("Star Wars crawl"),
-            new AdvancedEffectEndCreditsScroll("Credits scroll"),
+            new AdvancedEffectTypewriter(),
+            new AdvancedEffectTypewriterWithHighlight(),
+            new AdvancedEffectWordByWord(),
+            new AdvancedEffectKaraoke(),
+            new AdvancedEffectScrambleReveal(),
+            new AdvancedEffectRainbowPulse(),
+            new AdvancedEffectWave(),
+            new AdvancedEffectWaveBlue(),
+            new AdvancedEffectStarWarsScroll(),
+            new AdvancedEffectEndCreditsScroll(),
         };
     }
 }
 
 public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectEndCreditsScroll(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectEndCreditsScroll;
+    public string Description => Se.Language.Assa.AdvancedEffectEndCreditsScrollDescription;
 
     public override string ToString() => Name;
 
@@ -99,14 +93,8 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
 
 public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectStarWarsScroll(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectStarWarsScroll;
+    public string Description => Se.Language.Assa.AdvancedEffectStarWarsScrollDescription;
 
     public override string ToString() => Name;
 
@@ -176,14 +164,8 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
 
 public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectWaveBlue(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectWaveBlue;
+    public string Description => Se.Language.Assa.AdvancedEffectWaveBlueDescription;
 
     public override string ToString() => Name;
 
@@ -261,14 +243,8 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 
 public class AdvancedEffectWave : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectWave(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectWave;
+    public string Description => Se.Language.Assa.AdvancedEffectWaveDescription;
 
     public override string ToString() => Name;
 
@@ -343,14 +319,8 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
 
 public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectRainbowPulse(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectRainbowPulse;
+    public string Description => Se.Language.Assa.AdvancedEffectRainbowPulseDescription;
 
     public override string ToString() => Name;
 
@@ -449,14 +419,8 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 /// </summary>
 public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one character at a time over the subtitle duration";
-
-    public AdvancedEffectTypewriter(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectTypewriter;
+    public string Description => Se.Language.Assa.AdvancedEffectTypewriterDescription;
 
     public override string ToString() => Name;
 
@@ -497,20 +461,74 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
     }
 }
 
+
+public class AdvancedEffectTypewriterWithHighlight : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectTypewriterWithHighlight;
+    public string Description => Se.Language.Assa.AdvancedEffectTypewriterWithHighlightDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+
+        foreach (var subtitle in subtitles)
+        {
+            var cleanText = Utilities.RemoveSsaTags(subtitle.Text);
+            if (string.IsNullOrEmpty(cleanText))
+            {
+                result.Add(subtitle);
+                continue;
+            }
+
+            var text = cleanText.Replace("\r\n", "\n").Replace("\r", "\n");
+            var chars = text.ToCharArray();
+            var charCount = chars.Length;
+            var msPerChar = subtitle.Duration.TotalMilliseconds / charCount;
+
+            for (var i = 0; i < charCount; i++)
+            {
+                var line = new SubtitleLineViewModel(subtitle, generateNewId: true);
+
+                var start = subtitle.StartTime.Add(TimeSpan.FromMilliseconds(i * msPerChar));
+                var end = (i == charCount - 1)
+                    ? subtitle.EndTime
+                    : subtitle.StartTime.Add(TimeSpan.FromMilliseconds((i + 1) * msPerChar));
+
+                line.StartTime = start;
+                line.EndTime = end;
+
+                string previousText = new string(chars, 0, i).Replace("\n", "\\N");
+                string activeChar = chars[i].ToString().Replace("\n", "\\N");
+
+                // TAGS:
+                // {\r} - Reset revealed text to your default style (clean and sharp).
+                // {\bord3\blur5\3c&HFFFFFF&} - Adds a 3px white border, then blurs it heavily.
+                // This creates a "glow" halo around the active character only.
+                line.Text = "{\\r}" + previousText +
+                            "{\\bord3\\blur8\\3c&HFFFFFF&\\1c&HFFFFFF&}" + activeChar;
+
+                result.Add(line);
+            }
+        }
+        return result;
+    }
+
+
+
+
+}
+
+
 /// <summary>
 /// Reveals text one word at a time: produces N sequential subtitle entries where entry i
 /// shows the first i+1 words and spans 1/N of the original duration.
 /// </summary>
 public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Reveals text one word at a time over the subtitle duration";
-
-    public AdvancedEffectWordByWord(string name)
-    {
-        Name = name;
-    }
+    public string Name => Se.Language.Assa.AdvancedEffectWordByWord;
+    public string Description => Se.Language.Assa.AdvancedEffectWordByWordDescription;
 
     public override string ToString() => Name;
 
@@ -564,17 +582,11 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
 /// </summary>
 public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Progressive left-to-right color reveal across characters";
+    public string Name => Se.Language.Assa.AdvancedEffectKaraoke;
+    public string Description => Se.Language.Assa.AdvancedEffectKaraokeDescription;
 
     private const string HighlightColor = @"{\1c&HFFFFFF&}";
     private const string DimColor = @"{\1c&H808080&}";
-
-    public AdvancedEffectKaraoke(string name)
-    {
-        Name = name;
-    }
 
     public override string ToString() => Name;
 
@@ -648,17 +660,11 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
 /// </summary>
 public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
 {
-    public string Name { get; set; }
-    public string Tag => string.Empty;
-    public string Description => "Scrambled characters decode into the real text from left to right";
+    public string Name => Se.Language.Assa.AdvancedEffectScrambleReveal;
+    public string Description => Se.Language.Assa.AdvancedEffectScrambleRevealDescription;
 
     private static readonly char[] ScramblePool =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#@$%&".ToCharArray();
-
-    public AdvancedEffectScrambleReveal(string name)
-    {
-        Name = name;
-    }
 
     public override string ToString() => Name;
 

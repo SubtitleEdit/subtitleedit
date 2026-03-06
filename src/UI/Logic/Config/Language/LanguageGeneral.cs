@@ -30,6 +30,7 @@ public class LanguageGeneral
     public string Appearance { get; set; }
     public string Append { get; set; }
     public string Apply { get; set; }
+    public string ApplyTo { get; set; }
     public string Ascending { get; set; }
     public string AttachDotDotDot { get; set; }
     public string AudioFiles { get; set; }
@@ -664,6 +665,7 @@ public class LanguageGeneral
         Appearance = "Appearance";
         Append = "Append";
         Apply = "Apply";
+        ApplyTo = "Apply to";
         Ascending = "Ascending";
         AttachDotDotDot = "Attach...";
         AudioFiles = "Audio files";

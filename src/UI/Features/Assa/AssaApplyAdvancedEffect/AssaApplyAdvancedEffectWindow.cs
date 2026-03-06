@@ -17,7 +17,7 @@ public class AssaApplyAdvancedEffectWindow : Window
     public AssaApplyAdvancedEffectWindow(AssaApplyAdvancedEffectViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Assa.ApplyOverrideTags;
+        Title = Se.Language.Assa.ApplyAdvancedEffectTitle;
         CanResize = true;
         Width = 1100;
         Height = 700;
@@ -27,7 +27,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         DataContext = vm;
 
         // ── Left panel ────────────────────────────────────────────────────────
-        var chooseLabel = UiUtil.MakeLabel("Choose effect:").WithBold();
+        var chooseLabel = UiUtil.MakeLabel(Se.Language.Assa.ChooseEffect).WithBold();
 
         var effectListBox = new ListBox
         {
@@ -63,7 +63,7 @@ public class AssaApplyAdvancedEffectWindow : Window
             Margin = new Thickness(0, 8, 0, 0),
             Children =
             {
-                UiUtil.MakeLabel("Apply to:").WithBold(),
+                UiUtil.MakeLabel(Se.Language.General.ApplyTo).WithBold(),
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustAll,

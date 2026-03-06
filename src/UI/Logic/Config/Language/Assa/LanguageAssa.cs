@@ -111,6 +111,30 @@ public class LanguageAssa
     public string CopyColorAsHextoClipboard { get; set; }
     public string GeneratingBackgroundBoxXOfY { get; set; }
 
+    // Apply Advanced Effect
+    public string ApplyAdvancedEffectTitle { get; set; }
+    public string ChooseEffect { get; set; }
+    public string AdvancedEffectTypewriter { get; set; }
+    public string AdvancedEffectTypewriterDescription { get; set; }
+    public string AdvancedEffectTypewriterWithHighlight { get; set; }
+    public string AdvancedEffectTypewriterWithHighlightDescription { get; set; }
+    public string AdvancedEffectWordByWord { get; set; }
+    public string AdvancedEffectWordByWordDescription { get; set; }
+    public string AdvancedEffectKaraoke { get; set; }
+    public string AdvancedEffectKaraokeDescription { get; set; }
+    public string AdvancedEffectScrambleReveal { get; set; }
+    public string AdvancedEffectScrambleRevealDescription { get; set; }
+    public string AdvancedEffectRainbowPulse { get; set; }
+    public string AdvancedEffectRainbowPulseDescription { get; set; }
+    public string AdvancedEffectWave { get; set; }
+    public string AdvancedEffectWaveDescription { get; set; }
+    public string AdvancedEffectWaveBlue { get; set; }
+    public string AdvancedEffectWaveBlueDescription { get; set; }
+    public string AdvancedEffectStarWarsScroll { get; set; }
+    public string AdvancedEffectStarWarsScrollDescription { get; set; }
+    public string AdvancedEffectEndCreditsScroll { get; set; }
+    public string AdvancedEffectEndCreditsScrollDescription { get; set; }
+
     public LanguageAssa()
     {
         // ASSA Draw
@@ -220,5 +244,29 @@ public class LanguageAssa
         ImageColorPicker = "Image color picker";
         CopyColorAsHextoClipboard = "Copy color as hex to clipboard";
         GeneratingBackgroundBoxXOfY = "Generating background box {0} of {1}...";
+
+        // Apply Advanced Effect
+        ApplyAdvancedEffectTitle = "Apply advanced effect";
+        ChooseEffect = "Choose effect";
+        AdvancedEffectTypewriter = "Typewriter";
+        AdvancedEffectTypewriterDescription = "Reveals text one character at a time over the subtitle duration";
+        AdvancedEffectTypewriterWithHighlight = "Typewriter with highlight";
+        AdvancedEffectTypewriterWithHighlightDescription = "Reveals text one character at a time with a glowing highlight on the current character";
+        AdvancedEffectWordByWord = "Word by word";
+        AdvancedEffectWordByWordDescription = "Reveals text one word at a time over the subtitle duration";
+        AdvancedEffectKaraoke = "Karaoke";
+        AdvancedEffectKaraokeDescription = "Highlights each character in sequence, revealing the text left to right like karaoke lyrics";
+        AdvancedEffectScrambleReveal = "Scramble reveal";
+        AdvancedEffectScrambleRevealDescription = "Scrambled characters decode into the real text from left to right";
+        AdvancedEffectRainbowPulse = "Rainbow pulse";
+        AdvancedEffectRainbowPulseDescription = "Each character cycles through rainbow colors independently";
+        AdvancedEffectWave = "Wave";
+        AdvancedEffectWaveDescription = "Each character pulses up and down with a rolling sine wave effect";
+        AdvancedEffectWaveBlue = "Wave (blue)";
+        AdvancedEffectWaveBlueDescription = "Each character pulses in a wave with blue and cyan color animation";
+        AdvancedEffectStarWarsScroll = "Star Wars scroll";
+        AdvancedEffectStarWarsScrollDescription = "Scrolls text from bottom to top with a perspective tilt, like the Star Wars opening crawl";
+        AdvancedEffectEndCreditsScroll = "Credits scroll";
+        AdvancedEffectEndCreditsScrollDescription = "Scrolls all subtitle lines from bottom to top as a continuous credits roll";
     }
 }
