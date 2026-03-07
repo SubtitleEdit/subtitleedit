@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ss.CurrentDCinemaMovieTitle = title;
             }
 
-            if (ss.CurrentDCinemaFontSize == 0 || string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
+            if (ss.CurrentDCinemaFontSize == 0)
             {
                 Configuration.Settings.SubtitleSettings.InitializeDCinemaSettings(true);
             }
@@ -172,11 +172,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).Attributes["ID"].Value = loadedFontId;
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Size"].Value = fontSize.ToString();
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["ID"].Value = loadedFontId;
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Effect"].Value = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
+            var mainFontNode = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
+            mainFontNode.Attributes["Size"].Value = fontSize.ToString();
+            mainFontNode.Attributes["Color"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
+            mainFontNode.Attributes["ID"].Value = loadedFontId;
+
+            if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
+            {
+                mainFontNode.Attributes["Effect"].Value = ss.CurrentDCinemaFontEffect;
+                mainFontNode.Attributes["EffectColor"].Value = DCinemaInterop.ColorToHexWithTransparency(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
+            }
+            else
+            {
+                if (mainFontNode.Attributes["Effect"] != null)
+                {
+                    mainFontNode.Attributes.RemoveNamedItem("Effect");
+                }
+                if (mainFontNode.Attributes["EffectColor"] != null)
+                {
+                    mainFontNode.Attributes.RemoveNamedItem("EffectColor");
+                }
+            }
 
             XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
             var no = 0;
