@@ -22,7 +22,7 @@ public class SpellCheckDictionaryDisplay
             return "en";
         }
 
-        var fileNameOnly = System.IO.Path.GetFileNameWithoutExtension(language.DictionaryFileName);
+        var fileNameOnly = Path.GetFileNameWithoutExtension(language.DictionaryFileName).Trim('[',']','(',')');
 
         try
         {
@@ -33,7 +33,6 @@ public class SpellCheckDictionaryDisplay
         {
             // ignore
         }
-
 
         if (fileNameOnly.Contains("English", StringComparison.OrdinalIgnoreCase))
         {
@@ -178,6 +177,20 @@ public class SpellCheckDictionaryDisplay
         if (fileNameOnly.Contains("Korean", StringComparison.OrdinalIgnoreCase))
         {
             return "ko";
+        }
+
+        if (fileNameOnly.Length >= 2)
+        {
+            try
+            {
+                var twoLetterCode = fileNameOnly.Substring(0, 2).ToLowerInvariant();
+                var ci = CultureInfo.GetCultureInfo($"{twoLetterCode}-{twoLetterCode}");
+                return ci.TwoLetterISOLanguageName;
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         return "en";
