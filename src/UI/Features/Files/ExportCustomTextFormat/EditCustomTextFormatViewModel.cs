@@ -29,6 +29,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
         "{duration}",
         "{gap}",
         "{text}",
+        "{text-csv}",
         "{original-text}",
         "{actor}",
         "{actor-colon-space}",

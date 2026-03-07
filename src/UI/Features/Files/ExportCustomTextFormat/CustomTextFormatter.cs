@@ -80,6 +80,7 @@ public static class CustomTextFormatter
         s = s.Replace("{end}", "{1}");
         s = s.Replace("{text}", "{2}");
         s = s.Replace("{original-text}", "{3}");
+        s = s.Replace("{text-csv}", "{23}");
         s = s.Replace("{number}", "{4}");
         s = s.Replace("{number:", "{4:");
         s = s.Replace("{number,", "{4,");
@@ -215,7 +216,7 @@ public static class CustomTextFormatter
         return Regex.Replace(template, @"s+", match =>
         {
             var length = match.Value.Length;
-            
+
             if (isPureSMode)
             {
                 var totalSeconds = (long)Math.Round(Math.Abs(timeCode.TotalSeconds), MidpointRounding.AwayFromZero);
@@ -362,9 +363,22 @@ public static class CustomTextFormatter
                           videoFileName,
                           string.IsNullOrEmpty(videoFileName) ? string.Empty : System.IO.Path.GetFileName(videoFileName),
                           actorColonSpace,
-                          actorUppercaseBracketsSpace
+                          actorUppercaseBracketsSpace,
+                          CsvEscape(text)
                           );
         s = PostCurly(s, replaceStart, replaceEnd);
+        return s;
+    }
+
+    private static string CsvEscape(string s)
+    {
+        if (s.Contains('"'))
+        {
+            s = s.Replace("\"", "\"\"");
+        }
+
+        s = $"\"{s}\"";
+
         return s;
     }
 
