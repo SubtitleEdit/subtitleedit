@@ -1420,7 +1420,7 @@ public partial class OcrViewModel : ObservableObject
                         {
                             engine = PaddleOcrDownloadType.EngineGpu12;
                         }
-                        
+
                         vm.Initialize(engine);
                     });
 
@@ -2920,20 +2920,32 @@ public partial class OcrViewModel : ObservableObject
             DeleteSelectedLines();
             SelectAndScrollToRow(OcrSubtitleItems.Count - 1);
         }
+        else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            CommandInspectLine();
+        }
     }
 
     internal void SubtitleGridDoubleTapped()
     {
+        CommandInspectLine();
+    }
+
+    private bool CommandInspectLine()
+    {
         var engine = SelectedOcrEngine;
         if (engine == null)
         {
-            return;
+            return false;
         }
 
-        if (engine != null && engine.EngineType == OcrEngineType.nOcr)
+        if (engine.EngineType == OcrEngineType.nOcr || engine.EngineType == OcrEngineType.BinaryImageCompare)
         {
             Dispatcher.UIThread.Post(async void () => { await InspectLine(); });
         }
+
+        return true;
     }
 
     internal void OnKeyDown(KeyEventArgs e)
