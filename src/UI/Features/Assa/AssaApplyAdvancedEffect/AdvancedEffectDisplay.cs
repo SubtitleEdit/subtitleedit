@@ -1,8 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Presentation;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
@@ -30,8 +34,95 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectWaveBlue(),
             new AdvancedEffectStarWarsScroll(),
             new AdvancedEffectEndCreditsScroll(),
-        };
+            new AdvancedEffectStarfield(),
+        }.OrderBy(p=>p.Name).ToList();
     }
+}
+
+public class AdvancedEffectStarfield : IAdvancedEffectDisplay
+{
+    public string Name { get; set; } = "Infinite Starfield";
+    public string Tag => string.Empty;
+    public string Description => "Continuous warp-speed starfield";
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        int screenWidth = width > 0 ? width : 1280;
+        int screenHeight = height > 0 ? height : 720;
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+
+        var globalStart = subtitles.Min(s => s.StartTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
+        double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
+
+        int starCount = 150;
+
+        for (int i = 0; i < starCount; i++)
+        {
+            // Each star "slot" will spawn multiple stars sequentially over the video duration
+            double currentTimeMs = 0;
+
+            while (currentTimeMs < totalVideoMs)
+            {
+                var star = new SubtitleLineViewModel();
+
+                // Randomize how long this specific star takes to cross the screen
+                int lifeSpan = rng.Next(4000, 8000);
+
+                // Set Start/End times relative to the global video timeline
+                star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                star.EndTime = star.StartTime.Add(TimeSpan.FromMilliseconds(lifeSpan));
+
+                // Ensure we don't exceed the video end
+                if (star.StartTime >= globalEnd) break;
+                if (star.EndTime > globalEnd) star.EndTime = globalEnd;
+
+                // PHYSICS
+                double angle = rng.NextDouble() * 2 * Math.PI;
+                int travelDist = 2500;
+
+                // FIRST WAVE LOGIC: 
+                // If this is the very first star in this slot, start it at a random progress 
+                // so the screen is full at 0:00. Otherwise, start it at the center (0).
+                double startProg = (currentTimeMs == 0) ? rng.NextDouble() : 0;
+
+                int startX = centerX + (int)(Math.Cos(angle) * (travelDist * startProg));
+                int startY = centerY + (int)(Math.Sin(angle) * (travelDist * startProg));
+                int endX = centerX + (int)(Math.Cos(angle) * travelDist);
+                int endY = centerY + (int)(Math.Sin(angle) * travelDist);
+
+                // STYLING
+                int starType = rng.Next(0, 10);
+                bool isGiant = starType >= 8;
+                string color = isGiant ? (rng.Next(0, 2) == 0 ? "&HFFDADA&" : "&HACE6FF&") : "&HFFFFFF&";
+
+                // FADE: Quick fade-in for new stars so they don't "pop" into the center
+                int fadeIn = (startProg == 0) ? 1000 : 0;
+
+                string tags = $@"\\an5\\bord0\\shad0\\blur{(isGiant ? 3 : 1)}\\1c{color}\\fad({fadeIn},200)" +
+                              $@"\\move({startX},{startY},{endX},{endY})" +
+                              $@"\\fscx{(isGiant ? 20 : 10)}\\fscy{(isGiant ? 20 : 10)}\\t(0,{lifeSpan},\\fscx{(isGiant ? 800 : 300)}\\fscy{(isGiant ? 800 : 300)})";
+
+                star.Text = "{" + tags + "}·";
+                result.Add(star);
+
+                // Move the clock forward for the next star in this "slot"
+                currentTimeMs += (lifeSpan * (1.0 - startProg));
+            }
+        }
+
+        result.AddRange(subtitles);
+        return result;
+    }
+
+
+
 }
 
 public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
