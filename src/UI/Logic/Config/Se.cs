@@ -395,6 +395,34 @@ public class Se
         Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText = Settings.Tools.ImportTextAutoBreakAtEndMarkerText;
         Configuration.Settings.Tools.ImportTextDurationAuto = Settings.Tools.ImportTextDurationAuto;
         Configuration.Settings.Tools.ImportTextFixedDuration = Settings.Tools.ImportTextFixedDuration;
+
+        var dc = Settings.File.DCinemaSmpte;
+        var ss = Configuration.Settings.SubtitleSettings;
+        ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
+        ss.DCinemaFontSize = dc.DCinemaFontSize;
+        ss.DCinemaBottomMargin = dc.DCinemaBottomMargin;
+        ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
+        ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
+        ss.CurrentDCinemaSubtitleId = dc.CurrentDCinemaSubtitleId;
+        ss.CurrentDCinemaMovieTitle = dc.CurrentDCinemaMovieTitle;
+        ss.CurrentDCinemaReelNumber = dc.CurrentDCinemaReelNumber;
+        ss.CurrentDCinemaIssueDate = dc.CurrentDCinemaIssueDate;
+        ss.CurrentDCinemaLanguage = dc.CurrentDCinemaLanguage;
+        ss.CurrentDCinemaEditRate = dc.CurrentDCinemaEditRate;
+        ss.CurrentDCinemaTimeCodeRate = dc.CurrentDCinemaTimeCodeRate;
+        ss.CurrentDCinemaStartTime = dc.CurrentDCinemaStartTime;
+        ss.CurrentDCinemaFontId = dc.CurrentDCinemaFontId;
+        ss.CurrentDCinemaFontUri = dc.CurrentDCinemaFontUri;
+        ss.CurrentDCinemaFontEffect = dc.CurrentDCinemaFontEffect;
+        ss.CurrentDCinemaFontSize = dc.CurrentDCinemaFontSize;
+        if (!string.IsNullOrEmpty(dc.CurrentDCinemaFontColor))
+        {
+            try { ss.CurrentDCinemaFontColor = dc.CurrentDCinemaFontColor.FromHex(); } catch { }
+        }
+        if (!string.IsNullOrEmpty(dc.CurrentDCinemaFontEffectColor))
+        {
+            try { ss.CurrentDCinemaFontEffectColor = dc.CurrentDCinemaFontEffectColor.FromHex(); } catch { }
+        }
     }
 
     public static string GetErrorLogFilePath()

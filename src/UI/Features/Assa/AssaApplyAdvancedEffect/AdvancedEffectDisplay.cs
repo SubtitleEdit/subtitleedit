@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
@@ -30,7 +31,438 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectWaveBlue(),
             new AdvancedEffectStarWarsScroll(),
             new AdvancedEffectEndCreditsScroll(),
-        };
+            new AdvancedEffectStarfield(),
+            new AdvancedEffectRain(),
+            new AdvancedEffectShow(),
+            new AdvancedEffectOldMovie(),
+            new AdvancedEffectTest(),
+        }.OrderBy(p => p.Name).ToList();
+    }
+}
+
+public class AdvancedEffectTest : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectNeonBurst;
+    public string Description => Se.Language.Assa.AdvancedEffectNeonBurstDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        foreach (var sub in subtitles)
+        {
+            // 1. SELECT NEON COLOR
+            // Modern shorts use 'Electric Lime', 'Cyan', or 'Hot Pink'
+            string[] neonColors = { "&H00FF00&", "&HFFFF00&", "&HFF00FF&", "&H00FFFF&" };
+            string chosenColor = neonColors[rng.Next(neonColors.Length)];
+
+            // 2. CREATE THE GLOW LAYER (The 'Bloom')
+            // We create a duplicate line that sits behind the text with a heavy blur
+            var glowLayer = new SubtitleLineViewModel()
+            {
+                StartTime = sub.StartTime,
+                EndTime = sub.EndTime,
+                // Deep neon glow: High blur, matching color, slightly transparent
+                Text = "{\\an5\\bord5\\blur8\\shad0\\1c" + chosenColor + "\\3c" + chosenColor + "\\alpha&H60&" +
+                       GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true) // CleanText removes existing tags
+            };
+
+            // 3. CREATE THE SHARP TOP LAYER (The 'Core')
+            var coreLayer = new SubtitleLineViewModel()
+            {
+                StartTime = sub.StartTime,
+                EndTime = sub.EndTime,
+                // Sharp white core with a thin neon border
+                Text = "{\\an5\\bord2\\blur0.5\\shad0\\1c&HFFFFFF&\\3c" + chosenColor +
+                       GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true)
+            };
+
+            result.Add(glowLayer);
+            result.Add(coreLayer);
+        }
+
+        return result;
+    }
+
+    // Helper method to create the 'Pop' animation
+    private string GetPopTags(int startOffset, int duration)
+    {
+        // Starts at 125% size and shrinks down to 100% quickly
+        return $"\\fscx125\\fscy125\\t({startOffset},{duration},\\fscx100\\fscy100)";
+    }
+
+}
+
+public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectOldMovie;
+    public string Description => Se.Language.Assa.AdvancedEffectOldMovieDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        int w = width > 0 ? width : 1280;
+        int h = height > 0 ? height : 720;
+
+        var globalStart = subtitles.Min(s => s.StartTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
+        double totalMs = (globalEnd - globalStart).TotalMilliseconds;
+
+        // --- 1. HEAVY FILM NOISE (GRAIN) ---
+        // High particle count (40) with very short lifespans (33ms = 30fps)
+        for (int i = 0; i < 40; i++)
+        {
+            double currentTimeMs = rng.Next(0, 1000);
+            while (currentTimeMs < totalMs)
+            {
+                var grain = new SubtitleLineViewModel(); // Using requested constructor
+                int life = 33;
+                grain.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                grain.EndTime = grain.StartTime.Add(TimeSpan.FromMilliseconds(life));
+
+                int x = rng.Next(0, w);
+                int y = rng.Next(0, h);
+                // Mix of black and dark grey for "gritty" noise
+                string color = rng.Next(0, 2) == 0 ? "&H000000&" : "&H333333&";
+
+                grain.Text = "{\\an5\\pos(" + x + "," + y + ")\\bord0\\shad0\\1c" + color + "\\alpha&H90&\\fs" + rng.Next(2, 8) + "}·";
+
+                result.Add(grain);
+                currentTimeMs += life + rng.Next(10, 100);
+            }
+        }
+
+        // --- 2. IMPERFECT/BROKEN SCRATCHES ---
+        for (int i = 0; i < 6; i++)
+        {
+            double currentTimeMs = rng.Next(0, 5000);
+            while (currentTimeMs < totalMs)
+            {
+                var scratch = new SubtitleLineViewModel();
+                int life = rng.Next(50, 150);
+                scratch.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                scratch.EndTime = scratch.StartTime.Add(TimeSpan.FromMilliseconds(life));
+
+                int x = rng.Next(50, w - 50);
+                int startY = rng.Next(-100, h / 2);
+                int endY = startY + rng.Next(h / 2, h + 200);
+
+                // Slightly crooked vertical line
+                string sDraw = $"m 0 0 l 1 0 l {rng.Next(0, 3)} {h} l {rng.Next(-2, 1)} {h}";
+                scratch.Text = "{\\p1\\an7\\pos(" + x + "," + startY + ")\\bord0\\shad0\\1c&H666666&\\alpha&HA0&\\blur1}" + sDraw;
+
+                result.Add(scratch);
+                currentTimeMs += life + rng.Next(1000, 4000);
+            }
+        }
+
+        // --- 3. SLOW GATE FLICKER ---
+        double flickerTime = 0;
+        while (flickerTime < totalMs)
+        {
+            var flicker = new SubtitleLineViewModel();
+            int life = rng.Next(180, 400);
+            flicker.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(flickerTime));
+            flicker.EndTime = flicker.StartTime.Add(TimeSpan.FromMilliseconds(life));
+
+            string alpha = rng.Next(242, 252).ToString("X2");
+            flicker.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&HFFFFFF&\\alpha&H" + alpha + "}" + $"m 0 0 l {w} 0 l {w} {h} l 0 {h}";
+
+            result.Add(flicker);
+            flickerTime += life;
+        }
+
+        // --- 4. VIGNETTE ---
+        var vignette = new SubtitleLineViewModel() { StartTime = globalStart, EndTime = globalEnd };
+        string vDraw = $"m 0 0 l {w} 0 l {w} {h} l 0 {h} l 0 0 m 180 180 l {w - 180} 180 l {w - 180} {h - 180} l 180 {h - 180} l 180 180";
+        vignette.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\alpha&HA0&\\be90}" + vDraw;
+        result.Add(vignette);
+
+        result.AddRange(subtitles);
+        return result;
+    }
+}
+
+public class AdvancedEffectShow : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectSnow;
+    public string Description => Se.Language.Assa.AdvancedEffectSnowDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        int screenWidth = width > 0 ? width : 1280;
+        int screenHeight = height > 0 ? height : 720;
+
+        var globalStart = subtitles.Min(s => s.StartTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
+        double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
+
+        int flakeCount = 200;
+
+        for (int i = 0; i < flakeCount; i++)
+        {
+            // INITIAL DELAY: This creates the "start slow" effect. 
+            // Higher index flakes start much later in the video.
+            double currentTimeMs = rng.Next(0, 5000) + (i * 20);
+
+            while (currentTimeMs < totalVideoMs)
+            {
+                var flake = new SubtitleLineViewModel();
+
+                int layerRoll = rng.Next(0, 100);
+                int fallDuration, size, alpha;
+                double blur;
+
+                // --- REVISED SNOW SIZES (Smaller & Lighter) ---
+                if (layerRoll < 70) // BACKGROUND - 70% of snow, tiny specks
+                {
+                    fallDuration = rng.Next(10000, 15000);
+                    size = rng.Next(10, 25); // Was 20-40
+                    blur = 0.3;
+                    alpha = 180;
+                }
+                else if (layerRoll < 95) // MIDGROUND - Gentle flakes
+                {
+                    fallDuration = rng.Next(6000, 9000);
+                    size = rng.Next(30, 50); // Was 50-80
+                    blur = 1.0;
+                    alpha = 100;
+                }
+                else // FOREGROUND - Out of focus "Close" flakes
+                {
+                    fallDuration = rng.Next(4000, 6000);
+                    size = rng.Next(80, 130); // Was 150-250
+                    blur = 4.0;
+                    alpha = 60;
+                }
+
+                flake.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                flake.EndTime = flake.StartTime.Add(TimeSpan.FromMilliseconds(fallDuration));
+
+                if (flake.StartTime >= globalEnd) break;
+
+                int startX = rng.Next(-100, screenWidth + 100);
+                int endX = startX + rng.Next(20, 80); // Drift
+
+                // ROTATION: Adding a slow spin for more 3D realism
+                int startRotation = rng.Next(0, 360);
+                int endRotation = startRotation + rng.Next(-180, 180);
+
+                string hexAlpha = alpha.ToString("X2");
+                string tags = $@"\\an5\\bord0\\shad0\\blur{blur:F1}\\1c&HFFFFFF&\\alpha&H{hexAlpha}&\\fad(1200,1200)" +
+                              $@"\\fscx{size}\\fscy{size}\\frz{startRotation}\\t(0,{fallDuration},\\frz{endRotation})" +
+                              $@"\\move({startX}, -50, {endX}, {screenHeight + 50})";
+
+                flake.Text = "{" + tags + "}•";
+                result.Add(flake);
+
+                currentTimeMs += fallDuration;
+            }
+        }
+
+        result.AddRange(subtitles);
+        return result;
+    }
+}
+
+public class AdvancedEffectRain : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectRain;
+    public string Description => Se.Language.Assa.AdvancedEffectRainDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        int screenWidth = width > 0 ? width : 1280;
+        int screenHeight = height > 0 ? height : 720;
+
+        var globalStart = subtitles.Min(s => s.StartTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
+        double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
+
+        int dropCount = 350;
+
+        for (int i = 0; i < dropCount; i++)
+        {
+            double currentTimeMs = 0;
+            while (currentTimeMs < totalVideoMs)
+            {
+                var drop = new SubtitleLineViewModel();
+
+                // --- 3D LAYER LOGIC ---
+                int layerRoll = rng.Next(0, 100);
+                int fallDuration, dropWidth, dropLength, alpha;
+                double blur;
+                string color;
+
+                if (layerRoll < 60) // BACKGROUND (60% of rain) - Tiny, slow, sharp
+                {
+                    fallDuration = rng.Next(2500, 3500);
+                    dropWidth = rng.Next(4, 8);
+                    dropLength = rng.Next(80, 150);
+                    blur = 0.2;
+                    alpha = 180; // Very transparent (&HB4&)
+                    color = "&HA0A0A0&"; // Darker Grey
+                }
+                else if (layerRoll < 90) // MIDGROUND (30% of rain) - Standard
+                {
+                    fallDuration = rng.Next(1200, 1800);
+                    dropWidth = rng.Next(10, 18);
+                    dropLength = rng.Next(200, 350);
+                    blur = 0.8;
+                    alpha = 100; // Semi-transparent (&H64&)
+                    color = "&HD0D0D0&"; // Mid Grey
+                }
+                else // FOREGROUND (10% of rain) - Huge, fast, blurry (The "Close" drops)
+                {
+                    fallDuration = rng.Next(600, 900);
+                    dropWidth = rng.Next(25, 45);
+                    dropLength = rng.Next(500, 800);
+                    blur = 3.5; // Heavy "Out of focus" look
+                    alpha = 60; // Solid but soft (&H3C&)
+                    color = "&HFFFFFF&"; // Bright White
+                }
+
+                drop.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                drop.EndTime = drop.StartTime.Add(TimeSpan.FromMilliseconds(fallDuration));
+
+                if (drop.StartTime >= globalEnd) break;
+
+                int startX = rng.Next(-100, screenWidth + 100);
+                int endX = startX + rng.Next(15, 40);
+
+                // --- TAG CONSTRUCTION ---
+                string hexAlpha = alpha.ToString("X2");
+                string tags = $@"\\an5\\bord0\\shad0\\blur{blur:F1}\\1c{color}\\alpha&H{hexAlpha}&\\fad(150,150)" +
+                              $@"\\fscx{dropWidth}\\fscy{dropLength}" +
+                              $@"\\move({startX}, -100, {endX}, {screenHeight + 100})";
+
+                drop.Text = "{" + tags + "}·";
+                result.Add(drop);
+
+                currentTimeMs += (fallDuration * rng.NextDouble());
+            }
+        }
+
+        result.AddRange(subtitles);
+        return result;
+    }
+}
+
+public class AdvancedEffectStarfield : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectStarfield;
+    public string Description => Se.Language.Assa.AdvancedEffectStarfieldDescription;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        Random rng = new Random(subtitles[0].Text.GetHashCode());
+
+        int screenWidth = width > 0 ? width : 1280;
+        int screenHeight = height > 0 ? height : 720;
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+
+        var globalStart = subtitles.Min(s => s.StartTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
+        double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
+
+        // 1. INCREASED DENSITY
+        int starCount = 300;
+
+        for (int i = 0; i < starCount; i++)
+        {
+            double currentTimeMs = 0;
+
+            while (currentTimeMs < totalVideoMs)
+            {
+                var star = new SubtitleLineViewModel();
+
+                // Randomize how long this specific star takes to cross the screen
+                int lifeSpan = rng.Next(3500, 6500); // Faster speed feels more like warp
+
+                // Timing
+                star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
+                star.EndTime = star.StartTime.Add(TimeSpan.FromMilliseconds(lifeSpan));
+
+                // Ensure we don't exceed the video end
+                if (star.StartTime >= globalEnd) break;
+                if (star.EndTime > globalEnd) star.EndTime = globalEnd;
+
+                // PHYSICS
+                double angle = rng.NextDouble() * 2 * Math.PI;
+                int travelDist = 3000; // Far off-screen
+
+                // First Wave logic to fill the screen instantly at 0:00
+                double startProg = (currentTimeMs == 0) ? rng.NextDouble() : 0;
+
+                int startX = centerX + (int)(Math.Cos(angle) * (travelDist * startProg));
+                int startY = centerY + (int)(Math.Sin(angle) * (travelDist * startProg));
+                int endX = centerX + (int)(Math.Cos(angle) * travelDist);
+                int endY = centerY + (int)(Math.Sin(angle) * travelDist);
+
+                // STYLING & SPECTRA
+                int starType = rng.Next(0, 10);
+                bool isGiant = starType >= 8;
+                string color = isGiant ? (rng.Next(0, 2) == 0 ? "&HFFDADA&" : "&HACE6FF&") : "&HFFFFFF&";
+
+                // STREAK EFFECT: Use rapid movement between two coordinates to create "blur"
+                int blurX1 = startX - 3; // Shift by 3 pixels
+                int blurX2 = startX + 3;
+                string motionBlur = $"\\t({(lifeSpan / 2)},{lifeSpan},\\move({blurX1},{startY},{blurX2},{startY},0,20))";
+
+                // Fade and scaling (Unlinked fscx/y)
+                int fadeIn = (startProg == 0) ? 1000 : 0;
+                int initialSize = isGiant ? rng.Next(25, 40) : rng.Next(8, 18);
+
+                // \fscx(startScaleX): The horizontal width (stretches away from center)
+                // \fscy(startScaleY): The constant vertical height (star's 'thickness')
+                string tags = $@"\\an5\\bord0\\shad0\\blur1\\1c{color}\\fad({fadeIn},200)" +
+                              $@"\\fscx{initialSize}\\fscy{initialSize}" +
+                              $@"\\t(0,{lifeSpan},\\fscx{(isGiant ? 800 : 400)}\\fscy{(isGiant ? 20 : 10)})" +
+                              $@"\\move({startX},{startY},{endX},{endY})" +
+                              motionBlur; // Apply the motion blur oscillation last
+
+                star.Text = "{" + tags + "}·";
+                result.Add(star);
+
+                // Stagger the rebirth of stars so they don't all pop in at once
+                currentTimeMs += (lifeSpan * (1.0 - startProg)) + rng.Next(0, 300);
+            }
+        }
+
+        // Dialogue on top
+        result.AddRange(subtitles);
+        return result;
     }
 }
 

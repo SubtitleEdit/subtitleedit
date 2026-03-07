@@ -134,6 +134,16 @@ public class LanguageAssa
     public string AdvancedEffectStarWarsScrollDescription { get; set; }
     public string AdvancedEffectEndCreditsScroll { get; set; }
     public string AdvancedEffectEndCreditsScrollDescription { get; set; }
+    public string AdvancedEffectStarfield { get; set; }
+    public string AdvancedEffectStarfieldDescription { get; set; }
+    public string AdvancedEffectRain { get; set; }
+    public string AdvancedEffectRainDescription { get; set; }
+    public string AdvancedEffectSnow { get; set; }
+    public string AdvancedEffectSnowDescription { get; set; }
+    public string AdvancedEffectOldMovie { get; set; }
+    public string AdvancedEffectOldMovieDescription { get; set; }
+    public string AdvancedEffectNeonBurst { get; set; }
+    public string AdvancedEffectNeonBurstDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -270,5 +280,15 @@ public class LanguageAssa
         AdvancedEffectStarWarsScrollDescription = "Scrolls text from bottom to top with a perspective tilt, like the Star Wars opening crawl";
         AdvancedEffectEndCreditsScroll = "Credits scroll";
         AdvancedEffectEndCreditsScrollDescription = "Scrolls all subtitle lines from bottom to top as a continuous credits roll";
+        AdvancedEffectStarfield = "Infinite starfield (background)";
+        AdvancedEffectStarfieldDescription = "Continuous warp-speed starfield effect";
+        AdvancedEffectRain = "Infinite rain (background)";
+        AdvancedEffectRainDescription = "Continuous rain with depth-of-field layers";
+        AdvancedEffectSnow = "Infinite snow (background)";
+        AdvancedEffectSnowDescription = "Continuous snowfall with depth-of-field layers";
+        AdvancedEffectOldMovie = "Old movie effect (background)";
+        AdvancedEffectOldMovieDescription = "Simulates a vintage 35mm film projector with noise, vignette, and scratches";
+        AdvancedEffectNeonBurst = "Neon burst (centered)";
+        AdvancedEffectNeonBurstDescription = "High-energy 'Shorts' style captions with neon bloom glow and scale-in 'pop' animation";
     }
 }

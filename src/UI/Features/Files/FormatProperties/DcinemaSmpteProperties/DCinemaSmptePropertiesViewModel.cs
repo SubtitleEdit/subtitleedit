@@ -123,17 +123,17 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
 
             FontColor = ColorFromString(ss.CurrentDCinemaFontColor, Colors.White);
 
-            if (ss.CurrentDCinemaFontEffect == "border")
+            if (ss.CurrentDCinemaFontEffect?.Equals("border", StringComparison.OrdinalIgnoreCase) == true)
             {
-                SelectedFontEffect = FontEffects[1];
+                SelectedFontEffect = "Border";
             }
-            else if (ss.CurrentDCinemaFontEffect == "shadow")
+            else if (ss.CurrentDCinemaFontEffect?.Equals("shadow", StringComparison.OrdinalIgnoreCase) == true)
             {
-                SelectedFontEffect = FontEffects[2];
+                SelectedFontEffect = "Shadow";
             }
             else
             {
-                SelectedFontEffect = FontEffects[0];
+                SelectedFontEffect = "None";
             }
 
             FontEffectColor = ColorFromString(ss.CurrentDCinemaFontEffectColor, Colors.Black);
@@ -163,17 +163,17 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
             // Load colors from Current settings (last used colors)
             FontColor = ColorFromString(ss.CurrentDCinemaFontColor, Colors.White);
 
-            if (ss.CurrentDCinemaFontEffect == "border")
+            if (ss.CurrentDCinemaFontEffect?.Equals("border", StringComparison.OrdinalIgnoreCase) == true)
             {
-                SelectedFontEffect = FontEffects[1];
+                SelectedFontEffect = "Border";
             }
-            else if (ss.CurrentDCinemaFontEffect == "shadow")
+            else if (ss.CurrentDCinemaFontEffect?.Equals("shadow", StringComparison.OrdinalIgnoreCase) == true)
             {
-                SelectedFontEffect = FontEffects[2];
+                SelectedFontEffect = "Shadow";
             }
             else
             {
-                SelectedFontEffect = FontEffects[0];
+                SelectedFontEffect = "None";
             }
 
             FontEffectColor = ColorFromString(ss.CurrentDCinemaFontEffectColor, Colors.Black);
@@ -205,11 +205,11 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
 
         ss.CurrentDCinemaFontColor = ColorToString(FontColor);
 
-        if (SelectedFontEffect == FontEffects[1])
+        if (SelectedFontEffect?.Equals("Border", StringComparison.OrdinalIgnoreCase) == true)
         {
             ss.CurrentDCinemaFontEffect = "border";
         }
-        else if (SelectedFontEffect == FontEffects[2])
+        else if (SelectedFontEffect?.Equals("Shadow", StringComparison.OrdinalIgnoreCase) == true)
         {
             ss.CurrentDCinemaFontEffect = "shadow";
         }
