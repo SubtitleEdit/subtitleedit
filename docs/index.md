@@ -89,6 +89,10 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Compare](features/compare.md) — Compare subtitle files
 - [Statistics](features/statistics.md) — Subtitle statistics
 
+## Contributing
+
+- [Translating Subtitle Edit](translating.md) — How to translate the UI into another language
+
 ## Reference
 
 ### Format Documentation
