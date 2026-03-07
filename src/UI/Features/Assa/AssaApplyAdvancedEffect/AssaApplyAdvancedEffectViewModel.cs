@@ -141,11 +141,6 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
             _oldSubtitleText = text;
             UpdatedSubtitle = subtitle;
-
-            Dispatcher.UIThread.Post(async() =>
-            {
-                await ClipboardHelper.SetTextAsync(Window!, text);
-            });
         };
 
         _positionTimer.Start();
