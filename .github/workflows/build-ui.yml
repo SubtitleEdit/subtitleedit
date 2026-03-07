@@ -297,10 +297,15 @@ jobs:
           # Create DMG for x64
           mkdir -p "./dmg-temp-x64"
           cp -R "./SubtitleEdit-x64.app" "./dmg-temp-x64/Subtitle Edit.app"
-          
+
           # Delete app bundle immediately after copying
           rm -rf "./SubtitleEdit-x64.app"
-          
+
+          # Add unsigned-app helper files
+          cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-x64/README-macOS.txt"
+          cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-x64/fix-unsigned-app.sh"
+          chmod +x "./dmg-temp-x64/fix-unsigned-app.sh"
+
           ln -s /Applications "./dmg-temp-x64/Applications"
           hdiutil create -volname "SubtitleEdit x64" -srcfolder "./dmg-temp-x64" -ov -format UDZO "./SubtitleEdit-macOS-x64.dmg"
       
@@ -395,10 +400,15 @@ jobs:
           # Create DMG for ARM64
           mkdir -p "./dmg-temp-arm64"
           cp -R "./SubtitleEdit-ARM64.app" "./dmg-temp-arm64/Subtitle Edit.app"
-          
+
           # Delete app bundle immediately after copying
           rm -rf "./SubtitleEdit-ARM64.app"
-          
+
+          # Add unsigned-app helper files
+          cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-arm64/README-macOS.txt"
+          cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-arm64/fix-unsigned-app.sh"
+          chmod +x "./dmg-temp-arm64/fix-unsigned-app.sh"
+
           ln -s /Applications "./dmg-temp-arm64/Applications"
           hdiutil create -volname "SubtitleEdit ARM64" -srcfolder "./dmg-temp-arm64" -ov -format UDBZ "./SubtitleEdit-macOS-ARM64.dmg"
       
