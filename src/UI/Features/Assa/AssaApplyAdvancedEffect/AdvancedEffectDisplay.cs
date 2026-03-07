@@ -42,9 +42,10 @@ public static class AdvancedEffectDisplayFactory
 
 public class AdvancedEffectTest : IAdvancedEffectDisplay
 {
-    public string Name { get; set; } = "Neon Burst (centered)";
+    public string Name => Se.Language.Assa.AdvancedEffectNeonBurst;
+    public string Description => Se.Language.Assa.AdvancedEffectNeonBurstDescription;
 
-    public string Description => "High-energy 'Shorts' style captions with neon bloom glow and 125% scale-in 'pop' animation.";
+    public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
@@ -99,8 +100,10 @@ public class AdvancedEffectTest : IAdvancedEffectDisplay
 
 public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 {
-    public string Name { get; set; } = "Old movie effect (background)";
-    public string Description => "Simulates a vintage 35mm film projector (noise/vignette/scratches).";
+    public string Name => Se.Language.Assa.AdvancedEffectOldMovie;
+    public string Description => Se.Language.Assa.AdvancedEffectOldMovieDescription;
+
+    public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
@@ -193,8 +196,10 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 
 public class AdvancedEffectShow : IAdvancedEffectDisplay
 {
-    public string Name { get; set; } = "Infinite snow (background)";
-    public string Description => "Continuous snow";
+    public string Name => Se.Language.Assa.AdvancedEffectSnow;
+    public string Description => Se.Language.Assa.AdvancedEffectSnowDescription;
+
+    public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
@@ -280,8 +285,10 @@ public class AdvancedEffectShow : IAdvancedEffectDisplay
 
 public class AdvancedEffectRain : IAdvancedEffectDisplay
 {
-    public string Name { get; set; } = "Infinite rain (background)";
-    public string Description => "Continuous rain";
+    public string Name => Se.Language.Assa.AdvancedEffectRain;
+    public string Description => Se.Language.Assa.AdvancedEffectRainDescription;
+
+    public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
@@ -368,8 +375,10 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
 
 public class AdvancedEffectStarfield : IAdvancedEffectDisplay
 {
-    public string Name { get; set; } = "Infinite Starfield (background)";
-    public string Description => "Continuous warp-speed starfield";
+    public string Name => Se.Language.Assa.AdvancedEffectStarfield;
+    public string Description => Se.Language.Assa.AdvancedEffectStarfieldDescription;
+
+    public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
     {
