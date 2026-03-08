@@ -42,6 +42,27 @@ namespace Nikse.SubtitleEdit.Controls
             _textBuffer = FormatTime(Value);
         }
 
+        private void MakeMouseWheelHandler(TextBox? control)
+        {
+            if (control == null)
+            {
+                return;
+            }
+
+            control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
+            {
+                if (e.Delta.Y > 0)
+                {
+                    ChangeValue(+1);                    
+                }
+                else
+                {
+                    ChangeValue(-1);
+                }
+                e.Handled = true;
+            });
+        }
+
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
@@ -81,6 +102,8 @@ namespace Nikse.SubtitleEdit.Controls
 
             // Initial MinWidth calculation with text measurement
             UpdateMinWidth();
+
+            MakeMouseWheelHandler(_textBox);
         }
 
         private void OnSpinnerLayoutUpdated(object? sender, EventArgs e)
