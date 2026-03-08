@@ -1,6 +1,6 @@
 ; preprocessor checks
-#if VER < EncodeVer(6,2,1)
-  #error Update your Inno Setup version (6.2.1 or newer)
+#if VER < EncodeVer(6,7,1)
+  #error Update your Inno Setup version (6.7.1 or newer)
 #endif
 
 #ifndef UNICODE
@@ -75,7 +75,7 @@ DisableDirPage=auto
 DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"

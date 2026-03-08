@@ -141,13 +141,13 @@ jobs:
             ./SubtitleEdit-Windows-x64.zip
             ./SubtitleEdit-Windows-ARM64.zip
 
-      - name: Upload Windows MSI Installers
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-msi-installers
-          path: |
-            ./SubtitleEdit-Windows-x64.msi
-            # ./SubtitleEdit-Windows-ARM64.msi
+      # - name: Upload Windows MSI Installers
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: windows-msi-installers
+      #     path: |
+      #       ./SubtitleEdit-Windows-x64.msi
+      #       ./SubtitleEdit-Windows-ARM64.msi
 
       - name: Upload Inno Setup installer
         uses: actions/upload-artifact@v4
@@ -563,7 +563,7 @@ jobs:
       
             ### Downloads
             - **Windows x64 installer (Inno Setup):** [SubtitleEdit-Windows-x64-Setup.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64-Setup.exe)
-            - **Windows x64 installer (MSI):** [SubtitleEdit-Windows-x64.msi](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.msi)
+            #- **Windows x64 installer (MSI):** [SubtitleEdit-Windows-x64.msi](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.msi)
             - **Windows x64:** [SubtitleEdit-Windows-x64.zip]
             - **Windows ARM64:** [SubtitleEdit-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-ARM64.zip)
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
