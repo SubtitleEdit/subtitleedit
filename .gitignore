@@ -399,4 +399,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea/
-/installer/WindowsInno/SubtitleEdit-1.0.0-Setup.exe
+/installer/WindowsInno/SubtitleEdit-*-Setup.exe

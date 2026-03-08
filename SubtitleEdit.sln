@@ -132,6 +132,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots"
 		docs\screenshots\README.md = docs\screenshots\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsInno", "WindowsInno", "{5925DAD2-308F-4879-9587-E45FE31BC34C}"
+	ProjectSection(SolutionItems) = preProject
+		installer\WindowsInno\Subtitle_Edit_Installer.iss = installer\WindowsInno\Subtitle_Edit_Installer.iss
+		installer\WindowsInno\Subtitle_Edit_Localization.iss = installer\WindowsInno\Subtitle_Edit_Localization.iss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,6 +234,7 @@ Global
 		{79A92250-4337-4BB1-B117-1375C220E61E} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 		{F97CA7CF-6808-41F2-A3B7-A4F4033E20AF} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 		{4F23FA81-26B9-4E5D-A7AC-C5C1CE2654DC} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
+		{5925DAD2-308F-4879-9587-E45FE31BC34C} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27E960EC-896F-428C-95A2-C250321C16D5}
