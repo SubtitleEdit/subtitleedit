@@ -14279,6 +14279,13 @@ public partial class MainViewModel :
             MenuIteminsertSubtitleFileAtPositionMenuItem.IsVisible = vp.Position > lastSeconds;
         }
 
+        if (subtitlesAtPosition.Count > 0)
+        {
+            MenuItemAudioVisualizerDeleteAtPosition.IsVisible = true;
+            MenuItemAudioVisualizerSplitAtPosition.IsVisible = true;
+            MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = true;
+        }
+
         if (selectedSubtitles?.Count == 1 &&
             subtitlesAtPosition.Count == 1 &&
             selectedSubtitles[0] == subtitlesAtPosition[0])
@@ -14317,15 +14324,7 @@ public partial class MainViewModel :
             });
 
             return;
-        }
-
-        if (subtitlesAtPosition.Count > 0)
-        {
-            MenuItemAudioVisualizerDeleteAtPosition.IsVisible = true;
-            MenuItemAudioVisualizerSplitAtPosition.IsVisible = true;
-            MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = true;
-            return;
-        }
+        }      
     }
 
     internal void SubtitleTextBoxGotFocus()
