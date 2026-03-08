@@ -84,7 +84,7 @@ public partial class AdjustDurationViewModel : ObservableObject
             var subtitle = subtitles[i];
             var nextSubtitle = subtitles.GetOrNull(i + 1);
             var adjustment = TimeSpan.FromSeconds(AdjustFixed);
-            var newEndTime = subtitle.EndTime + adjustment;
+            var newEndTime = subtitle.StartTime + adjustment;
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
