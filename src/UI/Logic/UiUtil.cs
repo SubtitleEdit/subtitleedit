@@ -1,17 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Projektanker.Icons.Avalonia;
 using SkiaSharp;
@@ -1653,7 +1650,6 @@ public static class UiUtil
     {
         var control = new NumericUpDown
         {
-            Width = width,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = viewModel,
@@ -1683,9 +1679,16 @@ public static class UiUtil
             });
         }
 
+        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
+        {
+            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
+                                        control.Minimum,
+                                        control.Maximum);
+            e.Handled = true;
+        });
+
         return control;
     }
-
 
     public static NumericUpDown MakeNumericUpDownTwoDecimals(decimal min, decimal max, double width, object viewModel,
         string? propertyValuePath = null, string? propertyIsVisiblePath = null)
@@ -1720,6 +1723,8 @@ public static class UiUtil
                 Mode = BindingMode.TwoWay,
             });
         }
+
+        MakeNumeriUpDownMouseWheelHandler(control);
 
         return control;
     }
@@ -1757,6 +1762,8 @@ public static class UiUtil
             });
         }
 
+        MakeNumeriUpDownMouseWheelHandler(control);
+
         return control;
     }
 
@@ -1793,7 +1800,20 @@ public static class UiUtil
             });
         }
 
+        MakeNumeriUpDownMouseWheelHandler(control);
+
         return control;
+    }
+
+    private static void MakeNumeriUpDownMouseWheelHandler(NumericUpDown control)
+    {
+        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
+        {
+            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
+                                        control.Minimum,
+                                        control.Maximum);
+            e.Handled = true;
+        });
     }
 
     public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath)
