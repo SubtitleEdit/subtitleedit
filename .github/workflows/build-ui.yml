@@ -104,6 +104,7 @@ jobs:
           dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
             -p:PublishSingleFile=true `
             -o ./src/UI/bin/Release/net10.0/publish
+          Copy-Item "libmpv-temp/libmpv-2.dll" "./src/UI/bin/Release/net10.0/publish/"
           Get-ChildItem -Path "./src/UI/bin/Release/net10.0/publish/" -Recurse -Include *.pdb | Remove-Item -Force
 
       - name: Install Inno Setup
