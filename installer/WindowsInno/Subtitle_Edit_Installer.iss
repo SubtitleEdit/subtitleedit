@@ -12,21 +12,18 @@
 #define app_copyright_start  "2001"
 #define app_copyright_end    GetDateTimeString('yyyy','','')
 
-#define VerMajor
-#define VerMinor
-#define VerBuild
-#define VerRevision
+; Version constants — updated by installer/WindowsInno/update-version.ps1
+#define app_ver         "5.0.0"
+#define app_ver_suffix  "beta4"
+#define app_ver_full    "5.0.0.4"
+; Shows "5.0.0 beta4" when suffix is set, plain "5.0.0" for release builds
+#define app_ver_display app_ver_suffix != "" ? app_ver + " " + app_ver_suffix : app_ver
 
 #define bindir "..\..\src\UI\bin\Release\net10.0\publish"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
 #endif
-
-#expr ParseVersion(bindir + "\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
-
-#define app_ver       str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
-#define app_ver_full  str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
 
 #define keyAppPaths  "Software\Microsoft\Windows\CurrentVersion\App Paths"
 
@@ -35,7 +32,7 @@
 AppID={{B5E6D1E0-A9F3-4B2C-8E7D-1F5C3A9B0E4D}
 AppName={#app_name}
 AppVersion={#app_ver_full}
-AppVerName={#app_name} {#app_ver}
+AppVerName={#app_name} {#app_ver_display}
 
 AppCopyright={#app_copyright} {#app_copyright_start} {#app_copyright_end}
 AppPublisher={#app_copyright}
@@ -104,13 +101,13 @@ Source: ..\..\LICENSE;                 DestDir: {app}; Flags: ignoreversion
 
 
 [Icons]
-Name: {group}\Subtitle Edit;                                        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit;                                        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver_display}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog;                          Filename: {app}\Changelog.txt; WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: https://subtitleedit.github.io/subtitleedit/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                  Filename: {uninstallexe}; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
-Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
-Name: {userdesktop}\Subtitle Edit;   Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
+Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver_display}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
+Name: {userdesktop}\Subtitle Edit;   Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver_display}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
 
 
 [InstallDelete]
