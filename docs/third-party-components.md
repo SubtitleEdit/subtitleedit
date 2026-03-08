@@ -48,6 +48,12 @@ Used for reading media info, extracting audio, and generating waveforms.
     *   Extract `ffmpeg.exe` from the download (usually found in a `bin` subfolder).
     *   Place `ffmpeg.exe` **directly** in `[Data Folder]/ffmpeg` — **do not** include the `bin` subfolder itself.
     *   (Optional) `ffprobe.exe` can also be placed in the same folder.
+*   **Alternative: Custom Path**
+    *   You can point to an existing FFmpeg installation in `Settings.json` (located in the Data Folder):
+    ```json
+    "FfmpegPath": "C:\\path\\to\\your\\ffmpeg.exe"
+    ```
+    *   Use double backslashes (`\\`) for Windows paths in JSON.
 
 ### MPV Media Player (libmpv)
 Used as a video player engine.
@@ -93,6 +99,10 @@ Used for reading media info, extracting audio, and generating waveforms.
 *   **Install:** Via package manager (e.g., `sudo apt install ffmpeg`) or download static builds from [ffmpeg.org](https://ffmpeg.org/download.html).
 *   **Files:** Subtitle Edit will look for `ffmpeg` in system paths (e.g., `/usr/bin/ffmpeg`).
 *   **Alternative:** Place the `ffmpeg` binary in `[Data Folder]/ffmpeg`.
+*   **Custom Path:** You can specify a custom path in `Settings.json` (located in the Data Folder):
+    ```json
+    "FfmpegPath": "/path/to/your/ffmpeg"
+    ```
 
 ### MPV Media Player (libmpv)
 Used as a video player engine.
@@ -132,6 +142,10 @@ Used for reading media info, extracting audio, and generating waveforms.
 *   **Install:** Via Homebrew (e.g., `brew install ffmpeg`) or download static builds from [ffmpeg.org](https://ffmpeg.org/download.html).
 *   **Files:** Subtitle Edit will look for `ffmpeg` in system paths (e.g., `/opt/homebrew/bin/ffmpeg`).
 *   **Alternative:** Place the `ffmpeg` binary in `[Data Folder]/ffmpeg`.
+*   **Custom Path:** You can specify a custom path in `Settings.json` (located in the Data Folder):
+    ```json
+    "FfmpegPath": "/path/to/your/ffmpeg"
+    ```
 
 ### MPV Media Player (libmpv)
 Used as a video player engine.
