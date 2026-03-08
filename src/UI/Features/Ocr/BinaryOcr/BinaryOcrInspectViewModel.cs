@@ -35,6 +35,7 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     [ObservableProperty] private Bitmap? _sentenceImageSource;
     [ObservableProperty] private Bitmap? _itemImageSource;
     [ObservableProperty] private bool _isEditControlsEnabled;
+    [ObservableProperty] private bool _canAddBetterMatch;
     [ObservableProperty] private ObservableCollection<int> _noOfLinesToAutoDrawList;
     [ObservableProperty] private int _selectedNoOfLinesToAutoDraw;
     [ObservableProperty] private Bitmap _currentBitmap;
@@ -334,6 +335,19 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         _splitItem = _letters[index];
 
         IsEditControlsEnabled = match != null;
+
+        CanAddBetterMatch = match != null && match.ImageSplitterItem?.NikseBitmap != null;
+        if (_splitItem.NikseBitmap != null)
+        {
+            var x = new BinaryOcrBitmap(_splitItem.NikseBitmap)
+            {
+                X = _splitItem.X,
+                Y = _splitItem.Top,
+                Text = match?.Text ?? string.Empty,
+                Italic = match?.Italic ?? false
+            };
+            CanAddBetterMatch = _db.FindExactMatch(x) < 0;
+        }
 
         if (match != null && _splitItem.NikseBitmap != null)
         {
