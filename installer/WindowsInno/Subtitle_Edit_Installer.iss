@@ -47,8 +47,8 @@ VersionInfoVersion={#app_ver_full}
 VersionInfoDescription={#app_name} installer
 VersionInfoProductName={#app_name}
 
-tallDisplayName={#app_name}
-tallDisplayIcon={app}\SubtitleEdit.exe
+UninstallDisplayName={#app_name}
+UninstallDisplayIcon={app}\SubtitleEdit.exe
 
 WizardStyle=modern
 
@@ -74,9 +74,6 @@ DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64compatible
-
-UninstallDisplayName={#app_name}
-UninstallDisplayIcon={#bindir}\SubtitleEdit.exe
 
 ShowLanguageDialog=yes
 UsePreviousLanguage=no
