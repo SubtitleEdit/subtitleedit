@@ -367,6 +367,21 @@ public static class UiUtil
         return control;
     }
 
+    public static NumericUpDown BindIsEnabled(this NumericUpDown control, object viewModal, string propertyIsEnabledPath,
+        IValueConverter converter)
+    {
+        control.Bind(NumericUpDown.IsEnabledProperty, new Binding
+        {
+            Path = propertyIsEnabledPath,
+            Mode = BindingMode.OneWay,
+            Source = viewModal,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            Converter = converter,
+        });
+
+        return control;
+    }
+
     public static Button BindIsEnabled(this Button control, object viewModal, string propertyIsEnabledPath,
         IValueConverter converter)
     {

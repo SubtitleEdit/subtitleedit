@@ -611,7 +611,7 @@ public partial class OcrViewModel : ObservableObject
             }
             else
             {
-                var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out _, letters, letters.IndexOf(splitterItem), db);
+                var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out _, letters, letters.IndexOf(splitterItem), db, BinaryOcrMaxErrorPercent);
                 matches.Add(match);
             }
         }
@@ -1078,12 +1078,6 @@ public partial class OcrViewModel : ObservableObject
                 }
             }
         }
-    }
-
-    [RelayCommand]
-    private void ToggleTopAlign()
-    {
-        HasCaptureTopAlign = !HasCaptureTopAlign;
     }
 
     [RelayCommand]
@@ -2204,7 +2198,7 @@ public partial class OcrViewModel : ObservableObject
                 }
                 else
                 {
-                    var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out var secondBestMatch, letters, index, db);
+                    var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out var secondBestMatch, letters, index, db, BinaryOcrMaxErrorPercent);
 
                     if (match == null)
                     {
@@ -2305,8 +2299,7 @@ public partial class OcrViewModel : ObservableObject
                 index++;
             }
 
-            // item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-            item.Text = matches.Aggregate(string.Empty, (current, match) => current + match.Text).Trim();
+            item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
             var unknownWords = OcrFixLineAndSetText(i, item);
 
             _runOnceChars.Clear();
