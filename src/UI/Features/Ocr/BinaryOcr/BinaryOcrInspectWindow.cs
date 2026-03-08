@@ -161,7 +161,7 @@ public class BinaryOcrInspectWindow : Window
                 UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.MatchResolutionAndTopMargin)),
                 UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateCommand).WithMarginTop(25).WithLeftAlignment().WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
                 UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithMarginTop(5).WithLeftAlignment().WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                UiUtil.MakeButton(Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand).WithMarginTop(5).WithLeftAlignment(),
+                UiUtil.MakeButton(Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand).WithBindEnabled(nameof(vm.CanAddBetterMatch)).WithMarginTop(5).WithLeftAlignment(),
             },
         };
 
