@@ -581,7 +581,7 @@ jobs:
           prerelease: ${{ inputs.is_prerelease }}
           files: |
             ./release-assets/SubtitleEdit-Windows-x64-Setup.exe
-            ./release-assets/SubtitleEdit-Windows-x64.msi
+            # ./release-assets/SubtitleEdit-Windows-x64.msi
             ./release-assets/SubtitleEdit-Windows-x64.zip
             ./release-assets/SubtitleEdit-Windows-ARM64.zip
             ./release-assets/SubtitleEdit-macOS-ARM64.dmg
