@@ -877,6 +877,11 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-styles");
+        }
     }
 
     internal void FilesContextMenuOpening(object? sender, EventArgs e)

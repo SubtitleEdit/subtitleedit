@@ -78,6 +78,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [ASSA Progress Bar](features/assa-progress-bar.md) — Generate progress bars
 - [ASSA Resolution Resampler](features/assa-resolution-resampler.md) — Resample for different resolutions
 - [ASSA Image Color Picker](features/assa-image-color-picker.md) — Pick colors from video
+- [ASSA Apply Advanced Effects](features/assa-apply-advanced-effects.md) — Apply cinematic and creative animation effects
 - [ASSA Apply Custom Override Tags](features/assa-override-tags.md) — Apply custom tags
 
 ### Options

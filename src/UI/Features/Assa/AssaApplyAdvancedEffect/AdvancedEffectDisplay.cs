@@ -604,7 +604,7 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
                 int yOffset = i * internalLineSpacing;
 
                 string tags =
-                    $@"\an8\b1\fs52\fsp2\blur0.6\bord1.5\shad1\fad(300,300)" +
+                    $@"\an8\fad(300,300)" +
                     $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})";
 
                 charLine.Text = "{" + tags + "}" + lines[i].Trim();
