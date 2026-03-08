@@ -38,18 +38,9 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectNeonBurst(),
             new AdvancedEffectFadeIn(),
             new AdvancedEffectFadeOut(),
-            //new AdvancedEffectTest(),
         }.OrderBy(p => p.Name).ToList();
     }
 }
-
-//public class AdvancedEffectText : IAdvancedEffectDisplay
-//{
-//    public string Name => "Transition - circle-out";
-//    public string Description => "Classic circular closing transition. The video is swallowed by a shrinking circle that fades to black.";
-
-   
-//}
 
 public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
 {
@@ -107,27 +98,25 @@ public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
 
         foreach (var sub in subtitles)
         {
-            result.Add(CreateLineFadeIn(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
+            result.Add(CreateBlackOverlay(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
             result.Add(sub);
         }
 
         return result;
     }
 
-    private SubtitleLineViewModel CreateLineFadeIn(TimeSpan lineStart, double durationMs, int w, int h)
+    private SubtitleLineViewModel CreateBlackOverlay(TimeSpan lineStart, double durationMs, int w, int h)
     {
-        var fadeIn = new SubtitleLineViewModel();
-        fadeIn.StartTime = lineStart;
-        fadeIn.EndTime = lineStart.Add(TimeSpan.FromMilliseconds(durationMs));
+        var fadeOut = new SubtitleLineViewModel();
+        fadeOut.StartTime = lineStart;
+        fadeOut.EndTime = lineStart.Add(TimeSpan.FromMilliseconds(durationMs));
 
         // Vector rectangle covering the whole screen
-        string drawBox = $"m 0 0 l {w} 0 l {w} {h} l {0} {h}";
+        string drawBox = $"m 0 0 l {w} 0 l {w} {h} l 0 {h}";
 
-        // \fad(0, duration) tells the object to fade OUT over the duration
-        // 1c&H000000& ensures it is solid black
-        fadeIn.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(0," + durationMs + ")}" + drawBox;
+        fadeOut.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\layer10\\fad(" + durationMs + ",0)}" + drawBox;
 
-        return fadeIn;
+        return fadeOut;
     }
 }
 
@@ -180,13 +169,11 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
         return result;
     }
 
-    // Helper method to create the 'Pop' animation
-    private string GetPopTags(int startOffset, int duration)
+    private static string GetPopTags(int startOffset, int duration)
     {
         // Starts at 125% size and shrinks down to 100% quickly
         return $"\\fscx125\\fscy125\\t({startOffset},{duration},\\fscx100\\fscy100)";
     }
-
 }
 
 public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
@@ -543,7 +530,6 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
         result.AddRange(subtitles);
         return result;
     }
-
 }
 
 public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
@@ -828,7 +814,6 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
     }
 }
 
-
 public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectRainbowPulse;
@@ -924,7 +909,6 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
     }
 }
 
-
 /// <summary>
 /// Reveals text one character at a time: produces N sequential subtitle entries where entry i
 /// shows the first i+1 characters and spans 1/N of the original duration.
@@ -972,7 +956,6 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
         return result;
     }
 }
-
 
 public class AdvancedEffectTypewriterWithHighlight : IAdvancedEffectDisplay
 {
@@ -1026,12 +1009,7 @@ public class AdvancedEffectTypewriterWithHighlight : IAdvancedEffectDisplay
         }
         return result;
     }
-
-
-
-
 }
-
 
 /// <summary>
 /// Reveals text one word at a time: produces N sequential subtitle entries where entry i
@@ -1041,7 +1019,6 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectWordByWord;
     public string Description => Se.Language.Assa.AdvancedEffectWordByWordDescription;
-
     public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
