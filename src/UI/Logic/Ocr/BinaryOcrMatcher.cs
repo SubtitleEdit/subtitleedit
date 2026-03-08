@@ -7,14 +7,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr;
 
 public interface IBinaryOcrMatcher
 {
-    BinaryOcrMatcher.CompareMatch? GetCompareMatch(ImageSplitterItem2 targetItem, out BinaryOcrMatcher.CompareMatch? secondBestGuess, List<ImageSplitterItem2> list, int listIndex, BinaryOcrDb binaryOcrDb);
+    BinaryOcrMatcher.CompareMatch? GetCompareMatch(ImageSplitterItem2 targetItem,
+                                                   out BinaryOcrMatcher.CompareMatch? secondBestGuess,
+                                                   List<ImageSplitterItem2> list,
+                                                   int listIndex,
+                                                   BinaryOcrDb binaryOcrDb,
+                                                   double maxErrorPercent);
     bool IsLatinDb { get; set; }
 }
 
 public class BinaryOcrMatcher : IBinaryOcrMatcher
 {
     public bool IsLatinDb { get; set; }
-    private double _numericUpDownMaxErrorPct = 6;
 
     private long _ocrLowercaseHeightsTotal;
     private int _ocrLowercaseHeightsTotalCount;
@@ -71,9 +75,13 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         }
     }
 
-    public CompareMatch? GetCompareMatch(ImageSplitterItem2 targetItem, out CompareMatch? secondBestGuess, List<ImageSplitterItem2> list, int listIndex, BinaryOcrDb binaryOcrDb)
+    public CompareMatch? GetCompareMatch(ImageSplitterItem2 targetItem,
+                                         out CompareMatch? secondBestGuess,
+                                         List<ImageSplitterItem2> list,
+                                         int listIndex,
+                                         BinaryOcrDb binaryOcrDb,
+                                         double maxErrorPercent)
     {
-        double maxDiff = _numericUpDownMaxErrorPct;
         secondBestGuess = null;
         int index = 0;
         int smallestDifference = 10000;
@@ -125,7 +133,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         for (int k = 0; k < binaryOcrDb.CompareImagesExpanded.Count; k++)
         {
             var b = binaryOcrDb.CompareImagesExpanded[k];
-            if (Math.Abs(bob.Width - b.Width) < 3 && Math.Abs(bob.Height - b.Height) < 3 && Math.Abs(bob.NumberOfColoredPixels - b.NumberOfColoredPixels) < 5 && GetPixelDifPercentage(b, bob, target, maxDiff) <= maxDiff)
+            if (Math.Abs(bob.Width - b.Width) < 3 && Math.Abs(bob.Height - b.Height) < 3 && Math.Abs(bob.NumberOfColoredPixels - b.NumberOfColoredPixels) < 5 && GetPixelDifPercentage(b, bob, target, maxErrorPercent) <= maxErrorPercent)
             {
                 bool ok = false;
                 for (int i = 0; i < b.ExpandedList.Count; i++)
@@ -137,7 +145,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
                         {
                             ok = true;
                         }
-                        else if (Math.Abs(b.ExpandedList[i].Y - bobNext.Y) < 6 && GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap!, maxDiff) <= maxDiff)
+                        else if (Math.Abs(b.ExpandedList[i].Y - bobNext.Y) < 6 && GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap!, maxErrorPercent) <= maxErrorPercent)
                         {
                             ok = true;
                         }
@@ -161,30 +169,30 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
             }
         }
 
-        FindBestMatch(ref index, ref smallestDifference, out var hit, target, binaryOcrDb, bob, maxDiff);
-        if (maxDiff > 0)
+        FindBestMatch(ref index, ref smallestDifference, out var hit, target, binaryOcrDb, bob, maxErrorPercent);
+        if (maxErrorPercent > 0)
         {
-            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(0, 1, target.Width, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxDiff);
+                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
-            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(1, 0, target.Width, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxDiff);
+                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
-            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(0, 0, target.Width - 1, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxDiff);
+                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
         }
 
         if (hit != null)
         {
             double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
-            if (differencePercentage <= maxDiff)
+            if (differencePercentage <= maxErrorPercent)
             {
                 string? text = hit.Text;
                 if (smallestDifference > 0)
@@ -249,7 +257,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
             }
         }
 
-        if (maxDiff > 1 && IsLatinDb)
+        if (maxErrorPercent > 1 && IsLatinDb)
         {
             if (bob.IsPeriod())
             {

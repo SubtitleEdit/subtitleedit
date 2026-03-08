@@ -159,12 +159,11 @@ public class OcrWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var toggleButtonCaptureTopAlign = new ToggleButton
-        {
-            Command = vm.ToggleTopAlignCommand,
-        };
+        var toggleButtonCaptureTopAlign = new ToggleButton();
         Attached.SetIcon(toggleButtonCaptureTopAlign, IconNames.DockTop);
         ToolTip.SetTip(toggleButtonCaptureTopAlign, Se.Language.Ocr.CaptureTopAlign);
+        toggleButtonCaptureTopAlign.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureTopAlign)));
+
         var toggleButtonPreProcessing = new ToggleButton
         {
             Command = vm.ShowPreProcessingCommand,
@@ -237,6 +236,9 @@ public class OcrWindow : Window
                 UiUtil.MakeComboBox(vm.BinaryOcrPixelsAreSpaceList, vm, nameof(vm.SelectedBinaryOcrPixelsAreSpace),
                         nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(10)
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                UiUtil.MakeLabel(Se.Language.Ocr.MaxErrorPct, nameof(vm.IsBinaryImageCompareVisible)),
+                UiUtil.MakeNumericUpDownOneDecimal(0, 50, 120, vm, nameof(vm.BinaryOcrMaxErrorPercent), nameof(vm.IsBinaryImageCompareVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Tesseract settings

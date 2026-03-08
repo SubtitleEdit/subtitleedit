@@ -13,6 +13,7 @@ public class LanguageOcr
     public string OcrEngine { get; set; }
     public string Database { get; set; }
     public string MaxWrongPixels { get; set; }
+    public string MaxErrorPct { get; set; }
     public string NumberOfPixelsIsSpace { get; set; }
     public string InspectImageMatches { get; set; }
     public string ResolutionXYAndTopmarginZ { get; set; }
@@ -83,6 +84,7 @@ public class LanguageOcr
         OcrEngine = "OCR Engine";
         Database = "Database";
         MaxWrongPixels = "Max wrong pixels";
+        MaxErrorPct = "Max error %";
         NumberOfPixelsIsSpace = "Number of pixels is space";
         InspectImageMatches = "Inspect image matches";
         ResolutionXYAndTopmarginZ = "Resolution {0}x{1}, top margin {2}";

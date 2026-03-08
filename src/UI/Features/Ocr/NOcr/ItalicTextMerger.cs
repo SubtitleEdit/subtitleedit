@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic.Ocr;
+﻿using Microsoft.VisualBasic;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,116 @@ namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
 public class ItalicTextMerger
 {
+    public static string MergeWithItalicTags(List<BinaryOcrMatcher.CompareMatch> chars)
+    {
+        if (chars == null || chars.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var segments = GroupIntoSegments(chars);
+        var result = new StringBuilder();
+        bool currentlyInItalic = false;
+
+        foreach (var segment in segments)
+        {
+            if (segment.ShouldBeItalic && !currentlyInItalic)
+            {
+                result.Append("<i>");
+                currentlyInItalic = true;
+            }
+            else if (!segment.ShouldBeItalic && currentlyInItalic)
+            {
+                result.Append("</i>");
+                currentlyInItalic = false;
+            }
+
+            result.Append(segment.Text);
+        }
+
+        // Close italic tag if still open
+        if (currentlyInItalic)
+        {
+            result.Append("</i>");
+        }
+
+        return result.ToString();
+    }
+
+    private static List<TextSegment> GroupIntoSegments(List<BinaryOcrMatcher.CompareMatch> chars)
+    {
+        var words = GroupIntoWords(chars);
+        var segments = new List<TextSegment>();
+
+        foreach (var word in words)
+        {
+            bool shouldBeItalic = word.IsWhitespace ? false : GetMajorityItalic(word.Chars);
+            string text = string.Concat(word.Chars.Select(c => c.Text));
+
+            // If this is whitespace, check if we can merge it with surrounding italic content
+            if (word.IsWhitespace)
+            {
+                // Check if previous and next non-whitespace segments are both italic
+                bool prevIsItalic = GetPreviousNonWhitespaceItalic(segments);
+                bool nextIsItalic = GetNextNonWhitespaceItalic(words, words.IndexOf(word));
+
+                // If surrounded by italic content, include whitespace in italic
+                shouldBeItalic = prevIsItalic && nextIsItalic;
+            }
+
+            segments.Add(new TextSegment
+            {
+                Text = text,
+                ShouldBeItalic = shouldBeItalic,
+                IsWhitespace = word.IsWhitespace
+            });
+        }
+
+        // Post-process to merge consecutive segments with same formatting
+        return MergeConsecutiveSegments(segments);
+    }
+
+    private static List<WordGroup> GroupIntoWords(List<BinaryOcrMatcher.CompareMatch> chars)
+    {
+        var words = new List<WordGroup>();
+        var currentWord = new List<NOcrChar>();
+        bool inWhitespace = false;
+
+        foreach (var ch in chars)
+        {
+            bool isWhitespace = IsWhitespace(ch.Text ?? string.Empty);
+
+            if (isWhitespace != inWhitespace)
+            {
+                if (currentWord.Count > 0)
+                {
+                    words.Add(new WordGroup
+                    {
+                        Chars = new List<NOcrChar>(currentWord),
+                        IsWhitespace = inWhitespace
+                    });
+                    currentWord.Clear();
+                }
+                inWhitespace = isWhitespace;
+            }
+
+            currentWord.Add(new NOcrChar() { Text = ch.Text ?? string.Empty , Italic = ch.Italic });
+        }
+
+        if (currentWord.Count > 0)
+        {
+            words.Add(new WordGroup
+            {
+                Chars = currentWord,
+                IsWhitespace = inWhitespace
+            });
+        }
+
+        return words;
+    }
+
+    //----------------------------
+
     public static string MergeWithItalicTags(List<NOcrChar> chars)
     {
         if (chars == null || chars.Count == 0)
