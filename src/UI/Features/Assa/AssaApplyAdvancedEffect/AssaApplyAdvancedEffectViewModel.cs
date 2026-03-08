@@ -156,7 +156,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         {
             foreach (var item in Paragraphs)
             {
-                result.Paragraphs.Add(item.Subtitle.ToParagraph());
+                result.Paragraphs.Add(item.Subtitle.ToParagraph(_assaFormat));
             }
             return result;
         }
@@ -191,13 +191,13 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         {
             if (!affectedIds.Contains(item.Subtitle.Id))
             {
-                result.Paragraphs.Add(item.Subtitle.ToParagraph());
+                result.Paragraphs.Add(item.Subtitle.ToParagraph(_assaFormat));
             }
         }
 
         foreach (var line in transformed)
         {
-            result.Paragraphs.Add(line.ToParagraph());
+            result.Paragraphs.Add(line.ToParagraph(_assaFormat));
         }
 
         result.Paragraphs.Sort((a, b) =>
