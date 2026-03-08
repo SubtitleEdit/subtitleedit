@@ -10114,10 +10114,18 @@ public partial class MainViewModel :
         if (Se.Settings.Appearance.SubtitleGridLiveSpellCheck && dictionaryFound)
         {
             SubtitleDataGridSyntaxHighlighting.SetSpellCheck(_spellCheckManager);
+            foreach (var item in Subtitles)
+            {
+                item.RefreshText();
+            }
         }
         else
         {
             SubtitleDataGridSyntaxHighlighting.SetSpellCheck(null);
+            foreach (var item in Subtitles)
+            {
+                item.RefreshText();
+            }
         }
     }
 

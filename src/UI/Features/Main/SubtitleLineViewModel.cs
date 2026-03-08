@@ -397,6 +397,11 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(WpmBackgroundBrush));
     }
 
+    public void RefreshText()
+    {
+        OnPropertyChanged(nameof(Text));
+    }
+
     internal void SetStartTimeOnly(TimeSpan timeSpan)
     {
         _skipUpdate = true;
