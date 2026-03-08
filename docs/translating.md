@@ -114,7 +114,7 @@ Please send your completed translation file to the Subtitle Edit team so it can 
 You can submit it via:
 - A [pull request](https://github.com/SubtitleEdit/subtitleedit/pulls) to the repository (place the file under `src/UI/Assets/Languages/`)
 - A [GitHub issue](https://github.com/SubtitleEdit/subtitleedit/issues) with the file attached
-- An email to nikse.dk@gmail.com with the translation attached
+- An email to `nikse.dk@gmail.com` with the translation attached
 
 ---
 
