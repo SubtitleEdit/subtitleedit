@@ -171,6 +171,44 @@ Root: HKCU; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueN
 
 
 [Code]
+// .NET 5+ writes the shared host version to this registry key.
+// We check that the major version is >= 10.
+function IsDotNet10Installed(): Boolean;
+var
+  HostVersion: String;
+  DotPos: Integer;
+begin
+  Result := False;
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE,
+       'SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost',
+       'Version', HostVersion) then
+  begin
+    DotPos := Pos('.', HostVersion);
+    if DotPos > 1 then
+      Result := StrToIntDef(Copy(HostVersion, 1, DotPos - 1), 0) >= 10;
+  end;
+end;
+
+
+function InitializeSetup(): Boolean;
+begin
+  Result := True;
+  if not IsDotNet10Installed() then
+  begin
+    if MsgBox(
+        'Subtitle Edit requires the .NET 10 Runtime, which is not installed on this computer.' +
+        #13#10 + #13#10 +
+        'Please download and install the .NET 10 Runtime and run this setup again.' +
+        #13#10 + #13#10 +
+        'Do you want to open the .NET 10 download page now?',
+        mbConfirmation, MB_YESNO or MB_DEFBUTTON1) = IDYES then
+      ShellExec('open', 'https://dotnet.microsoft.com/download/dotnet/10.0',
+                '', '', SW_SHOW, ewNoWait, 0);
+    Result := False;
+  end;
+end;
+
+
 function SettingsExist(): Boolean;
 begin
   Result := FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
