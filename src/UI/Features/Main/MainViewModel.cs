@@ -947,7 +947,7 @@ public partial class MainViewModel :
                 newP.StartTime = lastParagraph!.StartTime;
                 newP.EndTime = lastParagraph.EndTime;
                 var insertIndex = lastParagraph == null ? 0 : Subtitles.IndexOf(lastParagraph) + 1;
-                Subtitles.Insert(insertIndex, new SubtitleLineViewModel(p, SelectedSubtitleFormat));
+                Subtitles.Insert(insertIndex, newP);
             }
         }
 

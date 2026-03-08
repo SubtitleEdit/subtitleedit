@@ -115,10 +115,6 @@ public class AssaDrawCanvas : Control
         set
         {
             _zoomFactor = Math.Clamp(value, 0.1f, 10f);
-            if (Math.Abs(_zoomFactor - 1.0f) < 0.05f)
-            {
-                _zoomFactor = 1.0f;
-            }
             InvalidateVisual();
             ZoomChanged?.Invoke(this, _zoomFactor);
         }
@@ -137,11 +133,10 @@ public class AssaDrawCanvas : Control
 
     public void ResetView()
     {
-        _zoomFactor = 1.0f;
+        _isPanning = false;
         _panX = 0;
         _panY = 0;
-        InvalidateVisual();
-        ZoomChanged?.Invoke(this, _zoomFactor);
+        ZoomFactor = 1.0f;
     }
 
     public void ZoomIn() => ZoomFactor += 0.02f;

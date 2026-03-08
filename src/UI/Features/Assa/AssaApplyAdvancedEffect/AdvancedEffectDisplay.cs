@@ -1,9 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
+using SharpCompress.Compressors.ZStandard.Unsafe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
@@ -35,12 +38,103 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectRain(),
             new AdvancedEffectShow(),
             new AdvancedEffectOldMovie(),
-            new AdvancedEffectTest(),
+            new AdvancedEffectNeonBurst(),
+            new AdvancedEffectFadeIn(),
+            new AdvancedEffectFadeOut(),
+            //new AdvancedEffectTest(),
         }.OrderBy(p => p.Name).ToList();
     }
 }
 
-public class AdvancedEffectTest : IAdvancedEffectDisplay
+//public class AdvancedEffectText : IAdvancedEffectDisplay
+//{
+//    public string Name => "Transition - circle-out";
+//    public string Description => "Classic circular closing transition. The video is swallowed by a shrinking circle that fades to black.";
+
+   
+//}
+
+public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
+{
+    public string Name => "Transition - fade-in";
+    public string Description => "A per-line fade-in effect where the screen starts black and reveals the video.";
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        int w = width > 0 ? width : 1280;
+        int h = height > 0 ? height : 720;
+
+        foreach (var sub in subtitles)
+        {
+            result.Add(CreateLineFadeIn(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
+            result.Add(sub);
+        }
+
+        return result;
+    }
+
+    private SubtitleLineViewModel CreateLineFadeIn(TimeSpan lineStart, double durationMs, int w, int h)
+    {
+        var fadeIn = new SubtitleLineViewModel();
+        fadeIn.StartTime = lineStart;
+        // The box only needs to exist for the duration of the fade
+        fadeIn.EndTime = lineStart.Add(TimeSpan.FromMilliseconds(durationMs));
+
+        // Vector rectangle covering the whole screen
+        string drawBox = $"m 0 0 l {w} 0 l {w} {h} l 0 {h}";
+
+        // \fad(0, durationMs) makes the black box go from Opaque (0) to Transparent (durationMs)
+        fadeIn.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(0," + durationMs + ")}" + drawBox;
+
+        return fadeIn;
+    }
+}
+
+public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
+{
+    public string Name => "Transition - fade-out";
+    public string Description => "A per-line fade-out effect where the screen ends black.";
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        int w = width > 0 ? width : 1280;
+        int h = height > 0 ? height : 720;
+
+        foreach (var sub in subtitles)
+        {
+            result.Add(CreateLineFadeIn(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
+            result.Add(sub);
+        }
+
+        return result;
+    }
+
+    private SubtitleLineViewModel CreateLineFadeIn(TimeSpan lineStart, double durationMs, int w, int h)
+    {
+        var fadeIn = new SubtitleLineViewModel();
+        fadeIn.StartTime = lineStart;
+        fadeIn.EndTime = lineStart.Add(TimeSpan.FromMilliseconds(durationMs));
+
+        // Vector rectangle covering the whole screen
+        string drawBox = $"m 0 0 l {w} 0 l {w} {h} l {0} {h}";
+
+        // \fad(0, duration) tells the object to fade OUT over the duration
+        // 1c&H000000& ensures it is solid black
+        fadeIn.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(0," + durationMs + ")}" + drawBox;
+
+        return fadeIn;
+    }
+}
+
+public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectNeonBurst;
     public string Description => Se.Language.Assa.AdvancedEffectNeonBurstDescription;

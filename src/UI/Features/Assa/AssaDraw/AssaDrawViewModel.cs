@@ -62,6 +62,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private float _currentY = float.MinValue;
     private readonly Regex _regexStart = new(@"\{[^{]*\\p1[^}]*\}");
     private readonly Regex _regexEnd = new(@"\{[^{]*\\p0[^}]*\}");
+    private readonly Regex _regexIclip = new(@"\{\\iclip\(([^)]+)\)\}");
     private readonly IFileHelper _fileHelper;
     private string _fileName = string.Empty;
     private Subtitle? _subtitle;
@@ -122,26 +123,41 @@ public partial class AssaDrawViewModel : ObservableObject
     public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height)
     {
         _subtitle = subtitle;
-        if (width.HasValue &&  height.HasValue && width.Value >= 0 && height.Value >= 0)
+        if (width.HasValue && height.HasValue && width.Value >= 0 && height.Value >= 0)
         {
             CanvasWidth = width.Value;
             CanvasHeight = height.Value;
         }
-        
+
         var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
+
         foreach (var line in selectedLines)
         {
-            if (line.Text.Contains("{\\p1}") && line.Text.Contains("{\\p0}"))
-            {
-                var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase));
-                if (style == null)
-                {
-                    style = new SsaStyle();
-                }
+            var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase)) ?? new SsaStyle();
+            var color = style.Primary.ToAvaloniaColor();
 
-                ImportAssaDrawingFromText(line.Text, line.Layer, style.Primary.ToAvaloniaColor(), false);
+            // 1. Process iclip (Vector Mask)
+            var iclipMatch = _regexIclip.Match(line.Text);
+            if (iclipMatch.Success)
+            {
+                // Extract only the drawing commands inside the parentheses
+                var clipCommands = iclipMatch.Groups[1].Value;
+                ImportAssaDrawingFromText(clipCommands, line.Layer, color, true);
+            }
+
+            // 2. Process \p1 Drawing
+            if (line.Text.Contains("{\\p1}"))
+            {
+                // Remove all tags (anything inside curly braces) to get raw vector data
+                string drawingOnly = Regex.Replace(line.Text, @"\{[^}]+\}", string.Empty).Trim();
+
+                if (!string.IsNullOrWhiteSpace(drawingOnly))
+                {
+                    ImportAssaDrawingFromText(drawingOnly, line.Layer, color, false);
+                }
             }
         }
+
         RefreshTreeView();
         Canvas?.InvalidateVisual();
     }
@@ -639,7 +655,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
-    private Subtitle GenerateSubtitle()
+    private Subtitle GenerateSubtitle(bool includeAll = false)
     {
         var subtitle = new Subtitle
         {
@@ -658,11 +674,11 @@ public partial class AssaDrawViewModel : ObservableObject
 
         // Collect unique colors from all layers
         var colorToStyleName = new Dictionary<Color, string>();
-        var layers = Shapes.Where(s => !s.Hidden).GroupBy(s => s.Layer).OrderBy(g => g.Key).ToList();
+        var layers = Shapes.Where(s => !s.Hidden || includeAll).GroupBy(s => s.Layer).OrderBy(g => g.Key).ToList();
         
         foreach (var layer in layers)
         {
-            var firstShape = layer.FirstOrDefault(p => !p.IsEraser);
+            var firstShape = layer.FirstOrDefault(p => !p.IsEraser || includeAll);
             if (firstShape != null && !colorToStyleName.ContainsKey(firstShape.ForeColor))
             {
                 var color = firstShape.ForeColor;
@@ -727,9 +743,14 @@ public partial class AssaDrawViewModel : ObservableObject
                     finalText.Append($"{{\\p1}}{drawText}{{\\p0}}");
                 }
 
-                if (finalText.Length > 0 && firstShape != null)
+                if (finalText.Length > 0)
                 {
-                    var styleName = colorToStyleName.GetValueOrDefault(firstShape.ForeColor, "Default");
+                    string styleName = string.Empty;
+                    if (firstShape != null)
+                    {
+                        styleName = colorToStyleName.GetValueOrDefault(firstShape.ForeColor, "Default");
+                    }
+                  
                     var p = new Paragraph(finalText.ToString(), 0, 10000)
                     {
                         Layer = layer.Key,
@@ -767,27 +788,46 @@ public partial class AssaDrawViewModel : ObservableObject
             return string.Empty;
         }
 
-        var sb = new StringBuilder();
+        var sbDraw = new StringBuilder();
         foreach (var shape in Shapes.Where(s => !s.IsEraser && !s.Hidden))
         {
-            sb.Append(shape.ToAssa());
-            sb.Append(' ');
+            sbDraw.Append(shape.ToAssa());
+            sbDraw.Append(' ');
         }
 
-        var drawCode = sb.ToString().Trim();
-        if (string.IsNullOrEmpty(drawCode))
+        var sbErase = new StringBuilder();
+        foreach (var shape in Shapes.Where(s => s.IsEraser && !s.Hidden))
+        {
+            sbErase.Append(shape.ToAssa());
+            sbErase.Append(' ');
+        }
+
+        var drawCode = sbDraw.ToString().Trim();
+        var eraseCode = sbErase.ToString().Trim();
+
+        if (string.IsNullOrEmpty(drawCode) && string.IsNullOrEmpty(eraseCode))
         {
             return string.Empty;
         }
 
-        return $"{{\\p1}}{drawCode}{{\\p0}}";
+        var result = new StringBuilder();
+        if (!string.IsNullOrEmpty(eraseCode))
+        {
+            result.Append($"{{\\iclip({eraseCode})}}");
+        }
+        if (!string.IsNullOrEmpty(drawCode))
+        {
+            result.Append($"{{\\p1}}{drawCode}{{\\p0}}");
+        }
+
+        return result.ToString();
     }
 
     [RelayCommand]
     private void Ok()
     {
         AssaDrawingCode = GenerateAssaCode();
-        ResultSubtitle = GenerateSubtitle();
+        ResultSubtitle = GenerateSubtitle(true);
         OkPressed = true;
         Window?.Close();
     }
@@ -929,35 +969,40 @@ public partial class AssaDrawViewModel : ObservableObject
         // Read resolution from header
         var playResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", subtitle.Header);
         if (int.TryParse(playResX, out var width) && width >= 125 && width <= 4096)
-        {
             CanvasWidth = width;
-        }
 
         var playResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", subtitle.Header);
         if (int.TryParse(playResY, out var height) && height >= 125 && height <= 4096)
-        {
             CanvasHeight = height;
-        }
 
-        // Get styles from header
         var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
 
-        // Import drawing codes from paragraphs
         foreach (var paragraph in subtitle.Paragraphs)
         {
             var color = Colors.White;
-            
-            // Try to get style from paragraph.Extra
             if (!string.IsNullOrEmpty(paragraph.Extra))
             {
                 var style = styles.FirstOrDefault(s => s.Name.Equals(paragraph.Extra, StringComparison.OrdinalIgnoreCase));
-                if (style != null)
+                if (style != null) color = style.Primary.ToAvaloniaColor();
+            }
+
+            // Handle iclip
+            var iclipMatch = _regexIclip.Match(paragraph.Text);
+            if (iclipMatch.Success)
+            {
+                ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, paragraph.Layer, color, true);
+            }
+
+            // Handle \p1 Drawing
+            if (paragraph.Text.Contains("{\\p1}"))
+            {
+                // Strip tags to avoid parsing non-coordinate text
+                string drawingOnly = Regex.Replace(paragraph.Text, @"\{[^}]+\}", string.Empty).Trim();
+                if (!string.IsNullOrWhiteSpace(drawingOnly))
                 {
-                    color = style.Primary.ToAvaloniaColor();
+                    ImportAssaDrawingFromText(drawingOnly, paragraph.Layer, color, false);
                 }
             }
-            
-            ImportAssaDrawingFromText(paragraph.Text, paragraph.Layer, color, false);
         }
 
         RefreshTreeView();
