@@ -247,6 +247,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-set-position");
+        }
     }
 
     public void UpdateOverlayPosition()

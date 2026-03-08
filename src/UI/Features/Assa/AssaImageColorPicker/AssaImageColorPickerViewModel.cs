@@ -184,6 +184,11 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-image-color-picker");
+        }
     }
 
     public void UpdateOverlayPosition()

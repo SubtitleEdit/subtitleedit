@@ -569,6 +569,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-progress-bar");
+        }
     }
 
     public async void LoadVideoAndSubtitle()

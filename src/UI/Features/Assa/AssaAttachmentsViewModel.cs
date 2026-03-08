@@ -464,6 +464,11 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-attachments");
+        }
     }
 
     internal void DataGridSelectionChanged(object? sender, SelectionChangedEventArgs e)

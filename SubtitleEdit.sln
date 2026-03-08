@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "features", "features", "{88
 		docs\features\adjust-duration.md = docs\features\adjust-duration.md
 		docs\features\apply-duration-limits.md = docs\features\apply-duration-limits.md
 		docs\features\apply-min-gap.md = docs\features\apply-min-gap.md
+		docs\features\assa-apply-advanced-effects.md = docs\features\assa-apply-advanced-effects.md
 		docs\features\assa-attachments.md = docs\features\assa-attachments.md
 		docs\features\assa-draw.md = docs\features\assa-draw.md
 		docs\features\assa-image-color-picker.md = docs\features\assa-image-color-picker.md

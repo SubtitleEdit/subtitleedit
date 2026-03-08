@@ -1145,6 +1145,11 @@ public partial class AssaDrawViewModel : ObservableObject
             CloseShape();
             e.Handled = true;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-draw");
+        }
     }
 
     private void AdjustPosition(float xAdjust, float yAdjust)
