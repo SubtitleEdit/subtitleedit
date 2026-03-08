@@ -13,18 +13,14 @@ You can translate Subtitle Edit's user interface into any language by creating a
 
 Subtitle Edit 5 uses JSON language files. All UI strings are stored in a single file, and you create a translated copy for your language.
 
-The English base file lives at:
-`src/UI/Assets/Languages/English.json` on [GitHub](https://github.com/SubtitleEdit/subtitleedit/blob/main/src/UI/Assets/Languages/English.json)
+The English base file lives at: [src/UI/Assets/Languages/English.json](https://github.com/SubtitleEdit/subtitleedit/blob/main/src/UI/Assets/Languages/English.json)
 
 ---
 
 ## Step 1 — Download the English Base File
 
-Download the raw English base file:
+Download the raw English base file: [Download](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/src/UI/Assets/Languages/English.json)
 
-```
-https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/src/UI/Assets/Languages/English.json
-```
 
 Save it as a starting point for your translation.
 
@@ -36,7 +32,7 @@ You have two options:
 
 ### Option A — Use JSON Content Translator (recommended)
 
-[JSON Content Translator](https://github.com/niksedk/json-content-translator/releases) is a dedicated tool for translating Subtitle Edit's JSON language files. It highlights untranslated entries, lets you work on one string at a time, and supports machine translation to speed up the process.
+[JSON Content Translator](https://github.com/niksedk/json-content-translator) is a dedicated tool for translating Subtitle Edit's JSON language files. It highlights untranslated entries, lets you work on one string at a time, and supports machine translation to speed up the process.
 
 1. Download and run JSON Content Translator from the [releases page](https://github.com/niksedk/json-content-translator/releases).
 2. Open the downloaded `English.json` file.
