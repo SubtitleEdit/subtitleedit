@@ -1005,18 +1005,8 @@ public static partial class InitListViewAndEditBox
             FontWeight = FontWeight.Bold,
         }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
         panelLayer.Children.Add(labelLayer);
-        var upDownLayer = new NumericUpDown
-        {
-            DataContext = vm,
-            [!NumericUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}")
-            {
-                Mode = BindingMode.TwoWay,
-            },
-            Minimum = int.MinValue,
-            Maximum = int.MaxValue,
-            Increment = 1,
-            FormatString = "F0",
-        };
+        var upDownLayer = UiUtil.MakeNumericUpDownInt(int.MinValue, int.MaxValue, 0, double.NaN, vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}");
+        upDownLayer.HorizontalAlignment = HorizontalAlignment.Stretch;
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(upDownLayer, Se.Language.General.Layer);
