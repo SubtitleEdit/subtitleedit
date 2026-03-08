@@ -96,6 +96,9 @@ jobs:
       #       -d ProductVersion="1.0.0" `
       #       -o ./SubtitleEdit-Windows-ARM64.msi
 
+      - name: Update UI.csproj with version from Se.cs
+        run: ./installer/WindowsInno/update-version.ps1
+
       - name: Publish Windows x64 app (framework-dependent, for Inno Setup)
         run: |
           dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
