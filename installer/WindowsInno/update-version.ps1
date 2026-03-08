@@ -1,13 +1,13 @@
-# Script to update UI.csproj with version from Se.cs
+# Script to update Subtitle_Edit_Installer.iss with version from Se.cs
 # Mirrors installer/macBundle/update-plist-version.sh for the Windows/Inno Setup build.
 #
 # Usage (from repo root):
 #   ./installer/WindowsInno/update-version.ps1
-#   ./installer/WindowsInno/update-version.ps1 -SeCsPath "src/UI/Logic/Config/Se.cs" -CsprojPath "src/UI/UI.csproj"
+#   ./installer/WindowsInno/update-version.ps1 -SeCsPath "src/UI/Logic/Config/Se.cs" -IssPath "installer/WindowsInno/Subtitle_Edit_Installer.iss"
 
 param (
-    [string]$SeCsPath   = "src/UI/Logic/Config/Se.cs",
-    [string]$CsprojPath = "src/UI/UI.csproj"
+    [string]$SeCsPath = "src/UI/Logic/Config/Se.cs",
+    [string]$IssPath  = "installer/WindowsInno/Subtitle_Edit_Installer.iss"
 )
 
 Set-StrictMode -Version Latest
@@ -28,54 +28,44 @@ $versionString = $match.Groups[1].Value   # e.g. "5.0.0-beta4"
 Write-Host "Extracted version from Se.cs: $versionString"
 
 # ---------------------------------------------------------------------------
-# 2. Parse into numeric parts
-#    "5.0.0-beta4"   -> major=5, minor=0, build=0, revision=4
-#    "5.0.0-preview95" -> major=5, minor=0, build=0, revision=95
-#    "5.1.2"          -> major=5, minor=1, build=2, revision=0
+# 2. Parse into the three constants used in Subtitle_Edit_Installer.iss
+#    "5.0.0-beta4"     -> app_ver="5.0.0"  app_ver_suffix="beta4"   app_ver_full="5.0.0.4"
+#    "5.0.0-preview95" -> app_ver="5.0.0"  app_ver_suffix="preview95" app_ver_full="5.0.0.95"
+#    "5.1.2"           -> app_ver="5.1.2"  app_ver_suffix=""        app_ver_full="5.1.2.0"
 # ---------------------------------------------------------------------------
-$numericPart   = ($versionString -split '-')[0]           # "5.0.0"
+$parts        = $versionString -split '-', 2
+$numericPart  = $parts[0]
+$appVerSuffix = if ($parts.Length -gt 1) { $parts[1] } else { "" }   # e.g. "beta4", "preview95", ""
+
 $numericFields = $numericPart.Split('.')
-$major   = [int]$numericFields[0]
-$minor   = if ($numericFields.Length -gt 1) { [int]$numericFields[1] } else { 0 }
-$build   = if ($numericFields.Length -gt 2) { [int]$numericFields[2] } else { 0 }
+$major = [int]$numericFields[0]
+$minor = if ($numericFields.Length -gt 1) { [int]$numericFields[1] } else { 0 }
+$build = if ($numericFields.Length -gt 2) { [int]$numericFields[2] } else { 0 }
 
-# Extract trailing digits from suffix, e.g. "beta4" -> 4, "preview95" -> 95
-$suffixMatch = [regex]::Match($versionString, '\D(\d+)$')
-$revision    = if ($suffixMatch.Success) { [int]$suffixMatch.Groups[1].Value } else { 0 }
+# Revision: trailing digits of the suffix ("beta4"->4, "preview95"->95, ""->0)
+$revisionMatch = [regex]::Match($appVerSuffix, '\d+$')
+$revision      = if ($revisionMatch.Success) { [int]$revisionMatch.Value } else { 0 }
 
-# FileVersion / AssemblyVersion: four numeric parts (read by ParseVersion in Inno Setup)
-$fileVersion = "$major.$minor.$build.$revision"
+$appVer     = "$major.$minor.$build"            # output filename, e.g. "5.0.0"
+$appVerFull = "$major.$minor.$build.$revision"  # VersionInfoVersion, e.g. "5.0.0.4"
 
-# Version: NuGet/display string without the leading "v"
-$packageVersion = $versionString
-
-Write-Host "FileVersion / AssemblyVersion : $fileVersion"
-Write-Host "Version (package)             : $packageVersion"
+Write-Host "app_ver        : $appVer"
+Write-Host "app_ver_suffix : $appVerSuffix"
+Write-Host "app_ver_full   : $appVerFull"
 
 # ---------------------------------------------------------------------------
-# 3. Inject or update version tags in UI.csproj
+# 3. Replace the three version constants in the .iss file.
+#    app_ver_display is a computed ISPP expression and never needs updating.
 # ---------------------------------------------------------------------------
-$csproj = Get-Content $CsprojPath -Raw
+$iss = Get-Content $IssPath -Raw
 
-# Helper: replace existing tag or insert before a known anchor tag
-function Set-CsprojProperty {
-    param ([string]$xml, [string]$tag, [string]$value, [string]$anchor)
-    $pattern     = "(<$tag>)[^<]*(</\s*$tag\s*>)"
-    $replacement = "<$tag>$value</$tag>"
-    if ($xml -match $pattern) {
-        return $xml -replace $pattern, $replacement
-    }
-    # Insert the new tag on a new line immediately before the anchor tag
-    return $xml -replace "(<$anchor>)", "$replacement`n`t`t`$1"
-}
+$iss = $iss -replace '(?m)^#define app_ver\s+.*$',        "#define app_ver         `"$appVer`""
+$iss = $iss -replace '(?m)^#define app_ver_suffix\s+.*$', "#define app_ver_suffix  `"$appVerSuffix`""
+$iss = $iss -replace '(?m)^#define app_ver_full\s+.*$',   "#define app_ver_full    `"$appVerFull`""
 
-$csproj = Set-CsprojProperty $csproj "Version"         $packageVersion "AssemblyName"
-$csproj = Set-CsprojProperty $csproj "AssemblyVersion" $fileVersion    "AssemblyName"
-$csproj = Set-CsprojProperty $csproj "FileVersion"     $fileVersion    "AssemblyName"
+[System.IO.File]::WriteAllText((Resolve-Path $IssPath), $iss)
 
-[System.IO.File]::WriteAllText((Resolve-Path $CsprojPath), $csproj)
-
-Write-Host "Successfully updated $CsprojPath"
-Write-Host "  <Version>         $packageVersion"
-Write-Host "  <AssemblyVersion> $fileVersion"
-Write-Host "  <FileVersion>     $fileVersion"
+Write-Host "Successfully updated $IssPath"
+Write-Host "  #define app_ver         `"$appVer`""
+Write-Host "  #define app_ver_suffix  `"$appVerSuffix`""
+Write-Host "  #define app_ver_full    `"$appVerFull`""
