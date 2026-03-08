@@ -257,6 +257,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         {
             // ignore
         }
+
+        UiUtil.SaveWindowPosition(Window);
     }
 
     internal async void OnLoaded()
@@ -288,6 +290,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             SelectedParagraphIndex = Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == firstSelected.Id));
             VideoPlayerControl.Position = firstSelected.StartTime.TotalSeconds;
         });
+
+        UiUtil.RestoreWindowPosition(Window);
     }
 
     internal void OnKeyDownHandler(object? sender, KeyEventArgs e)

@@ -1,12 +1,9 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
-using SharpCompress.Compressors.ZStandard.Unsafe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
@@ -481,83 +478,72 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
 
         Random rng = new Random(subtitles[0].Text.GetHashCode());
 
-        int screenWidth = width > 0 ? width : 1280;
-        int screenHeight = height > 0 ? height : 720;
-        int centerX = screenWidth / 2;
-        int centerY = screenHeight / 2;
+        int w = width > 0 ? width : 1280;
+        int h = height > 0 ? height : 720;
+        int cx = w / 2;
+        int cy = h / 2;
 
         var globalStart = subtitles.Min(s => s.StartTime);
         var globalEnd = subtitles.Max(s => s.EndTime);
-        double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
+        double totalMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        // 1. INCREASED DENSITY
-        int starCount = 300;
+        int starCount = 650;
 
         for (int i = 0; i < starCount; i++)
         {
-            double currentTimeMs = 0;
+            double startMs = rng.NextDouble() * totalMs;
+            // INCREASED LIFESPAN: Ensures they stay on screen longer
+            int life = rng.Next(5000, 19000);
 
-            while (currentTimeMs < totalVideoMs)
+            var star = new SubtitleLineViewModel();
+            star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(startMs));
+            star.EndTime = star.StartTime.Add(TimeSpan.FromMilliseconds(life));
+
+            double angle = rng.NextDouble() * 2 * Math.PI;
+            // Faster stars need to live shorter, slower stars live longer
+            double speedMult = 0.4 + (rng.NextDouble() * 0.8);
+            int maxDist = (int)(Math.Max(w, h) * 1.5); // Travel further off-screen
+
+            int startX = cx + rng.Next(-3, 3);
+            int startY = cy + rng.Next(-3, 3);
+            int endX = cx + (int)(Math.Cos(angle) * maxDist * speedMult);
+            int endY = cy + (int)(Math.Sin(angle) * maxDist * speedMult);
+
+            string[] palette = { "&HFFFFFF&", "&HFFEBDA&", "&HDAEBFF&", "&HFFF0F5&", "&HFFFAF0&" };
+            string color = palette[rng.Next(palette.Length)];
+
+            string shape = "m 0 0 b 0 5 5 10 10 10 b 15 10 20 5 20 0 b 20 -5 15 -10 10 -10 b 5 -10 0 -5 0 0";
+
+            double sizeFactor = Math.Pow(rng.NextDouble(), 2);
+            int baseSize = 12 + (int)(sizeFactor * 14);
+
+            int fadeInDuration = (int)(life * 0.3);
+            int fadeOutStart = (int)(life * 0.8); // Start fading out at 80% of life
+
+            // \fad(fadeIn, fadeOut) is the most reliable way to prevent "popping"
+            string tags = $@"\\p1\\an5\\bord0\\shad0\\blur1.8\\1c{color}\\move({startX},{startY},{endX},{endY})\\fad(800,800)";
+
+            // Initial setup
+            tags += $@"\\fscx{baseSize / 2}\\fscy{baseSize / 2}";
+
+            // Growth over full life
+            tags += $@"\\t(0,{life},\\fscx{baseSize * 2.5}\\fscy{baseSize * 2.5})";
+
+            // Twinkle (1 in 8)
+            if (rng.Next(0, 8) == 0)
             {
-                var star = new SubtitleLineViewModel();
-
-                // Randomize how long this specific star takes to cross the screen
-                int lifeSpan = rng.Next(3500, 6500); // Faster speed feels more like warp
-
-                // Timing
-                star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
-                star.EndTime = star.StartTime.Add(TimeSpan.FromMilliseconds(lifeSpan));
-
-                // Ensure we don't exceed the video end
-                if (star.StartTime >= globalEnd) break;
-                if (star.EndTime > globalEnd) star.EndTime = globalEnd;
-
-                // PHYSICS
-                double angle = rng.NextDouble() * 2 * Math.PI;
-                int travelDist = 3000; // Far off-screen
-
-                // First Wave logic to fill the screen instantly at 0:00
-                double startProg = (currentTimeMs == 0) ? rng.NextDouble() : 0;
-
-                int startX = centerX + (int)(Math.Cos(angle) * (travelDist * startProg));
-                int startY = centerY + (int)(Math.Sin(angle) * (travelDist * startProg));
-                int endX = centerX + (int)(Math.Cos(angle) * travelDist);
-                int endY = centerY + (int)(Math.Sin(angle) * travelDist);
-
-                // STYLING & SPECTRA
-                int starType = rng.Next(0, 10);
-                bool isGiant = starType >= 8;
-                string color = isGiant ? (rng.Next(0, 2) == 0 ? "&HFFDADA&" : "&HACE6FF&") : "&HFFFFFF&";
-
-                // STREAK EFFECT: Use rapid movement between two coordinates to create "blur"
-                int blurX1 = startX - 3; // Shift by 3 pixels
-                int blurX2 = startX + 3;
-                string motionBlur = $"\\t({(lifeSpan / 2)},{lifeSpan},\\move({blurX1},{startY},{blurX2},{startY},0,20))";
-
-                // Fade and scaling (Unlinked fscx/y)
-                int fadeIn = (startProg == 0) ? 1000 : 0;
-                int initialSize = isGiant ? rng.Next(25, 40) : rng.Next(8, 18);
-
-                // \fscx(startScaleX): The horizontal width (stretches away from center)
-                // \fscy(startScaleY): The constant vertical height (star's 'thickness')
-                string tags = $@"\\an5\\bord0\\shad0\\blur1\\1c{color}\\fad({fadeIn},200)" +
-                              $@"\\fscx{initialSize}\\fscy{initialSize}" +
-                              $@"\\t(0,{lifeSpan},\\fscx{(isGiant ? 800 : 400)}\\fscy{(isGiant ? 20 : 10)})" +
-                              $@"\\move({startX},{startY},{endX},{endY})" +
-                              motionBlur; // Apply the motion blur oscillation last
-
-                star.Text = "{" + tags + "}·";
-                result.Add(star);
-
-                // Stagger the rebirth of stars so they don't all pop in at once
-                currentTimeMs += (lifeSpan * (1.0 - startProg)) + rng.Next(0, 300);
+                int tStep = life / 5;
+                tags += $@"\\t({tStep},{tStep * 2},\\alpha&H66&)\\t({tStep * 2},{tStep * 3},\\alpha&H00&)";
             }
+
+            star.Text = "{" + tags + "}" + shape;
+            result.Add(star);
         }
 
-        // Dialogue on top
         result.AddRange(subtitles);
         return result;
     }
+
 }
 
 public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
