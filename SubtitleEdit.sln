@@ -136,6 +136,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsInno", "WindowsInno"
 	ProjectSection(SolutionItems) = preProject
 		installer\WindowsInno\Subtitle_Edit_Installer.iss = installer\WindowsInno\Subtitle_Edit_Installer.iss
 		installer\WindowsInno\Subtitle_Edit_Localization.iss = installer\WindowsInno\Subtitle_Edit_Localization.iss
+		installer\WindowsInno\update-version.ps1 = installer\WindowsInno\update-version.ps1
 	EndProjectSection
 EndProject
 Global
