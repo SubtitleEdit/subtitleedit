@@ -27,6 +27,7 @@
 
 #define keyAppPaths  "Software\Microsoft\Windows\CurrentVersion\App Paths"
 
+#define URLSupport "https://subtitleedit.github.io/subtitleedit/"
 
 [Setup]
 AppID={{B5E6D1E0-A9F3-4B2C-8E7D-1F5C3A9B0E4D}
@@ -37,24 +38,24 @@ AppVerName={#app_name} {#app_ver_display}
 AppCopyright={#app_copyright} {#app_copyright_start} {#app_copyright_end}
 AppPublisher={#app_copyright}
 
-AppContact=https://subtitleedit.github.io/subtitleedit/
-AppPublisherURL=https://subtitleedit.github.io/subtitleedit/
-AppSupportURL=https://subtitleedit.github.io/subtitleedit/
-AppUpdatesURL=https://subtitleedit.github.io/subtitleedit/
+AppContact={#URLSupport}
+AppPublisherURL={#URLSupport}
+AppSupportURL={#URLSupport}
+AppUpdatesURL={#URLSupport}
 
 VersionInfoVersion={#app_ver_full}
 VersionInfoDescription={#app_name} installer
 VersionInfoProductName={#app_name}
 
-UninstallDisplayName={#app_name}
-UninstallDisplayIcon={app}\SubtitleEdit.exe
+tallDisplayName={#app_name}
+tallDisplayIcon={app}\SubtitleEdit.exe
 
 WizardStyle=modern
 
 DefaultDirName={autopf}\{#app_name}
 DefaultGroupName={#app_name}
 MinVersion=10.0
-LicenseFile=..\..\LICENSE
+LicenseFile=..\..\LICENSE.rtf
 SetupIconFile=..\..\src\UI\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
@@ -73,6 +74,13 @@ DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64compatible
+
+UninstallDisplayName={#app_name}
+UninstallDisplayIcon={#bindir}\SubtitleEdit.exe
+
+ShowLanguageDialog=yes
+UsePreviousLanguage=no
+LanguageDetectionMethod=uilanguage
 
 [Languages]
 Name: "en";   MessagesFile: "compiler:Default.isl"
