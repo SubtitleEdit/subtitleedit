@@ -71,20 +71,20 @@ jobs:
           Get-ChildItem -Path "./publish/windows-x64/" -Recurse -Include *.pdb | Remove-Item -Force
           Get-ChildItem -Path "./publish/windows-arm64/" -Recurse -Include *.pdb | Remove-Item -Force
 
-      - name: Setup WiX
-        run: |
-          dotnet tool install --global wix --version 5.0.1
-          wix extension add -g WixToolset.UI.wixext/5.0.1
+      # - name: Setup WiX
+      #   run: |
+      #     dotnet tool install --global wix --version 5.0.1
+      #     wix extension add -g WixToolset.UI.wixext/5.0.1
 
-      - name: Build MSI Installer for x64
-        run: |
-          wix build ./installer/Product.wxs `
-            -arch x64 `
-            -ext WixToolset.UI.wixext `
-            -d SourceDir="./publish/windows-x64/" `
-            -d ProjectDir="./" `
-            -d ProductVersion="1.0.0" `
-            -o ./SubtitleEdit-Windows-x64.msi
+      # - name: Build MSI Installer for x64
+      #   run: |
+      #     wix build ./installer/Product.wxs `
+      #       -arch x64 `
+      #       -ext WixToolset.UI.wixext `
+      #       -d SourceDir="./publish/windows-x64/" `
+      #       -d ProjectDir="./" `
+      #       -d ProductVersion="1.0.0" `
+      #       -o ./SubtitleEdit-Windows-x64.msi
 
       # - name: Build MSI Installer for ARM64
       #   run: |
@@ -95,6 +95,23 @@ jobs:
       #       -d ProjectDir="./" `
       #       -d ProductVersion="1.0.0" `
       #       -o ./SubtitleEdit-Windows-ARM64.msi
+
+      - name: Publish Windows x64 app (framework-dependent, for Inno Setup)
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
+            -p:PublishSingleFile=true `
+            -o ./src/UI/bin/Release/net10.0/publish
+          Get-ChildItem -Path "./src/UI/bin/Release/net10.0/publish/" -Recurse -Include *.pdb | Remove-Item -Force
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build Inno Setup installer
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer\WindowsInno\Subtitle_Edit_Installer.iss"
+          $setup = Get-ChildItem "installer\WindowsInno\SubtitleEdit-*-Setup.exe" | Select-Object -First 1
+          Copy-Item $setup.FullName "./SubtitleEdit-Windows-x64-Setup.exe"
+          Write-Host "Built Inno Setup installer: $($setup.Name)"
 
       - name: Create Windows ZIP packages
         run: |
@@ -128,6 +145,12 @@ jobs:
           path: |
             ./SubtitleEdit-Windows-x64.msi
             # ./SubtitleEdit-Windows-ARM64.msi
+
+      - name: Upload Inno Setup installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-inno-installer
+          path: ./SubtitleEdit-Windows-x64-Setup.exe
 
 
   build-macos:
@@ -510,6 +533,7 @@ jobs:
           
           # Copy ZIP/TAR packages to release assets
           cp ./artifacts/windows-msi-installers/*.msi ./release-assets/
+          cp ./artifacts/windows-inno-installer/SubtitleEdit-Windows-x64-Setup.exe ./release-assets/
           cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
           cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
           cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
@@ -535,8 +559,9 @@ jobs:
             **Build Date:** ${{ steps.date.outputs.date }}
       
             ### Downloads
-            - **Windows x64 installer:** [SubtitleEdit-Windows-x64.msi](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.msi)
-            - **Windows x64:** [SubtitleEdit-Windows-x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.zip)
+            - **Windows x64 installer (Inno Setup):** [SubtitleEdit-Windows-x64-Setup.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64-Setup.exe)
+            - **Windows x64 installer (MSI):** [SubtitleEdit-Windows-x64.msi](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.msi)
+            - **Windows x64:** [SubtitleEdit-Windows-x64.zip]
             - **Windows ARM64:** [SubtitleEdit-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-ARM64.zip)
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
@@ -552,6 +577,7 @@ jobs:
           draft: false
           prerelease: ${{ inputs.is_prerelease }}
           files: |
+            ./release-assets/SubtitleEdit-Windows-x64-Setup.exe
             ./release-assets/SubtitleEdit-Windows-x64.msi
             ./release-assets/SubtitleEdit-Windows-x64.zip
             ./release-assets/SubtitleEdit-Windows-ARM64.zip
