@@ -93,7 +93,7 @@ Name: reset_settings;     Description: {cm:tsk_ResetSettings};  GroupDescription
 Source: {#bindir}\SubtitleEdit.exe;      DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\av_libglesv2.dll;      DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\libHarfBuzzSharp.dll;  DestDir: {app}; Flags: ignoreversion
-;Source: {#bindir}\libmpv-2.dll;          DestDir: {app}; Flags: ignoreversion
+Source: {#bindir}\libmpv-2.dll;          DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\libonigwrap.dll;       DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\libSkiaSharp.dll;      DestDir: {app}; Flags: ignoreversion
 ;Source: ..\Changelog.txt;               DestDir: {app}; Flags: ignoreversion
