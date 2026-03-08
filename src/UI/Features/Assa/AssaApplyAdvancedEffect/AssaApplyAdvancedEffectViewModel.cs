@@ -47,7 +47,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
-    private FfmpegMediaInfo2 _mediaInfo;
+    private FfmpegMediaInfo2? _mediaInfo;
 
     public AssaApplyAdvancedEffectViewModel()
     {
@@ -61,13 +61,14 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         SelectionInfo = string.Empty;
         AdjustAll = true;
         UpdatedSubtitle = new Subtitle();
+        _subtitle = new Subtitle();
 
         // Toggle play/pause on surface click
         VideoPlayerControl.SurfacePointerPressed += (_, __) => VideoPlayerControl.TogglePlayPause();
 
         SelectedOverrideTag = OverrideTags[0];
 
-        _tempSubtitleFileName = System.IO.Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
+        _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
     }
 
     public void Initialize(
@@ -75,7 +76,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         List<SubtitleLineViewModel> paragraphs,
         List<SubtitleLineViewModel> selectedParagraphs,
         string? videoFileName,
-        FfmpegMediaInfo2 mediaInfo)
+        FfmpegMediaInfo2? mediaInfo)
     {
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _subtitle = subtitle;
