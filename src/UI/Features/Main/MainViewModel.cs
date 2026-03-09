@@ -4374,6 +4374,41 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ExecuteMenuPlugin(ISubtitleEditPlugin plugin)
+    {
+        if (Window == null) return;
+
+        var selectedParagraphs = SubtitleGrid.SelectedItems
+            .Cast<SubtitleLineViewModel>()
+            .Select(vm => new Paragraph
+            {
+                Number = vm.Number,
+                Text = vm.Text,
+                StartTime = new TimeCode(vm.StartTime.TotalMilliseconds),
+                EndTime = new TimeCode(vm.EndTime.TotalMilliseconds),
+            })
+            .ToList();
+
+        var context = new SubtitleEditPluginContext
+        {
+            VideoFileName = _videoFileName ?? string.Empty,
+            SelectedParagraphs = selectedParagraphs,
+            Subtitle = GetUpdateSubtitle(),
+        };
+
+        if (plugin.NeedsOutputFolder)
+        {
+            context.OutputFolder = await _folderHelper.PickFolderAsync(Window, "Select output folder");
+            if (string.IsNullOrEmpty(context.OutputFolder)) return;
+        }
+
+        await plugin.ExecuteAsync(context);
+
+        if (!string.IsNullOrEmpty(context.OutputFolder))
+            await _folderHelper.OpenFolder(Window, context.OutputFolder);
+    }
+
+    [RelayCommand]
     private async Task SpeechToTextSelectedLinesPromptForLangaugeFirstTime()
     {
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());

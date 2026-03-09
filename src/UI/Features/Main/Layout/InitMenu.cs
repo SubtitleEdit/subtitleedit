@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -701,6 +702,23 @@ public static class InitMenu
                 },
             },
         });
+
+        var pluginItems = SubtitleEditPluginLoader.GetPlugins();
+        if (pluginItems.Count > 0)
+        {
+            var pluginsMenu = new MenuItem { Header = "Plugins" };
+            foreach (var plugin in pluginItems)
+            {
+                var p = plugin;
+                pluginsMenu.Items.Add(new MenuItem
+                {
+                    Header = p.MenuItemText,
+                    Command = vm.ExecuteMenuPluginCommand,
+                    CommandParameter = p,
+                });
+            }
+            menu.Items.Add(pluginsMenu);
+        }
 
         menu.Items.Add(new MenuItem
         {
