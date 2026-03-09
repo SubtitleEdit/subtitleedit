@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -98,7 +99,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     _zipUnpacker.UnpackZipStream(_downloadStream, folder, "piper", false, new List<string>(), null);
                     _downloadStream.Dispose();
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     ProgressText = "Unpack failed: " + ex.Message;
                     Error = ex.Message;
@@ -112,6 +113,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     if (File.Exists(path))
                     {
                         LinuxHelper.MakeExecutable(path);
+                        FixSymbolicLink(path);
                     }
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -162,6 +164,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     Error = "No data received";
                     return;
                 }
+
                 _downloadStreamConfig.Position = 0;
                 File.WriteAllBytes(_configFileName, _downloadStreamConfig.ToArray());
                 _downloadStreamConfig.Dispose();
@@ -202,12 +205,65 @@ public partial class DownloadTtsViewModel : ObservableObject
         }
     }
 
+    private void FixSymbolicLink(string path)
+    {
+        var folder = Path.GetDirectoryName(path);
+        var sourcePath = Path.Combine(folder, "libpiper_phonemize.so.1.2.0");
+        var linkPath = Path.Combine(folder, "libpiper_phonemize.so.1");
+
+        try
+        {
+            if (File.Exists(sourcePath))
+            {
+                // Check if the link exists and remove it if necessary
+                if (File.Exists(linkPath) || Directory.Exists(linkPath))
+                {
+                    File.Delete(linkPath); // Delete the existing link or file
+                }
+
+                // Create the symbolic link
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash", // Use bash shell for command execution
+                    Arguments = $"-c \"ln -sf \\\"{sourcePath}\\\" \\\"{linkPath}\\\"\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                var process = Process.Start(processStartInfo);
+
+                if (process != null)
+                {
+                    process.WaitForExit();
+
+                    // Check if the process completed successfully
+                    if (process.ExitCode != 0)
+                    {
+                        var error = process.StandardError.ReadToEnd();
+                        Se.LogError($"Error creating symlink: {error}");
+                    }
+                    else
+                    {
+                        Se.LogError("Symbolic link created successfully.");
+                    }
+                }
+            }
+            else
+            {
+                Se.LogError("Source library file not found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex);
+        }
+    }
+
     private void Close()
     {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            Window?.Close();
-        });
+        Dispatcher.UIThread.Invoke(() => { Window?.Close(); });
     }
 
     [RelayCommand]
@@ -229,7 +285,8 @@ public partial class DownloadTtsViewModel : ObservableObject
             ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        _downloadTask = _ttsDownloadService.DownloadPiper(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+        _downloadTask =
+            _ttsDownloadService.DownloadPiper(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadPiperVoice(PiperVoice piperVoice)
@@ -252,8 +309,10 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
         var downloadProgressNull = new Progress<float>(_ => { });
 
-        _downloadTaskVoiceModel = _ttsDownloadService.DownloadPiperVoice(modelUrl, _downloadStreamModel, downloadProgress, _cancellationTokenSource.Token);
-        _downloadTaskVoiceConfig = _ttsDownloadService.DownloadPiperVoice(configUrl, _downloadStreamConfig, downloadProgressNull, _cancellationTokenSource.Token);
+        _downloadTaskVoiceModel = _ttsDownloadService.DownloadPiperVoice(modelUrl, _downloadStreamModel,
+            downloadProgress, _cancellationTokenSource.Token);
+        _downloadTaskVoiceConfig = _ttsDownloadService.DownloadPiperVoice(configUrl, _downloadStreamConfig,
+            downloadProgressNull, _cancellationTokenSource.Token);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -264,4 +323,3 @@ public partial class DownloadTtsViewModel : ObservableObject
         }
     }
 }
-
