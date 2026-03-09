@@ -136,6 +136,9 @@ public class LanguageSettings
     public string WaveformInvertMouseWheel { get; set; }
     public string WaveformSnapToShotChanges { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
+    public string WaveformTextFontSize { get; set; }
+    public string WaveformTextFontBold { get; set; }
+    public string WaveformTextColor { get; set; }
     public string WaveformColor { get; set; }
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
@@ -396,6 +399,9 @@ public class LanguageSettings
         WaveformInvertMouseWheel = "Invert mouse-wheel";
         WaveformSnapToShotChanges = "Snap to shot changes";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
+        WaveformTextFontSize = "Waveform text font size";
+        WaveformTextFontBold = "Waveform text font bold";
+        WaveformTextColor = "Waveform text color";
         WaveformColor = "Waveform color";
         WaveformBackgroundColor = "Waveform background color";
         WaveformSelectedColor = "Waveform selected color";
