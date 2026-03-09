@@ -691,6 +691,9 @@ public partial class SettingsViewModel : ObservableObject
         ShowWaveformToolbarVideoPositionSlider = Se.Settings.Waveform.ShowToolbarVideoPositionSlider;
         ShowWaveformToolbarPlaybackSpeed = Se.Settings.Waveform.ShowToolbarPlaybackSpeed;
         WaveformFocusTextboxAfterInsertNew = Se.Settings.Waveform.FocusTextBoxAfterInsertNew;
+        WaveformTextFontSize = Se.Settings.Waveform.WaveformTextFontSize;
+        WaveformTextFontBold = Se.Settings.Waveform.WaveformTextFontBold;
+        WaveformTextColor = Se.Settings.Waveform.WaveformTextColor.FromHexToColor();
         WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
         WaveformBackgroundColor = Se.Settings.Waveform.WaveformBackgroundColor.FromHexToColor();
         WaveformParagraphBackgroundColor = Se.Settings.Waveform.ParagraphBackground.FromHexToColor();
@@ -1235,6 +1238,9 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.ShowToolbarHorizontalZoom = ShowWaveformToolbarHorizontalZoom;
         Se.Settings.Waveform.ShowToolbarVideoPositionSlider = ShowWaveformToolbarVideoPositionSlider;
         Se.Settings.Waveform.ShowToolbarPlaybackSpeed = ShowWaveformToolbarPlaybackSpeed;
+        Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
+        Se.Settings.Waveform.WaveformTextFontBold = WaveformTextFontBold;
+        Se.Settings.Waveform.WaveformTextColor = WaveformTextColor.FromColorToHex();
         Se.Settings.Waveform.WaveformColor = WaveformColor.FromColorToHex();
         Se.Settings.Waveform.WaveformBackgroundColor = WaveformBackgroundColor.FromColorToHex();
         Se.Settings.Waveform.ParagraphBackground = WaveformParagraphBackgroundColor.FromColorToHex();

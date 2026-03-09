@@ -66,6 +66,9 @@ public class SeWaveform
         DrawGridLines = false;
         FocusTextBoxAfterInsertNew = true;
         SpectrogramCombinedWaveformHeight = 50;
+        WaveformTextFontSize = 10;
+        WaveformTextFontBold = false;
+        WaveformTextColor = Colors.White.FromColorToHex();
         WaveformColor = Color.FromArgb(255, 0, 70, 0).FromColorToHex();
         WaveformBackgroundColor = Color.FromArgb(255, 0, 0, 0).FromColorToHex();
         WaveformSelectedColor = Color.FromArgb(150, 0, 120, 255).FromColorToHex();
