@@ -68,6 +68,7 @@ public class TtsDownloadService : ITtsDownloadService
     private readonly HttpClient _httpClient;
     private const string WindowsPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_windows_amd64.zip";
     private const string MacPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_macos_x64.tar.gz";
+    private const string LinuxPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_x86_64.tar.gz";
 
     public TtsDownloadService(HttpClient httpClient)
     {
@@ -82,7 +83,16 @@ public class TtsDownloadService : ITtsDownloadService
 
     public async Task DownloadPiper(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        var url = OperatingSystem.IsWindows() ? WindowsPiperUrl : MacPiperUrl;
+        var url = WindowsPiperUrl;
+        if (OperatingSystem.IsLinux())
+        {
+            url = LinuxPiperUrl;
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            url = MacPiperUrl; 
+        }
+
         await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
     }
 
