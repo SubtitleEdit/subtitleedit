@@ -4,7 +4,9 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -47,6 +49,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [ObservableProperty] private bool _doTranslateToEnglish;
     [ObservableProperty] private bool _doAdjustTimings;
     [ObservableProperty] private bool _doPostProcessing;
+    [ObservableProperty] private bool _doPostTranslateWithOllama;
+    [ObservableProperty] private ObservableCollection<TranslationPair> _ollamaTargetLanguages = new();
+    [ObservableProperty] private TranslationPair? _selectedOllamaTargetLanguage;
 
     [ObservableProperty] private string _parameters;
 
@@ -161,6 +166,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         BatchItems = new ObservableCollection<WhisperJobItem>();
 
         ResultAudioClips = new List<AudioClip>();
+
+        OllamaTargetLanguages = new ObservableCollection<TranslationPair>(ChatGptTranslate.ListLanguages());
+        SelectedOllamaTargetLanguage = OllamaTargetLanguages.FirstOrDefault(p => p.Name == "English");
 
         IsTranscribeEnabled = true;
         IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine;
@@ -1050,17 +1058,57 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     FileHelper.OpenFileWithDefaultProgram(Se.GetWhisperLogFilePath());
                 }
 
+                transcribedSubtitle = await TranslateWithOllama(transcribedSubtitle ?? new Subtitle());
                 OkPressed = anyLinesTranscribed;
-                TranscribedSubtitle = transcribedSubtitle ?? new Subtitle();
+                TranscribedSubtitle = transcribedSubtitle;
                 Window?.Close();
             }
             else if (anyLinesTranscribed)
             {
+                transcribedSubtitle = await TranslateWithOllama(transcribedSubtitle ?? new Subtitle());
                 OkPressed = anyLinesTranscribed;
-                TranscribedSubtitle = transcribedSubtitle ?? new Subtitle();
+                TranscribedSubtitle = transcribedSubtitle;
                 Window?.Close();
             }
         }
+    }
+
+    private async Task<Subtitle> TranslateWithOllama(Subtitle subtitle)
+    {
+        if (!DoPostTranslateWithOllama || SelectedOllamaTargetLanguage == null || subtitle.Paragraphs.Count == 0)
+        {
+            return subtitle;
+        }
+
+        ProgressText = "Translating with Ollama...";
+        ProgressOpacity = 1;
+
+        using var translator = new OllamaTranslate();
+        translator.Initialize();
+
+        var targetCode = SelectedOllamaTargetLanguage.Code;
+        var sourceCode = DoTranslateToEnglish ? "en" : (SelectedLanguage?.Code ?? "auto");
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(30));
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            if (cts.IsCancellationRequested) break;
+            var p = subtitle.Paragraphs[i];
+            if (string.IsNullOrWhiteSpace(p.Text)) continue;
+            try
+            {
+                p.Text = await translator.Translate(p.Text, sourceCode, targetCode, cts.Token);
+            }
+            catch
+            {
+                // keep original text on error
+            }
+
+            ProgressValue = (i + 1) * 100.0 / subtitle.Paragraphs.Count;
+        }
+
+        ProgressOpacity = 0;
+        return subtitle;
     }
 
     private void OnTimerWaveExtractOnElapsed(object? sender, ElapsedEventArgs e)

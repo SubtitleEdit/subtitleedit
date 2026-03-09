@@ -82,6 +82,20 @@ public class AudioToTextWhisperWindow : Window
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
 
+        var labelOllamaTranslate = UiUtil.MakeTextBlock("Translate with Ollama");
+        var checkOllamaTranslate = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostTranslateWithOllama))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        var comboOllamaLanguage = UiUtil.MakeComboBox(vm.OllamaTargetLanguages, vm, nameof(vm.SelectedOllamaTargetLanguage))
+            .WithMinWidth(160)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        var panelOllamaTranslate = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { checkOllamaTranslate, comboOllamaLanguage }
+        };
+
         var labelPostProcessing = UiUtil.MakeTextBlock(Se.Language.General.PostProcessing).WithMarginTop(15);
         var checkPostProcessing = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostProcessing)).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
         var buttonPostProcessing = UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings)
@@ -269,6 +283,7 @@ public class AudioToTextWhisperWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Language
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Model
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate to English
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate with Ollama
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Post processing
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Advanced settings
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -323,11 +338,11 @@ public class AudioToTextWhisperWindow : Window
         grid.Children.Add(consoleLogAndBatchView);
         Grid.SetRow(consoleLogAndBatchView, row);
         Grid.SetColumn(consoleLogAndBatchView, 2);
-        Grid.SetRowSpan(consoleLogAndBatchView, 8);
+        Grid.SetRowSpan(consoleLogAndBatchView, 9);
         grid.Children.Add(consoleLogOnlyView);
         Grid.SetRow(consoleLogOnlyView, row);
         Grid.SetColumn(consoleLogOnlyView, 2);
-        Grid.SetRowSpan(consoleLogOnlyView, 8);
+        Grid.SetRowSpan(consoleLogOnlyView, 9);
         row++;
 
         grid.Children.Add(labelEngine);
@@ -364,6 +379,15 @@ public class AudioToTextWhisperWindow : Window
         grid.Children.Add(checkTranslateToEnglish);
         Grid.SetRow(checkTranslateToEnglish, row);
         Grid.SetColumn(checkTranslateToEnglish, 1);
+        row++;
+
+        grid.Children.Add(labelOllamaTranslate);
+        Grid.SetRow(labelOllamaTranslate, row);
+        Grid.SetColumn(labelOllamaTranslate, 0);
+
+        grid.Children.Add(panelOllamaTranslate);
+        Grid.SetRow(panelOllamaTranslate, row);
+        Grid.SetColumn(panelOllamaTranslate, 1);
         row++;
 
         grid.Children.Add(labelPostProcessing);
