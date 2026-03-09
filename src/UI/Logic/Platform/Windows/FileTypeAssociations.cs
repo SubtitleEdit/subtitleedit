@@ -1,158 +1,141 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
 
 internal static class FileTypeAssociationsHelper
 {
-    [System.Runtime.InteropServices.DllImport("Shell32.dll")]
-    private static extern int SHChangeNotify(int eventId, int flags, nint item1, nint item2);
+    // Shell notification constants
+    private const int SHCNE_ASSOCCHANGED = 0x08000000;
+    private const uint SHCNF_IDLIST = 0x0000;
+    private const uint SHCNF_FLUSH = 0x1000;
 
-    internal static bool GetChecked(string ext, string appName)
+    [DllImport("Shell32.dll", SetLastError = true)]
+    private static extern void SHChangeNotify(int eventId, uint flags, nint item1, nint item2);
+
+    /// <summary>
+    /// Checks if the app is currently the default handler for a specific extension.
+    /// It checks both the ProgID and the "UserChoice" (the Windows 10+ standard).
+    /// </summary>
+    internal static bool IsDefault(string ext, string appName)
     {
-#pragma warning disable CA1416 // Validate platform compatibility
-        using (var key = Registry.CurrentUser.OpenSubKey($"Software\\Classes\\{appName}{ext}"))
-        {
-            if (key == null)
-            {
-                return false;
-            }
-
-            var defaultIcon = key.OpenSubKey("DefaultIcon");
-
-            var iconFileNameObject = defaultIcon?.GetValue("");
-            if (!(iconFileNameObject is string iconFileName) || !File.Exists(iconFileName))
-            {
-                return false;
-            }
-
-            var cmd = key.OpenSubKey("shell\\open\\command");
-            if (cmd == null)
-            {
-                return false;
-            }
-
-            var cmdObject = cmd.GetValue("");
-            if (cmdObject is string cmdString)
-            {
-                var ix = cmdString.IndexOf("SubtitleEdit.exe", StringComparison.Ordinal);
-                if (ix >= 0)
-                {
-                    var exeFileName = cmdString.Substring(0, ix + "SubtitleEdit.exe".Length).Trim('"');
-                    return File.Exists(exeFileName);
-                }
-            }
-        }
-#pragma warning restore CA1416 // Validate platform compatibility
-
-        return false;
-    }
-
-    internal static void SetFileAssociationViaRegistry(string ext, string exeFileName, string iconFileName, string appName)
-    {
-#pragma warning disable CA1416 // Validate platform compatibility
-        Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}", "", $"{GetFriendlyName(ext)} subtitle file");
-        Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}\\DefaultIcon", "", iconFileName);
-        Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}\\shell\\open\\command", "", $"\"{exeFileName.Trim('"')}\" \"%1\"");
-        Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{ext}", "", $"{appName}{ext}");
-#pragma warning restore CA1416 // Validate platform compatibility
-    }
-
-    private static string GetFriendlyName(string ext)
-    {
-        if (ext.Equals(".srt", StringComparison.OrdinalIgnoreCase))
-        {
-            return "SubRip";
-        }
-
-        if (ext.Equals(".ass", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Advanced Sub Station Alpha";
-        }
-
-        if (ext.Equals(".dfxp", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Distribution Format Exchange Profile";
-        }
-
-        if (ext.Equals(".ssa", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Sub Station Alpha";
-        }
-
-        if (ext.Equals(".sup", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Blu-ray PGS";
-        }
-
-        if (ext.Equals(".vtt", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Web Video Text Tracks (WebVTT)";
-        }
-
-        if (ext.Equals(".smi", StringComparison.OrdinalIgnoreCase))
-        {
-            return "SAMI";
-        }
-
-        if (ext.Equals(".itt", StringComparison.OrdinalIgnoreCase))
-        {
-            return "iTunes Timed Text";
-        }
-
-        return $"{ext.TrimStart('.')}";
-    }
-
-    internal static void DeleteFileAssociationViaRegistry(string ext, string appName)
-    {
-#pragma warning disable CA1416 // Validate platform compatibility
+#pragma warning disable CA1416
         try
         {
-            var appExtensionRegKey = $"{appName}{ext}";
-            using (var registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Classes\", true))
+            string progId = $"{appName}{ext}";
+
+            // 1. Check Modern "UserChoice" (Windows 10/11)
+            // This key is read-only for apps, but we can read it to see who won the 'war'.
+            using (var userChoice = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{ext}\UserChoice"))
             {
-                if (registryKey?.OpenSubKey(appExtensionRegKey) != null)
-                {
-                    registryKey.DeleteSubKeyTree($"{appName}{ext}");
-                }
+                var progIdValue = userChoice?.GetValue("Progid") as string;
+                if (progIdValue == progId) return true;
             }
 
-            // (Default)
-            const string defaultRegValueName = "";
-            using (var registryKey = Registry.CurrentUser.OpenSubKey("Software\\Classes\\" + ext, true))
+            // 2. Fallback: Check the old-school Software\Classes
+            using (var key = Registry.CurrentUser.OpenSubKey($@"Software\Classes\{ext}"))
             {
-                if (registryKey == null)
-                {
-                    return;
-                }   
-
-                var registryValue = registryKey.GetValue(defaultRegValueName);
-                if (registryValue == null)
-                {
-                    return;
-                }
-
-                if (appExtensionRegKey.Equals((string)registryValue, StringComparison.Ordinal))
-                {
-                    registryKey.DeleteValue(defaultRegValueName);
-                }
+                var val = key?.GetValue("") as string;
+                return val == progId;
             }
         }
-        catch (UnauthorizedAccessException)
+        catch
         {
-            throw;
+            return false;
         }
-        catch (System.Security.SecurityException)
-        {
-            throw;
-        }
-#pragma warning restore CA1416 // Validate platform compatibility
+#pragma warning restore CA1416
     }
+
+    /// <summary>
+    /// Registers the file association using both the legacy ProgID method 
+    /// and the modern OpenWithProgids fallback.
+    /// </summary>
+    internal static void SetFileAssociation(string ext, string exePath, string appName)
+    {
+#pragma warning disable CA1416
+        string progId = $"{appName}{ext}";
+        string friendlyName = $"{GetFriendlyName(ext)} Subtitle File";
+
+        // --- STEP 1: Old-School ProgID Registration ---
+        // This defines WHAT your app is (Icon, Command, Name)
+        using (var rootKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{progId}"))
+        {
+            rootKey.SetValue("", friendlyName);
+
+            using (var iconKey = rootKey.CreateSubKey("DefaultIcon"))
+            {
+                iconKey.SetValue("", $"\"{exePath}\",0");
+            }
+
+            using (var cmdKey = rootKey.CreateSubKey(@"shell\open\command"))
+            {
+                cmdKey.SetValue("", $"\"{exePath}\" \"%1\"");
+            }
+        }
+
+        // --- STEP 2: Extension Mapping ---
+        using (var extKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{ext}"))
+        {
+            // Set as default (Old school - works on Win7 and fresh Win10 installs)
+            extKey.SetValue("", progId);
+
+            // --- STEP 3: Modern Fallback (OpenWithProgids) ---
+            // This tells Windows 10/11: "I am capable of opening this." 
+            // Even if Windows denies the "Default" status, you'll be in the 'Open With' menu.
+            using (var openWith = extKey.CreateSubKey("OpenWithProgids"))
+            {
+                openWith.SetValue(progId, Array.Empty<byte>(), RegistryValueKind.Binary);
+            }
+        }
+
+        Refresh();
+#pragma warning restore CA1416
+    }
+
+    /// <summary>
+    /// Cleans up registry entries for the specific app/extension pair.
+    /// </summary>
+    internal static void DeleteFileAssociation(string ext, string appName)
+    {
+#pragma warning disable CA1416
+        string progId = $"{appName}{ext}";
+
+        // Delete the ProgID definition
+        Registry.CurrentUser.DeleteSubKeyTree($@"Software\Classes\{progId}", false);
+
+        // Remove from the extension mapping
+        using (var extKey = Registry.CurrentUser.OpenSubKey($@"Software\Classes\{ext}", true))
+        {
+            if (extKey != null)
+            {
+                if (extKey.GetValue("")?.ToString() == progId)
+                    extKey.DeleteValue("");
+
+                using (var openWith = extKey.OpenSubKey("OpenWithProgids", true))
+                {
+                    openWith?.DeleteValue(progId, false);
+                }
+            }
+        }
+
+        Refresh();
+#pragma warning restore CA1416
+    }
+
+    private static string GetFriendlyName(string ext) => ext.ToLowerInvariant() switch
+    {
+        ".srt" => "SubRip",
+        ".ass" => "Advanced Sub Station Alpha",
+        ".ssa" => "Sub Station Alpha",
+        ".vtt" => "WebVTT",
+        ".sup" => "Blu-ray PGS",
+        _ => ext.TrimStart('.').ToUpper()
+    };
 
     internal static void Refresh()
     {
-        //this call notifies Windows that it needs to redo the file associations and icons
-        SHChangeNotify(0x08000000, 0x2000, nint.Zero, nint.Zero);
+        // Flush the shell cache so icons change immediately
+        SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_FLUSH | SHCNF_IDLIST, nint.Zero, nint.Zero);
     }
 }

@@ -28,7 +28,7 @@ public static class FileTypeAssociationsManager
 
         foreach (var item in fileTypeAssociations)
         {
-            item.IsAssociated = FileTypeAssociationsHelper.GetChecked(item.Extension, "SubtitleEdit5");
+            item.IsAssociated = FileTypeAssociationsHelper.IsDefault(item.Extension, "SubtitleEdit5");
         }
     }
 
@@ -50,7 +50,7 @@ public static class FileTypeAssociationsManager
         try
         {
             var hasChanges = fileTypeAssociations.Any(item =>
-                item.IsAssociated != FileTypeAssociationsHelper.GetChecked(item.Extension, "SubtitleEdit5"));
+                item.IsAssociated != FileTypeAssociationsHelper.IsDefault(item.Extension, "SubtitleEdit5"));
 
             if (!hasChanges)
             {
@@ -97,11 +97,11 @@ public static class FileTypeAssociationsManager
             if (item.IsAssociated)
             {
                 var iconFileName = GetIconPath(item);
-                FileTypeAssociationsHelper.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "SubtitleEdit5");
+                FileTypeAssociationsHelper.SetFileAssociation(ext, exeFileName, "SubtitleEdit5");
             }
             else
             {
-                FileTypeAssociationsHelper.DeleteFileAssociationViaRegistry(ext, "SubtitleEdit5");
+                FileTypeAssociationsHelper.DeleteFileAssociation(ext, "SubtitleEdit5");
             }
         }
 
