@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -12,9 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using static Nikse.SubtitleEdit.Core.AudioToText.AudioToTextPostProcessor;
 using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -88,10 +91,37 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
 
                 var folder = Piper.GetSetPiperFolder();
-                _downloadStream.Position = 0;
-                _zipUnpacker.UnpackZipStream(_downloadStream, folder, "piper", false, new List<string>(), null);
 
-                _downloadStream.Dispose();
+                try
+                {
+                    _downloadStream.Position = 0;
+                    _zipUnpacker.UnpackZipStream(_downloadStream, folder, "piper", false, new List<string>(), null);
+                    _downloadStream.Dispose();
+                }
+                catch (Exception ex) 
+                {
+                    ProgressText = "Unpack failed: " + ex.Message;
+                    Error = ex.Message;
+                    Se.LogError(ex);
+                    return;
+                }
+
+                var path = Piper.GetPiperExecutableFileName();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    if (File.Exists(path))
+                    {
+                        LinuxHelper.MakeExecutable(path);
+                    }
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (File.Exists(path))
+                    {
+                        MacHelper.MakeExecutable(path);
+                    }
+                }
+
                 OkPressed = true;
                 Close();
             }
