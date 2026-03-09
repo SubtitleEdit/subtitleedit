@@ -148,7 +148,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            Engines.Add(new ChatLlmCppEngine());
+            //Engines.Add(new ChatLlmCppEngine());
         }
 
         SelectedEngine = Engines[0];
