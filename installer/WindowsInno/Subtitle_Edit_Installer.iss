@@ -178,22 +178,34 @@ Root: HKCU; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueN
 
 
 [Code]
-// .NET 5+ writes the shared host version to this registry key.
-// We check that the major version is >= 10.
 function IsDotNet10Installed(): Boolean;
 var
-  HostVersion: String;
-  DotPos: Integer;
+  FindRec: TFindRec;
+  RuntimePath: String;
 begin
   Result := False;
-  if RegQueryStringValue(HKEY_LOCAL_MACHINE,
-       'SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost',
-       'Version', HostVersion) then
+  // Look in the Desktop App shared framework folder
+  RuntimePath := ExpandConstant('{pf}\dotnet\shared\Microsoft.WindowsDesktop.App\');
+  
+  // Search for any directory starting with '10.'
+  if FindFirst(RuntimePath + '10.*', FindRec) then
   begin
-    DotPos := Pos('.', HostVersion);
-    if DotPos > 1 then
-      Result := StrToIntDef(Copy(HostVersion, 1, DotPos - 1), 0) >= 10;
+    try
+      repeat
+        if FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0 then
+        begin
+          // If we find at least one directory starting with 10., we are good.
+          Result := True;
+          break;
+        end;
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
+    end;
   end;
+  
+  if not Result then
+    Log('No .NET 10.x runtime folders found in ' + RuntimePath);
 end;
 
 
