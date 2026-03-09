@@ -76,6 +76,35 @@ public class AudioToTextWhisperWindow : Window
             }
         };
 
+        var labelApiUrl = UiUtil.MakeTextBlock("API URL")
+            .BindIsVisible(vm, nameof(vm.IsHttpApiEngine));
+        var textApiUrl = new TextBox
+        {
+            MinWidth = 280,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        textApiUrl.Bind(TextBox.TextProperty, new Binding(nameof(vm.WhisperApiUrl))
+        {
+            Source = vm, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        });
+        textApiUrl.BindIsVisible(vm, nameof(vm.IsHttpApiEngine));
+        textApiUrl.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsTranscribeEnabled)) { Source = vm });
+
+        var labelApiKey = UiUtil.MakeTextBlock("API Key")
+            .BindIsVisible(vm, nameof(vm.IsHttpApiEngine));
+        var textApiKey = new TextBox
+        {
+            MinWidth = 280,
+            PasswordChar = '●',
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        textApiKey.Bind(TextBox.TextProperty, new Binding(nameof(vm.WhisperApiKey))
+        {
+            Source = vm, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        });
+        textApiKey.BindIsVisible(vm, nameof(vm.IsHttpApiEngine));
+        textApiKey.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsTranscribeEnabled)) { Source = vm });
+
         var labelTranslateToEnglish = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.TranslateToEnglish)
             .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
         var checkTranslateToEnglish = UiUtil.MakeCheckBox(vm, nameof(vm.DoTranslateToEnglish))
@@ -282,6 +311,8 @@ public class AudioToTextWhisperWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Engine
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Language
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // API URL
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // API Key
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate to English
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate with Ollama
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Post processing
@@ -338,11 +369,11 @@ public class AudioToTextWhisperWindow : Window
         grid.Children.Add(consoleLogAndBatchView);
         Grid.SetRow(consoleLogAndBatchView, row);
         Grid.SetColumn(consoleLogAndBatchView, 2);
-        Grid.SetRowSpan(consoleLogAndBatchView, 9);
+        Grid.SetRowSpan(consoleLogAndBatchView, 11);
         grid.Children.Add(consoleLogOnlyView);
         Grid.SetRow(consoleLogOnlyView, row);
         Grid.SetColumn(consoleLogOnlyView, 2);
-        Grid.SetRowSpan(consoleLogOnlyView, 9);
+        Grid.SetRowSpan(consoleLogOnlyView, 11);
         row++;
 
         grid.Children.Add(labelEngine);
@@ -370,6 +401,24 @@ public class AudioToTextWhisperWindow : Window
         grid.Children.Add(panelModelControls);
         Grid.SetRow(panelModelControls, row);
         Grid.SetColumn(panelModelControls, 1);
+        row++;
+
+        grid.Children.Add(labelApiUrl);
+        Grid.SetRow(labelApiUrl, row);
+        Grid.SetColumn(labelApiUrl, 0);
+
+        grid.Children.Add(textApiUrl);
+        Grid.SetRow(textApiUrl, row);
+        Grid.SetColumn(textApiUrl, 1);
+        row++;
+
+        grid.Children.Add(labelApiKey);
+        Grid.SetRow(labelApiKey, row);
+        Grid.SetColumn(labelApiKey, 0);
+
+        grid.Children.Add(textApiKey);
+        Grid.SetRow(textApiKey, row);
+        Grid.SetColumn(textApiKey, 1);
         row++;
 
         grid.Children.Add(labelTranslateToEnglish);

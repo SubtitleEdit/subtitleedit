@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -52,6 +54,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [ObservableProperty] private bool _doPostTranslateWithOllama;
     [ObservableProperty] private ObservableCollection<TranslationPair> _ollamaTargetLanguages = new();
     [ObservableProperty] private TranslationPair? _selectedOllamaTargetLanguage;
+
+    [ObservableProperty] private bool _isHttpApiEngine;
+    [ObservableProperty] private string _whisperApiUrl = string.Empty;
+    [ObservableProperty] private string _whisperApiKey = string.Empty;
 
     [ObservableProperty] private string _parameters;
 
@@ -150,6 +156,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
         
         Engines.Add(new WhisperEngineOpenAi());
+        Engines.Add(new WhisperEngineHttpApi());
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -170,8 +177,12 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         OllamaTargetLanguages = new ObservableCollection<TranslationPair>(ChatGptTranslate.ListLanguages());
         SelectedOllamaTargetLanguage = OllamaTargetLanguages.FirstOrDefault(p => p.Name == "English");
 
+        WhisperApiUrl = Se.Settings.Tools.AudioToText.WhisperApiUrl;
+        WhisperApiKey = Se.Settings.Tools.AudioToText.WhisperApiKey;
+
         IsTranscribeEnabled = true;
         IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine;
+        IsHttpApiEngine = SelectedEngine is WhisperEngineHttpApi;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -219,6 +230,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
         Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
         Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments = Parameters;
+        Se.Settings.Tools.AudioToText.WhisperApiUrl = WhisperApiUrl;
+        Se.Settings.Tools.AudioToText.WhisperApiKey = WhisperApiKey;
 
         Se.SaveSettings();
     }
@@ -1111,6 +1124,82 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         return subtitle;
     }
 
+    private void TranscribeViaHttpApiBackground(string waveFileName)
+    {
+        Task.Run(async () =>
+        {
+            try
+            {
+                var apiUrl = WhisperApiUrl.Trim();
+                if (string.IsNullOrEmpty(apiUrl))
+                    apiUrl = "https://api.openai.com/v1/audio/transcriptions";
+
+                var model = (SelectedModel?.Model.Name ?? "whisper-1");
+                var languageCode = SelectedLanguage?.Code ?? string.Empty;
+
+                using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
+                if (!string.IsNullOrEmpty(WhisperApiKey))
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", WhisperApiKey);
+
+                using var form = new MultipartFormDataContent();
+                form.Add(new StringContent(model), "model");
+                form.Add(new StringContent("srt"), "response_format");
+                if (!string.IsNullOrEmpty(languageCode) && languageCode != "auto")
+                    form.Add(new StringContent(languageCode), "language");
+
+                var fileBytes = File.ReadAllBytes(waveFileName);
+                var fileContent = new ByteArrayContent(fileBytes);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
+                form.Add(fileContent, "file", Path.GetFileName(waveFileName));
+
+                Dispatcher.UIThread.Post(() => ProgressText = "Calling Whisper API...");
+
+                var response = await client.PostAsync(apiUrl, form);
+                var srtText = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Dispatcher.UIThread.Invoke<Task>(async () =>
+                    {
+                        IsTranscribeEnabled = true;
+                        HideProgressBar();
+                        await MessageBox.Show(Window!, "API Error",
+                            $"HTTP {(int)response.StatusCode}: {srtText}");
+                    });
+                    return;
+                }
+
+                var subtitle = new Subtitle();
+                new SubRip().LoadSubtitle(subtitle, srtText.SplitToLines(), string.Empty);
+
+                var postProcessed = PostProcess(subtitle);
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    LogToConsole($"Whisper HTTP API done ({subtitle.Paragraphs.Count} lines){Environment.NewLine}");
+                    IsTranscribeEnabled = true;
+                    HideProgressBar();
+                    if (_audioClips != null && ResultAudioClips.Count > 0)
+                    {
+                        var clip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
+                        if (clip != null)
+                            clip.Transcription = new Subtitle(postProcessed);
+                    }
+                    await MakeResult(postProcessed);
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Invoke<Task>(async () =>
+                {
+                    IsTranscribeEnabled = true;
+                    HideProgressBar();
+                    await MessageBox.Show(Window!, "API Error", ex.Message);
+                });
+            }
+        });
+    }
+
     private void OnTimerWaveExtractOnElapsed(object? sender, ElapsedEventArgs e)
     {
         lock (_lockObj)
@@ -1672,6 +1761,13 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         IsTranscribeEnabled = false;
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
+
+        // HTTP API engine: send to remote API instead of running local process
+        if (engine is WhisperEngineHttpApi)
+        {
+            TranscribeViaHttpApiBackground(waveFileName);
+            return true;
+        }
 
         _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
                                 FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
@@ -2295,6 +2391,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
 
         IsTranslateVisible = !(engine is ChatLlmCppEngine);
+        IsHttpApiEngine = engine is WhisperEngineHttpApi;
 
         SaveSettings();
     }

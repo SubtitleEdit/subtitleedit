@@ -51,4 +51,7 @@ public class SeAudioToText
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }
     public string WhisperPostProcessingChangeUnderlineToColorColor { get; set; } = Colors.Red.FromColorToHex();
     public string WhisperCppVulkanGpuDevice { get; set; } = string.Empty;
+
+    public string WhisperApiUrl { get; set; } = "https://api.openai.com/v1/audio/transcriptions";
+    public string WhisperApiKey { get; set; } = string.Empty;
 }

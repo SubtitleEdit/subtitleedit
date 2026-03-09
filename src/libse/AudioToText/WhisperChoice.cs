@@ -13,5 +13,6 @@
         public const string StableTs = "stable-ts";
         public const string PurfviewFasterWhisperXxl = "Purfview's Faster-Whisper-XXL";
         public const string ChatLlm = "Chat LLM";
+        public const string HttpApi = "Whisper HTTP API";
     }
 }
