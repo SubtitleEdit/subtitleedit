@@ -73,6 +73,18 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowVideoFileOpen)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("OpenVideo"),
+                Command = vm.CommandFileOpenKeepVideoCommand,
+                Background = Brushes.Transparent,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenVideoHint, shortcuts, nameof(vm.CommandFileOpenKeepVideoCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowSave)
         {
             stackPanelLeft.Children.Add(new Button

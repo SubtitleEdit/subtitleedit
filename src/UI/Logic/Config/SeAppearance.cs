@@ -89,7 +89,7 @@ public class SeAppearance
         ShowUpDownLabels = true;
 
         ToolbarShowFileNew = true;
-        ToolbarShowFileOpen = true;
+        ToolbarShowFileOpen = false;
         ToolbarShowVideoFileOpen = true;
         ToolbarShowSave = true;
         ToolbarShowSaveAs = false;
