@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Platform;
-using Microsoft.Win32;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
@@ -58,16 +57,7 @@ public static class FileTypeAssociationsManager
                 return;
             }
 
-            // For Windows 10+, use the modern approach
-            if (Environment.OSVersion.Version.Major >= 10)
-            {
-                await SaveFileTypeAssociationsModernAsync(fileTypeAssociations, window);
-            }
-            else
-            {
-                // Legacy registry approach for older Windows versions
-                await SaveFileTypeAssociationsLegacyAsync(fileTypeAssociations, exeFileName);
-            }
+            await SaveFileTypeAssociationsViaRegistryAsync(fileTypeAssociations, exeFileName);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -97,141 +87,10 @@ public static class FileTypeAssociationsManager
         }
     }
 
-    private static async Task SaveFileTypeAssociationsModernAsync(
-        IEnumerable<FileTypeAssociationViewModel> fileTypeAssociations,
-        Window? window)
-    {
-        // On Windows 10+, register the app but let user choose associations via Settings
-        var exeFileName = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
-        if (string.IsNullOrEmpty(exeFileName))
-        {
-            return;
-        }
-
-        var items = fileTypeAssociations.ToList();
-        var needsAssociation = items.Where(item => item.IsAssociated).ToList();
-        var needsRemoval = items.Where(item => !item.IsAssociated).ToList();
-
-        // Remove associations using the same registry approach as legacy
-        foreach (var item in needsRemoval)
-        {
-            FileTypeAssociationsHelper.DeleteFileAssociationViaRegistry(item.Extension, "SubtitleEdit5");
-        }
-
-        if (needsRemoval.Count > 0)
-        {
-            FileTypeAssociationsHelper.Refresh();
-        }
-
-        if (needsAssociation.Count == 0)
-        {
-            return;
-        }
-
-        // Register the application capabilities (doesn't require admin)
-        RegisterApplicationCapabilities(exeFileName, needsAssociation);
-
-        // Prompt user to open Settings
-        if (window != null && !window.IsClosing())
-        {
-            var result = await MessageBox.Show(
-                window,
-                "File Associations",
-                $"To set file associations, please open Windows Settings.\n\n" +
-                $"Would you like to open the Default Apps settings now?",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                OpenWindowsDefaultAppsSettings();
-            }
-        }
-    }
-    private static void RegisterApplicationCapabilities(
-        string exeFileName,
-        List<FileTypeAssociationViewModel> associations)
-    {
-        try
-        {
-            // Register under HKEY_CURRENT_USER (doesn't require admin)
-#pragma warning disable CA1416 // Validate platform compatibility
-            using var capabilitiesKey = Registry.CurrentUser.CreateSubKey(
-                @"Software\SubtitleEdit5\Capabilities");
-
-            if (capabilitiesKey != null)
-            {
-                capabilitiesKey.SetValue("ApplicationName", "Subtitle Edit");
-                capabilitiesKey.SetValue("ApplicationDescription", "Subtitle editor");
-
-                using var fileAssocsKey = capabilitiesKey.CreateSubKey("FileAssociations");
-                if (fileAssocsKey != null)
-                {
-                    foreach (var item in associations)
-                    {
-                        fileAssocsKey.SetValue(item.Extension, $"SubtitleEdit5{item.Extension}");
-                    }
-                }
-            }
-
-            // Register the ProgId under HKEY_CURRENT_USER
-            foreach (var item in associations)
-            {
-                var progId = $"SubtitleEdit5{item.Extension}";
-                using var progIdKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{progId}");
-                if (progIdKey != null)
-                {
-                    progIdKey.SetValue("", $"Subtitle Edit {item.Extension.ToUpper()} File");
-
-                    using var iconKey = progIdKey.CreateSubKey("DefaultIcon");
-                    if (iconKey != null)
-                    {
-                        var iconPath = GetIconPath(item);
-                        if (!string.IsNullOrEmpty(iconPath))
-                        {
-                            iconKey.SetValue("", iconPath);
-                        }
-                    }
-
-                    using var commandKey = progIdKey.CreateSubKey(@"shell\open\command");
-                    if (commandKey != null)
-                    {
-                        commandKey.SetValue("", $"\"{exeFileName}\" \"%1\"");
-                    }
-                }
-            }
-
-#pragma warning restore CA1416 // Validate platform compatibility
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "RegisterApplicationCapabilities");
-            throw;
-        }
-    }
-
-    private static void OpenWindowsDefaultAppsSettings()
-    {
-        try
-        {
-            // Open Default Apps settings in Windows 10/11
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "ms-settings:defaultapps",
-                UseShellExecute = true
-            });
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "OpenWindowsDefaultAppsSettings");
-        }
-    }
-
-    private static async Task SaveFileTypeAssociationsLegacyAsync(
+    private static async Task SaveFileTypeAssociationsViaRegistryAsync(
         IEnumerable<FileTypeAssociationViewModel> fileTypeAssociations,
         string exeFileName)
     {
-        // Original registry-based approach for older Windows versions
         foreach (var item in fileTypeAssociations)
         {
             var ext = item.Extension;
@@ -301,7 +160,18 @@ public static class FileTypeAssociationsManager
 
         if (result == MessageBoxResult.Yes && openSettings)
         {
-            OpenWindowsDefaultAppsSettings();
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "ms-settings:defaultapps",
+                    UseShellExecute = true,
+                });
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "ShowFileAssociationErrorAsync - OpenWindowsDefaultAppsSettings");
+            }
         }
     }
 }
