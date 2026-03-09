@@ -179,6 +179,16 @@ public class Piper : ITtsEngine
         var process = StartPiperProcess(piperVoice, text, fileNameOnly);
         await process.WaitForExitAsync(cancellationToken);
 
+        if (process.ExitCode != 0)
+        {
+            Se.LogError($"Piper process exited with code {process.ExitCode} - Parameters: "
+                + $"Voice: {piperVoice}, "
+                + $"Text: {text}"
+                + $"FileName: {process.StartInfo.FileName}"
+                + $"Parameters: {process.StartInfo.Arguments}"
+                );
+        }
+
         var fileName = Path.Combine(GetSetPiperFolder(), fileNameOnly);
         return new TtsResult(fileName, text);
     }
