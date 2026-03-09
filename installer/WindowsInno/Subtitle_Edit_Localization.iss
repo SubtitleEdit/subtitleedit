@@ -328,17 +328,17 @@ it.SetupAppTitle=Installazione di Subtitle Edit
 it.SetupWindowTitle=Installazione di Subtitle Edit {#app_ver}
 [CustomMessages]
 it.comp_translations=Traduzioni
-it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.8.%nScarica ed installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.8 adesso?
-it.msg_DeleteSettings=Vuoi anche eliminare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
+it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.8.%nScarica ed installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.8?
+it.msg_DeleteSettings=Vuoi eliminare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi evitare di farlo.
 it.msg_OptimizingPerformance=Ottimizzazione prestazioni...
 it.run_VisitWebsite=Visita il sito di Subtitle Edit
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
 it.tsk_AllUsers=Per tutti gli utenti
 it.tsk_CurrentUser=Solo per l'utente attuale
-it.tsk_Other=Altra:
+it.tsk_Other=Altre attività:
 it.tsk_ResetDictionaries=Ripristina i dizionari ed elimina i nomi personali
 it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
-it.tsk_SetFileTypes=Associa file di sottotitoli comuni a Subtitle Edit
+it.tsk_SetFileTypes=Associa file sottotitoli comuni a Subtitle Edit
 it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 
