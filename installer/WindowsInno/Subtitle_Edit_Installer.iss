@@ -13,9 +13,11 @@
 #define app_copyright_end    GetDateTimeString('yyyy','','')
 
 ; Version constants — updated by installer/WindowsInno/update-version.ps1
-#define app_ver         "5.0.0"
-#define app_ver_suffix  "beta4"
-#define app_ver_full    "5.0.0.4"
+
+#define app_ver              "5.0.0"
+#define app_ver_suffix       "beta4"
+#define app_ver_full         "5.0.0.4"
+
 ; Shows "5.0.0 beta4" when suffix is set, plain "5.0.0" for release builds
 #define app_ver_display app_ver_suffix != "" ? app_ver + " " + app_ver_suffix : app_ver
 
@@ -27,6 +29,7 @@
 
 #define keyAppPaths  "Software\Microsoft\Windows\CurrentVersion\App Paths"
 
+#define SupportURL "https://subtitleedit.github.io/subtitleedit/"
 
 [Setup]
 AppID={{B5E6D1E0-A9F3-4B2C-8E7D-1F5C3A9B0E4D}
@@ -37,10 +40,10 @@ AppVerName={#app_name} {#app_ver_display}
 AppCopyright={#app_copyright} {#app_copyright_start} {#app_copyright_end}
 AppPublisher={#app_copyright}
 
-AppContact=https://subtitleedit.github.io/subtitleedit/
-AppPublisherURL=https://subtitleedit.github.io/subtitleedit/
-AppSupportURL=https://subtitleedit.github.io/subtitleedit/
-AppUpdatesURL=https://subtitleedit.github.io/subtitleedit/
+AppContact={#SupportURL}
+AppPublisherURL={#SupportURL}
+AppSupportURL={#SupportURL}
+AppUpdatesURL={#SupportURL}
 
 VersionInfoVersion={#app_ver_full}
 VersionInfoDescription={#app_name} installer
@@ -73,6 +76,10 @@ DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64compatible
+
+ShowLanguageDialog=yes
+UsePreviousLanguage=no
+LanguageDetectionMethod=uilanguage
 
 [Languages]
 Name: "en";   MessagesFile: "compiler:Default.isl"
