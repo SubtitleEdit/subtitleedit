@@ -219,6 +219,14 @@ public class InitWaveform
             flyout.Items.Add(menuItemSpeechToTextSelectedLines);
             vm.MenuItemAudioVisualizerSpeechToTextSelectedLines = menuItemSpeechToTextSelectedLines;
 
+            var menuItemExportAsWhisperSample = new MenuItem
+            {
+                Header = Se.Language.Waveform.ExportAsWhisperSampleDotDotDot,
+                Command = vm.WaveformExportAsWhisperSampleCommand,
+            };
+            flyout.Items.Add(menuItemExportAsWhisperSample);
+            vm.MenuItemAudioVisualizerExportAsWhisperSample = menuItemExportAsWhisperSample;
+
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
             separatorDisplayMode.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.ShowWaveformDisplayModeSeparator)));
