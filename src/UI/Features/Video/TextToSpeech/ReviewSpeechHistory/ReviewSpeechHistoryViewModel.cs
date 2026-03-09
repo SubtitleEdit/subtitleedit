@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,9 +86,16 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
         {
             _mpvContext?.Stop();
             _mpvContext?.Dispose();
+
             _mpvContext = new LibMpvDynamicPlayer();
+            _mpvContext.LoadLib(); // core not initialized"
+            var err = _mpvContext.Initialize();
+            if (err < 0)
+            {
+                throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+            }
         }
-        
+
         await _mpvContext.LoadFile(fileName);
 
         foreach (var row in HistoryItems)
