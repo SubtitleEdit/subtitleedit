@@ -79,11 +79,17 @@ public class Piper : ITtsEngine
         return true;
     }
 
-    private static string GetPiperExecutableFileName()
+    public static string GetPiperExecutableFileName()
     {
         if (OperatingSystem.IsWindows())
         {
             return Path.Combine(GetSetPiperFolder(), "piper.exe");
+        }
+
+        var path = Path.Combine(GetSetPiperFolder(), "piper");
+        if (File.Exists(path))
+        {
+            return path;
         }
 
         return "piper";
