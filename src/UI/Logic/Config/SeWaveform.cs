@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -25,6 +26,9 @@ public class SeWaveform
     public bool ShowToolbarVideoPositionSlider { get; set; }
     public bool ShowToolbarPlaybackSpeed { get; set; }
 
+    public int WaveformTextFontSize { get; set; }
+    public bool WaveformTextFontBold { get; set; }
+    public string WaveformTextColor { get; set; }
     public string WaveformColor { get; set; }
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
