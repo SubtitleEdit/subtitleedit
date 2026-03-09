@@ -266,9 +266,9 @@ public class AudioVisualizer : Control
     private IBrush _paintParagraphSelectedBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
     private readonly Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
     private readonly Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
-    private readonly IBrush _paintText = Brushes.White;
-    private readonly Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName());
-    private readonly double _fontSize = 12;
+    private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
+    private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
+    private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
     private bool _isCtrlDown;
@@ -2638,6 +2638,10 @@ public class AudioVisualizer : Control
         _fancyWaveformPenCache.Clear();
         _fancyWaveformGlowPenCache.Clear();
         _fancyWaveformGradientCache.Clear();
+        
+        _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
+        _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
+        _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
     }
 
     internal void SetKeyModifiers(KeyEventArgs e)
