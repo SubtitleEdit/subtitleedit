@@ -30,7 +30,6 @@ public class LanguageWaveform
     public string SetVideoPositionAndPause { get; set; }
     public string SetVideopositionAndPauseAndCenter { get; set; }
     public string SetVideoposition { get; set; }
-    public string ExportAsWhisperSampleDotDotDot { get; set; }
 
     public LanguageWaveform()
     {
@@ -64,6 +63,5 @@ public class LanguageWaveform
         SetVideoPositionAndPause = "Set video position and pause";
         SetVideopositionAndPauseAndCenter = "Set video position, pause, and center";
         SetVideoposition = "Set video position";
-        ExportAsWhisperSampleDotDotDot = "Export as Whisper sample...";
     }
 }

@@ -265,7 +265,6 @@ public partial class MainViewModel :
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
-    private SubtitleLineViewModel? _waveformContextMenuSelection;
     private AudioTrackInfo? _audioTrack;
     private string? _audioTrackLangauge;
     private CancellationTokenSource? _statusFadeCts;
@@ -341,7 +340,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerMergeWithPrevious { get; set; }
     public MenuItem MenuItemAudioVisualizerMergeWithNext { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
-    public MenuItem MenuItemAudioVisualizerExportAsWhisperSample { get; set; }
+    public readonly List<MenuItem> WaveformPluginMenuItems = new();
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public TextEditorBindingHelper? EditTextBoxHelper { get; set; }
@@ -429,7 +428,6 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithPrevious = new MenuItem();
         MenuItemAudioVisualizerMergeWithNext = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
-        MenuItemAudioVisualizerExportAsWhisperSample = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
@@ -4351,40 +4349,28 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task WaveformExportAsWhisperSample()
+    private async Task ExecuteWaveformPlugin(IWaveformContextMenuPlugin plugin)
     {
-        var selection = _waveformContextMenuSelection;
-        if (selection == null || string.IsNullOrEmpty(_videoFileName)) return;
+        var selection = AudioVisualizer?.NewSelectionParagraph;
+        if (selection == null || string.IsNullOrEmpty(_videoFileName) || Window == null) return;
 
-        if (Window == null) return;
         var outputFolder = await _folderHelper.PickFolderAsync(Window, "Select output folder for Whisper samples");
         if (string.IsNullOrEmpty(outputFolder)) return;
 
-        var startMs = (long)selection.StartTime.TotalMilliseconds;
-        var endMs = (long)selection.EndTime.TotalMilliseconds;
-        var baseName = $"sample_{startMs:D8}_{endMs:D8}";
-        var outputWav = Path.Combine(outputFolder, baseName + ".wav");
-
-        var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+        await plugin.ExecuteAsync(
             _videoFileName,
             selection.StartTime.TotalSeconds,
-            selection.Duration.TotalSeconds,
-            false,
-            outputWav);
+            selection.EndTime.TotalSeconds,
+            outputFolder);
 
-        var process = FfmpegGenerator.GetProcess(arguments, null);
-        process.Start();
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-        await Task.Run(() => process.WaitForExit());
+        var startMs = (long)selection.StartTime.TotalMilliseconds;
+        var endMs = (long)selection.EndTime.TotalMilliseconds;
+        var outputWav = Path.Combine(outputFolder, $"sample_{startMs:D8}_{endMs:D8}.wav");
 
-        if (process.ExitCode != 0 || !File.Exists(outputWav))
-        {
+        if (File.Exists(outputWav))
+            await _folderHelper.OpenFolderWithFileSelected(Window, outputWav);
+        else
             await MessageBox.Show(Window, Se.Language.General.Error, "Failed to export audio sample.");
-            return;
-        }
-
-        await _folderHelper.OpenFolderWithFileSelected(Window, outputWav);
     }
 
     [RelayCommand]
@@ -14297,14 +14283,14 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithPrevious.IsVisible = false;
         MenuItemAudioVisualizerMergeWithNext.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
-        MenuItemAudioVisualizerExportAsWhisperSample.IsVisible = false;
+        foreach (var item in WaveformPluginMenuItems) item.IsVisible = false;
 
         if (e.NewParagraph != null)
         {
             MenuItemAudioVisualizerInsertNewSelection.IsVisible = true;
             MenuItemAudioVisualizerPasteNewSelection.IsVisible = true;
-            _waveformContextMenuSelection = e.NewParagraph;
-            MenuItemAudioVisualizerExportAsWhisperSample.IsVisible = !string.IsNullOrEmpty(_videoFileName);
+            var hasVideo = !string.IsNullOrEmpty(_videoFileName);
+            foreach (var item in WaveformPluginMenuItems) item.IsVisible = hasVideo;
             return;
         }
 

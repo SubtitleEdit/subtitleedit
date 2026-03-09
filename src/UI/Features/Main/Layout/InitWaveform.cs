@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Projektanker.Icons.Avalonia;
@@ -219,13 +220,18 @@ public class InitWaveform
             flyout.Items.Add(menuItemSpeechToTextSelectedLines);
             vm.MenuItemAudioVisualizerSpeechToTextSelectedLines = menuItemSpeechToTextSelectedLines;
 
-            var menuItemExportAsWhisperSample = new MenuItem
+            foreach (var plugin in WaveformContextMenuPluginLoader.GetPlugins())
             {
-                Header = Se.Language.Waveform.ExportAsWhisperSampleDotDotDot,
-                Command = vm.WaveformExportAsWhisperSampleCommand,
-            };
-            flyout.Items.Add(menuItemExportAsWhisperSample);
-            vm.MenuItemAudioVisualizerExportAsWhisperSample = menuItemExportAsWhisperSample;
+                var p = plugin;
+                var pluginMenuItem = new MenuItem
+                {
+                    Header = p.MenuItemText,
+                    Command = vm.ExecuteWaveformPluginCommand,
+                    CommandParameter = p,
+                };
+                flyout.Items.Add(pluginMenuItem);
+                vm.WaveformPluginMenuItems.Add(pluginMenuItem);
+            }
 
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
