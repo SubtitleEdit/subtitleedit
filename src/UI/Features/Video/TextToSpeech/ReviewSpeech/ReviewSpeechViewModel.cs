@@ -182,7 +182,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             _mpvContext?.Stop();
             _mpvContext?.Dispose();
+
             _mpvContext = new LibMpvDynamicPlayer();
+            _mpvContext.LoadLib(); 
+            var err = _mpvContext.Initialize();
+            if (err < 0)
+            {
+                throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+            }
         }
 
         await _mpvContext.LoadFile(fileName);
