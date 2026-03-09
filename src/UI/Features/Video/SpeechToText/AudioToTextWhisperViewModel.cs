@@ -151,6 +151,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             //Engines.Add(new ChatLlmCppEngine());
         }
 
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            //Engines.Add(new ParakeetCppEngine());
+        }
+
         SelectedEngine = Engines[0];
 
         Languages = new ObservableCollection<WhisperLanguage>(SelectedEngine.Languages);
