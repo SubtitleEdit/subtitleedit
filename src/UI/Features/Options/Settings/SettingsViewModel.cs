@@ -189,6 +189,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
+    [ObservableProperty] private int _waveformTextFontSize;
+    [ObservableProperty] private bool _waveformTextFontBold;
+    [ObservableProperty] private Color _waveformTextColor;
     [ObservableProperty] private Color _waveformColor;
     [ObservableProperty] private Color _waveformBackgroundColor;
     [ObservableProperty] private Color _waveformParagraphBackgroundColor;
