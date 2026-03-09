@@ -4,6 +4,7 @@ public class LanguageMainToolbar
 {
     public string NewHint { get; set; }
     public string OpenHint { get; set; }
+    public string OpenVideoHint { get; set; }
     public string SaveHint { get; set; }
     public string SaveAsHint { get; set; }
     public string FindHint { get; set; }
@@ -24,6 +25,7 @@ public class LanguageMainToolbar
     {
         NewHint = "Start a new subtitle file {0}";
         OpenHint = "Open an existing subtitle file {0}";
+        OpenVideoHint = "Open a video file {0}";
         SaveHint = "Save the current subtitle {0}";
         SaveAsHint = "Save subtitle with a new name {0}";
         FindHint = "Find text in subtitles {0}";

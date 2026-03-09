@@ -144,6 +144,7 @@ public class LanguageSettings
     // Toolbar
     public string ShowToolbarNew { get; set; }
     public string ShowToolbarOpen { get; set; }
+    public string ShowToolbarVideoFileOpen { get; set; }
     public string ShowToolbarSave { get; set; }
     public string ShowToolbarSaveAs { get; set; }
     public string ShowToolbarFind { get; set; }
@@ -403,6 +404,7 @@ public class LanguageSettings
         // Toolbar
         ShowToolbarNew = "Show new icon";
         ShowToolbarOpen = "Show open icon";
+        ShowToolbarVideoFileOpen = "Show video file open icon";
         ShowToolbarSave = "Show save icon";
         ShowToolbarSaveAs = "Show save as icon";
         ShowToolbarFind = "Show find icon";

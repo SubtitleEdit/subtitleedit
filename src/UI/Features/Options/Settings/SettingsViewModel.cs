@@ -118,6 +118,7 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private bool _showToolbarNew;
     [ObservableProperty] private bool _showToolbarOpen;
+    [ObservableProperty] private bool _showToolbarVideoFileOpen;
     [ObservableProperty] private bool _showToolbarSave;
     [ObservableProperty] private bool _showToolbarSaveAs;
     [ObservableProperty] private bool _showToolbarFind;
@@ -586,6 +587,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         ShowToolbarNew = appearance.ToolbarShowFileNew;
         ShowToolbarOpen = appearance.ToolbarShowFileOpen;
+        ShowToolbarVideoFileOpen = appearance.ToolbarShowVideoFileOpen;
         ShowToolbarSave = appearance.ToolbarShowSave;
         ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
         ShowToolbarFind = appearance.ToolbarShowFind;
@@ -1137,6 +1139,7 @@ public partial class SettingsViewModel : ObservableObject
             : SelectedFontName;
         appearance.ToolbarShowFileNew = ShowToolbarNew;
         appearance.ToolbarShowFileOpen = ShowToolbarOpen;
+        appearance.ToolbarShowVideoFileOpen = ShowToolbarVideoFileOpen;
         appearance.ToolbarShowSave = ShowToolbarSave;
         appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
         appearance.ToolbarShowFind = ShowToolbarFind;
