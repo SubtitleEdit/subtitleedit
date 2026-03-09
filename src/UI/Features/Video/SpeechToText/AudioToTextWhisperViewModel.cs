@@ -122,6 +122,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     private readonly Lock _lockObj = new();
     private int _batchIndex = -1;
     private string _error;
+    private CancellationTokenSource? _httpApiCts;
+    private CancellationTokenSource? _ollamaCts;
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
     private string _chatLlmText = string.Empty;
@@ -1089,12 +1091,14 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     private async Task<Subtitle> TranslateWithOllama(Subtitle subtitle)
     {
         if (!DoPostTranslateWithOllama || SelectedOllamaTargetLanguage == null || subtitle.Paragraphs.Count == 0)
-        {
             return subtitle;
-        }
 
         ProgressText = "Translating with Ollama...";
         ProgressOpacity = 1;
+
+        _ollamaCts?.Dispose();
+        _ollamaCts = new CancellationTokenSource(TimeSpan.FromMinutes(30));
+        var token = _ollamaCts.Token;
 
         using var translator = new OllamaTranslate();
         translator.Initialize();
@@ -1102,15 +1106,18 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         var targetCode = SelectedOllamaTargetLanguage.Code;
         var sourceCode = DoTranslateToEnglish ? "en" : (SelectedLanguage?.Code ?? "auto");
 
-        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(30));
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
-            if (cts.IsCancellationRequested) break;
+            if (token.IsCancellationRequested) break;
             var p = subtitle.Paragraphs[i];
             if (string.IsNullOrWhiteSpace(p.Text)) continue;
             try
             {
-                p.Text = await translator.Translate(p.Text, sourceCode, targetCode, cts.Token);
+                p.Text = await translator.Translate(p.Text, sourceCode, targetCode, token);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
             }
             catch
             {
@@ -1126,6 +1133,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
     private void TranscribeViaHttpApiBackground(string waveFileName)
     {
+        _httpApiCts?.Dispose();
+        _httpApiCts = new CancellationTokenSource();
+        var token = _httpApiCts.Token;
+
         Task.Run(async () =>
         {
             try
@@ -1134,7 +1145,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                 if (string.IsNullOrEmpty(apiUrl))
                     apiUrl = "https://api.openai.com/v1/audio/transcriptions";
 
-                var model = (SelectedModel?.Model.Name ?? "whisper-1");
+                var apiModel = SelectedModel?.Model.Name ?? "whisper-1";
                 var languageCode = SelectedLanguage?.Code ?? string.Empty;
 
                 using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
@@ -1143,24 +1154,24 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                         new AuthenticationHeaderValue("Bearer", WhisperApiKey);
 
                 using var form = new MultipartFormDataContent();
-                form.Add(new StringContent(model), "model");
+                form.Add(new StringContent(apiModel), "model");
                 form.Add(new StringContent("srt"), "response_format");
                 if (!string.IsNullOrEmpty(languageCode) && languageCode != "auto")
                     form.Add(new StringContent(languageCode), "language");
 
-                var fileBytes = File.ReadAllBytes(waveFileName);
-                var fileContent = new ByteArrayContent(fileBytes);
+                await using var fileStream = File.OpenRead(waveFileName);
+                var fileContent = new StreamContent(fileStream);
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
                 form.Add(fileContent, "file", Path.GetFileName(waveFileName));
 
                 Dispatcher.UIThread.Post(() => ProgressText = "Calling Whisper API...");
 
-                var response = await client.PostAsync(apiUrl, form);
-                var srtText = await response.Content.ReadAsStringAsync();
+                var response = await client.PostAsync(apiUrl, form, token);
+                var srtText = await response.Content.ReadAsStringAsync(token);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Dispatcher.UIThread.Invoke<Task>(async () =>
+                    await Dispatcher.UIThread.InvokeAsync(async () =>
                     {
                         IsTranscribeEnabled = true;
                         HideProgressBar();
@@ -1188,16 +1199,24 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     await MakeResult(postProcessed);
                 });
             }
+            catch (OperationCanceledException)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    IsTranscribeEnabled = true;
+                    HideProgressBar();
+                });
+            }
             catch (Exception ex)
             {
-                Dispatcher.UIThread.Invoke<Task>(async () =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     IsTranscribeEnabled = true;
                     HideProgressBar();
                     await MessageBox.Show(Window!, "API Error", ex.Message);
                 });
             }
-        });
+        }, token);
     }
 
     private void OnTimerWaveExtractOnElapsed(object? sender, ElapsedEventArgs e)
@@ -1725,6 +1744,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (!IsTranscribeEnabled)
         {
             _abort = true;
+            _httpApiCts?.Cancel();
+            _ollamaCts?.Cancel();
             return;
         }
 

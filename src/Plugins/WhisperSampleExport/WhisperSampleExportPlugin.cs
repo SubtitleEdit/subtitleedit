@@ -69,17 +69,14 @@ public class WhisperSampleExportPlugin : IWaveformContextMenuPlugin, ISubtitleEd
         string videoFileName, double startSeconds, double durationSeconds, string outputWav)
     {
         var ffmpeg = Configuration.Settings.General.FFmpegLocation;
-        if (string.IsNullOrEmpty(ffmpeg) ||
-            (!Configuration.IsRunningOnWindows && !File.Exists(ffmpeg)))
-        {
+        if (string.IsNullOrEmpty(ffmpeg) || !File.Exists(ffmpeg))
             ffmpeg = "ffmpeg";
-        }
 
         var start = $"{startSeconds:0.000}".Replace(",", ".");
         var duration = $"{durationSeconds:0.000}".Replace(",", ".");
         var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\" -vn -ar 16000 -ac 1 \"{outputWav}\"";
 
-        var process = new Process
+        using var process = new Process
         {
             StartInfo = new ProcessStartInfo
             {
