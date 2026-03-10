@@ -78,9 +78,9 @@ public static class InitToolbar
             stackPanelLeft.Children.Add(new Button
             {
                 Content = MakeImage("OpenVideo"),
-                Command = vm.CommandFileOpenKeepVideoCommand,
+                Command = vm.CommandVideoOpenCommand,
                 Background = Brushes.Transparent,
-                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenVideoHint, shortcuts, nameof(vm.CommandFileOpenKeepVideoCommand)),
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenVideoHint, shortcuts, nameof(vm.CommandVideoOpenCommand)),
             });
             isLastSeparator = false;
         }
@@ -157,6 +157,19 @@ public static class InitToolbar
             });
             isLastSeparator = false;
         }
+
+        if (appearance.ToolbarShowFixCommonErrors)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("FixCommonErrors"),
+                Command = vm.ShowToolsFixCommonErrorsCommand,
+                Background = Brushes.Transparent,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.FixCommonErrorsHint, shortcuts, nameof(vm.ShowToolsFixCommonErrorsCommand)),
+            });
+            isLastSeparator = false;
+        }
+
 
         if (appearance.ToolbarShowSettings)
         {

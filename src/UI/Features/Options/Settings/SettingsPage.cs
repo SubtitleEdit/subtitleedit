@@ -650,6 +650,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSettings, nameof(_vm.ShowToolbarSettings)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarLayout, nameof(_vm.ShowToolbarLayout)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
