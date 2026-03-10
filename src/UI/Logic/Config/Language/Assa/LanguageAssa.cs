@@ -292,7 +292,7 @@ public class LanguageAssa
         AdvancedEffectSnowDescription = "Continuous snowfall with depth-of-field layers";
         AdvancedEffectOldMovie = "Old movie effect (background)";
         AdvancedEffectOldMovieDescription = "Simulates a vintage 35mm film projector with noise, vignette, and scratches";
-        AdvancedEffectNeonBurst = "Neon burst (centered)";
+        AdvancedEffectNeonBurst = "Neon burst";
         AdvancedEffectNeonBurstDescription = "High-energy 'Shorts' style captions with neon bloom glow and scale-in 'pop' animation";
         AdvancedEffectSettings = "Settings";
         AdvancedEffectSnowFlakeCount = "Flake count";
