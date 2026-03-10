@@ -33,7 +33,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectEndCreditsScroll(),
             new AdvancedEffectStarfield(),
             new AdvancedEffectRain(),
-            new AdvancedEffectShow(),
+            new AdvancedEffectSnow(),
             new AdvancedEffectOldMovie(),
             new AdvancedEffectNeonBurst(),
             new AdvancedEffectFadeIn(),
@@ -272,7 +272,7 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
     }
 }
 
-public class AdvancedEffectShow : IAdvancedEffectDisplay
+public class AdvancedEffectSnow : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectSnow;
     public string Description => Se.Language.Assa.AdvancedEffectSnowDescription;
@@ -293,11 +293,11 @@ public class AdvancedEffectShow : IAdvancedEffectDisplay
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        int flakeCount = 200;
+        int flakeCount = 250;
 
         for (int i = 0; i < flakeCount; i++)
         {
-            // INITIAL DELAY: This creates the "start slow" effect. 
+            // INITIAL DELAY: This creates the "start slow" effect.
             // Higher index flakes start much later in the video.
             double currentTimeMs = rng.Next(0, 5000) + (i * 20);
 
@@ -306,30 +306,35 @@ public class AdvancedEffectShow : IAdvancedEffectDisplay
                 var flake = new SubtitleLineViewModel();
 
                 int layerRoll = rng.Next(0, 100);
-                int fallDuration, size, alpha;
-                double blur;
+                int fallDuration, size, alpha, xDrift;
+                double glowBorder, glowBlur;
 
-                // --- REVISED SNOW SIZES (Smaller & Lighter) ---
-                if (layerRoll < 70) // BACKGROUND - 70% of snow, tiny specks
+                if (layerRoll < 70) // BACKGROUND - tiny specks, subtle glow
                 {
                     fallDuration = rng.Next(10000, 15000);
-                    size = rng.Next(10, 25); // Was 20-40
-                    blur = 0.3;
+                    size = rng.Next(10, 25);
+                    glowBorder = 0.8;
+                    glowBlur = 1.5;
                     alpha = 180;
+                    xDrift = rng.Next(-50, 50); // Gentle bidirectional drift
                 }
-                else if (layerRoll < 95) // MIDGROUND - Gentle flakes
+                else if (layerRoll < 95) // MIDGROUND - gentle flakes, soft glow
                 {
                     fallDuration = rng.Next(6000, 9000);
-                    size = rng.Next(30, 50); // Was 50-80
-                    blur = 1.0;
+                    size = rng.Next(30, 50);
+                    glowBorder = 1.5;
+                    glowBlur = 2.5;
                     alpha = 100;
+                    xDrift = rng.Next(-100, 100); // Moderate wind sway
                 }
-                else // FOREGROUND - Out of focus "Close" flakes
+                else // FOREGROUND - large out-of-focus flakes, bright halo
                 {
                     fallDuration = rng.Next(4000, 6000);
-                    size = rng.Next(80, 130); // Was 150-250
-                    blur = 4.0;
+                    size = rng.Next(60, 110);
+                    glowBorder = 3.0;
+                    glowBlur = 6.0;
                     alpha = 60;
+                    xDrift = rng.Next(-160, 160); // Strong gusting drift
                 }
 
                 flake.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
@@ -338,21 +343,22 @@ public class AdvancedEffectShow : IAdvancedEffectDisplay
                 if (flake.StartTime >= globalEnd) break;
 
                 int startX = rng.Next(-100, screenWidth + 100);
-                int endX = startX + rng.Next(20, 80); // Drift
+                int endX = startX + xDrift;
 
-                // ROTATION: Adding a slow spin for more 3D realism
+                // ROTATION: Wide tumble range for natural spinning
                 int startRotation = rng.Next(0, 360);
-                int endRotation = startRotation + rng.Next(-180, 180);
+                int endRotation = startRotation + rng.Next(-270, 270);
 
+                // GLOW: white border (\bord + \3c) blurred outward creates a soft luminous halo
                 string hexAlpha = alpha.ToString("X2");
-                string tags = $@"\\an5\\bord0\\shad0\\blur{blur:F1}\\1c&HFFFFFF&\\alpha&H{hexAlpha}&\\fad(1200,1200)" +
+                string tags = $@"\\an5\\bord{glowBorder:F1}\\shad0\\3c&HFFFFFF&\\blur{glowBlur:F1}\\1c&HFFFFFF&\\alpha&H{hexAlpha}&\\fad(1200,1200)" +
                               $@"\\fscx{size}\\fscy{size}\\frz{startRotation}\\t(0,{fallDuration},\\frz{endRotation})" +
-                              $@"\\move({startX}, -50, {endX}, {screenHeight + 50})";
+                              $@"\\move({startX},-50,{endX},{screenHeight + 50})";
 
                 flake.Text = "{" + tags + "}•";
                 result.Add(flake);
 
-                currentTimeMs += fallDuration;
+                currentTimeMs += fallDuration + rng.Next(0, 2000);
             }
         }
 
