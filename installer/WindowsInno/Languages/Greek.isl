@@ -1,4 +1,4 @@
-﻿; *** Inno Setup version 6.1.0+ Greek messages ***
+; *** Inno Setup version 6.5.0+ Greek messages ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   https://jrsoftware.org/files/istrans/
@@ -10,7 +10,7 @@
 ;
 ; Originally translated by Anastasis Chatzioglou, baldycom@hotmail.com
 ; Updated by XhmikosR [XhmikosR, my_nickname at yahoo dot com]
-; Updated to version 6.1.0+ by Vasileios Karamichail, v.karamichail@outlook.com
+; Updated to version 6.4.0+ by Vasileios Karamichail, v.karamichail@outlook.com
 ;
 
 [LangOptions]
@@ -22,13 +22,11 @@ LanguageCodePage=1253
 ; If the language you are translating to requires special font faces or
 ; sizes, uncomment any of the following entries and change them accordingly.
 ;DialogFontName=
-;DialogFontSize=8
-;WelcomeFontName=Verdana
-;WelcomeFontSize=12
-;TitleFontName=Arial
-;TitleFontSize=29
-;CopyrightFontName=Arial
-;CopyrightFontSize=8
+;DialogFontSize=9
+;DialogFontBaseScaleWidth=7
+;DialogFontBaseScaleHeight=15
+;WelcomeFontName=Segoe UI
+;WelcomeFontSize=14
 
 [Messages]
 
@@ -216,16 +214,26 @@ ReadyMemoGroup=Φάκελος στο μενού Έναρξη:
 ReadyMemoTasks=Επιπλέον ενέργειες:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Λήψη πρόσθετων αρχείων...
+DownloadingLabel2=Λήψη αρχείων...
 ButtonStopDownload=&Διακοπή λήψης
 StopDownload=Είστε βέβαιοι ότι θέλετε να διακόψετε τη λήψη;
 ErrorDownloadAborted=Η λήψη ακυρώθηκε
 ErrorDownloadFailed=Η λήψη απέτυχε: %1 %2
 ErrorDownloadSizeFailed=Η λήψη του μεγέθους απέτυχε: %1 %2
-ErrorFileHash1=Αποτυχία υπολογισμού hash: %1
-ErrorFileHash2=Μη έγκυρο hash: αναμενόμενο %1, βρέθηκε %2
 ErrorProgress=Μη έγκυρη πρόοδος: %1 από %2
 ErrorFileSize=Μη έγκυρο μέγεθος αρχείου: αναμενόμενο %1, βρέθηκε %2
+
+; *** TExtractionWizardPage wizard page and ExtractArchive
+ExtractingLabel=Αποσυμπίεση αρχείων...
+ButtonStopExtraction=&Διακοπή αποσυμπίεσης
+StopExtraction=Είστε βέβαιοι ότι θέλετε να διακόψετε την αποσυμπίεση;
+ErrorExtractionAborted=Η αποσυμπίεση ακυρώθηκε
+ErrorExtractionFailed=Η αποσυμπίεση απέτυχε: %1
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=Ο κωδικός πρόσβασης είναι λανθασμένος
+ArchiveIsCorrupted=Το συμπιεσμένο αρχείο είναι κατεστραμμένο
+ArchiveUnsupportedFormat=Η μορφή του συμπιεσμένου αρχείου δεν υποστηρίζεται
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Προετοιμασία Εγκατάστασης
@@ -271,11 +279,15 @@ AbortRetryIgnoreSelectAction=Επιλέξτε ενέργεια
 AbortRetryIgnoreRetry=&Δοκιμή
 AbortRetryIgnoreIgnore=&Αγνόηση και συνέχεια
 AbortRetryIgnoreCancel=Ακυρώση εγκατάστασης
+RetryCancelSelectAction=Επιλέξτε ενέργεια
+RetryCancelRetry=&Δοκιμή ξανά
+RetryCancelCancel=Ακύρωση
 
 ; *** Installation status messages
 StatusClosingApplications=Κλείσιμο εφαρμογών...
 StatusCreateDirs=Δημιουργία φακέλων...
 StatusExtractFiles=Αποσυμπίεση αρχείων...
+StatusDownloadFiles=Λήψη αρχείων...
 StatusCreateIcons=Δημιουργία συντομεύσεων...
 StatusCreateIniEntries=Δημιουργία καταχωρήσεων INI...
 StatusCreateRegistryEntries=Δημιουργία καταχωρήσεων στο μητρώο...
@@ -305,6 +317,14 @@ FileAbortRetryIgnoreSkipNotRecommended=&Παράλειψη αυτού του α�
 FileAbortRetryIgnoreIgnoreNotRecommended=Παράλειψη σφάλματος και &συνέχεια (δεν συνιστάται)
 SourceIsCorrupted=Το αρχείο προέλευσης είναι κατεστραμμένο
 SourceDoesntExist=Το αρχείο προέλευσης "%1" δεν υπάρχει
+SourceVerificationFailed=Η επαλήθευση του αρχείου προέλευσης απέτυχε: %1
+VerificationSignatureDoesntExist=Το αρχείο υπογραφής "%1" δεν υπάρχει
+VerificationSignatureInvalid=Το αρχείο υπογραφής "%1" δεν είναι έγκυρο
+VerificationKeyNotFound=Το αρχείο υπογραφής "%1" χρησιμοποιεί άγνωστο κλειδί
+VerificationFileNameIncorrect=Το όνομα του αρχείου δεν είναι σωστό
+VerificationFileTagIncorrect=Η ετικέτα του αρχείου δεν είναι σωστή
+VerificationFileSizeIncorrect=Το μέγεθος του αρχείου δεν είναι σωστό
+VerificationFileHashIncorrect=Το hash του αρχείου δεν είναι σωστό
 ExistingFileReadOnly2=Το υπάρχον αρχείο δεν μπόρεσε να αντικατασταθεί επειδή είναι μόνο για ανάγνωση.
 ExistingFileReadOnlyRetry=&Καταργήστε το χαρακτηριστικό μόνο για ανάγνωση και δοκιμάστε ξανά
 ExistingFileReadOnlyKeepExisting=&Διατηρήστε το υπάρχον αρχείο
@@ -323,6 +343,8 @@ ErrorChangingAttr=Παρουσιάστηκε σφάλμα κατά την προ
 ErrorCreatingTemp=Παρουσιάστηκε σφάλμα κατά την προσπάθεια δημιουργίας ενός αρχείου στον φακέλο προορισμού:
 ErrorReadingSource=Παρουσιάστηκε σφάλμα κατά την προσπάθεια ανάγνωσης του αρχείου προέλευσης:
 ErrorCopying=Παρουσιάστηκε σφάλμα κατά την προσπάθεια αντιγραφής ενός αρχείου:
+ErrorDownloading=Παρουσιάστηκε σφάλμα κατά την προσπάθεια λήψης ενός αρχείου:
+ErrorExtracting=Παρουσιάστηκε σφάλμα κατά την προσπάθεια αποσυμπίεσης ενός αρχείου:
 ErrorReplacingExistingFile=Παρουσιάστηκε σφάλμα κατά την προσπάθεια αντικατάστασης του υπάρχοντος αρχείου:
 ErrorRestartReplace=Η ΕπανεκκίνησηΑντικατάσταση απέτυχε:
 ErrorRenamingTemp=Παρουσιάστηκε σφάλμα κατά την προσπάθεια μετονομασίας ενός αρχείου στον φακέλο προορισμού:

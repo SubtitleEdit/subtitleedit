@@ -81,54 +81,52 @@ ShowLanguageDialog=yes
 UsePreviousLanguage=no
 LanguageDetectionMethod=uilanguage
 
+; Include the installer's custom messages
+#include "Subtitle_Edit_Localization.iss"
+
 [Languages]
 Name: "en";   MessagesFile: "compiler:Default.isl"
-Name: "ar";   MessagesFile: "Languages\Arabic.isl"
-Name: "hy";   MessagesFile: "Languages\Armenian.isl"
-Name: "bg";   MessagesFile: "Languages\Bulgarian.isl"
-Name: "ca";   MessagesFile: "Languages\Catalan.isl"
-Name: "co";   MessagesFile: "Languages\Corsican.isl"
+Name: "ar";   MessagesFile: "compiler:Languages\Arabic.isl"
+;Name: "hy";   MessagesFile: "compiler:Languages\Armenian.isl"
+Name: "bg";   MessagesFile: "compiler:Languages\Bulgarian.isl"
+Name: "ca";   MessagesFile: "LanguagesCatalan.isl"
+;Name: "co";   MessagesFile: "Languages\Corsican.isl"
 Name: "cs";   MessagesFile: "compiler:Languages\Czech.isl"
 Name: "da";   MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de";   MessagesFile: "compiler:Languages\German.isl"
 Name: "el";   MessagesFile: "Languages\Greek.isl"
 Name: "es";   MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "eu";   MessagesFile: "Languages\Basque.isl"
+;Name: "eu";   MessagesFile: "Languages\Basque.isl"
 Name: "fa";   MessagesFile: "Languages\Farsi.isl"
 Name: "fi";   MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";   MessagesFile: "compiler:Languages\French.isl"
-Name: "he";   MessagesFile: "Languages\Hebrew.isl"
+;Name: "he";   MessagesFile: "Languages\Hebrew.isl"
 Name: "hr";   MessagesFile: "Languages\Croatian.isl"
-Name: "hu";   MessagesFile: "Languages\Hungarian.isl"
-Name: "is";   MessagesFile: "Languages\Icelandic.isl"
-Name: "id";   MessagesFile: "Languages\Indonesian.isl"
+Name: "hu";   MessagesFile: "compiler:Languages\Hungarian.isl"
+;Name: "is";   MessagesFile: "Languages\Icelandic.isl"
+;Name: "id";   MessagesFile: "Languages\Indonesian.isl"
 Name: "it";   MessagesFile: "compiler:Languages\Italian.isl"
 Name: "ja";   MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "ko";   MessagesFile: "Languages\Korean.isl"
-Name: "mk";   MessagesFile: "Languages\Macedonian.isl"
+Name: "ko";   MessagesFile: "compiler:Languages\Korean.isl"
+;Name: "mk";   MessagesFile: "Languages\Macedonian.isl"
 Name: "nl";   MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "no";   MessagesFile: "compiler:Languages\Norwegian.isl"
+;Name: "no";   MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";   MessagesFile: "compiler:Languages\Polish.isl"
 Name: "pt";   MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "ptBR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ro";   MessagesFile: "Languages\Romanian.isl"
+;Name: "ro";   MessagesFile: "Languages\Romanian.isl"
 Name: "ru";   MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sk";   MessagesFile: "Languages\Slovak.isl"
+;Name: "sk";   MessagesFile: "Languages\Slovak.isl"
 Name: "sl";   MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "srC";  MessagesFile: "Languages\SerbianCyrillic.isl"
 Name: "srL";  MessagesFile: "Languages\SerbianLatin.isl"
-Name: "sv";   MessagesFile: "Languages\Swedish.isl"
-Name: "th";   MessagesFile: "Languages\Thai.isl"
+Name: "sv";   MessagesFile: "compiler:Languages\Swedish.isl"
+Name: "th";   MessagesFile: "compiler:Languages\Thai.isl"
 Name: "tr";   MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "uk";   MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "vi";   MessagesFile: "Languages\Vietnamese.isl"
 Name: "zh";   MessagesFile: "Languages\ChineseSimplified.isl"
 Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
-
-
-; Include the installer's custom messages
-#include "Subtitle_Edit_Localization.iss"
-
 
 [Tasks]
 Name: desktopicon;        Description: {cm:CreateDesktopIcon};  GroupDescription: {cm:AdditionalIcons}
@@ -159,8 +157,8 @@ Name: {userdesktop}\Subtitle Edit;   Filename: {app}\SubtitleEdit.exe; WorkingDi
 
 
 [InstallDelete]
-Type: files; Name: {userdesktop}\Subtitle Edit.lnk;   Check: not IsTaskSelected('desktopicon\user')   and WasPreviousVersionInstalled()
-Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: not IsTaskSelected('desktopicon\common') and WasPreviousVersionInstalled()
+Type: files; Name: {userdesktop}\Subtitle Edit.lnk;   Check: not WizardIsTaskSelected('desktopicon\user')   and WasPreviousVersionInstalled()
+Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: not WizardIsTaskSelected('desktopicon\common') and WasPreviousVersionInstalled()
 Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
 

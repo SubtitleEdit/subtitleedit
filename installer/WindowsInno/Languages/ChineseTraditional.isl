@@ -1,5 +1,7 @@
-﻿; *** Inno Setup version 6.1.0+ Chinese (Traditional) messages ***
-; Name: Enfeng Tsao, nelson22768384@gmail.com
+; *** Inno Setup version 6.7.0+ Chinese Traditional messages ***
+; Name: Anbang LI, anbangli@outlook.com
+;
+; Name: Enfong Tsao, nelson22768384@gmail.com
 ; Based on 5.5.3+ translations by Samuel Lee, Email: 751555749@qq.com
 ; Translation based on network resource
 ;
@@ -7,23 +9,31 @@
 ; messages that didn't have them already, because on those messages Inno
 ; Setup adds the periods automatically (appending a period would result in
 ; two periods being displayed).
+;
+; Submit webpage: https://jrsoftware.org/files/istrans/
 
 [LangOptions]
 ; The following three entries are very important. Be sure to read and 
 ; understand the '[LangOptions] section' topic in the help file.
+LanguageName=繁體中文
+; If Language Name display incorrect, uncomment next line
 LanguageName=<7e41><9ad4><4e2d><6587>
+; About LanguageID, to reference link:
+; https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c
 LanguageID=$0404
+; About CodePage, to reference link:
+; https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
 LanguageCodepage=950
 ; If the language you are translating to requires special font faces or
 ; sizes, uncomment any of the following entries and change them accordingly.
-;DialogFontName=
-;DialogFontSize=8
-;TitleFontName=Arial
-;TitleFontSize=29
-;WelcomeFontName=Verdana
-;WelcomeFontSize=12
+DialogFontName=Arial
+DialogFontSize=10
+DialogFontBaseScaleWidth=7
+DialogFontBaseScaleHeight=15
+WelcomeFontName=Segoe UI
+WelcomeFontSize=14
 ;CopyrightFontName=Arial
-;CopyrightFontSize=8
+;CopyrightFontSize=10
 
 [Messages]
 
@@ -79,7 +89,7 @@ ErrorTooManyFilesInDir=無法在資料夾“%1”內建立檔案，因為資料�
 
 ; *** Setup common messages
 ExitSetupTitle=結束安裝程式
-ExitSetupMessage=安裝尚未完成。如果您現在結束安裝程式，這個程式將不會被安裝。%n%n您可以稍後再執行安裝程式以完成安裝程序。您現在要結束安裝程式嗎?
+ExitSetupMessage=安裝尚未完成。如果您現在結束安裝程式，這個程式將不會被安裝。%n%n您可以稍後再執行安裝程式以完成安裝程式。您現在要結束安裝程式嗎?
 AboutSetupMenuItem=關於安裝程式 (&A)...
 AboutSetupTitle=關於安裝程式
 AboutSetupMessage=%1 版本 %2%n%3%n%n%1 網址:%n%4
@@ -88,8 +98,9 @@ TranslatorNote=
 
 ; *** Buttons
 ButtonBack=< 上一步(&B)
-ButtonInstall=安裝(&I)
+
 ButtonNext=下一步(&N)  >
+ButtonInstall=安裝(&I)
 ButtonOK=確定
 ButtonCancel=取消
 ButtonYes=是(&Y)
@@ -109,7 +120,7 @@ SelectLanguageLabel=選擇在安裝過程中使用的語言:
 ClickNext=按 「下一步」 繼續安裝，或按 「取消」 結束安裝程式。
 BeveledLabel=
 BrowseDialogTitle=瀏覽資料夾
-BrowseDialogLabel=在下面的資料夾列表中選擇一個資料夾，然後按 「確定」。
+BrowseDialogLabel=在下麵的資料夾清單中選擇一個資料夾，然後按 「確定」。
 NewFolderName=新資料夾
 
 ; *** "Welcome" wizard page
@@ -149,7 +160,7 @@ UserInfoNameRequired=您必須輸入您的名稱。
 ; *** "Select Destination Location" wizard page
 WizardSelectDir=選擇目的資料夾
 SelectDirDesc=選擇安裝程式安裝 [name] 的位置。
-SelectDirLabel3=安裝程式將會把 [name] 安裝到下面的資料夾。
+SelectDirLabel3=安裝程式將會把 [name] 安裝到下麵的資料夾。
 SelectDirBrowseLabel=按 「下一步」 繼續，如果您想選擇另一個資料夾，請按 「瀏覽」。
 DiskSpaceGBLabel=最少需要 [gb] GB 磁碟空間。
 DiskSpaceMBLabel=最少需要 [mb] MB 磁碟空間。
@@ -190,7 +201,7 @@ SelectTasksLabel2=選擇安裝程式在安裝 [name] 時要執行的附加工作
 ; *** "Select Start Menu Folder" wizard page
 WizardSelectProgramGroup=選擇「開始」功能表的資料夾
 SelectStartMenuFolderDesc=選擇安裝程式建立程式的捷徑的位置。
-SelectStartMenuFolderLabel3=安裝程式將會把程式的捷徑建立在下面的「開始」功能表資料夾。
+SelectStartMenuFolderLabel3=安裝程式將會把程式的捷徑建立在下麵的「開始」功能表資料夾。
 SelectStartMenuFolderBrowseLabel=按 「下一步」 繼續，如果您想選擇另一個資料夾，請按 「瀏覽」。
 MustEnterGroupName=您必須輸入一個資料夾的名稱。
 GroupNameTooLong=資料夾名稱或路徑太長。
@@ -211,24 +222,34 @@ ReadyMemoGroup=「開始」功能表資料夾:
 ReadyMemoTasks=附加工作:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=正在下載額外檔案...
+DownloadingLabel2=正在下載額外檔案...
 ButtonStopDownload=停止下載 (&S)
 StopDownload=您確定要停止下載嗎？
 ErrorDownloadAborted=已停止下載
 ErrorDownloadFailed=下載失敗: %1 %2
 ErrorDownloadSizeFailed=取得檔案大小失敗: %1 %2
-ErrorFileHash1=檔案雜湊失敗: %1
-ErrorFileHash2=檔案雜湊無效: 必須為 %1，收到 %2
 ErrorProgress=進度無效: %1 之 %2
 ErrorFileSize=檔案大小無效: 必須為 %1，收到 %2
+
+; *** TExtractionWizardPage 嚮導頁面與 ExtractArchive
+ExtractingLabel=正在解壓檔...
+ButtonStopExtraction=停止解壓(&S)
+StopExtraction=您確定要停止解壓嗎？
+ErrorExtractionAborted=解壓已中止
+ErrorExtractionFailed=解壓失敗：%1
+
+; *** 壓縮檔解壓失敗詳情
+ArchiveIncorrectPassword=壓縮檔密碼不正確
+ArchiveIsCorrupted=壓縮檔已損壞
+ArchiveUnsupportedFormat=不支援的壓縮檔格式
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=準備安裝程式
 PreparingDesc=安裝程式準備將 [name] 安裝到您的電腦上。
 PreviousInstallNotCompleted=先前的安裝/ 解除安裝尚未完成，您必須重新啟動電腦以完成該安裝。%n%n在重新啟動電腦之後，請再執行這個程式來安裝 [name]。
 CannotContinue=安裝程式無法繼續。請按 「取消」 離開。
-ApplicationsFound=下面的應用程式正在使用安裝程式所需要更新的檔案。建議您允許安裝程式自動關閉這些應用程式。
-ApplicationsFound2=下面的應用程式正在使用安裝程式所需要更新的檔案。建議您允許安裝程式自動關閉這些應用程式。當安裝過程結束後，本安裝程式將會嘗試重新開啟該應用程式。
+ApplicationsFound=下麵的應用程式正在使用安裝程式所需要更新的檔案。建議您允許安裝程式自動關閉這些應用程式。
+ApplicationsFound2=下麵的應用程式正在使用安裝程式所需要更新的檔案。建議您允許安裝程式自動關閉這些應用程式。當安裝過程結束後，本安裝程式將會嘗試重新開啟該應用程式。
 CloseApplications=關閉應用程式 (&A)
 DontCloseApplications=不要關閉應用程式 (&D)
 ErrorCloseApplications=安裝程式無法自動關閉所有應用程式。建議您在繼續前先關閉所有應用程式使用的檔案。
@@ -266,11 +287,15 @@ AbortRetryIgnoreSelectAction=選取動作
 AbortRetryIgnoreRetry=請再試一次 (&T)
 AbortRetryIgnoreIgnore=略過錯誤並繼續 (&I)
 AbortRetryIgnoreCancel=取消安裝
+RetryCancelSelectAction=選擇操作
+RetryCancelRetry=重試(&T)
+RetryCancelCancel=取消(&C)
 
 ; *** Installation status messages
 StatusClosingApplications=正在關閉應用程式...
 StatusCreateDirs=正在建立資料夾...
 StatusExtractFiles=正在解壓縮檔案...
+StatusDownloadFiles=正在下载文件...
 StatusCreateIcons=正在建立程式集圖示...
 StatusCreateIniEntries=寫入 INI 檔案的項目...
 StatusCreateRegistryEntries=正在更新系統登錄...
@@ -300,6 +325,14 @@ FileAbortRetryIgnoreSkipNotRecommended=略過這個檔案 (不建議) (&S)
 FileAbortRetryIgnoreIgnoreNotRecommended=略過錯誤並繼續 (不建議) (&I)
 SourceDoesntExist=來源檔案“%1”不存在。
 SourceIsCorrupted=來源檔案已經損毀。
+SourceVerificationFailed=源文件验证失败: %1
+VerificationSignatureDoesntExist=簽名檔“%1”不存在
+VerificationSignatureInvalid=簽名檔“%1”無效
+VerificationKeyNotFound=簽名檔“%1”使用了未知金鑰
+VerificationFileNameIncorrect=檔案名不正確
+VerificationFileTagIncorrect=檔標籤不正確
+VerificationFileSizeIncorrect=檔大小不正確
+VerificationFileHashIncorrect=檔雜湊值不正確
 ExistingFileReadOnly2=無法取代現有檔案，因為檔案已標示為唯讀。
 ExistingFileReadOnlyRetry=移除唯讀屬性並重試 (&R)
 ExistingFileReadOnlyKeepExisting=保留現有檔案 (&K)
@@ -318,6 +351,8 @@ ErrorChangingAttr=在變更檔案屬性時發生錯誤:
 ErrorCreatingTemp=在目的資料夾中建立檔案時發生錯誤:
 ErrorReadingSource=讀取原始檔案時發生錯誤:
 ErrorCopying=複製檔案時發生錯誤:
+ErrorDownloading=下載檔案時出錯：
+ErrorExtracting=解壓壓縮檔時出錯：	
 ErrorReplacingExistingFile=取代檔案時發生錯誤:
 ErrorRestartReplace=重新啟動電腦後取代檔案失敗:
 ErrorRenamingTemp=在目的資料夾變更檔案名稱時發生錯誤:
@@ -350,7 +385,7 @@ OnlyAdminCanUninstall=這個程式要具備系統管理員權限的使用者方�
 UninstallStatusLabel=正在從您的電腦移除 %1 中，請稍候...
 UninstalledAll=%1 已經成功從您的電腦中移除。
 UninstalledMost=%1 解除安裝完成。%n%n某些檔案及元件無法移除，您可以自行刪除這些檔案。
-UninstalledAndNeedsRestart=要完成 %1 的解除安裝程序，您必須重新啟動電腦。%n%n您想要現在重新啟動電腦嗎？
+UninstalledAndNeedsRestart=要完成 %1 的解除安裝程式，您必須重新啟動電腦。%n%n您想要現在重新啟動電腦嗎？
 UninstallDataCorrupted=檔案“%1”已經損毀，無法解除安裝
 
 ; *** Uninstallation phase messages
