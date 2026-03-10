@@ -148,7 +148,7 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
                 StartTime = sub.StartTime,
                 EndTime = sub.EndTime,
                 // Deep neon glow: High blur, matching color, slightly transparent
-                Text = "{\\an5\\bord5\\blur8\\shad0\\1c" + chosenColor + "\\3c" + chosenColor + "\\alpha&H60&" +
+                Text = "{\\bord5\\blur8\\shad0\\1c" + chosenColor + "\\3c" + chosenColor + "\\alpha&H60&" +
                        GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true) // CleanText removes existing tags
             };
 
@@ -158,7 +158,7 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
                 StartTime = sub.StartTime,
                 EndTime = sub.EndTime,
                 // Sharp white core with a thin neon border
-                Text = "{\\an5\\bord2\\blur0.5\\shad0\\1c&HFFFFFF&\\3c" + chosenColor +
+                Text = "{\\bord2\\blur0.5\\shad0\\1c&HFFFFFF&\\3c" + chosenColor +
                        GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true)
             };
 
