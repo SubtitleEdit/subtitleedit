@@ -276,6 +276,7 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectSnow;
     public string Description => Se.Language.Assa.AdvancedEffectSnowDescription;
+    public int FlakeCount { get; set; } = 200;
 
     public override string ToString() => Name;
 
@@ -293,9 +294,7 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        int flakeCount = 250;
-
-        for (int i = 0; i < flakeCount; i++)
+        for (int i = 0; i < FlakeCount; i++)
         {
             // INITIAL DELAY: This creates the "start slow" effect.
             // Higher index flakes start much later in the video.
@@ -461,6 +460,8 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectStarfield;
     public string Description => Se.Language.Assa.AdvancedEffectStarfieldDescription;
+    public int StarCount { get; set; } = 650;
+    public double SpeedMultiplier { get; set; } = 1.0;
 
     public override string ToString() => Name;
 
@@ -480,13 +481,11 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        int starCount = 650;
-
-        for (int i = 0; i < starCount; i++)
+        for (int i = 0; i < StarCount; i++)
         {
             double startMs = rng.NextDouble() * totalMs;
             // INCREASED LIFESPAN: Ensures they stay on screen longer
-            int life = rng.Next(5000, 19000);
+            int life = (int)(rng.Next(5000, 19000) / SpeedMultiplier);
 
             var star = new SubtitleLineViewModel();
             star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(startMs));

@@ -144,6 +144,10 @@ public class LanguageAssa
     public string AdvancedEffectOldMovieDescription { get; set; }
     public string AdvancedEffectNeonBurst { get; set; }
     public string AdvancedEffectNeonBurstDescription { get; set; }
+    public string AdvancedEffectSettings { get; set; }
+    public string AdvancedEffectSnowFlakeCount { get; set; }
+    public string AdvancedEffectStarfieldStarCount { get; set; }
+    public string AdvancedEffectStarfieldSpeed { get; set; }
 
     public LanguageAssa()
     {
@@ -290,5 +294,9 @@ public class LanguageAssa
         AdvancedEffectOldMovieDescription = "Simulates a vintage 35mm film projector with noise, vignette, and scratches";
         AdvancedEffectNeonBurst = "Neon burst (centered)";
         AdvancedEffectNeonBurstDescription = "High-energy 'Shorts' style captions with neon bloom glow and scale-in 'pop' animation";
+        AdvancedEffectSettings = "Settings";
+        AdvancedEffectSnowFlakeCount = "Flake count";
+        AdvancedEffectStarfieldStarCount = "Star count";
+        AdvancedEffectStarfieldSpeed = "Speed";
     }
 }
