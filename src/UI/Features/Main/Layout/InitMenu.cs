@@ -497,11 +497,6 @@ public static class InitMenu
         {
             new MenuItem
             {
-                Header = Se.Language.Video.GenerateBlankVideoDotDotDot,
-                Command = vm.VideoGenerateBlankCommand,
-            },
-            new MenuItem
-            {
                 Header = Se.Language.Video.ReEncodeVideoForBetterSubtitlingDotDotDot,
                 Command = vm.VideoReEncodeCommand,
             },
@@ -587,6 +582,11 @@ public static class InitMenu
                 {
                     Header = l.GenerateTransparent,
                     Command = vm.ShowVideoTransparentSubtitlesCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.GenerateBlankVideoDotDotDot,
+                    Command = vm.VideoGenerateBlankCommand,
                 },
                 new Separator(),
                 new MenuItem

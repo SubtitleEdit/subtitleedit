@@ -1655,6 +1655,7 @@ public static class UiUtil
             DataContext = viewModel,
             Minimum = min,
             Maximum = max,
+            Width = width,
             Increment = 1,
             FormatString = "F0",
             Foreground = GetTextColor(),

@@ -655,6 +655,14 @@ public partial class MainViewModel :
                         var _ = await RequireFfmpegOk();
                     });
                 }
+                else
+                {
+                    var baseFileName = Path.Combine(AppContext.BaseDirectory, "libmpv-2.dll");
+                    if (File.Exists(baseFileName))
+                    {
+                        Se.Settings.General.LibMpvPath = baseFileName;
+                    }
+                }
             }
         }
     }
@@ -3194,6 +3202,11 @@ public partial class MainViewModel :
         if (!result.OkPressed)
         {
             return;
+        }
+        
+        if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
+        {
+            await VideoOpenFile(result.VideoFileName);
         }
     }
 
