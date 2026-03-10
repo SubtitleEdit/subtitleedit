@@ -1,4 +1,4 @@
-﻿; *** Inno Setup version 6.1.0+ Croatian messages ***
+; *** Inno Setup version 6.5.0+ Croatian messages ***
 ; Translated by: Milo Ivir (mail@milotype.de)
 ; Based on translation by Elvis Gambiraža (el.gambo@gmail.com)
 ; Based on translation by Krunoslav Kanjuh (krunoslav.kanjuh@zg.t-com.hr)
@@ -82,7 +82,7 @@ ErrorTooManyFilesInDir=Datoteku nije moguće stvoriti u mapi "%1", jer mapa sadr
 
 ; *** Setup common messages
 ExitSetupTitle=Prekini instalaciju
-ExitSetupMessage=Instalacija nije završena. Ako sad izađeš, program neće biti instaliran.%n%nInstalaciju možeš pokrenuti kasnije, ukoliko je želiš dovršiti.%n%nPrekinuti instalaciju?
+ExitSetupMessage=Instalacija nije završena. Ako sad izađeš, program se neće instalirati.%n%nInstalaciju možeš pokrenuti kasnije, ukoliko je želiš dovršiti.%n%nŽeliš prekinuti instalaciju?
 AboutSetupMenuItem=&O instalaciji …
 AboutSetupTitle=O instalaciji
 AboutSetupMessage=%1 verzija %2%n%3%n%n%1 web-stranica:%n%4
@@ -214,16 +214,26 @@ ReadyMemoGroup=Mapa u "Start" izborniku:
 ReadyMemoTasks=Dodatni zadaci:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Preuzimanje dodatnih datoteka …
+DownloadingLabel2=Preuzimanje datoteka …
 ButtonStopDownload=&Prekini preuzimanje
 StopDownload=Stvarno želiš prekinuti preuzimanje?
 ErrorDownloadAborted=Preuzimanje je prekinuto
 ErrorDownloadFailed=Neuspjelo preuzimanje: %1 %2
 ErrorDownloadSizeFailed=Neuspjelo dohvaćanje veličine: %1 %2
-ErrorFileHash1=Izračunavanje kontrolnog zbroja datoteke neuspjelo: %1
-ErrorFileHash2=Neispravan kontrolni zbroj datoteke: očekivano %1, pronađeno %2
 ErrorProgress=Neispravan napredak: %1 od %2
 ErrorFileSize=Neispravna veličina datoteke: očekivano %1, pronađeno %2
+
+; *** TExtractionWizardPage wizard page and Extract7ZipArchive
+ExtractingLabel=Raspakiravanje datoteka …
+ButtonStopExtraction=&Prekini raspakiravanje
+StopExtraction=Stvarno želiš prekinuti raspakiravanje?
+ErrorExtractionAborted=Raspakiravanje prekinuto
+ErrorExtractionFailed=Raspakiravanje neuspjelo: %1
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=Lozinka je neispravna
+ArchiveIsCorrupted=Arhiva je pokvarena
+ArchiveUnsupportedFormat=Format arhive nije podržan
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Priprema za instaliranje
@@ -269,11 +279,15 @@ AbortRetryIgnoreSelectAction=Odaberi radnju
 AbortRetryIgnoreRetry=&Pokušaj ponovo
 AbortRetryIgnoreIgnore=&Zanemari grešku i nastavi
 AbortRetryIgnoreCancel=Prekini s instaliranjem
+RetryCancelSelectAction=Odaberi radnju
+RetryCancelRetry=&Pokušaj ponovo
+RetryCancelCancel=Odustani
 
 ; *** Installation status messages
 StatusClosingApplications=Zatvaranje programa …
 StatusCreateDirs=Stvaranje mapa …
-StatusExtractFiles=Izdvajanje datoteka …
+StatusExtractFiles=Raspakiravanje datoteka …
+StatusDownloadFiles=Preuzimanje datoteka …
 StatusCreateIcons=Stvaranje prečaca …
 StatusCreateIniEntries=Stvaranje INI unosa …
 StatusCreateRegistryEntries=Stvaranje unosa u registar …
@@ -303,10 +317,18 @@ FileAbortRetryIgnoreSkipNotRecommended=&Preskoči ovu datoteku (ne preporučuje 
 FileAbortRetryIgnoreIgnoreNotRecommended=&Zanemari grešku i nastavi (ne preporučuje se)
 SourceIsCorrupted=Izvorna datoteka je oštećena
 SourceDoesntExist=Izvorna datoteka "%1" ne postoji
+SourceVerificationFailed=Provjera izvorne datoteke nije uspjela: %1
+VerificationSignatureDoesntExist=Datoteka potpisa "%1" ne postoji
+VerificationSignatureInvalid=Datoteka potpisa "%1" nije valjana
+VerificationKeyNotFound=Datoteka potpisa "%1" koristi nepoznati ključ
+VerificationFileNameIncorrect=Ime datoteke je neispravno
+VerificationFileTagIncorrect=Oznaka datoteke je neispravna
+VerificationFileSizeIncorrect=Veličina datoteke je neispravno
+VerificationFileHashIncorrect=Kodiranje datoteke je neispravno
 ExistingFileReadOnly2=Postojeću datoteku nije bilo moguće zamijeniti, jer je označena sa "samo-za-čitanje".
 ExistingFileReadOnlyRetry=&Ukloni svojstvo "samo-za-čitanje" i pokušaj ponovo
 ExistingFileReadOnlyKeepExisting=&Zadrži postojeću datoteku
-ErrorReadingExistingDest=Pojavila se greška prilikom pokušaja čitanja postojeće datoteke:
+ErrorReadingExistingDest=Greška prilikom pokušaja čitanja postojeće datoteke:
 FileExistsSelectAction=Odaberi radnju
 FileExists2=Datoteka već postoji.
 FileExistsOverwriteExisting=&Prepiši postojeću datoteku
@@ -317,13 +339,15 @@ ExistingFileNewer2=Postojeća datoteka je novija od one koja se pokušava instal
 ExistingFileNewerOverwriteExisting=&Prepiši postojeću datoteku
 ExistingFileNewerKeepExisting=&Zadrži postojeću datoteku (preporučeno)
 ExistingFileNewerOverwriteOrKeepAll=&Uradi to i u narednim slučajevima
-ErrorChangingAttr=Pojavila se greška prilikom pokušaja promjene svojstva postojeće datoteke:
-ErrorCreatingTemp=Pojavila se greška prilikom pokušaja stvaranja datoteke u odredišnoj mapi:
-ErrorReadingSource=Pojavila se greška prilikom pokušaja čitanja izvorišne datoteke:
-ErrorCopying=Pojavila se greška prilikom pokušaja kopiranja datoteke:
-ErrorReplacingExistingFile=Pojavila se greška prilikom pokušaja zamijenjivanja datoteke:
+ErrorChangingAttr=Greška prilikom pokušaja promjene svojstva postojeće datoteke:
+ErrorCreatingTemp=Greška prilikom pokušaja stvaranja datoteke u odredišnoj mapi:
+ErrorReadingSource=Greška prilikom pokušaja čitanja izvorišne datoteke:
+ErrorCopying=Greška prilikom pokušaja kopiranja datoteke:
+ErrorDownloading=Greška prilikom preuzimanja datoteke:
+ErrorExtracting=Greška prilikom pokušaja raspakiravanja arhive:
+ErrorReplacingExistingFile=Greška prilikom pokušaja zamijenjivanja datoteke:
 ErrorRestartReplace=Zamijenjivanje nakon ponovnog pokretanja nije uspjelo:
-ErrorRenamingTemp=Pojavila se greška prilikom pokušaja preimenovanja datoteke u odredišnoj mapi:
+ErrorRenamingTemp=Greška prilikom pokušaja preimenovanja datoteke u odredišnoj mapi:
 ErrorRegisterServer=Nije moguće registrirati DLL/OCX: %1
 ErrorRegSvr32Failed=Greška u RegSvr32. Izlazni kod %1
 ErrorRegisterTypeLib=Nije moguće registrirati biblioteku vrsta: %1
@@ -339,7 +363,7 @@ UninstallDisplayNameMarkAllUsers=Svi korisnici
 UninstallDisplayNameMarkCurrentUser=Trenutačni korisnik
 
 ; *** Post-installation errors
-ErrorOpeningReadme=Pojavila se greška prilikom pokušaja otvaranja README datoteke.
+ErrorOpeningReadme=Greška prilikom pokušaja otvaranja README datoteke.
 ErrorRestartingComputer=Instalacija nije mogla ponovo pokrenuti računalo. Učini to ručno.
 
 ; *** Uninstaller messages
@@ -384,4 +408,4 @@ AssocFileExtension=&Poveži program %1 s datotečnim nastavkom %2
 AssocingFileExtension=Povezivanje programa %1 s datotečnim nastavkom %2 …
 AutoStartProgramGroupDescription=Pokretanje:
 AutoStartProgram=Automatski pokreni %1
-AddonHostProgramNotFound=%1 nije nađen u odabranoj mapi.%n%nŽeliš li svejedno nastaviti?
+AddonHostProgramNotFound=%1 nije pronađen u odabranoj mapi.%n%nŽeliš li svejedno nastaviti?
