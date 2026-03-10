@@ -95,7 +95,7 @@ public class SeAppearance
         ToolbarShowSaveAs = false;
         ToolbarShowFind = true;
         ToolbarShowReplace = true;
-        ToolbarShowFixCommonErrors = true;
+        ToolbarShowFixCommonErrors = false;
         ToolbarShowSpellCheck = true;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;

@@ -10,6 +10,7 @@ public class LanguageMainToolbar
     public string FindHint { get; set; }
     public string ReplaceHint { get; set; }
     public string SpellCheckHint { get; set; }
+    public string FixCommonErrorsHint { get; set; }
     public string SettingsHint { get; set; }
     public string LayoutHint { get; set; }
     public string HelpHint { get; set; }
@@ -31,6 +32,7 @@ public class LanguageMainToolbar
         FindHint = "Find text in subtitles {0}";
         ReplaceHint = "Find and replace text {0}";
         SpellCheckHint = "Check subtitles for spelling errors {0}";
+        FixCommonErrorsHint = "Fix common subtitle errors {0}";
         SettingsHint = "Adjust program settings and preferences {0}";
         LayoutHint = "Change toolbar and panel layout {0}";
         HelpHint = "Open help website {0}";

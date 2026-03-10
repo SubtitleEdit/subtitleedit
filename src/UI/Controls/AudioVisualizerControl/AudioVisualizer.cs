@@ -381,11 +381,6 @@ public class AudioVisualizer : Control
         LostFocus += (sender, e) => { InvalidateVisual(); };
     }
 
-    public void UpdateTheme()
-    {
-        _paintTimeText = UiUtil.GetTextColor();
-    }
-
     private void OnKeyUp(object? sender, KeyEventArgs e)
     {
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -1465,7 +1460,6 @@ public class AudioVisualizer : Control
         var imageHeight = renderCtx.Height;
 
         var pen = _paintTimeLine;
-        var textBrush = _paintTimeText;
 
         while (position < renderCtx.Width)
         {
@@ -1482,9 +1476,9 @@ public class AudioVisualizer : Control
                     timeText,
                     CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight,
-                    Typeface.Default, // Use default typeface instead of custom one
-                    12, // Increased font size for better visibility
-                    textBrush);
+                    _typeface,
+                    _fontSize - 1,
+                    _paintText);
 
                 // Try different Y positions - adjust these based on your control height
                 var textY = Math.Max(0, imageHeight - formattedText.Height - 2); // Ensure text is within bounds
@@ -1506,7 +1500,6 @@ public class AudioVisualizer : Control
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
-    private IBrush _paintTimeText = UiUtil.GetTextColor();
 
     private static string GetDisplayTime(double seconds)
     {
@@ -2638,7 +2631,7 @@ public class AudioVisualizer : Control
         _fancyWaveformPenCache.Clear();
         _fancyWaveformGlowPenCache.Clear();
         _fancyWaveformGradientCache.Clear();
-        
+
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
         _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
@@ -2650,5 +2643,10 @@ public class AudioVisualizer : Control
         _isShiftDown = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         _isAltDown = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         _isMetaDown = e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+    }
+
+    internal void UpdateTheme()
+    {
+        //_paintTimeText = UiUtil.GetTextColor();
     }
 }
