@@ -31,13 +31,6 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     [ObservableProperty] private bool _adjustSelectedLines;
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
     [ObservableProperty] private string _selectionInfo;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsAnySettingsVisible))] private bool _isSnowSettingsVisible;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsAnySettingsVisible))] private bool _isStarfieldSettingsVisible;
-    [ObservableProperty] private int _snowFlakeCount = 200;
-    [ObservableProperty] private int _starfieldStarCount = 650;
-    [ObservableProperty] private decimal _starfieldSpeed = 1.0m;
-
-    public bool IsAnySettingsVisible => IsSnowSettingsVisible || IsStarfieldSettingsVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -324,37 +317,5 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
         var selected = Paragraphs[SelectedParagraphIndex];
         VideoPlayerControl.Position = selected.Subtitle.StartTime.TotalSeconds;
-    }
-
-    partial void OnSelectedOverrideTagChanged(IAdvancedEffectDisplay? value)
-    {
-        IsSnowSettingsVisible = value is AdvancedEffectSnow;
-        IsStarfieldSettingsVisible = value is AdvancedEffectStarfield;
-
-        if (value is AdvancedEffectSnow snow)
-            SnowFlakeCount = snow.FlakeCount;
-        if (value is AdvancedEffectStarfield starfield)
-        {
-            StarfieldStarCount = starfield.StarCount;
-            StarfieldSpeed = (decimal)starfield.SpeedMultiplier;
-        }
-    }
-
-    partial void OnSnowFlakeCountChanged(int value)
-    {
-        if (SelectedOverrideTag is AdvancedEffectSnow snow)
-            snow.FlakeCount = value;
-    }
-
-    partial void OnStarfieldStarCountChanged(int value)
-    {
-        if (SelectedOverrideTag is AdvancedEffectStarfield starfield)
-            starfield.StarCount = value;
-    }
-
-    partial void OnStarfieldSpeedChanged(decimal value)
-    {
-        if (SelectedOverrideTag is AdvancedEffectStarfield starfield)
-            starfield.SpeedMultiplier = (double)value;
     }
 }

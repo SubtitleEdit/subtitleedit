@@ -36,7 +36,7 @@ public class AssaApplyAdvancedEffectWindow : Window
             {
                 Mode = BindingMode.TwoWay,
             },
-            ItemTemplate = new FuncDataTemplate<IAdvancedEffectDisplay>((_, _) =>
+            ItemTemplate = new FuncDataTemplate<IAdvancedEffectDisplay>((item, _) =>
             {
                 var panel = new StackPanel { Margin = new Thickness(4, 6, 4, 6), Spacing = 3 };
 
@@ -53,6 +53,28 @@ public class AssaApplyAdvancedEffectWindow : Window
 
                 panel.Children.Add(nameBlock);
                 panel.Children.Add(descBlock);
+
+                if (item is AdvancedEffectSnow snowItem)
+                {
+                    var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectSnowFlakeCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(UiUtil.MakeNumericUpDownInt(10, 2000, 200, 130, snowItem, nameof(AdvancedEffectSnow.FlakeCount)));
+                    panel.Children.Add(row);
+                }
+                else if (item is AdvancedEffectStarfield starfieldItem)
+                {
+                    var starCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    starCountRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldStarCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 2000, 650, 130, starfieldItem, nameof(AdvancedEffectStarfield.StarCount)));
+                    var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+                    speedRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldSpeed, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 5.0m, 130, starfieldItem, nameof(AdvancedEffectStarfield.SpeedMultiplier)));
+                    var settingsStack = new StackPanel { Spacing = 4 };
+                    settingsStack.Children.Add(starCountRow);
+                    settingsStack.Children.Add(speedRow);
+                    panel.Children.Add(settingsStack);
+                }
+
                 return panel;
             }),
         };
@@ -83,42 +105,14 @@ public class AssaApplyAdvancedEffectWindow : Window
             },
         };
 
-        // -- Per-effect settings panel --
-        var snowSettingsPanel = new StackPanel { Spacing = 4 };
-        snowSettingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsSnowSettingsVisible)));
-        var snowFlakeCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        snowFlakeCountRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectSnowFlakeCount));
-        snowFlakeCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(10, 2000, 200, 80, vm, nameof(vm.SnowFlakeCount)));
-        snowSettingsPanel.Children.Add(snowFlakeCountRow);
-
-        var starfieldSettingsPanel = new StackPanel { Spacing = 4 };
-        starfieldSettingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsStarfieldSettingsVisible)));
-        var starCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        starCountRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectStarfieldStarCount));
-        starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 2000, 650, 80, vm, nameof(vm.StarfieldStarCount)));
-        var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        speedRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectStarfieldSpeed));
-        speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 5.0m, 80, vm, nameof(vm.StarfieldSpeed)));
-        starfieldSettingsPanel.Children.Add(starCountRow);
-        starfieldSettingsPanel.Children.Add(speedRow);
-
-        var settingsPanel = new StackPanel
-        {
-            Spacing = 4,
-            Margin = new Thickness(0, 8, 0, 0),
-            Children = { UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectSettings).WithBold(), snowSettingsPanel, starfieldSettingsPanel },
-        };
-        settingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAnySettingsVisible)));
-
         var leftGrid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
             RowSpacing = 8,
         };
         leftGrid.Add(chooseLabel, 0);
         leftGrid.Add(UiUtil.MakeBorderForControlNoPadding(effectListBox), 1);
         leftGrid.Add(scopePanel, 2);
-        leftGrid.Add(settingsPanel, 3);
 
         // ── Right panel (video + subtitle navigation) ─────────────────────────
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();

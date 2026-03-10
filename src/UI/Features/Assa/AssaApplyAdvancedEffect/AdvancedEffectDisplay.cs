@@ -461,7 +461,7 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
     public string Name => Se.Language.Assa.AdvancedEffectStarfield;
     public string Description => Se.Language.Assa.AdvancedEffectStarfieldDescription;
     public int StarCount { get; set; } = 650;
-    public double SpeedMultiplier { get; set; } = 1.0;
+    public decimal SpeedMultiplier { get; set; } = 1.0m;
 
     public override string ToString() => Name;
 
@@ -485,7 +485,7 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
         {
             double startMs = rng.NextDouble() * totalMs;
             // INCREASED LIFESPAN: Ensures they stay on screen longer
-            int life = (int)(rng.Next(5000, 19000) / SpeedMultiplier);
+            int life = (int)(rng.Next(5000, 19000) / (double)SpeedMultiplier);
 
             var star = new SubtitleLineViewModel();
             star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(startMs));
