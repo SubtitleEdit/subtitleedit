@@ -83,14 +83,42 @@ public class AssaApplyAdvancedEffectWindow : Window
             },
         };
 
+        // -- Per-effect settings panel --
+        var snowSettingsPanel = new StackPanel { Spacing = 4 };
+        snowSettingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsSnowSettingsVisible)));
+        var snowFlakeCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        snowFlakeCountRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectSnowFlakeCount));
+        snowFlakeCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(10, 2000, 200, 80, vm, nameof(vm.SnowFlakeCount)));
+        snowSettingsPanel.Children.Add(snowFlakeCountRow);
+
+        var starfieldSettingsPanel = new StackPanel { Spacing = 4 };
+        starfieldSettingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsStarfieldSettingsVisible)));
+        var starCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        starCountRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectStarfieldStarCount));
+        starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 2000, 650, 80, vm, nameof(vm.StarfieldStarCount)));
+        var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        speedRow.Children.Add(UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectStarfieldSpeed));
+        speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 5.0m, 80, vm, nameof(vm.StarfieldSpeed)));
+        starfieldSettingsPanel.Children.Add(starCountRow);
+        starfieldSettingsPanel.Children.Add(speedRow);
+
+        var settingsPanel = new StackPanel
+        {
+            Spacing = 4,
+            Margin = new Thickness(0, 8, 0, 0),
+            Children = { UiUtil.MakeLabel(Se.Language.Assa.AdvancedEffectSettings).WithBold(), snowSettingsPanel, starfieldSettingsPanel },
+        };
+        settingsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAnySettingsVisible)));
+
         var leftGrid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
             RowSpacing = 8,
         };
         leftGrid.Add(chooseLabel, 0);
         leftGrid.Add(UiUtil.MakeBorderForControlNoPadding(effectListBox), 1);
         leftGrid.Add(scopePanel, 2);
+        leftGrid.Add(settingsPanel, 3);
 
         // ── Right panel (video + subtitle navigation) ─────────────────────────
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
