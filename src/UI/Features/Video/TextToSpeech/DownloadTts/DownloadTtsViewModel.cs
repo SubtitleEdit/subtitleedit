@@ -208,6 +208,12 @@ public partial class DownloadTtsViewModel : ObservableObject
     private void FixSymbolicLink(string path)
     {
         var folder = Path.GetDirectoryName(path);
+        if (string.IsNullOrEmpty(folder))
+        {
+            Se.LogError("FixSymbolicLink: Failed to get folder from path: " + path);
+            return;
+        }
+
         var sourcePath = Path.Combine(folder, "libpiper_phonemize.so.1.2.0");
         var linkPath = Path.Combine(folder, "libpiper_phonemize.so.1");
 
