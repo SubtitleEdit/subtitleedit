@@ -1,9 +1,6 @@
 ﻿;* Subtitle Edit - installer localization script 
 
 ; English
-[Messages]
-SetupAppTitle=Setup - Subtitle Edit
-SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 en.sm_com_Changelog=Subtitle Edit's Changelog
 en.tsk_AllUsers=For all users
@@ -16,9 +13,6 @@ en.types_custom=Custom installation
 en.types_default=Default installation
 
 ; Arabic
-[Messages]
-ar.SetupAppTitle=Setup - Subtitle Edit
-ar.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ar.sm_com_Changelog=Subtitle Edit's Changelog
 ar.tsk_AllUsers=For all users
@@ -31,9 +25,6 @@ ar.types_custom=Custom installation
 ar.types_default=Default installation
 
 ; Bulgarian
-[Messages]
-bg.SetupAppTitle=Setup - Subtitle Edit
-bg.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 bg.sm_com_Changelog=Subtitle Edit's Changelog
 bg.tsk_AllUsers=For all users
@@ -46,9 +37,6 @@ bg.types_custom=Custom installation
 bg.types_default=Default installation
 
 ; Catalan
-[Messages]
-ca.SetupAppTitle=Setup - Subtitle Edit
-ca.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ca.sm_com_Changelog=Registre de canvis de Subtitle Edit
 ca.tsk_AllUsers=Per a tots els usuaris
@@ -61,9 +49,6 @@ ca.types_custom=Instal·lació personalitzada
 ca.types_default=Instal·lació predeterminada
 
 ; Czech
-[Messages]
-cs.SetupAppTitle=Setup - Subtitle Edit
-cs.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 cs.sm_com_Changelog=Seznam změn Subtitle Edit
 cs.tsk_AllUsers=Pro všechny uživatele
@@ -76,9 +61,6 @@ cs.types_custom=Vlastní instalace
 cs.types_default=Výchozí instalace
 
 ; Danish
-[Messages]
-da.SetupAppTitle=Installation af Subtitle Edit
-da.SetupWindowTitle=Installation af Subtitle Edit {#app_ver_display}
 [CustomMessages]
 da.sm_com_Changelog=Subtitle Edit ændringslog
 da.tsk_AllUsers=For alle brugere
@@ -91,9 +73,6 @@ da.types_custom=Brugerdefineret installation
 da.types_default=Default installation
 
 ; Deutsch
-[Messages]
-de.SetupAppTitle=Setup - Subtitle Edit
-de.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 de.sm_com_Changelog=Subtitle Edit Änderungen
 de.tsk_AllUsers=Für alle Benutzer
@@ -106,9 +85,6 @@ de.types_custom=Benutzerdefinierte Installation
 de.types_default=Standardinstallation
 
 ; Greek
-[Messages]
-el.SetupAppTitle=Setup - Subtitle Edit
-el.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 el.sm_com_Changelog=Ιστορικό του Subtitle Edit
 el.tsk_AllUsers=Για όλους τους χρήστες
@@ -121,9 +97,6 @@ el.types_custom=Προσαρμοσμένη εγκατάσταση
 el.types_default=Προεπιλεγμένη εγκατάσταση
 
 ; Spanish
-[Messages]
-es.SetupAppTitle=Setup - Subtitle Edit
-es.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 es.sm_com_Changelog=Historial de Subtitle Edit
 es.tsk_AllUsers=Para todos los usuarios
@@ -137,9 +110,6 @@ es.types_default=Instalacion predefinida
 
 
 ; Persian
-[Messages]
-fa.SetupAppTitle=Setup - Subtitle Edit
-fa.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 fa.sm_com_Changelog=تغییرات در نسخه جدید
 fa.tsk_AllUsers=برای تمامی کاربران سیستم
@@ -152,9 +122,6 @@ fa.types_custom=نصب دستی
 fa.types_default=نصب پیشفرض
 
 ; Finnish
-[Messages]
-fi.SetupAppTitle=Setup - Subtitle Edit
-fi.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 fi.sm_com_Changelog=Subtitle Edit:n muutosloki
 fi.tsk_AllUsers=Kaikille käyttäjille
@@ -167,9 +134,6 @@ fi.types_custom=Mukautettu asennus
 fi.types_default=Oletusasennus
 
 ; French
-[Messages]
-fr.SetupAppTitle=Setup - Subtitle Edit
-fr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 fr.sm_com_Changelog=Journal des modifications de Subtitle Edit
 fr.tsk_AllUsers=Pour tous les utilisateurs
@@ -182,9 +146,6 @@ fr.types_custom=Installation personnalisée
 fr.types_default=Installation par défaut
 
 ; Croatian
-[Messages]
-hr.SetupAppTitle=Setup - Subtitle Edit
-hr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 hr.sm_com_Changelog=Subtitle Edit's Changelog
 hr.tsk_AllUsers=For all users
@@ -197,9 +158,6 @@ hr.types_custom=Custom installation
 hr.types_default=Default installation
 
 ; Hungarian
-[Messages]
-hu.SetupAppTitle=Setup - Subtitle Edit
-hu.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 hu.sm_com_Changelog=Subtitle Edit's változásnapló
 hu.tsk_AllUsers=Az összes felhasználó számára
@@ -212,9 +170,6 @@ hu.types_custom=Custom installation
 hu.types_default=Default installation
 
 ; Italian
-[Messages]
-it.SetupAppTitle=Installazione di Subtitle Edit
-it.SetupWindowTitle=Installazione di Subtitle Edit {#app_ver_display}
 [CustomMessages]
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
 it.tsk_AllUsers=Per tutti gli utenti
@@ -229,9 +184,6 @@ it.tsk_CurrentUser=Solo per l'utente attuale
 it.tsk_AllUsers=Per tutti gli utenti
 
 ; Japanese
-[Messages]
-ja.SetupAppTitle=Setup - Subtitle Edit
-ja.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ja.sm_com_Changelog=Subtitle Editの変更履歴
 ja.tsk_AllUsers=すべてのユーザー
@@ -244,9 +196,6 @@ ja.types_custom=カスタムインストール
 ja.types_default=デフォルトインストール
 
 ; Korean
-[Messages]
-ko.SetupAppTitle=Setup - Subtitle Edit
-ko.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ko.sm_com_Changelog=Subtitle Edit 변경 내역
 ko.tsk_AllUsers=모든 사용자
@@ -259,9 +208,6 @@ ko.types_custom=사용자 지정 설치
 ko.types_default=기본 설치
 
 ; Dutch
-[Messages]
-nl.SetupAppTitle=Setup - Subtitle Edit
-nl.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 nl.sm_com_Changelog=Recente wijzigingen in Subtitle Edit
 nl.tsk_AllUsers=Voor alle gebruikers
@@ -274,9 +220,6 @@ nl.types_custom=Aangepaste installatie
 nl.types_default=Standaardinstallatie
 
 ; Polish
-[Messages]
-pl.SetupAppTitle=Setup - Subtitle Edit
-pl.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 pl.sm_com_Changelog=Lista zmian w Subtitle Edit
 pl.tsk_AllUsers=Dla wszystkich użytkowników
@@ -289,9 +232,6 @@ pl.types_custom=Instalacja użytkownika
 pl.types_default=Instalacja domyślna
 
 ; Portuguese (Portugal)
-[Messages]
-pt.SetupAppTitle=Setup - Subtitle Edit
-pt.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 pt.sm_com_Changelog=Registo de alterações do Subtitle Edit
 pt.tsk_AllUsers=Todos os utilizadores
@@ -304,9 +244,6 @@ pt.types_custom=Instalação personalizada
 pt.types_default=Instalação predefinida
 
 ; Portuguese (Brazil)
-[Messages]
-ptBR.SetupAppTitle=Setup - Subtitle Edit
-ptBR.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ptBR.sm_com_Changelog=Changelog do Subtitle Edit
 ptBR.tsk_AllUsers=Todos os usuários
@@ -319,9 +256,6 @@ ptBR.types_custom=Instalação personalizada
 ptBR.types_default=Instalação padrão
 
 ; Russian
-[Messages]
-ru.SetupAppTitle=Setup - Subtitle Edit
-ru.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 ru.sm_com_Changelog=Журнал изменений "Subtitle Edit"
 ru.tsk_AllUsers=Для всех пользователей
@@ -334,9 +268,6 @@ ru.types_custom=Выборочная установка
 ru.types_default=Обычная установка
 
 ; Slovenian
-[Messages]
-sl.SetupAppTitle=Setup - Subtitle Edit
-sl.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 sl.sm_com_Changelog=Subtitle Edit's Changelog
 sl.tsk_AllUsers=For all users
@@ -349,9 +280,6 @@ sl.types_custom=Custom installation
 sl.types_default=Default installation
 
 ; Serbian Cyrillic
-[Messages]
-srC.SetupAppTitle=Setup - Subtitle Edit
-srC.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 srC.sm_com_Changelog=Дневник измена
 srC.tsk_AllUsers=За све кориснике
@@ -364,9 +292,6 @@ srC.types_custom=Прилагођена инсталација
 srC.types_default=Подразумевана инсталација
 
 ; Serbian Latin
-[Messages]
-srL.SetupAppTitle=Setup - Subtitle Edit
-srL.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 srL.sm_com_Changelog=Dnevnik izmena
 srL.tsk_AllUsers=Za sve korisnike
@@ -379,9 +304,6 @@ srL.types_custom=Prilagođena instalacija
 srL.types_default=Podrazumevana instalacija
 
 ; Swedish
-[Messages]
-sv.SetupAppTitle=Setup - Subtitle Edit
-sv.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 sv.sm_com_Changelog=Subtitle Edit's Changelog
 sv.tsk_AllUsers=For all users
@@ -394,9 +316,6 @@ sv.types_custom=Custom installation
 sv.types_default=Default installation
 
 ; Thai
-[Messages]
-th.SetupAppTitle=Setup - Subtitle Edit
-th.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 th.sm_com_Changelog=Subtitle Edit's Changelog
 th.tsk_AllUsers=For all users
@@ -409,9 +328,6 @@ th.types_custom=Custom installation
 th.types_default=Default installation
 
 ; Turkish
-[Messages]
-tr.SetupAppTitle=Setup - Subtitle Edit
-tr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 tr.sm_com_Changelog=Subtitle Edit'in Değişiklik Günlüğü
 tr.tsk_AllUsers=Tüm kullanıcılar için
@@ -424,9 +340,6 @@ tr.types_custom=Özel kurulum
 tr.types_default=Varsayılan kurulum
 
 ; Ukrainian
-[Messages]
-uk.SetupAppTitle=Setup - Subtitle Edit
-uk.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 uk.sm_com_Changelog=Журнал версій Subtitle Edit
 uk.tsk_AllUsers=Для усіх користувачів
@@ -439,9 +352,6 @@ uk.types_custom=Налаштовуване встановлення
 uk.types_default=Типове встановлення
 
 ; Vietnamese
-[Messages]
-vi.SetupAppTitle=Setup - Subtitle Edit
-vi.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 vi.sm_com_Changelog=Subtitle Edit's Changelog
 vi.tsk_AllUsers=For all users
@@ -454,9 +364,6 @@ vi.types_custom=Custom installation
 vi.types_default=Default installation
 
 ; Chinese Simplified
-[Messages]
-zh.SetupAppTitle=安装程序 - Subtitle Edit
-zh.SetupWindowTitle=安装程序 - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 zh.sm_com_Changelog=Subtitle Edit 的更新日志
 zh.tsk_AllUsers=为所有用户安装
@@ -469,9 +376,6 @@ zh.types_custom=自定义安装
 zh.types_default=典型安装
 
 ; Chinese Traditional
-[Messages]
-zhTW.SetupAppTitle=Setup - Subtitle Edit
-zhTW.SetupWindowTitle=Setup - Subtitle Edit {#app_ver_display}
 [CustomMessages]
 zhTW.sm_com_Changelog=Subtitle Edit 更新日誌
 zhTW.tsk_AllUsers=所有使用者
