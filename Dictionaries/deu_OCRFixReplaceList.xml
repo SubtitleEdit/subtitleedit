@@ -7055,10 +7055,160 @@
   </PartialLines>
   <BeginLines />
   <EndLines />
-	<RegularExpressionsIfSpelledCorrectly>
-    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
+  <RegularExpressionsIfSpelledCorrectly>
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
     <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
-    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
-	</RegularExpressionsIfSpelledCorrectly>
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <!-- SlNG to SING -->
+  </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions />
+  <RegularExpressionsIfSpelledCorrectly>
+
+    <!-- ============================================================ -->
+    <!-- GERMAN CHARACTER CLASS (used throughout)                     -->
+    <!-- German lowercase: a-z + ä ö ü + ß                          -->
+    <!-- ß (Eszett) only appears lowercase — never in all-caps        -->
+    <!-- (all-caps uses SS: STRAßE → STRASSE)                        -->
+    <!-- Uppercase extra letters: Ä Ö Ü only                         -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- CRITICAL GERMAN-SPECIFIC NOTE: NOUN CAPITALISATION           -->
+    <!-- ALL German nouns are capitalised: der Mann, die Straße,      -->
+    <!-- das Haus. This means mid-sentence capitals are NORMAL and    -->
+    <!-- the missing-space rules must be especially conservative —    -->
+    <!-- only trigger on known short closed-class words (prepositions,-->
+    <!-- articles, conjunctions) that cannot begin a compound.        -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- I / l CONFUSION FIXES (visual OCR errors, language-agnostic) -->
+    <!-- ============================================================ -->
+
+    <!-- [GEAR GRlNDER] → [GEAR GRINDER] : l→I inside all-caps brackets -->
+    <RegEx find="\[([A-ZÄÖÜ ]*)l([A-ZÄÖÜ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+
+    <!-- [ABC] bracket with l mixed into caps -->
+    <RegEx find="\[([A-ZÄÖÜl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlNG → SING : l inside all-caps word -->
+    <RegEx find="\b([A-ZÄÖÜ]+)l([A-ZÄÖÜ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+
+    <!-- trailing l in all-caps word -->
+    <RegEx find="\b([A-ZÄÖÜ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+
+    <!-- leading l before all-caps word -->
+    <RegEx find="\bl([A-ZÄÖÜ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- chaIIenge → challenge : II→ll mid lowercase word -->
+    <RegEx find="\b([a-zäöüß]+)II([a-zäöüß]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- traIIer → trailer : I→l mid lowercase word -->
+    <RegEx find="\b([a-zäöüß]+)I([a-zäöüß]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- trailing I→l in capitalised word (e.g. BerlinI → Berlinl) -->
+    <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- I→l mid capitalised word (e.g. BerIin → Berlin) -->
+    <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]+)I([a-zäöüß]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- Ilesen → llesen : leading I→l before 3+ lowercase chars     -->
+    <!-- "Ich" starts with I but is only 3 chars — safe minimum is 4 -->
+    <RegEx find="\bI([a-zäöüß]{4,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- leading l→I before 2+ lowercase chars -->
+    <RegEx find="\bl([a-zäöüß]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- standalone l → I (Roman numerals, list markers) -->
+    <RegEx find="\bl\b" replaceWith="I" />
+
+    <!-- ============================================================ -->
+    <!-- GERMAN GENITIVE / APOSTROPHE                                 -->
+    <!-- Standard German genitive adds -s/-es with NO apostrophe:    -->
+    <!--   Berlins Straßen, des Mannes Hut                           -->
+    <!-- Apostrophe used ONLY for names ending in s/ß/x/z:           -->
+    <!--   Marx' Theorien, Hans' Buch, Voß' Gedichte                 -->
+    <!-- Common OCR error: English-style 's inserted wrongly          -->
+    <!-- ============================================================ -->
+
+    <!-- Marx's → Marx' : English-style OCR artefact on s/ß/x/z-ending names -->
+    <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]*[sßxzSXZ])['']s\b" spellCheck="$1" replaceWith="$1'" />
+
+    <!-- David's → Davids : remove apostrophe from normal genitive -->
+    <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
+
+    <!-- ============================================================ -->
+    <!-- GERMAN COMPOUND WORDS — NOTE                                 -->
+    <!-- German compounds are written as ONE word:                    -->
+    <!--   Eisenbahn, Fußballplatz, Krankenhaus, Donaudampfschiff     -->
+    <!-- Missing-space rules are therefore very high risk in German.  -->
+    <!-- ONLY trigger on short closed-class words (2-3 chars) that   -->
+    <!-- CANNOT start a German compound AND are followed by a capital.-->
+    <!-- All rules use spellCheck on the noun part as a safety gate.  -->
+    <!-- ============================================================ -->
+
+    <!-- imBerlin → im Berlin : contracted preposition (in + dem) -->
+    <RegEx find="\bim([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="im $1" />
+
+    <!-- amRhein → am Rhein : contracted preposition (an + dem) -->
+    <RegEx find="\bam([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="am $1" />
+
+    <!-- zumBahnhof → zum Bahnhof : contracted preposition (zu + dem) -->
+    <RegEx find="\bzum([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="zum $1" />
+
+    <!-- zurStation → zur Station : contracted preposition (zu + der) -->
+    <RegEx find="\bzur([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="zur $1" />
+
+    <!-- vonBerlin → von Berlin -->
+    <RegEx find="\bvon([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="von $1" />
+
+    <!-- mitDem → mit Dem / mitKarl → mit Karl -->
+    <RegEx find="\bmit([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="mit $1" />
+
+    <!-- beiMünchen → bei München -->
+    <RegEx find="\bbei([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="bei $1" />
+
+    <!-- nachBerlin → nach Berlin -->
+    <RegEx find="\bnach([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="nach $1" />
+
+    <!-- ausWien → aus Wien -->
+    <RegEx find="\baus([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="aus $1" />
+
+    <!-- seitKrieg → seit Krieg -->
+    <RegEx find="\bseit([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="seit $1" />
+
+    <!-- überBerlin → über Berlin -->
+    <RegEx find="\büber([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="über $1" />
+
+    <!-- unterDem → unter Dem -->
+    <RegEx find="\bunter([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="unter $1" />
+
+    <!-- gegenDen → gegen Den -->
+    <RegEx find="\bgegen([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="gegen $1" />
+
+    <!-- ohneIhn → ohne Ihn  -->
+    <RegEx find="\bohne([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="ohne $1" />
+
+    <!-- ============================================================ -->
+    <!-- ß / ss CONFUSION                                             -->
+    <!-- OCR sometimes confuses ß with B or 8 or renders ss as ß     -->
+    <!-- ============================================================ -->
+
+    <!-- daß → dass (post-1996 reform; spellcheck will reject old form) -->
+    <RegEx find="\bdaß\b" spellCheck="dass" replaceWith="dass" />
+
+    <!-- muß → muss / daß → dass : common pre-reform forms OCR'd from older texts -->
+    <RegEx find="\b([a-zäöü]+)ß([a-zäöü]+)\b" spellCheck="$1ss$2" replaceWith="$1ss$2" />
+
+    <!-- ============================================================ -->
+    <!-- RETAINED FROM ENGLISH (fire on proper nouns in German text)  -->
+    <!-- ============================================================ -->
+
+    <!-- ofLondon → of London -->
+    <RegEx find="\bof([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+    <!-- inBerlin → in Berlin -->
+    <RegEx find="\bin([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="in $1" />
+
+  </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
