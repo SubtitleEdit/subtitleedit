@@ -636,6 +636,7 @@ public class LanguageGeneral
     public string XSeconds { get; set; }
     public string XSubtitles { get; set; }
     public string Yes { get; set; }
+    public string CopyToClipboard { get; set; }
 
     public LanguageGeneral()
     {
@@ -1271,5 +1272,6 @@ public class LanguageGeneral
         XSeconds = "{0:0.0##} seconds";
         XSubtitles = "{0:#,###,##0} subtitles";
         Yes = "Yes";
+        CopyToClipboard = "Copy to clipboard";
     }
 }

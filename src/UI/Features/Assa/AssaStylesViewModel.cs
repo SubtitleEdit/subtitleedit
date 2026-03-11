@@ -54,6 +54,7 @@ public partial class AssaStylesViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private IApplyAssaStyles? _applyAssaStyles;
     private Subtitle _subtitle;
+    private string _subtitleFileName;
     private readonly System.Timers.Timer _timerUpdatePreview;
 
     public AssaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
@@ -73,6 +74,7 @@ public partial class AssaStylesViewModel : ObservableObject
 
         Header = string.Empty;
         _subtitle = new Subtitle();
+        _subtitleFileName = string.Empty;
 
         LoadSettings();
 
@@ -154,7 +156,32 @@ public partial class AssaStylesViewModel : ObservableObject
         UpdateUsages();
     }
 
-    private string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
+    [RelayCommand]
+    private async Task BrowseFontName()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaAttachmentsWindow, AssaAttachmentsViewModel>(Window, vm =>
+        {
+            vm.Initialize(_subtitle, new AdvancedSubStationAlpha(), _subtitleFileName);
+        });
+
+        if (result.OkPressed && CurrentStyle != null && result.SelectedAttachment != null && !string.IsNullOrEmpty(result.SelectedAttachment.FontName))
+        {
+            if (!Fonts.Contains(result.SelectedAttachment.FontName))
+            {
+                Fonts.Insert(0, result.SelectedAttachment.FontName);
+            }
+
+            CurrentStyle.FontName = result.SelectedAttachment.FontName;
+            _subtitle.Footer = result.Footer;
+        }
+    }
+
+    private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
     {
         var newName = name;
         if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
@@ -561,7 +588,8 @@ public partial class AssaStylesViewModel : ObservableObject
     {
         Title = string.Format(Se.Language.Assa.StylesTitleX, fileName);
         Header = subtitle.Header;
-        _subtitle = subtitle;
+        _subtitle = new Subtitle(subtitle, false);
+        _subtitleFileName = fileName;   
         _applyAssaStyles = applyAssaStyles;
         IsApplyVisible = applyAssaStyles != null;
 
@@ -593,6 +621,12 @@ public partial class AssaStylesViewModel : ObservableObject
                 var display = new StyleDisplay(style);
                 SelectedBorderType = display.BorderStyle;
                 FileStyles.Add(display);
+
+                var fontName = display.FontName;
+                if (!string.IsNullOrEmpty(fontName) && !Fonts.Contains(fontName))
+                {
+                    Fonts.Insert(0, fontName);
+                }
             }
         }
 
