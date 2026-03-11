@@ -58,17 +58,17 @@ public class AssaApplyAdvancedEffectWindow : Window
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
                     row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectSnowFlakeCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    row.Children.Add(UiUtil.MakeNumericUpDownInt(10, 2000, 200, 130, snowItem, nameof(AdvancedEffectSnow.FlakeCount)));
+                    row.Children.Add(UiUtil.MakeNumericUpDownInt(10, 3000, 200, 130, snowItem, nameof(AdvancedEffectSnow.FlakeCount)));
                     panel.Children.Add(row);
                 }
                 else if (item is AdvancedEffectStarfield starfieldItem)
                 {
                     var starCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
                     starCountRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldStarCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 2000, 650, 130, starfieldItem, nameof(AdvancedEffectStarfield.StarCount)));
+                    starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 3000, 650, 130, starfieldItem, nameof(AdvancedEffectStarfield.StarCount)));
                     var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
                     speedRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldSpeed, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 5.0m, 130, starfieldItem, nameof(AdvancedEffectStarfield.SpeedMultiplier)));
+                    speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10.0m, 130, starfieldItem, nameof(AdvancedEffectStarfield.SpeedMultiplier)));
                     var settingsStack = new StackPanel { Spacing = 4 };
                     settingsStack.Children.Add(starCountRow);
                     settingsStack.Children.Add(speedRow);
