@@ -1511,14 +1511,10 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
         for (int subIdx = 0; subIdx < subtitles.Count; subIdx++)
         {
             var sub = subtitles[subIdx];
-            // Compute when the first character of the next subtitle arrives at restY.
-            // Old resting text is cleared at min(restStartMs + 2000, that arrival time)
-            // so the bottom line is always clear before new text lands there.
-            double nextRevealYFirst = -20 + (h + 40) * 0.55; // revealFracStart = 0.55
-            double nextSubOffsetMs  = subIdx + 1 < subtitles.Count
-                ? (subtitles[subIdx + 1].StartTime - sub.StartTime).TotalMilliseconds +
-                  subtitles[subIdx + 1].Duration.TotalMilliseconds *
-                  (0.55 + ((int)(h * 0.88) - nextRevealYFirst) / (h + 40.0))
+            // With preRoll applied, every subtitle's chars land at restY at that subtitle's StartTime.
+            // So we only need the raw gap to the next subtitle to know when to clear old text.
+            double nextSubOffsetMs = subIdx + 1 < subtitles.Count
+                ? (subtitles[subIdx + 1].StartTime - sub.StartTime).TotalMilliseconds
                 : double.MaxValue;
             var cleanText = Utilities.RemoveSsaTags(sub.Text)
                 .Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ").Trim();
@@ -1533,6 +1529,9 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
             double fallDuration = sub.Duration.TotalMilliseconds;
 
             var subRng    = new Random(sub.Text.GetHashCode());
+            // preRollMs: shift every animation backwards so each char arrives at restY at sub.StartTime.
+            // restStartMs = fallDuration × (h×0.88 + 20) / (h + 40) for any revealFrac, so this is constant.
+            double preRollMs = fallDuration * (h * 0.88 + 20.0) / (h + 40.0);
             var scrambled = new char[charCount];
             for (int k = 0; k < charCount; k++)
                 scrambled[k] = chars[k] == ' ' ? ' ' : MatrixPool[subRng.Next(MatrixPool.Length)];
@@ -1559,10 +1558,10 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 double charRevealMs = fallDuration * revealFrac;
                 int    revealY      = (int)(-20 + (h + 40) * revealFrac); // Y exactly at the reveal moment
 
-                // Part 1: scrambled green char falls from top to revealY
+                // Part 1: scrambled green char falls from top to revealY (starts before sub.StartTime)
                 var falling = new SubtitleLineViewModel(sub, generateNewId: true);
-                falling.StartTime = sub.StartTime;
-                falling.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs));
+                falling.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(-preRollMs));
+                falling.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
                 falling.Text = $"{{\\an5\\1c{BrightGreen}\\blur3\\bord0\\shad0\\fs{fs}" +
                                $"\\move({charX},-20,{charX},{revealY})}}" + scrambled[i];
                 result.Add(falling);
@@ -1575,8 +1574,8 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 if (fallToRestMs > 0)
                 {
                     var revealed = new SubtitleLineViewModel(sub, generateNewId: true);
-                    revealed.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs));
-                    revealed.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(restStartMs));
+                    revealed.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
+                    revealed.EndTime   = sub.StartTime; // arrives at restY exactly at subtitle start time
                     int flashDur       = Math.Min(300, (int)fallToRestMs);
                     revealed.Text = $"{{\\an5\\1c{HeadColor}\\blur3\\bord1\\shad0\\fs{fs}" +
                                     $"\\t(0,{flashDur},\\1c&HFFFFFF&\\blur1)" +
@@ -1588,9 +1587,9 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 if (restStartMs < fallDuration)
                 {
                     var resting = new SubtitleLineViewModel(sub, generateNewId: true);
-                    resting.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(restStartMs));
+                    resting.StartTime = sub.StartTime; // all chars land at restY at subtitle start time
                     resting.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(
-                        Math.Min(restStartMs + 2000, nextSubOffsetMs)));
+                        Math.Min(2000, nextSubOffsetMs)));
                     resting.Text = $"{{\\an5\\pos({charX},{restY})\\1c&HFFFFFF&\\blur0.5\\bord1\\shad0\\fs{fs}}}" + chars[i];
                     result.Add(resting);
                 }
