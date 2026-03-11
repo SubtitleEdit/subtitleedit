@@ -4769,12 +4769,6 @@ public partial class MainViewModel :
             return;
         }
 
-        if (IsEmpty)
-        {
-            ShowSubtitleNotLoadedMessage();
-            return;
-        }
-
         var ffmpegOk = await RequireFfmpegOk();
         if (!ffmpegOk)
         {
