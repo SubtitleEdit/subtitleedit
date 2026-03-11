@@ -1,0 +1,4 @@
+Subtitle Edit Changelog
+
+v5.0.0-beta7 (xth February 2026) 
+* Work on installer
