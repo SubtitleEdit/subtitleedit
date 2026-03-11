@@ -40,12 +40,144 @@
   <PartialLines />
   <BeginLines />
   <EndLines />
-	<RegularExpressionsIfSpelledCorrectly>
-		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- David's (spell check "David") -->
-		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" /> <!-- there's  (spell check "there") -->
-		<RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
-    	<RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
-    	<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
-	</RegularExpressionsIfSpelledCorrectly>
+  <RegularExpressionsIfSpelledCorrectly>
+    <RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" />
+    <!-- David's (spell check "David") -->
+    <RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" />
+    <!-- there's  (spell check "there") -->
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <!-- SlNG to SING -->
+  </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions />
+  <RegularExpressionsIfSpelledCorrectly>
+
+    <!-- ============================================================ -->
+    <!-- NORWEGIAN CHARACTER CLASS (used throughout)                  -->
+    <!-- Norwegian lowercase: a-z + æ ø å                            -->
+    <!-- Bokmål and Nynorsk both use the same three extra letters.    -->
+    <!-- é appears in loanwords (idé, café) — included               -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- I / l CONFUSION FIXES (visual OCR errors, language-agnostic) -->
+    <!-- ============================================================ -->
+
+    <!-- [GEAR GRlNDER] → [GEAR GRINDER] : l→I inside all-caps brackets -->
+    <RegEx find="\[([A-ZÆØÅ ]*)l([A-ZÆØÅ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+
+    <!-- [ABC] bracket with l mixed into caps -->
+    <RegEx find="\[([A-ZÆØÅl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlNG → SING : l inside all-caps word -->
+    <RegEx find="\b([A-ZÆØÅ]+)l([A-ZÆØÅ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+
+    <!-- trailing l in all-caps word -->
+    <RegEx find="\b([A-ZÆØÅ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+
+    <!-- leading l before all-caps word -->
+    <RegEx find="\bl([A-ZÆØÅ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- chaIIenge → challenge : II→ll mid lowercase word -->
+    <RegEx find="\b([a-zæøåé]+)II([a-zæøåé]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- traIIer → trailer : I→l mid lowercase word -->
+    <RegEx find="\b([a-zæøåé]+)I([a-zæøåé]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- trailing I→l in capitalised word (e.g. OsloI → Oslol) -->
+    <RegEx find="\b([A-ZÆØÅ][a-zæøåé]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- I→l mid capitalised word (e.g. OsIo → Oslo) -->
+    <RegEx find="\b([A-ZÆØÅ][a-zæøåé]+)I([a-zæøåé]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- Ileser → lleser : leading I→l before 3+ lowercase chars -->
+    <!-- Norwegian "I" not a standalone pronoun (it's "jeg/eg") — 3-char min is safe -->
+    <RegEx find="\bI([a-zæøåé]{3,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- leading l→I before 2+ lowercase chars -->
+    <RegEx find="\bl([a-zæøåé]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- standalone l → I (Roman numerals, list markers, ordinals) -->
+    <RegEx find="\bl\b" replaceWith="I" />
+
+    <!-- ============================================================ -->
+    <!-- NORWEGIAN GENITIVE                                           -->
+    <!-- Norwegian (both Bokmål and Nynorsk) genitive adds -s         -->
+    <!-- directly with no apostrophe: Oslos gater, kongens menn      -->
+    <!-- Apostrophe only for names ending in s/x/z:                  -->
+    <!--   Lars' bok, Marx' teorier                                   -->
+    <!-- Normalise English-style OCR apostrophes                      -->
+    <!-- ============================================================ -->
+
+    <!-- Lars's → Lars' : English-style OCR artefact on s-ending names -->
+    <RegEx find="\b([A-ZÆØÅ][a-zæøåé]*[sxzSXZ])['']s\b" spellCheck="$1" replaceWith="$1'" />
+
+    <!-- David's → Davids : remove apostrophe from normal genitive -->
+    <RegEx find="\b([A-ZÆØÅ][a-zæøåé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
+
+    <!-- ============================================================ -->
+    <!-- NORWEGIAN COMPOUND WORDS — NOTE                              -->
+    <!-- Norwegian, like Danish and Swedish, writes compounds as ONE  -->
+    <!-- word: jernbanestasjon, fotballbane, helsevesen               -->
+    <!-- Missing-space rules only trigger on preposition + Capital,   -->
+    <!-- which is never a valid Norwegian compound.                   -->
+    <!-- ============================================================ -->
+
+    <!-- iOslo → i Oslo -->
+    <RegEx find="\bi([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="i $1" />
+
+    <!-- påBergen → på Bergen -->
+    <RegEx find="\bpå([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="på $1" />
+
+    <!-- tilTrondheim → til Trondheim -->
+    <RegEx find="\btil([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="til $1" />
+
+    <!-- fraStavanger → fra Stavanger -->
+    <RegEx find="\bfra([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="fra $1" />
+
+    <!-- medKongen → med Kongen -->
+    <RegEx find="\bmed([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="med $1" />
+
+    <!-- avKongen → av Kongen -->
+    <RegEx find="\bav([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="av $1" />
+
+    <!-- omNorge → om Norge -->
+    <RegEx find="\bom([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="om $1" />
+
+    <!-- vedHavet → ved Havet -->
+    <RegEx find="\bved([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="ved $1" />
+
+    <!-- forKongen → for Kongen -->
+    <RegEx find="\bfor([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="for $1" />
+
+    <!-- motNord → mot Nord -->
+    <RegEx find="\bmot([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="mot $1" />
+
+    <!-- etterKrigen → etter Krigen (Bokmål) -->
+    <RegEx find="\better([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="etter $1" />
+
+    <!-- underKrigen → under Krigen -->
+    <RegEx find="\bunder([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="under $1" />
+
+    <!-- overFjorden → over Fjorden -->
+    <RegEx find="\bover([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="over $1" />
+
+    <!-- innanLands → innan Lands (Nynorsk) -->
+    <RegEx find="\binnan([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="innan $1" />
+
+    <!-- utanLands → utan Lands (Nynorsk) -->
+    <RegEx find="\butan([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="utan $1" />
+
+    <!-- ============================================================ -->
+    <!-- RETAINED FROM ENGLISH (fire on proper nouns in Norwegian text)-->
+    <!-- ============================================================ -->
+
+    <!-- ofLondon → of London -->
+    <RegEx find="\bof([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+    <!-- inOslo → in Oslo -->
+    <RegEx find="\bin([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="in $1" />
+
+  </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
