@@ -12,6 +12,7 @@ public class AssaAttachmentItem
     public byte[] Bytes { get; set; }
 
     public string Size { get; set; }
+    public string FontName { get; set; }
 
     public AssaAttachmentItem()
     {
@@ -20,11 +21,13 @@ public class AssaAttachmentItem
         Content = string.Empty;
         Bytes = Array.Empty<byte>();
         Size = string.Empty;
+        FontName = string.Empty;
     }
 
     public AssaAttachmentItem(string fileName)
     {
         FileName = fileName;
+        FontName = string.Empty;
         if (fileName.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase))
         {
             Category = Se.Language.General.Fonts;
@@ -35,7 +38,7 @@ public class AssaAttachmentItem
         }
 
         Bytes = FileUtil.ReadAllBytesShared(fileName);
-        Content = UUEncoding.UUEncode(Bytes); 
+        Content = UUEncoding.UUEncode(Bytes);
         Size = Utilities.FormatBytesToDisplayFileSize(Bytes.Length);
     }
 }

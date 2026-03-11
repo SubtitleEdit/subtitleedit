@@ -28,6 +28,7 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     [ObservableProperty] private AssaAttachmentItem? _selectedAttachment;
     [ObservableProperty] private string _previewTitle;
     [ObservableProperty] private Bitmap? _previewImage;
+    [ObservableProperty] private bool _isCopyFontnameToClipboardVisible;
     [ObservableProperty] private bool _isDeleteVisible;
     [ObservableProperty] private bool _isDeleteAllVisible;
 
@@ -73,6 +74,15 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     private void Cancel()
     {
         Close();
+    }
+
+    [RelayCommand]
+    private async Task CopyFontNameToClipboard()
+    {
+        if (Window?.Clipboard != null && SelectedAttachment != null && !string.IsNullOrEmpty(SelectedAttachment.FontName))
+        {
+            await ClipboardHelper.SetTextAsync(Window, SelectedAttachment.FontName);
+        }
     }
 
     [RelayCommand]
@@ -374,12 +384,13 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         if (selectedItem == null)
         {
             PreviewImage = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            IsCopyFontnameToClipboardVisible = false;
             return;
         }
 
         if (selectedItem.Category == Se.Language.General.Fonts)
         {
-            ShowFont(selectedItem.Bytes);
+            selectedItem.FontName = ShowFont(selectedItem.Bytes);
         }
         else if (selectedItem.Category == Se.Language.Assa.Graphics)
         {
@@ -397,21 +408,23 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         PreviewTitle = $"{Se.Language.General.Image}: {SelectedAttachment?.FileName ?? "untitled"}, {skBitmap.Width}x{skBitmap.Height}";
         PreviewImage?.Dispose();
         PreviewImage = skBitmap.ToAvaloniaBitmap();
+        IsCopyFontnameToClipboardVisible = false;
     }
 
-    public void ShowFont(byte[] fontBytes)
+    public string ShowFont(byte[] fontBytes)
     {
         var previewWidth = 400; // Replace with actual width from your control
         var previewHeight = 300; // Replace with actual height from your control
         if (previewWidth <= 1 || previewHeight <= 1)
         {
-            return;
+            return string.Empty;
         }
         using var skTypeface = SKTypeface.FromData(SKData.CreateCopy(fontBytes));
         if (skTypeface == null)
         {
-            return;
+            return string.Empty;
         }
+        var fontName = skTypeface.FamilyName;
         PreviewTitle = $"{Se.Language.General.FontName}: {skTypeface.FamilyName}";
         PreviewImage?.Dispose();
 
@@ -456,6 +469,8 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         using var skData = skImage.Encode(SKEncodedImageFormat.Png, 100);
         using var stream = new MemoryStream(skData.ToArray());
         PreviewImage = new Bitmap(stream);
+        IsCopyFontnameToClipboardVisible = true;
+        return fontName;
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

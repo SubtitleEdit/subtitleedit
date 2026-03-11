@@ -48,6 +48,9 @@ public class AssaAttachmentsWindow : Window
 
         var labelFontsAndImages = UiUtil.MakeLabel(Se.Language.Assa.FontsAndGraphics);
         var labelPreview = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.PreviewTitle));
+        var buttonCopyToClipboard = UiUtil.MakeButton(Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand)
+            .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
+        var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard);
 
         var buttonAttach = UiUtil.MakeButton(Se.Language.General.AttachDotDotDot, vm.FileAttachCommand);
         var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
@@ -57,7 +60,7 @@ public class AssaAttachmentsWindow : Window
         var panelButtons = UiUtil.MakeButtonBar(buttonAttach, buttonImport, buttonExport, buttonOk, buttonCancel);
 
         grid.Add(labelFontsAndImages, 0);
-        grid.Add(labelPreview, 0, 1);
+        grid.Add(previewLine, 0, 1);
         grid.Add(MakeLeftView(vm), 1);
         grid.Add(MakeRightView(vm), 1, 1);
         grid.Add(panelButtons, 3, 0, 1, 2);
