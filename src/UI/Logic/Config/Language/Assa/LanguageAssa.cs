@@ -152,6 +152,10 @@ public class LanguageAssa
     public string AdvancedEffectGlitchDescription { get; set; }
     public string AdvancedEffectBounceIn { get; set; }
     public string AdvancedEffectBounceInDescription { get; set; }
+    public string AdvancedEffectFireflies { get; set; }
+    public string AdvancedEffectFirefliesDescription { get; set; }
+    public string AdvancedEffectMatrix { get; set; }
+    public string AdvancedEffectMatrixDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -306,5 +310,9 @@ public class LanguageAssa
         AdvancedEffectGlitchDescription = "Digital glitch with chromatic aberration, white flashes and distortion overlays";
         AdvancedEffectBounceIn = "Bounce in";
         AdvancedEffectBounceInDescription = "Each character springs in with elastic pop animation, staggered left to right";
+        AdvancedEffectFireflies = "Fireflies (background)";
+        AdvancedEffectFirefliesDescription = "Warm glowing yellow-amber dots drifting organically across the screen with pulsing glow";
+        AdvancedEffectMatrix = "Matrix";
+        AdvancedEffectMatrixDescription = "Falling green character columns with subtitle text building letter by letter from the rain";
     }
 }
