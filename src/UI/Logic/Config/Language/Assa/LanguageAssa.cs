@@ -148,6 +148,10 @@ public class LanguageAssa
     public string AdvancedEffectSnowFlakeCount { get; set; }
     public string AdvancedEffectStarfieldStarCount { get; set; }
     public string AdvancedEffectStarfieldSpeed { get; set; }
+    public string AdvancedEffectGlitch { get; set; }
+    public string AdvancedEffectGlitchDescription { get; set; }
+    public string AdvancedEffectBounceIn { get; set; }
+    public string AdvancedEffectBounceInDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -298,5 +302,9 @@ public class LanguageAssa
         AdvancedEffectSnowFlakeCount = "Flake count";
         AdvancedEffectStarfieldStarCount = "Star count";
         AdvancedEffectStarfieldSpeed = "Speed";
+        AdvancedEffectGlitch = "Glitch";
+        AdvancedEffectGlitchDescription = "Digital glitch with chromatic aberration, white flashes and distortion overlays";
+        AdvancedEffectBounceIn = "Bounce in";
+        AdvancedEffectBounceInDescription = "Each character springs in with elastic pop animation, staggered left to right";
     }
 }
