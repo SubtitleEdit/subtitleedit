@@ -1770,10 +1770,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         _skipOnceChars.Clear();
-        _ = Task.Run(() =>
-        {
-            using var _ = RunNOcrLoop(selectedIndices, cancellationToken);
-        });
+        _ = Task.Run(() => RunNOcrLoop(selectedIndices, cancellationToken));
     }
 
     private async Task RunNOcrLoop(List<int> selectedIndices, CancellationToken cancellationToken)
@@ -1956,6 +1953,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.ChangeAllPressed)
                         {
+                            ChangeWord(item, unknownWord, result.Word);
                             _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
                         }
                         else if (result.SkipOncePressed)
@@ -2140,10 +2138,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         _skipOnceChars.Clear();
-        _ = Task.Run(() =>
-        {
-            using var _ = RunBinaryImageCompareOcrLoop(db, selectedIndices, cancellationToken);
-        });
+        _ = Task.Run(() => RunBinaryImageCompareOcrLoop(db, selectedIndices, cancellationToken));
     }
 
     private BinaryOcrDb? InitImageComparOcrDb()
