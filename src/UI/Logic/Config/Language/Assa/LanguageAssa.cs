@@ -156,6 +156,10 @@ public class LanguageAssa
     public string AdvancedEffectFirefliesDescription { get; set; }
     public string AdvancedEffectMatrix { get; set; }
     public string AdvancedEffectMatrixDescription { get; set; }
+    public string AdvancedEffectAudioBars { get; set; }
+    public string AdvancedEffectAudioBarsDescription { get; set; }
+    public string AdvancedEffectAudioPulse { get; set; }
+    public string AdvancedEffectAudioPulseDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -314,5 +318,9 @@ public class LanguageAssa
         AdvancedEffectFirefliesDescription = "Warm glowing yellow-amber dots drifting organically across the screen with pulsing glow";
         AdvancedEffectMatrix = "Matrix";
         AdvancedEffectMatrixDescription = "Falling green character columns with subtitle text building letter by letter from the rain";
+        AdvancedEffectAudioBars = "Audio bars (waveform)";
+        AdvancedEffectAudioBarsDescription = "Animated equalizer bars driven by the audio waveform — bars scroll left as a waveform and pulse with the audio";
+        AdvancedEffectAudioPulse = "Audio text pulse";
+        AdvancedEffectAudioPulseDescription = "Subtitle text glows and pulses with the audio volume — quiet sections show normal text, loud peaks add a coloured halo and slight scale-up";
     }
 }

@@ -1,6 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,8 @@ public interface IAdvancedEffectDisplay
 {
     string Name { get; }
     string Description { get; }
-    List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height);
+    bool UsesAudio { get; }
+    List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio);
 }
 
 public static class AdvancedEffectDisplayFactory
@@ -40,6 +43,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectNeonBurst(),
             new AdvancedEffectGlitch(),
             new AdvancedEffectBounceIn(),
+            new AdvancedEffectAudioTextPulse(),
             new AdvancedEffectFadeIn(),
             new AdvancedEffectFadeOut(),
         }.OrderBy(p => p.Name).ToList();
@@ -50,8 +54,9 @@ public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
 {
     public string Name => "Transition - fade-in";
     public string Description => "A per-line fade-in effect where the screen starts black and reveals the video.";
+    public bool UsesAudio => false;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -89,10 +94,11 @@ public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
 {
     public string Name => "Transition - fade-out";
     public string Description => "A per-line fade-out effect where the screen ends black.";
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -128,10 +134,11 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectNeonBurst;
     public string Description => Se.Language.Assa.AdvancedEffectNeonBurstDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -184,10 +191,11 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectOldMovie;
     public string Description => Se.Language.Assa.AdvancedEffectOldMovieDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -280,11 +288,12 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectSnow;
     public string Description => Se.Language.Assa.AdvancedEffectSnowDescription;
+    public bool UsesAudio => false;
     public int FlakeCount { get; set; } = 200;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -374,10 +383,11 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectRain;
     public string Description => Se.Language.Assa.AdvancedEffectRainDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -464,12 +474,13 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectStarfield;
     public string Description => Se.Language.Assa.AdvancedEffectStarfieldDescription;
+    public bool UsesAudio => false;
     public int StarCount { get; set; } = 650;
     public decimal SpeedMultiplier { get; set; } = 1.0m;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -545,10 +556,11 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectEndCreditsScroll;
     public string Description => Se.Language.Assa.AdvancedEffectEndCreditsScrollDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -602,10 +614,10 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectStarWarsScroll;
     public string Description => Se.Language.Assa.AdvancedEffectStarWarsScrollDescription;
-
+    public bool UsesAudio => false;
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -673,10 +685,11 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectWaveBlue;
     public string Description => Se.Language.Assa.AdvancedEffectWaveBlueDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -752,10 +765,11 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectWave;
     public string Description => Se.Language.Assa.AdvancedEffectWaveDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -827,10 +841,11 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectRainbowPulse;
     public string Description => Se.Language.Assa.AdvancedEffectRainbowPulseDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         string[] rainbowColors = ["&H0000FF&", "&H00FFFF&", "&H00FF00&", "&HFFFF00&", "&HFF0000&", "&HFF00FF&"];
@@ -926,10 +941,11 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectTypewriter;
     public string Description => Se.Language.Assa.AdvancedEffectTypewriterDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -970,10 +986,11 @@ public class AdvancedEffectTypewriterWithHighlight : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectTypewriterWithHighlight;
     public string Description => Se.Language.Assa.AdvancedEffectTypewriterWithHighlightDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -1028,9 +1045,10 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectWordByWord;
     public string Description => Se.Language.Assa.AdvancedEffectWordByWordDescription;
+    public bool UsesAudio => false;
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1082,13 +1100,14 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectKaraoke;
     public string Description => Se.Language.Assa.AdvancedEffectKaraokeDescription;
+    public bool UsesAudio => false;
 
     private const string HighlightColor = @"{\1c&HFFFFFF&}";
     private const string DimColor = @"{\1c&H808080&}";
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1160,13 +1179,14 @@ public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectScrambleReveal;
     public string Description => Se.Language.Assa.AdvancedEffectScrambleRevealDescription;
+    public bool UsesAudio => false;
 
     private static readonly char[] ScramblePool =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#@$%&".ToCharArray();
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1235,10 +1255,11 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectGlitch;
     public string Description => Se.Language.Assa.AdvancedEffectGlitchDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -1343,10 +1364,11 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectBounceIn;
     public string Description => Se.Language.Assa.AdvancedEffectBounceInDescription;
+    public bool UsesAudio => false;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -1420,36 +1442,37 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectMatrix;
     public string Description => Se.Language.Assa.AdvancedEffectMatrixDescription;
+    public bool UsesAudio => false;
     public int ColumnCount { get; set; } = 55;
 
     private static readonly char[] MatrixPool =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$!?@#%&*<>[]{}|/;:".ToCharArray();
 
-    private const string HeadColor   = "&HCCFFCC&"; // bright white-green stream head
+    private const string HeadColor = "&HCCFFCC&"; // bright white-green stream head
     private const string BrightGreen = "&H00FF00&"; // pure green
-    private const string MidGreen    = "&H007800&"; // mid-green trail
-    private const string DarkGreen   = "&H003400&"; // dark-green tail
+    private const string MidGreen = "&H007800&"; // mid-green trail
+    private const string DarkGreen = "&H003400&"; // dark-green tail
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
 
         var rng = new Random(subtitles[0].Text.GetHashCode());
 
-        int w = width  > 0 ? width  : 1280;
+        int w = width > 0 ? width : 1280;
         int h = height > 0 ? height : 720;
 
         var globalStart = subtitles.Min(s => s.StartTime);
-        var globalEnd   = subtitles.Max(s => s.EndTime);
+        var globalEnd = subtitles.Max(s => s.EndTime);
         double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
 
         // ── MATRIX RAIN COLUMNS ─────────────────────────────────────────────────
         int cols = ColumnCount;
         int colW = w / cols;
-        int fs   = Math.Max(10, (int)(colW * 0.65)); // compact grid
+        int fs = Math.Max(10, (int)(colW * 0.65)); // compact grid
 
         for (int col = 0; col < cols; col++)
         {
@@ -1459,8 +1482,8 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
             while (streamStart < totalVideoMs)
             {
                 int streamLen = rng.Next(8, 18);
-                int fallDur   = rng.Next(1200, 3500);
-                int interval  = fallDur / (streamLen + 2); // stagger between chars in stream
+                int fallDur = rng.Next(1200, 3500);
+                int interval = fallDur / (streamLen + 2); // stagger between chars in stream
 
                 for (int j = 0; j < streamLen; j++)
                 {
@@ -1469,7 +1492,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
 
                     var entry = new SubtitleLineViewModel();
                     entry.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(charStartMs));
-                    entry.EndTime   = entry.StartTime.Add(TimeSpan.FromMilliseconds(fallDur));
+                    entry.EndTime = entry.StartTime.Add(TimeSpan.FromMilliseconds(fallDur));
                     if (entry.StartTime >= globalEnd) continue;
 
                     char ch = MatrixPool[rng.Next(MatrixPool.Length)];
@@ -1524,11 +1547,11 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 continue;
             }
 
-            var chars           = cleanText.ToCharArray();
-            int charCount       = chars.Length;
+            var chars = cleanText.ToCharArray();
+            int charCount = chars.Length;
             double fallDuration = sub.Duration.TotalMilliseconds;
 
-            var subRng    = new Random(sub.Text.GetHashCode());
+            var subRng = new Random(sub.Text.GetHashCode());
             // preRollMs: shift every animation backwards so each char arrives at restY at sub.StartTime.
             // restStartMs = fallDuration × (h×0.88 + 20) / (h + 40) for any revealFrac, so this is constant.
             double preRollMs = fallDuration * (h * 0.88 + 20.0) / (h + 40.0);
@@ -1536,18 +1559,18 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
             for (int k = 0; k < charCount; k++)
                 scrambled[k] = chars[k] == ' ' ? ' ' : MatrixPool[subRng.Next(MatrixPool.Length)];
 
-            int startCol    = Math.Max(0, (cols - charCount) / 2);
+            int startCol = Math.Max(0, (cols - charCount) / 2);
             int visibleCount = chars.Count(c => c != ' ');
 
             // Reveal wave spans from 55 % to 80 % of the fall — lower-screen region
             const double revealFracStart = 0.55;
-            const double revealFracEnd   = 0.80;
+            const double revealFracEnd = 0.80;
 
             int visIdx = 0;
             for (int i = 0; i < charCount; i++)
             {
                 int colIdx = Math.Min(startCol + i, cols - 1);
-                int charX  = colIdx * colW + colW / 2;
+                int charX = colIdx * colW + colW / 2;
 
                 if (chars[i] == ' ') continue;
 
@@ -1556,27 +1579,27 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                     : (revealFracStart + revealFracEnd) / 2.0;
 
                 double charRevealMs = fallDuration * revealFrac;
-                int    revealY      = (int)(-20 + (h + 40) * revealFrac); // Y exactly at the reveal moment
+                int revealY = (int)(-20 + (h + 40) * revealFrac); // Y exactly at the reveal moment
 
                 // Part 1: scrambled green char falls from top to revealY (starts before sub.StartTime)
                 var falling = new SubtitleLineViewModel(sub, generateNewId: true);
                 falling.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(-preRollMs));
-                falling.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
+                falling.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
                 falling.Text = $"{{\\an5\\1c{BrightGreen}\\blur3\\bord0\\shad0\\fs{fs}" +
                                $"\\move({charX},-20,{charX},{revealY})}}" + scrambled[i];
                 result.Add(falling);
 
                 // Part 2: actual char falls from revealY down to restY (with flash on reveal)
-                int    restY        = (int)(h * 0.88); // resting line — near bottom, subtitle-style
+                int restY = (int)(h * 0.88); // resting line — near bottom, subtitle-style
                 double fallToRestMs = (restY - revealY) * fallDuration / (h + 40.0);
-                double restStartMs  = charRevealMs + fallToRestMs;
+                double restStartMs = charRevealMs + fallToRestMs;
 
                 if (fallToRestMs > 0)
                 {
                     var revealed = new SubtitleLineViewModel(sub, generateNewId: true);
                     revealed.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
-                    revealed.EndTime   = sub.StartTime; // arrives at restY exactly at subtitle start time
-                    int flashDur       = Math.Min(300, (int)fallToRestMs);
+                    revealed.EndTime = sub.StartTime; // arrives at restY exactly at subtitle start time
+                    int flashDur = Math.Min(300, (int)fallToRestMs);
                     revealed.Text = $"{{\\an5\\1c{HeadColor}\\blur3\\bord1\\shad0\\fs{fs}" +
                                     $"\\t(0,{flashDur},\\1c&HFFFFFF&\\blur1)" +
                                     $"\\move({charX},{revealY},{charX},{restY})}}" + chars[i];
@@ -1588,7 +1611,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 {
                     var resting = new SubtitleLineViewModel(sub, generateNewId: true);
                     resting.StartTime = sub.StartTime; // all chars land at restY at subtitle start time
-                    resting.EndTime   = sub.StartTime.Add(TimeSpan.FromMilliseconds(
+                    resting.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(
                         Math.Min(2000, nextSubOffsetMs)));
                     resting.Text = $"{{\\an5\\pos({charX},{restY})\\1c&HFFFFFF&\\blur0.5\\bord1\\shad0\\fs{fs}}}" + chars[i];
                     result.Add(resting);
@@ -1610,11 +1633,12 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectFireflies;
     public string Description => Se.Language.Assa.AdvancedEffectFirefliesDescription;
+    public bool UsesAudio => false;
     public int FireflyCount { get; set; } = 60;
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -1704,5 +1728,109 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
 
         result.AddRange(subtitles);
         return result;
+    }
+}
+
+/// <summary>
+/// Audio-reactive subtitle glow: the subtitle text border, blur and colour pulse with the
+/// audio volume. Quiet sections show normal text; loud peaks add a bright coloured halo
+/// and a slight scale-up, so the text visually "breathes" with the soundtrack.
+/// </summary>
+public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
+{
+    public string Name => Se.Language.Assa.AdvancedEffectAudioPulse;
+    public string Description => Se.Language.Assa.AdvancedEffectAudioPulseDescription;
+    public bool UsesAudio => true;
+
+    public override string ToString() => Name;
+
+    public List<SubtitleLineViewModel> ApplyEffect(
+        List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    {
+        var result = new List<SubtitleLineViewModel>();
+        if (subtitles.Count == 0) return result;
+
+        var wavePeaks = audio?.WavePeaks;
+        const int frameMs = 50; // 20 fps
+
+        foreach (var sub in subtitles)
+        {
+            var cleanText = Utilities.RemoveSsaTags(sub.Text)
+                .Replace("\r\n", "\\N").Replace("\r", "\\N").Replace("\n", "\\N").Trim();
+            if (string.IsNullOrEmpty(cleanText))
+            {
+                result.Add(sub);
+                continue;
+            }
+
+            double durationMs = sub.Duration.TotalMilliseconds;
+
+            // Normalise against the loudest peak in the neighbourhood of this subtitle
+            double localPeak = ComputeLocalPeak(wavePeaks,
+                sub.StartTime.TotalSeconds - 1.0,
+                sub.EndTime.TotalSeconds + 1.0);
+            if (localPeak <= 0) localPeak = 1;
+
+            for (double t = 0; t < durationMs; t += frameMs)
+            {
+                double frameCenterSec = (sub.StartTime.TotalMilliseconds + t) / 1000.0;
+                double amp = GetAverageAmplitude(wavePeaks, frameCenterSec, 0.05, localPeak);
+
+                // Scale: 100 % at rest → 115 % at peak (subtle size pulse)
+                int scale = 100 + (int)(amp * 15);
+
+                // Border thickness grows with volume → thicker border = more glow
+                double bord = 1.5 + amp * 4.5;
+
+                // Blur softens the border into a halo
+                double blur = amp * 7.0;
+
+                // Glow colour ramp — same green→yellow→orange→red scale (ASS BGR)
+                string glowColor;
+                if (amp > 0.85) glowColor = "&H0000FF&"; // red
+                else if (amp > 0.70) glowColor = "&H0066FF&"; // orange
+                else if (amp > 0.55) glowColor = "&H00FFFF&"; // yellow
+                else if (amp > 0.35) glowColor = "&H00FF00&"; // bright green
+                else glowColor = "&H007800&"; // dark green (quiet)
+
+                var frame = new SubtitleLineViewModel(sub, generateNewId: true);
+                frame.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(t));
+                frame.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(Math.Min(t + frameMs, durationMs)));
+                frame.Text = $"{{\\an2\\1c&HFFFFFF&\\3c{glowColor}\\bord{bord:F1}\\blur{blur:F1}\\shad0\\fscx{scale}\\fscy{scale}}}" + cleanText;
+                result.Add(frame);
+            }
+        }
+
+        return result;
+    }
+
+    private static double GetAverageAmplitude(
+        WavePeakData2? wavePeaks, double centerSec, double windowSec, double localPeak)
+    {
+        if (wavePeaks == null || localPeak <= 0) return 0;
+        double half = windowSec / 2.0;
+        int start = Math.Max(0, (int)((centerSec - half) * wavePeaks.SampleRate));
+        int end = Math.Min(wavePeaks.Peaks.Count - 1,
+                                (int)((centerSec + half) * wavePeaks.SampleRate));
+        if (start > end) return 0;
+        long sum = 0;
+        for (int i = start; i <= end; i++)
+            sum += wavePeaks.Peaks[i].Abs;
+        return (double)(sum / (end - start + 1)) / localPeak;
+    }
+
+    private static double ComputeLocalPeak(
+        WavePeakData2? wavePeaks, double startSec, double endSec)
+    {
+        if (wavePeaks == null) return 1;
+        int start = Math.Max(0, (int)(startSec * wavePeaks.SampleRate));
+        int end = Math.Min(wavePeaks.Peaks.Count - 1, (int)(endSec * wavePeaks.SampleRate));
+        int peak = 0;
+        for (int i = start; i <= end; i++)
+        {
+            int abs = wavePeaks.Peaks[i].Abs;
+            if (abs > peak) peak = abs;
+        }
+        return peak > 0 ? peak : Math.Max(1, wavePeaks.HighestPeak);
     }
 }

@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -15,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,6 +51,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
     private FfmpegMediaInfo2? _mediaInfo;
+    private AudioVisualizer? _audioVisualizer;
 
     public AssaApplyAdvancedEffectViewModel()
     {
@@ -77,7 +80,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         List<SubtitleLineViewModel> paragraphs,
         List<SubtitleLineViewModel> selectedParagraphs,
         string? videoFileName,
-        FfmpegMediaInfo2? mediaInfo)
+        FfmpegMediaInfo2? mediaInfo,
+        AudioVisualizer? audioVisualizer)
     {
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _subtitle = subtitle;
@@ -85,6 +89,22 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         _subtitleLines = paragraphs;
         _selectedSubtitleLines = selectedParagraphs;
         _mediaInfo = mediaInfo;
+        _audioVisualizer = audioVisualizer;
+
+        if (audioVisualizer == null || audioVisualizer.WavePeaks == null || audioVisualizer.WavePeaks.Peaks.Count == 0)
+        {
+            // remove audio visualizer related effects if no audio visualizer data is available
+            var i = OverrideTags.Count-1;
+            while (i >= 0)
+            { 
+                var effect = OverrideTags[i];
+                if (effect.UsesAudio)
+                {
+                    OverrideTags.RemoveAt(i);
+                }
+                i--;
+            }
+        }
 
         if (selectedParagraphs.Count > 1)
         {
@@ -183,9 +203,11 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             idx++;
         }
 
-        var transformed = effect.ApplyEffect(toAffect, 
+        var transformed = effect.ApplyEffect(
+            toAffect, 
             _mediaInfo?.Dimension.Width ?? 1920, 
-            _mediaInfo?.Dimension.Height ?? 1080);
+            _mediaInfo?.Dimension.Height ?? 1080,
+            _audioVisualizer);
 
         foreach (var item in Paragraphs)
         {

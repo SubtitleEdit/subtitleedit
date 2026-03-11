@@ -2265,6 +2265,11 @@ public class AudioVisualizer : Control
         }
     }
 
+    internal SpectrogramData2? GetSpectrogram()
+    {
+        return _spectrogram;
+    }
+
     public bool HasSpectrogram()
     {
         return _spectrogram != null &&
