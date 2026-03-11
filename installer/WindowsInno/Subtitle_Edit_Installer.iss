@@ -87,36 +87,26 @@ LanguageDetectionMethod=uilanguage
 [Languages]
 Name: "en";   MessagesFile: "compiler:Default.isl"
 Name: "ar";   MessagesFile: "compiler:Languages\Arabic.isl"
-;Name: "hy";   MessagesFile: "compiler:Languages\Armenian.isl"
 Name: "bg";   MessagesFile: "compiler:Languages\Bulgarian.isl"
 Name: "ca";   MessagesFile: "Languages\Catalan.isl"
-;Name: "co";   MessagesFile: "Languages\Corsican.isl"
 Name: "cs";   MessagesFile: "compiler:Languages\Czech.isl"
 Name: "da";   MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de";   MessagesFile: "compiler:Languages\German.isl"
 Name: "el";   MessagesFile: "Languages\Greek.isl"
 Name: "es";   MessagesFile: "compiler:Languages\Spanish.isl"
-;Name: "eu";   MessagesFile: "Languages\Basque.isl"
 Name: "fa";   MessagesFile: "Languages\Farsi.isl"
 Name: "fi";   MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";   MessagesFile: "compiler:Languages\French.isl"
-;Name: "he";   MessagesFile: "Languages\Hebrew.isl"
 Name: "hr";   MessagesFile: "Languages\Croatian.isl"
 Name: "hu";   MessagesFile: "compiler:Languages\Hungarian.isl"
-;Name: "is";   MessagesFile: "Languages\Icelandic.isl"
-;Name: "id";   MessagesFile: "Languages\Indonesian.isl"
 Name: "it";   MessagesFile: "compiler:Languages\Italian.isl"
 Name: "ja";   MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "ko";   MessagesFile: "compiler:Languages\Korean.isl"
-;Name: "mk";   MessagesFile: "Languages\Macedonian.isl"
 Name: "nl";   MessagesFile: "compiler:Languages\Dutch.isl"
-;Name: "no";   MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";   MessagesFile: "compiler:Languages\Polish.isl"
 Name: "pt";   MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "ptBR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-;Name: "ro";   MessagesFile: "Languages\Romanian.isl"
 Name: "ru";   MessagesFile: "compiler:Languages\Russian.isl"
-;Name: "sk";   MessagesFile: "Languages\Slovak.isl"
 Name: "sl";   MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "srC";  MessagesFile: "Languages\SerbianCyrillic.isl"
 Name: "srL";  MessagesFile: "Languages\SerbianLatin.isl"
@@ -143,13 +133,13 @@ Source: {#bindir}\libmpv-2.dll;          DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\libonigwrap.dll;       DestDir: {app}; Flags: ignoreversion
 Source: {#bindir}\libSkiaSharp.dll;      DestDir: {app}; Flags: ignoreversion
 ;Source: ..\Changelog.txt;               DestDir: {app}; Flags: ignoreversion
-Source: ..\..\LICENSE;                 DestDir: {app}; Flags: ignoreversion
+Source: ..\..\LICENSE;                   DestDir: {app}; Flags: ignoreversion
 
 
 [Icons]
 Name: {group}\Subtitle Edit;                                        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver_display}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {group}\Help and Support\Changelog;                          Filename: {app}\Changelog.txt; WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
-Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: https://subtitleedit.github.io/subtitleedit/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\Help and Support\Changelog;                           Filename: {app}\Changelog.txt; WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit};  Filename: https://subtitleedit.github.io/subtitleedit/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                  Filename: {uninstallexe}; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
 Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver_display}; AppUserModelID: Nikse.SubtitleEdit5; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
