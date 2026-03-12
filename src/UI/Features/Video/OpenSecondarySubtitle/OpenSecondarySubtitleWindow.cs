@@ -1,9 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
+using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
@@ -14,8 +17,11 @@ public class OpenSecondarySubtitleWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = "Secondary Subtitle Appearance";
-        SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
+        CanResize = true;
+        Width = 1100;
+        Height = 700;
+        MinWidth = 900;
+        MinHeight = 600;
         vm.Window = this;
         DataContext = vm;
 
@@ -46,7 +52,8 @@ public class OpenSecondarySubtitleWindow : Window
 
         // Border style row
         var labelBorderStyle = UiUtil.MakeLabel("Border style").WithMinWidth(labelWidth);
-        var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.BorderStyles, vm, nameof(vm.SelectedBorderStyle)).WithMinWidth(160);
+        var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType)).WithMinWidth(160);
+        comboBoxBorderStyle.SelectionChanged += vm.BoxTypeChanged;
         var panelBorderStyle = UiUtil.MakeHorizontalPanel(labelBorderStyle, comboBoxBorderStyle);
 
         // Alignment grid (an7 an8 an9 / an4 an5 an6 / an1 an2 an3)
@@ -68,11 +75,9 @@ public class OpenSecondarySubtitleWindow : Window
         alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn3), "align"), 3, 2);
         var alignmentBorder = UiUtil.MakeBorderForControl(alignmentGrid);
 
-        var buttonPanel = UiUtil.MakeButtonBar(UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
-
-        var mainStack = new StackPanel
+        // Left panel with settings
+        var leftPanel = new StackPanel
         {
-            Margin = UiUtil.MakeWindowMargin(),
             Spacing = 10,
             Children =
             {
@@ -80,13 +85,56 @@ public class OpenSecondarySubtitleWindow : Window
                 panelFontSize,
                 panelBorderStyle,
                 alignmentBorder,
-                buttonPanel,
             },
         };
 
-        Content = mainStack;
+        // Right panel with video player
+        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayerControl.FullScreenIsVisible = false;
 
-        Activated += delegate { buttonPanel.Focus(); };
-        KeyDown += (_, e) => vm.OnKeyDown(e);
+        var comboBoxParagraphs = UiUtil.MakeComboBoxBindText(
+            vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), nameof(vm.SelectedParagraphIndex));
+        comboBoxParagraphs.Width = double.NaN;
+        comboBoxParagraphs.HorizontalAlignment = HorizontalAlignment.Stretch;
+        vm.ComboBoxParagraphs = comboBoxParagraphs;
+        comboBoxParagraphs.SelectionChanged += vm.ComboBoxParagraphsChanged;
+
+        var buttonPlay = UiUtil.MakeButton("Play current", vm.PlayAndBackCommand)
+            .WithLeftAlignment();
+
+        var videoGrid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("*,Auto,Auto"),
+            RowSpacing = 8,
+        };
+        videoGrid.Add(vm.VideoPlayerControl, 0);
+        videoGrid.Add(comboBoxParagraphs, 1);
+        videoGrid.Add(buttonPlay, 2);
+
+        // Main layout
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+
+        var mainGrid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("260,*"),
+            Margin = UiUtil.MakeWindowMargin(),
+            ColumnSpacing = 12,
+            RowSpacing = 10,
+        };
+        mainGrid.Add(leftPanel, 0, 0);
+        mainGrid.Add(UiUtil.MakeBorderForControl(videoGrid), 0, 1);
+        mainGrid.Add(buttonPanel, 1, 0, 1, 2);
+
+        Content = mainGrid;
+
+        Activated += delegate { buttonOk.Focus(); };
+        AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e),
+            RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
+        Loaded += (_, _) => vm.OnLoaded();
+        Closing += (_, _) => vm.OnClosing();
     }
 }
+

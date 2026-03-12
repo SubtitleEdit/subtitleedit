@@ -1407,14 +1407,35 @@ public partial class MainViewModel :
         }
 
         var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
-        if (!string.IsNullOrEmpty(fileName))
+        if (string.IsNullOrEmpty(fileName))
         {
-            var subtitle = Subtitle.Parse(fileName);
-            if (subtitle != null)
-            {
-                _subtitleSecondary = subtitle;
-                IsSubtitleSecondaryVisible = true;
-            }
+            return;
+        }
+
+        var subtitle = Subtitle.Parse(fileName);
+        if (subtitle == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<OpenSecondarySubtitleWindow, OpenSecondarySubtitleViewModel>(vm =>
+        {
+            vm.Initialize(subtitle, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo, _videoFileName);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        _subtitleSecondary = subtitle;
+        IsSubtitleSecondaryVisible = true;
+
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        {
+            _mpvReloader.Reset();
+            _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), SelectedSubtitleFormat);
         }
     }
 
