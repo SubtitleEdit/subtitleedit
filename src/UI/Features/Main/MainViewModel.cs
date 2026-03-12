@@ -1211,6 +1211,7 @@ public partial class MainViewModel :
     {
         _videoOpenTokenSource?.Cancel();
         ResetPlaySelection();
+        ClearSecondarySubtitle();
         IsSmpteTimingEnabled = false;
         ShowColumnOriginalText = false;
         _subtitle.Paragraphs.Clear();
@@ -1428,14 +1429,14 @@ public partial class MainViewModel :
             return;
         }
 
-        _subtitleSecondary = subtitle;
+        _subtitleSecondary = result.ResultSubtitle;
         IsSubtitleSecondaryVisible = true;
 
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), SelectedSubtitleFormat);
+            _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
         }
     }
 
@@ -5827,7 +5828,7 @@ public partial class MainViewModel :
         if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), SelectedSubtitleFormat);
+            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
         }
 
         if (Se.Settings.Appearance.RightToLeft)
@@ -7881,7 +7882,7 @@ public partial class MainViewModel :
         if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), SelectedSubtitleFormat);
+            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
         }
     }
 
@@ -13717,7 +13718,7 @@ public partial class MainViewModel :
                     subtitle.Paragraphs.AddRange(paragraphs);
                 }
 
-                _mpvReloader.RefreshMpv(mpv, subtitle, SelectedSubtitleFormat).ConfigureAwait(false);
+                _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
             }
         };
         _slowTimer.Start();

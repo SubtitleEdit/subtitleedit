@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 
 public interface IMpvReloader
 {
-    Task RefreshMpv(LibMpvDynamicPlayer mpv, Subtitle subtitle, SubtitleFormat uiFormat);
+    Task RefreshMpv(LibMpvDynamicPlayer mpv, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat);
     void Reset();
     bool SmpteMode { get; set; }
 }

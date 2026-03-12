@@ -499,6 +499,13 @@ public static class InitMenu
             {
                 Header = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot,
                 Command = vm.OpenSecondarySubtitleCommand,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSubtitleSecondaryVisible)) { Converter = new InverseBooleanConverter() },
+            },
+            new MenuItem
+            {
+                Header = Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer,
+                Command = vm.ClearSecondarySubtitleCommand,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSubtitleSecondaryVisible)),
             },
             new MenuItem
             {
