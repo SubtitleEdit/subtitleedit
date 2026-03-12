@@ -119,6 +119,16 @@ internal class SubtitleConverter
                 // The format itself should handle this during loading
             }
 
+            // Apply delete operations
+            if (options.DeleteFirst.HasValue)
+                LibSEIntegration.DeleteFirst(subtitle, options.DeleteFirst.Value);
+
+            if (options.DeleteLast.HasValue)
+                LibSEIntegration.DeleteLast(subtitle, options.DeleteLast.Value);
+
+            if (!string.IsNullOrEmpty(options.DeleteContains))
+                LibSEIntegration.DeleteContains(subtitle, options.DeleteContains);
+
             // Apply operations in order
             if (options.Operations.Count > 0)
             {
@@ -173,6 +183,9 @@ internal class ConversionOptions
     public double? TargetFps { get; init; }
     public bool Overwrite { get; init; }
     public List<string> Operations { get; init; } = new();
+    public int? DeleteFirst { get; init; }
+    public int? DeleteLast { get; init; }
+    public string? DeleteContains { get; init; }
 }
 
 internal class ConversionResult
