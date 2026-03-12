@@ -333,6 +333,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OpenFromUrlViewModel>();
+        collection.AddTransient<OpenSecondarySubtitleViewModel>();
         collection.AddTransient<PartsSavedViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();
         collection.AddTransient<PickFontNameViewModel>();
