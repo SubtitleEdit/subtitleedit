@@ -230,7 +230,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Fps = settings.Fps,
                 TargetFps = settings.TargetFps,
                 Overwrite = settings.Overwrite,
-                Operations = operations
+                Operations = operations,
+                DeleteFirst = settings.DeleteFirst,
+                DeleteLast = settings.DeleteLast,
+                DeleteContains = settings.DeleteContains,
             };
 
             // Display conversion info
@@ -261,6 +264,15 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             if (operations.Count > 0)
                 table.AddRow("Operations", string.Join(", ", operations));
+
+            if (settings.DeleteFirst.HasValue)
+                table.AddRow("Delete First", settings.DeleteFirst.Value.ToString());
+
+            if (settings.DeleteLast.HasValue)
+                table.AddRow("Delete Last", settings.DeleteLast.Value.ToString());
+
+            if (!string.IsNullOrEmpty(settings.DeleteContains))
+                table.AddRow("Delete Contains", settings.DeleteContains);
 
             AnsiConsole.Write(table);
             AnsiConsole.WriteLine();

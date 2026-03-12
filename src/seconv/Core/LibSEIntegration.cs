@@ -187,7 +187,6 @@ internal static class LibSEIntegration
                 break;
 
             case "removeunicodecontrolchars":
-                // TODO: Remove Unicode control characters
                 RemoveUnicodeControlChars(subtitle);
                 break;
 
@@ -214,6 +213,56 @@ internal static class LibSEIntegration
         foreach (var p in subtitle.Paragraphs)
         {
             p.Text = p.Text.RemoveControlCharacters();
+        }
+    }
+
+    public static void DeleteFirst(Subtitle subtitle, int count)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+
+        var paragraphs = subtitle.Paragraphs.Skip(count).ToList();
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(paragraphs);
+        subtitle.Renumber();
+    }
+
+    public static void DeleteLast(Subtitle subtitle, int count)
+    {
+        if (count <= 0 || count >= subtitle.Paragraphs.Count)
+        {
+            return;
+        }
+
+        var paragraphs = subtitle.Paragraphs.Take(subtitle.Paragraphs.Count - count).ToList();
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(paragraphs);
+        subtitle.Renumber();
+    }
+
+    public static void DeleteContains(Subtitle subtitle, string deleteContains)
+    {
+        if (string.IsNullOrEmpty(deleteContains))
+        {
+            return;
+        }
+
+        var deleted = 0;
+        for (var index = subtitle.Paragraphs.Count - 1; index >= 0; index--)
+        {
+            var paragraph = subtitle.Paragraphs[index];
+            if (paragraph.Text.Contains(deleteContains, StringComparison.Ordinal))
+            {
+                deleted++;
+                subtitle.Paragraphs.RemoveAt(index);
+            }
+        }
+
+        if (deleted > 0)
+        {
+            subtitle.Renumber();
         }
     }
 
