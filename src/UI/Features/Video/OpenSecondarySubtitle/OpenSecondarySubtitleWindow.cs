@@ -47,33 +47,18 @@ public class OpenSecondarySubtitleWindow : Window
 
         // Font size row
         var labelFontSize = UiUtil.MakeLabel("Font size").WithMinWidth(labelWidth);
-        var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 20, 120, vm, nameof(vm.FontSize));
+        var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 46, 120, vm, nameof(vm.FontSize));
         var panelFontSize = UiUtil.MakeHorizontalPanel(labelFontSize, numericFontSize);
 
         // Border style row
         var labelBorderStyle = UiUtil.MakeLabel("Border style").WithMinWidth(labelWidth);
         var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType)).WithMinWidth(160);
-        comboBoxBorderStyle.SelectionChanged += vm.BoxTypeChanged;
         var panelBorderStyle = UiUtil.MakeHorizontalPanel(labelBorderStyle, comboBoxBorderStyle);
 
-        // Alignment grid (an7 an8 an9 / an4 an5 an6 / an1 an2 an3)
-        var alignmentGrid = new Grid
-        {
-            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto"),
-            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto"),
-            HorizontalAlignment = HorizontalAlignment.Left,
-        };
-        alignmentGrid.Add(UiUtil.MakeLabel("Position"), 0, 0, 1, 3);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn7), "align"), 1, 0);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn8), "align"), 1, 1);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn9), "align"), 1, 2);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn4), "align"), 2, 0);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn5), "align"), 2, 1);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn6), "align"), 2, 2);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn1), "align"), 3, 0);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn2), "align"), 3, 1);
-        alignmentGrid.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.AlignmentAn3), "align"), 3, 2);
-        var alignmentBorder = UiUtil.MakeBorderForControl(alignmentGrid);
+        // Alignment row
+        var labelAlignment = UiUtil.MakeLabel("Alignment").WithMinWidth(labelWidth);
+        var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
+        var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
         // Left panel with settings
         var leftPanel = new StackPanel
@@ -84,7 +69,7 @@ public class OpenSecondarySubtitleWindow : Window
                 panelColor,
                 panelFontSize,
                 panelBorderStyle,
-                alignmentBorder,
+                panelAlignment,
             },
         };
 
