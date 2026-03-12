@@ -481,10 +481,8 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
 
     public void ChangeAll(string from, string to)
     {
-        if (!_changeAllDictionary.ContainsKey(from))
-        {
-            _changeAllDictionary[from] = to;
-        }
+        _changeAllDictionary.TryAdd(from, to);
+        _ocrFixReplaceList.AddWordOrPartial(from, to);
     }
 
     public void SkipAll(string word)

@@ -68,6 +68,7 @@ Local OCR engine.
 ## Keyboard Shortcuts
 
 ### General
+
 | Shortcut | Action |
 |----------|--------|
 | Escape | Cancel OCR / Close window |
@@ -75,6 +76,7 @@ Local OCR engine.
 | F1 | Show help |
 
 ### Subtitle Grid
+
 | Shortcut | Action |
 |----------|--------|
 | Ctrl+I | Toggle italic formatting |
@@ -85,6 +87,7 @@ Local OCR engine.
 | Double-click | Inspect line (nOCR/Binary OCR only) |
 
 ### Unknown Words List
+
 | Shortcut | Action |
 |----------|--------|
 | Enter | Jump to subtitle line containing the selected unknown word |

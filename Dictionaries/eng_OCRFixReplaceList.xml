@@ -3414,5 +3414,7 @@
 		<RegEx find="\bl\b" replaceWith="I" /> <!-- lowercase l (L) to I (i) -->
 		<RegEx find="\[([A-Z ]*)l([A-Z ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" /> <!-- [GEARS GRlNDlNG] to [GEARS GRINDING] -->
 		<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I([a-zæøåöääöéèàùâêîôûëï]*)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I\b" spellCheck="$1l" replaceWith="$1l" />
 	</RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

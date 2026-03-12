@@ -14,6 +14,7 @@ public class LanguageVideo
     public string GenerateBlankVideoTitle { get; set; }
     public string ReEncodeVideoForBetterSubtitlingTitle { get; set; }
     public string ReEncodeVideoForBetterSubtitlingDotDotDot { get; set; }
+    public string OpenSecondarySubtitleOnVideoPlayerDotDotDot { get; set; }
     public string CutVideoTitle { get; set; }
     public string CutVideoDotDotDot { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
@@ -43,6 +44,7 @@ public class LanguageVideo
         GenerateBlankVideoDotDotDot = "Generate blank video...";
         ReEncodeVideoForBetterSubtitlingTitle = "Re-encode video for better subtitling";
         ReEncodeVideoForBetterSubtitlingDotDotDot = "Re-encode video for better subtitling...";
+        OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open secondary subtitle on video player...";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
