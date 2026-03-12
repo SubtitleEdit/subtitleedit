@@ -13,6 +13,7 @@ The audio visualizer displays the audio waveform (and/or spectrogram) of the loa
 ## Mouse Controls
 
 ### Navigation
+
 | Mouse Action | Effect |
 |--------------|--------|
 | **Scroll wheel** | Scroll waveform left/right |
@@ -21,6 +22,7 @@ The audio visualizer displays the audio waveform (and/or spectrogram) of the loa
 | **Middle-click drag** | Pan the waveform |
 
 ### Subtitle Timing
+
 | Mouse Action | Effect |
 |--------------|--------|
 | **Click + Ctrl (cmd on mac) + Shift ** | Set start and offset the rest |
@@ -34,6 +36,7 @@ The audio visualizer displays the audio waveform (and/or spectrogram) of the loa
 | **Right-click** | Context menu |
 
 ### Creating New Subtitles
+
 | Mouse Action | Effect |
 |--------------|--------|
 | **Click+Drag** in empty area | Create a new subtitle with the selected time range |

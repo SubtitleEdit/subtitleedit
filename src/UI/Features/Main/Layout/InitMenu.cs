@@ -497,6 +497,11 @@ public static class InitMenu
         {
             new MenuItem
             {
+                Header = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot,
+                Command = vm.OpenSecondarySubtitleCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Video.ReEncodeVideoForBetterSubtitlingDotDotDot,
                 Command = vm.VideoReEncodeCommand,
             },
