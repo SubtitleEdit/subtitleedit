@@ -240,6 +240,7 @@ public partial class MainViewModel :
     [ObservableProperty] private string _surroundWith1Text;
     [ObservableProperty] private string _surroundWith2Text;
     [ObservableProperty] private string _surroundWith3Text;
+    [ObservableProperty] private bool _isSubtitleSecondaryVisible;
 
     public DataGrid SubtitleGrid { get; set; }
     public Window? Window { get; set; }
@@ -262,6 +263,7 @@ public partial class MainViewModel :
     private string? _subtitleFileNameOriginal;
     private bool _converted;
     private Subtitle _subtitle;
+    private Subtitle? _subtitleSecondary;
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
@@ -1394,6 +1396,33 @@ public partial class MainViewModel :
         }
 
         _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private async Task OpenSecondarySubtitle()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var subtitle = Subtitle.Parse(fileName);
+            if (subtitle != null)
+            {
+                _subtitleSecondary = subtitle;
+                IsSubtitleSecondaryVisible = true;
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void ClearSecondarySubtitle()
+    {
+        IsSubtitleSecondaryVisible = false;
+        _subtitleSecondary = null;
     }
 
     [RelayCommand]
