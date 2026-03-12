@@ -5,7 +5,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -24,9 +26,9 @@ public class MpvReloader : IMpvReloader
     private int _retryCount = 3;
     private string? _mpvPreviewStyleHeader;
 
-    public async Task RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, SubtitleFormat uiFormat)
+    public async Task RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
     {
-        if (subtitle.Paragraphs.Count == 0)
+        if (subtitle.Paragraphs.Count == 0 && subtitleSecondary == null)
         {
             return;
         }
@@ -53,6 +55,7 @@ public class MpvReloader : IMpvReloader
                 defaultStyle.BorderStyle = "3";
                 subtitle = new Subtitle(subtitle);
                 subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
+                AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
             }
             else
@@ -128,6 +131,7 @@ public class MpvReloader : IMpvReloader
                     }
                 }
 
+                AddSecondarySubtitle(subtitle, subtitleSecondary);
                 var hash = subtitle.GetFastHashCode(null);
                 if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
                 {
@@ -139,7 +143,6 @@ public class MpvReloader : IMpvReloader
                     text = _mpvTextOld;
                 }
             }
-
 
             if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
             {
@@ -165,6 +168,23 @@ public class MpvReloader : IMpvReloader
         catch (Exception exception)
         {
             Se.LogError(exception);
+        }
+    }
+
+    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
+    {
+        if (subtitleSecondary == null)
+        {
+            return;
+        }
+
+
+        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
+        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
+        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
+        foreach (var p in subtitleSecondary.Paragraphs)
+        {
+            subtitle.Paragraphs.Add(p);
         }
     }
 

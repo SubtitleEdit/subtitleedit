@@ -30,7 +30,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 {
     [ObservableProperty] private Color _subtitleColor;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
-    [ObservableProperty] private decimal _fontSize;
+    [ObservableProperty] private int _fontSize;
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
@@ -297,6 +297,9 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             ScaleY = 100,
         };
 
+        style.Outline = new SkiaSharp.SKColor(style.Outline.Red, style.Outline.Green, style.Outline.Blue, SubtitleColor.A);
+        style.Background = new SkiaSharp.SKColor(style.Background.Red, style.Background.Green, style.Background.Blue, SubtitleColor.A);
+
         var result = new Subtitle(_secondarySubtitle);
         result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
             AdvancedSubStationAlpha.DefaultHeader,
@@ -312,6 +315,10 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             if (_subtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
             {
                 result = new Subtitle(_subtitle);
+                var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(result.Header);
+                styles.Add(style);
+                result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+
                 foreach (var p in _secondarySubtitle.Paragraphs)
                 {
                     p.Extra = style.Name;
@@ -336,7 +343,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         }
         else
         {
-            foreach (var p in _secondarySubtitle.Paragraphs)
+            foreach (var p in result.Paragraphs)
             {
                 p.Extra = style.Name;
             }
