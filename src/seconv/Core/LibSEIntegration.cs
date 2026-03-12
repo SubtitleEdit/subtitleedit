@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Text;
 
@@ -120,58 +121,123 @@ internal static class LibSEIntegration
 
     private static void ApplyOperation(Subtitle subtitle, string operation)
     {
-        // TODO: Implement various operations using LibSE classes
-        // For now, this is a placeholder that shows the structure
-
         switch (operation.ToLowerInvariant())
         {
             case "fixcommonerrors":
                 // TODO: Use FixCommonErrors class from LibSE
-                // var fce = new FixCommonErrors();
-                // fce.Fix(subtitle);
                 break;
 
             case "removetextforhi":
-                // TODO: Use RemoveTextForHI class from LibSE
-                // var rtfhi = new RemoveTextForHI();
-                // rtfhi.Remove(subtitle);
+                {
+                    var hiSettings = new RemoveTextForHISettings(subtitle);
+                    var hiLib = new RemoveTextForHI(hiSettings);
+                    var hiLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var hiIndex = subtitle.Paragraphs.Count - 1;
+                    while (hiIndex >= 0)
+                    {
+                        var p = subtitle.Paragraphs[hiIndex];
+                        p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, hiLanguage);
+                        if (string.IsNullOrWhiteSpace(p.Text))
+                        {
+                            subtitle.Paragraphs.RemoveAt(hiIndex);
+                        }
+                        hiIndex--;
+                    }
+                    subtitle.Renumber();
+                }
                 break;
 
             case "mergesametexts":
-                // TODO: Merge paragraphs with same text
+                {
+                    var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, true, 250);
+                    if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
+                    {
+                        subtitle.Paragraphs.Clear();
+                        subtitle.Paragraphs.AddRange(merged.Paragraphs);
+                    }
+                }
                 break;
 
             case "mergesametimecodes":
-                // TODO: Merge paragraphs with same time codes
+                {
+                    var merged = MergeLinesWithSameTimeCodes.Merge(subtitle, new List<int>(), out _, true, false, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                    if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
+                    {
+                        subtitle.Paragraphs.Clear();
+                        subtitle.Paragraphs.AddRange(merged.Paragraphs);
+                    }
+                }
                 break;
 
             case "mergeshortlines":
-                // TODO: Merge short lines
+                {
+                    var merged = MergeShortLinesUtils.MergeShortLinesInSubtitle(subtitle, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
+                    if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
+                    {
+                        subtitle.Paragraphs.Clear();
+                        subtitle.Paragraphs.AddRange(merged.Paragraphs);
+                    }
+                }
                 break;
 
             case "splitlonglines":
-                // TODO: Split long lines
+                try
+                {
+                    var split = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
+                    subtitle.Paragraphs.Clear();
+                    subtitle.Paragraphs.AddRange(split.Paragraphs);
+                }
+                catch
+                {
+                    // ignore
+                }
                 break;
 
             case "balancelines":
-                // TODO: Balance line lengths
+                {
+                    var balanceLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.AutoBreakLine(p.Text, balanceLanguage, false);
+                    }
+                }
                 break;
 
             case "redocasing":
-                // TODO: Redo casing
+                {
+                    var casingLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var fixCasing = new FixCasing(casingLanguage)
+                    {
+                        FixNormal = true,
+                        FixNormalOnlyAllUppercase = false,
+                        FixMakeUppercase = false,
+                        FixMakeLowercase = false,
+                    };
+                    fixCasing.Fix(subtitle);
+                }
                 break;
 
             case "removeformatting":
-                // TODO: Remove formatting tags
                 RemoveFormatting(subtitle);
                 break;
 
             case "removelinebreaks":
-                // TODO: Remove line breaks
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.Text = Utilities.RemoveLineBreaks(p.Text);
+                }
                 break;
 
             case "applydurationlimits":
-                // TODO: Apply duration limits
+                {
+                    var fixDurationLimits = new FixDurationLimits(
+                        Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds,
+                        Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds,
+                        new List<double>());
+                    var fixedSub = fixDurationLimits.Fix(subtitle);
+                    subtitle.Paragraphs.Clear();
+                    subtitle.Paragraphs.AddRange(fixedSub.Paragraphs);
+                }
                 break;
 
             case "beautifytimecodes":
@@ -179,11 +245,17 @@ internal static class LibSEIntegration
                 break;
 
             case "convertcolorstodialog":
-                // TODO: Convert colors to dialog
+                {
+                    var ctdLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false, false, false, ctdLanguage);
+                }
                 break;
 
             case "fixrtlviaunicodechars":
-                // TODO: Fix RTL via Unicode characters
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                }
                 break;
 
             case "removeunicodecontrolchars":
@@ -191,7 +263,10 @@ internal static class LibSEIntegration
                 break;
 
             case "reversertlstartend":
-                // TODO: Reverse RTL start/end
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                }
                 break;
 
             default:
