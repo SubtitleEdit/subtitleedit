@@ -1623,8 +1623,18 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            await ocrEngine.OcrBatch(engineType, batchImages, language, mode, ocrProgress, cancellationToken);
-            IsOcrRunning = false;
+            try
+            {
+                await ocrEngine.OcrBatch(engineType, batchImages, language, mode, ocrProgress, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Error running Paddle OCR");
+            }
+            finally
+            {
+                IsOcrRunning = false;
+            }
         });
     }
 

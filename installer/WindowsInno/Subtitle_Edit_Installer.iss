@@ -153,6 +153,7 @@ Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settin
 
 [Run]
 Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: {app}\ChangeLog.txt;    Description: {cm:run_ViewChangelog};                                Flags: shellexec postinstall skipifsilent unchecked
 
 
 [Registry]

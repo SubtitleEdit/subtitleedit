@@ -3,6 +3,7 @@
 ; English
 [CustomMessages]
 en.sm_com_Changelog=Subtitle Edit's Changelog
+en.run_ViewChangelog=View Changelog
 en.tsk_AllUsers=For all users
 en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
@@ -15,6 +16,7 @@ en.types_default=Default installation
 ; Arabic
 [CustomMessages]
 ar.sm_com_Changelog=Subtitle Edit's Changelog
+ar.run_ViewChangelog=View Changelog
 ar.tsk_AllUsers=For all users
 ar.tsk_CurrentUser=For the current user only
 ar.tsk_Other=Other:
@@ -27,6 +29,7 @@ ar.types_default=Default installation
 ; Bulgarian
 [CustomMessages]
 bg.sm_com_Changelog=Subtitle Edit's Changelog
+bg.run_ViewChangelog=View Changelog
 bg.tsk_AllUsers=For all users
 bg.tsk_CurrentUser=For the current user only
 bg.tsk_Other=Other:
@@ -39,6 +42,7 @@ bg.types_default=Default installation
 ; Catalan
 [CustomMessages]
 ca.sm_com_Changelog=Registre de canvis de Subtitle Edit
+ca.run_ViewChangelog=Mostra el registre de canvis
 ca.tsk_AllUsers=Per a tots els usuaris
 ca.tsk_CurrentUser=Només per a l'usuari actual
 ca.tsk_Other=Altre:
@@ -51,6 +55,7 @@ ca.types_default=Instal·lació predeterminada
 ; Czech
 [CustomMessages]
 cs.sm_com_Changelog=Seznam změn Subtitle Edit
+cs.run_ViewChangelog=Zobrazit seznam změn
 cs.tsk_AllUsers=Pro všechny uživatele
 cs.tsk_CurrentUser=Pouze pro aktuálního uživatele
 cs.tsk_Other=Ostatní:
@@ -63,6 +68,7 @@ cs.types_default=Výchozí instalace
 ; Danish
 [CustomMessages]
 da.sm_com_Changelog=Subtitle Edit ændringslog
+da.run_ViewChangelog=Vis ændringslog
 da.tsk_AllUsers=For alle brugere
 da.tsk_CurrentUser=Kun for aktulle bruger
 da.tsk_Other=Andre:
@@ -75,6 +81,7 @@ da.types_default=Default installation
 ; Deutsch
 [CustomMessages]
 de.sm_com_Changelog=Subtitle Edit Änderungen
+de.run_ViewChangelog=Änderungsprotokoll anzeigen
 de.tsk_AllUsers=Für alle Benutzer
 de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
@@ -87,6 +94,7 @@ de.types_default=Standardinstallation
 ; Greek
 [CustomMessages]
 el.sm_com_Changelog=Ιστορικό του Subtitle Edit
+el.run_ViewChangelog=Προβολή ιστορικού
 el.tsk_AllUsers=Για όλους τους χρήστες
 el.tsk_CurrentUser=Μόνο για τον τρέχων χρήστη
 el.tsk_Other=Άλλα:
@@ -99,6 +107,7 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 ; Spanish
 [CustomMessages]
 es.sm_com_Changelog=Historial de Subtitle Edit
+es.run_ViewChangelog=Ver el historial de cambios
 es.tsk_AllUsers=Para todos los usuarios
 es.tsk_CurrentUser=Para el usuario actual
 es.tsk_Other=Otro:
@@ -112,6 +121,7 @@ es.types_default=Instalacion predefinida
 ; Persian
 [CustomMessages]
 fa.sm_com_Changelog=تغییرات در نسخه جدید
+fa.run_ViewChangelog=مشاهده تغییرات
 fa.tsk_AllUsers=برای تمامی کاربران سیستم
 fa.tsk_CurrentUser=فقط برای کاربر جاری
 fa.tsk_Other=دیگر:
@@ -124,6 +134,7 @@ fa.types_default=نصب پیشفرض
 ; Finnish
 [CustomMessages]
 fi.sm_com_Changelog=Subtitle Edit:n muutosloki
+fi.run_ViewChangelog=Näytä muutosloki
 fi.tsk_AllUsers=Kaikille käyttäjille
 fi.tsk_CurrentUser=Vain nykyiselle käyttäjälle
 fi.tsk_Other=Muuta:
@@ -136,6 +147,7 @@ fi.types_default=Oletusasennus
 ; French
 [CustomMessages]
 fr.sm_com_Changelog=Journal des modifications de Subtitle Edit
+fr.run_ViewChangelog=Voir le journal des modifications
 fr.tsk_AllUsers=Pour tous les utilisateurs
 fr.tsk_CurrentUser=Uniquement pour l'utilisateur actuel
 fr.tsk_Other=Autre :
@@ -148,6 +160,7 @@ fr.types_default=Installation par défaut
 ; Croatian
 [CustomMessages]
 hr.sm_com_Changelog=Subtitle Edit's Changelog
+hr.run_ViewChangelog=View Changelog
 hr.tsk_AllUsers=For all users
 hr.tsk_CurrentUser=For the current user only
 hr.tsk_Other=Other:
@@ -160,6 +173,7 @@ hr.types_default=Default installation
 ; Hungarian
 [CustomMessages]
 hu.sm_com_Changelog=Subtitle Edit's változásnapló
+hu.run_ViewChangelog=Változásnapló megtekintése
 hu.tsk_AllUsers=Az összes felhasználó számára
 hu.tsk_CurrentUser=Csak a jelenlegi felhasználó számára
 hu.tsk_Other=Egyéb:
@@ -172,6 +186,7 @@ hu.types_default=Default installation
 ; Italian
 [CustomMessages]
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
+it.run_ViewChangelog=Visualizza le novità
 it.tsk_AllUsers=Per tutti gli utenti
 it.tsk_CurrentUser=Solo per l'utente attuale
 it.tsk_Other=Altre attività:
@@ -186,6 +201,7 @@ it.tsk_AllUsers=Per tutti gli utenti
 ; Japanese
 [CustomMessages]
 ja.sm_com_Changelog=Subtitle Editの変更履歴
+ja.run_ViewChangelog=変更履歴を表示する
 ja.tsk_AllUsers=すべてのユーザー
 ja.tsk_CurrentUser=このユーザーのみ
 ja.tsk_Other=その他:
@@ -198,6 +214,7 @@ ja.types_default=デフォルトインストール
 ; Korean
 [CustomMessages]
 ko.sm_com_Changelog=Subtitle Edit 변경 내역
+ko.run_ViewChangelog=변경 내역 보기
 ko.tsk_AllUsers=모든 사용자
 ko.tsk_CurrentUser=현재 사용자
 ko.tsk_Other=기타:
@@ -210,6 +227,7 @@ ko.types_default=기본 설치
 ; Dutch
 [CustomMessages]
 nl.sm_com_Changelog=Recente wijzigingen in Subtitle Edit
+nl.run_ViewChangelog=Wijzigingen bekijken
 nl.tsk_AllUsers=Voor alle gebruikers
 nl.tsk_CurrentUser=Alleen voor huidige gebruiker
 nl.tsk_Other=Anders:
@@ -222,6 +240,7 @@ nl.types_default=Standaardinstallatie
 ; Polish
 [CustomMessages]
 pl.sm_com_Changelog=Lista zmian w Subtitle Edit
+pl.run_ViewChangelog=Wyświetl listę zmian
 pl.tsk_AllUsers=Dla wszystkich użytkowników
 pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
 pl.tsk_Other=Inne:
@@ -234,6 +253,7 @@ pl.types_default=Instalacja domyślna
 ; Portuguese (Portugal)
 [CustomMessages]
 pt.sm_com_Changelog=Registo de alterações do Subtitle Edit
+pt.run_ViewChangelog=Ver registo de alterações
 pt.tsk_AllUsers=Todos os utilizadores
 pt.tsk_CurrentUser=Utilizador atual
 pt.tsk_Other=Outro:
@@ -246,6 +266,7 @@ pt.types_default=Instalação predefinida
 ; Portuguese (Brazil)
 [CustomMessages]
 ptBR.sm_com_Changelog=Changelog do Subtitle Edit
+ptBR.run_ViewChangelog=Ver changelog
 ptBR.tsk_AllUsers=Todos os usuários
 ptBR.tsk_CurrentUser=Usuário atual
 ptBR.tsk_Other=Outro:
@@ -258,6 +279,7 @@ ptBR.types_default=Instalação padrão
 ; Russian
 [CustomMessages]
 ru.sm_com_Changelog=Журнал изменений "Subtitle Edit"
+ru.run_ViewChangelog=Показать журнал изменений
 ru.tsk_AllUsers=Для всех пользователей
 ru.tsk_CurrentUser=Только для текущего пользователя
 ru.tsk_Other=Другие задачи:
@@ -270,6 +292,7 @@ ru.types_default=Обычная установка
 ; Slovenian
 [CustomMessages]
 sl.sm_com_Changelog=Subtitle Edit's Changelog
+sl.run_ViewChangelog=View Changelog
 sl.tsk_AllUsers=For all users
 sl.tsk_CurrentUser=For the current user only
 sl.tsk_Other=Other:
@@ -282,6 +305,7 @@ sl.types_default=Default installation
 ; Serbian Cyrillic
 [CustomMessages]
 srC.sm_com_Changelog=Дневник измена
+srC.run_ViewChangelog=Погледај дневник измена
 srC.tsk_AllUsers=За све кориснике
 srC.tsk_CurrentUser=Само за текућег корисника
 srC.tsk_Other=Друго:
@@ -294,6 +318,7 @@ srC.types_default=Подразумевана инсталација
 ; Serbian Latin
 [CustomMessages]
 srL.sm_com_Changelog=Dnevnik izmena
+srL.run_ViewChangelog=Pogledaj dnevnik izmena
 srL.tsk_AllUsers=Za sve korisnike
 srL.tsk_CurrentUser=Samo za tekućeg korisnika
 srL.tsk_Other=Drugo:
@@ -306,6 +331,7 @@ srL.types_default=Podrazumevana instalacija
 ; Swedish
 [CustomMessages]
 sv.sm_com_Changelog=Subtitle Edit's Changelog
+sv.run_ViewChangelog=View Changelog
 sv.tsk_AllUsers=For all users
 sv.tsk_CurrentUser=For the current user only
 sv.tsk_Other=Other:
@@ -318,6 +344,7 @@ sv.types_default=Default installation
 ; Thai
 [CustomMessages]
 th.sm_com_Changelog=Subtitle Edit's Changelog
+th.run_ViewChangelog=View Changelog
 th.tsk_AllUsers=For all users
 th.tsk_CurrentUser=For the current user only
 th.tsk_Other=Other:
@@ -330,6 +357,7 @@ th.types_default=Default installation
 ; Turkish
 [CustomMessages]
 tr.sm_com_Changelog=Subtitle Edit'in Değişiklik Günlüğü
+tr.run_ViewChangelog=Değişiklik Günlüğünü görüntüle
 tr.tsk_AllUsers=Tüm kullanıcılar için
 tr.tsk_CurrentUser=Sadece geçerli kullanıcı için
 tr.tsk_Other=Diğer:
@@ -342,6 +370,7 @@ tr.types_default=Varsayılan kurulum
 ; Ukrainian
 [CustomMessages]
 uk.sm_com_Changelog=Журнал версій Subtitle Edit
+uk.run_ViewChangelog=Переглянути журнал версій
 uk.tsk_AllUsers=Для усіх користувачів
 uk.tsk_CurrentUser=Тільки для поточного користувача
 uk.tsk_Other=Інше:
@@ -354,6 +383,7 @@ uk.types_default=Типове встановлення
 ; Vietnamese
 [CustomMessages]
 vi.sm_com_Changelog=Subtitle Edit's Changelog
+vi.run_ViewChangelog=View Changelog
 vi.tsk_AllUsers=For all users
 vi.tsk_CurrentUser=For the current user only
 vi.tsk_Other=Other:
@@ -366,6 +396,7 @@ vi.types_default=Default installation
 ; Chinese Simplified
 [CustomMessages]
 zh.sm_com_Changelog=Subtitle Edit 的更新日志
+zh.run_ViewChangelog=查看更新日志
 zh.tsk_AllUsers=为所有用户安装
 zh.tsk_CurrentUser=仅为当前用户安装
 zh.tsk_Other=其他：
@@ -378,6 +409,7 @@ zh.types_default=典型安装
 ; Chinese Traditional
 [CustomMessages]
 zhTW.sm_com_Changelog=Subtitle Edit 更新日誌
+zhTW.run_ViewChangelog=查看更新日誌
 zhTW.tsk_AllUsers=所有使用者
 zhTW.tsk_CurrentUser=僅目前使用者 
 zhTW.tsk_Other=其他：
