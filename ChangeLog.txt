@@ -13,6 +13,8 @@ v5.0.0-beta8 (xth March 2026)
 * Rename Purfview-Whisper-Faster to Purfview-Faster-Whisper-XXL
 * Fix TTML Rosetta alignment - thx james
 * Add new ASSA advanced effects
+* Add Video -> More -> Open seconds subtitle - thx matmaggi
+* Fixes for ASSA styles font handling
 
 -----------------------------------------------------------------------------------------------------
 

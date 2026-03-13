@@ -49,6 +49,7 @@ public partial class AssaStylesViewModel : ObservableObject
     public string Header { get; set; }
     public DataGrid FileStyleGrid { get; set; }
     public DataGrid StorageStyleGrid { get; set; }
+    public Subtitle ResultSubtitle => _subtitle;
 
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
@@ -65,7 +66,7 @@ public partial class AssaStylesViewModel : ObservableObject
         Title = string.Empty;
         FileStyles = new ObservableCollection<StyleDisplay>();
         StorageStyles = new ObservableCollection<StyleDisplay>();
-        Fonts = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
+        Fonts = new ObservableCollection<string>();
         BorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         SelectedBorderType = BorderTypes[0];
         CurrentTitle = string.Empty;
@@ -169,15 +170,20 @@ public partial class AssaStylesViewModel : ObservableObject
             vm.Initialize(_subtitle, new AdvancedSubStationAlpha(), _subtitleFileName);
         });
 
-        if (result.OkPressed && CurrentStyle != null && result.SelectedAttachment != null && !string.IsNullOrEmpty(result.SelectedAttachment.FontName))
+        if (result.OkPressed)
         {
-            if (!Fonts.Contains(result.SelectedAttachment.FontName))
-            {
-                Fonts.Insert(0, result.SelectedAttachment.FontName);
-            }
-
-            CurrentStyle.FontName = result.SelectedAttachment.FontName;
             _subtitle.Footer = result.Footer;
+
+            if (CurrentStyle != null && result.SelectedAttachment != null && !string.IsNullOrEmpty(result.SelectedAttachment.FontName))
+            {
+                if (!Fonts.Contains(result.SelectedAttachment.FontName))
+                {
+                    Fonts.Insert(0, result.SelectedAttachment.FontName);
+                }
+
+                CurrentStyle.FontName = result.SelectedAttachment.FontName;
+                _subtitle.Footer = result.Footer;
+            }
         }
     }
 
@@ -630,6 +636,8 @@ public partial class AssaStylesViewModel : ObservableObject
             }
         }
 
+        Task.Run(() => LoadFonts());
+
         UpdateUsages();
 
         if (FileStyles.Count > 0)
@@ -649,6 +657,22 @@ public partial class AssaStylesViewModel : ObservableObject
         IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
 
         _timerUpdatePreview.Start();
+    }
+
+    private void LoadFonts()
+    {
+        var fonts = FontHelper.GetLibAssaFonts();
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var font in fonts)
+            {
+                if (!Fonts.Contains(font))
+                {
+                    Fonts.Add(font);
+                }
+            }
+        });
     }
 
     private void UpdateUsages()
@@ -707,6 +731,7 @@ public partial class AssaStylesViewModel : ObservableObject
         var text = "This is a test";
 
         var fontSize = (float)style.FontSize;
+        var libAssFontName = FontHelper.GetSkiaFontNameFromLibAssaFontName(style.FontName);
         SKBitmap bitmap;
 
         if (style.BorderStyle.Style == BorderStyleType.BoxPerLine)
@@ -733,7 +758,7 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             bitmap = TextToImageGenerator.GenerateImageWithPadding(
                 text,
-                style.FontName,
+                libAssFontName,
                 fontSize,
                 style.Bold,
                 style.ColorPrimary.ToSKColor(),
@@ -749,7 +774,7 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             bitmap = TextToImageGenerator.GenerateImageWithPadding(
                 text,
-                style.FontName,
+                libAssFontName,
                 fontSize,
                 style.Bold,
                 style.ColorPrimary.ToSKColor(),

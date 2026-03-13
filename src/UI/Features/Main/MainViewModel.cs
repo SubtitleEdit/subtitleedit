@@ -884,6 +884,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             ApplyAssaStyles(result);
+            _subtitle.Footer = result.ResultSubtitle.Footer;
         }
     }
 

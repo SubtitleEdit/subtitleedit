@@ -15,6 +15,7 @@ public static class FontHelper
     }
 
     private static List<string>? _libAssaFontsCache;
+    private static Dictionary<string, string>? _libAssaToSkiaMapCache;
 
     /// <summary>
     /// Returns font family names compatible with libass.
@@ -60,6 +61,53 @@ public static class FontHelper
     /// </summary>
     public static string GetLibAssaFontName(SKTypeface typeface) =>
         ReadWin32FamilyName(typeface) ?? typeface.FamilyName;
+
+    /// <summary>
+    /// Given a libass-compatible (Win32/GDI, name ID 1) font family name,
+    /// returns the Skia typographic family name (<see cref="SKTypeface.FamilyName"/>)
+    /// that <see cref="SKFontManager"/> recognises for the same typeface.
+    /// Falls back to <paramref name="libAssaFontName"/> when no match is found.
+    /// Result is cached after the first call.
+    /// </summary>
+    public static string GetSkiaFontNameFromLibAssaFontName(string libAssaFontName)
+    {
+        if (string.IsNullOrEmpty(libAssaFontName))
+        {
+            return libAssaFontName;
+        }
+
+        return GetLibAssaToSkiaMap().TryGetValue(libAssaFontName, out var skiaName) ? skiaName : libAssaFontName;
+    }
+
+    private static Dictionary<string, string> GetLibAssaToSkiaMap() =>
+        _libAssaToSkiaMapCache ??= BuildLibAssaToSkiaMap();
+
+    private static Dictionary<string, string> BuildLibAssaToSkiaMap()
+    {
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var skManager = SKFontManager.Default;
+
+        foreach (var familyName in skManager.FontFamilies)
+        {
+            using var styleSet = skManager.GetFontStyles(familyName);
+            for (var i = 0; i < styleSet.Count; i++)
+            {
+                using var typeface = styleSet.CreateTypeface(i);
+                if (typeface == null)
+                {
+                    continue;
+                }
+
+                var win32Name = ReadWin32FamilyName(typeface);
+                if (!string.IsNullOrEmpty(win32Name) && !map.ContainsKey(win32Name))
+                {
+                    map[win32Name] = typeface.FamilyName;
+                }
+            }
+        }
+
+        return map;
+    }
 
     /// <summary>
     /// Reads name ID 1 (Win32/GDI family name) from the OpenType 'name' table.
