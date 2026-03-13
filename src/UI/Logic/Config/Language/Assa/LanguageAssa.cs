@@ -160,6 +160,8 @@ public class LanguageAssa
     public string AdvancedEffectAudioBarsDescription { get; set; }
     public string AdvancedEffectAudioPulse { get; set; }
     public string AdvancedEffectAudioPulseDescription { get; set; }
+    public string AdvancedEffectConfetti { get; set; }
+    public string AdvancedEffectConfettiDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -322,5 +324,7 @@ public class LanguageAssa
         AdvancedEffectAudioBarsDescription = "Animated equalizer bars driven by the audio waveform — bars scroll left as a waveform and pulse with the audio";
         AdvancedEffectAudioPulse = "Audio text pulse";
         AdvancedEffectAudioPulseDescription = "Subtitle text glows and pulses with the audio volume — quiet sections show normal text, loud peaks add a coloured halo and slight scale-up";
+        AdvancedEffectConfetti = "Confetti burst";
+        AdvancedEffectConfettiDescription = "Explosive burst of colorful spinning paper confetti from corner poppers and a center starburst at each subtitle";
     }
 }
