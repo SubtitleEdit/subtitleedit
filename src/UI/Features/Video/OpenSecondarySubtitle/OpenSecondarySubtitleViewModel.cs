@@ -130,8 +130,8 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 _ = VideoPlayerControl.Open(videoFileName);
             }
 
-            var width = mediaInfo?.Dimension.Width ?? 1920;
-            FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultWidth, width, Se.Settings.Video.MpvPreviewFontSize);
+            var height = mediaInfo?.Dimension.Height ?? 1080;
+            FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
         });
     }
 
@@ -297,6 +297,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             ScaleY = 100,
         };
 
+        if (!mergeWithSubtitle && _subtitleFormat.GetType() != typeof(AdvancedSubStationAlpha))
+        {
+            style.FontSize = Se.Settings.Video.MpvPreviewFontSize;
+        }
+
         style.Outline = new SkiaSharp.SKColor(style.Outline.Red, style.Outline.Green, style.Outline.Blue, SubtitleColor.A);
         style.Background = new SkiaSharp.SKColor(style.Background.Red, style.Background.Green, style.Background.Blue, SubtitleColor.A);
 
@@ -329,7 +334,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             else
             {
                 var defaultStyle = AdvancedSubStationAlpha.GetSsaStyle("Default", result.Header);
-                defaultStyle.FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultWidth, width, Se.Settings.Video.MpvPreviewFontSize);
+                defaultStyle.FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
                 defaultStyle.Bold = Se.Settings.Video.MpvPreviewFontBold;
                 result.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(result.Header, defaultStyle);
 

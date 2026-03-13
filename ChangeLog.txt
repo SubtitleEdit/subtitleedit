@@ -12,6 +12,7 @@ v5.0.0-beta8 (xth March 2026)
 * Add NOcr CaseFixer warmup
 * Rename Purfview-Whisper-Faster to Purfview-Faster-Whisper-XXL
 * Fix TTML Rosetta alignment - thx james
+* Add new ASSA advanced effects
 
 -----------------------------------------------------------------------------------------------------
 

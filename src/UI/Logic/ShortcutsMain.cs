@@ -334,6 +334,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowBeautifyTimeCodesCommand), Se.Language.Tools.BeautifyTimeCodes.Title },
         { nameof(MainViewModel.ZoomLayoutInCommand), Se.Language.Options.Shortcuts.LayoutZoomIn },
         { nameof(MainViewModel.ZoomLayoutOutCommand), Se.Language.Options.Shortcuts.LayoutZoomOut },
+        { nameof(MainViewModel.OpenSecondarySubtitleCommand), Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer },
     };
 
     private static List<AvailableShortcut> GetAllAvailableShortcuts(MainViewModel vm)
@@ -615,6 +616,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowBeautifyTimeCodesCommand, nameof(vm.ShowBeautifyTimeCodesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ZoomLayoutInCommand, nameof(vm.ZoomLayoutInCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ZoomLayoutOutCommand, nameof(vm.ZoomLayoutOutCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.OpenSecondarySubtitleCommand, nameof(vm.OpenSecondarySubtitleCommand), ShortcutCategory.General);
 
         return shortcuts;
     }

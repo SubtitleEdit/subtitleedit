@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
@@ -16,7 +17,7 @@ public class OpenSecondarySubtitleWindow : Window
     public OpenSecondarySubtitleWindow(OpenSecondarySubtitleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Secondary Subtitle Appearance";
+        Title = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer;
         CanResize = true;
         Width = 1100;
         Height = 700;
@@ -28,8 +29,8 @@ public class OpenSecondarySubtitleWindow : Window
         var labelWidth = 100;
 
         // Color row
-        var labelColor = UiUtil.MakeLabel("Color").WithMinWidth(labelWidth);
-        var buttonColor = UiUtil.MakeButton("Choose color...", vm.ChooseColorCommand).WithMinWidth(120);
+        var labelColor = UiUtil.MakeLabel(Se.Language.General.Color).WithMinWidth(labelWidth);
+        var buttonColor = UiUtil.MakeButton(Se.Language.General.ChooseColorDotDotDot, vm.ChooseColorCommand).WithMinWidth(120);
         var colorPreview = new Border
         {
             Width = 30,
@@ -46,17 +47,17 @@ public class OpenSecondarySubtitleWindow : Window
         var panelColor = UiUtil.MakeHorizontalPanel(labelColor, buttonColor, colorPreview);
 
         // Font size row
-        var labelFontSize = UiUtil.MakeLabel("Font size").WithMinWidth(labelWidth);
+        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize).WithMinWidth(labelWidth);
         var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 46, 120, vm, nameof(vm.FontSize));
         var panelFontSize = UiUtil.MakeHorizontalPanel(labelFontSize, numericFontSize);
 
         // Border style row
-        var labelBorderStyle = UiUtil.MakeLabel("Border style").WithMinWidth(labelWidth);
+        var labelBorderStyle = UiUtil.MakeLabel(Se.Language.General.BorderStyle).WithMinWidth(labelWidth);
         var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType)).WithMinWidth(160);
         var panelBorderStyle = UiUtil.MakeHorizontalPanel(labelBorderStyle, comboBoxBorderStyle);
 
         // Alignment row
-        var labelAlignment = UiUtil.MakeLabel("Alignment").WithMinWidth(labelWidth);
+        var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment).WithMinWidth(labelWidth);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
         var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
@@ -84,7 +85,7 @@ public class OpenSecondarySubtitleWindow : Window
         vm.ComboBoxParagraphs = comboBoxParagraphs;
         comboBoxParagraphs.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
-        var buttonPlay = UiUtil.MakeButton("Play current", vm.PlayAndBackCommand)
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayAndBackCommand)
             .WithLeftAlignment();
 
         var videoGrid = new Grid
