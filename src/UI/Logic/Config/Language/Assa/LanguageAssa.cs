@@ -162,6 +162,8 @@ public class LanguageAssa
     public string AdvancedEffectAudioPulseDescription { get; set; }
     public string AdvancedEffectConfetti { get; set; }
     public string AdvancedEffectConfettiDescription { get; set; }
+    public string AdvancedEffectHearts { get; set; }
+    public string AdvancedEffectHeartsDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -326,5 +328,7 @@ public class LanguageAssa
         AdvancedEffectAudioPulseDescription = "Subtitle text glows and pulses with the audio volume — quiet sections show normal text, loud peaks add a coloured halo and slight scale-up";
         AdvancedEffectConfetti = "Confetti burst";
         AdvancedEffectConfettiDescription = "Explosive burst of colorful spinning paper confetti from corner poppers and a center starburst at each subtitle";
+        AdvancedEffectHearts = "Hearts (rain)";
+        AdvancedEffectHeartsDescription = "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle";
     }
 }
