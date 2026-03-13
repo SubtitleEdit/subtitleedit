@@ -2603,6 +2603,8 @@ public partial class MainViewModel :
             AudioVisualizer.ResetCache();
             _updateAudioVisualizer = true;
         }
+
+        ShowStatus(Se.Settings.Waveform.SpectrogramStyle);
     }
 
     [RelayCommand]

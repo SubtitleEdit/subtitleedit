@@ -1221,18 +1221,64 @@ public class WavePeakGenerator2 : IDisposable
         }
 
         /// <summary>
-        /// Viridis color palette - perceptually uniform color scheme from dark purple to yellow-green
+        /// Fancy green-to-orange palette matching the Fancy waveform style:
+        /// silence → dark green (0,70,0) → vivid green → amber → orange (255,165,0) → bright warm peak
         /// </summary>
         private static SKColor PaletteValueViridis(int x, int range)
         {
             double t = (double)x / range;
 
-            // Viridis polynomial approximation
-            double r = 0.267004 + t * (0.281908 + t * (-1.135700 + t * (1.155175 + t * (-0.569888))));
-            double g = 0.004874 + t * (1.336760 + t * (-0.747169 + t * (0.144650 + t * (0.239742))));
-            double b = 0.329415 + t * (1.375486 + t * (-2.889028 + t * (2.790644 + t * (-1.283776))));
+            double r, g, b;
 
-            // Clamp and convert to bytes
+            if (t < 0.18)
+            {
+                // Black → dark green  (matching WaveformColor base: 0,70,0)
+                double localT = t / 0.18;
+                r = 0.0;
+                g = 0.274 * localT;
+                b = 0.0;
+            }
+            else if (t < 0.42)
+            {
+                // Dark green → vivid green
+                double localT = (t - 0.18) / 0.24;
+                r = 0.06 * localT;
+                g = 0.274 + (0.780 - 0.274) * localT;
+                b = 0.06 * localT;
+            }
+            else if (t < 0.62)
+            {
+                // Vivid green → yellow-green (red rises, blue fades)
+                double localT = (t - 0.42) / 0.20;
+                r = 0.06 + (0.55 - 0.06) * localT;
+                g = 0.780 + (0.920 - 0.780) * localT;
+                b = 0.06 * (1.0 - localT);
+            }
+            else if (t < 0.80)
+            {
+                // Yellow-green → amber
+                double localT = (t - 0.62) / 0.18;
+                r = 0.55 + (0.95 - 0.55) * localT;
+                g = 0.920 - (0.920 - 0.740) * localT;
+                b = 0.0;
+            }
+            else if (t < 0.93)
+            {
+                // Amber → orange  (matching WaveformFancyHighColor: 255,165,0)
+                double localT = (t - 0.80) / 0.13;
+                r = 0.95 + (1.000 - 0.95) * localT;
+                g = 0.740 - (0.740 - 0.647) * localT;
+                b = 0.0;
+            }
+            else
+            {
+                // Orange → bright warm highlight at peak
+                double localT = (t - 0.93) / 0.07;
+                r = 1.0;
+                g = 0.647 + (0.880 - 0.647) * localT;
+                b = 0.50 * localT;
+            }
+
             r = Math.Max(0, Math.Min(1, r));
             g = Math.Max(0, Math.Min(1, g));
             b = Math.Max(0, Math.Min(1, b));
