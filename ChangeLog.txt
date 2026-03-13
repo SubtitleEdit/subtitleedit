@@ -1,12 +1,17 @@
+
 Subtitle Edit Changelog
+
 
 v5.0.0-beta8 (xth March 2026)
 
 * Use language from installer at first use - thx bovirus
+* Option for showing change log in installer
 * Translate about box - thx bovirus
 * Minor spectrogram fixes (you can toggle style live via a shortcut)
 * Add classic/legacy icon theme - thx GrampaWildWilly
 * Add NOcr CaseFixer warmup
+* Rename Purfview-Whisper-Faster to Purfview-Faster-Whisper-XXL
+* Fix TTML Rosetta alignment - thx james
 
 -----------------------------------------------------------------------------------------------------
 

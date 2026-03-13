@@ -388,6 +388,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
 
+            var regionDisplayAlignments = new Dictionary<string, string>();
+            var layoutNode = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:layout", namespaceManager);
+            if (layoutNode != null)
+            {
+                foreach (XmlNode regionNode in layoutNode.SelectNodes("ttml:region", namespaceManager))
+                {
+                    var id = regionNode.Attributes?["xml:id"]?.Value ?? regionNode.Attributes?["id"]?.Value;
+                    var displayAlign = regionNode.Attributes?["tts:displayAlign"]?.Value ?? "after";
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        regionDisplayAlignments[id] = displayAlign;
+                    }
+                }
+            }
+
             foreach (XmlNode divNode in body.SelectNodes("ttml:div", namespaceManager))
             {
                 TimedText10.ExtractTimeCodes(divNode, subtitle, out var begin, out var end);
@@ -403,7 +418,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var paragraphStyle = firstPNode.Attributes?["style"]?.Value ?? string.Empty;
                     
                     // Get the alignment tag
-                    var alignmentTag = GetAlignmentTagFromRegionAndStyle(regionId, paragraphStyle);
+                    var displayAlign = regionDisplayAlignments.TryGetValue(regionId, out var da) ? da : "after";
+                    var alignmentTag = GetAlignmentTagFromRegionAndStyle(paragraphStyle, displayAlign);
                     
                     // Read all <p> nodes and combine them with line breaks
                     var textBuilder = new StringBuilder();
@@ -454,16 +470,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "an2"; // default: bottom-center
         }
 
-        private static string GetAlignmentTagFromRegionAndStyle(string regionId, string paragraphStyle)
+        private static string GetAlignmentTagFromRegionAndStyle(string paragraphStyle, string displayAlign = "after")
         {
-            // Determine vertical position from region
-            var verticalPosition = regionId switch
+            // Determine vertical position from region's tts:displayAlign attribute
+            var verticalPosition = displayAlign switch
             {
-                "R0" => "bottom",
-                "R1" => "middle",
-                "R2" => "top",
-                "R3" => "middle",
-                _ => "bottom" // default
+                "before" => "top",
+                "center" => "middle",
+                "after" => "bottom",
+                _ => "bottom"
             };
 
             // Determine horizontal position from paragraph style

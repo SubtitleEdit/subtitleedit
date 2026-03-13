@@ -84,8 +84,39 @@ public class TimedTextImscRosettaTest
         // load xml
         subtitle = new Subtitle();
         sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
-        
+
         // verify that the text still has top alignment tag
         Assert.Equal(text, subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void DisplayAlignBefore_IsTopAligned()
+    {
+        // A region with tts:displayAlign="before" means top alignment.
+        // Previously, R1 was hardcoded to "middle", causing top-aligned
+        // subtitles from external files to be incorrectly center-aligned.
+        var sut = new TimedTextImscRosetta();
+
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                  "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xmlns:rosetta=\"https://github.com/imsc-rosetta/specification\" ttp:timeBase=\"media\" ttp:frameRate=\"25\" ttp:frameRateMultiplier=\"1 1\" xml:lang=\"en-US\">" +
+                  "<head>" +
+                  "<metadata><rosetta:format>imsc-rosetta</rosetta:format><rosetta:version>0.0.0</rosetta:version></metadata>" +
+                  "<styling><style xml:id=\"p_font2\" tts:fontFamily=\"proportionalSansSerif\" tts:lineHeight=\"125%\" tts:fontSize=\"100%\"/></styling>" +
+                  "<layout>" +
+                  "<region xml:id=\"R0\" tts:origin=\"10% 10%\" tts:extent=\"80% 80%\" tts:displayAlign=\"after\" style=\"r_default\"/>" +
+                  "<region xml:id=\"R1\" tts:origin=\"10% 10%\" tts:extent=\"80% 80%\" tts:displayAlign=\"before\" style=\"r_default\"/>" +
+                  "</layout>" +
+                  "</head>" +
+                  "<body>" +
+                  "<div xml:id=\"e_12\" region=\"R1\" begin=\"00:00:44.320\" end=\"00:00:45.280\" style=\"d_default\">" +
+                  "<p style=\"p_font2\"><span>\"MIND-BENDINGLY BRILLIANT\"</span></p>" +
+                  "</div>" +
+                  "</body></tt>";
+
+        var subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.StartsWith("{\\an8}", subtitle.Paragraphs[0].Text);
     }
 }
