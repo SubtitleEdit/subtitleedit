@@ -84,6 +84,7 @@ public class LanguageSettings
     public string GridCompactMode { get; set; }
     public string UiFont { get; set; }
     public string Theme { get; set; }
+    public string IconTheme { get; set; }
     public string DarkThemeForegroundColor { get; set; }
     public string DarkThemeBackgroundColor { get; set; }
     public string ShowGridLines { get; set; }
@@ -347,6 +348,7 @@ public class LanguageSettings
         GridCompactMode = "Use compact mode for grids";
         UiFont = "UI font";
         Theme = "Theme";
+        Theme = "Icon theme";
         DarkThemeForegroundColor = "Dark theme foreground color";
         DarkThemeBackgroundColor = "Dark theme background color";
         ShowGridLines = "Show grid lines";

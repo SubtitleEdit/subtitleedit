@@ -574,6 +574,7 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.Appearance,
         [
             new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
+            new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
                 (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) , 
                 (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero), 
