@@ -30,6 +30,13 @@ public class AboutWindow : Window
             FontWeight = FontWeight.Bold,
         };
 
+        var translatedByText = new TextBlock
+        {
+            Text = vm.TranslatedBy,
+            FontSize = 12,
+        };
+        translatedByText.IsVisible = !string.IsNullOrEmpty(Se.Language.TranslatedBy);
+
         var licenseText = new TextBlock
         {
             Text = vm.LicenseText,
@@ -53,7 +60,7 @@ public class AboutWindow : Window
 
         var githubLink = new TextBlock
         {
-            Text = "Github",
+            Text = Se.Language.About.GitHub,
             Foreground = UiUtil.MakeLinkForeground(),
             Cursor = new Cursor(StandardCursorType.Hand),
         };
@@ -64,14 +71,14 @@ public class AboutWindow : Window
             Orientation = Orientation.Horizontal,
             Children =
             {
-                new TextBlock { Text = "Issue tracking and source code: " },
+                new TextBlock { Text = Se.Language.About.IssueTrackingAndSourceCode },
                 githubLink,
             }
         };
 
         var paypalLink = new TextBlock
         {
-            Text = "PayPal",
+            Text = Se.Language.About.PayPal,
             Foreground = UiUtil.MakeLinkForeground(),
             Cursor = new Cursor(StandardCursorType.Hand),
         };
@@ -79,7 +86,7 @@ public class AboutWindow : Window
 
         var githubSponsorLink = new TextBlock
         {
-            Text = "Github sponsor",
+            Text = Se.Language.About.GitHubSponsor,
             Foreground = UiUtil.MakeLinkForeground(),
             Cursor = new Cursor(StandardCursorType.Hand),
         };
@@ -90,9 +97,9 @@ public class AboutWindow : Window
             Orientation = Orientation.Horizontal,
             Children =
             {
-                new TextBlock { Text = "Donate: " },
+                new TextBlock { Text = Se.Language.About.Donate },
                 paypalLink,
-                new TextBlock { Text = " or " },
+                new TextBlock { Text = Se.Language.About.Or },
                 githubSponsorLink
             }
         };
@@ -107,6 +114,7 @@ public class AboutWindow : Window
             Children =
             {
                 titleText,
+                translatedByText,
                 licenseText,
                 imageAbout,
                 descriptionText,

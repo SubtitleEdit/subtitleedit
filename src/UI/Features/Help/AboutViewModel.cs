@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Threading.Tasks;
 
@@ -14,13 +15,9 @@ public partial class AboutViewModel : ObservableObject
     public Window? Window { get; set; }
 
     public string TitleText => $"Subtitle Edit {Se.Version}";
-    public string LicenseText => "Subtitle Edit is free software under the MIT license.";
-    public string DescriptionText =>
-       "Subtitle Edit 5 beta is a development version of our upcoming major release." + Environment.NewLine +
-       "We are actively refining the new tools and appreciate your help in testing." + Environment.NewLine +
-       "Please share your feedback to help us ensure the best possible final version." + Environment.NewLine +
-       Environment.NewLine +
-       "Thank you for being part of the Subtitle Edit community! :)";
+    public string TranslatedBy => string.Format(Se.Language.About.TranslatedBy, Se.Language.TranslatedBy);
+    public string LicenseText => Se.Language.About.LicenseText;
+    public string DescriptionText => string.Join(Environment.NewLine, Se.Language.About.DescriptionTextBeta.SplitToLines());
 
     [RelayCommand]
     private async Task OpenGitHub()

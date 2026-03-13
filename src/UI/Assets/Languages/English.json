@@ -1600,7 +1600,8 @@
     "generateBlankVideoTitle": "Generate blank video",
     "reEncodeVideoForBetterSubtitlingTitle": "Re-encode video for better subtitling",
     "reEncodeVideoForBetterSubtitlingDotDotDot": "Re-encode video for better subtitling...",
-    "openSecondarySubtitleOnVideoPlayerDotDotDot": "Open secondary subtitle on video player...",
+    "openSecondarySubtitleOnVideoPlayerDotDotDot": "Secondary subtitle on video player, open...",
+    "removeSecondarySubtitleOnVideoPlayer": "Secondary subtitle on video player, remove",
     "cutVideoTitle": "Cut video",
     "cutVideoDotDotDot": "Cut video...",
     "embedSubtitlesDotDotDot": "Add/remove embedded subtitles...",
@@ -1644,6 +1645,7 @@
     "spectrogramClassicPlasma": "Plasma",
     "spectrogramClassicInferno": "Inferno",
     "spectrogramClassicTurbo": "Turbo",
+    "spectrogramNeon": "Neon",
     "waveformDrawStyleClassic": "Classic",
     "waveformDrawStyleFancy": "Fancy",
     "setVideoPositionAndPauseAndSelectSubtitle": "Set video position, pause, and select subtitle",
@@ -1765,6 +1767,7 @@
       "gridCompactMode": "Use compact mode for grids",
       "uiFont": "UI font",
       "theme": "Theme",
+      "iconTheme": "Icon theme",
       "darkThemeForegroundColor": "Dark theme foreground color",
       "darkThemeBackgroundColor": "Dark theme background color",
       "showGridLines": "Show grid lines",
@@ -2429,5 +2432,17 @@
     "advancedEffectAudioBarsDescription": "Animated equalizer bars driven by the audio waveform \u2014 bars scroll left as a waveform and pulse with the audio",
     "advancedEffectAudioPulse": "Audio text pulse",
     "advancedEffectAudioPulseDescription": "Subtitle text glows and pulses with the audio volume \u2014 quiet sections show normal text, loud peaks add a coloured halo and slight scale-up"
+  },
+  "about": {
+    "title": "About Subtite Edit",
+    "translatedBy": "Translated by: {0}",
+    "licenseText": "Subtitle Edit is free software under the MIT license.",
+    "descriptionTextBeta": "Subtitle Edit 5 beta is a development version of our upcoming major release.\nWe are actively refining the new tools and appreciate your help in testing.\nPlease share your feedback to help us ensure the best possible final version.\n\nThank you for being part of the Subtitle Edit community! :)",
+    "issueTrackingAndSourceCode": "Issue tracking and source code: ",
+    "gitHub": "Github",
+    "donate": "Donate: ",
+    "payPal": "PayPal",
+    "gitHubSponsor": "Github sponsor",
+    "or": " or "
   }
 }
