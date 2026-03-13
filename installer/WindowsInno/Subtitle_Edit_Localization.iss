@@ -4,6 +4,7 @@
 [CustomMessages]
 en.sm_com_Changelog=Subtitle Edit's Changelog
 en.run_ViewChangelog=View Changelog
+en.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 en.tsk_AllUsers=For all users
 en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
@@ -17,6 +18,7 @@ en.types_default=Default installation
 [CustomMessages]
 ar.sm_com_Changelog=Subtitle Edit's Changelog
 ar.run_ViewChangelog=View Changelog
+ar.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 ar.tsk_AllUsers=For all users
 ar.tsk_CurrentUser=For the current user only
 ar.tsk_Other=Other:
@@ -30,6 +32,7 @@ ar.types_default=Default installation
 [CustomMessages]
 bg.sm_com_Changelog=Subtitle Edit's Changelog
 bg.run_ViewChangelog=View Changelog
+bg.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 bg.tsk_AllUsers=For all users
 bg.tsk_CurrentUser=For the current user only
 bg.tsk_Other=Other:
@@ -43,6 +46,7 @@ bg.types_default=Default installation
 [CustomMessages]
 ca.sm_com_Changelog=Registre de canvis de Subtitle Edit
 ca.run_ViewChangelog=Mostra el registre de canvis
+ca.msg_DeleteSettings=Voleu suprimir la configuració personal de Subtitle Edit?
 ca.tsk_AllUsers=Per a tots els usuaris
 ca.tsk_CurrentUser=Només per a l'usuari actual
 ca.tsk_Other=Altre:
@@ -56,6 +60,7 @@ ca.types_default=Instal·lació predeterminada
 [CustomMessages]
 cs.sm_com_Changelog=Seznam změn Subtitle Edit
 cs.run_ViewChangelog=Zobrazit seznam změn
+cs.msg_DeleteSettings=Chcete odstranit osobní nastavení Subtitle Edit?
 cs.tsk_AllUsers=Pro všechny uživatele
 cs.tsk_CurrentUser=Pouze pro aktuálního uživatele
 cs.tsk_Other=Ostatní:
@@ -69,6 +74,7 @@ cs.types_default=Výchozí instalace
 [CustomMessages]
 da.sm_com_Changelog=Subtitle Edit ændringslog
 da.run_ViewChangelog=Vis ændringslog
+da.msg_DeleteSettings=Vil du slette dine personlige indstillinger for Subtitle Edit?
 da.tsk_AllUsers=For alle brugere
 da.tsk_CurrentUser=Kun for aktulle bruger
 da.tsk_Other=Andre:
@@ -82,6 +88,7 @@ da.types_default=Default installation
 [CustomMessages]
 de.sm_com_Changelog=Subtitle Edit Änderungen
 de.run_ViewChangelog=Änderungsprotokoll anzeigen
+de.msg_DeleteSettings=Möchten Sie Ihre persönlichen Einstellungen für Subtitle Edit löschen?
 de.tsk_AllUsers=Für alle Benutzer
 de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
@@ -95,6 +102,7 @@ de.types_default=Standardinstallation
 [CustomMessages]
 el.sm_com_Changelog=Ιστορικό του Subtitle Edit
 el.run_ViewChangelog=Προβολή ιστορικού
+el.msg_DeleteSettings=Θέλετε να διαγράψετε τις προσωπικές ρυθμίσεις του Subtitle Edit;
 el.tsk_AllUsers=Για όλους τους χρήστες
 el.tsk_CurrentUser=Μόνο για τον τρέχων χρήστη
 el.tsk_Other=Άλλα:
@@ -108,6 +116,7 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 [CustomMessages]
 es.sm_com_Changelog=Historial de Subtitle Edit
 es.run_ViewChangelog=Ver el historial de cambios
+es.msg_DeleteSettings=¿Desea eliminar su configuración personal de Subtitle Edit?
 es.tsk_AllUsers=Para todos los usuarios
 es.tsk_CurrentUser=Para el usuario actual
 es.tsk_Other=Otro:
@@ -122,6 +131,7 @@ es.types_default=Instalacion predefinida
 [CustomMessages]
 fa.sm_com_Changelog=تغییرات در نسخه جدید
 fa.run_ViewChangelog=مشاهده تغییرات
+fa.msg_DeleteSettings=آیا می‌خواهید تنظیمات شخصی Subtitle Edit را حذف کنید؟
 fa.tsk_AllUsers=برای تمامی کاربران سیستم
 fa.tsk_CurrentUser=فقط برای کاربر جاری
 fa.tsk_Other=دیگر:
@@ -135,6 +145,7 @@ fa.types_default=نصب پیشفرض
 [CustomMessages]
 fi.sm_com_Changelog=Subtitle Edit:n muutosloki
 fi.run_ViewChangelog=Näytä muutosloki
+fi.msg_DeleteSettings=Haluatko poistaa Subtitle Editin henkilökohtaiset asetukset?
 fi.tsk_AllUsers=Kaikille käyttäjille
 fi.tsk_CurrentUser=Vain nykyiselle käyttäjälle
 fi.tsk_Other=Muuta:
@@ -148,6 +159,7 @@ fi.types_default=Oletusasennus
 [CustomMessages]
 fr.sm_com_Changelog=Journal des modifications de Subtitle Edit
 fr.run_ViewChangelog=Voir le journal des modifications
+fr.msg_DeleteSettings=Voulez-vous supprimer vos paramètres personnels de Subtitle Edit ?
 fr.tsk_AllUsers=Pour tous les utilisateurs
 fr.tsk_CurrentUser=Uniquement pour l'utilisateur actuel
 fr.tsk_Other=Autre :
@@ -161,6 +173,7 @@ fr.types_default=Installation par défaut
 [CustomMessages]
 hr.sm_com_Changelog=Subtitle Edit's Changelog
 hr.run_ViewChangelog=View Changelog
+hr.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 hr.tsk_AllUsers=For all users
 hr.tsk_CurrentUser=For the current user only
 hr.tsk_Other=Other:
@@ -174,6 +187,7 @@ hr.types_default=Default installation
 [CustomMessages]
 hu.sm_com_Changelog=Subtitle Edit's változásnapló
 hu.run_ViewChangelog=Változásnapló megtekintése
+hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit személyes beállításait?
 hu.tsk_AllUsers=Az összes felhasználó számára
 hu.tsk_CurrentUser=Csak a jelenlegi felhasználó számára
 hu.tsk_Other=Egyéb:
@@ -187,6 +201,7 @@ hu.types_default=Default installation
 [CustomMessages]
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
 it.run_ViewChangelog=Visualizza le novità
+it.msg_DeleteSettings=Vuoi eliminare le impostazioni personali di Subtitle Edit?
 it.tsk_AllUsers=Per tutti gli utenti
 it.tsk_CurrentUser=Solo per l'utente attuale
 it.tsk_Other=Altre attività:
@@ -202,6 +217,7 @@ it.tsk_AllUsers=Per tutti gli utenti
 [CustomMessages]
 ja.sm_com_Changelog=Subtitle Editの変更履歴
 ja.run_ViewChangelog=変更履歴を表示する
+ja.msg_DeleteSettings=Subtitle Edit の個人設定を削除しますか？
 ja.tsk_AllUsers=すべてのユーザー
 ja.tsk_CurrentUser=このユーザーのみ
 ja.tsk_Other=その他:
@@ -215,6 +231,7 @@ ja.types_default=デフォルトインストール
 [CustomMessages]
 ko.sm_com_Changelog=Subtitle Edit 변경 내역
 ko.run_ViewChangelog=변경 내역 보기
+ko.msg_DeleteSettings=Subtitle Edit의 개인 설정을 삭제하시겠습니까?
 ko.tsk_AllUsers=모든 사용자
 ko.tsk_CurrentUser=현재 사용자
 ko.tsk_Other=기타:
@@ -228,6 +245,7 @@ ko.types_default=기본 설치
 [CustomMessages]
 nl.sm_com_Changelog=Recente wijzigingen in Subtitle Edit
 nl.run_ViewChangelog=Wijzigingen bekijken
+nl.msg_DeleteSettings=Wilt u uw persoonlijke instellingen voor Subtitle Edit verwijderen?
 nl.tsk_AllUsers=Voor alle gebruikers
 nl.tsk_CurrentUser=Alleen voor huidige gebruiker
 nl.tsk_Other=Anders:
@@ -241,6 +259,7 @@ nl.types_default=Standaardinstallatie
 [CustomMessages]
 pl.sm_com_Changelog=Lista zmian w Subtitle Edit
 pl.run_ViewChangelog=Wyświetl listę zmian
+pl.msg_DeleteSettings=Czy chcesz usunąć swoje osobiste ustawienia Subtitle Edit?
 pl.tsk_AllUsers=Dla wszystkich użytkowników
 pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
 pl.tsk_Other=Inne:
@@ -254,6 +273,7 @@ pl.types_default=Instalacja domyślna
 [CustomMessages]
 pt.sm_com_Changelog=Registo de alterações do Subtitle Edit
 pt.run_ViewChangelog=Ver registo de alterações
+pt.msg_DeleteSettings=Pretende eliminar as suas definições pessoais do Subtitle Edit?
 pt.tsk_AllUsers=Todos os utilizadores
 pt.tsk_CurrentUser=Utilizador atual
 pt.tsk_Other=Outro:
@@ -267,6 +287,7 @@ pt.types_default=Instalação predefinida
 [CustomMessages]
 ptBR.sm_com_Changelog=Changelog do Subtitle Edit
 ptBR.run_ViewChangelog=Ver changelog
+ptBR.msg_DeleteSettings=Deseja excluir suas configurações pessoais do Subtitle Edit?
 ptBR.tsk_AllUsers=Todos os usuários
 ptBR.tsk_CurrentUser=Usuário atual
 ptBR.tsk_Other=Outro:
@@ -280,6 +301,7 @@ ptBR.types_default=Instalação padrão
 [CustomMessages]
 ru.sm_com_Changelog=Журнал изменений "Subtitle Edit"
 ru.run_ViewChangelog=Показать журнал изменений
+ru.msg_DeleteSettings=Вы хотите удалить личные настройки Subtitle Edit?
 ru.tsk_AllUsers=Для всех пользователей
 ru.tsk_CurrentUser=Только для текущего пользователя
 ru.tsk_Other=Другие задачи:
@@ -293,6 +315,7 @@ ru.types_default=Обычная установка
 [CustomMessages]
 sl.sm_com_Changelog=Subtitle Edit's Changelog
 sl.run_ViewChangelog=View Changelog
+sl.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 sl.tsk_AllUsers=For all users
 sl.tsk_CurrentUser=For the current user only
 sl.tsk_Other=Other:
@@ -306,6 +329,7 @@ sl.types_default=Default installation
 [CustomMessages]
 srC.sm_com_Changelog=Дневник измена
 srC.run_ViewChangelog=Погледај дневник измена
+srC.msg_DeleteSettings=Да ли желите да избришете личне поставке програма Subtitle Edit?
 srC.tsk_AllUsers=За све кориснике
 srC.tsk_CurrentUser=Само за текућег корисника
 srC.tsk_Other=Друго:
@@ -319,6 +343,7 @@ srC.types_default=Подразумевана инсталација
 [CustomMessages]
 srL.sm_com_Changelog=Dnevnik izmena
 srL.run_ViewChangelog=Pogledaj dnevnik izmena
+srL.msg_DeleteSettings=Da li želite da izbrišete lične postavke programa Subtitle Edit?
 srL.tsk_AllUsers=Za sve korisnike
 srL.tsk_CurrentUser=Samo za tekućeg korisnika
 srL.tsk_Other=Drugo:
@@ -332,6 +357,7 @@ srL.types_default=Podrazumevana instalacija
 [CustomMessages]
 sv.sm_com_Changelog=Subtitle Edit's Changelog
 sv.run_ViewChangelog=View Changelog
+sv.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 sv.tsk_AllUsers=For all users
 sv.tsk_CurrentUser=For the current user only
 sv.tsk_Other=Other:
@@ -345,6 +371,7 @@ sv.types_default=Default installation
 [CustomMessages]
 th.sm_com_Changelog=Subtitle Edit's Changelog
 th.run_ViewChangelog=View Changelog
+th.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 th.tsk_AllUsers=For all users
 th.tsk_CurrentUser=For the current user only
 th.tsk_Other=Other:
@@ -358,6 +385,7 @@ th.types_default=Default installation
 [CustomMessages]
 tr.sm_com_Changelog=Subtitle Edit'in Değişiklik Günlüğü
 tr.run_ViewChangelog=Değişiklik Günlüğünü görüntüle
+tr.msg_DeleteSettings=Subtitle Edit'e ait kişisel ayarlarınızı silmek istiyor musunuz?
 tr.tsk_AllUsers=Tüm kullanıcılar için
 tr.tsk_CurrentUser=Sadece geçerli kullanıcı için
 tr.tsk_Other=Diğer:
@@ -371,6 +399,7 @@ tr.types_default=Varsayılan kurulum
 [CustomMessages]
 uk.sm_com_Changelog=Журнал версій Subtitle Edit
 uk.run_ViewChangelog=Переглянути журнал версій
+uk.msg_DeleteSettings=Ви хочете видалити особисті налаштування Subtitle Edit?
 uk.tsk_AllUsers=Для усіх користувачів
 uk.tsk_CurrentUser=Тільки для поточного користувача
 uk.tsk_Other=Інше:
@@ -384,6 +413,7 @@ uk.types_default=Типове встановлення
 [CustomMessages]
 vi.sm_com_Changelog=Subtitle Edit's Changelog
 vi.run_ViewChangelog=View Changelog
+vi.msg_DeleteSettings=Do you want to delete your personal settings for Subtitle Edit?
 vi.tsk_AllUsers=For all users
 vi.tsk_CurrentUser=For the current user only
 vi.tsk_Other=Other:
@@ -397,6 +427,7 @@ vi.types_default=Default installation
 [CustomMessages]
 zh.sm_com_Changelog=Subtitle Edit 的更新日志
 zh.run_ViewChangelog=查看更新日志
+zh.msg_DeleteSettings=是否删除 Subtitle Edit 的个人设置？
 zh.tsk_AllUsers=为所有用户安装
 zh.tsk_CurrentUser=仅为当前用户安装
 zh.tsk_Other=其他：
@@ -410,6 +441,7 @@ zh.types_default=典型安装
 [CustomMessages]
 zhTW.sm_com_Changelog=Subtitle Edit 更新日誌
 zhTW.run_ViewChangelog=查看更新日誌
+zhTW.msg_DeleteSettings=是否刪除 Subtitle Edit 的個人設定？
 zhTW.tsk_AllUsers=所有使用者
 zhTW.tsk_CurrentUser=僅目前使用者 
 zhTW.tsk_Other=其他：
