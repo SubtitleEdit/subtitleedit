@@ -33,6 +33,8 @@ public class LanguageImport
     public string Fixed { get; set; }
     public string NumberOfSubtitlesX { get; set; }
     public string GapMs { get; set; }
+    public string UseFixedDuration { get; set; }
+    public string FixedDurationMs { get; set; }
 
     public LanguageImport()
     {
@@ -77,5 +79,7 @@ Rules:
         Fixed = "Fixed";
         NumberOfSubtitlesX = "Number of subtitles: {0}";
         GapMs = "Gap (ms)";
+        UseFixedDuration = "Use fixed duration";
+        FixedDurationMs = "Fixed duration (ms)";
     }
 }

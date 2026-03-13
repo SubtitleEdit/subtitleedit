@@ -226,8 +226,16 @@ public class ImportPlainTextWindow : Window
         numericUpDownGap.ValueChanged += vm.GapChanged;
         var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap).WithMarginTop(30);
 
+        var checkBoxUseFixedDuration = UiUtil.MakeCheckBox(Se.Language.File.Import.UseFixedDuration, vm, nameof(vm.UseFixedDuration)).WithMarginTop(30);
+        var labelFixedDurationMs = UiUtil.MakeLabel(Se.Language.File.Import.FixedDurationMs);
+        var numericUpDownFixedDurationMs = UiUtil.MakeNumericUpDownInt(0, 100000, (int)Se.Settings.Tools.AdjustDurations.AdjustDurationFixed, 130, vm, nameof(vm.FixedDurationMs));
+        numericUpDownFixedDurationMs.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.UseFixedDuration)));
+        var panelFixedDurationMs = UiUtil.MakeHorizontalPanel(labelFixedDurationMs, numericUpDownFixedDurationMs);
+
         grid.Add(panelSplit, 0);
         grid.Add(panelGap, 1);
+        grid.Add(checkBoxUseFixedDuration, 2);
+        grid.Add(panelFixedDurationMs, 3);
 
 
         return UiUtil.MakeBorderForControl(grid);

@@ -35,4 +35,18 @@ public static class TimeCodeCalculator
 
         return subtitles;
     }
+
+    internal static List<SubtitleLineViewModel> CalculateFixedTimeCodes(List<SubtitleLineViewModel> subtitles, int fixedDurationMs, int gapMs)
+    {
+        var currentTimeMs = 0;
+        foreach (var subtitle in subtitles)
+        {
+            var durationMs = fixedDurationMs;
+            subtitle.StartTime = TimeSpan.FromMilliseconds(currentTimeMs);
+            subtitle.EndTime = TimeSpan.FromMilliseconds(currentTimeMs + durationMs);
+            currentTimeMs += durationMs + gapMs;
+        }
+
+        return subtitles;
+    }
 }

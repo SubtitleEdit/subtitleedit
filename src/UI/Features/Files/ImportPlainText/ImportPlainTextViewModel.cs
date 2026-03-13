@@ -29,6 +29,8 @@ public partial class ImportPlainTextViewModel : ObservableObject
     [ObservableProperty] private bool _isDeleteVisible;
     [ObservableProperty] private bool _isDeleteAllVisible;
     [ObservableProperty] private int _minGapMs;
+    [ObservableProperty] private bool _useFixedDuration;
+    [ObservableProperty] private int _fixedDurationMs;
     [ObservableProperty] private string _plainText;
     [ObservableProperty] private string _numberOfSubtitles;
 
@@ -61,6 +63,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
         PlainText = string.Empty;
         MinGapMs = Se.Settings.General.MinimumMillisecondsBetweenLines;
         NumberOfSubtitles = string.Empty;
+        FixedDurationMs = (int)Math.Round(Se.Settings.Tools.AdjustDurations.AdjustDurationFixed * 1000.0, MidpointRounding.AwayFromZero);
 
         _timerUpdatePreview = new Timer();
         _timerUpdatePreview.Interval = 250;
@@ -84,13 +87,20 @@ public partial class ImportPlainTextViewModel : ObservableObject
 
             if (!HasTimeCodes(subtitles))
             {
-                subtitles = TimeCodeCalculator.CalculateTimeCodes(
-                    subtitles,
-                    Se.Settings.General.SubtitleOptimalCharactersPerSeconds,
-                    Se.Settings.General.SubtitleMaximumCharactersPerSeconds,
-                    MinGapMs,
-                    Se.Settings.General.SubtitleMinimumDisplayMilliseconds,
-                    Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                if (UseFixedDuration)
+                {
+                    subtitles = TimeCodeCalculator.CalculateFixedTimeCodes(subtitles, FixedDurationMs, MinGapMs);
+                }
+                else
+                { 
+                    subtitles = TimeCodeCalculator.CalculateTimeCodes(
+                        subtitles,
+                        Se.Settings.General.SubtitleOptimalCharactersPerSeconds,
+                        Se.Settings.General.SubtitleMaximumCharactersPerSeconds,
+                        MinGapMs,
+                        Se.Settings.General.SubtitleMinimumDisplayMilliseconds,
+                        Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                }
             }
 
             Dispatcher.UIThread.Post(() =>
