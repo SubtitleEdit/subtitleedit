@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CheetahCaptionOld : SubtitleFormat
+    public class CheetahCaptionOld : SubtitleFormat, IBinaryPersistableSubtitle
     {
 
         public override string Extension => ".cap";
@@ -17,6 +18,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                new CheetahCaptionOld().Save(fileName, fs, subtitle, false);
+            }
+        }
+
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            // 128-byte header: magic bytes 0xEA 0x10, rest zeros
+            var header = new byte[0x80];
+            header[0] = 0xEA;
+            header[1] = 0x10;
+            stream.Write(header, 0, header.Length);
+
+            var encoding = Encoding.ASCII;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var record = new byte[0xb2]; // 178 bytes per record
+
+                // Start timecode at offset 0
+                record[0] = (byte)p.StartTime.Hours;
+                record[1] = (byte)p.StartTime.Minutes;
+                record[2] = (byte)p.StartTime.Seconds;
+                record[3] = (byte)MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
+
+                // End timecode at offset 4
+                record[4] = (byte)p.EndTime.Hours;
+                record[5] = (byte)p.EndTime.Minutes;
+                record[6] = (byte)p.EndTime.Seconds;
+                record[7] = (byte)MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
+
+                // Write text lines - line 1 at 0x1a (38 bytes), line 2 at 0x40 (38 bytes)
+                var text = HtmlUtil.RemoveHtmlTags(p.Text);
+                var lines = text.SplitToLines();
+                WriteTextLine(record, 0x1a, lines.Count > 0 ? lines[0] : string.Empty, encoding);
+                WriteTextLine(record, 0x40, lines.Count > 1 ? lines[1] : string.Empty, encoding);
+
+                stream.Write(record, 0, record.Length);
+            }
+
+            return true;
+        }
+
+        private static void WriteTextLine(byte[] record, int offset, string text, Encoding encoding)
+        {
+            var bytes = encoding.GetBytes(text.Length > 38 ? text.Substring(0, 38) : text);
+            Array.Copy(bytes, 0, record, offset, bytes.Length);
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -51,12 +99,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMillisecondsMax999(buffer[index + 3]));
         }
 
-        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
             int i = 0x80;
             var sb = new StringBuilder();
             while (i < buffer.Length - 0xb1)
@@ -93,6 +140,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            _errorCount = 0;
+            subtitle.Paragraphs.Clear();
+            subtitle.Header = null;
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+            LoadSubtitle(subtitle, buffer);
         }
 
     }
