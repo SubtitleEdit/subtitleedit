@@ -214,6 +214,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformRightClickSelectsSubtitle;
     [ObservableProperty] private ObservableCollection<string> _themes;
     [ObservableProperty] private string _selectedTheme;
+    [ObservableProperty] private ObservableCollection<string> _iconThemes;
+    [ObservableProperty] private string _selectedIconTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
@@ -308,6 +310,11 @@ public partial class SettingsViewModel : ObservableObject
 
         Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
         SelectedTheme = Themes[0];
+
+        var iconFolders = Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList();
+        iconFolders.Insert(0, Se.Language.General.Auto);
+        IconThemes =  new ObservableCollection<string>(iconFolders);
+        SelectedIconTheme = IconThemes[0];
 
         FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
         FontNames.Insert(0, "Default");
@@ -587,6 +594,7 @@ public partial class SettingsViewModel : ObservableObject
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
+        SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         ShowToolbarNew = appearance.ToolbarShowFileNew;
@@ -1141,6 +1149,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
+        appearance.IconTheme = SelectedIconTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontName = SelectedFontName == FontNames.First()
             ? new Label().FontFamily.Name
