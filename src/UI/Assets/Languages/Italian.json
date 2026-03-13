@@ -1494,6 +1494,7 @@
     "ReEncodeVideoForBetterSubtitlingTitle": "Ricodifica il video per una migliore sottotitolazione",
     "ReEncodeVideoForBetterSubtitlingDotDotDot": "Ricodifica il video per una migliore sottotitolazione...",
     "OpenSecondarySubtitleOnVideoPlayerDotDotDot": "Apri sottotitoli secondari nel lettore video...",
+    "RemoveSecondarySubtitleOnVideoPlayer": "Rimuovi sottotitolo secondario nel lettore video",
     "CutVideoTitle": "Taglia video",
     "CutVideoDotDotDot": "Taglia video...",
     "EmbedSubtitlesDotDotDot": "Aggiungi/rimuovi sottotitoli incorporati...",
@@ -1643,6 +1644,7 @@
     "SpectrogramClassicPlasma": "Plasma",
     "SpectrogramClassicInferno": "Inferno",
     "SpectrogramClassicTurbo": "Turbo",
+    "SpectrogramNeon": "Neon",
     "WaveformDrawStyleClassic": "Classico",
     "WaveformDrawStyleFancy": "Fantasia",
     "SetVideoPositionAndPauseAndSelectSubtitle": "Imposta posizione video, pausa e selezione sottotitoli",
@@ -1764,6 +1766,7 @@
       "GridCompactMode": "Usa modalità compatta per le griglie",
       "UiFont": "Font interfaccia utente",
       "Theme": "Tema",
+      "IconTheme": "Tema icona",
       "DarkThemeForegroundColor": "Colore di primo piano tema scuro",
       "DarkThemeBackgroundColor": "Colore di sfondo tema scuro",
       "ShowGridLines": "Visualizza righe griglia",
@@ -2428,5 +2431,17 @@
     "AdvancedEffectAudioBarsDescription": "Barre equalizzatore animate guidate dalla forma d'onda audio: le barre scorrono verso sinistra come forma d'onda e pulsano con l'audio",
     "AdvancedEffectAudioPulse": "Impulso testo audio",
     "AdvancedEffectAudioPulseDescription": "Il testo dei sottotitoli si illumina e pulsa con il volume dell'audio: le sezioni silenziose visualizzano il testo normale, i picchi forti aggiungono un alone colorato e un leggero ingrandimento"
+  },
+  "About": {
+    "Title": "Info su Subtitle Edit",
+    "TranslatedBy": "Traduzione: {0}",
+    "LicenseText": "Subtitle Edit è un software gratuito con licenza MIT.",
+    "DescriptionTextBeta": "Subtitle Edit 5 beta è una versione di sviluppo della nostra prossima versione finale.\r\nStiamo perfezionando attivamente i nuovi strumenti e apprezziamo il tuo aiuto nei test.\r\nCondividi il tuo feedback per aiutarci a garantire la migliore versione finale possibile.\r\nGrazie per far parte della community di Subtitle Edit!\r\n:)",
+    "IssueTrackingAndSourceCode": "Monitoraggio problemi/codice sorgente:",
+    "GitHub": "Github",
+    "Donate": "Donazioni:",
+    "PayPal": "PayPal",
+    "GitHubSponsor": "sponsor Github",
+    "Or": "o"
   }
 }
