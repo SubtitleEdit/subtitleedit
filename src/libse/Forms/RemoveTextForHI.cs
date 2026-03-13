@@ -1026,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (_interjections == null)
                 {
-                    ReloadInterjection(twoLetterIsoLanguageName);
+                    //ReloadInterjection(twoLetterIsoLanguageName);
                 }
 
                 // reusable context
@@ -1632,9 +1632,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sortedList;
         }
 
-        public void ReloadInterjection(string twoLetterIsoLanguageName)
+        public void ReloadInterjection(List<string> interjections, List<string> skipList)
         {
-            _interjections = GetInterjectionList(twoLetterIsoLanguageName, out var skipList);
+            _interjections = interjections;
             _interjectionsSkipIfStartsWith = skipList;
         }
     }
