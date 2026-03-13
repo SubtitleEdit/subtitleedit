@@ -589,7 +589,7 @@ public partial class AssaStylesViewModel : ObservableObject
         Title = string.Format(Se.Language.Assa.StylesTitleX, fileName);
         Header = subtitle.Header;
         _subtitle = new Subtitle(subtitle, false);
-        _subtitleFileName = fileName;   
+        _subtitleFileName = fileName;
         _applyAssaStyles = applyAssaStyles;
         IsApplyVisible = applyAssaStyles != null;
 

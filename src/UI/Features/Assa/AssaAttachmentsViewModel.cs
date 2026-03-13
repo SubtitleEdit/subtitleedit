@@ -424,8 +424,9 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         {
             return string.Empty;
         }
-        var fontName = skTypeface.FamilyName;
-        PreviewTitle = $"{Se.Language.General.FontName}: {skTypeface.FamilyName}";
+        var fontName = FontHelper.GetLibAssaFontName(skTypeface);
+
+        PreviewTitle = $"{Se.Language.General.FontName}: {fontName}";
         PreviewImage?.Dispose();
 
         // Create Skia surface and canvas
