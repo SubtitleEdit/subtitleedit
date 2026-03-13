@@ -65,7 +65,7 @@ public partial class AssaStylesViewModel : ObservableObject
         Title = string.Empty;
         FileStyles = new ObservableCollection<StyleDisplay>();
         StorageStyles = new ObservableCollection<StyleDisplay>();
-        Fonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        Fonts = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         BorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         SelectedBorderType = BorderTypes[0];
         CurrentTitle = string.Empty;

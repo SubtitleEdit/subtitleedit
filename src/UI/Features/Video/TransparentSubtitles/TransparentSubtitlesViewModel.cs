@@ -110,7 +110,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _fileHelper = fileHelper;
         _windowService = windowService;
 
-        FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        FontNames = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         SelectedFontName = FontNames.FirstOrDefault(p => p == Se.Settings.Video.BurnIn.FontName) ?? FontNames[0];
 
         // font factors between 0-1
