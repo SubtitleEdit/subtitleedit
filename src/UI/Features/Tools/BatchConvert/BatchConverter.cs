@@ -1648,7 +1648,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var removeTextForHiLib = new RemoveTextForHI(settings);
         removeTextForHiLib.Warnings = [];
-        removeTextForHiLib.ReloadInterjection(language);
+
+        var interjections = Se.Settings.Tools.RemoveTextForHi.Interjections
+            .FirstOrDefault(p => p.LanguageCode == (language ?? "en"));
+        var list = interjections?.Interjections ?? new List<string>();
+        var skipList = interjections?.SkipStartList ?? new List<string>();
+
+
+        removeTextForHiLib.ReloadInterjection(list, skipList);
 
         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
         {

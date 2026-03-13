@@ -194,8 +194,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [RelayCommand]
     private async Task EditInterjections()
     {
-        await _windowService.ShowDialogAsync<InterjectionsWindow, InterjectionsViewModel>(Window!,
-            vm => { vm.Initialize(SelectedLanguage); });
+        await _windowService.ShowDialogAsync<InterjectionsWindow, InterjectionsViewModel>(Window!, vm => 
+        { 
+            vm.Initialize(SelectedLanguage); 
+        });
     }
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
@@ -223,8 +225,12 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
         _removeTextForHiLib.Settings = GetSettings(_subtitle);
         _removeTextForHiLib.Warnings = [];
-
-        _removeTextForHiLib.ReloadInterjection(SelectedLanguage?.Code ?? "en");
+        
+        var interjections = Se.Settings.Tools.RemoveTextForHi.Interjections
+            .FirstOrDefault(p => p.LanguageCode == (SelectedLanguage?.Code ?? "en"));
+        var list = interjections?.Interjections ?? new List<string>();
+        var skipList = interjections?.SkipStartList ?? new List<string>();
+        _removeTextForHiLib.ReloadInterjection(list, skipList);
 
         var count = 0;
         var newFixes = new List<RemoveItem>();

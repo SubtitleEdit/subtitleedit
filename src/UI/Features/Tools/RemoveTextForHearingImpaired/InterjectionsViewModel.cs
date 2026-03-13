@@ -30,8 +30,9 @@ public partial class InterjectionsViewModel : ObservableObject
     [RelayCommand]                   
     private void Ok() 
     {
-        var interjectionLanguage = Se.Settings.Tools.RemoveTextForHi.Interjections.FirstOrDefault(p =>
-            p.LanguageCode == _languageCode);
+        var interjectionLanguage = 
+            Se.Settings.Tools.RemoveTextForHi.Interjections
+            .FirstOrDefault(p => p.LanguageCode == _languageCode);
         
         if (interjectionLanguage == null)
         {
@@ -47,7 +48,7 @@ public partial class InterjectionsViewModel : ObservableObject
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .Select(p => p.Trim())
             .ToList();
-        
+
         OkPressed = true;
         Window?.Close();
     }
