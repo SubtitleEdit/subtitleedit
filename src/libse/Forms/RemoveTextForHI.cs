@@ -2,9 +2,7 @@
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -1571,50 +1569,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sb.ToString().Trim();
         }
 
-        public static List<string> GetInterjections(string fileName)
+        public void ReloadInterjection(List<string> interjections, List<string> skipList)
         {
-            var words = new List<string>();
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    var xml = new XmlDocument();
-                    xml.Load(fileName);
-                    if (xml.DocumentElement != null)
-                    {
-                        var nodes = xml.DocumentElement.SelectNodes("word");
-                        if (nodes != null)
-                        {
-                            foreach (XmlNode node in nodes)
-                            {
-                                var w = node.InnerText.Trim();
-                                if (w.Length > 0)
-                                {
-                                    words.Add(w);
-                                }
-                            }
-                        }
-
-                        return words;
-                    }
-                }
-                catch
-                {
-                    // ignore
-                }
-            }
-
-            return words;
-        }
-
-        public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName, out List<string> skipIfStartsWith)
-        {
-            var interjections = InterjectionsRepository.LoadInterjections(twoLetterIsoLanguageName);
-
-            skipIfStartsWith = interjections.SkipIfStartsWith;
-
             var interjectionList = new HashSet<string>();
-            foreach (var s in interjections.Interjections)
+            foreach (var s in interjections)
             {
                 if (s.Length <= 0)
                 {
@@ -1629,12 +1587,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var sortedList = new List<string>(interjectionList);
             sortedList.Sort((a, b) => b.Length.CompareTo(a.Length));
-            return sortedList;
-        }
+            _interjections = sortedList;
 
-        public void ReloadInterjection(List<string> interjections, List<string> skipList)
-        {
-            _interjections = interjections;
             _interjectionsSkipIfStartsWith = skipList;
         }
     }
