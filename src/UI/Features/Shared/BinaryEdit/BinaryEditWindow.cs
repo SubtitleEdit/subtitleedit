@@ -323,6 +323,7 @@ public class BinaryEditWindow : Window
 
         dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)));
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Mode = BindingMode.Default });
+        dataGrid.DoubleTapped += (_, e) => vm.OnDataGridDoubleTapped(e);
 
         dataGrid.KeyDown += (_, e) => vm.OnDataGridKeyDown(e);
 

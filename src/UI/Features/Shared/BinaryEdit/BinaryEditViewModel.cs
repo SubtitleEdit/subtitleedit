@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
@@ -1642,6 +1641,18 @@ public partial class BinaryEditViewModel : ObservableObject
         IsInsertAfterVisible = selectedCount == 1;
         IsInsertBeforeVisible = selectedCount == 1;
         IsInsertSubtitleVisible = selectedCount == 1 && selectedIndex == Subtitles.Count - 1;
+    }
+
+    internal void OnDataGridDoubleTapped(TappedEventArgs e)
+    {
+        var vp = VideoPlayerControl;
+        var item = SubtitleGrid?.SelectedItem as BinarySubtitleItem;
+        if (vp == null || item == null)
+        {
+            return;
+        }
+
+        vp.Position = item.StartTime.TotalSeconds;
     }
 }
 
