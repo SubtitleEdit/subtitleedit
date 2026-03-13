@@ -55,6 +55,13 @@ public static class FontHelper
     }
 
     /// <summary>
+    /// Returns the libass-compatible (Win32/GDI, name ID 1) family name for a single typeface.
+    /// Falls back to <see cref="SKTypeface.FamilyName"/> when the name table cannot be read.
+    /// </summary>
+    public static string GetLibAssaFontName(SKTypeface typeface) =>
+        ReadWin32FamilyName(typeface) ?? typeface.FamilyName;
+
+    /// <summary>
     /// Reads name ID 1 (Win32/GDI family name) from the OpenType 'name' table.
     /// Returns null when the table cannot be read.
     /// </summary>
@@ -79,12 +86,12 @@ public static class FontHelper
                 break;
             }
 
-            int platformId = (data[r] << 8)     | data[r + 1];  // 3 = Windows
+            int platformId = (data[r] << 8) | data[r + 1];  // 3 = Windows
             int encodingId = (data[r + 2] << 8) | data[r + 3];  // 1 = Unicode BMP
             int languageId = (data[r + 4] << 8) | data[r + 5];
-            int nameId     = (data[r + 6] << 8) | data[r + 7];  // 1 = Win32 Family Name
-            int length     = (data[r + 8] << 8) | data[r + 9];
-            int strOffset  = (data[r + 10] << 8) | data[r + 11];
+            int nameId = (data[r + 6] << 8) | data[r + 7];  // 1 = Win32 Family Name
+            int length = (data[r + 8] << 8) | data[r + 9];
+            int strOffset = (data[r + 10] << 8) | data[r + 11];
 
             if (platformId != 3 || encodingId != 1 || nameId != 1)
             {

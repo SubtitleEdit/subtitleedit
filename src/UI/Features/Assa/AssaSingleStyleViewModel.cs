@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
@@ -6,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Assa;
 
@@ -30,7 +30,7 @@ public partial class AssaSingleStyleViewModel : ObservableObject
 
     public void Initialize(SsaStyle style)
     {
-        CurrentStyle = new  StyleDisplay(style);
+        CurrentStyle = new StyleDisplay(style);
     }
 
     [RelayCommand]

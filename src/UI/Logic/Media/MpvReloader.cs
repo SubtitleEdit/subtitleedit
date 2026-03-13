@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
