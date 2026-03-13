@@ -254,6 +254,18 @@ begin
 end;
 
 
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+  begin
+    ForceDirectories(ExpandConstant('{userappdata}\Subtitle Edit'));
+    SaveStringToFile(
+      ExpandConstant('{userappdata}\Subtitle Edit\SetupLanguage.txt'),
+      ActiveLanguage, False);
+  end;
+end;
+
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usUninstall then

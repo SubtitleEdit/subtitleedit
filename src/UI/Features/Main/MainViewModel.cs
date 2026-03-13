@@ -532,6 +532,12 @@ public partial class MainViewModel :
                 Se.LogError(e);
             }
         }, DispatcherPriority.Loaded);
+
+        if (!File.Exists(Se.GetSettingsFilePath()))
+        {
+            FirstLoad();
+        }
+
         InitializeFfmpeg();
         InitializeLibMpv();
         LoadShortcuts();
@@ -546,6 +552,38 @@ public partial class MainViewModel :
             _dropDownFormatsSearchText = string.Empty;
             _dropDownFormatsSearchTimer.Stop();
         };
+    }
+
+    private void FirstLoad()
+    {
+        try
+        {
+            var setupLanguageFile = Path.Combine(Se.DataFolder, "SetupLanguage.txt");
+            if (File.Exists(setupLanguageFile))
+            {
+                var languageCode = File.ReadAllText(setupLanguageFile).Trim();
+                var language = Iso639Dash2LanguageCode.List
+                    .FirstOrDefault(p => languageCode.StartsWith(p.ThreeLetterCode, StringComparison.OrdinalIgnoreCase) ||
+                                        languageCode.StartsWith(p.TwoLetterCode, StringComparison.OrdinalIgnoreCase));
+                if (language != null)
+                {
+                    var translationFiles = Directory.GetFiles(Se.TranslationFolder, language.EnglishName);
+                    if (translationFiles?.Length > 0)
+                    {
+                        Dispatcher.UIThread.Post(async void () =>
+                        {
+                            await LoadLanguage(translationFiles[0]);
+                        });
+                    }
+                }
+            }
+
+            File.Delete(setupLanguageFile);
+        }
+        catch
+        {
+            // ignore
+        }
     }
 
     private void SetSubtitleFormat(SubtitleFormat format)
@@ -6259,20 +6297,24 @@ public partial class MainViewModel :
         var viewModel = await ShowDialogAsync<LanguageWindow, LanguageViewModel>();
         if (viewModel.OkPressed && viewModel.SelectedLanguage != null)
         {
-            var jsonFileName = viewModel.SelectedLanguage.FileName;
-            var json = await File.ReadAllTextAsync(jsonFileName, Encoding.UTF8);
-            var language = System.Text.Json.JsonSerializer.Deserialize<SeLanguage>(json,
-                new System.Text.Json.JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
-
-            Se.Language = language ?? new SeLanguage();
-
-            // reload current layout
-            InitMenu.Make(this);
-            SetLayout(Se.Settings.General.LayoutNumber);
+            await LoadLanguage(viewModel.SelectedLanguage.FileName);
         }
+    }
+
+    private async Task LoadLanguage(string jsonFileName)
+    {
+        var json = await File.ReadAllTextAsync(jsonFileName, Encoding.UTF8);
+        var language = JsonSerializer.Deserialize<SeLanguage>(json,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+
+        Se.Language = language ?? new SeLanguage();
+
+        // reload current layout
+        InitMenu.Make(this);
+        SetLayout(Se.Settings.General.LayoutNumber);
     }
 
     [RelayCommand]
