@@ -1168,6 +1168,13 @@ public class WavePeakGenerator2 : IDisposable
                     palette[colorIndex] = PaletteValueTurbo(colorIndex, MagnitudeIndexRange);
                 }
             }
+            else if (Se.Settings.Waveform.SpectrogramStyle == SeSpectrogramStyle.Neon.ToString())
+            {
+                for (int colorIndex = 0; colorIndex < MagnitudeIndexRange; colorIndex++)
+                {
+                    palette[colorIndex] = PaletteValueNeon(colorIndex, MagnitudeIndexRange);
+                }
+            }
             else // Classic
             {
                 for (int colorIndex = 0; colorIndex < MagnitudeIndexRange; colorIndex++)
@@ -1287,6 +1294,62 @@ public class WavePeakGenerator2 : IDisposable
         }
 
         /// <summary>
+        /// Neon palette: black → deep violet → electric cyan → neon green → white-hot peak
+        /// </summary>
+        private static SKColor PaletteValueNeon(int x, int range)
+        {
+            double t = (double)x / range;
+            double r, g, b;
+
+            if (t < 0.20)
+            {
+                // Black → deep violet
+                double lt = t / 0.20;
+                r = 0.35 * lt;
+                g = 0.0;
+                b = 0.55 * lt;
+            }
+            else if (t < 0.42)
+            {
+                // Deep violet → electric blue-cyan
+                double lt = (t - 0.20) / 0.22;
+                r = 0.35 - 0.35 * lt;
+                g = 0.60 * lt;
+                b = 0.55 + 0.45 * lt;
+            }
+            else if (t < 0.65)
+            {
+                // Electric cyan → neon green
+                double lt = (t - 0.42) / 0.23;
+                r = 0.10 * lt;
+                g = 0.60 + 0.40 * lt;
+                b = 1.00 - 0.85 * lt;
+            }
+            else if (t < 0.87)
+            {
+                // Neon green → bright yellow
+                double lt = (t - 0.65) / 0.22;
+                r = 0.10 + 0.90 * lt;
+                g = 1.00;
+                b = 0.15 * lt;
+            }
+            else
+            {
+                // Bright yellow → white-hot peak
+                double lt = (t - 0.87) / 0.13;
+                r = 1.0;
+                g = 1.0;
+                b = 0.15 + 0.85 * lt;
+            }
+
+            r = Math.Max(0, Math.Min(1, r));
+            g = Math.Max(0, Math.Min(1, g));
+            b = Math.Max(0, Math.Min(1, b));
+
+            return new SKColor((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+        }
+
+        /// <summary>
         /// Plasma color palette - perceptually uniform color scheme from deep blue/purple through pink to yellow
         /// </summary>
         private static SKColor PaletteValuePlasma(int x, int range)
@@ -1298,6 +1361,11 @@ public class WavePeakGenerator2 : IDisposable
             double g = 0.029803 + t * (0.280267 + t * (2.645293 + t * (-5.336825 + t * (4.481445 + t * (-1.355430)))));
             double b = 0.527975 + t * (0.600417 + t * (1.412440 + t * (-11.930240 + t * (20.434160 + t * (-12.791690)))));
 
+            // Fade to black at low magnitudes so silence renders as black rather than blue
+            double fade = Math.Min(1.0, t / 0.15);
+            r *= fade;
+            g *= fade;
+            b *= fade;
 
             // Clamp and convert to bytes
             r = Math.Max(0, Math.Min(1, r));

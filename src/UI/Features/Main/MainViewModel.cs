@@ -2585,7 +2585,11 @@ public partial class MainViewModel :
         {
             Se.Settings.Waveform.SpectrogramStyle = nameof(SeSpectrogramStyle.ClassicTurbo);
         }
-        else // ClassicTurbo or any other value, cycle back to Classic
+        else if (currentStyle == nameof(SeSpectrogramStyle.ClassicTurbo))
+        {
+            Se.Settings.Waveform.SpectrogramStyle = nameof(SeSpectrogramStyle.Neon);
+        }
+        else // Neon or any other value, cycle back to Classic
         {
             Se.Settings.Waveform.SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
         }
@@ -2604,7 +2608,23 @@ public partial class MainViewModel :
             _updateAudioVisualizer = true;
         }
 
-        ShowStatus(Se.Settings.Waveform.SpectrogramStyle);
+        ShowStatus(AddSpaceBeforeUppercaseLetter(Se.Settings.Waveform.SpectrogramStyle));
+    }
+
+    private string AddSpaceBeforeUppercaseLetter(string spectrogramStyle)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < spectrogramStyle.Length; i++)
+        {
+            var c = spectrogramStyle[i];
+            if (i > 0 && char.IsUpper(c) && !char.IsUpper(spectrogramStyle[i - 1]))
+            {
+                sb.Append(' ');
+            }
+            sb.Append(c);
+        }
+
+        return sb.ToString().Trim();
     }
 
     [RelayCommand]

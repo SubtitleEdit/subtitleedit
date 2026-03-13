@@ -348,6 +348,7 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Waveform.SpectrogramClassicPlasma,
             Se.Language.Waveform.SpectrogramClassicInferno,
             Se.Language.Waveform.SpectrogramClassicTurbo,
+            Se.Language.Waveform.SpectrogramNeon,
         };
         SelectedWaveformSpectrogramStyle = WaveformSpectrogramStyles[0];
 
@@ -679,6 +680,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (Se.Settings.Waveform.SpectrogramStyle == SeSpectrogramStyle.ClassicTurbo.ToString())
         {
             SelectedWaveformSpectrogramStyle = WaveformSpectrogramStyles[4];
+        }
+        else if (Se.Settings.Waveform.SpectrogramStyle == SeSpectrogramStyle.Neon.ToString())
+        {
+            SelectedWaveformSpectrogramStyle = WaveformSpectrogramStyles[5];
         }
         else
         {
@@ -1233,6 +1238,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (SelectedWaveformSpectrogramStyle == Se.Language.Waveform.SpectrogramClassicTurbo)
         {
             Se.Settings.Waveform.SpectrogramStyle = SeSpectrogramStyle.ClassicTurbo.ToString();
+        }
+        else if (SelectedWaveformSpectrogramStyle == Se.Language.Waveform.SpectrogramNeon)
+        {
+            Se.Settings.Waveform.SpectrogramStyle = SeSpectrogramStyle.Neon.ToString();
         }
 
         Se.Settings.Waveform.SpectrogramCombinedWaveformHeight = WaveformSpectrogramCombinedWaveformHeight;

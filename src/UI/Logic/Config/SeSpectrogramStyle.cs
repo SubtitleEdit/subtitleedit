@@ -7,4 +7,5 @@ public enum SeSpectrogramStyle
     ClassicPlasma,
     ClassicInferno,
     ClassicTurbo,
+    Neon,
 }
