@@ -84,6 +84,7 @@ internal class IconNames
     public const string SetSplit = "mdi-set-split";
     public const string Settings = "mdi-cog";
     public const string SkipNext = "mdi-skip-next";
+    public const string Sort = "mdi-sort";
     public const string Spellcheck = "mdi-spellcheck";
     public const string StopCircle = "mdi-stop-circle";
     public const string SwapVertical = "mdi-swap-vertical";

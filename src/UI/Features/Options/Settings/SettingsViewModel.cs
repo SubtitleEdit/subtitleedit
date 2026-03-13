@@ -181,6 +181,21 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showWaveformToolbarVideoPositionSlider;
     [ObservableProperty] private bool _showWaveformToolbarPlaybackSpeed;
 
+    [ObservableProperty] private int _sortWaveformToolbarPlay;
+    [ObservableProperty] private int _sortWaveformToolbarPlayNext;
+    [ObservableProperty] private int _sortWaveformToolbarPlaySelection;
+    [ObservableProperty] private int _sortWaveformToolbarRepeat;
+    [ObservableProperty] private int _sortWaveformToolbarRemoveBlankLines;
+    [ObservableProperty] private int _sortWaveformToolbarNew;
+    [ObservableProperty] private int _sortWaveformToolbarSetStart;
+    [ObservableProperty] private int _sortWaveformToolbarSetEnd;
+    [ObservableProperty] private int _sortWaveformToolbarSetStartAndOffsetTheRest;
+    [ObservableProperty] private int _sortWaveformToolbarVerticalZoom;
+    [ObservableProperty] private int _sortWaveformToolbarHorizontalZoom;
+    [ObservableProperty] private int _sortWaveformToolbarVideoPositionSlider;
+    [ObservableProperty] private int _sortWaveformToolbarPlaybackSpeed;
+
+
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
     [ObservableProperty] private string _libMpvPath;
@@ -705,6 +720,21 @@ public partial class SettingsViewModel : ObservableObject
         ShowWaveformToolbarHorizontalZoom = Se.Settings.Waveform.ShowToolbarHorizontalZoom;
         ShowWaveformToolbarVideoPositionSlider = Se.Settings.Waveform.ShowToolbarVideoPositionSlider;
         ShowWaveformToolbarPlaybackSpeed = Se.Settings.Waveform.ShowToolbarPlaybackSpeed;
+
+        SortWaveformToolbarPlay = Se.Settings.Waveform.SortToolbarPlay;
+        SortWaveformToolbarPlayNext = Se.Settings.Waveform.SortToolbarPlayNext;
+        SortWaveformToolbarPlaySelection = Se.Settings.Waveform.SortToolbarPlaySelection;
+        SortWaveformToolbarRepeat = Se.Settings.Waveform.SortToolbarRepeat;
+        SortWaveformToolbarRemoveBlankLines = Se.Settings.Waveform.SortToolbarRemoveBlankLines;
+        SortWaveformToolbarNew = Se.Settings.Waveform.SortToolbarNew;
+        SortWaveformToolbarSetStart = Se.Settings.Waveform.SortToolbarSetStart;
+        SortWaveformToolbarSetEnd = Se.Settings.Waveform.SortToolbarSetEnd;
+        SortWaveformToolbarSetStartAndOffsetTheRest = Se.Settings.Waveform.SortToolbarSetStartAndOffsetTheRest;
+        SortWaveformToolbarVerticalZoom = Se.Settings.Waveform.SortToolbarVerticalZoom;
+        SortWaveformToolbarHorizontalZoom = Se.Settings.Waveform.SortToolbarHorizontalZoom;
+        SortWaveformToolbarVideoPositionSlider = Se.Settings.Waveform.SortToolbarVideoPositionSlider;
+        SortWaveformToolbarPlaybackSpeed = Se.Settings.Waveform.SortToolbarPlaybackSpeed;
+
         WaveformFocusTextboxAfterInsertNew = Se.Settings.Waveform.FocusTextBoxAfterInsertNew;
         WaveformTextFontSize = Se.Settings.Waveform.WaveformTextFontSize;
         WaveformTextFontBold = Se.Settings.Waveform.WaveformTextFontBold;
@@ -1259,6 +1289,21 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.ShowToolbarHorizontalZoom = ShowWaveformToolbarHorizontalZoom;
         Se.Settings.Waveform.ShowToolbarVideoPositionSlider = ShowWaveformToolbarVideoPositionSlider;
         Se.Settings.Waveform.ShowToolbarPlaybackSpeed = ShowWaveformToolbarPlaybackSpeed;
+
+        Se.Settings.Waveform.SortToolbarPlay = SortWaveformToolbarPlay;
+        Se.Settings.Waveform.SortToolbarPlayNext = SortWaveformToolbarPlayNext;
+        Se.Settings.Waveform.SortToolbarPlaySelection = SortWaveformToolbarPlaySelection;
+        Se.Settings.Waveform.SortToolbarRepeat = SortWaveformToolbarRepeat;
+        Se.Settings.Waveform.SortToolbarRemoveBlankLines = SortWaveformToolbarRemoveBlankLines;
+        Se.Settings.Waveform.SortToolbarNew = SortWaveformToolbarNew;
+        Se.Settings.Waveform.SortToolbarSetStart = SortWaveformToolbarSetStart;
+        Se.Settings.Waveform.SortToolbarSetEnd = SortWaveformToolbarSetEnd;
+        Se.Settings.Waveform.SortToolbarSetStartAndOffsetTheRest = SortWaveformToolbarSetStartAndOffsetTheRest;
+        Se.Settings.Waveform.SortToolbarVerticalZoom = SortWaveformToolbarVerticalZoom;
+        Se.Settings.Waveform.SortToolbarHorizontalZoom = SortWaveformToolbarHorizontalZoom;
+        Se.Settings.Waveform.SortToolbarVideoPositionSlider = SortWaveformToolbarVideoPositionSlider;
+        Se.Settings.Waveform.SortToolbarPlaybackSpeed = SortWaveformToolbarPlaybackSpeed;
+
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
         Se.Settings.Waveform.WaveformTextFontBold = WaveformTextFontBold;
         Se.Settings.Waveform.WaveformTextColor = WaveformTextColor.FromColorToHex();

@@ -442,7 +442,25 @@ public class SettingsPage : UserControl
             MakeNumericSettingInt(Se.Language.Options.Settings.WaveformSpectrogramCombinedWaveformHeight, nameof(_vm.WaveformSpectrogramCombinedWaveformHeight), 10, 90),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowToolbar, nameof(_vm.WaveformShowToolbar)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlay, nameof(_vm.ShowWaveformToolbarPlay)),
+
+             new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarPlay,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarPlay)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarPlay))
+                    )),
+            
+
+            //MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlay, nameof(_vm.ShowWaveformToolbarPlay)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlayNext, nameof(_vm.ShowWaveformToolbarPlayNext)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlaySelection, nameof(_vm.ShowWaveformToolbarPlaySelection)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarRepeat, nameof(_vm.ShowWaveformToolbarRepeat)),

@@ -26,6 +26,20 @@ public class SeWaveform
     public bool ShowToolbarVideoPositionSlider { get; set; }
     public bool ShowToolbarPlaybackSpeed { get; set; }
 
+    public int SortToolbarPlay { get; set; }
+    public int SortToolbarPlayNext { get; set; }
+    public int SortToolbarPlaySelection { get; set; }
+    public int SortToolbarRepeat { get; set; }
+    public int SortToolbarRemoveBlankLines { get; set; }
+    public int SortToolbarNew { get; set; }
+    public int SortToolbarSetStart { get; set; }
+    public int SortToolbarSetEnd { get; set; }
+    public int SortToolbarSetStartAndOffsetTheRest { get; set; }
+    public int SortToolbarVerticalZoom { get; set; }
+    public int SortToolbarHorizontalZoom { get; set; }
+    public int SortToolbarVideoPositionSlider { get; set; }
+    public int SortToolbarPlaybackSpeed { get; set; }
+
     public int WaveformTextFontSize { get; set; }
     public bool WaveformTextFontBold { get; set; }
     public string WaveformTextColor { get; set; }
@@ -96,6 +110,21 @@ public class SeWaveform
         ShowToolbarHorizontalZoom = true;
         ShowToolbarVideoPositionSlider = true;
         ShowToolbarPlaybackSpeed = true;
+
+        SortToolbarPlay = 10;
+        SortToolbarPlayNext = 20;
+        SortToolbarPlaySelection = 30;
+        SortToolbarRepeat = 40;
+        SortToolbarRemoveBlankLines = 50;
+        SortToolbarNew = 60;
+        SortToolbarSetStart = 70;
+        SortToolbarSetEnd = 80;
+        SortToolbarSetStartAndOffsetTheRest = 90;
+        SortToolbarVerticalZoom = 100;
+        SortToolbarHorizontalZoom = 110;
+        SortToolbarVideoPositionSlider = 120;
+        SortToolbarPlaybackSpeed = 130;
+
         SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
         LastDisplayMode = nameof(WaveformDisplayMode.OnlyWaveform);
         WaveformDrawStyle = Controls.AudioVisualizerControl.WaveformDrawStyle.Fancy.ToString();
