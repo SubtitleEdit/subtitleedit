@@ -12,7 +12,9 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Projektanker.Icons.Avalonia;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using MenuItem = Avalonia.Controls.MenuItem;
 
@@ -20,6 +22,12 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public class InitWaveform
 {
+    public class SortedControl
+    {
+        public int Sort { get; set; }
+        public Control? Control { get; set; }
+    }
+
     public static Grid MakeWaveform(MainViewModel vm)
     {
         var languageHints = Se.Language.Main.Waveform;
@@ -34,7 +42,7 @@ public class InitWaveform
             VerticalAlignment = VerticalAlignment.Stretch,
             Height = double.NaN, // Auto height
         };
-        
+
         // waveform area
         if (vm.AudioVisualizer == null)
         {
@@ -382,6 +390,7 @@ public class InitWaveform
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(5, 0, 5, 0),
             Children = { sliderHorizontalZoom, labelHorizontalZoom }
         };
 
@@ -427,7 +436,7 @@ public class InitWaveform
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0),
+            Margin = new Thickness(5, 0, 5, 0),
             Children = { sliderVerticalZoom, labelVerticalZoom }
         };
 
@@ -437,7 +446,7 @@ public class InitWaveform
             Width = 160,
             Value = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0),
+            Margin = new Thickness(5, 0, 5, 0),
             Focusable = true,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.VideoPosition, shortcuts),
         };
@@ -549,72 +558,31 @@ public class InitWaveform
         };
         flyoutMore.Items.Add(menuItemHideControls);
 
-        if (settings.ShowToolbarPlay)
+        var sortableButtons = MakeCustomSortableButtons(
+            settings, 
+            buttonPlay, 
+            buttonPlaySelectedLines, 
+            buttonPlaySelectedLinesRepeat, 
+            buttonPlayNext, 
+            buttonNew, 
+            buttonSetStartAndOffsetTheRest, 
+            buttonSetStart, 
+            buttonSetEnd, 
+            buttonRemoveBlankLines,
+            iconHorizontal,
+            panelHorizontalZoom,
+            iconVertical,
+            panelVerticalZoom,
+            sliderPosition,
+            panelSpeed
+        );
+        foreach (var sortedButton in sortableButtons)
         {
-            controlsPanel.Children.Add(buttonPlay);
-        }
-
-        if (settings.ShowToolbarPlaySelection)
-        {
-            controlsPanel.Children.Add(buttonPlaySelectedLines);
-        }
-
-        if (settings.ShowToolbarRepeat)
-        {
-            controlsPanel.Children.Add(buttonPlaySelectedLinesRepeat);
-        }
-
-        if (settings.ShowToolbarPlayNext)
-        {
-            controlsPanel.Children.Add(buttonPlayNext);
-        }
-
-        if (settings.ShowToolbarNew)
-        {
-            controlsPanel.Children.Add(buttonNew);
-        }
-
-        if (settings.ShowToolbarSetStartAndOffsetTheRest)
-        {
-            controlsPanel.Children.Add(buttonSetStartAndOffsetTheRest);
-        }
-
-        if (settings.ShowToolbarSetStart)
-        {
-            controlsPanel.Children.Add(buttonSetStart);
-        }
-
-        if (settings.ShowToolbarSetEnd)
-        {
-            controlsPanel.Children.Add(buttonSetEnd);
-        }
-
-        if (settings.ShowToolbarRemoveBlankLines)
-        {
-            controlsPanel.Children.Add(buttonRemoveBlankLines);
-        }
-
-        if (settings.ShowToolbarHorizontalZoom)
-        {
-            controlsPanel.Children.Add(iconHorizontal);
-            controlsPanel.Children.Add(panelHorizontalZoom);
-        }
-
-        if (settings.ShowToolbarVerticalZoom)
-        {
-            controlsPanel.Children.Add(iconVertical);
-            controlsPanel.Children.Add(panelVerticalZoom);
-        }
-
-        if (settings.ShowToolbarVideoPositionSlider)
-        {
-            controlsPanel.Children.Add(sliderPosition);
-        }
-
-        if (settings.ShowToolbarPlaybackSpeed)
-        {
-            controlsPanel.Children.Add(panelSpeed);
-        }
+            if (sortedButton.Control != null)
+            {
+                controlsPanel.Children.Add(sortedButton.Control);
+            }
+        }               
 
         controlsPanel.Children.Add(toggleButtonAutoSelectOnPlay);
         controlsPanel.Children.Add(toggleButtonCenter);
@@ -629,6 +597,96 @@ public class InitWaveform
         vm.AudioVisualizer.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
         return mainGrid;
+    }
+
+    private static List<SortedControl> MakeCustomSortableButtons(
+        SeWaveform settings, 
+        Button buttonPlay, 
+        Button buttonPlaySelectedLines, 
+        Button buttonPlaySelectedLinesRepeat, 
+        Button buttonPlayNext, 
+        Button buttonNew, 
+        Button buttonSetStartAndOffsetTheRest, 
+        Button buttonSetStart, 
+        Button buttonSetEnd, 
+        Button buttonRemoveBlankLines,
+        Icon iconHorizontal,
+        StackPanel panelHorizontalZoom,
+        Icon iconVertical,
+        StackPanel panelVerticalZoom,
+        Slider sliderPosition,
+        StackPanel panelSpeed)
+    {
+        var toolbarButtonForSort = new List<SortedControl>();
+
+        if (settings.ShowToolbarPlay)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarPlay, Control = buttonPlay });
+        }
+
+        if (settings.ShowToolbarPlaySelection)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarPlaySelection, Control = buttonPlaySelectedLines });
+        }
+
+        if (settings.ShowToolbarRepeat)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarRepeat, Control = buttonPlaySelectedLinesRepeat });
+        }
+
+        if (settings.ShowToolbarPlayNext)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarPlayNext, Control = buttonPlayNext });
+        }
+
+        if (settings.ShowToolbarNew)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarNew, Control = buttonNew });
+        }
+
+        if (settings.ShowToolbarSetStartAndOffsetTheRest)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarSetStartAndOffsetTheRest, Control = buttonSetStartAndOffsetTheRest });
+        }
+
+        if (settings.ShowToolbarSetStart)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarSetStart, Control = buttonSetStart });
+        }
+
+        if (settings.ShowToolbarSetEnd)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarSetEnd, Control = buttonSetEnd });
+        }
+
+        if (settings.ShowToolbarRemoveBlankLines)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarRemoveBlankLines, Control = buttonRemoveBlankLines });
+        }
+
+        if (settings.ShowToolbarHorizontalZoom)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarHorizontalZoom, Control = iconHorizontal });
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarHorizontalZoom, Control = panelHorizontalZoom });
+        }
+
+        if (settings.ShowToolbarVerticalZoom)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarVerticalZoom, Control = iconVertical });    
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarVerticalZoom, Control = panelVerticalZoom });
+        }
+
+        if (settings.ShowToolbarVideoPositionSlider)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarVideoPositionSlider, Control = sliderPosition });
+        }
+
+        if (settings.ShowToolbarPlaybackSpeed)
+        {
+            toolbarButtonForSort.Add(new SortedControl { Sort = settings.SortToolbarPlaybackSpeed, Control = panelSpeed });
+        }
+
+        return toolbarButtonForSort.OrderBy(p=>p.Sort).ToList();
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

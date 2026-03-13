@@ -458,21 +458,187 @@ public class SettingsPage : UserControl
                         },
                         UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarPlay))
                     )),
-            
 
-            //MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlay, nameof(_vm.ShowWaveformToolbarPlay)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlayNext, nameof(_vm.ShowWaveformToolbarPlayNext)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlaySelection, nameof(_vm.ShowWaveformToolbarPlaySelection)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarRepeat, nameof(_vm.ShowWaveformToolbarRepeat)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarRemoveBlankLines, nameof(_vm.ShowWaveformToolbarRemoveBlankLines)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarNew, nameof(_vm.ShowWaveformToolbarNew)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarSetStart, nameof(_vm.ShowWaveformToolbarSetStart)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarSetEnd, nameof(_vm.ShowWaveformToolbarSetEnd)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarStartAndOffsetTheRest, nameof(_vm.ShowWaveformToolbarSetStartAndOffsetTheRest)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarHorizontalZoom, nameof(_vm.ShowWaveformToolbarHorizontalZoom)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarVerticalZoom, nameof(_vm.ShowWaveformToolbarVerticalZoom)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarVideoPositionSlider, nameof(_vm.ShowWaveformToolbarVideoPositionSlider)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowWaveformToolbarPlaybackSpeed, nameof(_vm.ShowWaveformToolbarPlaybackSpeed)),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarPlayNext,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarPlayNext)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarPlayNext))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarPlaySelection,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarPlaySelection)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarPlaySelection))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarRepeat,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarRepeat)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarRepeat))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarRemoveBlankLines,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarRemoveBlankLines)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarRemoveBlankLines))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarNew,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarNew)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarNew))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarSetStart,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarSetStart)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarSetStart))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarSetEnd,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarSetEnd)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarSetEnd))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarStartAndOffsetTheRest,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarSetStartAndOffsetTheRest)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarSetStartAndOffsetTheRest))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarHorizontalZoom,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarHorizontalZoom)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarHorizontalZoom))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarVerticalZoom,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarVerticalZoom)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarVerticalZoom))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarVideoPositionSlider,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarVideoPositionSlider)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarVideoPositionSlider))
+                    )),
+            new SettingsItem(Se.Language.Options.Settings.ShowWaveformToolbarPlaybackSpeed,
+                () => UiUtil.MakeHorizontalPanel(
+                        new CheckBox
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ShowWaveformToolbarPlaybackSpeed)) { Source = _vm, Mode = BindingMode.TwoWay }
+                        },
+                        new Icon
+                        {
+                            Value = IconNames.Sort,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(10, 0, 4, 0)
+                        },
+                        UiUtil.MakeNumericUpDownInt(0, 100000, 10, 120, _vm, nameof(_vm.SortWaveformToolbarPlaybackSpeed))
+                    )),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformCenterVideoPosition, nameof(_vm.WaveformCenterVideoPosition)),
