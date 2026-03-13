@@ -16,6 +16,8 @@ public class NOcrCaseFixer : INOcrCaseFixer
     private long _ocrUppercaseHeightsTotal;
     private int _ocrUppercaseHeightsTotalCount;
 
+    public bool HasWarmedUp { get; set; }
+
     /// <summary>
     /// Fix uppercase/lowercase issues (not I/l)
     /// </summary>

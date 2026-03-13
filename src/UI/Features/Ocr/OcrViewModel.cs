@@ -1769,8 +1769,43 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        if (!_nOcrCaseFixer.HasWarmedUp)
+        {
+            NOcrWarmUp();
+            _nOcrCaseFixer.HasWarmedUp = true;
+        }
+
         _skipOnceChars.Clear();
         _ = Task.Run(() => RunNOcrLoop(selectedIndices, cancellationToken));
+    }
+
+    private void NOcrWarmUp()
+    {
+        for (var i = 0; i < Math.Min(10, OcrSubtitleItems.Count); i++)
+        {
+            var item = OcrSubtitleItems[i];
+            var bitmap = item.GetSkBitmap();
+            var parentBitmap = new NikseBitmap2(bitmap);
+            parentBitmap.MakeTwoColor(200);
+            parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
+                false, true, 20, true);
+            int index = 0;
+            while (index < letters.Count)
+            {
+                var splitterItem = letters[index];
+                if (splitterItem.NikseBitmap != null)
+                {
+                    var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels);
+                    if (match != null)
+                    {
+                        _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match);
+                    }
+                }
+
+                index++;
+            }
+        }
     }
 
     private async Task RunNOcrLoop(List<int> selectedIndices, CancellationToken cancellationToken)
