@@ -567,7 +567,7 @@ public partial class MainViewModel :
                                         languageCode.StartsWith(p.TwoLetterCode, StringComparison.OrdinalIgnoreCase));
                 if (language != null)
                 {
-                    var translationFiles = Directory.GetFiles(Se.TranslationFolder, language.EnglishName);
+                    var translationFiles = Directory.GetFiles(Se.TranslationFolder, language.EnglishName + ".json");
                     if (translationFiles?.Length > 0)
                     {
                         Dispatcher.UIThread.Post(async void () =>
