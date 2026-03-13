@@ -348,7 +348,7 @@ public class LanguageSettings
         GridCompactMode = "Use compact mode for grids";
         UiFont = "UI font";
         Theme = "Theme";
-        Theme = "Icon theme";
+        IconTheme = "Icon theme";
         DarkThemeForegroundColor = "Dark theme foreground color";
         DarkThemeBackgroundColor = "Dark theme background color";
         ShowGridLines = "Show grid lines";
