@@ -33,9 +33,10 @@ Subtitle Edit stores these components in its **Data Folder**.
 |-----------|---------|------------------|
 | **FFmpeg** | `ffmpeg.exe`, `ffprobe.exe` (optional) | `[Data Folder]/ffmpeg` |
 | **MPV** | `libmpv-2.dll` | `[Data Folder]` (root) |
+| **yt-dlp** | `yt-dlp.exe` | `[Data Folder]` (root) |
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/Whisper/Cpp` |
-| **Purfview Faster-Whisper** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/Whisper/Purfview-Whisper-Faster` |
+| **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL` |
 
 ---
 
@@ -64,6 +65,15 @@ Used as a video player engine.
 *   **Destination:** `[Data Folder]` (The root data folder)
 *   **Files:** Extract `libmpv-2.dll` to the **root** of the Data Folder.
 
+### yt-dlp (Online Video Playback)
+Used to enable mpv to stream online videos (e.g., YouTube, Vimeo, and [many other sites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)) via **Video > Open from URL**.
+
+*   **Download:** [yt-dlp releases](https://github.com/yt-dlp/yt-dlp/releases)
+*   **Destination:** `[Data Folder]` (The root data folder)
+*   **File:** Download `yt-dlp.exe` and place it directly in the root of the Data Folder.
+
+> **Tip:** Subtitle Edit can download yt-dlp automatically. When you use **Video > Open from URL** for the first time, you will be prompted to download it.
+
 ### Tesseract OCR
 Used for converting image-based subtitles (Sup/VobSub) to text.
 
@@ -85,7 +95,7 @@ Used for AI-based speech recognition.
 Used for GPU-accelerated AI-based speech recognition.
 
 *   **Download:** [Purfview/whisper-standalone-win releases](https://github.com/Purfview/whisper-standalone-win/releases)
-*   **Destination:** `[Data Folder]/Whisper/Purfview-Whisper-Faster`
+*   **Destination:** `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL`
 *   **Files:** Download the Standalone Archive, extract contents so `faster-whisper-xxl.exe` is in the folder root.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
@@ -110,6 +120,16 @@ Used as a video player engine.
 *   **Install:** Use your package manager to install `libmpv` (e.g., `sudo apt install libmpv2` or `libmpv-dev`).
 *   **Files:** Subtitle Edit looks for `libmpv.so.2` or `libmpv.so` in standard library paths (`/usr/lib`, `/usr/local/lib`, etc.).
 
+### yt-dlp (Online Video Playback)
+Used to enable mpv to stream online videos via **Video > Open from URL**.
+
+*   **Download:** [yt-dlp releases](https://github.com/yt-dlp/yt-dlp/releases)
+*   **Destination:** `[Data Folder]` (The root data folder)
+*   **File:** Download `yt-dlp_linux` and place it directly in the root of the Data Folder.
+*   **Permissions:** The file must be executable. Run: `chmod +x yt-dlp_linux`
+
+> **Tip:** Subtitle Edit can download yt-dlp automatically when you use **Video > Open from URL** for the first time.
+
 ### Tesseract OCR
 Used for converting image-based subtitles (Sup/VobSub) to text.
 
@@ -128,7 +148,7 @@ Used for AI-based speech recognition.
 Used for GPU-accelerated AI-based speech recognition.
 
 *   **Download:** [Purfview/whisper-standalone-win releases](https://github.com/Purfview/whisper-standalone-win/releases)
-*   **Destination:** `[Data Folder]/Whisper/Purfview-Whisper-Faster`
+*   **Destination:** `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL`
 *   **Files:** Download the Linux Archive, extract so `faster-whisper-xxl` binary is present.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
@@ -152,6 +172,16 @@ Used as a video player engine.
 
 *   **Install:** Use Homebrew (e.g., `brew install mpv`).
 *   **Files:** Subtitle Edit looks for `libmpv.dylib` or `libmpv.2.dylib` in standard library paths (`/opt/homebrew/lib`, `/usr/local/lib`, etc.).
+
+### yt-dlp (Online Video Playback)
+Used to enable mpv to stream online videos via **Video > Open from URL**.
+
+*   **Download:** [yt-dlp releases](https://github.com/yt-dlp/yt-dlp/releases)
+*   **Destination:** `[Data Folder]` (The root data folder)
+*   **File:** Download `yt-dlp_macos` and place it directly in the root of the Data Folder.
+*   **Permissions:** The file must be executable. Run: `chmod +x yt-dlp_macos`
+
+> **Tip:** Subtitle Edit can download yt-dlp automatically when you use **Video > Open from URL** for the first time.
 
 ### Tesseract OCR
 Used for converting image-based subtitles (Sup/VobSub) to text.

@@ -43,7 +43,7 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
             Directory.CreateDirectory(baseFolder);
         }
 
-        var folder = Path.Combine(baseFolder, "Purfview-Whisper-Faster");
+        var folder = Path.Combine(baseFolder, "Purfview-Faster-Whisper-XXL");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

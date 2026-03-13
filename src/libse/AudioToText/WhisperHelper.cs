@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                     }
 
-                    location = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
+                    location = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Faster-Whisper-XXL");
                     return Directory.Exists(location) ? location : null;
                 }
 
