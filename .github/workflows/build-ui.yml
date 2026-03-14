@@ -259,10 +259,17 @@ jobs:
     
           echo "After cleanup:"; df -h /
 
-      # Setup signing environment if certificates are available
+      # Setup signing environment if certificates and credentials are available
+      # Required secrets:
+      # * MACOS_CERTIFICATE: Base64-encoded .p12 Apple Developer ID certificate
+      # * MACOS_CERTIFICATE_PASSWORD: Password for the .p12 certificate
+      # * MACOS_CERTIFICATE_NAME: Common Name (CN) of the certificate (e.g. "Developer ID Application: Your Name (TEAMID)")
+      # * APPLE_ID_USER: Apple ID (email address)
+      # * APPLE_APP_SPECIFIC_PASSWORD: App-specific password, see https://support.apple.com/en-us/102654
+      # * APPLE_TEAM_ID: Team ID associated with the Apple Developer account (last part of the certificate name w/o parentheses)
       - name: Setup code signing (if certificates available)
         run: |
-          if [ -n "${{ secrets.MACOS_CERTIFICATE }}" ]; then
+          if [ -n "${{ secrets.MACOS_CERTIFICATE }}" ] && [ -n "${{ secrets.APPLE_ID_USER }}" ]; then
             echo "Setting up code signing..."
             echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
             security create-keychain -p "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" build.keychain
@@ -318,7 +325,7 @@ jobs:
           # Sign the x64 app if certificates are available
           if [ "$SIGNING_AVAILABLE" = "true" ]; then
             echo "Signing x64 app..."
-            codesign --force --options runtime --deep --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-x64.app"
+            codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-x64.app"
             codesign --verify --verbose "./SubtitleEdit-x64.app"
           fi
       
@@ -329,14 +336,28 @@ jobs:
           # Delete app bundle immediately after copying
           rm -rf "./SubtitleEdit-x64.app"
 
-          # Add unsigned-app helper files
-          cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-x64/README-macOS.txt"
-          cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-x64/fix-unsigned-app.sh"
-          chmod +x "./dmg-temp-x64/fix-unsigned-app.sh"
+          # Add unsigned-app helper files if signing was skipped
+          if [ "$SIGNING_AVAILABLE" != "true" ]; then
+            cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-x64/README-macOS.txt"
+            cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-x64/fix-unsigned-app.sh"
+            chmod +x "./dmg-temp-x64/fix-unsigned-app.sh"
+          fi
 
           ln -s /Applications "./dmg-temp-x64/Applications"
           hdiutil create -volname "SubtitleEdit x64" -srcfolder "./dmg-temp-x64" -ov -format UDZO "./SubtitleEdit-macOS-x64.dmg"
-      
+
+          # Sign and notarize the x64 DMG if certificates are available
+          if [ "$SIGNING_AVAILABLE" = "true" ]; then
+            echo "Signing x64 DMG..."
+            codesign --timestamp --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-macOS-x64.dmg"
+            codesign --verify --verbose "./SubtitleEdit-macOS-x64.dmg"
+
+            echo "Notarizing x64 DMG..."
+            xcrun notarytool submit "./SubtitleEdit-macOS-x64.dmg" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
+            xcrun stapler staple "./SubtitleEdit-macOS-x64.dmg"
+            xcrun stapler validate "./SubtitleEdit-macOS-x64.dmg"
+          fi
+
           # Immediate cleanup of x64 temp directory
           rm -rf "./dmg-temp-x64"
           
@@ -421,7 +442,7 @@ jobs:
           # Sign the ARM64 app if certificates are available
           if [ "$SIGNING_AVAILABLE" = "true" ]; then
             echo "Signing ARM64 app..."
-            codesign --force --options runtime --deep --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-ARM64.app"
+            codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-ARM64.app"
             codesign --verify --verbose "./SubtitleEdit-ARM64.app"
           fi
       
@@ -432,14 +453,28 @@ jobs:
           # Delete app bundle immediately after copying
           rm -rf "./SubtitleEdit-ARM64.app"
 
-          # Add unsigned-app helper files
-          cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-arm64/README-macOS.txt"
-          cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-arm64/fix-unsigned-app.sh"
-          chmod +x "./dmg-temp-arm64/fix-unsigned-app.sh"
+          # Add unsigned-app helper files if signing was skipped
+          if [ "$SIGNING_AVAILABLE" != "true" ]; then
+            cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-arm64/README-macOS.txt"
+            cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-arm64/fix-unsigned-app.sh"
+            chmod +x "./dmg-temp-arm64/fix-unsigned-app.sh"
+          fi
 
           ln -s /Applications "./dmg-temp-arm64/Applications"
           hdiutil create -volname "SubtitleEdit ARM64" -srcfolder "./dmg-temp-arm64" -ov -format UDBZ "./SubtitleEdit-macOS-ARM64.dmg"
       
+          # Sign and notarize the ARM64 DMG if certificates are available
+          if [ "$SIGNING_AVAILABLE" = "true" ]; then
+            echo "Signing ARM64 DMG..."
+            codesign --timestamp --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-macOS-ARM64.dmg"
+            codesign --verify --verbose "./SubtitleEdit-macOS-ARM64.dmg"
+
+            echo "Notarizing ARM64 DMG..."
+            xcrun notarytool submit "./SubtitleEdit-macOS-ARM64.dmg" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
+            xcrun stapler staple "./SubtitleEdit-macOS-ARM64.dmg"
+            xcrun stapler validate "./SubtitleEdit-macOS-ARM64.dmg"
+          fi
+
           # Final cleanup
           rm -rf "./dmg-temp-arm64"
           
