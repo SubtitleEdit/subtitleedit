@@ -27,15 +27,16 @@ on:
         default: ''
         type: string
 
+
 jobs:
   build-windows:
     runs-on: windows-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -123,19 +124,19 @@ jobs:
           Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SubtitleEdit-Windows-ARM64.zip"
 
       - name: Upload Windows x64 artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: se-windows-x64
           path: ./publish/windows-x64/
 
       - name: Upload Windows ARM64 artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: se-windows-arm64
           path: ./publish/windows-arm64/
 
       - name: Upload Windows ZIP packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: windows-zip-packages
           path: |
@@ -143,7 +144,7 @@ jobs:
             ./SubtitleEdit-Windows-ARM64.zip
 
       # - name: Upload Windows MSI Installers
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v5
       #   with:
       #     name: windows-msi-installers
       #     path: |
@@ -151,7 +152,7 @@ jobs:
       #       ./SubtitleEdit-Windows-ARM64.msi
 
       - name: Upload Inno Setup installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: windows-inno-installer
           path: ./SubtitleEdit-Windows-x64-Setup.exe
@@ -160,9 +161,9 @@ jobs:
   build-macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
       - name: Restore dependencies
@@ -451,7 +452,7 @@ jobs:
 
       # Upload only the DMG files now, not the publish directories
       - name: Upload macOS DMG packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: macos-dmg-packages
           path: |
@@ -464,10 +465,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -495,13 +496,13 @@ jobs:
           cd ./publish/linux-x64 && tar -czf ../../SubtitleEdit-Linux-x64.tar.gz . && cd ../..
 
       - name: Upload Linux x64 artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: se-linux-x64
           path: ./publish/linux-x64/
 
       - name: Upload Linux TAR package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: linux-tar-package
           path: ./SubtitleEdit-Linux-x64.tar.gz
@@ -514,7 +515,7 @@ jobs:
       contents: write
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Generate release tag
         id: tag
@@ -527,7 +528,7 @@ jobs:
           fi
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: ./artifacts
 
