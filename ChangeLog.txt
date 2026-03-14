@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta8 (xth March 2026)
+v5.0.0-beta8 (14th March 2026)
 
 * Use language from installer at first use - thx bovirus
 * Option for showing change log in installer
