@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
 
-            var regionDisplayAlignments = new Dictionary<string, string>();
+            var regionDisplayAlignments = new Dictionary<string, (string displayAlign, double originY, double extentY)>();
             var layoutNode = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:layout", namespaceManager);
             if (layoutNode != null)
             {
@@ -396,9 +396,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var id = regionNode.Attributes?["xml:id"]?.Value ?? regionNode.Attributes?["id"]?.Value;
                     var displayAlign = regionNode.Attributes?["tts:displayAlign"]?.Value ?? "after";
+                    var originY = ParsePercentY(regionNode.Attributes?["tts:origin"]?.Value) ?? 10.0;
+                    var extentY = ParsePercentY(regionNode.Attributes?["tts:extent"]?.Value) ?? 80.0;
                     if (!string.IsNullOrEmpty(id))
                     {
-                        regionDisplayAlignments[id] = displayAlign;
+                        regionDisplayAlignments[id] = (displayAlign, originY, extentY);
                     }
                 }
             }
@@ -418,8 +420,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var paragraphStyle = firstPNode.Attributes?["style"]?.Value ?? string.Empty;
                     
                     // Get the alignment tag
-                    var displayAlign = regionDisplayAlignments.TryGetValue(regionId, out var da) ? da : "after";
-                    var alignmentTag = GetAlignmentTagFromRegionAndStyle(paragraphStyle, displayAlign);
+                    var (regionDisplayAlign, originY, extentY) = regionDisplayAlignments.TryGetValue(regionId, out var ri) ? ri : ("after", 10.0, 80.0);
+                    var alignmentTag = GetAlignmentTagFromRegionAndStyle(paragraphStyle, regionDisplayAlign, originY, extentY);
                     
                     // Read all <p> nodes and combine them with line breaks
                     var textBuilder = new StringBuilder();
@@ -470,19 +472,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "an2"; // default: bottom-center
         }
 
-        private static string GetAlignmentTagFromRegionAndStyle(string paragraphStyle, string displayAlign = "after")
+        private static string GetAlignmentTagFromRegionAndStyle(string paragraphStyle, string displayAlign, double originY, double extentY)
         {
-            // Determine vertical position from region's tts:displayAlign attribute
-            var verticalPosition = displayAlign switch
+            // Calculate the anchor Y position based on displayAlign
+            double anchorY;
+            switch (displayAlign)
             {
-                "before" => "top",
-                "center" => "middle",
-                "after" => "bottom",
-                _ => "bottom"
-            };
+                case "before":
+                    anchorY = originY;
+                    break;
+                case "center":
+                    anchorY = originY + extentY / 2.0;
+                    break;
+                case "after":
+                default:
+                    anchorY = originY + extentY;
+                    break;
+            }
+
+            // Snap anchor to screen thirds
+            string verticalPosition;
+            if (anchorY <= 33)
+            {
+                verticalPosition = "top";
+            }
+            else if (anchorY >= 66)
+            {
+                verticalPosition = "bottom";
+            }
+            else
+            {
+                verticalPosition = "middle";
+            }
 
             // Determine horizontal position from paragraph style
-            var horizontalPosition = "center"; // default
+            var horizontalPosition = "center";
             if (!string.IsNullOrEmpty(paragraphStyle))
             {
                 if (paragraphStyle.Contains("p_al_start"))
@@ -507,11 +531,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ("top", "left") => "{\\an7}",
                 ("top", "center") => "{\\an8}",
                 ("top", "right") => "{\\an9}",
-                _ => "{\\an2}" // default: bottom-center
+                _ => "{\\an2}"
             };
 
-            // Only return non-default alignment tags
             return alignmentTag == "{\\an2}" ? string.Empty : alignmentTag;
+        }
+
+        private static double? ParsePercentY(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            var parts = value.Split(' ');
+            if (parts.Length >= 2)
+            {
+                var yStr = parts[1].TrimEnd('%');
+                if (double.TryParse(yStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var y))
+                {
+                    return y;
+                }
+            }
+
+            return null;
         }
 
         private static string GetRegionIdForAlignment(string alignment)

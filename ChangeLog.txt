@@ -16,6 +16,8 @@ v5.0.0-beta8 (xth March 2026)
 * Add Video -> More -> Open seconds subtitle - thx matmaggi
 * Fixes for ASSA styles font handling
 * Add "fixed duration" to import plain text
+* Allow some sorting of waveform toolbar buttons
+* Double click in edit-binary-sub-grid goes to video position
 
 -----------------------------------------------------------------------------------------------------
 
