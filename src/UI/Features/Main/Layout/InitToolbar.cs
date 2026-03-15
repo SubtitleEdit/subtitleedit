@@ -384,7 +384,7 @@ public static class InitToolbar
 
     private static unsafe Bitmap MakeOneColor(string filePath)
     {
-        if (!UiTheme.IsDarkThemeEnabled())
+        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme)
         {
             return new Bitmap(filePath);
         }

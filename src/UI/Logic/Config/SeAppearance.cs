@@ -8,6 +8,7 @@ public class SeAppearance
 {
     public string Theme { get; set; }
     public string IconTheme { get; set; }
+    public bool MatchIconColorToDarkTheme { get; set; }
     public double LayoutScale { get; set; }
     public string FontName { get; set; }
     public double SubtitleGridFontSize { get; set; }
@@ -65,6 +66,7 @@ public class SeAppearance
         CurrentLayoutPositions = new LayoutPositions();
         Theme = "System";
         IconTheme = string.Empty;
+        MatchIconColorToDarkTheme = true;
         LayoutScale = 1.0;
         FontName = "Default";
         SubtitleTextBoxAndGridFontName = "Default";

@@ -269,6 +269,7 @@ public class LanguageSettings
     public string AllSettings { get; set; }
     public string UiScale { get; set; }
     public string WaveformToolbarItems { get; set; }
+    public string MatchIconColorToDarkTheme { get; set; }
 
     public LanguageSettings()
     {
@@ -534,6 +535,7 @@ public class LanguageSettings
         AllSettings = "All settings";
         UiScale = "UI scale (%)";
         WaveformToolbarItems = "Waveform toolbar items";
+        MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

@@ -203,6 +203,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedTheme;
     [ObservableProperty] private ObservableCollection<string> _iconThemes;
     [ObservableProperty] private string _selectedIconTheme;
+    [ObservableProperty] private bool _matchIconColorToDarkTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
@@ -584,6 +585,7 @@ public partial class SettingsViewModel : ObservableObject
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
+        MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         ShowToolbarNew = appearance.ToolbarShowFileNew;
@@ -1144,6 +1146,7 @@ public partial class SettingsViewModel : ObservableObject
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
+        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;   
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontName = SelectedFontName == FontNames.First()
             ? new Label().FontFamily.Name

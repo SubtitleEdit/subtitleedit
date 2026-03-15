@@ -559,6 +559,7 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
                 (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) , 
                 (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero), 
