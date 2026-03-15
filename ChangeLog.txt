@@ -2,6 +2,18 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta9 (xth March 2026)
+
+* Work on installer - thx bovirus
+* More customization possible for waveform toolbar buttons
+* Reload toolbar after UI language change - thx bovirus
+* Fix: Burn-In dialog crash on Linux - thx Ironship
+* Build macOS: Finish implementing signing/notarization - thx jdpurcell
+* Build: Update to V5 github actions
+* Italian language update - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta8 (14th March 2026)
 
 * Use language from installer at first use - thx bovirus
