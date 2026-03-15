@@ -1,4 +1,4 @@
-﻿using Avalonia.Media;
+using Avalonia.Media;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -111,11 +111,23 @@ public static class FontHelper
 
     /// <summary>
     /// Reads name ID 1 (Win32/GDI family name) from the OpenType 'name' table.
-    /// Returns null when the table cannot be read.
+    /// Returns null when the table cannot be read (e.g. for Type1/PostScript fonts
+    /// that lack OpenType tables).
     /// </summary>
     private static string? ReadWin32FamilyName(SKTypeface typeface)
     {
-        var data = typeface.GetTableData(0x6E616D65u); // 'name' table tag
+        byte[]? data;
+        try
+        {
+            data = typeface.GetTableData(0x6E616D65u); // 'name' table tag
+        }
+        catch
+        {
+            // Type1 (.pfb) and other non-OpenType fonts do not have a 'name' table;
+            // SkiaSharp throws instead of returning null for these typefaces.
+            return null;
+        }
+
         if (data == null || data.Length < 6)
         {
             return null;

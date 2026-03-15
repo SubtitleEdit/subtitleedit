@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 13.03.2026 di bovirus",
+  "TranslatedBy": "v. 14.03.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -225,7 +225,7 @@
     "Height": "Altezza",
     "Help": "Aiuto",
     "Hex": "Esadecimale",
-    "Hide": "Nascondere",
+    "Hide": "Nascondi",
     "HidePreview": "Nascondi anteprima",
     "History": "Cronologia",
     "Horizontal": "Orizzontale",
@@ -2437,11 +2437,11 @@
     "TranslatedBy": "Traduzione: {0}",
     "LicenseText": "Subtitle Edit è un software gratuito con licenza MIT.",
     "DescriptionTextBeta": "Subtitle Edit 5 beta è una versione di sviluppo della nostra prossima versione finale.\r\nStiamo perfezionando attivamente i nuovi strumenti e apprezziamo il tuo aiuto nei test.\r\nCondividi il tuo feedback per aiutarci a garantire la migliore versione finale possibile.\r\nGrazie per far parte della community di Subtitle Edit!\r\n:)",
-    "IssueTrackingAndSourceCode": "Monitoraggio problemi/codice sorgente:",
+    "IssueTrackingAndSourceCode": "Monitoraggio problemi/codice sorgente: ",
     "GitHub": "Github",
-    "Donate": "Donazioni:",
+    "Donate": "Donazioni: ",
     "PayPal": "PayPal",
     "GitHubSponsor": "sponsor Github",
-    "Or": "o"
+    "Or": " o "
   }
 }
