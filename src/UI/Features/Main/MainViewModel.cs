@@ -6299,7 +6299,7 @@ public partial class MainViewModel :
         var viewModel = await ShowDialogAsync<LanguageWindow, LanguageViewModel>();
         if (viewModel.OkPressed && viewModel.SelectedLanguage != null)
         {
-            await LoadLanguage(viewModel.SelectedLanguage.FileName);
+            await LoadLanguage(viewModel.SelectedLanguage.FileName);           
         }
     }
 
@@ -6317,6 +6317,17 @@ public partial class MainViewModel :
         // reload current layout
         InitMenu.Make(this);
         SetLayout(Se.Settings.General.LayoutNumber);
+
+        if (Toolbar is Border toolbarBorder)
+        {
+            var tb = InitToolbar.Make(this);
+            if (tb is Border newToolbarBorder)
+            {
+                var grid = newToolbarBorder.Child;
+                newToolbarBorder.Child = null;
+                toolbarBorder.Child = grid;
+            }
+        }
     }
 
     [RelayCommand]
