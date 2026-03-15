@@ -143,6 +143,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -1195,10 +1196,11 @@ public partial class MainViewModel :
             return;
         }
 
-        var json = System.Text.Json.JsonSerializer.Serialize(Se.Language, new System.Text.Json.JsonSerializerOptions
+        var json = JsonSerializer.Serialize(Se.Language, new JsonSerializerOptions
         {
             WriteIndented = true,
-            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         });
 
         var currentDirectory = Directory.GetCurrentDirectory();

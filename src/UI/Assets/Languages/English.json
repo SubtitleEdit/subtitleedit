@@ -636,7 +636,10 @@
     "xSeconds": "{0:0.0##} seconds",
     "xSubtitles": "{0:#,###,##0} subtitles",
     "yes": "Yes",
-    "copyToClipboard": "Copy to clipboard"
+    "copyToClipboard": "Copy to clipboard",
+    "playCurrent": "Play current",
+    "leftMargin": "Left margin",
+    "rightMargin": "Right margin"
   },
   "main": {
     "menu": {
@@ -959,7 +962,9 @@
       "takeTimeFromCurrentFile": "Take time from current file",
       "fixed": "Fixed",
       "numberOfSubtitlesX": "Number of subtitles: {0}",
-      "gapMs": "Gap (ms)"
+      "gapMs": "Gap (ms)",
+      "useFixedDuration": "Use fixed duration",
+      "fixedDurationMs": "Fixed duration (ms)"
     },
     "export": {
       "exportImagesProfiles": "Export images profiles",
@@ -1601,6 +1606,7 @@
     "reEncodeVideoForBetterSubtitlingTitle": "Re-encode video for better subtitling",
     "reEncodeVideoForBetterSubtitlingDotDotDot": "Re-encode video for better subtitling...",
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Secondary subtitle on video player, open...",
+    "openSecondarySubtitleOnVideoPlayer": "Secondary subtitle (on video player)",
     "removeSecondarySubtitleOnVideoPlayer": "Secondary subtitle on video player, remove",
     "cutVideoTitle": "Cut video",
     "cutVideoDotDotDot": "Cut video...",
@@ -1804,6 +1810,7 @@
       "waveformDrawGridLines": "Draw grid lines",
       "waveformCenterVideoPosition": "Center video position",
       "waveformShowToolbar": "Show toolbar",
+      "waveformShowToolbarEdit": "Edit toolbar...",
       "waveformSpectrogramCombinedWaveformHeight": "Waveform/spectrogram combined, waveform height %",
       "showWaveformToolbarPlay": "Toolbar: show play button",
       "showWaveformToolbarRepeat": "Toolbar: show repeat button",
@@ -1942,7 +1949,9 @@
       "waveformSingleClickAction": "Waveform single-click action",
       "waveformDoubleClickAction": "Waveform double-click action (after single-click action)",
       "allSettings": "All settings",
-      "uiScale": "UI scale (%)"
+      "uiScale": "UI scale (%)",
+      "waveformToolbarItems": "Waveform toolbar items",
+      "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color"
     },
     "shortcuts": {
       "title": "Shortcuts",
@@ -2431,7 +2440,11 @@
     "advancedEffectAudioBars": "Audio bars (waveform)",
     "advancedEffectAudioBarsDescription": "Animated equalizer bars driven by the audio waveform \u2014 bars scroll left as a waveform and pulse with the audio",
     "advancedEffectAudioPulse": "Audio text pulse",
-    "advancedEffectAudioPulseDescription": "Subtitle text glows and pulses with the audio volume \u2014 quiet sections show normal text, loud peaks add a coloured halo and slight scale-up"
+    "advancedEffectAudioPulseDescription": "Subtitle text glows and pulses with the audio volume \u2014 quiet sections show normal text, loud peaks add a coloured halo and slight scale-up",
+    "advancedEffectConfetti": "Confetti burst",
+    "advancedEffectConfettiDescription": "Explosive burst of colorful spinning paper confetti from corner poppers and a center starburst at each subtitle",
+    "advancedEffectHearts": "Hearts (rain)",
+    "advancedEffectHeartsDescription": "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle"
   },
   "about": {
     "title": "About Subtite Edit",
