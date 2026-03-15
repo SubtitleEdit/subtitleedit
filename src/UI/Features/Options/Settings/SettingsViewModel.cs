@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Logic;
@@ -167,35 +168,6 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private bool _waveformShowToolbar;
 
-    [ObservableProperty] private bool _showWaveformToolbarPlay;
-    [ObservableProperty] private bool _showWaveformToolbarPlayNext;
-    [ObservableProperty] private bool _showWaveformToolbarPlaySelection;
-    [ObservableProperty] private bool _showWaveformToolbarRepeat;
-    [ObservableProperty] private bool _showWaveformToolbarRemoveBlankLines;
-    [ObservableProperty] private bool _showWaveformToolbarNew;
-    [ObservableProperty] private bool _showWaveformToolbarSetStart;
-    [ObservableProperty] private bool _showWaveformToolbarSetEnd;
-    [ObservableProperty] private bool _showWaveformToolbarSetStartAndOffsetTheRest;
-    [ObservableProperty] private bool _showWaveformToolbarVerticalZoom;
-    [ObservableProperty] private bool _showWaveformToolbarHorizontalZoom;
-    [ObservableProperty] private bool _showWaveformToolbarVideoPositionSlider;
-    [ObservableProperty] private bool _showWaveformToolbarPlaybackSpeed;
-
-    [ObservableProperty] private int _sortWaveformToolbarPlay;
-    [ObservableProperty] private int _sortWaveformToolbarPlayNext;
-    [ObservableProperty] private int _sortWaveformToolbarPlaySelection;
-    [ObservableProperty] private int _sortWaveformToolbarRepeat;
-    [ObservableProperty] private int _sortWaveformToolbarRemoveBlankLines;
-    [ObservableProperty] private int _sortWaveformToolbarNew;
-    [ObservableProperty] private int _sortWaveformToolbarSetStart;
-    [ObservableProperty] private int _sortWaveformToolbarSetEnd;
-    [ObservableProperty] private int _sortWaveformToolbarSetStartAndOffsetTheRest;
-    [ObservableProperty] private int _sortWaveformToolbarVerticalZoom;
-    [ObservableProperty] private int _sortWaveformToolbarHorizontalZoom;
-    [ObservableProperty] private int _sortWaveformToolbarVideoPositionSlider;
-    [ObservableProperty] private int _sortWaveformToolbarPlaybackSpeed;
-
-
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
     [ObservableProperty] private string _libMpvPath;
@@ -304,6 +276,7 @@ public partial class SettingsViewModel : ObservableObject
     private MainViewModel? _mainViewModel;
     private List<ProfileDisplay> _profilesForEdit;
     private bool _skipRuleValueChanged = false;
+    private List<SeWaveformToolbarItem> _waveformToolbarItems = new List<SeWaveformToolbarItem>();
 
     public SettingsViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
@@ -328,7 +301,7 @@ public partial class SettingsViewModel : ObservableObject
 
         var iconFolders = Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList();
         iconFolders.Insert(0, Se.Language.General.Auto);
-        IconThemes =  new ObservableCollection<string>(iconFolders);
+        IconThemes = new ObservableCollection<string>(iconFolders);
         SelectedIconTheme = IconThemes[0];
 
         FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
@@ -707,33 +680,12 @@ public partial class SettingsViewModel : ObservableObject
 
         WaveformSpectrogramCombinedWaveformHeight = Se.Settings.Waveform.SpectrogramCombinedWaveformHeight;
 
-        ShowWaveformToolbarPlay = Se.Settings.Waveform.ShowToolbarPlay;
-        ShowWaveformToolbarPlayNext = Se.Settings.Waveform.ShowToolbarPlayNext;
-        ShowWaveformToolbarPlaySelection = Se.Settings.Waveform.ShowToolbarPlaySelection;
-        ShowWaveformToolbarRepeat = Se.Settings.Waveform.ShowToolbarRepeat;
-        ShowWaveformToolbarRemoveBlankLines = Se.Settings.Waveform.ShowToolbarRemoveBlankLines;
-        ShowWaveformToolbarNew = Se.Settings.Waveform.ShowToolbarNew;
-        ShowWaveformToolbarSetStart = Se.Settings.Waveform.ShowToolbarSetStart;
-        ShowWaveformToolbarSetEnd = Se.Settings.Waveform.ShowToolbarSetEnd;
-        ShowWaveformToolbarSetStartAndOffsetTheRest = Se.Settings.Waveform.ShowToolbarSetStartAndOffsetTheRest;
-        ShowWaveformToolbarVerticalZoom = Se.Settings.Waveform.ShowToolbarVerticalZoom;
-        ShowWaveformToolbarHorizontalZoom = Se.Settings.Waveform.ShowToolbarHorizontalZoom;
-        ShowWaveformToolbarVideoPositionSlider = Se.Settings.Waveform.ShowToolbarVideoPositionSlider;
-        ShowWaveformToolbarPlaybackSpeed = Se.Settings.Waveform.ShowToolbarPlaybackSpeed;
-
-        SortWaveformToolbarPlay = Se.Settings.Waveform.SortToolbarPlay;
-        SortWaveformToolbarPlayNext = Se.Settings.Waveform.SortToolbarPlayNext;
-        SortWaveformToolbarPlaySelection = Se.Settings.Waveform.SortToolbarPlaySelection;
-        SortWaveformToolbarRepeat = Se.Settings.Waveform.SortToolbarRepeat;
-        SortWaveformToolbarRemoveBlankLines = Se.Settings.Waveform.SortToolbarRemoveBlankLines;
-        SortWaveformToolbarNew = Se.Settings.Waveform.SortToolbarNew;
-        SortWaveformToolbarSetStart = Se.Settings.Waveform.SortToolbarSetStart;
-        SortWaveformToolbarSetEnd = Se.Settings.Waveform.SortToolbarSetEnd;
-        SortWaveformToolbarSetStartAndOffsetTheRest = Se.Settings.Waveform.SortToolbarSetStartAndOffsetTheRest;
-        SortWaveformToolbarVerticalZoom = Se.Settings.Waveform.SortToolbarVerticalZoom;
-        SortWaveformToolbarHorizontalZoom = Se.Settings.Waveform.SortToolbarHorizontalZoom;
-        SortWaveformToolbarVideoPositionSlider = Se.Settings.Waveform.SortToolbarVideoPositionSlider;
-        SortWaveformToolbarPlaybackSpeed = Se.Settings.Waveform.SortToolbarPlaybackSpeed;
+        WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
+        _waveformToolbarItems = new List<SeWaveformToolbarItem>();
+        foreach (var item in Se.Settings.Waveform.ToolbarItems)
+        {
+            _waveformToolbarItems.Add(new SeWaveformToolbarItem(item));
+        }
 
         WaveformFocusTextboxAfterInsertNew = Se.Settings.Waveform.FocusTextBoxAfterInsertNew;
         WaveformTextFontSize = Se.Settings.Waveform.WaveformTextFontSize;
@@ -811,6 +763,13 @@ public partial class SettingsViewModel : ObservableObject
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
         ExistsWhisperLogFile = File.Exists(Se.GetWhisperLogFilePath());
         ExistsSettingsFile = File.Exists(Se.GetSettingsFilePath());
+    }
+
+    private bool GetToolbarVisible(SeWaveformToolbarItemType type)
+    {
+        return Se.Settings.Waveform.ToolbarItems
+            .First(p => p.Type == type)
+            .IsVisible;
     }
 
     private static readonly Dictionary<string, string> _waveformSingleClickActionToTextMap = new Dictionary<string, string>
@@ -1237,7 +1196,6 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.FocusTextBoxAfterInsertNew = WaveformFocusTextboxAfterInsertNew;
-        Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
 
         if (SelectedWaveformDrawStyle == Se.Language.Waveform.WaveformDrawStyleClassic)
         {
@@ -1276,33 +1234,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.SpectrogramCombinedWaveformHeight = WaveformSpectrogramCombinedWaveformHeight;
 
-        Se.Settings.Waveform.ShowToolbarPlay = ShowWaveformToolbarPlay;
-        Se.Settings.Waveform.ShowToolbarPlayNext = ShowWaveformToolbarPlayNext;
-        Se.Settings.Waveform.ShowToolbarPlaySelection = ShowWaveformToolbarPlaySelection;
-        Se.Settings.Waveform.ShowToolbarRepeat = ShowWaveformToolbarRepeat;
-        Se.Settings.Waveform.ShowToolbarRemoveBlankLines = ShowWaveformToolbarRemoveBlankLines;
-        Se.Settings.Waveform.ShowToolbarNew = ShowWaveformToolbarNew;
-        Se.Settings.Waveform.ShowToolbarSetStart = ShowWaveformToolbarSetStart;
-        Se.Settings.Waveform.ShowToolbarSetEnd = ShowWaveformToolbarSetEnd;
-        Se.Settings.Waveform.ShowToolbarSetStartAndOffsetTheRest = ShowWaveformToolbarSetStartAndOffsetTheRest;
-        Se.Settings.Waveform.ShowToolbarVerticalZoom = ShowWaveformToolbarVerticalZoom;
-        Se.Settings.Waveform.ShowToolbarHorizontalZoom = ShowWaveformToolbarHorizontalZoom;
-        Se.Settings.Waveform.ShowToolbarVideoPositionSlider = ShowWaveformToolbarVideoPositionSlider;
-        Se.Settings.Waveform.ShowToolbarPlaybackSpeed = ShowWaveformToolbarPlaybackSpeed;
-
-        Se.Settings.Waveform.SortToolbarPlay = SortWaveformToolbarPlay;
-        Se.Settings.Waveform.SortToolbarPlayNext = SortWaveformToolbarPlayNext;
-        Se.Settings.Waveform.SortToolbarPlaySelection = SortWaveformToolbarPlaySelection;
-        Se.Settings.Waveform.SortToolbarRepeat = SortWaveformToolbarRepeat;
-        Se.Settings.Waveform.SortToolbarRemoveBlankLines = SortWaveformToolbarRemoveBlankLines;
-        Se.Settings.Waveform.SortToolbarNew = SortWaveformToolbarNew;
-        Se.Settings.Waveform.SortToolbarSetStart = SortWaveformToolbarSetStart;
-        Se.Settings.Waveform.SortToolbarSetEnd = SortWaveformToolbarSetEnd;
-        Se.Settings.Waveform.SortToolbarSetStartAndOffsetTheRest = SortWaveformToolbarSetStartAndOffsetTheRest;
-        Se.Settings.Waveform.SortToolbarVerticalZoom = SortWaveformToolbarVerticalZoom;
-        Se.Settings.Waveform.SortToolbarHorizontalZoom = SortWaveformToolbarHorizontalZoom;
-        Se.Settings.Waveform.SortToolbarVideoPositionSlider = SortWaveformToolbarVideoPositionSlider;
-        Se.Settings.Waveform.SortToolbarPlaybackSpeed = SortWaveformToolbarPlaybackSpeed;
+        Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
+        Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
         Se.Settings.Waveform.WaveformTextFontBold = WaveformTextFontBold;
@@ -1392,7 +1325,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.SaveSettings();
     }
 
-    private string MapWaveformSingleClickFromTranslation(string selectedWaveformSingleClickActionType)
+    private static string MapWaveformSingleClickFromTranslation(string selectedWaveformSingleClickActionType)
     {
         if (string.IsNullOrEmpty(selectedWaveformSingleClickActionType))
         {
@@ -1404,7 +1337,7 @@ public partial class SettingsViewModel : ObservableObject
             : WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle.ToString();
     }
 
-    private string MapWaveformDoubleClickFromTranslation(string selectedWaveformDoubleClickActionType)
+    private static string MapWaveformDoubleClickFromTranslation(string selectedWaveformDoubleClickActionType)
     {
         if (string.IsNullOrEmpty(selectedWaveformDoubleClickActionType))
         {
@@ -1598,6 +1531,25 @@ public partial class SettingsViewModel : ObservableObject
             {
                 FavoriteSubtitleFormats.Add(selectedFormat.FriendlyName);
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditWaveformToolbarProperties()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<WaveformToolbarItemsWindow, WaveformToolbarItemsViewModel>(Window, vm =>
+        {
+            vm.Initialize(_waveformToolbarItems);
+        });
+
+        if (result.OkPressed)
+        {
+            _waveformToolbarItems = result.ResultToolbarItems;
         }
     }
 

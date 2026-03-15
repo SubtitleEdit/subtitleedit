@@ -1,7 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.Main;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Main;
 
 public class LanguageMain
 {

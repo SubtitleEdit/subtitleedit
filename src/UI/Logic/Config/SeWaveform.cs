@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -12,33 +12,7 @@ public class SeWaveform
     public bool FocusTextBoxAfterInsertNew { get; set; }
     public int SpectrogramCombinedWaveformHeight { get; set; }
 
-    public bool ShowToolbarPlay { get; set; }
-    public bool ShowToolbarPlayNext { get; set; }
-    public bool ShowToolbarPlaySelection { get; set; }
-    public bool ShowToolbarRepeat { get; set; }
-    public bool ShowToolbarRemoveBlankLines { get; set; }
-    public bool ShowToolbarNew { get; set; }
-    public bool ShowToolbarSetStart { get; set; }
-    public bool ShowToolbarSetEnd { get; set; }
-    public bool ShowToolbarSetStartAndOffsetTheRest { get; set; }
-    public bool ShowToolbarVerticalZoom { get; set; }
-    public bool ShowToolbarHorizontalZoom { get; set; }
-    public bool ShowToolbarVideoPositionSlider { get; set; }
-    public bool ShowToolbarPlaybackSpeed { get; set; }
-
-    public int SortToolbarPlay { get; set; }
-    public int SortToolbarPlayNext { get; set; }
-    public int SortToolbarPlaySelection { get; set; }
-    public int SortToolbarRepeat { get; set; }
-    public int SortToolbarRemoveBlankLines { get; set; }
-    public int SortToolbarNew { get; set; }
-    public int SortToolbarSetStart { get; set; }
-    public int SortToolbarSetEnd { get; set; }
-    public int SortToolbarSetStartAndOffsetTheRest { get; set; }
-    public int SortToolbarVerticalZoom { get; set; }
-    public int SortToolbarHorizontalZoom { get; set; }
-    public int SortToolbarVideoPositionSlider { get; set; }
-    public int SortToolbarPlaybackSpeed { get; set; }
+    public List<SeWaveformToolbarItem> ToolbarItems { get; set; }
 
     public int WaveformTextFontSize { get; set; }
     public bool WaveformTextFontBold { get; set; }
@@ -95,35 +69,6 @@ public class SeWaveform
         SnapToShotChangesPixels = 8;
         SnapToShotChanges = true;
         ShotChangesAutoGenerate = false;
-        ShowToolbarPlay = true;
-        ShowToolbarRepeat = true;
-        ShowToolbarRemoveBlankLines = false;
-        ShowToolbarNew = true;
-        ShowToolbarSetStart = true;
-        ShowToolbarSetEnd = true;
-        ShowToolbarSetStartAndOffsetTheRest = true;
-        ShowToolbarVerticalZoom = true;
-        ShowToolbarHorizontalZoom = true;
-        ShowToolbarVideoPositionSlider = true;
-        ShowToolbarPlaybackSpeed = true;
-        ShowToolbarVerticalZoom = true;
-        ShowToolbarHorizontalZoom = true;
-        ShowToolbarVideoPositionSlider = true;
-        ShowToolbarPlaybackSpeed = true;
-
-        SortToolbarPlay = 10;
-        SortToolbarPlayNext = 20;
-        SortToolbarPlaySelection = 30;
-        SortToolbarRepeat = 40;
-        SortToolbarRemoveBlankLines = 50;
-        SortToolbarNew = 60;
-        SortToolbarSetStart = 70;
-        SortToolbarSetEnd = 80;
-        SortToolbarSetStartAndOffsetTheRest = 90;
-        SortToolbarVerticalZoom = 100;
-        SortToolbarHorizontalZoom = 110;
-        SortToolbarVideoPositionSlider = 120;
-        SortToolbarPlaybackSpeed = 130;
 
         SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
         LastDisplayMode = nameof(WaveformDisplayMode.OnlyWaveform);
@@ -141,5 +86,25 @@ public class SeWaveform
         SeekSilenceSeekForward = true;
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;
+
+        ToolbarItems =
+        [
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Play, IsVisible = true, SortOrder = 10 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlayNext, IsVisible = false, SortOrder = 20 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaySelection, IsVisible = false, SortOrder = 30 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Repeat, IsVisible = true, SortOrder = 40 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RemoveBlankLines, IsVisible = false, SortOrder = 50 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.New, IsVisible = true, SortOrder = 60 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStart, IsVisible = true, SortOrder = 70 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetEnd, IsVisible = true, SortOrder = 80 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStartAndOffsetTheRest, IsVisible = true, SortOrder = 90 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VerticalZoom, IsVisible = true, SortOrder = 100 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.HorizontalZoom, IsVisible = true, SortOrder = 110 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VideoPositionSlider, IsVisible = true, SortOrder = 120 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaybackSpeed, IsVisible = true, SortOrder = 130 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
+        ];
     }
 }

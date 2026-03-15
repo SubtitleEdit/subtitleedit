@@ -110,6 +110,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
+using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;

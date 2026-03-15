@@ -4,11 +4,12 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
-namespace Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
+namespace Nikse.SubtitleEdit.Features.Tools.SortBy;
 
 public class SortByWindow : Window
 {

@@ -638,6 +638,8 @@ public class LanguageGeneral
     public string Yes { get; set; }
     public string CopyToClipboard { get; set; }
     public string PlayCurrent { get; set; }
+    public string LeftMargin { get; set; }
+    public string RightMargin { get; set; }
 
     public LanguageGeneral()
     {
@@ -1275,5 +1277,7 @@ public class LanguageGeneral
         Yes = "Yes";
         CopyToClipboard = "Copy to clipboard";
         PlayCurrent = "Play current";   
+        LeftMargin = "Left margin";
+        RightMargin = "Right margin";
     }
 }

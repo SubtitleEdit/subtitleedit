@@ -121,6 +121,7 @@ public class LanguageSettings
     public string WaveformDrawGridLines { get; set; }
     public string WaveformCenterVideoPosition { get; set; }
     public string WaveformShowToolbar { get; set; }
+    public string WaveformShowToolbarEdit { get; set; }
     public string WaveformSpectrogramCombinedWaveformHeight { get; set; }
     public string ShowWaveformToolbarPlay { get; set; }
     public string ShowWaveformToolbarRepeat { get; set; }
@@ -267,6 +268,7 @@ public class LanguageSettings
     public string WaveformDoubleClickAction { get; set; }
     public string AllSettings { get; set; }
     public string UiScale { get; set; }
+    public string WaveformToolbarItems { get; set; }
 
     public LanguageSettings()
     {
@@ -386,6 +388,7 @@ public class LanguageSettings
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPosition = "Center video position";
         WaveformShowToolbar = "Show toolbar";
+        WaveformShowToolbarEdit = "Edit toolbar...";
         WaveformSpectrogramCombinedWaveformHeight = "Waveform/spectrogram combined, waveform height %";
         ShowWaveformToolbarPlay = "Toolbar: show play button";
         ShowWaveformToolbarRepeat = "Toolbar: show repeat button";
@@ -530,6 +533,7 @@ public class LanguageSettings
         WaveformDoubleClickAction = "Waveform double-click action (after single-click action)";
         AllSettings = "All settings";
         UiScale = "UI scale (%)";
+        WaveformToolbarItems = "Waveform toolbar items";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

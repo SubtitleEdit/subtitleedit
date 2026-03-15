@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
+namespace Nikse.SubtitleEdit.Features.Tools.SortBy;
 
 public class SortCriterion : ObservableObject
 {
