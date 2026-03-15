@@ -2227,7 +2227,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ImportPlainTextWindow, ImportPlainTextViewModel>(vm => vm.SetCurrentSubtitle(_subtitle));
+        var result = await ShowDialogAsync<ImportPlainTextWindow, ImportPlainTextViewModel>(vm => vm.Initialize(_subtitle, _videoFileName));
         if (result.OkPressed && result.Subtitles.Count > 0)
         {
             _subtitleFileName = string.Empty;

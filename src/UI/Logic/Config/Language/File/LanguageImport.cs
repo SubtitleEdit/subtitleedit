@@ -35,6 +35,7 @@ public class LanguageImport
     public string GapMs { get; set; }
     public string UseFixedDuration { get; set; }
     public string FixedDurationMs { get; set; }
+    public string AlignViaWhisper { get; set; }
 
     public LanguageImport()
     {
@@ -81,5 +82,6 @@ Rules:
         GapMs = "Gap (ms)";
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
+        AlignViaWhisper = "Align time codes via Whisper...";
     }
 }

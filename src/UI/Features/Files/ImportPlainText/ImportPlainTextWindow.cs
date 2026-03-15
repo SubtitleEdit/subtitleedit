@@ -67,6 +67,7 @@ public class ImportPlainTextWindow : Window
 
         var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
 
+        var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaWhisper, vm.AlignScriptWithTimestampsFromWhisperCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);

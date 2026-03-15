@@ -38,6 +38,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private Subtitle _subtitle = new Subtitle();
+    private string  _videoFileName = string.Empty;
     private readonly IFileHelper _fileHelper;
     private readonly List<string> _textExtensions = new List<string>
     {
@@ -241,6 +242,13 @@ public partial class ImportPlainTextViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void AlignScriptWithTimestampsFromWhisper()
+    {
+
+    }
+
+
+    [RelayCommand]
     private async Task FileImport()
     {
         if (Window == null)
@@ -368,9 +376,10 @@ public partial class ImportPlainTextViewModel : ObservableObject
         _dirty = true;
     }
 
-    internal void SetCurrentSubtitle(Subtitle subtitle)
+    internal void Initialize(Subtitle subtitle, string? videoFileName)
     {
         _subtitle = new Subtitle(subtitle, false);
+        _videoFileName = videoFileName ?? string.Empty;
     }
 
     internal void GapChanged(object? sender, NumericUpDownValueChangedEventArgs e)
