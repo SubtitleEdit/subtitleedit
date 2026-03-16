@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         private List<Paragraph> GetParagraphs(Stream fs, string handlerType)
         {
+            var stsdCodec = Stsd?.Name ?? "null";
             var paragraphs = new List<Paragraph>();
             uint samplesPerChunk = 1;
             var max = ChunkOffsets.Count;
@@ -161,6 +162,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
 
                 var chunkOffset = ChunkOffsets[chunkIndex];
+                var sampleOffset = chunkOffset; // tracks the byte position of the current sample within the chunk
                 var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
@@ -187,10 +189,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 //TODO: cea 608 or 708 cc? What is the content?
                             }
                         }
-                        else if (handlerType == "clcp" && Stsd?.Name == "c608")
+                        else if (handlerType == "clcp" && stsdCodec == "c608")
                         {
                             var sampleData = new byte[sampleSize];
-                            fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                            fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                             if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
                             {
                                 for (var j = 0; j + 1 < sampleData.Length; j += 2)
@@ -204,12 +206,56 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 }
                             }
                         }
+                        else if (stsdCodec == "wvtt") // WebVTT in MP4 (ISO 14496-30)
+                        {
+                            var sampleEnd = sampleOffset + sampleSize;
+                            fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+
+                            var wvttText = new StringBuilder();
+                            while ((ulong)fs.Position < sampleEnd)
+                            {
+                                var boxStart = (ulong)fs.Position;
+                                var boxHeader = new byte[8];
+                                if (fs.Read(boxHeader, 0, 8) < 8)
+                                    break;
+
+                                var boxSize = GetUInt(boxHeader.AsSpan(0, 4));
+                                var boxName = GetString(boxHeader, 4, 4);
+                                if (boxSize < 8)
+                                    break;
+
+                                var boxEnd = boxStart + boxSize;
+                                if (boxEnd > sampleEnd)
+                                    break; // malformed box extends beyond sample
+
+                                if (boxName == "vttc")
+                                {
+                                    // Vttc parses payl (cue payload) and sttg (cue settings) sub-boxes
+                                    var vttcBox = new Vttc(fs, boxEnd);
+                                    if (!string.IsNullOrEmpty(vttcBox.Data?.Payload))
+                                    {
+                                        if (wvttText.Length > 0)
+                                            wvttText.AppendLine();
+                                        wvttText.Append(vttcBox.Data.Payload);
+                                    }
+                                }
+                                // vtte = empty cue (gap marker, 8 bytes), vtta = additional text - skip both
+
+                                fs.Seek((long)boxEnd, SeekOrigin.Begin);
+                            }
+
+                            if (wvttText.Length > 0)
+                            {
+                                paragraphs.Add(new Paragraph(wvttText.ToString(), before * 1000.0, totalTime * 1000.0));
+                            }
+                        }
                         else
                         {
-                            fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                            fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                             var buffer = new byte[2];
                             fs.Read(buffer, 0, buffer.Length);
                             var textSize = (uint)GetWord(buffer, 0);
+
                             if (textSize == 0 && samplesPerChunk > 1)
                             {
                                 fs.Read(buffer, 0, buffer.Length);
@@ -223,7 +269,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                     if (textSize > 100)
                                     {
                                         buffer = new byte[textSize + 2];
-                                        fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                                        fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                                         fs.Read(buffer, 0, buffer.Length);
                                         SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
                                         paragraphs.Add(p);
@@ -246,6 +292,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                     p.EndTime.TotalSeconds = totalTime;
                     index++;
+                    sampleOffset += sampleSize; // advance to next sample within this chunk
                 }
 
                 if (!string.IsNullOrEmpty(p.Text))
