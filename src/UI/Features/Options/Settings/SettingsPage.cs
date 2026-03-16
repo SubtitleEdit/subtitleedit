@@ -333,7 +333,7 @@ public class SettingsPage : UserControl
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooLong, nameof(_vm.ColorTextTooLong)),
             
-            new SettingsItem(Se.Language.Options.Settings.DefaultSaveAsFormat, () =>
+            new SettingsItem(Se.Language.Options.Settings.ColorTextTooWide, () =>
                 UiUtil.MakeHorizontalPanel(
                     new CheckBox
                     {
