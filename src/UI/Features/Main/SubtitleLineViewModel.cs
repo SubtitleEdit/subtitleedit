@@ -1,10 +1,13 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using SkiaSharp;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Main;
@@ -222,9 +225,38 @@ public partial class SubtitleLineViewModel : ObservableObject
                     }
                 }
             }
+            else if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
+            {
+                var text = HtmlUtil.RemoveHtmlTags(Text, true);
+                foreach (var line in text.SplitToLines())
+                {
+                    if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
+                    {
+                        return new SolidColorBrush(_errorColor);
+                    }
+                }
+
+
+            }
 
             return new SolidColorBrush(Colors.Transparent);
         }
+    }
+
+    private static readonly Dictionary<(string name, int size), SKFont> _fontCache = [];
+
+    private static int CalculatePixelWidth(string line)
+    {
+        var general = Se.Settings.General;
+        var key = (name: general.ColorTextTooWideFontName, size: general.ColorTextTooWideFontSize);
+        if (!_fontCache.TryGetValue(key, out var font))
+        {
+            var typeface = SKTypeface.FromFamilyName(key.name) ?? SKTypeface.Default;
+            font = new SKFont(typeface, key.size);
+            _fontCache[key] = font;
+        }
+
+        return (int)Math.Ceiling(font.MeasureText(line));
     }
 
     public IBrush DurationBackgroundBrush
@@ -475,6 +507,18 @@ public partial class SubtitleLineViewModel : ObservableObject
                 {
 
                     errors.AppendLine("Max line length: " + line.Length + " > " + general.SubtitleLineMaximumLength);
+                }
+            }
+        }
+
+        if (Se.Settings.General.ColorTextTooWide)
+        {
+            foreach (var line in HtmlUtil.RemoveHtmlTags(Text, true).SplitToLines())
+            {
+                var pixelWidth = CalculatePixelWidth(line);
+                if (pixelWidth > general.ColorTextTooWidePixels)
+                {
+                    errors.AppendLine("Max width (px): " + pixelWidth + " > " + general.ColorTextTooWidePixels);
                 }
             }
         }

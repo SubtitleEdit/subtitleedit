@@ -70,8 +70,8 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
             SampleBoxWidth = MaxWidthPixels + 200;
         }
 
-        _updateTimer.Start();
         _previewDirty = true;
+        _updateTimer.Start();
     }
 
     internal void MarkPreviewDirty() => _previewDirty = true;
@@ -93,37 +93,56 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         var canvas = surface.Canvas;
         canvas.Clear(new SKColor(18, 18, 22));
 
-        // Green safe-area tint (left of limit line)
-        if (greenLineX > 0 && greenLineX < bitmapWidth)
-        {
-            using var p = new SKPaint { Color = new SKColor(0, 160, 0, 22) };
-            canvas.DrawRect(new SKRect(0, 0, greenLineX, previewHeight), p);
-        }
-
         // Draw text and measure width
         var typeface = SKTypeface.FromFamilyName(SelectedFont) ?? SKTypeface.Default;
         using var skFont = new SKFont(typeface, FontSize);
         var rawTextWidth = skFont.MeasureText(SampleText);
         var scaledTextWidth = (float)(rawTextWidth * widthScale);
 
-        // Red overflow tint (text past the limit line)
-        if (greenLineX > 0 && scaledTextWidth > greenLineX)
+        // Safe area: centered rect of width greenLineX
+        var safeLeft = (bitmapWidth - greenLineX) / 2f;
+        var safeRight = safeLeft + greenLineX;
+
+        // Green safe-area tint (centered)
+        if (greenLineX > 0)
         {
-            using var p = new SKPaint { Color = new SKColor(200, 30, 30, 50) };
-            canvas.DrawRect(new SKRect(greenLineX, 0, Math.Min(scaledTextWidth, bitmapWidth), previewHeight), p);
+            using var p = new SKPaint { Color = new SKColor(0, 160, 0, 22) };
+            canvas.DrawRect(new SKRect(Math.Max(0, safeLeft), 0, Math.Min(bitmapWidth, safeRight), previewHeight), p);
+        }
+
+        // Text centered horizontally
+        var textX = (bitmapWidth - scaledTextWidth) / 2f;
+
+        // Red overflow tint (text outside safe area edges)
+        if (greenLineX > 0)
+        {
+            if (textX < safeLeft)
+            {
+                using var p = new SKPaint { Color = new SKColor(200, 30, 30, 50) };
+                canvas.DrawRect(new SKRect(Math.Max(0, textX), 0, safeLeft, previewHeight), p);
+            }
+            var textRight = textX + scaledTextWidth;
+            if (textRight > safeRight)
+            {
+                using var p = new SKPaint { Color = new SKColor(200, 30, 30, 50) };
+                canvas.DrawRect(new SKRect(safeRight, 0, Math.Min(bitmapWidth, textRight), previewHeight), p);
+            }
         }
 
         // Sample text
         var metrics = skFont.Metrics;
         var textY = previewHeight / 2f - (metrics.Ascent + metrics.Descent) / 2f;
         using var textPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
-        canvas.DrawText(SampleText, 0, textY, skFont, textPaint);
+        canvas.DrawText(SampleText, textX, textY, skFont, textPaint);
 
-        // Green limit line
-        if (greenLineX > 0 && greenLineX <= bitmapWidth)
+        // Green limit lines (left and right edges of safe area)
+        if (greenLineX > 0)
         {
             using var p = new SKPaint { Color = new SKColor(50, 220, 50), StrokeWidth = 2, IsAntialias = false };
-            canvas.DrawLine(greenLineX, 0, greenLineX, previewHeight, p);
+            if (safeLeft >= 0 && safeLeft <= bitmapWidth)
+                canvas.DrawLine(safeLeft, 0, safeLeft, previewHeight, p);
+            if (safeRight >= 0 && safeRight <= bitmapWidth)
+                canvas.DrawLine(safeRight, 0, safeRight, previewHeight, p);
         }
 
         // Outer box border

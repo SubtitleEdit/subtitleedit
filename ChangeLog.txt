@@ -11,6 +11,8 @@ v5.0.0-beta9 (xth March 2026)
 * Build macOS: Finish implementing signing/notarization - thx jdpurcell
 * Build: Update to V5 github actions
 * Italian language update - thx bovirus
+* Implement syntax-color-if-pixels-is-too-wide - thx Louis
+* Fix for WebVTT in mp4 - thx xiaomotalktech
 
 -----------------------------------------------------------------------------------------------------
 

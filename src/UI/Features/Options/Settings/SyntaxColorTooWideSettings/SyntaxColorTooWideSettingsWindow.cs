@@ -69,7 +69,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         // Row 7 – hint
         var hint = new TextBlock
         {
-            Text = "Green line = max-width limit   |   Red area = text exceeds limit",
+            Text = "Green lines = max-width limit   |   Red area = text exceeds limit",
             FontStyle = FontStyle.Italic,
             Opacity = 0.65,
             HorizontalAlignment = HorizontalAlignment.Left,
