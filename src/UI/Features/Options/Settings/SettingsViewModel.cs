@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
@@ -1525,6 +1526,27 @@ public partial class SettingsViewModel : ObservableObject
         };
 
         return animation.RunAsync(control);
+    }
+
+    [RelayCommand]
+    private async Task EditTextTooWideSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<SyntaxColorTooWideSettingsWindow, SyntaxColorTooWideSettingsViewModel>(Window, vm => 
+        {
+            vm.Initialize(ColorTextTooWidePixels, ColorTextTooWideFontName, ColorTextTooWideFontSize); 
+        });
+
+        if (viewModel.OkPressed)
+        {
+            ColorTextTooWidePixels = viewModel.MaxWidthPixels;
+            ColorTextTooWideFontName = viewModel.SelectedFont;
+            ColorTextTooWideFontSize = viewModel.FontSize;
+        }
     }
 
     [RelayCommand]

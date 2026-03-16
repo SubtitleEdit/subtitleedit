@@ -38,6 +38,7 @@ using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Settings.SettingsImportExport;
+using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
@@ -383,6 +384,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SplitSubtitleViewModel>();
         collection.AddTransient<StatisticsViewModel>();
         collection.AddTransient<SurroundWithViewModel>();
+        collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
         collection.AddTransient<TmpegEncXmlPropertiesViewModel>();
         collection.AddTransient<TranslateSettingsViewModel>();
