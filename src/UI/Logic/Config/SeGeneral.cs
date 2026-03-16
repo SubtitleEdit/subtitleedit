@@ -82,6 +82,9 @@ public class SeGeneral
     public bool ColorDurationTooLong { get; set; }
     public bool ColorTextTooLong { get; set; }
     public bool ColorTextTooWide { get; set; }
+    public int ColorTextTooWidePixels { get; set; }
+    public string ColorTextTooWideFontName { get; set; }
+    public int ColorTextTooWideFontSize { get; set; }
     public bool ColorTextTooManyLines { get; set; }
     public bool ColorTimeCodeOverlap { get; set; }
     public bool ColorGapTooShort { get; set; }
@@ -191,6 +194,9 @@ public class SeGeneral
         ColorDurationTooLong = true;
         ColorTextTooLong = true;
         ColorTextTooWide = true;
+        ColorTextTooWidePixels = 1200;
+        ColorTextTooWideFontName = "Arial";
+        ColorTextTooWideFontSize = 40;
         ColorTextTooManyLines = true;
         ColorTimeCodeOverlap = true;
         ColorGapTooShort = true;

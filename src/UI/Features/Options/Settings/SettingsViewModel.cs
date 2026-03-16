@@ -142,6 +142,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _colorDurationTooLong;
     [ObservableProperty] private bool _colorTextTooLong;
     [ObservableProperty] private bool _colorTextTooWide;
+    [ObservableProperty] private int _colorTextTooWidePixels;
+    [ObservableProperty] private int _colorTextTooWideFontSize;
+    [ObservableProperty] private string _colorTextTooWideFontName;
     [ObservableProperty] private bool _colorTextTooManyLines;
     [ObservableProperty] private bool _colorOverlap;
     [ObservableProperty] private bool _colorGapTooShort;
@@ -445,6 +448,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedGridLinesVisibility = GridLinesVisibilities[0];
 
         ErrorColor = Color.FromArgb(50, 255, 0, 0);
+        ColorTextTooWideFontName = "Arial";
 
         FfmpegStatus = Se.Language.General.NotInstalled;
         FfmpegPath = string.Empty;
@@ -714,6 +718,9 @@ public partial class SettingsViewModel : ObservableObject
         ColorDurationTooShort = general.ColorDurationTooShort;
         ColorTextTooLong = general.ColorTextTooLong;
         ColorTextTooWide = general.ColorTextTooWide;
+        ColorTextTooWidePixels = general.ColorTextTooWidePixels;
+        ColorTextTooWideFontName = general.ColorTextTooWideFontName;
+        ColorTextTooWideFontSize = general.ColorTextTooWideFontSize;
         ColorTextTooManyLines = general.ColorTextTooManyLines;
         ColorOverlap = general.ColorTimeCodeOverlap;
         ColorGapTooShort = general.ColorGapTooShort;
@@ -1264,6 +1271,9 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorDurationTooShort = ColorDurationTooShort;
         general.ColorTextTooLong = ColorTextTooLong;
         general.ColorTextTooWide = ColorTextTooWide;
+        general.ColorTextTooWidePixels = ColorTextTooWidePixels;
+        general.ColorTextTooWideFontName = ColorTextTooWideFontName;
+        general.ColorTextTooWideFontSize = ColorTextTooWideFontSize;
         general.ColorTextTooManyLines = ColorTextTooManyLines;
         general.ColorTimeCodeOverlap = ColorOverlap;
         general.ColorGapTooShort = ColorGapTooShort;
