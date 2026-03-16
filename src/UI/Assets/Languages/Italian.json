@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 14.03.2026 di bovirus",
+  "TranslatedBy": "v. 16.03.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -635,7 +635,10 @@
     "XSeconds": "{0:0.0##} secondi",
     "XSubtitles": "{0:#,###,##0} sottotitoli",
     "Yes": "Sì",
-    "CopyToClipboard": "Copia negli appunti"
+    "CopyToClipboard": "Copia negli appunti",
+    "PlayCurrent": "Riproduci attuale",
+    "LeftMargin": "Margine sinistro",
+    "RightMargin": "Margine destro"
   },
   "Main": {
     "AudioTrackIsNowX": "La traccia audio ora è \"{0}",
@@ -979,7 +982,9 @@
       "TakeTimeFromCurrentFile": "Prendi tempo dal file attuale",
       "Fixed": "Corretta",
       "NumberOfSubtitlesX": "Numero sottotitoli: {0}",
-      "GapMs": "Gap (ms)"
+      "GapMs": "Gap (ms)",
+      "UseFixedDuration": "Usa durata fissa",
+      "FixedDurationMs": "Durata fissa (ms)"
     },
     "Export": {
       "ExportImagesProfiles": "Esporta profili immagini",
@@ -1494,7 +1499,8 @@
     "ReEncodeVideoForBetterSubtitlingTitle": "Ricodifica il video per una migliore sottotitolazione",
     "ReEncodeVideoForBetterSubtitlingDotDotDot": "Ricodifica il video per una migliore sottotitolazione...",
     "OpenSecondarySubtitleOnVideoPlayerDotDotDot": "Apri sottotitoli secondari nel lettore video...",
-    "RemoveSecondarySubtitleOnVideoPlayer": "Rimuovi sottotitolo secondario nel lettore video",
+    "OpenSecondarySubtitleOnVideoPlayer": "Sottotitoli secondari (lettore video)",
+    "RemoveSecondarySubtitleOnVideoPlayer": "Rimuovi sottotitoli secondari nel lettore video",
     "CutVideoTitle": "Taglia video",
     "CutVideoDotDotDot": "Taglia video...",
     "EmbedSubtitlesDotDotDot": "Aggiungi/rimuovi sottotitoli incorporati...",
@@ -1803,6 +1809,7 @@
       "WaveformDrawGridLines": "Disegna linee griglia",
       "WaveformCenterVideoPosition": "Posizione video centrale",
       "WaveformShowToolbar": "Visualizza barra strumenti",
+      "WaveformShowToolbarEdit": "Modifica barra strumenti...",
       "WaveformSpectrogramCombinedWaveformHeight": "Forma d'onda/spettrogramma combinati, % altezza forma d'onda",
       "ShowWaveformToolbarPlay": "Barra strumenti: visualizza pulsante 'Riproduci'",
       "ShowWaveformToolbarRepeat": "Barra strumenti: visualizza pulsante 'Ripeti'",
@@ -1941,7 +1948,9 @@
       "WaveformSingleClickAction": "Azione clic singolo sulla forma d'onda",
       "WaveformDoubleClickAction": "Azione doppio clic sulla forma d'onda (dopo l'azione con clic singolo)",
       "AllSettings": "Tutte le impostazioni",
-      "UiScale": "Scala interfaccia utente (%)"
+      "UiScale": "Scala interfaccia utente (%)",
+      "WaveformToolbarItems": "Elementi barra strumenti forma d'onda",
+      "MatchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro"
     },
     "Shortcuts": {
       "Title": "Tasti rapidi",
@@ -2430,7 +2439,11 @@
     "AdvancedEffectAudioBars": "Barre audio (forma d'onda)",
     "AdvancedEffectAudioBarsDescription": "Barre equalizzatore animate guidate dalla forma d'onda audio: le barre scorrono verso sinistra come forma d'onda e pulsano con l'audio",
     "AdvancedEffectAudioPulse": "Impulso testo audio",
-    "AdvancedEffectAudioPulseDescription": "Il testo dei sottotitoli si illumina e pulsa con il volume dell'audio: le sezioni silenziose visualizzano il testo normale, i picchi forti aggiungono un alone colorato e un leggero ingrandimento"
+    "AdvancedEffectAudioPulseDescription": "Il testo dei sottotitoli si illumina e pulsa con il volume dell'audio: le sezioni silenziose visualizzano il testo normale, i picchi forti aggiungono un alone colorato e un leggero ingrandimento",
+    "AdvancedEffectConfetti": "Scoppio coriandoli",
+    "AdvancedEffectConfettiDescription": "Esplosione di coriandoli colorati di carta rotanti provenienti da bottoni automatici agli angoli e un'esplosione di stelle al centro su ogni sottotitolo",
+    "AdvancedEffectHearts": "Cuori (pioggia)",
+    "AdvancedEffectHeartsDescription": "Cuori disegnati Bezier in tre forme piovono dolcemente dalla parte superiore dello schermo, cadendo e svanendo durante ogni sottotitolo"
   },
   "About": {
     "Title": "Info su Subtitle Edit",
