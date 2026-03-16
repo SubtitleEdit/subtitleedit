@@ -13,6 +13,7 @@ v5.0.0-beta9 (xth March 2026)
 * Italian language update - thx bovirus
 * Implement syntax-color-if-pixels-is-too-wide - thx Louis
 * Fix for WebVTT in mp4 - thx xiaomotalktech
+* Expose start and end line waveform colors in options - thx rRobis
 
 -----------------------------------------------------------------------------------------------------
 

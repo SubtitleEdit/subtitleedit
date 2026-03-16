@@ -55,6 +55,8 @@ public class InitWaveform
                 WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
                 WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
                 WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
+                WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
+                WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
                 WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
                 ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
                 ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),

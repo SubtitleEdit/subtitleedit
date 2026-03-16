@@ -184,6 +184,8 @@ public class LanguageSettings
     public string ShowSettingsFile { get; set; }
     public string ShowAssaLayer { get; set; }
     public string WaveformCursorColor { get; set; }
+    public string WaveformParagraphLeftColor { get; set; }
+    public string WaveformParagraphRightColor { get; set; }
     public string WaveformFancyHighColor { get; set; }
     public string WaveformFocusOnMouseOver { get; set; }
 
@@ -451,6 +453,8 @@ public class LanguageSettings
         ShowSettingsFile = "Show settings file";
         ShowAssaLayer = "Show ASSA layer box";
         WaveformCursorColor = "Waveform cursor/head color";
+        WaveformParagraphLeftColor = "Waveform left border color";
+        WaveformParagraphRightColor = "Waveform right border color";
         WaveformFancyHighColor = "Waveform fancy high color";
 
         ResetAllSettings = "Reset all settings";

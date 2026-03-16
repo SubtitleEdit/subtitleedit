@@ -61,6 +61,12 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformCursorColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformCursorColor));
 
+    public static readonly StyledProperty<Color> WaveformParagraphLeftColorProperty =
+        AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphLeftColor));
+
+    public static readonly StyledProperty<Color> WaveformParagraphRightColorProperty =
+        AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphRightColor));
+
     public WavePeakData2? WavePeaks
     {
         get => GetValue(WavePeaksProperty);
@@ -158,6 +164,28 @@ public class AudioVisualizer : Control
             SetValue(WaveformCursorColorProperty, value);
         }
     }
+
+    public Color WaveformParagraphLeftColor
+    {
+        get => GetValue(WaveformParagraphLeftColorProperty);
+        set
+        {
+            _paintLeft = new Pen(new SolidColorBrush(value), 1);
+            SetValue(WaveformParagraphLeftColorProperty, value);
+        }
+    }
+
+
+    public Color WaveformParagraphRightColor
+    {
+        get => GetValue(WaveformParagraphRightColorProperty);
+        set
+        {
+            _paintRight = new Pen(new SolidColorBrush(value), 1);
+            SetValue(WaveformParagraphRightColorProperty, value);
+        }
+    }
+
 
     public SubtitleLineViewModel? SelectedParagraph { get; set; }
 
@@ -264,8 +292,8 @@ public class AudioVisualizer : Control
     private IBrush _paintBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
     private IBrush _paintParagraphBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
     private IBrush _paintParagraphSelectedBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
-    private readonly Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
-    private readonly Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
+    private Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
+    private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
     private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
