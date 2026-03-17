@@ -14,6 +14,7 @@ v5.0.0-beta9 (xth March 2026)
 * Implement syntax-color-if-pixels-is-too-wide - thx Louis
 * Fix for WebVTT in mp4 - thx xiaomotalktech
 * Expose start and end line waveform colors in options - thx rRobis
+* Add margin for subtitle view preview - thx darnn
 
 -----------------------------------------------------------------------------------------------------
 
