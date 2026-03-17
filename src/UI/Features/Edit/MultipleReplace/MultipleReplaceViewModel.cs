@@ -1009,6 +1009,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     Number = i + 1,
                     Before = p.Text,
                     After = newText,
+                    Hits = ruleHits,
                 };
                 fixes.Add(fix);
                 FixedSubtitle.Paragraphs[i].Text = newText;
