@@ -31,6 +31,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private MultipleReplaceFix? _selectedFix;
     [ObservableProperty] private RuleTreeNode? _selectedNode;
     [ObservableProperty] private bool _isEditPanelVisible;
+    [ObservableProperty] private bool _isFixDetailPanelVisible;
+    [ObservableProperty] private ObservableCollection<ReplaceExpression> _selectedFixHits;
     public ObservableCollection<MultipleReplaceTypeItem> RuleTypes { get; }
     [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
 
@@ -53,6 +55,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         _windowService = windowService;
 
         Fixes = new ObservableCollection<MultipleReplaceFix>();
+        SelectedFixHits = new ObservableCollection<ReplaceExpression>();
         Nodes = new ObservableCollection<RuleTreeNode>(GetNodes());
         RulesTreeView = new TreeView();
 
@@ -106,6 +109,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             node.Type = value.Type;
             _dirty = true;
+        }
+    }
+
+    partial void OnSelectedFixChanged(MultipleReplaceFix? value)
+    {
+        SelectedFixHits.Clear();
+        IsFixDetailPanelVisible = value?.Hits.Count > 0;
+        if (value != null)
+        {
+            foreach (var hit in value.Hits)
+            {
+                SelectedFixHits.Add(hit);
+            }
         }
     }
 

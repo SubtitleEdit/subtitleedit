@@ -10,6 +10,7 @@ public class LanguageMultipleReplace
     public string NewCategory { get; set; }
     public string CategoryName { get; set; }
     public string ExportReplaceRules { get; set; }
+    public string AppliedRules { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -20,5 +21,6 @@ public class LanguageMultipleReplace
         NewCategory = "New category";
         CategoryName = "Category name";
         ExportReplaceRules = "Export rules";
+        AppliedRules = "Applied rules";
     }
 }

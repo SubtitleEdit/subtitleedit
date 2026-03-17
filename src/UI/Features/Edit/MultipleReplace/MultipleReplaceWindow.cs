@@ -5,6 +5,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -422,12 +423,105 @@ public class MultipleReplaceWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
 
+        var hitsItemsControl = new ItemsControl
+        {
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.SelectedFixHits)) { Source = vm },
+            ItemTemplate = new FuncDataTemplate<ReplaceExpression>((hit, _) =>
+            {
+                var isDark = UiTheme.IsDarkThemeEnabled();
+                var redFg = new SolidColorBrush(isDark ? Color.FromRgb(255, 100, 100) : Color.FromRgb(183, 28, 28));
+                var greenFg = new SolidColorBrush(isDark ? Color.FromRgb(100, 220, 100) : Color.FromRgb(27, 94, 32));
+                var chipBg = new SolidColorBrush(isDark ? Color.FromArgb(40, 200, 200, 200) : Color.FromArgb(25, 0, 0, 0));
+
+                var iconLabel = new Label { Padding = new Thickness(0, 0, 2, 0), VerticalAlignment = VerticalAlignment.Center };
+                if (hit.RuleTreeNode != null)
+                    Attached.SetIcon(iconLabel, hit.RuleTreeNode.IconName);
+
+                var findBlock = new TextBlock
+                {
+                    Text = hit.FindWhat,
+                    Foreground = redFg,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = new FontFamily("Consolas"),
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                };
+
+                var arrowLabel = UiUtil.MakeLabel("→");
+                arrowLabel.Margin = new Thickness(4, 0, 4, 0);
+                arrowLabel.VerticalAlignment = VerticalAlignment.Center;
+                arrowLabel.Padding = new Thickness(0);
+
+                var replaceBlock = new TextBlock
+                {
+                    Text = hit.ReplaceWith,
+                    Foreground = greenFg,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = new FontFamily("Consolas"),
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                };
+
+                var row = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Spacing = 0,
+                    Children = { iconLabel, findBlock, arrowLabel, replaceBlock },
+                };
+
+                if (!string.IsNullOrEmpty(hit.RuleTreeNode?.Description))
+                {
+                    var descBlock = new TextBlock
+                    {
+                        Text = "  · " + hit.RuleTreeNode.Description,
+                        Opacity = 0.6,
+                        FontStyle = FontStyle.Italic,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                    };
+                    row.Children.Add(descBlock);
+                }
+
+                var chip = new Border
+                {
+                    Background = chipBg,
+                    CornerRadius = new CornerRadius(3),
+                    Padding = new Thickness(6, 2, 6, 2),
+                    Margin = new Thickness(0, 1, 0, 1),
+                    Child = row,
+                };
+                ToolTip.SetTip(chip, hit.RuleInfo);
+                return chip;
+            }),
+        };
+
+        var hitsPanel = new StackPanel
+        {
+            Margin = new Thickness(0, 4, 0, 0),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = Se.Language.Edit.MultipleReplace.AppliedRules,
+                    FontWeight = FontWeight.SemiBold,
+                    Margin = new Thickness(0, 0, 0, 2),
+                },
+                new ScrollViewer
+                {
+                    Content = hitsItemsControl,
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    MaxHeight = 120,
+                },
+            },
+        }.WithBindVisible(vm, nameof(vm.IsFixDetailPanelVisible));
+
         var gridFixes = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -436,6 +530,7 @@ public class MultipleReplaceWindow : Window
         };
         gridFixes.Add(editGrid, 0, 0);
         gridFixes.Add(dataGrid, 1, 0);
+        gridFixes.Add(hitsPanel, 2, 0);
 
         var border = new Border
         {
