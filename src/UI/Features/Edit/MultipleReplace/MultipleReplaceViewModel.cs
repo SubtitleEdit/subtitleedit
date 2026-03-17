@@ -957,7 +957,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             var hit = false;
             var newText = p.Text;
             var ruleInfo = string.Empty;
-            var ruleHits = new List<MultipleReplaceRule>();
+            var ruleHits = new List<ReplaceExpression>();
             foreach (var item in replaceExpressions)
             {
                 if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
@@ -966,6 +966,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     {
                         hit = true;
                         ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                        ruleHits.Add(item);
                         newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                     }
                 }
@@ -976,6 +977,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     {
                         hit = true;
                         ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                        ruleHits.Add(item);
                         newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                     }
                 }
@@ -986,6 +988,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     {
                         hit = true;
                         ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                        ruleHits.Add(item);
                         do
                         {
                             newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
@@ -1039,11 +1042,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
                             ? $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}"
                             : $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}. {rule.Description}";
                         var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
+                        mpi.RuleTreeNode = rule;
                         replaceExpressions.Add(mpi);
                         if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                         {
-                            _compiledRegExList.Add(findWhat,
-                                new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
+                            _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
                         }
                     }
                 }

@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Common
+﻿using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
+
+namespace Nikse.SubtitleEdit.Core.Common
 {
     public class ReplaceExpression
     {
@@ -14,6 +16,7 @@
         public string ReplaceWith { get; set; }
         public int SearchType { get; set; }
         public string RuleInfo { get; set; }
+        public RuleTreeNode? RuleTreeNode { get; set; }
 
         public ReplaceExpression(string findWhat, string replaceWith, string searchType, string ruleInfo)
         {
