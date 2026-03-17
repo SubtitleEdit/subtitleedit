@@ -15,7 +15,7 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based spe
 | Whisper.cpp (cuBLAS) | Windows | NVIDIA CUDA |
 | Whisper.cpp (Vulkan) | Windows | Vulkan GPU |
 | Purfview's Faster Whisper XXL | Windows, Linux | NVIDIA CUDA |
-| Whisper CTranslate2 | Windows, Linux, macOs | CPU only |
+| Whisper CTranslate2 | Windows, Linux, macOs | CPU only / NVIDIA CUDA (requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive)) |
 | Const-me's Whisper | Windows | DirectX |
 | OpenAI Whisper | All (Python required) | NVIDIA CUDA |
 | Chat LLM cpp | Windows, Linux | CPU/GPU |
