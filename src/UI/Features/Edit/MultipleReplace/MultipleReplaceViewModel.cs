@@ -843,6 +843,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 NodeDuplicate(node);
             }
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/edit");
+        }
     }
 
     internal void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)

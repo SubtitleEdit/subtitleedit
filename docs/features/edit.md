@@ -48,14 +48,71 @@ Find and replace text in the subtitle.
 
 ## Multiple Replace
 
-Apply multiple find-and-replace rules at once. Rules can be organized into groups and saved.
+Apply multiple find-and-replace rules at once, organized into named categories. Rules are persisted across sessions.
 
 - **Menu:** Edit → Multiple replace
-- Supports regular expressions
-- Import/export rule sets
 
 <!-- Screenshot: Multiple replace window -->
 ![Multiple Replace](../screenshots/multiple-replace.png)
+
+### Window layout
+
+The window is split into two resizable panels:
+
+| Panel | Description |
+|---|---|
+| **Left — Rules** | Tree of categories and their rules. Each rule shows its type icon, find pattern, replacement, and an optional description. |
+| **Right — Fixes** | Preview of all lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row reveals an **Applied rules** detail panel at the bottom listing every rule that matched that line. |
+
+### Rule types
+
+Each rule has one of three match types, shown as an icon in the tree:
+
+| Type | Description |
+|---|---|
+| Case insensitive | Plain text match, ignores case |
+| Case sensitive | Plain text match, exact case |
+| Regular expression | Full .NET regex syntax |
+
+### Managing categories
+
+Right-click a category node to open its context menu:
+
+- **Edit** — rename the category
+- **New category** — add a sibling category
+- **New rule** — add a rule to this category
+- **Move up / Move down** — reorder categories
+- **Delete** — remove the category and all its rules
+- **Import** — load rules from a `.template` file (JSON or legacy SE4 XML)
+- **Export** — save selected categories to a `.template` file
+
+### Managing rules
+
+Right-click a rule node to open its context menu:
+
+- **Edit rule** — change find/replace text, type, and description
+- **Duplicate** — insert a copy of the rule above the current one
+- **Insert before / Insert after** — add a new rule relative to this one
+- **Move up / Move down** — reorder within the category
+- **Delete** — remove the rule
+
+Double-clicking a rule also opens the **Edit rule** dialog.
+
+### Keyboard shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
+| `Ctrl+D` | Duplicate the selected rule |
+| `Delete` | Delete the selected rule (focus must be in the rules tree) |
+| `Space` | Toggle the selected node (category or rule) on/off |
+| `Escape` | Close the window |
+
+The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once.
+
+### Import / Export
+
+Rule sets are stored as JSON `.template` files and can be shared across installations. The export dialog lets you choose which categories to include. SE4-format XML files can also be imported.
 
 ## Modify Selection
 
