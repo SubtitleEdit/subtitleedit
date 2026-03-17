@@ -59,6 +59,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _mpvPreviewFontName;
     [ObservableProperty] private int _mpvPreviewFontSize;
     [ObservableProperty] private bool _mpvPreviewFontBold;
+    [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
     [ObservableProperty] private Color _mpvPreviewColorShadow;
@@ -760,6 +761,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
         MpvPreviewFontBold = video.MpvPreviewFontBold;
+        MpvPreviewMargin = video.MpvPreviewMargin;
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
         MpvPreviewColorPrimary = video.MpvPreviewColorPrimary.FromHexToColor();
@@ -1309,6 +1311,7 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontName = MpvPreviewFontName;
         video.MpvPreviewFontSize = MpvPreviewFontSize;
         video.MpvPreviewFontBold = MpvPreviewFontBold;
+        video.MpvPreviewMargin = MpvPreviewMargin;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
         video.MpvPreviewColorPrimary = MpvPreviewColorPrimary.FromColorToHex();

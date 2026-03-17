@@ -27,6 +27,7 @@ public class SeVideo
     public string MpvPreviewFontName { get; set; }
     public int MpvPreviewFontSize { get; set; }
     public bool MpvPreviewFontBold { get; set; }
+    public int MpvPreviewMargin { get; set; }
     public string MpvPreviewColorPrimary { get; set; }
     public string MpvPreviewColorOutline { get; set; }
     public string MpvPreviewColorShadow { get; set; }
@@ -56,6 +57,7 @@ public class SeVideo
         MpvPreviewFontName = "Arial";
         MpvPreviewFontSize = 20;
         MpvPreviewFontBold = true;
+        MpvPreviewMargin = 10;
         MpvPreviewOutlineWidth = 2;
         MpvPreviewShadowWidth = 1;
         MpvPreviewColorPrimary = Color.FromRgb(255, 255, 255).FromColorToHex();

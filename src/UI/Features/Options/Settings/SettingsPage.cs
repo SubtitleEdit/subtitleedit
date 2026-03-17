@@ -777,6 +777,10 @@ public class SettingsPage : UserControl
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.MpvPreviewFontBold));
 
+        var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
+        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
+        numericUpDownMargin.Increment = 1;
+        
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPicker(vm, nameof(vm.MpvPreviewColorPrimary));
 
@@ -790,6 +794,7 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -816,16 +821,19 @@ public class SettingsPage : UserControl
 
         grid.Add(checkBoxBold, 2, 1);
 
-        grid.Add(labelColorPrimary, 3);
-        grid.Add(colorPickerPrimary, 3, 1);
+        grid.Add(labelMargin, 3);
+        grid.Add(numericUpDownMargin, 3, 1);
 
-        grid.Add(labelColorOutline, 4);
-        grid.Add(colorPickerOutline, 4, 1);
+        grid.Add(labelColorPrimary, 4);
+        grid.Add(colorPickerPrimary, 4, 1);
 
-        grid.Add(labelColorShadow, 5);
-        grid.Add(colorPickerShadow, 5, 1);
+        grid.Add(labelColorOutline, 5);
+        grid.Add(colorPickerOutline, 5, 1);
 
-        grid.Add(MakeBorderView(vm), 6, 0, 1, 2);
+        grid.Add(labelColorShadow, 6);
+        grid.Add(colorPickerShadow, 6, 1);
+
+        grid.Add(MakeBorderView(vm), 7, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

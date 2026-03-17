@@ -222,7 +222,9 @@ public class MpvReloader : IMpvReloader
             ShadowWidth = gs.MpvPreviewShadowWidth,
             BorderStyle = gs.MpvPreviewBorderType.ToString(),
             Alignment = "2",  // bottom center
-            MarginVertical = 10,
+            MarginVertical = gs.MpvPreviewMargin,
+            MarginLeft =  gs.MpvPreviewMargin,
+            MarginRight =  gs.MpvPreviewMargin,
         };
     }
 
