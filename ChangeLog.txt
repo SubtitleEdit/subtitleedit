@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta9 (xth March 2026)
+v5.0.0-beta9 (17th March 2026)
 
 * Work on installer - thx bovirus
 * More customization possible for waveform toolbar buttons
@@ -16,6 +16,7 @@ v5.0.0-beta9 (xth March 2026)
 * Expose start and end line waveform colors in options - thx rRobis
 * Add margin for subtitle view preview - thx darnn
 * Fixes for Speech to text selected lines incl. option for default prompt settings - thx rRobis
+* Multiple-replace: Coloring, expland/collapse, remember expanded state, show rule matches for fixes - thx rRobis/TR-9970X
 
 -----------------------------------------------------------------------------------------------------
 
