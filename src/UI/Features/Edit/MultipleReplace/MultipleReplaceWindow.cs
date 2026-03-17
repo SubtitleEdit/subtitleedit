@@ -5,6 +5,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Projektanker.Icons.Avalonia;
@@ -383,19 +384,37 @@ public class MultipleReplaceWindow : Window
                     Binding = new Binding(nameof(MultipleReplaceFix.Number)),
                     IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Before,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MultipleReplaceFix.Before)),
+                    CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                    {
+                        var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4),
+                            Child = beforeBlock,
+                        };
+                    }),
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.After,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MultipleReplaceFix.After)),
+                    CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                    {
+                        var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4),
+                            Child = afterBlock,
+                        };
+                    }),
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },

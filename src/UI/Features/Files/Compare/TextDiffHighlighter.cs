@@ -31,6 +31,20 @@ public static class TextDiffHighlighter
         return new SolidColorBrush(Color.FromRgb(255, 235, 238));
     }
 
+    private static IBrush GetForegroundAddedColor()
+    {
+        if (UiTheme.IsDarkThemeEnabled())
+            return new SolidColorBrush(Color.FromRgb(100, 255, 100));
+        return new SolidColorBrush(Color.FromRgb(27, 94, 32));
+    }
+
+    private static IBrush GetBackAddedColor()
+    {
+        if (UiTheme.IsDarkThemeEnabled())
+            return new SolidColorBrush(Color.FromRgb(30, 80, 30));
+        return new SolidColorBrush(Color.FromRgb(200, 250, 205));
+    }
+
     private static IBrush GetDiffBackgroundColor()
     {
         if (UiTheme.IsDarkThemeEnabled())
@@ -91,14 +105,55 @@ public static class TextDiffHighlighter
         }
 
         // Build the visual representation
-        BuildDiffRuns(left, text1, commonStart, commonEnd, middleCommon1, hasDifferences);
-        BuildDiffRuns(right, text2, commonStart, commonEnd, middleCommon2, hasDifferences);
+        var redFg = GetForegroundDifferenceColor();
+        var redBg = GetBackDifferenceColor();
+        BuildDiffRuns(left, text1, commonStart, commonEnd, middleCommon1, hasDifferences, redFg, redBg);
+        BuildDiffRuns(right, text2, commonStart, commonEnd, middleCommon2, hasDifferences, redFg, redBg);
 
         return (left, right);
     }
 
-    private static void BuildDiffRuns(TextBlock textBlock, string text, int commonStart, int commonEnd, 
-        List<(int start, int length)> middleCommon, bool hasDifferences)
+    public static (TextBlock before, TextBlock after) CompareReplacement(string text1, string text2)
+    {
+        var before = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        var after = new TextBlock { TextWrapping = TextWrapping.Wrap };
+
+        if (before.Inlines == null || after.Inlines == null)
+            return (before, after);
+
+        if (string.IsNullOrEmpty(text1) && string.IsNullOrEmpty(text2))
+            return (before, after);
+
+        if (string.IsNullOrEmpty(text1))
+        {
+            after.Inlines.Add(new Run(text2) { Foreground = GetForegroundAddedColor(), Background = GetBackAddedColor() });
+            return (before, after);
+        }
+
+        if (string.IsNullOrEmpty(text2))
+        {
+            before.Inlines.Add(new Run(text1) { Foreground = GetForegroundDifferenceColor(), Background = GetBackDifferenceColor() });
+            return (before, after);
+        }
+
+        var (commonStart, commonEnd, middleCommon1, middleCommon2) = FindCommonParts(text1, text2);
+        var hasDifferences = commonStart != text1.Length || commonEnd != 0 || middleCommon1.Count > 0;
+
+        if (!hasDifferences)
+        {
+            before.Inlines.Add(new Run(text1));
+            after.Inlines.Add(new Run(text2));
+            return (before, after);
+        }
+
+        BuildDiffRuns(before, text1, commonStart, commonEnd, middleCommon1, hasDifferences, GetForegroundDifferenceColor(), GetBackDifferenceColor());
+        BuildDiffRuns(after, text2, commonStart, commonEnd, middleCommon2, hasDifferences, GetForegroundAddedColor(), GetBackAddedColor());
+
+        return (before, after);
+    }
+
+    private static void BuildDiffRuns(TextBlock textBlock, string text, int commonStart, int commonEnd,
+        List<(int start, int length)> middleCommon, bool hasDifferences, IBrush diffForeground, IBrush diffBackground)
     {
         int currentPos = 0;
 
@@ -123,8 +178,8 @@ public static class TextDiffHighlighter
                 {
                     textBlock.Inlines!.Add(new Run(text.Substring(currentPos, start - currentPos))
                     {
-                        Foreground = GetForegroundDifferenceColor(),
-                        Background = GetBackDifferenceColor()
+                        Foreground = diffForeground,
+                        Background = diffBackground
                     });
                 }
 
@@ -143,8 +198,8 @@ public static class TextDiffHighlighter
         {
             textBlock.Inlines!.Add(new Run(text.Substring(currentPos, middleEnd - currentPos))
             {
-                Foreground = GetForegroundDifferenceColor(),
-                Background = GetBackDifferenceColor()
+                Foreground = diffForeground,
+                Background = diffBackground
             });
             currentPos = middleEnd;
         }
