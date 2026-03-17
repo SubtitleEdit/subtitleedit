@@ -801,7 +801,7 @@ public static partial class InitListViewAndEditBox
                 new MenuItem
                 {
                     Header = Se.Language.Main.Menu.TextToSpeech,
-                    Command = vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand,
+                    Command = vm.SpeechToTextSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new MenuItem

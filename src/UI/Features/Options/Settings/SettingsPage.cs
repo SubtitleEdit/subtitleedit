@@ -565,6 +565,7 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrUseWordSplitList, nameof(_vm.OcrUseWordSplitList)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFistTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance,

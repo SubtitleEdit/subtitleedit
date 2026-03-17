@@ -226,7 +226,7 @@ public class InitWaveform
             var menuItemSpeechToTextSelectedLines = new MenuItem
             {
                 Header = Se.Language.Waveform.SpeechToTextSelectedLinesDotDotDot,
-                Command = vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand,
+                Command = vm.SpeechToTextSelectedLinesCommand,
             };
             flyout.Items.Add(menuItemSpeechToTextSelectedLines);
             vm.MenuItemAudioVisualizerSpeechToTextSelectedLines = menuItemSpeechToTextSelectedLines;

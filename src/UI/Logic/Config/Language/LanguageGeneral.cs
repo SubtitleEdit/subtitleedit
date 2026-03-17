@@ -506,7 +506,7 @@ public class LanguageGeneral
     public string SourceViewX { get; set; }
     public string Spacing { get; set; }
     public string SpeechToTextSelectedLines { get; set; }
-    public string SpeechToTextSelectedLinesPrompt { get; set; }
+    public string SpeechToTextSelectedLinesPromptAlways { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTime { get; set; }
     public string Speed { get; set; }
     public string SplitAtTextBoxCursorPosition { get; set; }
@@ -1144,9 +1144,9 @@ public class LanguageGeneral
         SolidColor = "Solid color";
         SourceViewX = "Source view - {0}";
         Spacing = "Spacing";
-        SpeechToTextSelectedLines = "Speech-to-text selected lines";
-        SpeechToTextSelectedLinesPrompt = "Speech-to-text selected lines (prompt engine/language)";
-        SpeechToTextSelectedLinesPromptFirstTime = "Speech-to-text selected lines (prompt engine/language first time)";
+        SpeechToTextSelectedLinesPromptFirstTime = "Speech to text selected lines (prompt engine/language only first time)";
+        SpeechToTextSelectedLinesPromptAlways = "Speech to text selected lines (always prompt engine/language)";
+        SpeechToTextSelectedLines = "Speech to text selected (see Options - Settings)";
         Speed = "Speed";
         SplitAtTextBoxCursorPosition = "Split at text cursor position";
         SplitLine = "Split line";

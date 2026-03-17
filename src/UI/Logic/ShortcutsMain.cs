@@ -303,7 +303,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.RemoveBlankLinesCommand), Se.Language.General.RemoveBlankLines },
         { nameof(MainViewModel.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), Se.Language.General.NewSubtitleStartKeyDownSetEndKeyUp },
         { nameof(MainViewModel.SpeechToTextSelectedLinesCommand), Se.Language.General.SpeechToTextSelectedLines },
-        { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeCommand), Se.Language.General.SpeechToTextSelectedLinesPrompt },
+        { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), Se.Language.General.SpeechToTextSelectedLinesPromptAlways },
         { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), Se.Language.General.SpeechToTextSelectedLinesPromptFirstTime },
         { nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), Se.Language.General.PlaySelectedLines },
         { nameof(MainViewModel.PlaySelectedLinesWithLoopCommand), Se.Language.General.PlaySelectedLinesWithLoop },
@@ -585,7 +585,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.RemoveBlankLinesCommand, nameof(vm.RemoveBlankLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand, nameof(vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesCommand, nameof(vm.SpeechToTextSelectedLinesCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithoutLoopCommand, nameof(vm.PlaySelectedLinesWithoutLoopCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopCommand, nameof(vm.PlaySelectedLinesWithLoopCommand), ShortcutCategory.General);

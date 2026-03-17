@@ -4466,11 +4466,18 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SpeechToTextSelectedLines()
     {
-        await SpeechToTextSelectedLines(false);
+        if (Se.Settings.Tools.SpeechToTextSelectedLinesPromptFistTimeOnly)
+        {
+            await SpeechToTextSelectedLinesPromptForLangaugeFirstTime();
+        }
+        else
+        {
+            await SpeechToTextSelectedLines(true);
+        }
     }
 
     [RelayCommand]
-    private async Task SpeechToTextSelectedLinesPromptForLangauge()
+    private async Task SpeechToTextSelectedLinesPromptForLangaugeAlways()
     {
         await SpeechToTextSelectedLines(true);
     }
@@ -4479,7 +4486,7 @@ public partial class MainViewModel :
     private async Task SpeechToTextSelectedLinesPromptForLangaugeFirstTime()
     {
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
-        await SpeechToTextSelectedLines(_audioTrackLangauge == language);
+        await SpeechToTextSelectedLines(_audioTrackLangauge != language);
         _audioTrackLangauge = language;
     }
 
@@ -4506,7 +4513,7 @@ public partial class MainViewModel :
 
         var resultSpeechToText = await ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(vm =>
         {
-            vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, promptEngineAndLanguage);
+            vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, !promptEngineAndLanguage);
         });
 
         if (!resultSpeechToText.OkPressed)

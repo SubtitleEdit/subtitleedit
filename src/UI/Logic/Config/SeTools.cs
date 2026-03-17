@@ -79,6 +79,7 @@ public class SeTools
     public string LastColorPickerColor6 { get; set; }
     public string LastColorPickerColor7 { get; set; }
     public bool ImportTextTryToFindTimeCodes { get; set; }
+    public bool SpeechToTextSelectedLinesPromptFistTimeOnly { get; set; }
 
     public SeTools()
     {
@@ -129,6 +130,7 @@ public class SeTools
         ImportTextDurationAuto = true;
         ImportTextFixedDuration = 3000;
         ImportTextTryToFindTimeCodes = false;
+        SpeechToTextSelectedLinesPromptFistTimeOnly = true;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();
