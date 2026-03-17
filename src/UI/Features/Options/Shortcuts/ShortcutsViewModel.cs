@@ -357,7 +357,7 @@ public partial class ShortcutsViewModel : ObservableObject
             sb.AppendLine();
             foreach (var duplicate in duplicates)
             {
-                sb.AppendLine($"• {duplicate}");
+                sb.AppendLine($"ï¿½ {duplicate}");
             }
             sb.AppendLine();
             sb.Append("Save anyway?");
@@ -844,7 +844,8 @@ public partial class ShortcutsViewModel : ObservableObject
         }
 
         var title = MakeDisplayName(p);
-        return title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
+        return title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+               title.Replace('-', ' ').Contains(searchText.Replace('-', ' '), StringComparison.InvariantCultureIgnoreCase);
     }
 
     internal void ShortcutsDataGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)

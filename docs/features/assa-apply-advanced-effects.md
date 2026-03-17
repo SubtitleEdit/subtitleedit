@@ -17,7 +17,7 @@ Apply cinematic and creative ASS/SSA override tag effects to subtitles with real
 
 This feature automatically generates complex ASSA override tag animations and effects for selected subtitle lines. Each effect creates frame-by-frame animations using ASSA's vector drawing and animation capabilities, with real-time video preview.
 
-Effects range from text animations (typewriter, karaoke) to visual enhancements (neon glow, rainbow) to full-screen transitions and decorative elements (starfield, rain, old movie grain).
+Effects range from text animations (typewriter, karaoke, bounce-in) to visual enhancements (neon, glitch, rainbow) to transitions and atmospheric/background generators (starfield, rain, snow, fireflies, old movie, confetti, hearts).
 
 ## How to Use
 
@@ -30,6 +30,8 @@ Effects range from text animations (typewriter, karaoke) to visual enhancements 
 4. Preview the effect in the video player
 5. Click **OK** to apply
 
+> Note: Audio-reactive effects (like **Audio text pulse**) are only shown when waveform/audio peak data is available.
+
 ## Available Effects
 
 ### Text Animation Effects
@@ -41,6 +43,7 @@ Effects range from text animations (typewriter, karaoke) to visual enhancements 
 | **Word by word** | Words appear one-by-one instead of characters |
 | **Karaoke** | Classic karaoke color-wipe effect synchronized to subtitle timing |
 | **Scramble reveal** | Text starts scrambled and gradually resolves to the correct characters |
+| **Bounce in** | Each character springs in with an elastic pop animation |
 
 ### Visual Enhancement Effects
 
@@ -49,25 +52,31 @@ Effects range from text animations (typewriter, karaoke) to visual enhancements 
 | **Neon burst** | Text appears with a neon glow and "pop" animation using modern colors |
 | **Rainbow pulse** | Text cycles through rainbow colors with a pulsing animation |
 | **Wave** | Text characters undulate in a wave motion |
-| **Wave blue** | Blue-colored wave effect variant |
+| **Wave (blue)** | Blue/cyan wave variant |
+| **Glitch** | Digital glitch overlays with flashes, distortion, and chromatic offset |
+| **Audio text pulse** | Audio-reactive glow/scale pulse driven by waveform amplitude |
 
 ### Transition Effects
 
 | Effect | Description |
 |--------|-------------|
-| **Fade in** | Screen fades in from black at the start of each subtitle |
-| **Fade out** | Screen fades out to black at the end of each subtitle |
+| **Transition - fade-in** | Per-line fade-in from black at the start of each subtitle |
+| **Transition - fade-out** | Per-line fade-out to black at the end of each subtitle |
 
 ### Decorative/Atmospheric Effects
 
 | Effect | Description |
 |--------|-------------|
 | **Star Wars scroll** | Classic opening crawl effect with perspective text scrolling into the distance |
-| **End credits scroll** | Vertical scrolling credits effect |
-| **Starfield** | Animated starfield background with moving stars |
-| **Rain** | Animated falling rain particles across the screen |
-| **Old movie** | Film grain, scratches, and imperfections simulating aged film stock |
-| **Show** | Basic effect demonstrating the feature (for testing) |
+| **Credits scroll** | Vertical scrolling credits effect |
+| **Infinite starfield (background)** | Continuous warp-speed starfield background |
+| **Infinite rain (background)** | Continuous falling rain with depth layers |
+| **Infinite snow (background)** | Continuous snowfall with depth layers |
+| **Fireflies (background)** | Warm glowing dots drifting and pulsing organically |
+| **Old movie effect (background)** | Film grain, scratches, gate flicker, and vignette |
+| **Matrix** | Falling green character rain with matrix-style subtitle reveal |
+| **Confetti burst** | Colorful spinning confetti bursts from dynamic launch points |
+| **Hearts (rain)** | Bezier-drawn hearts rain gently with tumbling motion |
 
 ## Effect Scope Options
 
@@ -107,12 +116,13 @@ Many effects split a single subtitle line into multiple lines with sequential ti
 
 ### Video Resolution
 
-Effects that involve positioning or drawing (starfield, rain, transitions) adapt to the video resolution. The feature automatically detects the video dimensions or uses a default of 1920×1080.
+Effects that involve positioning or drawing (background effects, particles, transitions) adapt to the video resolution. The feature automatically detects the video dimensions or uses a fallback resolution of 1280x720.
 
 ### Performance Considerations
 
-- Complex effects (especially particle effects like starfield/rain/grain) generate many subtitle lines
+- Complex effects (especially particle/background effects like starfield/rain/snow/old-movie/confetti/hearts) generate many subtitle lines
 - Each generated line adds to the ASS file size and rendering overhead
+- Audio-reactive effects split subtitle lines into short frame windows for waveform-driven animation
 - Effects are optimized for modern playback engines (libmpv, mpv, VLC, etc.)
 - Preview uses temporary files that are automatically cleaned up on close
 

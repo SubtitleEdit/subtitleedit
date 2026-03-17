@@ -193,7 +193,7 @@ public class SeGeneral
         ColorDurationTooShort = true;
         ColorDurationTooLong = true;
         ColorTextTooLong = true;
-        ColorTextTooWide = true;
+        ColorTextTooWide = false;
         ColorTextTooWidePixels = 1200;
         ColorTextTooWideFontName = "Arial";
         ColorTextTooWideFontSize = 40;
