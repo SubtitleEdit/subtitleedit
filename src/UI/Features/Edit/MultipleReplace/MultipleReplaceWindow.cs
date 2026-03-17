@@ -28,6 +28,21 @@ public class MultipleReplaceWindow : Window
         var rulesView = MakeRulesView(vm);
         var fixesView = MakeFixesView(vm);
 
+        var buttonCollapseAll = UiUtil.MakeButton(vm.CollapseAllCommand, IconNames.Minus);
+        var buttonExpandAll = UiUtil.MakeButton(vm.ExpandAllCommand, IconNames.Plus);
+        var panelExpandCollapse = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 10),
+            Children =
+            {
+                buttonCollapseAll,
+                buttonExpandAll,
+            }
+        };
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(
             buttonOk,
@@ -66,6 +81,7 @@ public class MultipleReplaceWindow : Window
         grid.Add(rulesView, 0, 0);
         grid.Add(splitter, 0, 1);
         grid.Add(fixesView, 0, 2);
+        grid.Add(panelExpandCollapse, 1, 0);
         grid.Add(panelButtons, 1, 0, 1, 3);
 
         Content = grid;

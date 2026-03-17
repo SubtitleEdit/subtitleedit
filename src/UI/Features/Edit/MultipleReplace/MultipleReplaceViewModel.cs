@@ -31,11 +31,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private MultipleReplaceFix? _selectedFix;
     [ObservableProperty] private RuleTreeNode? _selectedNode;
     [ObservableProperty] private bool _isEditPanelVisible;
-
-    // Expose a dedicated list property for the ComboBox ItemsSource
     public ObservableCollection<MultipleReplaceTypeItem> RuleTypes { get; }
-
-    // Selected rule type for the ComboBox (two-way bound)
     [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
 
     public ObservableCollection<RuleTreeNode> Nodes { get; }
@@ -130,6 +126,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         _subtitle = subtitle;
         _dirty = true;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
+            foreach (var item in allTreeViewItems)
+            {
+                if (item.DataContext is RuleTreeNode node && node.IsCategory)
+                {
+                    item.IsExpanded = node.IsExpanded;
+                    break;
+                }
+            }
+        });
     }
 
     private static List<RuleTreeNode> GetNodes()
@@ -142,6 +151,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 category.IsActive)
             {
                 IsCategory = true,
+                IsExpanded = category.IsExpanded,
             };
             nodes.Add(categoryNode);
 
@@ -159,13 +169,23 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void SaveSettings()
     {
+        var expandedCategories = new List<RuleTreeNode>();
+        foreach (var item in FindAllTreeViewItems(RulesTreeView))
+        {
+            if (item.DataContext is RuleTreeNode node && node.IsCategory && item.IsExpanded)
+            {
+                expandedCategories.Add(node);
+            }
+        }
+
         Se.Settings.Edit.MultipleReplace.Categories.Clear();
         foreach (var category in Nodes)
         {
             var c = new SeEditMultipleReplace.MultipleReplaceCategory
             {
                 Name = category.CategoryName,
-                IsActive = category.IsActive
+                IsActive = category.IsActive,
+                IsExpanded = expandedCategories.Contains(category),
             };
             Se.Settings.Edit.MultipleReplace.Categories.Add(c);
 
@@ -215,6 +235,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         GeneratePreview();
         UndoUnchecked();
+        SaveSettings();
         OkPressed = true;
         Window?.Close();
     }
@@ -265,7 +286,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.Edit.MultipleReplace.NewRule,
                     Command = CategoryAddRuleCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
                 },
                 new Separator(),
                 new MenuItem
@@ -578,7 +599,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.Duplicate,
                     Command = NodeDuplicateCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
                 },
                 new MenuItem
                 {
@@ -781,8 +802,32 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (e.Key == Key.N && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            var node = SelectedNode;
+            if (node != null)
+            {
+                if (node.IsCategory)
+                {
+                    _ = CategoryAddRule(node);
+                }
+                else
+                {
+                    _ = NodeInsertAfter(node);
+                }
+            }
+        }
+        else if (e.Key == Key.D && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            var node = SelectedNode;
+            if (node != null && !node.IsCategory)
+            {
+                NodeDuplicate(node);
+            }
+        }
     }
-
 
     internal void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
     {
@@ -792,7 +837,41 @@ public partial class MultipleReplaceViewModel : ObservableObject
             var node = SelectedNode;
             if (node != null && !node.IsCategory)
             {
+                var idx = -1;
+                var parent = node.Parent;
+                if (parent != null && parent.SubNodes != null)
+                {
+                    idx = parent.SubNodes.IndexOf(node);
+                }
+
                 NodeDelete(node);
+
+                if (parent != null && parent.SubNodes != null && idx >= 0)
+                {
+                    RuleTreeNode? selectedNode = null;
+                    if (idx < parent.SubNodes.Count)
+                    {
+                        selectedNode = parent.SubNodes[idx];
+                    }
+                    else if (parent.SubNodes.Count > 0)
+                    {
+                        selectedNode = parent.SubNodes[parent.SubNodes.Count - 1];
+                    }
+
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        if (selectedNode != null)
+                        {
+                            SelectedNode = selectedNode;
+                            var container = RulesTreeView.ContainerFromItem(selectedNode) as TreeViewItem;
+                            if (container != null)
+                            {
+                                container.BringIntoView();
+                                container.Focus(NavigationMethod.Directional);
+                            }
+                        }
+                    }, DispatcherPriority.Input);
+                }
             }
         }
         else if (e.Key == Key.Space)
@@ -807,19 +886,28 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
     public void ExpandAll()
     {
-        if (RulesTreeView.ItemCount > 30)
-        {
-            return;
-        }
-
         Dispatcher.UIThread.Post(() =>
         {
             var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
             foreach (var item in allTreeViewItems)
             {
                 item.IsExpanded = true;
+            }
+        }, DispatcherPriority.Background);
+    }
+
+    [RelayCommand]
+    public void CollapseAll()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
+            foreach (var item in allTreeViewItems)
+            {
+                item.IsExpanded = false;
             }
         }, DispatcherPriority.Background);
     }
@@ -1001,13 +1089,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     internal void OnClosing()
     {
-        SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }
 
     internal void OnLoaded()
     {
-        ExpandAll();
         UiUtil.RestoreWindowPosition(Window);
     }
 

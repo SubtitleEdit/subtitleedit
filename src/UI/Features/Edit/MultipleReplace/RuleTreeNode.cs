@@ -15,6 +15,7 @@ public partial class RuleTreeNode : ObservableObject
     [ObservableProperty] private bool _isCategory = false;
     [ObservableProperty] private string _iconName;
     [ObservableProperty] private bool _isSelected;
+    [ObservableProperty] private bool _isExpanded;
 
     private MultipleReplaceType _type;
     public MultipleReplaceType Type
