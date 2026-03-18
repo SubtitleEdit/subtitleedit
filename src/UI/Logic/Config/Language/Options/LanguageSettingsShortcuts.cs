@@ -221,6 +221,7 @@ public class LanguageSettingsShortcuts
     public string GoToPreviousError { get; set; }
     public string AddNameToNameList { get; set; }
     public string FindDoubleWords { get; set; }
+    public string FindDoubleLines { get; set; }
     public string ColorX { get; set; }
     public string RemoveColor { get; set; }
     public string SurroundWith { get; set; }
@@ -487,6 +488,7 @@ public class LanguageSettingsShortcuts
         GoToNextError = "GoTo next error";
         AddNameToNameList = "Add name to name list";
         FindDoubleWords = "Find double words";
+        FindDoubleLines = "Find double lines";
         ColorX = "Color {0}";
         RemoveColor = "Remove color";
         SurroundWith = "Surround with...";

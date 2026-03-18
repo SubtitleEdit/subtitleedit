@@ -279,6 +279,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.GoToNextErrorCommand), Se.Language.Options.Shortcuts.GoToNextError },
         { nameof(MainViewModel.ShowAddToNameListCommand), Se.Language.Options.Shortcuts.AddNameToNameList },
         { nameof(MainViewModel.ShowFindDoubleWordsCommand), Se.Language.Options.Shortcuts.FindDoubleWords },
+        { nameof(MainViewModel.ShowFindDoubleLinesCommand), Se.Language.Options.Shortcuts.FindDoubleLines },
         { nameof(MainViewModel.SetColor1Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "1") },
         { nameof(MainViewModel.SetColor2Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "2") },
         { nameof(MainViewModel.SetColor3Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "3") },
@@ -561,6 +562,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToNextErrorCommand, nameof(vm.GoToNextErrorCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAddToNameListCommand, nameof(vm.ShowAddToNameListCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowFindDoubleWordsCommand, nameof(vm.ShowFindDoubleWordsCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowFindDoubleLinesCommand, nameof(vm.ShowFindDoubleLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetColor1Command, nameof(vm.SetColor1Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SetColor2Command, nameof(vm.SetColor2Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SetColor3Command, nameof(vm.SetColor3Command), ShortcutCategory.SubtitleGridAndTextBox);
