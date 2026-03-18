@@ -253,7 +253,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         GeneratePreview();
         UndoUnchecked();
-        SaveSettings();
         OkPressed = true;
         Window?.Close();
     }
@@ -407,7 +406,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
         if (result.OkPressed)
         {
-            var rule = MakeRuleTreeNode(node, result);
+            var rule = new RuleTreeNode(node, new MultipleReplaceRule
+            {
+                Active = true,
+                Description = result.Description,
+                Find = result.FindWhat,
+                ReplaceWith = result.ReplaceWith,
+                Type = result.IsRegularExpression ? MultipleReplaceType.RegularExpression :
+                    result.IsCaseSensitive ? MultipleReplaceType.CaseSensitive :
+                    MultipleReplaceType.CaseInsensitive,
+            });
             node.SubNodes?.Add(rule);
 
             Dispatcher.UIThread.Post(() =>
@@ -1164,6 +1172,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }
 
