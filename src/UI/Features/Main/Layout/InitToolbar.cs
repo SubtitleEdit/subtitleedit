@@ -43,7 +43,7 @@ public static class InitToolbar
                 _imagePath = path;
             }
         }
-        
+
         var stackPanelLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -293,7 +293,7 @@ public static class InitToolbar
         {
             Text = Se.Language.General.Format,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
+            Margin = new Thickness(5, 0, 2, 0),
         });
         var comboBoxSubtitleFormat = new ComboBox
         {
@@ -310,7 +310,7 @@ public static class InitToolbar
         };
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
-        comboBoxSubtitleFormat.PointerPressed += vm.ComboBoxSubtitleFormatPointerPressed;   
+        comboBoxSubtitleFormat.PointerPressed += vm.ComboBoxSubtitleFormatPointerPressed;
         stackPanelRight.Children.Add(comboBoxSubtitleFormat);
         isLastSeparator = false;
 
@@ -320,7 +320,7 @@ public static class InitToolbar
             {
                 Text = Se.Language.General.Encoding,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(5, 0, 0, 0),
+                Margin = new Thickness(5, 0, 2, 0),
             });
             var comboBoxEncoding = new ComboBox
             {
@@ -338,7 +338,7 @@ public static class InitToolbar
             {
                 Text = Se.Language.General.FrameRate,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(5, 0, 0, 0),
+                Margin = new Thickness(5, 0, 2, 0),
             });
             var comboBoxFrameRate = new ComboBox
             {
@@ -377,7 +377,7 @@ public static class InitToolbar
     {
         return new Image
         {
-            Source = MakeOneColor(Path.Combine(_imagePath, image+ ".png")),
+            Source = MakeOneColor(Path.Combine(_imagePath, image + ".png")),
             Stretch = Stretch.Uniform,
         };
     }
