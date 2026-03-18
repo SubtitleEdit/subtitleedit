@@ -300,6 +300,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ExportPacViewModel>();
         collection.AddTransient<ExportPlainTextViewModel>();
         collection.AddTransient<FindDoubleWordsViewModel>();
+        collection.AddTransient<FindRuleViewModel>();
         collection.AddTransient<FindTextViewModel>();
         collection.AddTransient<FindViewModel>();
         collection.AddTransient<FixCommonErrorsProfileViewModel>();

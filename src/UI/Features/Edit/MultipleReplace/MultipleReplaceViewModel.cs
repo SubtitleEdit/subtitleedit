@@ -843,11 +843,59 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 NodeDuplicate(node);
             }
         }
+        else if (e.Key == Key.F && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            _ = FindRule();
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/edit");
         }
+    }
+
+    private async Task FindRule()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<FindRuleWindow, FindRuleViewModel>(Window,
+            vm => { vm.Initialize(Nodes); });
+
+        if (!result.OkPressed || result.SelectedRule == null)
+        {
+            return;
+        }
+
+        var rule = result.SelectedRule;
+        var parent = rule.Parent;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
+            foreach (var item in allTreeViewItems)
+            {
+                if (item.DataContext == parent)
+                {
+                    item.IsExpanded = true;
+                    break;
+                }
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                SelectedNode = rule;
+                var container = RulesTreeView.ContainerFromItem(rule) as TreeViewItem;
+                if (container != null)
+                {
+                    container.BringIntoView();
+                    container.Focus(NavigationMethod.Directional);
+                }
+            }, DispatcherPriority.Input);
+        }, DispatcherPriority.Background);
     }
 
     internal void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
