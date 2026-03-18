@@ -257,6 +257,7 @@ public class LanguageSettings
     public string SplitOddLinesAction { get; set; }
     public string OcrUseWordSplitList { get; set; }
     public string SpeechToTextSelectedLinesPromptFistTimeOnly { get; set; }
+    public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string ForceCrLfOnSave { get; set; }
@@ -526,6 +527,7 @@ public class LanguageSettings
         SplitOddLinesAction = "Split odd lines action";
         OcrUseWordSplitList = "OCR: use word split list";
         SpeechToTextSelectedLinesPromptFistTimeOnly = "Speech to text: selected lines, prompt for language/engine first time only";
+        MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";
         ForceCrLfOnSave = "Force CR+LF on save (text subtitle files)";

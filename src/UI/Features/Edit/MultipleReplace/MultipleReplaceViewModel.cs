@@ -32,6 +32,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private RuleTreeNode? _selectedNode;
     [ObservableProperty] private bool _isEditPanelVisible;
     [ObservableProperty] private bool _isFixDetailPanelVisible;
+    [ObservableProperty] private bool _isMultipleReplaceDotDotDotButtonsVisible;
     [ObservableProperty] private ObservableCollection<ReplaceExpression> _selectedFixHits;
     public ObservableCollection<MultipleReplaceTypeItem> RuleTypes { get; }
     [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
@@ -58,6 +59,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         SelectedFixHits = new ObservableCollection<ReplaceExpression>();
         Nodes = new ObservableCollection<RuleTreeNode>(GetNodes());
         RulesTreeView = new TreeView();
+        IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
         _compiledRegExList = new Dictionary<string, Regex>();
 

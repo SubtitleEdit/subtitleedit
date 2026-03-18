@@ -1,6 +1,5 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -80,6 +79,7 @@ public class SeTools
     public string LastColorPickerColor7 { get; set; }
     public bool ImportTextTryToFindTimeCodes { get; set; }
     public bool SpeechToTextSelectedLinesPromptFistTimeOnly { get; set; }
+    public bool MultipleReplaceShowDotDotDotButtons { get; set; }
 
     public SeTools()
     {
@@ -131,6 +131,7 @@ public class SeTools
         ImportTextFixedDuration = 3000;
         ImportTextTryToFindTimeCodes = false;
         SpeechToTextSelectedLinesPromptFistTimeOnly = true;
+        MultipleReplaceShowDotDotDotButtons = true;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();

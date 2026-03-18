@@ -143,7 +143,9 @@ public class MultipleReplaceWindow : Window
                     CommandParameter = node,
                     Margin = new Thickness(5, 0, 0, 0),
                     Padding = new Thickness(4),
+                    DataContext = vm,
                 };
+                buttonCategoryActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
                 Attached.SetIcon(buttonCategoryActions, IconNames.DotsVertical);
 
                 var panelCategory = new DockPanel
@@ -216,8 +218,10 @@ public class MultipleReplaceWindow : Window
                 Command = vm.NodeOpenContextMenuCommand,
                 CommandParameter = node,
                 Margin = new Thickness(5, 0, 0, 0),
-                Padding = new Thickness(4)
+                Padding = new Thickness(4),
+                DataContext = vm,
             };
+            buttonActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
             Attached.SetIcon(buttonActions, IconNames.DotsVertical);
 
             var labelDescription = UiUtil.MakeLabel().WithBindText(node, nameof(RuleTreeNode.Description));

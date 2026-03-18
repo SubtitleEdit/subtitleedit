@@ -114,6 +114,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedSplitOddNumberOfLinesAction;
     [ObservableProperty] private bool _ocrUseWordSplitList;
     [ObservableProperty] private bool _speechToTextSelectedLinesPromptFistTimeOnly;
+    [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
 
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
@@ -592,6 +593,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
         SpeechToTextSelectedLinesPromptFistTimeOnly = Se.Settings.Tools.SpeechToTextSelectedLinesPromptFistTimeOnly;
+        MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
@@ -1160,6 +1162,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
         Se.Settings.Tools.SpeechToTextSelectedLinesPromptFistTimeOnly = SpeechToTextSelectedLinesPromptFistTimeOnly;
+        Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
