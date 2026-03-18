@@ -16,7 +16,6 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,6 +44,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPlayer;
     private bool _isSubtitleLoaded;
     private string _oldSubtitleText;
+    private WavePeakData2? _wavePeaks;
     private Subtitle _subtitle;
     private string? _videoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
@@ -52,6 +52,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
     private FfmpegMediaInfo2? _mediaInfo;
     private AudioVisualizer? _audioVisualizer;
+    private HashSet<Guid> _selectedSubtitleLineIds = [];
+    private int _firstSelectedIndex;
 
     public AssaApplyAdvancedEffectViewModel()
     {
@@ -84,19 +86,24 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         AudioVisualizer? audioVisualizer)
     {
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
+        _wavePeaks = audioVisualizer?.WavePeaks;
         _subtitle = subtitle;
         _videoFileName = videoFileName;
         _subtitleLines = paragraphs;
         _selectedSubtitleLines = selectedParagraphs;
         _mediaInfo = mediaInfo;
         _audioVisualizer = audioVisualizer;
+        _selectedSubtitleLineIds = new HashSet<Guid>(selectedParagraphs.Select(x => x.Id));
+        _firstSelectedIndex = _subtitleLines.Count > 0
+            ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _subtitleLines[0].Id))
+            : 0;
 
         if (audioVisualizer == null || audioVisualizer.WavePeaks == null || audioVisualizer.WavePeaks.Peaks.Count == 0)
         {
             // remove audio visualizer related effects if no audio visualizer data is available
-            var i = OverrideTags.Count-1;
+            var i = OverrideTags.Count - 1;
             while (i >= 0)
-            { 
+            {
                 var effect = OverrideTags[i];
                 if (effect.UsesAudio)
                 {
@@ -122,7 +129,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             {
                 SelectionInfo = string.Format(Se.Language.General.SelectedlinesX, _selectedSubtitleLines.Count);
             }
-            else 
+            else
             {
                 SelectionInfo = string.Format(Se.Language.General.SelectedlinesX, string.Join(", ", _selectedSubtitleLines.Select(s => s.Number)));
             }
@@ -133,34 +140,46 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
-        _positionTimer.Tick += (s, e) =>
+        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(750) };
+        _positionTimer.Tick += async (s, e) =>
         {
             if (_mpvPlayer == null)
             {
                 return;
             }
 
-            var subtitle = BuildPreviewSubtitle();
-            var text = _assaFormat.ToText(subtitle, string.Empty);
-            if (_oldSubtitleText == text)
+            _positionTimer.Stop();
+            try
             {
-                return;
-            }
+                var (subtitle, text) = await Task.Run(() =>
+                {
+                    var built = BuildPreviewSubtitle();
+                    return (built, _assaFormat.ToText(built, string.Empty));
+                });
 
-            File.WriteAllText(_tempSubtitleFileName, text);
-            if (!_isSubtitleLoaded)
-            {
-                _isSubtitleLoaded = true;
-                _mpvPlayer.SubAdd(_tempSubtitleFileName);
-            }
-            else
-            {
-                _mpvPlayer.SubReload();
-            }
+                if (_oldSubtitleText == text)
+                {
+                    return;
+                }
 
-            _oldSubtitleText = text;
-            UpdatedSubtitle = subtitle;
+                _oldSubtitleText = text;
+                await File.WriteAllTextAsync(_tempSubtitleFileName, text);
+                if (!_isSubtitleLoaded)
+                {
+                    _isSubtitleLoaded = true;
+                    _mpvPlayer.SubAdd(_tempSubtitleFileName);
+                }
+                else
+                {
+                    _mpvPlayer.SubReload();
+                }
+
+                UpdatedSubtitle = subtitle;
+            }
+            finally
+            {
+                _positionTimer.Start();
+            }
         };
 
         _positionTimer.Start();
@@ -181,19 +200,15 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             return result;
         }
 
-        var firstSelectedIndex = _subtitleLines.Count > 0
-            ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _subtitleLines[0].Id))
-            : 0;
-
-        var toAffect = new List<SubtitleLineViewModel>();
-        var affectedIds = new HashSet<Guid>();
+        var toAffect = new List<SubtitleLineViewModel>(Paragraphs.Count);
+        var affectedIds = new HashSet<Guid>(Paragraphs.Count);
         var idx = 0;
 
         foreach (var item in Paragraphs)
         {
             var shouldAffect = AdjustAll
-                || (AdjustSelectedLines && _selectedSubtitleLines.Any(x => x.Id == item.Subtitle.Id))
-                || (AdjustSelectedLinesAndForward && idx >= firstSelectedIndex);
+                || (AdjustSelectedLines && _selectedSubtitleLineIds.Contains(item.Subtitle.Id))
+                || (AdjustSelectedLinesAndForward && idx >= _firstSelectedIndex);
 
             if (shouldAffect)
             {
@@ -204,10 +219,10 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         }
 
         var transformed = effect.ApplyEffect(
-            toAffect, 
-            _mediaInfo?.Dimension.Width ?? 1920, 
+            toAffect,
+            _mediaInfo?.Dimension.Width ?? 1920,
             _mediaInfo?.Dimension.Height ?? 1080,
-            _audioVisualizer);
+            _wavePeaks);
 
         foreach (var item in Paragraphs)
         {

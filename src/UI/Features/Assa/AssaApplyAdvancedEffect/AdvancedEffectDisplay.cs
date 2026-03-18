@@ -15,7 +15,7 @@ public interface IAdvancedEffectDisplay
     string Name { get; }
     string Description { get; }
     bool UsesAudio { get; }
-    List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio);
+    List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks);
 }
 
 public static class AdvancedEffectDisplayFactory
@@ -58,7 +58,7 @@ public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
     public string Description => "A per-line fade-in effect where the screen starts black and reveals the video.";
     public bool UsesAudio => false;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -100,7 +100,7 @@ public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -140,7 +140,7 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -197,7 +197,7 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -295,7 +295,7 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -389,7 +389,7 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -482,7 +482,7 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -562,7 +562,7 @@ public class AdvancedEffectEndCreditsScroll : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -619,7 +619,7 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
     public bool UsesAudio => false;
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -691,7 +691,7 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -771,7 +771,7 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -847,7 +847,7 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         string[] rainbowColors = ["&H0000FF&", "&H00FFFF&", "&H00FF00&", "&HFFFF00&", "&HFF0000&", "&HFF00FF&"];
@@ -947,7 +947,7 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -992,7 +992,7 @@ public class AdvancedEffectTypewriterWithHighlight : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -1050,7 +1050,7 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
     public bool UsesAudio => false;
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1109,7 +1109,7 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1188,7 +1188,7 @@ public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         foreach (var subtitle in subtitles)
@@ -1261,7 +1261,7 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -1370,7 +1370,7 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
 
@@ -1457,7 +1457,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -1640,7 +1640,7 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
 
     public override string ToString() => Name;
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -1747,12 +1747,11 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
     public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(
-        List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+        List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
 
-        var wavePeaks = audio?.WavePeaks;
         const int frameMs = 50; // 20 fps
 
         foreach (var sub in subtitles)
@@ -1878,7 +1877,7 @@ public class AdvancedEffectConfetti : IAdvancedEffectDisplay
     // Shapes: rectangle, diamond, circle — all widely supported in subtitle fonts
     private static readonly string[] ConfettiChars = ["■", "◆", "●"];
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
@@ -2062,7 +2061,7 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
         "&H6400E6&",  // Magenta-red
     ];
 
-    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, AudioVisualizer? audio)
+    public List<SubtitleLineViewModel> ApplyEffect(List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
         if (subtitles.Count == 0) return result;
