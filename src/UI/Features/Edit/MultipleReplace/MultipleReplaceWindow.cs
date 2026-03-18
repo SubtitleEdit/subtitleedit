@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
@@ -139,55 +141,44 @@ public class MultipleReplaceWindow : Window
                     VerticalContentAlignment = VerticalAlignment.Center,
                     Command = vm.NodeCategoryOpenContextMenuCommand,
                     CommandParameter = node,
-                    Margin = new Thickness(0),
-                    Padding = new Thickness(4)
+                    Margin = new Thickness(5, 0, 0, 0),
+                    Padding = new Thickness(4),
                 };
                 Attached.SetIcon(buttonCategoryActions, IconNames.DotsVertical);
 
-                var gridCategory = new Grid
+                var panelCategory = new DockPanel
                 {
-                    RowDefinitions =
-                    {
-                        new RowDefinition { Height = new GridLength(1, GridUnitType.Auto), MinHeight = 0 },
-                    },
-                    ColumnDefinitions =
-                    {
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                    },
+                    LastChildFill = true,
                     Width = double.NaN,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Margin = new Thickness(0),
-                    RowSpacing = 0,
-                    ColumnSpacing = 0,
                 };
+                DockPanel.SetDock(checkBox, Dock.Left);
+                DockPanel.SetDock(buttonCategoryActions, Dock.Left);
+                panelCategory.Children.Add(checkBox);
+                panelCategory.Children.Add(buttonCategoryActions);
+                panelCategory.Children.Add(label);
+                panelCategory.AddHandler(InputElement.PointerReleasedEvent, (sender, e) =>
+                {
+                    var isContextClick = e.InitialPressMouseButton == MouseButton.Right ||
+                        (System.OperatingSystem.IsMacOS() && e.InitialPressMouseButton == MouseButton.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control));
+                    if (isContextClick)
+                    {
+                        vm.NodeCategoryOpenContextMenuCommand.Execute(node);
+                        e.Handled = true;
+                    }
+                }, RoutingStrategies.Tunnel);
 
-                gridCategory.Add(checkBox, 0, 0);
-                gridCategory.Add(label, 0, 1);
-                gridCategory.Add(buttonCategoryActions, 0, 2);
-
-                return gridCategory;
+                return panelCategory;
             }
 
-            var grid = new Grid
+            var panelRow = new DockPanel
             {
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Auto), MinHeight = 0 },
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                },
+                LastChildFill = true,
                 Width = double.NaN,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Margin = new Thickness(0),
-                RowSpacing = 0,
-                ColumnSpacing = 0,
             };
 
             var labelFind = UiUtil.MakeLabel(string.Empty).WithBindText(node, nameof(RuleTreeNode.Find));
@@ -224,7 +215,7 @@ public class MultipleReplaceWindow : Window
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Command = vm.NodeOpenContextMenuCommand,
                 CommandParameter = node,
-                Margin = new Thickness(0),
+                Margin = new Thickness(5, 0, 0, 0),
                 Padding = new Thickness(4)
             };
             Attached.SetIcon(buttonActions, IconNames.DotsVertical);
@@ -252,11 +243,23 @@ public class MultipleReplaceWindow : Window
                 }
             };
 
-            grid.Add(checkBox, 0);
-            grid.Add(panelFindAndReplaceWith, 0, 1);
-            grid.Add(buttonActions, 0, 2);
+            DockPanel.SetDock(checkBox, Dock.Left);
+            DockPanel.SetDock(buttonActions, Dock.Left);
+            panelRow.Children.Add(checkBox);
+            panelRow.Children.Add(buttonActions);
+            panelRow.Children.Add(new Border { ClipToBounds = true, Background = Brushes.Transparent, Child = panelFindAndReplaceWith });
+            panelRow.AddHandler(InputElement.PointerReleasedEvent, (sender, e) =>
+            {
+                var isContextClick = e.InitialPressMouseButton == MouseButton.Right ||
+                    (System.OperatingSystem.IsMacOS() && e.InitialPressMouseButton == MouseButton.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control));
+                if (isContextClick)
+                {
+                    vm.NodeOpenContextMenuCommand.Execute(node);
+                    e.Handled = true;
+                }
+            }, RoutingStrategies.Tunnel);
 
-            return grid;
+            return panelRow;
         },
             node => node.SubNodes ?? []
         );
@@ -271,6 +274,7 @@ public class MultipleReplaceWindow : Window
         {
             Content = treeView,
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
         };
 
         var border = new Border
