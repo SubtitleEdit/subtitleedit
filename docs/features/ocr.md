@@ -73,6 +73,8 @@ Local OCR engine.
 |----------|--------|
 | Escape | Cancel OCR / Close window |
 | Ctrl+G | Go to line number |
+| Ctrl+ | Zoom in (images in grid) |
+| Ctrl- | Zoom out (images in grid) |
 | F1 | Show help |
 
 ### Subtitle Grid
