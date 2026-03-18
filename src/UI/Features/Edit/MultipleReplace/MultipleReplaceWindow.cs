@@ -33,7 +33,17 @@ public class MultipleReplaceWindow : Window
         var fixesView = MakeFixesView(vm);
 
         var buttonCollapseAll = UiUtil.MakeButton(vm.CollapseAllCommand, IconNames.Minus);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonCollapseAll, Se.Language.General.Collapse);
+        }
+
         var buttonExpandAll = UiUtil.MakeButton(vm.ExpandAllCommand, IconNames.Plus);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonExpandAll, Se.Language.General.Expand);
+        }
+
         var panelExpandCollapse = new StackPanel
         {
             Orientation = Orientation.Horizontal,

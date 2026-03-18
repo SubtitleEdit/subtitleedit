@@ -66,7 +66,7 @@ public class SeAppearance
         CurrentLayoutPositions = new LayoutPositions();
         Theme = "System";
         IconTheme = string.Empty;
-        MatchIconColorToDarkTheme = true;
+        MatchIconColorToDarkTheme = false;
         LayoutScale = 1.0;
         FontName = "Default";
         SubtitleTextBoxAndGridFontName = "Default";
