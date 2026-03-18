@@ -153,6 +153,7 @@ public class MultipleReplaceWindow : Window
                     LastChildFill = true,
                     Width = double.NaN,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Background = Brushes.Transparent,
                     Margin = new Thickness(0),
                 };
                 DockPanel.SetDock(checkBox, Dock.Left);
