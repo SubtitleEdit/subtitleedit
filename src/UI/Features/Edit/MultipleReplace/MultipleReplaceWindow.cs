@@ -546,15 +546,25 @@ public class MultipleReplaceWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
         };
+
+        var labelFixesInfo = new TextBlock
+        {
+            Margin = new Thickness(0, 0, 0, 4),
+            Opacity = 0.7,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.FixesInfo)) { Source = vm },
+        };
+
         gridFixes.Add(editGrid, 0, 0);
         gridFixes.Add(dataGrid, 1, 0);
-        gridFixes.Add(hitsPanel, 2, 0);
+        gridFixes.Add(labelFixesInfo, 2, 0);
+        gridFixes.Add(hitsPanel, 3, 0);
 
         var border = new Border
         {

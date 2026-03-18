@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -33,6 +34,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private bool _isEditPanelVisible;
     [ObservableProperty] private bool _isFixDetailPanelVisible;
     [ObservableProperty] private bool _isMultipleReplaceDotDotDotButtonsVisible;
+    [ObservableProperty] private string _fixesInfo;
     [ObservableProperty] private ObservableCollection<ReplaceExpression> _selectedFixHits;
     public ObservableCollection<MultipleReplaceTypeItem> RuleTypes { get; }
     [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
@@ -57,6 +59,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
         Fixes = new ObservableCollection<MultipleReplaceFix>();
         SelectedFixHits = new ObservableCollection<ReplaceExpression>();
+        FixesInfo = string.Empty;
         Nodes = new ObservableCollection<RuleTreeNode>(GetNodes());
         RulesTreeView = new TreeView();
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
@@ -1108,9 +1111,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             Fixes.Clear();
             Fixes.AddRange(fixes);
+            FixesInfo = string.Format(Se.Language.Edit.MultipleReplace.XLinesAffected, TotalReplaced);
         });
-
-        //groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MultipleReplace.LinesFoundX, fixedLines);
     }
 
     private HashSet<ReplaceExpression> BuildReplaceExpressions()
