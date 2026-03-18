@@ -121,6 +121,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private GuessUsedItem? _selectedAllGuess;
     [ObservableProperty] private bool _hasPreProcessingSettings;
     [ObservableProperty] private bool _hasCaptureTopAlign;
+    [ObservableProperty] private double _imageMaxHeight = 100;
+    [ObservableProperty] private double _imageMaxWidth = 200;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
     [ObservableProperty] private decimal _textBoxFontSize;
     [ObservableProperty] private FontWeight _textBoxFontWeight;
@@ -2994,6 +2996,28 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true; // prevent further handling if needed
             Dispatcher.UIThread.Post(async void () => { await ShowGoToLine(); });
         }
+        else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            e.Handled = true;
+            if (ImageMaxHeight < 300)
+            {
+                ImageMaxHeight *= 1.1;
+                ImageMaxWidth *= 1.1;
+                var rowHeight = CalculateRowHeight();
+                Dispatcher.UIThread.Post(() => SubtitleGrid.RowHeight = rowHeight);
+            }
+        }
+        else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            e.Handled = true;
+            if (ImageMaxHeight > 50)
+            {
+                ImageMaxHeight *= 0.9;
+                ImageMaxWidth *= 0.9;
+                var rowHeight = CalculateRowHeight();
+                Dispatcher.UIThread.Post(() => SubtitleGrid.RowHeight = rowHeight);
+            }
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
@@ -3137,6 +3161,26 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, "DivX");
         _ocrSubtitle = new OcrSubtitleDivX(list, fileName);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+    }
+
+    private double CalculateRowHeight()
+    {
+        var firstItem = OcrSubtitleItems.FirstOrDefault();
+        if (firstItem == null)
+        {
+            return ImageMaxHeight + 10;
+        }
+
+        var bitmap = firstItem.GetSkBitmap();
+        var natW = (double)bitmap.Width;
+        var natH = (double)bitmap.Height;
+        if (natW <= 0 || natH <= 0)
+        {
+            return ImageMaxHeight + 10;
+        }
+
+        var scale = Math.Min(ImageMaxWidth / natW, ImageMaxHeight / natH);
+        return natH * scale + 10;
     }
 
     internal void EngineSelectionChanged(object? sender, SelectionChangedEventArgs e)

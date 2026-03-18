@@ -388,10 +388,10 @@ public class OcrWindow : Window
                             var image = new Image
                             {
                                 Source = bitmap,
-                                MaxHeight = 100,
-                                MaxWidth = 200,
                                 Stretch = Avalonia.Media.Stretch.Uniform
                             };
+                            image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
+                            image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
                             stackPanel.Children.Add(image);
                         }
 
