@@ -497,8 +497,13 @@ public class MultipleReplaceWindow : Window
                     Padding = new Thickness(6, 2, 6, 2),
                     Margin = new Thickness(0, 1, 0, 1),
                     Child = row,
+                    Cursor = hit.RuleTreeNode != null ? new Cursor(StandardCursorType.Hand) : null,
                 };
                 ToolTip.SetTip(chip, hit.RuleInfo);
+                if (hit.RuleTreeNode != null)
+                {
+                    chip.Tapped += (_, _) => vm.NavigateToRule(hit.RuleTreeNode);
+                }
                 return chip;
             }),
         };

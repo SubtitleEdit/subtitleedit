@@ -880,7 +880,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var rule = result.SelectedRule;
+        NavigateToRule(result.SelectedRule);
+    }
+
+    internal void NavigateToRule(RuleTreeNode? rule)
+    {
+        if (rule == null)
+        {
+            return;
+        }
+
         var parent = rule.Parent;
 
         Dispatcher.UIThread.Post(() =>
