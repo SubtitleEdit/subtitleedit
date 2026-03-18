@@ -2,6 +2,15 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta10 (xth March 2026)
+
+* Multiple replace: Add find rule window (Ctrl+F)
+* Multiple replace: Add rule context menu + make "..." buttons optional
+* Multiple replace: Click on applied rules, now selects the rule 
+* OCR window: Ctrl+/Ctrl- now zoom images in/out 
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta9 (17th March 2026)
 
 * Work on installer - thx bovirus
