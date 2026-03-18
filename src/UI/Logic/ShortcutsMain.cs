@@ -16,13 +16,11 @@ public static class ShortcutsMain
 
         var keys = Se.Settings.Shortcuts
             .Where(p => !p.ActionName.Contains(' '))
-            .GroupBy(p => p.ActionName)
-            .Select(g => g.First())
-            .ToDictionary(p => p.ActionName, p => p);
+            .ToLookup(p => p.ActionName);
 
         foreach (var shortcut in GetAllAvailableShortcuts(vm))
         {
-            if (keys.TryGetValue(shortcut.Name, out var match))
+            foreach (var match in keys[shortcut.Name])
             {
                 shortcuts.Add(new ShortCut(shortcut, match));
             }
@@ -34,7 +32,9 @@ public static class ShortcutsMain
     public static List<ShortCut> GetAllShortcuts(MainViewModel vm)
     {
         var shortcuts = new List<ShortCut>();
-        var keys = Se.Settings.Shortcuts.ToDictionary(p => p.ActionName, p => p);
+        var keys = Se.Settings.Shortcuts
+            .GroupBy(p => p.ActionName)
+            .ToDictionary(g => g.Key, g => g.First());
         foreach (var shortcut in GetAllAvailableShortcuts(vm))
         {
             shortcuts.Add(keys.TryGetValue(shortcut.Name, out var match)
@@ -641,6 +641,7 @@ public static class ShortcutsMain
             new(nameof(vm.FindNextCommand), [nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),
             new(nameof(vm.FindPreviousCommand), ["Shift", nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),
             new(nameof(vm.ShowReplaceCommand), [cmd, "R"], ShortcutCategory.General),
+            new(nameof(vm.ShowReplaceCommand), [cmd, "H"], ShortcutCategory.General),
             new(nameof(vm.ShowMultipleReplaceCommand), [cmd, "Shift", "R"], ShortcutCategory.General),
             new(nameof(vm.OpenDataFolderCommand), [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
             new(nameof(vm.CommandFileNewCommand), [cmd, "N"], ShortcutCategory.General),

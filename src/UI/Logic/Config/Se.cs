@@ -188,12 +188,30 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
-        if (Shortcuts.Count > 0)
+        if (Shortcuts.Count == 0)
         {
+            Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm);
             return;
         }
 
-        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm);
+        // Add any new default bindings that are not yet in existing settings
+        var defaults = ShortcutsMain.GetDefaultShortcuts(vm);
+        foreach (var def in defaults)
+        {
+            var alreadyExists = Shortcuts.Any(s =>
+                s.ActionName == def.ActionName &&
+                s.Keys.SequenceEqual(def.Keys));
+            if (!alreadyExists)
+            {
+                // Only add if this action already has at least one binding (i.e. it's a secondary binding)
+                // or if the action has no binding at all
+                var hasAction = Shortcuts.Any(s => s.ActionName == def.ActionName);
+                if (hasAction)
+                {
+                    Shortcuts.Add(def);
+                }
+            }
+        }
     }
 
     public static void SaveSettings()
