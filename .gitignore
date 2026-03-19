@@ -400,3 +400,11 @@ FodyWeavers.xsd
 *.sln.iml
 .idea/
 /installer/WindowsInno/SubtitleEdit-*-Setup.exe
+
+# Flatpak: downloaded generator tool and CI-generated icon copy
+/installer/flatpak/flatpak-dotnet-generator.py
+/installer/flatpak/dk.nikse.subtitleedit.png
+# nuget-sources.json is intentionally tracked — commit it after running
+# installer/flatpak/generate-nuget-sources.sh
+
+

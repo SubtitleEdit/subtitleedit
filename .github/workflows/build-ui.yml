@@ -553,23 +553,18 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore dependencies
+      - name: Restore dependencies (generates packages.lock.json)
         run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
-
-      - name: Publish Linux x64 app (self-contained, for Flatpak)
-        run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
-            -p:PublishSingleFile=true \
-            -o ./publish/linux-x64
-          find "./publish/linux-x64/" -name "*.pdb" -type f -delete
 
       - name: Update metainfo version from Se.cs
         run: |
           chmod +x ./installer/flatpak/update-metainfo-version.sh
           ./installer/flatpak/update-metainfo-version.sh
+
+      - name: Generate NuGet sources for offline Flatpak build
+        run: |
+          chmod +x ./installer/flatpak/generate-nuget-sources.sh
+          ./installer/flatpak/generate-nuget-sources.sh
 
       - name: Copy icon for Flatpak manifest
         run: cp src/UI/Assets/SE.png installer/flatpak/dk.nikse.subtitleedit.png
@@ -578,9 +573,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.local/share/flatpak
-          key: flatpak-runtime-freedesktop-24.08-${{ runner.os }}
+          key: flatpak-runtime-freedesktop-24.08-dotnet10-${{ runner.os }}
           restore-keys: |
-            flatpak-runtime-freedesktop-24.08-
+            flatpak-runtime-freedesktop-24.08-dotnet10-
 
       - name: Install Flatpak tools
         run: |
@@ -590,11 +585,12 @@ jobs:
       - name: Add Flathub remote
         run: flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-      - name: Install Flatpak runtime and SDK
+      - name: Install Flatpak runtime, SDK and .NET 10 SDK extension
         run: |
           flatpak --user install -y --noninteractive flathub \
             org.freedesktop.Platform//24.08 \
-            org.freedesktop.Sdk//24.08
+            org.freedesktop.Sdk//24.08 \
+            org.freedesktop.Sdk.Extension.dotnet10//24.08
 
       - name: Build Flatpak
         run: |

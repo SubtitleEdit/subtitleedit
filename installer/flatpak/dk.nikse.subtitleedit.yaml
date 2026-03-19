@@ -2,8 +2,16 @@ app-id: dk.nikse.subtitleedit
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.dotnet10
 command: SubtitleEdit
 
+# Make the dotnet10 SDK tools available to every module at build time
+build-options:
+  append-path: /usr/lib/sdk/dotnet10/bin
+  append-ld-library-path: /usr/lib/sdk/dotnet10/lib
+  env:
+    PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
 
 finish-args:
   # Display
@@ -24,36 +32,43 @@ finish-args:
 modules:
   - name: subtitleedit
     buildsystem: simple
+    # Select the correct RID per host architecture
+    build-options:
+      arch:
+        x86_64:
+          env:
+            RUNTIME: linux-x64
+        aarch64:
+          env:
+            RUNTIME: linux-arm64
     build-commands:
-      # Install the main executable
-      - install -Dm755 SubtitleEdit /app/bin/SubtitleEdit
-
-      # Install any shared libraries next to the binary
-      # (e.g. libSkiaSharp.so when PublishSingleFile extraction is disabled)
-      - find . -maxdepth 1 -name "*.so*" -type f -exec install -Dm755 {} /app/lib/ \;
+      # Build and publish from source using the pre-fetched NuGet packages
+      - |
+        . /usr/lib/sdk/dotnet10/enable.sh
+        dotnet publish src/UI/UI.csproj \
+          --source ./nuget-sources \
+          --runtime $RUNTIME \
+          --self-contained true \
+          -p:PublishSingleFile=true \
+          -p:PublishReadyToRun=true \
+          -o /app/bin
 
       # Desktop entry
-      - install -Dm644 dk.nikse.subtitleedit.desktop /app/share/applications/dk.nikse.subtitleedit.desktop
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.desktop /app/share/applications/dk.nikse.subtitleedit.desktop
 
       # AppStream metainfo
-      - install -Dm644 dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
 
       # Icon (256x256 PNG, copied from src/UI/Assets/SE.png during CI)
-      - install -Dm644 dk.nikse.subtitleedit.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
 
     sources:
-      # Pre-built self-contained binary produced by `dotnet publish`
-      # Path is relative to this manifest file: installer/flatpak/
+      # Full repo checkout (path relative to this manifest: installer/flatpak/ → ../../)
       - type: dir
-        path: ../../publish/linux-x64
+        path: ../..
 
-      - type: file
-        path: dk.nikse.subtitleedit.desktop
-
-      - type: file
-        path: dk.nikse.subtitleedit.metainfo.xml
-
-      # Icon is copied here by the CI step "Copy icon for Flatpak"
-      - type: file
-        path: dk.nikse.subtitleedit.png
+      # NuGet packages pre-fetched by generate-nuget-sources.sh.
+      # flatpak-builder expands this JSON array and downloads every package
+      # into the nuget-sources/ directory before the build starts.
+      - nuget-sources.json
 
