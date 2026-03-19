@@ -13,6 +13,7 @@ v5.0.0-beta10 (xth March 2026)
 * Add pixel-width column - thx rRobis
 * Fix numeric up/down null safety - thx rRobis
 * Fix for Grid-lines-all option
+* Add export to Cheetah (.cap) 
 
 -----------------------------------------------------------------------------------------------------
 

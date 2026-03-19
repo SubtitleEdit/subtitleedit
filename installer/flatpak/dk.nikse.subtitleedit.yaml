@@ -1,0 +1,59 @@
+app-id: dk.nikse.subtitleedit
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: SubtitleEdit
+
+
+finish-args:
+  # Display
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  # Hardware acceleration
+  - --device=dri
+  # File access (subtitle files are typically in the home directory)
+  - --filesystem=home
+  # Network (optional online services: translation, TTS, speech-to-text, etc.)
+  - --share=network
+  # Audio (video playback via mpv)
+  - --socket=pulseaudio
+  # .NET single-file bundle extraction directory (persistent cache)
+  - --env=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/cache/.net
+
+modules:
+  - name: subtitleedit
+    buildsystem: simple
+    build-commands:
+      # Install the main executable
+      - install -Dm755 SubtitleEdit /app/bin/SubtitleEdit
+
+      # Install any shared libraries next to the binary
+      # (e.g. libSkiaSharp.so when PublishSingleFile extraction is disabled)
+      - find . -maxdepth 1 -name "*.so*" -type f -exec install -Dm755 {} /app/lib/ \;
+
+      # Desktop entry
+      - install -Dm644 dk.nikse.subtitleedit.desktop /app/share/applications/dk.nikse.subtitleedit.desktop
+
+      # AppStream metainfo
+      - install -Dm644 dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
+
+      # Icon (256x256 PNG, copied from src/UI/Assets/SE.png during CI)
+      - install -Dm644 dk.nikse.subtitleedit.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+
+    sources:
+      # Pre-built self-contained binary produced by `dotnet publish`
+      # Path is relative to this manifest file: installer/flatpak/
+      - type: dir
+        path: ../../publish/linux-x64
+
+      - type: file
+        path: dk.nikse.subtitleedit.desktop
+
+      - type: file
+        path: dk.nikse.subtitleedit.metainfo.xml
+
+      # Icon is copied here by the CI step "Copy icon for Flatpak"
+      - type: file
+        path: dk.nikse.subtitleedit.png
+

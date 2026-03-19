@@ -542,9 +542,75 @@ jobs:
           name: linux-tar-package
           path: ./SubtitleEdit-Linux-x64.tar.gz
 
+  build-flatpak:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      - name: Publish Linux x64 app (self-contained, for Flatpak)
+        run: |
+          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/linux-x64
+          find "./publish/linux-x64/" -name "*.pdb" -type f -delete
+
+      - name: Copy icon for Flatpak manifest
+        run: cp src/UI/Assets/SE.png installer/flatpak/dk.nikse.subtitleedit.png
+
+      - name: Cache Flatpak runtimes
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/flatpak
+          key: flatpak-runtime-freedesktop-24.08-${{ runner.os }}
+          restore-keys: |
+            flatpak-runtime-freedesktop-24.08-
+
+      - name: Install Flatpak tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y flatpak flatpak-builder
+
+      - name: Add Flathub remote
+        run: flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Install Flatpak runtime and SDK
+        run: |
+          flatpak --user install -y --noninteractive flathub \
+            org.freedesktop.Platform//24.08 \
+            org.freedesktop.Sdk//24.08
+
+      - name: Build Flatpak
+        run: |
+          flatpak-builder --user --repo=flatpak-repo --force-clean .flatpak-builder \
+            installer/flatpak/dk.nikse.subtitleedit.yaml
+
+      - name: Create Flatpak bundle
+        run: |
+          flatpak build-bundle flatpak-repo SubtitleEdit-Linux-x64.flatpak dk.nikse.subtitleedit
+          echo "Flatpak bundle size: $(du -sh SubtitleEdit-Linux-x64.flatpak | cut -f1)"
+
+      - name: Upload Flatpak artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: linux-flatpak-package
+          path: ./SubtitleEdit-Linux-x64.flatpak
+
+
   create-release:
     if: ${{ inputs.create_release }}
-    needs: [build-windows, build-macos, build-linux]
+    needs: [build-windows, build-macos, build-linux, build-flatpak]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -577,6 +643,7 @@ jobs:
           cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
           cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
           cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
+          cp ./artifacts/linux-flatpak-package/*.flatpak ./release-assets/
           
           # List all files that will be uploaded
           echo "Release assets:"
@@ -604,7 +671,8 @@ jobs:
             - **Windows ARM64:** [SubtitleEdit-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-ARM64.zip)
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
-            - **Linux x64:** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
+            - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
+            - **Linux x64 (Flatpak):** [SubtitleEdit-Linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.flatpak)
       
             ### Installation
             1. Read and fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
@@ -622,3 +690,4 @@ jobs:
             ./release-assets/SubtitleEdit-macOS-ARM64.dmg
             ./release-assets/SubtitleEdit-macOS-x64.dmg
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
+            ./release-assets/SubtitleEdit-Linux-x64.flatpak
