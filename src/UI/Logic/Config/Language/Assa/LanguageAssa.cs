@@ -164,6 +164,9 @@ public class LanguageAssa
     public string AdvancedEffectConfettiDescription { get; set; }
     public string AdvancedEffectHearts { get; set; }
     public string AdvancedEffectHeartsDescription { get; set; }
+    public string AdvancedEffectWordSpacing { get; set; }
+    public string AdvancedEffectWordSpacingDescription { get; set; }
+    public string AdvancedEffectWordSpacingPixels { get; set; }
 
     public LanguageAssa()
     {
@@ -330,5 +333,8 @@ public class LanguageAssa
         AdvancedEffectConfettiDescription = "Explosive burst of colorful spinning paper confetti from corner poppers and a center starburst at each subtitle";
         AdvancedEffectHearts = "Hearts (rain)";
         AdvancedEffectHeartsDescription = "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle";
+        AdvancedEffectWordSpacing = "Word spacing";
+        AdvancedEffectWordSpacingDescription = "Increases spacing between words using the \\fsp tag for better readability";
+        AdvancedEffectWordSpacingPixels = "Spacing (pixels)";
     }
 }

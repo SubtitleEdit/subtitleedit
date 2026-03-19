@@ -74,6 +74,13 @@ public class AssaApplyAdvancedEffectWindow : Window
                     settingsStack.Children.Add(speedRow);
                     panel.Children.Add(settingsStack);
                 }
+                else if (item is AdvancedEffectWordSpacing wordSpacingItem)
+                {
+                    var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectWordSpacingPixels, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0m, 100m, 130, wordSpacingItem, nameof(AdvancedEffectWordSpacing.SpacingPixels)));
+                    panel.Children.Add(row);
+                }
 
                 return panel;
             }),
