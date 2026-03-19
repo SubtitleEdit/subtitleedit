@@ -1692,7 +1692,7 @@ public static class UiUtil
     }
 
     public static NumericUpDown MakeNumericUpDownTwoDecimals(decimal min, decimal max, double width, object viewModel,
-        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null, decimal defaultValue = 0)
     {
         var control = new NumericUpDown
         {
@@ -1713,6 +1713,7 @@ public static class UiUtil
             {
                 Path = propertyValuePath,
                 Mode = BindingMode.TwoWay,
+                Converter = new NullableDecimalConverter { DefaultValue = defaultValue },
             });
         }
 
@@ -1769,7 +1770,7 @@ public static class UiUtil
     }
 
     public static NumericUpDown MakeNumericUpDownOneDecimal(decimal min, decimal max, double width, object viewModel,
-        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null, decimal defaultValue = 0)
     {
         var control = new NumericUpDown
         {
@@ -1789,6 +1790,7 @@ public static class UiUtil
             {
                 Path = propertyValuePath,
                 Mode = BindingMode.TwoWay,
+                Converter = new NullableDecimalConverter { DefaultValue = defaultValue },
             });
         }
 
