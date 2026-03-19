@@ -74,7 +74,7 @@
   </screenshots>
 
   <releases>
-    <release version="5.0.0" date="2025-01-01">
+    <release version="5.0.0-beta9" date="2026-03-19">
       <description>
         <p>Initial cross-platform release based on Avalonia UI.</p>
       </description>

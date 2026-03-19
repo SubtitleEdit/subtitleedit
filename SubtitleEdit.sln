@@ -136,6 +136,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsInno", "WindowsInno"
 		installer\WindowsInno\update-version.ps1 = installer\WindowsInno\update-version.ps1
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flatpak", "flatpak", "{6F6414CD-28F6-430C-B855-68B7573ACC4F}"
+	ProjectSection(SolutionItems) = preProject
+		installer\flatpak\dk.nikse.subtitleedit.desktop = installer\flatpak\dk.nikse.subtitleedit.desktop
+		installer\flatpak\dk.nikse.subtitleedit.metainfo.xml = installer\flatpak\dk.nikse.subtitleedit.metainfo.xml
+		installer\flatpak\dk.nikse.subtitleedit.yaml = installer\flatpak\dk.nikse.subtitleedit.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -220,6 +227,7 @@ Global
 		{F97CA7CF-6808-41F2-A3B7-A4F4033E20AF} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 		{4F23FA81-26B9-4E5D-A7AC-C5C1CE2654DC} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 		{5925DAD2-308F-4879-9587-E45FE31BC34C} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{6F6414CD-28F6-430C-B855-68B7573ACC4F} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27E960EC-896F-428C-95A2-C250321C16D5}
