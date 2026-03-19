@@ -12,7 +12,7 @@ v5.0.0-beta10 (xth March 2026)
 * Add ASSA advanced effect: word spacing - thx rRobis
 * Add pixel-width column - thx rRobis
 * Fix numeric up/down null safety - thx rRobis
-* Fix for Grid-lines-all option 
+* Fix for Grid-lines-all option
 
 -----------------------------------------------------------------------------------------------------
 

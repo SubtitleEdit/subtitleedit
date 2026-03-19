@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "region.bottomCenter";
         }
 
-        private static string GetAssStyleFromRegion(string region)
+        private static string GetAssStyleFromRegionName(string region)
         {
             switch (region)
             {
@@ -279,10 +279,126 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static List<string> GetStyles()
+        private static double? ParseRegionPercent(string value, bool useY)
         {
-            return TimedText10.GetStylesFromHeader(GetXmlStructure());
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            var parts = value.Split(' ');
+            var index = useY ? 1 : 0;
+            if (parts.Length > index)
+            {
+                var str = parts[index].TrimEnd('%');
+                if (double.TryParse(str, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var result))
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
+
+        private static string GetAssStyleFromRegion(string regionId, XmlDocument xml)
+        {
+            var nameResult = GetAssStyleFromRegionName(regionId);
+            if (!string.IsNullOrEmpty(nameResult))
+            {
+                return nameResult;
+            }
+
+            try
+            {
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                var head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                if (head == null)
+                {
+                    return string.Empty;
+                }
+
+                foreach (XmlNode regionNode in head.SelectNodes("//ttml:region", nsmgr))
+                {
+                    var id = regionNode.Attributes["xml:id"]?.Value ?? regionNode.Attributes["id"]?.Value;
+                    if (id != regionId)
+                    {
+                        continue;
+                    }
+
+                    var displayAlign = regionNode.Attributes["tts:displayAlign"]?.Value ?? "after";
+                    var textAlign = regionNode.Attributes["tts:textAlign"]?.Value ?? "center";
+                    var originY = ParseRegionPercent(regionNode.Attributes["tts:origin"]?.Value, useY: true) ?? 10.0;
+                    var extentY = ParseRegionPercent(regionNode.Attributes["tts:extent"]?.Value, useY: true) ?? 80.0;
+
+                    // Compute the actual anchor Y and snap to screen thirds (same logic as TimedTextImscRosetta)
+                    double anchorY;
+                    switch (displayAlign)
+                    {
+                        case "before":
+                            anchorY = originY;
+                            break;
+                        case "center":
+                            anchorY = originY + extentY / 2.0;
+                            break;
+                        default: // after
+                            anchorY = originY + extentY;
+                            break;
+                    }
+
+                    string verticalPosition;
+                    if (anchorY <= 33)
+                    {
+                        verticalPosition = "top";
+                    }
+                    else if (anchorY >= 66)
+                    {
+                        verticalPosition = "bottom";
+                    }
+                    else
+                    {
+                        verticalPosition = "middle";
+                    }
+
+                    string horizontalPosition;
+                    if (textAlign == "left" || textAlign == "start")
+                    {
+                        horizontalPosition = "left";
+                    }
+                    else if (textAlign == "right" || textAlign == "end")
+                    {
+                        horizontalPosition = "right";
+                    }
+                    else
+                    {
+                        horizontalPosition = "center";
+                    }
+
+                    var anNumber = (verticalPosition, horizontalPosition) switch
+                    {
+                        ("bottom", "left") => 1,
+                        ("bottom", "center") => 2,
+                        ("bottom", "right") => 3,
+                        ("middle", "left") => 4,
+                        ("middle", "center") => 5,
+                        ("middle", "right") => 6,
+                        ("top", "left") => 7,
+                        ("top", "center") => 8,
+                        ("top", "right") => 9,
+                        _ => 2
+                    };
+
+                    return anNumber == 2 ? string.Empty : $@"{{\an{anNumber}}}";
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+            }
+
+            return string.Empty;
+        }
+
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -357,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var region = node.Attributes?["region"];
                 if (region != null)
                 {
-                    assStyle = GetAssStyleFromRegion(region.InnerText);
+                    assStyle = GetAssStyleFromRegion(region.InnerText, xml);
                 }
 
                 var text = assStyle + ReadParagraph(node, xml);
@@ -371,7 +487,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ReadParagraph(XmlNode node, XmlDocument xml)
         {
             var pText = new StringBuilder();
-            var styles = GetStyles();
             foreach (XmlNode child in node.ChildNodes)
             {
                 if (child.NodeType == XmlNodeType.Text)
@@ -399,9 +514,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (child.Attributes["style"] != null)
                     {
-                        var styleName = child.Attributes["style"].Value;
+                        var styleAttr = child.Attributes["style"].Value;
+                        var styleNames = styleAttr.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (styles.Contains(styleName))
+                        foreach (var styleName in styleNames)
                         {
                             try
                             {
