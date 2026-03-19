@@ -373,7 +373,7 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
-
+        
         var wpmColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Wpm,
@@ -400,6 +400,29 @@ public static partial class InitListViewAndEditBox
         };
         vm.SubtitleGrid.Columns.Add(wpmColumn);
         wpmColumn.Bind(DataGridColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnWpm))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
+        
+        var pixelWidthColumn = new DataGridTemplateColumn
+        {
+            Header = Se.Language.General.PixelWidth,
+            Width = new DataGridLength(100),
+            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            {
+                var textBlock = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.PixelWidth)) {  Mode = BindingMode.OneWay },
+                };
+                return textBlock;
+            })
+        };
+        vm.SubtitleGrid.Columns.Add(pixelWidthColumn);
+        pixelWidthColumn.Bind(DataGridColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnPixelWidth))
         {
             Mode = BindingMode.OneWay,
             Source = vm,
@@ -582,6 +605,21 @@ public static partial class InitListViewAndEditBox
         };
         showWpmMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(showWpmMenuItem);
+        
+        var showPixelWidthMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowPixelWidthColumn,
+            Command = vm.ToggleShowColumnPixelWidthCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnPixelWidth)),
+            }
+        };
+        showPixelWidthMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(showPixelWidthMenuItem);
 
         var showLayerMenuItem = new MenuItem
         {

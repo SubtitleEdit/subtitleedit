@@ -167,6 +167,26 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         return p;
     }
+    
+    public int PixelWidth
+    {
+        get
+        {
+            var text = HtmlUtil.RemoveHtmlTags(Text, true);
+            var lines = text.SplitToLines();
+            var maxWidth = 0;
+            foreach (var line in lines)
+            {
+                var width = CalculatePixelWidth(line);
+                if (width > maxWidth)
+                {
+                    maxWidth = width;
+                }
+            }
+
+            return maxWidth;
+        }
+    }
 
     public double CharactersPerSecond
     {

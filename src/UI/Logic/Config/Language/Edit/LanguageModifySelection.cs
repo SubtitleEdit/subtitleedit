@@ -19,6 +19,7 @@ public class LanguageModifySelection
     public string CpsGreaterThan { get; set; }
     public string LengthLessThan { get; set; }
     public string LengthGreaterThan { get; set; }
+    public string PixelLengthGreaterThan { get; set; }
     public string ExactlyOneLine { get; set; }
     public string ExactlyTwoLines { get; set; }
     public string MoreThanTwoLines { get; set; }
@@ -46,6 +47,7 @@ public class LanguageModifySelection
         CpsGreaterThan = "CPS >";
         LengthLessThan = "Length <";
         LengthGreaterThan = "Length >";
+        PixelLengthGreaterThan = "Pixel length >";
         ExactlyOneLine = "Exactly one line";
         ExactlyTwoLines = "Exactly two lines";
         MoreThanTwoLines = "More than two lines";

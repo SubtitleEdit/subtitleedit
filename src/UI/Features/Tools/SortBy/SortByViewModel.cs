@@ -124,7 +124,8 @@ public partial class SortByViewModel : ObservableObject
             { "Layer", lang.Layer },
             { "Gap", lang.Gap },
             { "CharactersPerSecond", lang.CharsPerSec },
-            { "WordsPerMinute", lang.WordsPerMin }
+            { "WordsPerMinute", lang.WordsPerMin },
+            { "PixelWidth", lang.PixelWidth }
         };
 
         // Reverse map for lookup
@@ -202,6 +203,7 @@ public partial class SortByViewModel : ObservableObject
             "Gap" => item.Gap,
             "CharactersPerSecond" => item.CharactersPerSecond,
             "WordsPerMinute" => item.WordsPerMinute,
+            "PixelWidth" => item.PixelWidth,
             _ => string.Empty
         };
     }

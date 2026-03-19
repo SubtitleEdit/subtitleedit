@@ -202,6 +202,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnStyle;
     [ObservableProperty] private bool _showColumnCps;
     [ObservableProperty] private bool _showColumnWpm;
+    [ObservableProperty] private bool _showColumnPixelWidth;
     [ObservableProperty] private bool _showColumnLayer;
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
@@ -477,6 +478,7 @@ public partial class MainViewModel :
         ShowColumnStyle = Se.Settings.General.ShowColumnStyle;
         ShowColumnCps = Se.Settings.General.ShowColumnCps;
         ShowColumnWpm = Se.Settings.General.ShowColumnWpm;
+        ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
         ShowColumnLayer = Se.Settings.General.ShowColumnLayer;
         ShowUpDownStartTime = Se.Settings.Appearance.ShowUpDownStartTime;
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
@@ -6400,6 +6402,14 @@ public partial class MainViewModel :
     {
         Se.Settings.General.ShowColumnWpm = !Se.Settings.General.ShowColumnWpm;
         ShowColumnWpm = Se.Settings.General.ShowColumnWpm;
+        AutoFitColumns();
+    }
+
+    [RelayCommand]
+    private void ToggleShowColumnPixelWidth()
+    {
+        Se.Settings.General.ShowColumnPixelWidth = !Se.Settings.General.ShowColumnPixelWidth;
+        ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
         AutoFitColumns();
     }
 

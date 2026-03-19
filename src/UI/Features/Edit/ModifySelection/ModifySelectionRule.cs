@@ -163,6 +163,15 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.PixelWidthLengthGreaterThan,
+                Name = l.PixelLengthGreaterThan,
+                HasNumber = true,
+                NumberMinValue = 0,
+                NumberMaxValue = 200,
+                DefaultValue = 42,
+            },
+            new()
+            {
                 RuleType = RuleType.ExactlyOneLine,
                 Name = l.ExactlyOneLine,
             },
@@ -315,6 +324,9 @@ public class ModifySelectionRule
 
             case RuleType.LengthGreaterThan:
                 return (text?.Length ?? 0) > (int)Number;
+
+            case RuleType.PixelWidthLengthGreaterThan:
+                return item.PixelWidth > (int)Number;
 
             case RuleType.ExactlyOneLine:
                 return (text?.Split('\n').Length ?? 0) == 1;

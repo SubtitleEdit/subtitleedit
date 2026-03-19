@@ -491,6 +491,7 @@ public class LanguageGeneral
     public string ShowStyleColumn { get; set; }
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
+    public string ShowPixelWidthColumn { get; set; }
     public string Shrink { get; set; }
     public string SingleBox { get; set; }
     public string SingleLineLengths { get; set; }
@@ -628,6 +629,7 @@ public class LanguageGeneral
     public string Width { get; set; }
     public string WindowPositionAndSize { get; set; }
     public string WordsPerMin { get; set; }
+    public string PixelWidth { get; set; }
     public string Wpm { get; set; }
     public string XFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
@@ -1130,6 +1132,7 @@ public class LanguageGeneral
         ShowStyleColumn = "Show \"Style\" column";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
+        ShowPixelWidthColumn = "Show \"Pixel width\" column";
         Shrink = "Shrink";
         SingleBox = "Single box";
         SingleLineLengths = "Single line length:";
@@ -1267,6 +1270,7 @@ public class LanguageGeneral
         Width = "Width";
         WindowPositionAndSize = "Window position and size";
         WordsPerMin = "Words/min";
+        PixelWidth = "Pixel width";
         Wpm = "Words/min";
         XFiles = "{0:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";

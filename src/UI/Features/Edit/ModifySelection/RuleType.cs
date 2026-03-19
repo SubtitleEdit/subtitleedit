@@ -16,6 +16,7 @@ public enum RuleType
     CpsGreaterThan,
     LengthLessThan,
     LengthGreaterThan,
+    PixelWidthLengthGreaterThan,
     ExactlyOneLine,
     ExactlyTwoLines,
     MoreThanTwoLines,
