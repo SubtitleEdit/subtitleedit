@@ -13,7 +13,7 @@ public class ExportAlignmentDisplay
         DisplayName = displayName;
     }
 
-    override public string ToString()
+    public override string ToString()
     {
         return DisplayName;
     }   
