@@ -7,7 +7,12 @@ v5.0.0-beta10 (xth March 2026)
 * Multiple replace: Add find rule window (Ctrl+F)
 * Multiple replace: Add rule context menu + make "..." buttons optional
 * Multiple replace: Click on applied rules, now selects the rule 
-* OCR window: Ctrl+/Ctrl- now zoom images in/out 
+* OCR window: Ctrl+/Ctrl- now zoom images in/out
+* Fix PaddleOCR crash - thx max2000777 
+* Add ASSA advanced effect: word spacing - thx rRobis
+* Add pixel-width column - thx rRobis
+* Fix numeric up/down null safety - thx rRobis
+* Fix for Grid-lines-all option 
 
 -----------------------------------------------------------------------------------------------------
 

@@ -84,7 +84,7 @@ public static partial class InitListViewAndEditBox
             SelectionMode = DataGridSelectionMode.Extended,
             DataContext = vm.Subtitles,
             CanUserResizeColumns = true,
-            GridLinesVisibility = UiUtil.GetGridLinesVisibility(),
+            GridLinesVisibility = DataGridGridLinesVisibility.None, // Grid lines are rendered via cell themes
             VerticalGridLinesBrush = UiUtil.GetBorderBrush(),
             HorizontalGridLinesBrush = UiUtil.GetBorderBrush(),
             FontSize = Se.Settings.Appearance.SubtitleGridFontSize,

@@ -31,8 +31,12 @@ public static class UiUtil
     private static ControlTheme GetDataGridNoBorderCellTheme()
     {
         var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString() ||
-            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString();
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        var showHorizontal =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
 
         var compactMode = Se.Settings.Appearance.GridCompactMode;
 
@@ -45,7 +49,7 @@ public static class UiUtil
                 new Setter(DataGridCell.PaddingProperty, new Thickness(compactMode ? 0 : 4)),
                 new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
                 new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, 0)), // 1px vertical line
+                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
             }
         };
     }
@@ -55,8 +59,12 @@ public static class UiUtil
     private static ControlTheme GetDataGridNoBorderNoPaddingCellTheme()
     {
         var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString() ||
-            Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString();
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        var showHorizontal =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
 
         return new ControlTheme(typeof(DataGridCell))
         {
@@ -67,7 +75,7 @@ public static class UiUtil
                 new Setter(DataGridCell.PaddingProperty, new Thickness(0)),
                 new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
                 new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, 0)), // 1px vertical line
+                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
             }
         };
     }
