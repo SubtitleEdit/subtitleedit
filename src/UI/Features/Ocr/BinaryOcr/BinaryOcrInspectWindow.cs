@@ -13,7 +13,7 @@ public class BinaryOcrInspectWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Ocr.NOcrInspectImageMatches;
+        Title = Se.Language.Ocr.BinaryImageCompareInspectImageMatches;
         Width = 1200;
         Height = 700;
         MinWidth = 900;

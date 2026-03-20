@@ -72,6 +72,7 @@ public class LanguageOcr
     public string DownloadingPaddleOcrEngineDotDotDot { get; set; }
     public string DownloadingPaddleOcrModelsDotDotDot { get; set; }
     public string PaddleOcr { get; set; }
+    public string BinaryImageCompareInspectImageMatches { get; set; }
 
     public LanguageOcr()
     {
@@ -143,5 +144,6 @@ public class LanguageOcr
         DownloadingPaddleOcrEngineDotDotDot = "Downloading Paddle OCR engine...";
         DownloadingPaddleOcrModelsDotDotDot = "Downloading Paddle OCR models...";
         PaddleOcr = "Paddle OCR";
+        BinaryImageCompareInspectImageMatches = "\"Binary image compare\" - Inspect image matches";
     }
 }

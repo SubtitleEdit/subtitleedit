@@ -2952,7 +2952,6 @@ public partial class OcrViewModel : ObservableObject
         else if (e.Key == Key.End)
         {
             e.Handled = true; // prevent further handling if needed
-            DeleteSelectedLines();
             SelectAndScrollToRow(OcrSubtitleItems.Count - 1);
         }
         else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
@@ -2989,6 +2988,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (e.Key == Key.Escape)
         {
+            e.Handled = true;
             Cancel();
         }
         else if (e.Key == Key.G && e.KeyModifiers.HasFlag(KeyModifiers.Control))
@@ -3255,8 +3255,39 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    internal void OnClosing(WindowClosingEventArgs e)
+    private bool _forceClose = false;
+
+    internal async void OnClosing(WindowClosingEventArgs e)
     {
+        if (_forceClose || e.IsProgrammatic)
+        {
+            SaveSettings();
+            UiUtil.SaveWindowPosition(Window);
+            return;
+        }
+
+        if (OcrSubtitleItems.Any(p => !string.IsNullOrEmpty(p.Text)))
+        {
+            e.Cancel = true;
+
+            var result = await MessageBox.Show(
+                Window!,
+                "Discard OCR result?",
+                "Some items have OCR text. Close and discard the OCR result?",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _forceClose = true;
+                SaveSettings();
+                UiUtil.SaveWindowPosition(Window);
+                Window?.Close();
+            }
+
+            return;
+        }
+
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }
