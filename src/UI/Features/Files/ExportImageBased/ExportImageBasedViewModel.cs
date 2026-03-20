@@ -752,10 +752,9 @@ public partial class ExportImageBasedViewModel : ObservableObject
         tempCanvas.Clear(SKColors.Transparent);
 
         // Render text to temporary bitmap to measure actual bounds
-        var paddingLeftRight = (float)ip.PaddingLeftRight;
         RenderTextToCanvas(tempCanvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
-            100, 100, baseLineHeight, lineSpacing, paddingLeftRight,
-            fontColor, outlineColor, shadowColor, outlineWidth, shadowWidth, tempWidth, isForMeasurement: true);
+            100, 100, baseLineHeight, lineSpacing,
+            outlineColor, shadowColor, outlineWidth, shadowWidth);
 
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
 
@@ -784,74 +783,70 @@ public partial class ExportImageBasedViewModel : ObservableObject
         float textStartY,
         float baseLineHeight,
         float lineSpacing,
-        float paddingLeftRight,
-        SKColor fontColor,
         SKColor outlineColor,
         SKColor shadowColor,
         double outlineWidth,
-        double shadowWidth,
-        float canvasWidth,
-        bool isForMeasurement)
+        double shadowWidth)
     {
+        // Pre-calculate all line widths so alignment is relative to the widest line,
+        // not the canvas width (which would push text far right or off-canvas).
+        var lineWidths = new float[lines.Count];
+        for (var li = 0; li < lines.Count; li++)
+        {
+            var line = lines[li];
+            for (var j = 0; j < line.Count; j++)
+            {
+                var seg = line[j];
+                var font = GetFont(seg, regularFont, boldFont, italicFont, boldItalicFont);
+                lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
+                if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
+                    lineWidths[li] += regularFont.Size * 0.17f;
+            }
+        }
+        var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
+
         var currentY = 0f;
+        var lineIndex = 0;
 
         foreach (var line in lines)
         {
             // Reverse segments for RTL languages
             var segmentsToRender = ip.IsRightToLeft ? line.AsEnumerable().Reverse().ToList() : line;
 
-            // Calculate line width for alignment
-            float lineWidth = 0;
-            for (var j = 0; j < line.Count; j++)
-            {
-                var seg = line[j];
-                var font = GetFont(seg, regularFont, boldFont, italicFont, boldItalicFont);
-                lineWidth += MeasureTextWithShaping(seg.Text, font);
-
-                if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
-                {
-                    lineWidth += regularFont.Size * 0.17f;
-                }
-            }
+            var lineWidth = lineWidths[lineIndex++];
 
             float currentX;
 
-            // Calculate X position based on alignment
-            if (isForMeasurement)
+            // Calculate X position based on content alignment, relative to the widest line.
+            // This keeps all lines within [textStartX, textStartX + maxLineWidth].
+            if (ip.IsRightToLeft)
             {
-                // For measurement, use simple left alignment
-                currentX = textStartX;
-            }
-            else if (ip.IsRightToLeft)
-            {
-                var contentAreaWidth = canvasWidth - paddingLeftRight * 2;
-
                 if (ip.ContentAlignment == ExportContentAlignment.Center)
                 {
-                    currentX = textStartX + (contentAreaWidth - lineWidth) / 2;
+                    currentX = textStartX + (maxLineWidth - lineWidth) / 2;
                 }
                 else if (ip.ContentAlignment == ExportContentAlignment.Left)
                 {
-                    currentX = textStartX;
+                    currentX = textStartX + maxLineWidth - lineWidth;
                 }
-                else
+                else // Right (natural/default for RTL)
                 {
-                    currentX = textStartX + contentAreaWidth - lineWidth;
+                    currentX = textStartX;
                 }
             }
             else
             {
-                currentX = textStartX;
-
                 if (ip.ContentAlignment == ExportContentAlignment.Center)
                 {
-                    var contentAreaWidth = canvasWidth - paddingLeftRight * 2;
-                    currentX += (contentAreaWidth - lineWidth) / 2;
+                    currentX = textStartX + (maxLineWidth - lineWidth) / 2;
                 }
                 else if (ip.ContentAlignment == ExportContentAlignment.Right)
                 {
-                    var contentAreaWidth = canvasWidth - paddingLeftRight * 2;
-                    currentX += contentAreaWidth - lineWidth;
+                    currentX = textStartX + maxLineWidth - lineWidth;
+                }
+                else // Left (default)
+                {
+                    currentX = textStartX;
                 }
             }
 
