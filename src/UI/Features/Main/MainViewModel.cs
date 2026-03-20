@@ -110,6 +110,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
+using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
@@ -3949,6 +3950,33 @@ public partial class MainViewModel :
         {
             SetSubtitles(result.FixedSubtitle);
             SelectAndScrollToRow(idx);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsRenumber()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var result = await ShowDialogAsync<RenumberWindow, RenumberViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            Subtitles[i].Number = result.ResultSubtitles[i].Number;
         }
     }
 

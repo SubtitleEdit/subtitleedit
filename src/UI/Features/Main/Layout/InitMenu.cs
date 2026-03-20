@@ -436,6 +436,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.Renumber,
+                Command = vm.ShowToolsRenumberCommand,
+            },
+            new MenuItem
+            {
                 Header = l.RemoveTextForHearingImpaired,
                 Command = vm.ShowToolsRemoveTextForHearingImpairedCommand,
             },
