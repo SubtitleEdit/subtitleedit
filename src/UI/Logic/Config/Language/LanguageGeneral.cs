@@ -247,6 +247,7 @@ public class LanguageGeneral
     public string InsertAtPositionAndFocusTextBox { get; set; }
     public string InsertAtPositionNoFocusTextBox { get; set; }
     public string InsertBefore { get; set; }
+    public string InsertLine { get; set; }
     public string InsertNewSelection { get; set; }
     public string InsertSubtitleAfterCurrentLine { get; set; }
     public string InsertSubtitleFileAtVideoPositionDotDotDot { get; set; }
@@ -888,6 +889,7 @@ public class LanguageGeneral
         InsertAtPositionAndFocusTextBox = "Insert subtitle at video position and focus text box";
         InsertAtPositionNoFocusTextBox = "Insert subtitle at video position (no focus text box)";
         InsertBefore = "Insert before";
+        InsertLine = "Insert line";
         InsertNewSelection = "Insert new selection";
         InsertSubtitleAfterCurrentLine = "Insert subtitle after current line...";
         InsertSubtitleFileAtVideoPositionDotDotDot = "Insert subtitle file at video position...";

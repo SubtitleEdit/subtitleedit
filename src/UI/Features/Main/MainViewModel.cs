@@ -193,7 +193,9 @@ public partial class MainViewModel :
 
     [ObservableProperty] private bool _isWaveformToolbarVisible;
     [ObservableProperty] private bool _isSubtitleGridFlyoutHeaderVisible;
+    [ObservableProperty] private bool _isSubtitleGridDataMenuVisible;
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
+    [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
     [ObservableProperty] private bool _showColumnOriginalText;
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
@@ -246,6 +248,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isSubtitleSecondaryVisible;
 
     public DataGrid SubtitleGrid { get; set; }
+    public Border? SubtitleGridDropHost { get; set; }
     public Window? Window { get; set; }
     public Grid ContentGrid { get; set; }
     public MainView? MainView { get; set; }
@@ -6496,6 +6499,27 @@ public partial class MainViewModel :
     {
         _undoRedoManager.StopChangeDetection();
         InsertAfterSelectedItem();
+        _undoRedoManager.StartChangeDetection();
+    }
+
+    [RelayCommand]
+    private void InsertLineAtEnd()
+    {
+        _undoRedoManager.StopChangeDetection();
+        if (Subtitles.Count == 0)
+        {
+            _insertService.InsertBefore(SelectedSubtitleFormat, _subtitle, Subtitles, 0, string.Empty);
+            Renumber();
+            SelectAndScrollToRow(0);
+        }
+        else
+        {
+            var lastIndex = Subtitles.Count - 1;
+            _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, lastIndex, string.Empty);
+            Renumber();
+            SelectAndScrollToRow(lastIndex + 1);
+        }
+        _updateAudioVisualizer = true;
         _undoRedoManager.StartChangeDetection();
     }
 
@@ -13086,11 +13110,21 @@ public partial class MainViewModel :
 
         if (IsSubtitleGridFlyoutHeaderVisible)
         {
+            IsSubtitleGridDataMenuVisible = false;
             IsMergeWithNextOrPreviousVisible = false;
+            IsInsertLineNoSelectionVisible = false;
+        }
+        else if (Subtitles.Count == 0)
+        {
+            IsSubtitleGridDataMenuVisible = false;
+            IsMergeWithNextOrPreviousVisible = false;
+            IsInsertLineNoSelectionVisible = true;
         }
         else
         {
+            IsSubtitleGridDataMenuVisible = true;
             IsMergeWithNextOrPreviousVisible = SubtitleGrid.SelectedItems.Count == 1;
+            IsInsertLineNoSelectionVisible = false;
 
             if (IsFormatAssa || IsFormatSsa)
             {
