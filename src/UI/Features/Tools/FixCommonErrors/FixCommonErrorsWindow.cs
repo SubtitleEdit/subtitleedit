@@ -117,6 +117,13 @@ public class FixCommonErrorsWindow : Window
                 item.IsSelected = !item.IsSelected;
             }
         };
+        rulesGrid.DoubleTapped += (sender, e) =>
+        {
+            if (rulesGrid.SelectedItem is FixRuleDisplayItem item)
+            {
+                item.IsSelected = !item.IsSelected;
+            }
+        };
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -287,6 +294,13 @@ public class FixCommonErrorsWindow : Window
         };
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
+        dataGridFixes.DoubleTapped += (sender, e) =>
+        {
+            if (dataGridFixes.SelectedItem is FixDisplayItem item)
+            {
+                item.IsSelected = !item.IsSelected;
+            }
+        };
 
         var buttonBarFixes = UiUtil.MakeButtonBar(
             UiUtil.MakeButton("Select all", _vm.FixesSelectAllCommand),
