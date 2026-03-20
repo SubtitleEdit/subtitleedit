@@ -14,7 +14,7 @@ public partial class ProfileDisplayItem : ObservableObject
         Name = string.Empty;
         FixRules = new ObservableCollection<FixRuleDisplayItem>();
     }
-    override public string ToString()
+    public override string ToString()
     {
         return Name;
     }

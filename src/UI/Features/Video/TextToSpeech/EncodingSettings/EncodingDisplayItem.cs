@@ -14,7 +14,7 @@ public class EncodingDisplayItem
         Code = string.Empty;
     }
 
-    override public string ToString()
+    public override string ToString()
     {
         return Name;
     }

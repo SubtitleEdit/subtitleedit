@@ -101,7 +101,7 @@ public partial class ProfileDisplay : ObservableObject
         };
     }
 
-    override public string ToString()
+    public override string ToString()
     {
         return Name;
     }
