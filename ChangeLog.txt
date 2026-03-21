@@ -18,7 +18,8 @@ v5.0.0-beta10 (xth March 2026)
 * Add tool Renumber - thx ivandrofly
 * Fix WPM info update in grid
 * Fix translate-via-copy-paste - thx truubo
-* Fix content alignmend for image export - thx oxie93
+* Fix content alignment for image export - thx oxie93
+* Allow toggle on/off "Start time" column - thx abc16361
 
 -----------------------------------------------------------------------------------------------------
 
