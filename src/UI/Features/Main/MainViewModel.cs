@@ -198,6 +198,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
     [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
     [ObservableProperty] private bool _showColumnOriginalText;
+    [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
     [ObservableProperty] private bool _showColumnDuration;
@@ -475,6 +476,7 @@ public partial class MainViewModel :
 
         StatusTextLeft = string.Empty;
         StatusTextRight = string.Empty;
+        ShowColumnStartTime = Se.Settings.General.ShowColumnStartTime;
         ShowColumnEndTime = Se.Settings.General.ShowColumnEndTime;
         ShowColumnDuration = Se.Settings.General.ShowColumnDuration;
         ShowColumnGap = Se.Settings.General.ShowColumnGap;
@@ -6400,6 +6402,14 @@ public partial class MainViewModel :
     {
         await _folderHelper.OpenFolder(Window!, Se.DataFolder);
     }
+    
+    [RelayCommand]
+    private void ToggleShowColumnStartTime()
+    {
+        Se.Settings.General.ShowColumnStartTime = !Se.Settings.General.ShowColumnStartTime;
+        ShowColumnStartTime = Se.Settings.General.ShowColumnStartTime;
+        AutoFitColumns();
+    }
 
     [RelayCommand]
     private void ToggleShowColumnEndTime()
@@ -11677,6 +11687,7 @@ public partial class MainViewModel :
 
         if (Window != null)
         {
+            Se.Settings.General.ShowColumnStartTime = ShowColumnStartTime;
             Se.Settings.General.ShowColumnEndTime = ShowColumnEndTime;
             Se.Settings.General.ShowColumnDuration = ShowColumnDuration;
             Se.Settings.General.ShowColumnGap = ShowColumnGap;

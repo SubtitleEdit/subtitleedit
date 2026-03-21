@@ -484,6 +484,7 @@ public class LanguageGeneral
     public string ShowCpsColumn { get; set; }
     public string ShowDurationColumn { get; set; }
     public string ShowGapColumn { get; set; }
+    public string ShowStartColumn { get; set; }
     public string ShowHideColumn { get; set; }
     public string ShowHistory { get; set; }
     public string ShowLayerColumn { get; set; }
@@ -1126,6 +1127,7 @@ public class LanguageGeneral
         ShowCpsColumn = "Show \"Chars/sec\" column";
         ShowDurationColumn = "Show \"Duration\" column";
         ShowGapColumn = "Show \"Gap\" column";
+        ShowStartColumn = "Show \"Start\" column";
         ShowHideColumn = "Show \"Hide\" column";
         ShowHistory = "Show history";
         ShowLayerColumn = "Show \"Layer\" column";

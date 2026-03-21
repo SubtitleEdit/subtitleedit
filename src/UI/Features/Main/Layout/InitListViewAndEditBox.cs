@@ -158,13 +158,19 @@ public static partial class InitListViewAndEditBox
                 })
         });
 
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        var startColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Show,
             Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             MinWidth = 100,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+        };
+        vm.SubtitleGrid.Columns.Add(startColumn);
+        startColumn.Bind(DataGridColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnStartTime))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
         });
 
         var hideColumn = new DataGridTextColumn
@@ -494,6 +500,21 @@ public static partial class InitListViewAndEditBox
         sepAssa.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreAssaContentMenuItemsVisible)));
         flyout.Items.Add(sepAssa);
 
+        var showStartTimeMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowStartColumn,
+            Command = vm.ToggleShowColumnStartTimeCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnStartTime)),
+            }
+        };
+        showStartTimeMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(showStartTimeMenuItem);
+        
         var showEndTimeMenuItem = new MenuItem
         {
             Header = Se.Language.General.ShowHideColumn,
