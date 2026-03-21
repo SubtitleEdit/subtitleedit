@@ -621,12 +621,12 @@ public static class ShortcutsMain
         return shortcuts;
     }
 
-    public static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm)
+    public static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm, List<SeShortCut> shortcuts)
     {
         var cmd = GetCommandOrWin();
 
-        return
-        [
+        var defaultShortcuts = new List<SeShortCut>()
+        {
             new(nameof(vm.UndoCommand), [cmd, "Z"]),
             new(nameof(vm.RedoCommand), [cmd, "Y"]),
             new(nameof(vm.ShowGoToLineCommand), [cmd, "G"]),
@@ -654,7 +654,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowHelpCommand), [nameof(Avalonia.Input.Key.F1)], ShortcutCategory.General),
             new(nameof(vm.ShowSourceViewCommand), [nameof(Avalonia.Input.Key.F2)], ShortcutCategory.General),
             new(nameof(vm.TextBoxDeleteSelectionCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox),
-            new(nameof(vm.TextBoxCut2Command), ["Shift", nameof(Avalonia.Input.Key.Delete) ], ShortcutCategory.TextBox),
+            new(nameof(vm.TextBoxCut2Command), ["Shift", nameof(Avalonia.Input.Key.Delete)], ShortcutCategory.TextBox),
             new(nameof(vm.TextBoxCutCommand), [cmd, nameof(Avalonia.Input.Key.X)], ShortcutCategory.TextBox),
             new(nameof(vm.TextBoxPasteCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.TextBox),
             new(nameof(vm.TextBoxCopyCommand), [cmd, nameof(Avalonia.Input.Key.C)], ShortcutCategory.TextBox),
@@ -670,7 +670,36 @@ public static class ShortcutsMain
             new(nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.H)], ShortcutCategory.General),
             new(nameof(vm.ShowSyncAdjustAllTimesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.A)], ShortcutCategory.General),
             new(nameof(vm.WaveformPasteFromClipboardCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.Waveform),
-        ];
+        };
+
+        if (shortcuts.Count == 0)
+        {
+            return defaultShortcuts;
+        }
+
+        // Add any new default bindings that are not yet in existing settings
+        foreach (var defaultShortcut in defaultShortcuts)
+        {
+            var alreadyExists = shortcuts.Any(s =>
+                s.ActionName == defaultShortcut.ActionName &&
+                s.Keys.SequenceEqual(defaultShortcut.Keys));
+            
+            // binding with the same action and key already exists, skip
+            if (alreadyExists)
+            {
+                continue;
+            }
+
+            // Only add if this action already has at least one binding (i.e. it's a secondary binding)
+            // or if the action has no binding at all
+            var hasAction = shortcuts.Any(s => s.ActionName == defaultShortcut.ActionName);
+            if (hasAction)
+            {
+                shortcuts.Add(defaultShortcut);
+            }
+        }
+
+        return shortcuts;
     }
 
     private static string GetCommandOrWin()
