@@ -185,6 +185,11 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = CheetahCaptionOld.NameOfFormat,
+                            Command = vm.ExportCheetahCaptionOldCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Cavena890.NameOfFormat,
                             Command = vm.ExportCavena890Command,
                         },
