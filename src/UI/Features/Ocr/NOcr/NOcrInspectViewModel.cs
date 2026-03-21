@@ -59,6 +59,7 @@ public partial class NOcrInspectViewModel : ObservableObject
 
     private SKBitmap _sentenceBitmapOriginal;
     private NOcrDb _nOcrDb;
+    private int _maxWrongPixels;
     private bool _isControlDown = false;
     private bool _isWinDown = false;
 
@@ -97,11 +98,13 @@ public partial class NOcrInspectViewModel : ObservableObject
         TextBoxNew = new TextBox();
     }
 
-    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, NOcrDb? nOcrDb, int selectedNOcrMaxWrongPixels, List<ImageSplitterItem2> letters, List<NOcrChar?> matches)
+    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, NOcrDb? nOcrDb, int selectedNOcrMaxWrongPixels, List<ImageSplitterItem2> letters,
+        List<NOcrChar?> matches)
     {
         _letters = letters;
         _matches = matches;
         _nOcrDb = nOcrDb ?? new NOcrDb(string.Empty);
+        _maxWrongPixels = selectedNOcrMaxWrongPixels;
         _sentenceBitmapOriginal = sKBitmap;
         NOcrDrawingCanvas.BackgroundImage = CurrentBitmap;
         NOcrDrawingCanvas.ZoomFactor = Se.Settings.Ocr.NOcrZoomFactor;
@@ -126,12 +129,12 @@ public partial class NOcrInspectViewModel : ObservableObject
             using (var canvas = new SKCanvas(skBitmap))
             {
                 using (var paint = new SKPaint
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = SKColors.Red,
-                    StrokeWidth = 2, // Thickness of the rectangle border
-                    IsAntialias = true
-                })
+                       {
+                           Style = SKPaintStyle.Stroke,
+                           Color = SKColors.Red,
+                           StrokeWidth = 2, // Thickness of the rectangle border
+                           IsAntialias = true
+                       })
                 {
                     canvas.DrawRect(rect, paint);
                 }
@@ -191,11 +194,11 @@ public partial class NOcrInspectViewModel : ObservableObject
         }
 
         var answer = await MessageBox.Show(
-                   Window!,
-                   "Delete nOCR item?",
-                   $"Do you want to delete the current nOCR item?",
-                   MessageBoxButtons.YesNoCancel,
-                   MessageBoxIcon.Question);
+            Window!,
+            "Delete nOCR item?",
+            $"Do you want to delete the current nOCR item?",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
 
         if (answer != MessageBoxResult.Yes)
         {
@@ -206,7 +209,17 @@ public partial class NOcrInspectViewModel : ObservableObject
         _nOcrDb.OcrCharactersExpanded.Remove(item);
         _nOcrDb.Save();
 
-        Close();
+        _matches[LetterIndex] = _nOcrDb.GetMatch(
+            new NikseBitmap2(_sentenceBitmapOriginal),
+            _letters,
+            _letters[LetterIndex],
+            _letters[LetterIndex].Top,
+            false,
+            _maxWrongPixels);
+
+        PanelLines.Children.Clear();
+        OnLoaded();
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
     }
 
     [RelayCommand]
@@ -274,10 +287,7 @@ public partial class NOcrInspectViewModel : ObservableObject
 
     private void Close()
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            Window?.Close();
-        });
+        Dispatcher.UIThread.Post(() => { Window?.Close(); });
     }
 
     private void ShowOcrPoints()
@@ -316,7 +326,8 @@ public partial class NOcrInspectViewModel : ObservableObject
                     .WithIconLeft(IconNames.Help)
                     .WithMargin(4)
                     .WithPadding(8)
-                    .WithMinWidth(0); ;
+                    .WithMinWidth(0);
+                ;
                 var indexNotFound = i;
                 buttonNotFound.Click += (_, _) => OnLetterClicked(indexNotFound, match);
                 currentLine.Children.Add(buttonNotFound);
@@ -412,7 +423,7 @@ public partial class NOcrInspectViewModel : ObservableObject
             }
 
             NOcrDrawingCanvas.InvalidateVisual();
-            NOcrDrawingCanvas.ZoomFactor = Se.Settings.Ocr.NOcrZoomFactor; 
+            NOcrDrawingCanvas.ZoomFactor = Se.Settings.Ocr.NOcrZoomFactor;
             ZoomFactorInfo = string.Format(Se.Language.Ocr.ZoomFactorX, NOcrDrawingCanvas.ZoomFactor);
         }
         else
@@ -506,10 +517,7 @@ public partial class NOcrInspectViewModel : ObservableObject
 
     public void ItalicCheckChanged(object? sender, RoutedEventArgs e)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            TextBoxNew.FontStyle = IsNewTextItalic ? FontStyle.Italic : FontStyle.Normal;
-        });
+        Dispatcher.UIThread.Post(() => { TextBoxNew.FontStyle = IsNewTextItalic ? FontStyle.Italic : FontStyle.Normal; });
     }
 
     internal void DrawModeForegroundChanged(object? sender, RoutedEventArgs e)
