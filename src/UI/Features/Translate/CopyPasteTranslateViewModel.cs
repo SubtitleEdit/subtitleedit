@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Features.Translate;
 
 public partial class CopyPasteTranslateViewModel : ObservableObject
 {
+    [ObservableProperty] private ObservableCollection<TranslateRow> _rows;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     [ObservableProperty] private int? _maxBlockSize;
@@ -35,6 +36,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
 
         SubtitleGrid = new DataGrid();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
+        Rows = new ObservableCollection<TranslateRow>();
         MaxBlockSize = Se.Settings.AutoTranslate.CopyPasteMaxBlockSize;
         LineSeparator = Se.Settings.AutoTranslate.CopyPasteLineSeparator;
     }
@@ -144,6 +146,18 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
             if (index < Subtitles.Count)
             {
                 var item = Subtitles[index];
+
+                TranslateRow row = new TranslateRow
+                {
+                    Number = item.Number,
+                    Show = item.StartTime,
+                    Hide = item.EndTime,
+                    Duration = item.Duration.ToString(),
+                    Text = item.Text,
+                    TranslatedText = s
+                };
+                Rows.Add(row);
+
                 item.Text = s;
             }
             index++;

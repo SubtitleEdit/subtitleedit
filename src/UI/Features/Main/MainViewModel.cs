@@ -5563,16 +5563,16 @@ public partial class MainViewModel :
             return;
         }
 
-        //for (var i = 0; i < Subtitles.Count; i++)
-        //{
-        //    if (result.Rows.Count <= i)
-        //    {
-        //        break;
-        //    }
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            if (result.Rows.Count <= i)
+            {
+                break;
+            }
 
-        //    Subtitles[i].OriginalText = Subtitles[i].Text;
-        //    Subtitles[i].Text = result.Rows[i].TranslatedText;
-        //}
+            Subtitles[i].OriginalText = Subtitles[i].Text;
+            Subtitles[i].Text = result.Rows[i].TranslatedText;
+        }
 
         _subtitleFileNameOriginal = _subtitleFileName;
         _subtitleFileName = string.Empty;
