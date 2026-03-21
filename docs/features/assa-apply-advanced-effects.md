@@ -44,6 +44,7 @@ Effects range from text animations (typewriter, karaoke, bounce-in) to visual en
 | **Karaoke** | Classic karaoke color-wipe effect synchronized to subtitle timing |
 | **Scramble reveal** | Text starts scrambled and gradually resolves to the correct characters |
 | **Bounce in** | Each character springs in with an elastic pop animation |
+| **Word spacing** | Increases spacing between words using the `\fsp` tag for better readability |
 
 ### Visual Enhancement Effects
 
@@ -62,6 +63,7 @@ Effects range from text animations (typewriter, karaoke, bounce-in) to visual en
 |--------|-------------|
 | **Transition - fade-in** | Per-line fade-in from black at the start of each subtitle |
 | **Transition - fade-out** | Per-line fade-out to black at the end of each subtitle |
+| **Transition - TV close** | Black bars grow inward from top and bottom while the middle fades to white, then cuts to solid black — mimics an old CRT TV powering off |
 
 ### Decorative/Atmospheric Effects
 
