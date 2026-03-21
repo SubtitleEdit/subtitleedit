@@ -56,6 +56,11 @@ public partial class RenumberViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            Ok();
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
