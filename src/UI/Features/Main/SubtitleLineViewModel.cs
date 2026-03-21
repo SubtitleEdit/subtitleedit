@@ -255,8 +255,6 @@ public partial class SubtitleLineViewModel : ObservableObject
                         return new SolidColorBrush(_errorColor);
                     }
                 }
-
-
             }
 
             return new SolidColorBrush(Colors.Transparent);
@@ -435,6 +433,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Duration = EndTime - StartTime;
 
             OnPropertyChanged(nameof(CharactersPerSecond));
+            OnPropertyChanged(nameof(WordsPerMinute));
             OnPropertyChanged(nameof(TextBackgroundBrush));
             OnPropertyChanged(nameof(DurationBackgroundBrush));
         }
@@ -447,6 +446,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(CpsBackgroundBrush));
         OnPropertyChanged(nameof(WordsPerMinute));
         OnPropertyChanged(nameof(WpmBackgroundBrush));
+        OnPropertyChanged(nameof(PixelWidth));
     }
 
     public void RefreshText()
