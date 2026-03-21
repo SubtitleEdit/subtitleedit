@@ -14,29 +14,22 @@ public partial class RenumberViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public List<SubtitleLineViewModel> ResultSubtitles { get; private set; }
 
     private List<SubtitleLineViewModel> _subtitles;
 
     public RenumberViewModel()
     {
         _startNumber = 1;
-        _subtitles = new List<SubtitleLineViewModel>();
-        ResultSubtitles = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles)
-    {
-        _subtitles = subtitles;
-    }
+    public void Initialize(List<SubtitleLineViewModel> subtitles) => _subtitles = subtitles;
 
     [RelayCommand]
     private void Ok()
     {
-        ResultSubtitles = new List<SubtitleLineViewModel>(_subtitles);
-        for (var i = 0; i < ResultSubtitles.Count; i++)
+        for (var i = 0; i < _subtitles.Count; i++)
         {
-            ResultSubtitles[i].Number = StartNumber + i;
+            _subtitles[i].Number = StartNumber + i;
         }
 
         OkPressed = true;
@@ -55,6 +48,11 @@ public partial class RenumberViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            Ok();
         }
         else if (UiUtil.IsHelp(e))
         {

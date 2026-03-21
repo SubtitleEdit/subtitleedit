@@ -3967,17 +3967,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<RenumberWindow, RenumberViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
-
-        if (!result.OkPressed)
-        {
-            return;
-        }
-
-        for (var i = 0; i < Subtitles.Count; i++)
-        {
-            Subtitles[i].Number = result.ResultSubtitles[i].Number;
-        }
+        _ = await ShowDialogAsync<RenumberWindow, RenumberViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
     }
 
     [RelayCommand]
