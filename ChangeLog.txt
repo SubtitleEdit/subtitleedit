@@ -10,10 +10,15 @@ v5.0.0-beta10 (xth March 2026)
 * OCR window: Ctrl+/Ctrl- now zoom images in/out
 * Fix PaddleOCR crash - thx max2000777 
 * Add ASSA advanced effect: word spacing - thx rRobis
+* Add ASSA advanced effect: TV close (transition)
 * Add pixel-width column - thx rRobis
 * Fix numeric up/down null safety - thx rRobis
 * Fix for Grid-lines-all option
 * Add export to Cheetah (.cap) 
+* Add tool Renumber - thx ivandrofly
+* Fix WPM info update in grid
+* Fix translate-via-copy-paste - thx truubo
+* Fix content alignmend for image export - thx oxie93
 
 -----------------------------------------------------------------------------------------------------
 
