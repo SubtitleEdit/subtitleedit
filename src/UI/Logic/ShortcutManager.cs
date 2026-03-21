@@ -34,7 +34,16 @@ public class ShortcutManager : IShortcutManager
 
     public void OnKeyPressed(object? sender, KeyEventArgs e)
     {
-        // Avoid adding modifier keys to the active keys set to prevent redundancy 
+        // When IME is processing input, clear all active keys to prevent stale keys
+        // from corrupting shortcut hash lookups (e.g., after using Chinese input methods)
+        if (e.Key is Key.ImeProcessed or Key.ImeConvert or Key.ImeNonConvert or
+            Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
+        {
+            _activeKeys.Clear();
+            return;
+        }
+
+        // Avoid adding modifier keys to the active keys set to prevent redundancy
         // with KeyEventArgs.KeyModifiers
         if (e.Key is not (Key.LeftCtrl or Key.RightCtrl or
             Key.LeftShift or Key.RightShift or
@@ -50,7 +59,15 @@ public class ShortcutManager : IShortcutManager
 
     public void OnKeyReleased(object? sender, KeyEventArgs e)
     {
-        _activeKeys.Remove(e.Key);
+        if (e.Key is Key.ImeProcessed or Key.ImeConvert or Key.ImeNonConvert or
+            Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
+        {
+            _activeKeys.Clear();
+        }
+        else
+        {
+            _activeKeys.Remove(e.Key);
+        }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         _isShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
