@@ -188,12 +188,7 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
-        if (Shortcuts.Count > 0)
-        {
-            return;
-        }
-
-        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm);
+        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm, Shortcuts);
     }
 
     public static void SaveSettings()
