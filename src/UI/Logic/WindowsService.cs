@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic
             UiTheme.ApplyScaleToWindow(window);
 
             await window.ShowDialog(owner);
-
+            
             return viewModel;
         }
 

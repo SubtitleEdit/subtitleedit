@@ -8,6 +8,7 @@ public class LanguageTools
     public LanguageApplyMinGaps ApplyMinGaps { get; set; } = new();
     public LanguageBeautifyTimeCodes BeautifyTimeCodes { get; set; } = new();
     public LanguageBridgeGaps BridgeGaps { get; set; } = new();
+    public LanguageRenumber Renumber { get; set; } = new();
     public LanguageSortBy SortBy { get; set; } = new();
     public LanguageBatchConvert BatchConvert { get; set; } = new();
     public LanguageChangeCasing ChangeCasing { get; set; } = new();
