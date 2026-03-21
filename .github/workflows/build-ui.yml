@@ -681,6 +681,9 @@ jobs:
             3. Extract the archive (or use installer if available)
             4. Run the executable (on macOS, the app is unsigned - see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements) for how to allow it).
       
+            ### Change Log
+            See the full [Change Log](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt) for details.
+
             *This is an automated build from the GitHub Actions workflow.*
           draft: false
           prerelease: ${{ inputs.is_prerelease }}
