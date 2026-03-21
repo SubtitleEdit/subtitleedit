@@ -621,7 +621,7 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<BinaryOcrInspectWindow, BinaryOcrInspectViewModel>(Window!,
             vm =>
             {
-                vm.Initialize(nBmp.GetBitmap(), SelectedOcrSubtitleItem, db, SelectedNOcrMaxWrongPixels, letters,
+                vm.Initialize(nBmp.GetBitmap(), SelectedOcrSubtitleItem, db, BinaryOcrMaxErrorPercent, letters,
                     matches);
             });
 

@@ -53,6 +53,7 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
     private SKBitmap _sentenceBitmapOriginal;
     private BinaryOcrDb _db;
+    private double _maxErrorPercent;
     private bool _isControlDown = false;
     private bool _isWinDown = false;
 
@@ -86,11 +87,12 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         TextBoxNew = new TextBox();
     }
 
-    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, BinaryOcrDb db, int selectedNOcrMaxWrongPixels, List<ImageSplitterItem2> letters, List<BinaryOcrMatcher.CompareMatch?> matches)
+    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, BinaryOcrDb db, double maxErrorPercent, List<ImageSplitterItem2> letters, List<BinaryOcrMatcher.CompareMatch?> matches)
     {
         _letters = letters;
         _matches = matches;
         _db = db;
+        _maxErrorPercent = maxErrorPercent;
         _sentenceBitmapOriginal = sKBitmap;
 
         if (letters.Count > 0)
@@ -202,7 +204,18 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         }
         _db.Save();
 
-        Close();
+        _matches[LetterIndex] = new BinaryOcrMatcher().GetCompareMatch(
+            _letters[LetterIndex],
+            out _,
+            _letters,
+            LetterIndex,
+            _db,
+            _maxErrorPercent);
+
+        PanelLines.Children.Clear();
+        OnLoaded();
+
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
     }
 
     [RelayCommand]
