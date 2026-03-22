@@ -1,4 +1,9 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -6,19 +11,13 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Features.Ocr;
+namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
 public partial class NOcrCharacterAddViewModel : ObservableObject
 {
@@ -42,6 +41,8 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     [ObservableProperty] private bool _canExpand;
     [ObservableProperty] private bool _showUseOnce;
     [ObservableProperty] private bool _showSkip;
+    [ObservableProperty] private bool _showAbort;
+    [ObservableProperty] private bool _showCancel;
     [ObservableProperty] private bool _isInspectAdditionsVisible;
     [ObservableProperty] private ObservableCollection<int> _noOfLinesToAutoDrawList;
     [ObservableProperty] private int _selectedNoOfLinesToAutoDraw;
@@ -100,6 +101,8 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         _nBmp = new NikseBitmap2(1, 1);
         ShowSkip = true;
         ShowUseOnce = true;
+        ShowAbort = true;
+        ShowCancel = false;
         LoadSettings();
     }
 
@@ -125,7 +128,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         int i,
         NOcrDb nOcrDb,
         int maxWrongPixels,
-        NOcrAddHistoryManager nOcrAddHistoryManager,
+        NOcrAddHistoryManager? nOcrAddHistoryManager,
         bool showUseOnce,
         bool showSkip)
     {
@@ -145,7 +148,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         UpdateShrintExpand();
         SetImages(_item, _nBmp);
         SetTitle();
-        IsInspectAdditionsVisible = nOcrAddHistoryManager.Items.Count > 0;
+        IsInspectAdditionsVisible = nOcrAddHistoryManager?.Items.Count > 0;
     }
 
     private void SetImages(OcrSubtitleItem? item, NikseBitmap2 nBmp)
@@ -346,7 +349,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     {
         NOcrChar.LinesForeground.Clear();
         NOcrChar.LinesBackground.Clear();
-        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, new NikseBitmap2(CurrentBitmap.ToSkBitmap()));
+        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, new NikseBitmap2(SkBitmapExtensions.ToSkBitmap(CurrentBitmap)));
         ShowOcrPoints();
     }
 

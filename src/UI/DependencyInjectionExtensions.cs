@@ -146,6 +146,7 @@ using DownloadWhisperEngineViewModel = Nikse.SubtitleEdit.Features.Video.SpeechT
 using DownloadWhisperModelsViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadWhisperModelsViewModel;
 using GetAudioClipsViewModel = Nikse.SubtitleEdit.Features.Shared.GetAudioClips.GetAudioClipsViewModel;
 using MediaInfoViewViewModel = Nikse.SubtitleEdit.Features.Shared.MediaInfoView.MediaInfoViewViewModel;
+using NOcrCharacterAddViewModel = Nikse.SubtitleEdit.Features.Ocr.NOcr.NOcrCharacterAddViewModel;
 using ReviewSpeechViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech.ReviewSpeechViewModel;
 using RosettaPropertiesViewModel = Nikse.SubtitleEdit.Features.Files.FormatProperties.RosettaProperties.RosettaPropertiesViewModel;
 using SetVideoOffsetViewModel = Nikse.SubtitleEdit.Features.Shared.SetVideoOffset.SetVideoOffsetViewModel;

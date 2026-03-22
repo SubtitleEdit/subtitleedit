@@ -1854,7 +1854,7 @@ public partial class OcrViewModel : ObservableObject
                         Dispatcher.UIThread.Post(async void () =>
                         {
                             var result =
-                                await _windowService.ShowDialogAsync<NOcrCharacterAddWindow, NOcrCharacterAddViewModel>(
+                                await _windowService.ShowDialogAsync<NOcrCharacterAddWindow, NOcr.NOcrCharacterAddViewModel>(
                                     Window!,
                                     vm =>
                                     {

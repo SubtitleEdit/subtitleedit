@@ -56,8 +56,9 @@ public class NOcrCharacterAddWindow : Window
         var buttonInspectAdditions = UiUtil.MakeButton(Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand).WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible));
         var buttonUseOnce = UiUtil.MakeButton(Se.Language.General.UseOnce, vm.UseOnceCommand).WithBindIsVisible(nameof(vm.ShowUseOnce));
         var buttonSkip = UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip));
-        var buttonAbort = UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonInspectAdditions, buttonUseOnce, buttonSkip, buttonAbort);
+        var buttonAbort = UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand).WithBindIsVisible(nameof(vm.ShowAbort));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.AbortCommand).WithBindIsVisible(nameof(vm.ShowCancel));
+        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonInspectAdditions, buttonUseOnce, buttonSkip, buttonAbort, buttonCancel);
 
         grid.Add(image, 0, 0);
         grid.Add(controlsView, 1, 0);

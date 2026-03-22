@@ -280,8 +280,10 @@ public partial class NOcrInspectViewModel : ObservableObject
             return;
         }
 
-        var addVm = new NOcrCharacterAddViewModel();
-        addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _nOcrDb, _maxWrongPixels, _nOcrAddHistoryManager, false, false);
+        var addVm = new NOcr.NOcrCharacterAddViewModel();
+        addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _nOcrDb, _maxWrongPixels, null, false, false);
+        addVm.ShowAbort = false;
+        addVm.ShowCancel = true;
         var addWindow = new NOcrCharacterAddWindow(addVm);
         await addWindow.ShowDialog(Window!);
 
