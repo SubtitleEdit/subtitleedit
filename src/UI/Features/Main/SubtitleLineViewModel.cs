@@ -243,8 +243,9 @@ public partial class SubtitleLineViewModel : ObservableObject
                         return new SolidColorBrush(_errorColor);
                     }
                 }
-            }
-            else if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
+            } 
+            
+            if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
             {
                 var text = HtmlUtil.RemoveHtmlTags(Text, true);
                 foreach (var line in text.SplitToLines())
