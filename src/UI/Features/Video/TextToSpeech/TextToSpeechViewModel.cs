@@ -116,6 +116,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Engines =
         [
             new Piper(ttsDownloadService),
+            new EdgeTts(),
             new AllTalk(ttsDownloadService),
             new ElevenLabs(ttsDownloadService),
             new AzureSpeech(ttsDownloadService),
@@ -566,6 +567,24 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/erew123/alltalk_tts"));
 
+            return await engine.IsInstalled(SelectedRegion);
+        }
+
+        if (engine is EdgeTts)
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                $"\"EdgeTts\" text to speech requires the edge-tts CLI tool.{Environment.NewLine}{Environment.NewLine}Install with: pipx install edge-tts{Environment.NewLine}(or pip install edge-tts){Environment.NewLine}{Environment.NewLine}Read more?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/rany2/edge-tts"));
             return await engine.IsInstalled(SelectedRegion);
         }
 
