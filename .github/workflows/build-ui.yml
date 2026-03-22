@@ -592,10 +592,42 @@ jobs:
             org.freedesktop.Sdk//24.08 \
             org.freedesktop.Sdk.Extension.dotnet10//24.08
 
+      - name: Inline NuGet sources into Flatpak manifest
+        run: |
+          python3 << 'PYEOF'
+          import json, yaml, sys
+
+          with open('installer/flatpak/dk.nikse.subtitleedit.yaml', 'r') as f:
+              manifest = yaml.safe_load(f)
+
+          with open('installer/flatpak/nuget-sources.json', 'r') as f:
+              nuget_sources = json.load(f)
+
+          print(f'Inlining {len(nuget_sources)} NuGet packages into manifest...')
+
+          for module in manifest.get('modules', []):
+              if isinstance(module, dict) and module.get('name') == 'subtitleedit':
+                  new_sources = []
+                  for source in module.get('sources', []):
+                      if source == 'nuget-sources.json':
+                          new_sources.extend(nuget_sources)
+                      else:
+                          new_sources.append(source)
+                  module['sources'] = new_sources
+                  break
+
+          # Write as JSON (flatpak-builder supports JSON manifests and avoids
+          # the GLib YAML string-in-sources deserialisation warning)
+          with open('installer/flatpak/dk.nikse.subtitleedit.json', 'w') as f:
+              json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+          print('Created merged manifest: installer/flatpak/dk.nikse.subtitleedit.json')
+          PYEOF
+
       - name: Build Flatpak
         run: |
           flatpak-builder --user --repo=flatpak-repo --force-clean .flatpak-builder \
-            installer/flatpak/dk.nikse.subtitleedit.yaml
+            installer/flatpak/dk.nikse.subtitleedit.json
 
       - name: Create Flatpak bundle
         run: |
