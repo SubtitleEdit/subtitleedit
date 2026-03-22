@@ -286,10 +286,106 @@ public class TextToSpeechWindow : Window
             }
         };
 
+        var checkBoxProAudioChain = new CheckBox
+        {
+            Content = "Pro audio post-processing",
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 10),
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoProAudioChain)) { Mode = BindingMode.TwoWay }
+        };
+
+        var panelAudioDucking = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 10),
+            Children =
+            {
+                new CheckBox
+                {
+                    Content = "Audio ducking",
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoAudioDucking)) { Mode = BindingMode.TwoWay }
+                },
+                new Label { Content = "Vol %", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 5, 0) },
+                UiUtil.MakeTextBox(50, vm, nameof(vm.AudioDuckingVolume)),
+            }
+        };
+
+        var panelSilencePadding = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 10),
+            Children =
+            {
+                new Label { Content = "Silence padding (ms)", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 5, 0) },
+                UiUtil.MakeTextBox(50, vm, nameof(vm.SilencePaddingMs)),
+            }
+        };
+
+        var panelSampleRate = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 10),
+            Children =
+            {
+                new Label { Content = "Sample rate (0=default)", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 5, 0) },
+                UiUtil.MakeTextBox(60, vm, nameof(vm.OutputSampleRate)),
+            }
+        };
+
+        var panelEdgeTtsRate = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 5),
+            Children =
+            {
+                new Label { Content = "Edge-TTS rate", MinWidth = 110, VerticalAlignment = VerticalAlignment.Center },
+                UiUtil.MakeTextBox(120, vm, nameof(vm.EdgeTtsRate)),
+            },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsEdgeTtsEngine)) { Mode = BindingMode.OneWay },
+        };
+
+        var panelEdgeTtsPitch = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 5),
+            Children =
+            {
+                new Label { Content = "Edge-TTS pitch", MinWidth = 110, VerticalAlignment = VerticalAlignment.Center },
+                UiUtil.MakeTextBox(120, vm, nameof(vm.EdgeTtsPitch)),
+            },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsEdgeTtsEngine)) { Mode = BindingMode.OneWay },
+        };
+
+        var panelEdgeTtsVolume = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 0, 0, 5),
+            Children =
+            {
+                new Label { Content = "Edge-TTS volume", MinWidth = 110, VerticalAlignment = VerticalAlignment.Center },
+                UiUtil.MakeTextBox(120, vm, nameof(vm.EdgeTtsVolume)),
+            },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsEdgeTtsEngine)) { Mode = BindingMode.OneWay },
+        };
+
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
@@ -298,13 +394,20 @@ public class TextToSpeechWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 10,
-            RowSpacing = 10,
+            RowSpacing = 0,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(checkBoxReviewAudioClips, 0, 0);
         grid.Add(panelAddAudioToVideoFile, 1, 0);
+        grid.Add(checkBoxProAudioChain, 2, 0);
+        grid.Add(panelAudioDucking, 3, 0);
+        grid.Add(panelSilencePadding, 4, 0);
+        grid.Add(panelSampleRate, 5, 0);
+        grid.Add(panelEdgeTtsRate, 6, 0);
+        grid.Add(panelEdgeTtsPitch, 7, 0);
+        grid.Add(panelEdgeTtsVolume, 8, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }

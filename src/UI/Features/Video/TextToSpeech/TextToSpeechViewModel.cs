@@ -56,6 +56,15 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isVoiceTestEnabled;
     [ObservableProperty] private bool _doReviewAudioClips;
     [ObservableProperty] private bool _doGenerateVideoFile;
+    [ObservableProperty] private bool _doProAudioChain;
+    [ObservableProperty] private bool _doAudioDucking;
+    [ObservableProperty] private string _audioDuckingVolume;
+    [ObservableProperty] private string _silencePaddingMs;
+    [ObservableProperty] private string _outputSampleRate;
+    [ObservableProperty] private string _edgeTtsRate;
+    [ObservableProperty] private string _edgeTtsPitch;
+    [ObservableProperty] private string _edgeTtsVolume;
+    [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private bool _isGenerating;
     [ObservableProperty] private bool _isNotGenerating;
     [ObservableProperty] private bool _isEngineSettingsVisible;
@@ -100,6 +109,12 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = string.Empty;
         ProgressText = string.Empty;
         DoneOrCancelText = string.Empty;
+        EdgeTtsRate = string.Empty;
+        EdgeTtsPitch = string.Empty;
+        EdgeTtsVolume = string.Empty;
+        AudioDuckingVolume = string.Empty;
+        SilencePaddingMs = string.Empty;
+        OutputSampleRate = string.Empty;
         IsVoiceTestEnabled = true;
         IsGenerating = false;
         IsNotGenerating = true;
@@ -162,6 +177,14 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         DoReviewAudioClips = Se.Settings.Video.TextToSpeech.ReviewAudioClips;
         DoGenerateVideoFile = Se.Settings.Video.TextToSpeech.GenerateVideoFile;
+        DoProAudioChain = Se.Settings.Video.TextToSpeech.ProAudioChainEnabled;
+        DoAudioDucking = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled;
+        AudioDuckingVolume = Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume.ToString();
+        SilencePaddingMs = Se.Settings.Video.TextToSpeech.SilencePaddingMs.ToString();
+        OutputSampleRate = Se.Settings.Video.TextToSpeech.OutputSampleRate.ToString();
+        EdgeTtsRate = Se.Settings.Video.TextToSpeech.EdgeTtsRate;
+        EdgeTtsPitch = Se.Settings.Video.TextToSpeech.EdgeTtsPitch;
+        EdgeTtsVolume = Se.Settings.Video.TextToSpeech.EdgeTtsVolume;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -189,6 +212,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         Se.Settings.Video.TextToSpeech.Voice = SelectedVoice?.Name ?? string.Empty;
         Se.Settings.Video.TextToSpeech.ReviewAudioClips = DoReviewAudioClips;
         Se.Settings.Video.TextToSpeech.GenerateVideoFile = DoGenerateVideoFile;
+        Se.Settings.Video.TextToSpeech.ProAudioChainEnabled = DoProAudioChain;
+        Se.Settings.Video.TextToSpeech.AudioDuckingEnabled = DoAudioDucking;
+        Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume = int.TryParse(AudioDuckingVolume, out var dv) ? dv : 15;
+        Se.Settings.Video.TextToSpeech.SilencePaddingMs = int.TryParse(SilencePaddingMs, out var sp) ? sp : 0;
+        Se.Settings.Video.TextToSpeech.OutputSampleRate = int.TryParse(OutputSampleRate, out var sr) ? sr : 0;
+        Se.Settings.Video.TextToSpeech.EdgeTtsRate = EdgeTtsRate;
+        Se.Settings.Video.TextToSpeech.EdgeTtsPitch = EdgeTtsPitch;
+        Se.Settings.Video.TextToSpeech.EdgeTtsVolume = EdgeTtsVolume;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -290,10 +321,21 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // Post-processing (pro audio chain, silence padding, sample rate)
+        var postProcessResult = await ApplyPostProcessing(fixSpeedResult, _cancellationToken);
+        if (postProcessResult == null)
+        {
+            DoneOrCancelText = Se.Language.General.Done;
+            IsGenerating = false;
+            IsNotGenerating = true;
+            ProgressOpacity = 0;
+            return;
+        }
+
         // Review audio clips
         if (DoReviewAudioClips)
         {
-            var reviewAudioClipsResult = await ReviewAudioClips(fixSpeedResult);
+            var reviewAudioClipsResult = await ReviewAudioClips(postProcessResult);
             if (reviewAudioClipsResult == null)
             {
                 DoneOrCancelText = Se.Language.General.Done;
@@ -303,10 +345,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return;
             }
 
-            fixSpeedResult = reviewAudioClipsResult;
+            postProcessResult = reviewAudioClipsResult;
         }
 
-        await MergeAndAddToVideo(fixSpeedResult);
+        await MergeAndAddToVideo(postProcessResult);
     }
 
     [RelayCommand]
@@ -708,7 +750,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             stereo = true;
         }
 
-        var addAudioProcess = FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+        var addAudioProcess = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled
+            ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume)
+            : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
 #pragma warning disable CA1416 // Validate platform compatibility
         var _ = addAudioProcess.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -992,6 +1036,110 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    private async Task<TtsStepResult[]?> ApplyPostProcessing(TtsStepResult[] previousStepResult, CancellationToken cancellationToken)
+    {
+        var doProChain = Se.Settings.Video.TextToSpeech.ProAudioChainEnabled;
+        var silencePaddingMs = Se.Settings.Video.TextToSpeech.SilencePaddingMs;
+        var outputSampleRate = Se.Settings.Video.TextToSpeech.OutputSampleRate;
+
+        if (!doProChain && silencePaddingMs <= 0 && outputSampleRate <= 0)
+        {
+            return previousStepResult;
+        }
+
+        try
+        {
+            var resultList = new List<TtsStepResult>();
+            ProgressValue = 0;
+
+            for (var index = 0; index < previousStepResult.Length; index++)
+            {
+                ProgressText = $"Post-processing: segment {index + 1} of {previousStepResult.Length}";
+                var item = previousStepResult[index];
+                var currentFile = item.CurrentFileName;
+
+                // Apply pro audio chain (EQ, noise gate, compressor, loudness normalization, fade)
+                if (doProChain)
+                {
+                    var proChainOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"pro_{Guid.NewGuid()}.wav");
+                    var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = proProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await proProcess.WaitForExitAsync(cancellationToken);
+
+                    if (File.Exists(proChainOutput))
+                    {
+                        currentFile = proChainOutput;
+                    }
+                }
+
+                // Add silence padding at end of segment
+                if (silencePaddingMs > 0)
+                {
+                    var silenceFile = Path.Combine(Path.GetDirectoryName(currentFile)!, $"pad_{Guid.NewGuid()}.wav");
+                    var silenceProcess = FfmpegGenerator.GenerateSilence(silenceFile, silencePaddingMs);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = silenceProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await silenceProcess.WaitForExitAsync(cancellationToken);
+
+                    var paddedOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"padded_{Guid.NewGuid()}.wav");
+                    var concatProcess = FfmpegGenerator.ConcatAudio(currentFile, silenceFile, paddedOutput);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = concatProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await concatProcess.WaitForExitAsync(cancellationToken);
+
+                    DeleteFileNoError(silenceFile);
+                    if (File.Exists(paddedOutput))
+                    {
+                        currentFile = paddedOutput;
+                    }
+                }
+
+                // Change sample rate
+                if (outputSampleRate > 0)
+                {
+                    var resampledOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"sr_{Guid.NewGuid()}.wav");
+                    var srProcess = FfmpegGenerator.ChangeSampleRate(currentFile, resampledOutput, outputSampleRate);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = srProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await srProcess.WaitForExitAsync(cancellationToken);
+
+                    if (File.Exists(resampledOutput))
+                    {
+                        currentFile = resampledOutput;
+                    }
+                }
+
+                resultList.Add(new TtsStepResult
+                {
+                    Paragraph = item.Paragraph,
+                    Text = item.Text,
+                    CurrentFileName = currentFile,
+                    SpeedFactor = item.SpeedFactor,
+                    Voice = item.Voice,
+                });
+
+                ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return null;
+                }
+            }
+
+            ProgressValue = 100;
+            return resultList.ToArray();
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+    }
+
     private async Task<TtsStepResult[]?> ReviewAudioClips(TtsStepResult[] previousStepResult)
     {
         if (!DoReviewAudioClips)
@@ -1065,6 +1213,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasRegion = engine.HasRegion;
             HasModel = engine.HasModel;
             HasKeyFile = engine.HasKeyFile;
+            IsEdgeTtsEngine = engine is EdgeTts;
 
             if (HasLanguageParameter)
             {

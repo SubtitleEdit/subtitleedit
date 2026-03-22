@@ -26,6 +26,24 @@ public class SeVideoTextToSpeech
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
 
+    // Pro audio post-processing
+    public bool ProAudioChainEnabled { get; set; }
+
+    // Audio ducking (mix original audio at reduced volume)
+    public bool AudioDuckingEnabled { get; set; }
+    public int AudioDuckingOriginalVolume { get; set; }
+
+    // Edge-TTS prosody parameters
+    public string EdgeTtsRate { get; set; }
+    public string EdgeTtsPitch { get; set; }
+    public string EdgeTtsVolume { get; set; }
+
+    // Silence padding between segments (ms)
+    public int SilencePaddingMs { get; set; }
+
+    // Output sample rate (0 = default)
+    public int OutputSampleRate { get; set; }
+
     public SeVideoTextToSpeech()
     {
         Engine = "Piper";
@@ -51,5 +69,13 @@ public class SeVideoTextToSpeech
         MurfStyle = "Conversational";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
+        ProAudioChainEnabled = false;
+        AudioDuckingEnabled = false;
+        AudioDuckingOriginalVolume = 15;
+        EdgeTtsRate = string.Empty;
+        EdgeTtsPitch = string.Empty;
+        EdgeTtsVolume = string.Empty;
+        SilencePaddingMs = 0;
+        OutputSampleRate = 0;
     }
 }

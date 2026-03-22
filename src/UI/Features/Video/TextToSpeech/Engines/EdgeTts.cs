@@ -88,6 +88,25 @@ public class EdgeTts : ITtsEngine
         var args =
             $"--voice \"{escapedVoice}\" --text \"{escapedText}\" --write-media \"{fileName}\"";
 
+        // Add optional prosody parameters from settings
+        var rate = Se.Settings.Video.TextToSpeech.EdgeTtsRate;
+        if (!string.IsNullOrWhiteSpace(rate))
+        {
+            args += $" --rate={rate}";
+        }
+
+        var pitch = Se.Settings.Video.TextToSpeech.EdgeTtsPitch;
+        if (!string.IsNullOrWhiteSpace(pitch))
+        {
+            args += $" --pitch={pitch}";
+        }
+
+        var volume = Se.Settings.Video.TextToSpeech.EdgeTtsVolume;
+        if (!string.IsNullOrWhiteSpace(volume))
+        {
+            args += $" --volume={volume}";
+        }
+
         var (ok, stdOut, stdErr) = await RunEdgeTtsCommand(args, cancellationToken);
         if (!ok || !File.Exists(fileName))
         {
