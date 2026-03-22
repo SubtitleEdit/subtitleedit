@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta10 (xth March 2026)
+v5.0.0-beta10 (22th March 2026)
 
 * Multiple replace: Add find rule window (Ctrl+F)
 * Multiple replace: Add rule context menu + make "..." buttons optional
@@ -20,6 +20,7 @@ v5.0.0-beta10 (xth March 2026)
 * Fix translate-via-copy-paste - thx truubo
 * Fix content alignment for image export - thx oxie93
 * Allow toggle on/off "Start time" column - thx abc16361
+* Add color chang coloring for Fix-common-error-fixes
 
 -----------------------------------------------------------------------------------------------------
 
