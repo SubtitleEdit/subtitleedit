@@ -542,179 +542,6 @@ jobs:
           name: linux-tar-package
           path: ./SubtitleEdit-Linux-x64.tar.gz
 
-#  build-flatpak:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v5
-#
-#      - name: Setup .NET
-#        uses: actions/setup-dotnet@v5
-#        with:
-#          dotnet-version: '10.0.x'
-#
-#      - name: Restore dependencies (generates packages.lock.json)
-#        run: dotnet restore
-#
-#      - name: Update metainfo version from Se.cs
-#        run: |
-#          chmod +x ./installer/flatpak/update-metainfo-version.sh
-#          ./installer/flatpak/update-metainfo-version.sh
-#
-#      - name: Download NuGet packages and generate Flatpak sources
-#        run: |
-#          # Restore with all publish-time properties so every needed package
-#          # (including linux-x64 runtime + ReadyToRun crossgen2 packages) is
-#          # downloaded into /tmp/nuget-packages before we enter the sandbox.
-#          dotnet restore src/UI/UI.csproj \
-#            -r linux-x64 \
-#            -p:SelfContained=true \
-#            -p:PublishSingleFile=true \
-#            -p:PublishReadyToRun=true \
-#            --packages /tmp/nuget-packages
-#
-#          # Build nuget-sources.json by hashing the already-downloaded files.
-#          # Stage as a flat local feed (all .nupkg files in one folder) that
-#          # NuGet can consume in offline mode inside the Flatpak sandbox.
-#          python3 -u << 'PYEOF'
-#          import os, json, hashlib, glob, sys
-#
-#          cache_dir  = '/tmp/nuget-packages'
-#          output     = 'installer/flatpak/nuget-sources.json'
-#
-#          nupkg_files = sorted(glob.glob(
-#              os.path.join(cache_dir, '**', '*.nupkg'), recursive=True))
-#          print(f'Found {len(nupkg_files)} .nupkg files in cache', flush=True)
-#
-#          if not nupkg_files:
-#              print('ERROR: no packages found – restore may have failed',
-#                    file=sys.stderr)
-#              sys.exit(1)
-#
-#          sources = []
-#          for nupkg in nupkg_files:
-#              h = hashlib.sha256()
-#              with open(nupkg, 'rb') as f:
-#                  for chunk in iter(lambda: f.read(65536), b''):
-#                      h.update(chunk)
-#
-#              parts = os.path.relpath(nupkg, cache_dir).split(os.sep)
-#              if len(parts) < 3:
-#                  continue
-#              pkg_id, version, filename = parts[0], parts[1], os.path.basename(nupkg)
-#
-#              sources.append({
-#                  'type':          'file',
-#                  'url':           f'https://api.nuget.org/v3-flatcontainer/'
-#                                   f'{pkg_id.lower()}/{version}/{filename.lower()}',
-#                  'sha256':        h.hexdigest(),
-#                  'dest':          'nuget-packages-feed',
-#                  'dest-filename': filename,
-#              })
-#
-#          with open(output, 'w') as f:
-#              json.dump(sources, f, indent=2)
-#          print(f'Generated {output} with {len(sources)} entries', flush=True)
-#
-#          # NETStandard.Library.Ref is often satisfied by SDK targeting packs
-#          # (not a downloaded .nupkg), so only hard-require package-cache items
-#          # that must come from the offline feed.
-#          expected = {
-#              'microsoft.win32.registry.5.0.0.nupkg',
-#          }
-#          staged = {os.path.basename(s['dest-filename']).lower() for s in sources}
-#          missing = sorted(expected - staged)
-#          if missing:
-#              print(f'ERROR: required offline NuGet packages missing: {missing}', file=sys.stderr)
-#              sys.exit(1)
-#
-#          if 'netstandard.library.ref.2.1.0.nupkg' not in staged:
-#              print('INFO: netstandard.library.ref.2.1.0.nupkg not in cache; relying on SDK targeting packs', flush=True)
-#
-#          print('Verified required offline NuGet packages are present', flush=True)
-#          PYEOF
-#
-#      - name: Copy icon for Flatpak manifest
-#        run: cp src/UI/Assets/SE.png installer/flatpak/dk.nikse.subtitleedit.png
-#
-#      - name: Cache Flatpak runtimes
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.local/share/flatpak
-#          key: flatpak-runtime-freedesktop-24.08-dotnet10-${{ runner.os }}
-#          restore-keys: |
-#            flatpak-runtime-freedesktop-24.08-dotnet10-
-#
-#      - name: Install Flatpak tools
-#        run: |
-#          sudo apt-get update -qq
-#          sudo apt-get install -y flatpak flatpak-builder
-#
-#      - name: Add Flathub remote
-#        run: flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-#
-#      - name: Install Flatpak runtime, SDK and .NET 10 SDK extension
-#        run: |
-#          flatpak --user install -y --noninteractive flathub \
-#            org.freedesktop.Platform//24.08 \
-#            org.freedesktop.Sdk//24.08 \
-#            org.freedesktop.Sdk.Extension.dotnet10//24.08
-#
-#      - name: Inline NuGet sources into Flatpak manifest
-#        run: |
-#          python3 -u << 'PYEOF'
-#          import json, yaml, sys
-#
-#          with open('installer/flatpak/dk.nikse.subtitleedit.yaml', 'r') as f:
-#              manifest = yaml.safe_load(f)
-#
-#          with open('installer/flatpak/nuget-sources.json', 'r') as f:
-#              nuget_sources = json.load(f)
-#
-#          if not nuget_sources:
-#              print('ERROR: nuget-sources.json is empty', file=sys.stderr)
-#              sys.exit(1)
-#
-#          print(f'Inlining {len(nuget_sources)} NuGet packages into manifest...', flush=True)
-#
-#          for module in manifest.get('modules', []):
-#              if not isinstance(module, dict) or module.get('name') != 'subtitleedit':
-#                  continue
-#              new_sources = []
-#              for source in module.get('sources', []):
-#                  if isinstance(source, str):
-#                      # Any bare string is a sources-include file; replace with inlined list
-#                      print(f'  Replacing string source "{source}" with {len(nuget_sources)} entries', flush=True)
-#                      new_sources.extend(nuget_sources)
-#                  else:
-#                      new_sources.append(source)
-#              module['sources'] = new_sources
-#              print(f'  Total sources after merge: {len(new_sources)}', flush=True)
-#              break
-#
-#          with open('installer/flatpak/dk.nikse.subtitleedit.json', 'w') as f:
-#              json.dump(manifest, f, indent=2, ensure_ascii=False)
-#
-#          print('Created installer/flatpak/dk.nikse.subtitleedit.json', flush=True)
-#          PYEOF
-#
-#      - name: Build Flatpak
-#        run: |
-#          flatpak-builder --user --repo=flatpak-repo --force-clean .flatpak-builder \
-#            installer/flatpak/dk.nikse.subtitleedit.json
-#
-#      - name: Create Flatpak bundle
-#        run: |
-#          flatpak build-bundle flatpak-repo SubtitleEdit-Linux-x64.flatpak dk.nikse.subtitleedit
-#          echo "Flatpak bundle size: $(du -sh SubtitleEdit-Linux-x64.flatpak | cut -f1)"
-#
-#      - name: Upload Flatpak artifact
-#        uses: actions/upload-artifact@v5
-#        with:
-#          name: linux-flatpak-package
-#          path: ./SubtitleEdit-Linux-x64.flatpak
-
-
   create-release:
     if: ${{ inputs.create_release }}
     needs: [build-windows, build-macos, build-linux]
@@ -750,7 +577,6 @@ jobs:
           cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
           cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
           cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
-#          cp ./artifacts/linux-flatpak-package/*.flatpak ./release-assets/
           
           # List all files that will be uploaded
           echo "Release assets:"
@@ -779,7 +605,6 @@ jobs:
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
             - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
- #           - **Linux x64 (Flatpak):** [SubtitleEdit-Linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.flatpak)
       
             ### Installation
             1. Read and fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
@@ -800,4 +625,3 @@ jobs:
             ./release-assets/SubtitleEdit-macOS-ARM64.dmg
             ./release-assets/SubtitleEdit-macOS-x64.dmg
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
-  #          ./release-assets/SubtitleEdit-Linux-x64.flatpak
