@@ -1,6 +1,5 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DocumentFormat.OpenXml.ExtendedProperties;
 using SkiaSharp;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -146,7 +145,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraphOriginal(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph()
+        var p = new Paragraph
         {
             Number = Number,
             StartTime = new TimeCode(StartTime),
@@ -282,12 +281,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         get
         {
             if (Se.Settings.General.ColorDurationTooShort &&
-                Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
-            {
-                return new SolidColorBrush(_errorColor);
-            }
-
-            if (Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds || Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
             {
                 return new SolidColorBrush(_errorColor);
             }
@@ -562,22 +556,24 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
         }
 
-        if (next != null)
+        if (next == null)
         {
-            var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
-            if (gapNext < 0)
+            return errors.ToString();
+        }
+
+        var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
+        if (gapNext < 0)
+        {
+            if (Se.Settings.General.ColorTimeCodeOverlap)
             {
-                if (Se.Settings.General.ColorTimeCodeOverlap)
-                {
-                    errors.AppendLine("Overlap to next: " + Math.Round(-gapNext, 3));
-                }
+                errors.AppendLine("Overlap to next: " + Math.Round(-gapNext, 3));
             }
-            else if (gapNext < general.MinimumMillisecondsBetweenLines)
+        }
+        else if (gapNext < general.MinimumMillisecondsBetweenLines)
+        {
+            if (Se.Settings.General.ColorGapTooShort)
             {
-                if (Se.Settings.General.ColorGapTooShort)
-                {
-                    errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumMillisecondsBetweenLines);
-                }
+                errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumMillisecondsBetweenLines);
             }
         }
 
