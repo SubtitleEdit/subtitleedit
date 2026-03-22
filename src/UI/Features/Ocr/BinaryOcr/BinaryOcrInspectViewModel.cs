@@ -54,6 +54,10 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     private SKBitmap _sentenceBitmapOriginal;
     private BinaryOcrDb _db;
     private double _maxErrorPercent;
+    private NikseBitmap2 _nBmp;
+    private OcrSubtitleItem? _ocrSubtitleItem;
+    private int _maxWrongPixels;
+    private BinaryOcrAddHistoryManager _binaryOcrAddHistoryManager;
     private bool _isControlDown = false;
     private bool _isWinDown = false;
 
@@ -81,19 +85,35 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         SelectedNoOfLinesToAutoDraw = Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw;
         BinaryOcrBitmap = null;
         _db = new BinaryOcrDb(string.Empty);
+        _nBmp = new NikseBitmap2(1, 1);
+        _ocrSubtitleItem = null;
+        _binaryOcrAddHistoryManager = new BinaryOcrAddHistoryManager();
         SentenceBitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
         CurrentBitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
         _splitItem = new ImageSplitterItem2(string.Empty);
         TextBoxNew = new TextBox();
     }
 
-    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, BinaryOcrDb db, double maxErrorPercent, List<ImageSplitterItem2> letters, List<BinaryOcrMatcher.CompareMatch?> matches)
+    internal void Initialize(
+        SKBitmap sKBitmap,
+        NikseBitmap2 nBmp,
+        OcrSubtitleItem? selectedOcrSubtitleItem,
+        BinaryOcrDb db,
+        double maxErrorPercent,
+        int maxWrongPixels,
+        BinaryOcrAddHistoryManager binaryOcrAddHistoryManager,
+        List<ImageSplitterItem2> letters,
+        List<BinaryOcrMatcher.CompareMatch?> matches)
     {
         _letters = letters;
         _matches = matches;
         _db = db;
         _maxErrorPercent = maxErrorPercent;
+        _maxWrongPixels = maxWrongPixels;
+        _binaryOcrAddHistoryManager = binaryOcrAddHistoryManager;
         _sentenceBitmapOriginal = sKBitmap;
+        _nBmp = nBmp;
+        _ocrSubtitleItem = selectedOcrSubtitleItem;
 
         if (letters.Count > 0)
         {
@@ -227,14 +247,50 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void AddBetterMatch()
+    private async Task AddBetterMatch()
     {
-        if (BinaryOcrBitmap != null)
+        if (_ocrSubtitleItem == null)
         {
-            BinaryOcrBitmap.Text = NewText;
+            return;
         }
-        AddBetterMatchPressed = true;
-        Close();
+
+        var addVm = new BinaryOcrCharacterAddViewModel();
+        addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _db, _maxWrongPixels,
+            _binaryOcrAddHistoryManager, false, false);
+        var addWindow = new BinaryOcrCharacterAddWindow(addVm);
+        await addWindow.ShowDialog(Window!);
+
+        if (addVm.OkPressed && addVm.BinaryOcrBitmap != null)
+        {
+            var letterBitmap = _letters[LetterIndex].NikseBitmap;
+            _binaryOcrAddHistoryManager.Add(addVm.BinaryOcrBitmap, letterBitmap, 0);
+            _db.Add(addVm.BinaryOcrBitmap);
+            _ = Task.Run(_db.Save);
+            ReloadMatches();
+        }
+    }
+
+    private void ReloadMatches()
+    {
+        for (var i = 0; i < _letters.Count; i++)
+        {
+            if (_letters[i].NikseBitmap == null)
+            {
+                continue;
+            }
+
+            _matches[i] = new BinaryOcrMatcher().GetCompareMatch(
+                _letters[i],
+                out _,
+                _letters,
+                i,
+                _db,
+                _maxErrorPercent);
+        }
+
+        PanelLines.Children.Clear();
+        OnLoaded();
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
     }
 
     private void Close()

@@ -593,39 +593,11 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<BinaryOcrInspectWindow, BinaryOcrInspectViewModel>(Window!,
             vm =>
             {
-                vm.Initialize(nBmp.GetBitmap(), SelectedOcrSubtitleItem, db, BinaryOcrMaxErrorPercent, letters,
-                    matches);
+                vm.Initialize(nBmp.GetBitmap(), nBmp, SelectedOcrSubtitleItem, db, BinaryOcrMaxErrorPercent,
+                    SelectedNOcrMaxWrongPixels, _binaryOcrAddHistoryManager, letters, matches);
             });
 
         _isCtrlDown = false;
-
-        if (result.AddBetterMatchPressed)
-        {
-            var characterAddResult =
-                await _windowService.ShowDialogAsync<BinaryOcrCharacterAddWindow, BinaryOcrCharacterAddViewModel>(Window!,
-                    vm =>
-                    {
-                        vm.Initialize(nBmp, item, letters, result.LetterIndex, db, SelectedNOcrMaxWrongPixels,
-                            _binaryOcrAddHistoryManager, false, false);
-                    });
-
-            _isCtrlDown = false;
-
-            if (characterAddResult.OkPressed && characterAddResult.BinaryOcrBitmap != null)
-            {
-                var letterBitmap = letters[result.LetterIndex].NikseBitmap;
-                _binaryOcrAddHistoryManager.Add(characterAddResult.BinaryOcrBitmap, letterBitmap, OcrSubtitleItems.IndexOf(item));
-                db.Add(characterAddResult.BinaryOcrBitmap);
-                _ = Task.Run(db.Save);
-            }
-            else if (characterAddResult.InspectHistoryPressed)
-            {
-                await _windowService.ShowDialogAsync<BinaryOcrCharacterHistoryWindow, BinaryOcrCharacterHistoryViewModel>(Window!,
-                    vm => { vm.Initialize(db, _binaryOcrAddHistoryManager); });
-
-                _isCtrlDown = false;
-            }
-        }
     }
 
     [RelayCommand]
