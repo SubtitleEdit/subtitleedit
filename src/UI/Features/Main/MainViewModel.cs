@@ -86,6 +86,7 @@ using Nikse.SubtitleEdit.Features.Shared.Undocked;
 using Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 using Nikse.SubtitleEdit.Features.Shared.WaveformSeekSilence;
 using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleLines;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
@@ -4437,6 +4438,25 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<FindDoubleWordsWindow, FindDoubleWordsViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+        if (result.GoToPressed && result.SelectedSubtitle != null)
+        {
+            SelectAndScrollToSubtitle(result.SelectedSubtitle.Subtitle);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowFindDoubleLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<FindDoubleLinesWindow, FindDoubleLinesViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+        if (result.GoToPressed && result.SelectedSubtitle != null)
+        {
+            SelectAndScrollToSubtitle(result.SelectedSubtitle.Subtitle);
+        }
     }
 
     [RelayCommand]

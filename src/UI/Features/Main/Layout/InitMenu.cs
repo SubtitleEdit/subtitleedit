@@ -482,6 +482,11 @@ public static class InitMenu
                     Header = l.FindDoubleWords,
                     Command = vm.ShowFindDoubleWordsCommand,
                 },
+                new MenuItem
+                {
+                    Header = l.FindDoubleLines,
+                    Command = vm.ShowFindDoubleLinesCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {

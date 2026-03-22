@@ -132,6 +132,7 @@ public class LanguageGeneral
     public string DoNoChange { get; set; }
     public string Done { get; set; }
     public string DoubleWords { get; set; }
+    public string DoubleLines { get; set; }
     public string Download { get; set; }
     public string DownloadX { get; set; }
     public string DownloadingX { get; set; }
@@ -775,6 +776,7 @@ public class LanguageGeneral
         DoNoChange = "Do not change";
         Done = "Done";
         DoubleWords = "Double words";
+        DoubleLines = "Double lines";
         Download = "Download";
         DownloadX = "Download {0}";
         DownloadingX = "Downloading {0}";
