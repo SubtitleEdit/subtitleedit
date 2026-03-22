@@ -170,20 +170,27 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     [RelayCommand]
     private async Task Update()
     {
-        var item = BinaryOcrBitmap;
-        if (item == null || string.IsNullOrEmpty(NewText))
+        if (string.IsNullOrEmpty(NewText))
         {
             return;
         }
 
-        item.Text = NewText;
-        item.Italic = IsNewTextItalic;
-
-        // Keep the match in sync so the button label reflects the change
-        if (_matches[LetterIndex] != null)
+        var dbBitmap = FindDbBitmap(_matches[LetterIndex]);
+        if (dbBitmap == null)
         {
-            _matches[LetterIndex]!.Text = NewText;
-            _matches[LetterIndex]!.Italic = IsNewTextItalic;
+            return;
+        }
+
+        // Update the actual database entry
+        dbBitmap.Text = NewText;
+        dbBitmap.Italic = IsNewTextItalic;
+
+        // Keep local objects in sync
+        var match = _matches[LetterIndex];
+        if (match != null)
+        {
+            match.Text = NewText;
+            match.Italic = IsNewTextItalic;
         }
 
         _db.Save();
@@ -204,8 +211,8 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     [RelayCommand]
     private async Task Delete()
     {
-        var item = BinaryOcrBitmap;
-        if (item == null)
+        var dbBitmap = FindDbBitmap(_matches[LetterIndex]);
+        if (dbBitmap == null)
         {
             return;
         }
@@ -222,14 +229,9 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
             return;
         }
 
-        if (item.ExpandCount > 0)
-        {
-            _db.CompareImagesExpanded.Remove(item);
-        }
-        else
-        {
-            _db.CompareImages.Remove(item);
-        }
+        // Remove the actual database entry
+        _db.CompareImages.Remove(dbBitmap);
+        _db.CompareImagesExpanded.Remove(dbBitmap);
         _db.Save();
 
         _matches[LetterIndex] = new BinaryOcrMatcher().GetCompareMatch(
@@ -242,7 +244,6 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
         PanelLines.Children.Clear();
         OnLoaded();
-
         OnLetterClicked(LetterIndex, _matches[LetterIndex]);
     }
 
@@ -268,6 +269,17 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
             _ = Task.Run(_db.Save);
             ReloadMatches();
         }
+    }
+
+    private BinaryOcrBitmap? FindDbBitmap(BinaryOcrMatcher.CompareMatch? match)
+    {
+        if (match?.Name == null)
+        {
+            return null;
+        }
+
+        return _db.CompareImages.FirstOrDefault(b => b.Key == match.Name)
+               ?? _db.CompareImagesExpanded.FirstOrDefault(b => b.Key == match.Name);
     }
 
     private void ReloadMatches()
