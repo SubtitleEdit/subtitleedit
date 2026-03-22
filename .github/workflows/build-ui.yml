@@ -574,7 +574,8 @@ jobs:
             --packages /tmp/nuget-packages
 
           # Build nuget-sources.json by hashing the already-downloaded files.
-          # No extra network calls needed — SHA256 is computed from local files.
+          # Stage as a flat local feed (all .nupkg files in one folder) that
+          # NuGet can consume in offline mode inside the Flatpak sandbox.
           python3 -u << 'PYEOF'
           import os, json, hashlib, glob, sys
 
@@ -607,13 +608,25 @@ jobs:
                   'url':           f'https://api.nuget.org/v3-flatcontainer/'
                                    f'{pkg_id.lower()}/{version}/{filename.lower()}',
                   'sha256':        h.hexdigest(),
-                  'dest':          f'nuget-packages/{pkg_id}/{version}',
+                  'dest':          'nuget-packages-feed',
                   'dest-filename': filename,
               })
 
           with open(output, 'w') as f:
               json.dump(sources, f, indent=2)
           print(f'Generated {output} with {len(sources)} entries', flush=True)
+
+          expected = {
+              'netstandard.library.ref.2.1.0.nupkg',
+              'microsoft.win32.registry.5.0.0.nupkg',
+          }
+          staged = {os.path.basename(s['dest-filename']).lower() for s in sources}
+          missing = sorted(expected - staged)
+          if missing:
+              print(f'ERROR: required offline NuGet packages missing: {missing}', file=sys.stderr)
+              sys.exit(1)
+
+          print('Verified required offline NuGet packages are present', flush=True)
           PYEOF
 
       - name: Copy icon for Flatpak manifest
