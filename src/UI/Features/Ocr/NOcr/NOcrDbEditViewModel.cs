@@ -115,18 +115,20 @@ public partial class NOcrDbEditViewModel : ObservableObject
             return;
         }
 
-        // Validate the item text
         if (string.IsNullOrWhiteSpace(ItemText))
         {
             await MessageBox.Show(Window!, "Validation Error", "Item text cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        item.Text = ItemText;
+        var newText = ItemText;
+        item.Text = newText;
         item.Italic = IsItemItalic;
         _nOcrDb.Save();
 
-        Close();
+        RefreshCharacters(newText);
+
+        await MessageBox.Show(Window!, "nOCR", "nOCR character updated.", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     [RelayCommand]
@@ -154,7 +156,23 @@ public partial class NOcrDbEditViewModel : ObservableObject
         _nOcrDb.OcrCharactersExpanded.Remove(item);
         _nOcrDb.Save();
 
-        Close();
+        RefreshCharacters(SelectedCharacter);
+    }
+
+    private void RefreshCharacters(string? selectCharacter)
+    {
+        var characters = _nOcrDb.OcrCharactersCombined
+            .Where(c => !string.IsNullOrWhiteSpace(c.Text))
+            .Select(c => c.Text)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();
+
+        Characters.Clear();
+        Characters.AddRange(characters);
+
+        SelectedCharacter = characters.Contains(selectCharacter) ? selectCharacter : characters.FirstOrDefault();
+        CharactersChanged();
     }
 
 
