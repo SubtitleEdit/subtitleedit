@@ -561,10 +561,60 @@ jobs:
           chmod +x ./installer/flatpak/update-metainfo-version.sh
           ./installer/flatpak/update-metainfo-version.sh
 
-      - name: Generate NuGet sources for offline Flatpak build
+      - name: Download NuGet packages and generate Flatpak sources
         run: |
-          chmod +x ./installer/flatpak/generate-nuget-sources.sh
-          ./installer/flatpak/generate-nuget-sources.sh
+          # Restore with all publish-time properties so every needed package
+          # (including linux-x64 runtime + ReadyToRun crossgen2 packages) is
+          # downloaded into /tmp/nuget-packages before we enter the sandbox.
+          dotnet restore src/UI/UI.csproj \
+            -r linux-x64 \
+            -p:SelfContained=true \
+            -p:PublishSingleFile=true \
+            -p:PublishReadyToRun=true \
+            --packages /tmp/nuget-packages
+
+          # Build nuget-sources.json by hashing the already-downloaded files.
+          # No extra network calls needed — SHA256 is computed from local files.
+          python3 -u << 'PYEOF'
+          import os, json, hashlib, glob, sys
+
+          cache_dir  = '/tmp/nuget-packages'
+          output     = 'installer/flatpak/nuget-sources.json'
+
+          nupkg_files = sorted(glob.glob(
+              os.path.join(cache_dir, '**', '*.nupkg'), recursive=True))
+          print(f'Found {len(nupkg_files)} .nupkg files in cache', flush=True)
+
+          if not nupkg_files:
+              print('ERROR: no packages found – restore may have failed',
+                    file=sys.stderr)
+              sys.exit(1)
+
+          sources = []
+          for nupkg in nupkg_files:
+              h = hashlib.sha256()
+              with open(nupkg, 'rb') as f:
+                  for chunk in iter(lambda: f.read(65536), b''):
+                      h.update(chunk)
+
+              parts = os.path.relpath(nupkg, cache_dir).split(os.sep)
+              if len(parts) < 3:
+                  continue
+              pkg_id, version, filename = parts[0], parts[1], os.path.basename(nupkg)
+
+              sources.append({
+                  'type':          'file',
+                  'url':           f'https://api.nuget.org/v3-flatcontainer/'
+                                   f'{pkg_id.lower()}/{version}/{filename.lower()}',
+                  'sha256':        h.hexdigest(),
+                  'dest':          'nuget-sources',
+                  'dest-filename': filename,
+              })
+
+          with open(output, 'w') as f:
+              json.dump(sources, f, indent=2)
+          print(f'Generated {output} with {len(sources)} entries', flush=True)
+          PYEOF
 
       - name: Copy icon for Flatpak manifest
         run: cp src/UI/Assets/SE.png installer/flatpak/dk.nikse.subtitleedit.png
@@ -594,7 +644,7 @@ jobs:
 
       - name: Inline NuGet sources into Flatpak manifest
         run: |
-          python3 << 'PYEOF'
+          python3 -u << 'PYEOF'
           import json, yaml, sys
 
           with open('installer/flatpak/dk.nikse.subtitleedit.yaml', 'r') as f:
@@ -603,25 +653,31 @@ jobs:
           with open('installer/flatpak/nuget-sources.json', 'r') as f:
               nuget_sources = json.load(f)
 
-          print(f'Inlining {len(nuget_sources)} NuGet packages into manifest...')
+          if not nuget_sources:
+              print('ERROR: nuget-sources.json is empty', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'Inlining {len(nuget_sources)} NuGet packages into manifest...', flush=True)
 
           for module in manifest.get('modules', []):
-              if isinstance(module, dict) and module.get('name') == 'subtitleedit':
-                  new_sources = []
-                  for source in module.get('sources', []):
-                      if source == 'nuget-sources.json':
-                          new_sources.extend(nuget_sources)
-                      else:
-                          new_sources.append(source)
-                  module['sources'] = new_sources
-                  break
+              if not isinstance(module, dict) or module.get('name') != 'subtitleedit':
+                  continue
+              new_sources = []
+              for source in module.get('sources', []):
+                  if isinstance(source, str):
+                      # Any bare string is a sources-include file; replace with inlined list
+                      print(f'  Replacing string source "{source}" with {len(nuget_sources)} entries', flush=True)
+                      new_sources.extend(nuget_sources)
+                  else:
+                      new_sources.append(source)
+              module['sources'] = new_sources
+              print(f'  Total sources after merge: {len(new_sources)}', flush=True)
+              break
 
-          # Write as JSON (flatpak-builder supports JSON manifests and avoids
-          # the GLib YAML string-in-sources deserialisation warning)
           with open('installer/flatpak/dk.nikse.subtitleedit.json', 'w') as f:
               json.dump(manifest, f, indent=2, ensure_ascii=False)
 
-          print('Created merged manifest: installer/flatpak/dk.nikse.subtitleedit.json')
+          print('Created installer/flatpak/dk.nikse.subtitleedit.json', flush=True)
           PYEOF
 
       - name: Build Flatpak
