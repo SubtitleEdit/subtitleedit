@@ -179,7 +179,7 @@ public class Se
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
 
-    public static string Version { get; set; } = "v5.0.0-beta9";
+    public static string Version { get; set; } = "v5.0.0-beta10";
 
     public Se()
     {
@@ -188,7 +188,12 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
-        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm, Shortcuts);
+        if (Shortcuts.Count > 0)
+        {
+            return;
+        }
+
+        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm);
     }
 
     public static void SaveSettings()
