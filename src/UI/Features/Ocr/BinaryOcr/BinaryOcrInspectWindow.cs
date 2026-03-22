@@ -59,7 +59,6 @@ public class BinaryOcrInspectWindow : Window
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
         };
-        PointerWheelChanged += vm.PointerWheelChanged;
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);
         Loaded += (_, _) => vm.OnLoaded();

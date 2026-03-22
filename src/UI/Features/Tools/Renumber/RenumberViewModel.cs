@@ -19,7 +19,8 @@ public partial class RenumberViewModel : ObservableObject
 
     public RenumberViewModel()
     {
-        _startNumber = 1;
+        _subtitles = new List<SubtitleLineViewModel>();
+        StartNumber = 1;
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles) => _subtitles = subtitles;

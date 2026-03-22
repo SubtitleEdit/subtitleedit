@@ -229,42 +229,6 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         Close();
     }
 
-    [RelayCommand]
-    private void DrawAgain()
-    {
-        // Binary OCR doesn't use drawing - images are compared pixel by pixel
-    }
-
-    [RelayCommand]
-    private void ClearDraw()
-    {
-        // Binary OCR doesn't use drawing - images are compared pixel by pixel
-    }
-
-    [RelayCommand]
-    private void ClearDrawForeGround()
-    {
-        // Binary OCR doesn't use drawing - images are compared pixel by pixel
-    }
-
-    [RelayCommand]
-    private void ClearDrawBackground()
-    {
-        // Binary OCR doesn't use drawing - images are compared pixel by pixel
-    }
-
-    [RelayCommand]
-    private void ZoomIn()
-    {
-        // Binary OCR inspect doesn't use zoom
-    }
-
-    [RelayCommand]
-    private void ZoomOut()
-    {
-        // Binary OCR inspect doesn't use zoom
-    }
-
     private void Close()
     {
         Dispatcher.UIThread.Post(() =>
@@ -466,22 +430,5 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         {
             TextBoxNew.FontStyle = IsNewTextItalic ? FontStyle.Italic : FontStyle.Normal;
         });
-    }
-
-    internal void PointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-        if (_isControlDown || _isWinDown)
-        {
-            if (e.Delta.Y > 0)
-            {
-                ZoomIn();
-                e.Handled = true;
-            }
-            else if (e.Delta.Y < 0)
-            {
-                ZoomOut();
-                e.Handled = true;
-            }
-        }
     }
 }
