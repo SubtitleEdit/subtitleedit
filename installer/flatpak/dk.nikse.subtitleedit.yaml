@@ -45,8 +45,32 @@ modules:
       # Build and publish from source using the pre-fetched NuGet packages
       - |
         . /usr/lib/sdk/dotnet10/enable.sh
+
+        # Generate SHA-512 side-car files so NuGet recognises every staged
+        # .nupkg as already installed in the global packages cache.
+        python3 << 'PYEOF'
+        import os, glob, hashlib, base64
+        for nupkg in glob.glob('/run/build/subtitleedit/nuget-packages/**/*.nupkg',
+                               recursive=True):
+            data = open(nupkg, 'rb').read()
+            sha  = base64.b64encode(hashlib.sha512(data).digest()).decode()
+            open(nupkg + '.sha512', 'w').write(sha)
+        PYEOF
+
+        # Disable all internet NuGet sources for the offline sandbox build.
+        # SDK targeting packs (NETStandard.Library.Ref, etc.) are resolved
+        # from the dotnet10 extension's packs/ folder — unaffected by this.
+        cat > /run/build/subtitleedit/NuGet.Config << 'NUGET_CFG'
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+          </packageSources>
+        </configuration>
+        NUGET_CFG
+
+        NUGET_PACKAGES=/run/build/subtitleedit/nuget-packages \
         dotnet publish src/UI/UI.csproj \
-          --source ./nuget-sources \
           --runtime $RUNTIME \
           --self-contained true \
           -p:PublishSingleFile=true \

@@ -607,7 +607,7 @@ jobs:
                   'url':           f'https://api.nuget.org/v3-flatcontainer/'
                                    f'{pkg_id.lower()}/{version}/{filename.lower()}',
                   'sha256':        h.hexdigest(),
-                  'dest':          'nuget-sources',
+                  'dest':          f'nuget-packages/{pkg_id}/{version}',
                   'dest-filename': filename,
               })
 
