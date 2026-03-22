@@ -616,8 +616,10 @@ jobs:
               json.dump(sources, f, indent=2)
           print(f'Generated {output} with {len(sources)} entries', flush=True)
 
+          # NETStandard.Library.Ref is often satisfied by SDK targeting packs
+          # (not a downloaded .nupkg), so only hard-require package-cache items
+          # that must come from the offline feed.
           expected = {
-              'netstandard.library.ref.2.1.0.nupkg',
               'microsoft.win32.registry.5.0.0.nupkg',
           }
           staged = {os.path.basename(s['dest-filename']).lower() for s in sources}
@@ -625,6 +627,9 @@ jobs:
           if missing:
               print(f'ERROR: required offline NuGet packages missing: {missing}', file=sys.stderr)
               sys.exit(1)
+
+          if 'netstandard.library.ref.2.1.0.nupkg' not in staged:
+              print('INFO: netstandard.library.ref.2.1.0.nupkg not in cache; relying on SDK targeting packs', flush=True)
 
           print('Verified required offline NuGet packages are present', flush=True)
           PYEOF
