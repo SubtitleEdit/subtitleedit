@@ -13476,12 +13476,14 @@ public partial class MainViewModel :
     private bool _subtitleGridIsRightClick = false;
     private bool _subtitleGridIsLeftClick = false;
     private bool _subtitleGridIsControlPressed = false;
+    private int _dragSelectStartIndex = -1;
 
     public void SubtitleGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         _subtitleGridIsControlPressed = false;
         _subtitleGridIsLeftClick = false;
         _subtitleGridIsRightClick = false;
+        _dragSelectStartIndex = -1;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
         if (sender is Control { ContextFlyout: not null } control)
@@ -13504,11 +13506,76 @@ public partial class MainViewModel :
 
                 current = current.Parent as Control;
             }
+
+            if (_subtitleGridIsLeftClick && !_subtitleGridIsControlPressed)
+            {
+                var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+                if (rowIndex >= 0)
+                {
+                    _dragSelectStartIndex = rowIndex;
+                }
+            }
         }
+    }
+
+    private int GetDataGridRowIndexFromPoint(Avalonia.Point position)
+    {
+        var hitTest = SubtitleGrid.InputHitTest(position);
+        var current = hitTest as Control;
+        while (current != null)
+        {
+            if (current is DataGridRow row)
+            {
+                return row.Index;
+            }
+
+            current = current.Parent as Control;
+        }
+
+        return -1;
+    }
+
+    public void SubtitleGrid_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_dragSelectStartIndex < 0 || !_subtitleGridIsLeftClick)
+        {
+            return;
+        }
+
+        var props = e.GetCurrentPoint(SubtitleGrid).Properties;
+        if (!props.IsLeftButtonPressed)
+        {
+            _dragSelectStartIndex = -1;
+            return;
+        }
+
+        var currentIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+        if (currentIndex < 0 || currentIndex == _dragSelectStartIndex)
+        {
+            return;
+        }
+
+        var startIdx = Math.Min(_dragSelectStartIndex, currentIndex);
+        var endIdx = Math.Max(_dragSelectStartIndex, currentIndex);
+
+        _subtitleGridSelectionChangedSkip = true;
+        SubtitleGrid.SelectedItems.Clear();
+        for (var i = startIdx; i <= endIdx; i++)
+        {
+            if (i < Subtitles.Count)
+            {
+                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+            }
+        }
+        _subtitleGridSelectionChangedSkip = false;
+
+        SubtitleGridSelectionChanged();
     }
 
     public void SubtitleGrid_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        _dragSelectStartIndex = -1;
+
         if (sender is Control { ContextFlyout: MenuFlyout menuFlyout } control)
         {
             if (_subtitleGridIsRightClick)
