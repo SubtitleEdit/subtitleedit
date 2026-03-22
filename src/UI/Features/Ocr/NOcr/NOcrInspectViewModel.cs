@@ -177,7 +177,7 @@ public partial class NOcrInspectViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Update()
+    private async Task Update()
     {
         var item = NOcrChar;
         if (item == null || string.IsNullOrEmpty(NewText))
@@ -187,9 +187,51 @@ public partial class NOcrInspectViewModel : ObservableObject
 
         item.Text = NewText;
         item.Italic = IsNewTextItalic;
+
+        // Sync canvas lines back to NOcrChar (canvas stores bitmap-space coords, NOcrChar stores its own coord space)
+        if (_splitItem.NikseBitmap != null)
+        {
+            var bitmapWidth = _splitItem.NikseBitmap.Width;
+            var bitmapHeight = _splitItem.NikseBitmap.Height;
+
+            item.LinesForeground.Clear();
+            foreach (var line in NOcrDrawingCanvas.HitPaths)
+            {
+                item.LinesForeground.Add(new NOcrLine(
+                    new OcrPoint(
+                        (int)Math.Round(line.Start.X * item.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                        (int)Math.Round(line.Start.Y * item.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero)),
+                    new OcrPoint(
+                        (int)Math.Round(line.End.X * item.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                        (int)Math.Round(line.End.Y * item.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero))));
+            }
+
+            item.LinesBackground.Clear();
+            foreach (var line in NOcrDrawingCanvas.MissPaths)
+            {
+                item.LinesBackground.Add(new NOcrLine(
+                    new OcrPoint(
+                        (int)Math.Round(line.Start.X * item.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                        (int)Math.Round(line.Start.Y * item.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero)),
+                    new OcrPoint(
+                        (int)Math.Round(line.End.X * item.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                        (int)Math.Round(line.End.Y * item.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero))));
+            }
+        }
+
         _nOcrDb.Save();
 
-        Close();
+        // Rebuild letter buttons so any text change is reflected
+        PanelLines.Children.Clear();
+        OnLoaded();
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
+
+        await MessageBox.Show(
+            Window!,
+            "nOCR",
+            "nOCR character saved",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
     }
 
     [RelayCommand]
@@ -348,8 +390,31 @@ public partial class NOcrInspectViewModel : ObservableObject
         NOcrDrawingCanvas.MissPaths.Clear();
         NOcrDrawingCanvas.HitPaths.Clear();
 
-        NOcrDrawingCanvas.MissPaths.AddRange(NOcrChar.LinesBackground);
-        NOcrDrawingCanvas.HitPaths.AddRange(NOcrChar.LinesForeground);
+        if (_splitItem.NikseBitmap != null)
+        {
+            var bitmapWidth = _splitItem.NikseBitmap.Width;
+            var bitmapHeight = _splitItem.NikseBitmap.Height;
+
+            foreach (var line in NOcrChar.LinesForeground)
+            {
+                NOcrDrawingCanvas.HitPaths.Add(new NOcrLine(
+                    line.GetScaledStart(NOcrChar, bitmapWidth, bitmapHeight),
+                    line.GetScaledEnd(NOcrChar, bitmapWidth, bitmapHeight)));
+            }
+
+            foreach (var line in NOcrChar.LinesBackground)
+            {
+                NOcrDrawingCanvas.MissPaths.Add(new NOcrLine(
+                    line.GetScaledStart(NOcrChar, bitmapWidth, bitmapHeight),
+                    line.GetScaledEnd(NOcrChar, bitmapWidth, bitmapHeight)));
+            }
+        }
+        else
+        {
+            NOcrDrawingCanvas.HitPaths.AddRange(NOcrChar.LinesForeground);
+            NOcrDrawingCanvas.MissPaths.AddRange(NOcrChar.LinesBackground);
+        }
+
         NOcrDrawingCanvas.InvalidateVisual();
     }
 
