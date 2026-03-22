@@ -80,6 +80,7 @@ using Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 using Nikse.SubtitleEdit.Features.Shared.WaveformSeekSilence;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
+using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleLines;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
@@ -300,6 +301,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ExportImageBasedViewModel>();
         collection.AddTransient<ExportPacViewModel>();
         collection.AddTransient<ExportPlainTextViewModel>();
+        collection.AddTransient<FindDoubleLinesViewModel>();
         collection.AddTransient<FindDoubleWordsViewModel>();
         collection.AddTransient<FindRuleViewModel>();
         collection.AddTransient<FindTextViewModel>();
