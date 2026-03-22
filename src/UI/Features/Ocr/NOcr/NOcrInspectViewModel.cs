@@ -405,20 +405,23 @@ public partial class NOcrInspectViewModel : ObservableObject
             }
             else
             {
+                var bitmapWidth = _splitItem.NikseBitmap.Width;
+                var bitmapHeight = _splitItem.NikseBitmap.Height;
+
                 NOcrDrawingCanvas.HitPaths.Clear();
                 foreach (var line in match.LinesForeground)
                 {
                     NOcrDrawingCanvas.HitPaths.Add(new NOcrLine(
-                        line.GetScaledStart(match, NOcrChar.Width, NOcrChar.Height),
-                        line.GetScaledEnd(match, NOcrChar.Width, NOcrChar.Height)));
+                        line.GetScaledStart(match, bitmapWidth, bitmapHeight),
+                        line.GetScaledEnd(match, bitmapWidth, bitmapHeight)));
                 }
 
                 NOcrDrawingCanvas.MissPaths.Clear();
                 foreach (var line in match.LinesBackground)
                 {
                     NOcrDrawingCanvas.MissPaths.Add(new NOcrLine(
-                        line.GetScaledStart(match, NOcrChar.Width, NOcrChar.Height),
-                        line.GetScaledEnd(match, NOcrChar.Width, NOcrChar.Height)));
+                        line.GetScaledStart(match, bitmapWidth, bitmapHeight),
+                        line.GetScaledEnd(match, bitmapWidth, bitmapHeight)));
                 }
             }
 
