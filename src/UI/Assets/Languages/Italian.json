@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 16.03.2026 di bovirus",
+  "TranslatedBy": "v. 22.03.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -505,7 +505,7 @@
     "SourceViewX": "Visualizzazione sorgente - {0}",
     "Spacing": "Spaziatura",
     "SpeechToTextSelectedLines": "Righe selezionate sintesi vocale",
-    "SpeechToTextSelectedLinesPrompt": "Righe selezionate sintesi vocale (prompt motore/lingua)",
+    "SpeechToTextSelectedLinesPromptAlways": "Righe selezionate sintesi vocale (sempre prompt motore/lingua)",
     "SpeechToTextSelectedLinesPromptFirstTime": "Righe selezionate sintesi vocale (prompt motore/lingua la prima volta)",
     "Speed": "Velocità",
     "SplitAtTextBoxCursorPosition": "Dividi alla posizione cursore del testo",
@@ -984,7 +984,8 @@
       "NumberOfSubtitlesX": "Numero sottotitoli: {0}",
       "GapMs": "Gap (ms)",
       "UseFixedDuration": "Usa durata fissa",
-      "FixedDurationMs": "Durata fissa (ms)"
+      "FixedDurationMs": "Durata fissa (ms)",
+      "AlignViaWhisper": "Allinea timecode tramite Whisper..."
     },
     "Export": {
       "ExportImagesProfiles": "Esporta profili immagini",
@@ -1147,7 +1148,8 @@
       "EditCategory": "Modifica categoria",
       "NewCategory": "Nuova categoria",
       "CategoryName": "Nome categoria",
-      "ExportReplaceRules": "Esporta regole"
+      "ExportReplaceRules": "Esporta regole",
+      "AppliedRules": "Regole applicate"
     },
     "Find": {
       "SearchTextWatermark": "Cerca testo...",
@@ -1866,6 +1868,8 @@
       "ShowSettingsFile": "Visualizza file impostazioni",
       "ShowAssaLayer": "Visualizza casella livello ASSA",
       "WaveformCursorColor": "Colore cursore/intestazione forma d'onda",
+      "WaveformParagraphLeftColor": "Colore bordo sinistro forma d'onda",
+      "WaveformParagraphRightColor": "Colore bordo destro forma d'onda",
       "WaveformFancyHighColor": "Colore fantasia evidenziazione forma d'onda",
       "WaveformFocusOnMouseOver": "Evidenzia al passaggio del mouse",
       "ResetAllSettings": "Ripristina tutte le impostazioni",
@@ -1935,6 +1939,7 @@
       "SplitOddLineActionWeightBottom": "Peso inferiore",
       "SplitOddLinesAction": "Azione divisione righe dispari",
       "OcrUseWordSplitList": "OCR: usa elenco divisione parole",
+      "SpeechToTextSelectedLinesPromptFistTimeOnly": "Sintesi vocale: righe selezionate, richiesta lingua/motore solo la prima volta",
       "UseFocusedButtonBackgroundColor": "Usa colore di sfondo pulsante evidenziato",
       "FocusedButtonBackgroundColor": "Colore di sfondo pulsante in evidenza",
       "ForceCrLfOnSave": "Forza CR+LF al salvataggio (file sottotitoli testo)",
