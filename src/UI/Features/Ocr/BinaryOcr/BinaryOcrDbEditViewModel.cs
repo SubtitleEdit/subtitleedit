@@ -84,19 +84,21 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
             return;
         }
 
-        // Validate the item text
         if (string.IsNullOrWhiteSpace(ItemText))
         {
             await MessageBox.Show(Window!, "Validation Error", "Item text cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        item.Text = ItemText;
+        var newText = ItemText;
+        item.Text = newText;
         item.Italic = IsItemItalic;
 
         _binaryImageCompareDatabase.Save();
 
-        Close();
+        RefreshCharacters(newText);
+
+        await MessageBox.Show(Window!, "Binary OCR", "Binary OCR character updated.", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     [RelayCommand]
@@ -123,7 +125,30 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         _binaryImageCompareDatabase.CompareImages.Remove(item);
         _binaryImageCompareDatabase.CompareImagesExpanded.Remove(item);
         _binaryImageCompareDatabase.Save();
-        Close();
+
+        RefreshCharacters(SelectedCharacter);
+    }
+
+    private void RefreshCharacters(string? selectCharacter)
+    {
+        var characters = _binaryImageCompareDatabase.AllCompareImages
+            .Where(c => !string.IsNullOrWhiteSpace(c.Text))
+            .Select(c => c.Text)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();
+
+        Characters.Clear();
+        foreach (var s in characters)
+        {
+            if (!string.IsNullOrEmpty(s))
+            {
+                Characters.Add(s);
+            }
+        }
+
+        SelectedCharacter = characters.Contains(selectCharacter) ? selectCharacter : characters.FirstOrDefault();
+        CharactersChanged();
     }
 
 

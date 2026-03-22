@@ -44,8 +44,7 @@ public class BinaryOcrDbEditWindow : Window
         var currentItemView = MakeCurrentItemControlsView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
 
         grid.Add(charactersView, 0, 0);
         grid.Add(currentItemView, 0, 1);
