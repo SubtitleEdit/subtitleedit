@@ -67,6 +67,7 @@ public class LanguageOcr
     public string DarknessThreshold { get; set; }
     public string EditExportDotDotDot { get; set; }
     public string EditBinaryOcrDatabase { get; set; }
+    public string EditBinaryOcrDatabaseXWithYItems { get; set; }
     public string BinaryImageCompareDatabase { get; set; }
     public string RemoveXFromUnknownWordsList { get; set; }
     public string DownloadingPaddleOcrEngineDotDotDot { get; set; }
@@ -139,6 +140,7 @@ public class LanguageOcr
         DarknessThreshold = "Darkness threshold";
         EditExportDotDotDot = "Edit/export...";
         EditBinaryOcrDatabase = "Edit \"Binary image compare\" database";
+        EditBinaryOcrDatabaseXWithYItems = "Edit \"Binary image compare\" database {0} with {1:#,###,##0} items";
         BinaryImageCompareDatabase = "\"Binary image compare\" database";
         RemoveXFromUnknownWordsList = "Remove \"{0}\" from unknown words list";
         DownloadingPaddleOcrEngineDotDotDot = "Downloading Paddle OCR engine...";

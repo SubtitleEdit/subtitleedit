@@ -427,7 +427,7 @@ public class OcrWindow : Window
             },
         };
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
-        dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
+        dataGridSubtitle.AddHandler(KeyDownEvent, vm.SubtitleGridKeyDown, Avalonia.Interactivity.RoutingStrategies.Bubble, true);
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);

@@ -55,13 +55,13 @@ public class BinaryOcrInspectWindow : Window
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
-        Activated += delegate
-        {
-            vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);
-        Loaded += (_, _) => vm.OnLoaded();
+        Loaded += (_, _) =>
+        {
+            vm.OnLoaded();
+            vm.TextBoxNew.Focus();
+        };
     }
 
     private static Border MakeLinesView(BinaryOcrInspectViewModel vm)

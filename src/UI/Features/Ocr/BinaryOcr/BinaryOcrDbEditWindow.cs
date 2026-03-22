@@ -10,7 +10,7 @@ public class BinaryOcrDbEditWindow : Window
 {
     public BinaryOcrDbEditWindow(BinaryOcrDbEditViewModel vm)
     {
-        Title = Se.Language.Ocr.EditNOcrDatabase;
+        Title = Se.Language.Ocr.EditBinaryOcrDatabase;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
@@ -52,12 +52,12 @@ public class BinaryOcrDbEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate
-        {
-            buttonOk.Focus(); // hack to make OnKeyDown work
-        };
         KeyDown += (_, e) => vm.KeyDown(e);
-        Loaded += (_, _) => Title = vm.Title;
+        Loaded += (_, _) =>
+        {
+            Title = vm.Title;
+            buttonOk.Focus();
+        };
     }
 
     private static Border MakeCharacterControlsView(BinaryOcrDbEditViewModel vm)

@@ -55,14 +55,14 @@ public class NOcrDbEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate
-        {
-            buttonOk.Focus(); // hack to make OnKeyDown work
-        };
         PointerWheelChanged += vm.PointerWheelChanged;
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);
-        Loaded += (_,_) => Title = vm.Title;    
+        Loaded += (_, _) =>
+        {
+            Title = vm.Title;
+            buttonOk.Focus();
+        };
     }
 
     private static Border MakeCharacterControlsView(NOcrDbEditViewModel vm)

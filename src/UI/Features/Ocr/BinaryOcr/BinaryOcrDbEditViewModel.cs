@@ -188,7 +188,7 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         SelectedCharacter = characters.FirstOrDefault();
         CharactersChanged();
 
-        Title = string.Format(Se.Language.Ocr.EditNOcrDatabaseXWithYItems, imageCompareName, allImages.Count);
+        Title = string.Format(Se.Language.Ocr.EditBinaryOcrDatabaseXWithYItems, imageCompareName, allImages.Count);
     }
 
     internal void CharactersChanged(object? sender, SelectionChangedEventArgs e)

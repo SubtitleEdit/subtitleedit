@@ -27,6 +27,7 @@ public class OcrFixLineResult
         var sb = new System.Text.StringBuilder();
         foreach (var w in Words)
         {
+            w.WordIndex = sb.Length;
             sb.Append(string.IsNullOrEmpty(w.FixedWord) ? w.Word : w.FixedWord);
         }
 

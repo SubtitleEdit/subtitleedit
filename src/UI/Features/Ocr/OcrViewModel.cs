@@ -1151,6 +1151,7 @@ public partial class OcrViewModel : ObservableObject
             OcredSubtitle.Add(subtitleLine);
         }
 
+        _forceClose = true;
         Close();
     }
 
@@ -2313,6 +2314,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.ChangeAllPressed)
                         {
+                            ChangeWord(item, unknownWord, result.Word);
                             _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
                         }
                         else if (result.SkipOncePressed)
@@ -2362,10 +2364,21 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        var wordToFind = unknownWord.Word.FixedWord;
         var idx = unknownWord.Word.WordIndex;
-        if (item.Text.Substring(idx).StartsWith(unknownWord.Word.FixedWord))
+
+        // Try the pre-computed index first
+        if (idx >= 0 && idx < item.Text.Length && item.Text.Substring(idx).StartsWith(wordToFind))
         {
-            item.Text = item.Text.Remove(idx, unknownWord.Word.FixedWord.Length).Insert(idx, word);
+            item.Text = item.Text.Remove(idx, wordToFind.Length).Insert(idx, word);
+            return;
+        }
+
+        // Fallback: search for the word in the text (index may have shifted due to prior changes)
+        idx = item.Text.IndexOf(wordToFind, StringComparison.Ordinal);
+        if (idx >= 0)
+        {
+            item.Text = item.Text.Remove(idx, wordToFind.Length).Insert(idx, word);
         }
     }
 
@@ -3203,7 +3216,7 @@ public partial class OcrViewModel : ObservableObject
 
     internal async void OnClosing(WindowClosingEventArgs e)
     {
-        if (_forceClose || e.IsProgrammatic)
+        if (_forceClose)
         {
             SaveSettings();
             UiUtil.SaveWindowPosition(Window);
