@@ -147,18 +147,8 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         Close();
     }
 
-    public async Task ShowDrawingTips()
-    {
-        await MessageBox.Show(
-            Window!,
-            Se.Language.General.Help,
-            Se.Language.Ocr.NOcrDrawHelp,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
-    }
-
     [RelayCommand]
-    private void Update()
+    private async Task Update()
     {
         var item = BinaryOcrBitmap;
         if (item == null || string.IsNullOrEmpty(NewText))
@@ -168,9 +158,27 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
         item.Text = NewText;
         item.Italic = IsNewTextItalic;
+
+        // Keep the match in sync so the button label reflects the change
+        if (_matches[LetterIndex] != null)
+        {
+            _matches[LetterIndex]!.Text = NewText;
+            _matches[LetterIndex]!.Italic = IsNewTextItalic;
+        }
+
         _db.Save();
 
-        Close();
+        // Rebuild letter buttons so the updated text is reflected
+        PanelLines.Children.Clear();
+        OnLoaded();
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
+
+        await MessageBox.Show(
+            Window!,
+            "Binary OCR",
+            "Binary OCR character saved",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
     }
 
     [RelayCommand]
