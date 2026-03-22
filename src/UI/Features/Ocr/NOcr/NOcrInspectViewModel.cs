@@ -60,6 +60,9 @@ public partial class NOcrInspectViewModel : ObservableObject
     private SKBitmap _sentenceBitmapOriginal;
     private NOcrDb _nOcrDb;
     private int _maxWrongPixels;
+    private NikseBitmap2 _nBmp;
+    private OcrSubtitleItem? _ocrSubtitleItem;
+    private NOcrAddHistoryManager _nOcrAddHistoryManager;
     private bool _isControlDown = false;
     private bool _isWinDown = false;
 
@@ -91,6 +94,8 @@ public partial class NOcrInspectViewModel : ObservableObject
         SelectedNoOfLinesToAutoDraw = Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw;
         NOcrChar = new NOcrChar();
         _nOcrDb = new NOcrDb(string.Empty);
+        _nBmp = new NikseBitmap2(1, 1);
+        _nOcrAddHistoryManager = new NOcrAddHistoryManager();
         SentenceBitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
         CurrentBitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
         _splitItem = new ImageSplitterItem2(string.Empty);
@@ -98,14 +103,17 @@ public partial class NOcrInspectViewModel : ObservableObject
         TextBoxNew = new TextBox();
     }
 
-    internal void Initialize(SKBitmap sKBitmap, OcrSubtitleItem? selectedOcrSubtitleItem, NOcrDb? nOcrDb, int selectedNOcrMaxWrongPixels, List<ImageSplitterItem2> letters,
-        List<NOcrChar?> matches)
+    internal void Initialize(SKBitmap sKBitmap, NikseBitmap2 nBmp, OcrSubtitleItem? selectedOcrSubtitleItem, NOcrDb? nOcrDb, int selectedNOcrMaxWrongPixels, List<ImageSplitterItem2> letters,
+        List<NOcrChar?> matches, NOcrAddHistoryManager nOcrAddHistoryManager)
     {
         _letters = letters;
         _matches = matches;
         _nOcrDb = nOcrDb ?? new NOcrDb(string.Empty);
         _maxWrongPixels = selectedNOcrMaxWrongPixels;
         _sentenceBitmapOriginal = sKBitmap;
+        _nBmp = nBmp;
+        _ocrSubtitleItem = selectedOcrSubtitleItem;
+        _nOcrAddHistoryManager = nOcrAddHistoryManager;
         NOcrDrawingCanvas.BackgroundImage = CurrentBitmap;
         NOcrDrawingCanvas.ZoomFactor = Se.Settings.Ocr.NOcrZoomFactor;
 
@@ -223,11 +231,56 @@ public partial class NOcrInspectViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void AddBetterMatch()
+    private async Task AddBetterMatch()
     {
-        NOcrChar.Text = NewText;
-        AddBetterMatchPressed = true;
-        Close();
+        if (_ocrSubtitleItem == null)
+        {
+            return;
+        }
+
+        var addVm = new NOcrCharacterAddViewModel();
+        addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _nOcrDb, _maxWrongPixels, _nOcrAddHistoryManager, false, false);
+        var addWindow = new NOcrCharacterAddWindow(addVm);
+        await addWindow.ShowDialog(Window!);
+
+        if (addVm.OkPressed)
+        {
+            var letterBitmap = _letters[LetterIndex].NikseBitmap;
+            _nOcrAddHistoryManager.Add(addVm.NOcrChar, letterBitmap, 0);
+            _nOcrDb.Add(addVm.NOcrChar);
+            _ = Task.Run(_nOcrDb.Save);
+            ReloadMatches();
+        }
+        else if (addVm.InspectHistoryPressed)
+        {
+            var historyVm = new NOcrCharacterHistoryViewModel();
+            historyVm.Initialize(_nOcrDb, _nOcrAddHistoryManager);
+            var historyWindow = new NOcrCharacterHistoryWindow(historyVm);
+            await historyWindow.ShowDialog(Window!);
+        }
+    }
+
+    private void ReloadMatches()
+    {
+        for (var i = 0; i < _letters.Count; i++)
+        {
+            if (_letters[i].NikseBitmap == null)
+            {
+                continue;
+            }
+
+            _matches[i] = _nOcrDb.GetMatch(
+                _nBmp,
+                _letters,
+                _letters[i],
+                _letters[i].Top,
+                false,
+                _maxWrongPixels);
+        }
+
+        PanelLines.Children.Clear();
+        OnLoaded();
+        OnLetterClicked(LetterIndex, _matches[LetterIndex]);
     }
 
     [RelayCommand]

@@ -552,41 +552,13 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
-        var result = await _windowService.ShowDialogAsync<NOcrInspectWindow, NOcrInspectViewModel>(Window!,
+        await _windowService.ShowDialogAsync<NOcrInspectWindow, NOcrInspectViewModel>(Window!,
             vm =>
             {
-                vm.Initialize(nBmp.GetBitmap(), SelectedOcrSubtitleItem, _nOcrDb, SelectedNOcrMaxWrongPixels, letters,
-                    matches);
+                vm.Initialize(nBmp.GetBitmap(), nBmp, item, _nOcrDb, SelectedNOcrMaxWrongPixels, letters,
+                    matches, _nOcrAddHistoryManager);
             });
         _isCtrlDown = false;
-
-        if (result.AddBetterMatchPressed)
-        {
-            var characterAddResult =
-                await _windowService.ShowDialogAsync<NOcrCharacterAddWindow, NOcrCharacterAddViewModel>(Window!,
-                    vm =>
-                    {
-                        vm.Initialize(nBmp, item, letters, result.LetterIndex, _nOcrDb!, SelectedNOcrMaxWrongPixels,
-                            _nOcrAddHistoryManager, false, false);
-                    });
-
-            _isCtrlDown = false;
-
-            if (characterAddResult.OkPressed)
-            {
-                var letterBitmap = letters[result.LetterIndex].NikseBitmap;
-                _nOcrAddHistoryManager.Add(characterAddResult.NOcrChar, letterBitmap, OcrSubtitleItems.IndexOf(item));
-                _nOcrDb!.Add(characterAddResult.NOcrChar);
-                _ = Task.Run(_nOcrDb.Save);
-            }
-            else if (characterAddResult.InspectHistoryPressed)
-            {
-                await _windowService.ShowDialogAsync<NOcrCharacterHistoryWindow, NOcrCharacterHistoryViewModel>(Window!,
-                    vm => { vm.Initialize(_nOcrDb!, _nOcrAddHistoryManager); });
-
-                _isCtrlDown = false;
-            }
-        }
     }
 
     private async Task InspectLineBinaryImageCompareOcr(OcrSubtitleItem item)
