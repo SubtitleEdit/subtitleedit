@@ -1,0 +1,81 @@
+
+Subtitle Edit Changelog
+
+v5.0.0-beta11 (xth March 2026)
+
+* Fix pixel-width error column background color - thx rRobis 
+* Fix Remove Text for Hearing Impaired not working in batch convert - thx MKBB-85/ivandrofly
+* Mac: Option+Backspace deletes the previous word - thx derzz
+* Add Edge-TTS engine + TTS audio improvements - thx Ironship
+* Fix burn-in logo preview hidden under video on Windows - thx Ironship
+
+-----------------------------------------------------------------------------------------------------
+
+v5.0.0-beta10 (22th March 2026)
+
+* Multiple replace: Add find rule window (Ctrl+F)
+* Multiple replace: Add rule context menu + make "..." buttons optional
+* Multiple replace: Click on applied rules, now selects the rule 
+* OCR window: Ctrl+/Ctrl- now zoom images in/out
+* Fix PaddleOCR crash - thx max2000777 
+* Add ASSA advanced effect: word spacing - thx rRobis
+* Add ASSA advanced effect: TV close (transition)
+* Add pixel-width column - thx rRobis
+* Fix numeric up/down null safety - thx rRobis
+* Fix for Grid-lines-all option
+* Add export to Cheetah (.cap) 
+* Add tool Renumber - thx ivandrofly
+* Fix WPM info update in grid
+* Fix translate-via-copy-paste - thx truubo
+* Fix content alignment for image export - thx oxie93
+* Allow toggle on/off "Start time" column - thx abc16361
+* Add color chang coloring for Fix-common-error-fixes
+
+-----------------------------------------------------------------------------------------------------
+
+v5.0.0-beta9 (17th March 2026)
+
+* Work on installer - thx bovirus
+* More customization possible for waveform toolbar buttons
+* Reload toolbar after UI language change - thx bovirus
+* Fix: Burn-In dialog crash on Linux - thx Ironship
+* Build macOS: Finish implementing signing/notarization - thx jdpurcell
+* Build: Update to V5 github actions
+* Italian language update - thx bovirus
+* Implement syntax-color-if-pixels-is-too-wide - thx Louis
+* Fix for WebVTT in mp4 - thx xiaomotalktech
+* Expose start and end line waveform colors in options - thx rRobis
+* Add margin for subtitle view preview - thx darnn
+* Fixes for Speech to text selected lines incl. option for default prompt settings - thx rRobis
+* Multiple-replace: Coloring, expland/collapse, remember expanded state, show rule matches for fixes - thx rRobis/TR-9970X
+
+-----------------------------------------------------------------------------------------------------
+
+v5.0.0-beta8 (14th March 2026)
+
+* Use language from installer at first use - thx bovirus
+* Option for showing change log in installer
+* Translate about box - thx bovirus
+* Minor spectrogram fixes (you can toggle style live via a shortcut)
+* Add classic/legacy icon theme - thx Cyberyoda1411
+* Add NOcr CaseFixer warmup
+* Rename Purfview-Whisper-Faster to Purfview-Faster-Whisper-XXL
+* Fix TTML Rosetta alignment - thx james
+* Add new ASSA advanced effects
+* Add Video -> More -> Open seconds subtitle - thx matmaggi
+* Fixes for ASSA styles font handling
+* Add "fixed duration" to import plain text
+* Allow some sorting of waveform toolbar buttons
+* Double click in edit-binary-sub-grid goes to video position
+
+-----------------------------------------------------------------------------------------------------
+
+v5.0.0-beta7 (13th March 2026)
+
+* Work on installer - thx bovirus
+* Fix inclusion of Italian and Portuguese translations - thx bovirus
+* Fix for interjections - thx Hunique
+* Fix for ASSA font names - thx Hunique
+* Work on Video -> More -> Open seconds subtitle (not complete) - thx matmaggi
+* Enable gen-transparent-video with no subtitles (start in batch mode)
+* Work on OCR fix/replace lists

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dk.nikse.subtitleedit</id>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Subtitle Edit</name>
+  <summary>A free, open source subtitle editor</summary>
+
+  <description>
+    <p>
+      Subtitle Edit is a powerful, free and open source subtitle editor.
+      It supports hundreds of subtitle formats and provides a comprehensive
+      set of editing tools including:
+    </p>
+    <ul>
+      <li>Create, edit, and convert subtitles in hundreds of formats (SRT, ASS, SSA, VTT, STL, and more)</li>
+      <li>Sync subtitles to video using waveform or spectrogram view</li>
+      <li>Spell checking with Hunspell dictionaries</li>
+      <li>Auto-translation via popular online services</li>
+      <li>Speech-to-text (Whisper, Azure, Google, etc.)</li>
+      <li>Text-to-speech synthesis</li>
+      <li>OCR support for image-based subtitle formats (e.g. SUP/Blu-ray)</li>
+      <li>Batch conversion and fix common errors tools</li>
+      <li>Video playback with waveform/spectrogram synchronization (requires mpv)</li>
+    </ul>
+    <p>
+      Subtitle Edit is an offline, privacy-respecting application that does not
+      collect or transmit your data. All core editing features run entirely on
+      your device.
+    </p>
+  </description>
+
+  <url type="homepage">https://subtitleedit.github.io/subtitleedit/</url>
+  <url type="bugtracker">https://github.com/SubtitleEdit/subtitleedit/issues</url>
+  <url type="donation">https://github.com/sponsors/niksedk</url>
+
+  <developer id="dk.nikse">
+    <name>Nikolaj Olsson</name>
+  </developer>
+
+  <launchable type="desktop-id">dk.nikse.subtitleedit.desktop</launchable>
+
+  <categories>
+    <category>AudioVideo</category>
+    <category>Video</category>
+  </categories>
+
+  <keywords>
+    <keyword>subtitle</keyword>
+    <keyword>subtitles</keyword>
+    <keyword>srt</keyword>
+    <keyword>ass</keyword>
+    <keyword>vtt</keyword>
+    <keyword>caption</keyword>
+    <keyword>transcription</keyword>
+  </keywords>
+
+  <provides>
+    <binary>SubtitleEdit</binary>
+  </provides>
+
+  <mimetypes>
+    <mimetype>application/x-subrip</mimetype>
+    <mimetype>text/x-ssa</mimetype>
+  </mimetypes>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Main subtitle editing window</caption>
+      <image>https://subtitleedit.github.io/subtitleedit/images/main.png</image>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="5.0.0-beta9" date="2026-03-19">
+      <description>
+        <p>Initial cross-platform release based on Avalonia UI.</p>
+      </description>
+    </release>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+</component>
+

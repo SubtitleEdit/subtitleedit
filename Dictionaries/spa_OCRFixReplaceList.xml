@@ -1,0 +1,952 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <!-- Abreviaturas simples -->
+    <Word from="KBs" to="kB" />
+    <Word from="Vd" to="Ud" />
+    <Word from="N°" to="N.°" />
+    <Word from="n°" to="n.°" />
+    <Word from="nro." to="n.°" />
+    <Word from="Nro." to="N.°" />
+    <!-- Ortografía básica -->
+    <Word from="aca" to="acá" />
+    <Word from="actuas" to="actúas" />
+    <Word from="actues" to="actúes" />
+    <Word from="adios" to="adiós" />
+    <Word from="agarrenla" to="agárrenla" />
+    <Word from="agarrenlo" to="agárrenlo" />
+    <Word from="agarrandose" to="agarrándose" />
+    <Word from="algun" to="algún" />
+    <Word from="alli" to="allí" />
+    <Word from="alla" to="allá" />
+    <Word from="alejate" to="aléjate" />
+    <Word from="ahi" to="ahí" />
+    <Word from="angel" to="ángel" />
+    <Word from="angeles" to="ángeles" />
+    <Word from="ansian" to="ansían" />
+    <Word from="apagala" to="apágala" />
+    <Word from="aqui" to="aquí" />
+    <Word from="asi" to="así" />
+    <Word from="bahia" to="bahía" />
+    <Word from="busqueda" to="búsqueda" />
+    <Word from="busquedas" to="búsquedas" />
+    <Word from="callate" to="cállate" />
+    <Word from="carcel" to="cárcel" />
+    <Word from="camara" to="cámara" />
+    <Word from="caido" to="caído" />
+    <Word from="cabron" to="cabrón" />
+    <Word from="camion" to="camión" />
+    <Word from="codigo" to="código" />
+    <Word from="codigos" to="códigos" />
+    <Word from="comence" to="comencé" />
+    <Word from="comprate" to="cómprate" />
+    <Word from="consegui" to="conseguí" />
+    <Word from="confias" to="confías" />
+    <Word from="convertira" to="convertirá" />
+    <Word from="corazon" to="corazón" />
+    <Word from="crei" to="creí" />
+    <Word from="creia" to="creía" />
+    <Word from="creido" to="creído" />
+    <Word from="creiste" to="creíste" />
+    <Word from="cubrenos" to="cúbrenos" />
+    <Word from="comio" to="comió" />
+    <Word from="dara" to="dará" />
+    <Word from="dia" to="día" />
+    <Word from="dias" to="días" />
+    <Word from="debio" to="debió" />
+    <Word from="demelo" to="démelo" />
+    <Word from="dimelo" to="dímelo" />
+    <Word from="denoslo" to="dénoslo" />
+    <Word from="deselo" to="déselo" />
+    <Word from="decia" to="decía" />
+    <Word from="decian" to="decían" />
+    <Word from="detras" to="detrás" />
+    <Word from="deberia" to="debería" />
+    <Word from="deberas" to="deberás" />
+    <Word from="deberias" to="deberías" />
+    <Word from="deberian" to="deberían" />
+    <Word from="deberiamos" to="deberíamos" />
+    <Word from="dejame" to="déjame" />
+    <Word from="dejate" to="déjate" />
+    <Word from="dejalo" to="déjalo" />
+    <Word from="dejarian" to="dejarían" />
+    <Word from="damela" to="dámela" />
+    <Word from="despues" to="después" />
+    <Word from="diciendome" to="diciéndome" />
+    <Word from="dificil" to="difícil" />
+    <Word from="dificiles" to="difíciles" />
+    <Word from="disculpate" to="discúlpate" />
+    <Word from="dolares" to="dólares" />
+    <Word from="hechar" to="echar" />
+    <Word from="examenes" to="exámenes" />
+    <Word from="empezo" to="empezó" />
+    <Word from="empujon" to="empujón" />
+    <Word from="empujalo" to="empújalo" />
+    <Word from="energia" to="energía" />
+    <Word from="enfrian" to="enfrían" />
+    <Word from="escondanme" to="escóndanme" />
+    <Word from="esperame" to="espérame" />
+    <Word from="estara" to="estará" />
+    <Word from="estare" to="estaré" />
+    <Word from="estaria" to="estaría" />
+    <Word from="estan" to="están" />
+    <Word from="estaran" to="estarán" />
+    <Word from="estabamos" to="estábamos" />
+    <Word from="estuvieramos" to="estuviéramos" />
+    <Word from="exito" to="éxito" />
+    <Word from="facil" to="fácil" />
+    <Word from="fiscalia" to="fiscalía" />
+    <Word from="fragil" to="frágil" />
+    <Word from="fragiles" to="frágiles" />
+    <Word from="frances" to="francés" />
+    <Word from="gustaria" to="gustaría" />
+    <Word from="habia" to="había" />
+    <Word from="habias" to="habías" />
+    <Word from="habian" to="habían" />
+    <Word from="habrian" to="habrían" />
+    <Word from="habrias" to="habrías" />
+    <Word from="hagalo" to="hágalo" />
+    <Word from="haria" to="haría" />
+    <Word from="increible" to="increíble" />
+    <Word from="incredulo" to="incrédulo" />
+    <Word from="intentalo" to="inténtalo" />
+    <Word from="ire" to="iré" />
+    <Word from="jovenes" to="jóvenes" />
+    <Word from="ladron" to="ladrón" />
+    <Word from="linea" to="línea" />
+    <Word from="llamame" to="llámame" />
+    <Word from="llevalo" to="llévalo" />
+    <Word from="mama" to="mamá" />
+    <Word from="maricon" to="maricón" />
+    <Word from="mayoria" to="mayoría" />
+    <Word from="metodo" to="método" />
+    <Word from="metodos" to="métodos" />
+    <Word from="mio" to="mío" />
+    <Word from="mostro" to="mostró" />
+    <Word from="morira" to="morirá" />
+    <Word from="muevete" to="muévete" />
+    <Word from="murio" to="murió" />
+    <Word from="numero" to="número" />
+    <Word from="numeros" to="números" />
+    <Word from="ningun" to="ningún" />
+    <Word from="oido" to="oído" />
+    <Word from="oidos" to="oídos" />
+    <Word from="oimos" to="oímos" />
+    <Word from="oiste" to="oíste" />
+    <Word from="pasale" to="pásale" />
+    <Word from="pasame" to="pásame" />
+    <Word from="paraiso" to="paraíso" />
+    <Word from="parate" to="párate" />
+    <Word from="pense" to="pensé" />
+    <Word from="peluqueria" to="peluquería" />
+    <Word from="platano" to="plátano" />
+    <Word from="plastico" to="plástico" />
+    <Word from="plasticos" to="plásticos" />
+    <Word from="policia" to="policía" />
+    <Word from="policias" to="policías" />
+    <Word from="poster" to="póster" />
+    <Word from="podia" to="podía" />
+    <Word from="podias" to="podías" />
+    <Word from="podria" to="podría" />
+    <Word from="podrian" to="podrían" />
+    <Word from="podrias" to="podrías" />
+    <Word from="podriamos" to="podríamos" />
+    <Word from="prometio" to="prometió" />
+    <Word from="proposito" to="propósito" />
+    <Word from="pideselo" to="pídeselo" />
+    <Word from="ponganse" to="pónganse" />
+    <Word from="prometeme" to="prométeme" />
+    <Word from="publico" to="público" />
+    <Word from="publicos" to="públicos" />
+    <Word from="publicamente" to="públicamente" />
+    <Word from="quedate" to="quédate" />
+    <Word from="queria" to="quería" />
+    <Word from="querrias" to="querrías" />
+    <Word from="querian" to="querían" />
+    <Word from="rapido" to="rápido" />
+    <Word from="rapidamente" to="rápidamente" />
+    <Word from="razon" to="razón" />
+    <Word from="rehusen" to="rehúsen" />
+    <Word from="rie" to="ríe" />
+    <Word from="rias" to="rías" />
+    <Word from="rindete" to="ríndete" />
+    <Word from="sacame" to="sácame" />
+    <Word from="sentian" to="sentían" />
+    <Word from="sientate" to="siéntate" />
+    <Word from="sera" to="será" />
+    <Word from="soplon" to="soplón" />
+    <Word from="sueltalo" to="suéltalo" />
+    <Word from="tambien" to="también" />
+    <Word from="teoria" to="teoría" />
+    <Word from="tendra" to="tendrá" />
+    <Word from="telefono" to="teléfono" />
+    <Word from="tipica" to="típica" />
+    <Word from="todavia" to="todavía" />
+    <Word from="tomalo" to="tómalo" />
+    <Word from="tonterias" to="tonterías" />
+    <Word from="torci" to="torcí" />
+    <Word from="traelos" to="tráelos" />
+    <Word from="traiganlo" to="tráiganlo" />
+    <Word from="traiganlos" to="tráiganlos" />
+    <Word from="trio" to="trío" />
+    <Word from="tuvieramos" to="tuviéramos" />
+    <Word from="union" to="unión" />
+    <Word from="ultimo" to="último" />
+    <Word from="ultima" to="última" />
+    <Word from="ultimos" to="últimos" />
+    <Word from="ultimas" to="últimas" />
+    <Word from="unica" to="única" />
+    <Word from="unico" to="único" />
+    <Word from="vamonos" to="vámonos" />
+    <Word from="vayanse" to="váyanse" />
+    <Word from="victima" to="víctima" />
+    <Word from="vivira" to="vivirá" />
+    <Word from="volvio" to="volvió" />
+    <Word from="volvia" to="volvía" />
+    <Word from="volvian" to="volvían" />
+    <!-- Palabras con eír/oír más usadas -->
+    <Word from="reir" to="reír" />
+    <Word from="freir" to="freír" />
+    <Word from="sonreir" to="sonreír" />
+    <Word from="hazmerreir" to="hazmerreír" />
+    <Word from="oir" to="oír" />
+    <Word from="oirlo" to="oírlo" />
+    <Word from="oirte" to="oírte" />
+    <Word from="oirse" to="oírse" />
+    <Word from="oirme" to="oírme" />
+    <Word from="oirle" to="oírle" />
+    <Word from="oirla" to="oírla" />
+    <Word from="oirles" to="oírles" />
+    <Word from="oirnos" to="oírnos" />
+    <Word from="oirlas" to="oírlas" />
+    <!-- Palabras que no llevan acento -->
+    <Word from="bién" to="bien" />
+    <Word from="crímen" to="crimen" />
+    <Word from="fué" to="fue" />
+    <Word from="fuí" to="fui" />
+    <Word from="quiéres" to="quieres" />
+    <Word from="tí" to="ti" />
+    <Word from="dí" to="di" />
+    <Word from="vá" to="va" />
+    <Word from="vé" to="ve" />
+    <Word from="ví" to="vi" />
+    <Word from="vió" to="vio" />
+    <Word from="ó" to="o" />
+    <Word from="clón" to="clon" />
+    <Word from="dió" to="dio" />
+    <Word from="guión" to="guion" />
+    <Word from="dón" to="don" />
+    <Word from="fé" to="fe" />
+    <Word from="áquel" to="aquel" />
+    <!-- Palabras donde se puede prescindir de la tilde diacrítica -->
+    <Word from="éste" to="este" />
+    <Word from="ésta" to="esta" />
+    <Word from="éstos" to="estos" />
+    <Word from="éstas" to="estas" />
+    <Word from="ése" to="ese" />
+    <Word from="ésa" to="esa" />
+    <Word from="ésos" to="esos" />
+    <Word from="ésas" to="esas" />
+    <Word from="sólo" to="solo" />
+    <!-- Errores no relacionados con los tildes -->
+    <Word from="coktel" to="cóctel" />
+    <Word from="cocktel" to="cóctel" />
+    <Word from="conciente" to="consciente" />
+    <Word from="comenzé" to="comencé" />
+    <Word from="desilucionarte" to="desilusionarte" />
+    <Word from="dijieron" to="dijeron" />
+    <Word from="empezé" to="empecé" />
+    <Word from="hize" to="hice" />
+    <Word from="ilucionarte" to="ilusionarte" />
+    <Word from="inconciente" to="inconsciente" />
+    <Word from="quize" to="quise" />
+    <Word from="quizo" to="quiso" />
+    <Word from="verguenza" to="vergüenza" />
+    <!-- Errores en nombres propios o de países -->
+    <Word from="Nuñez" to="Núñez" />
+    <Word from="Ivan" to="Iván" />
+    <Word from="Japon" to="Japón" />
+    <Word from="Monica" to="Mónica" />
+    <Word from="Maria" to="María" />
+    <Word from="Jose" to="José" />
+    <Word from="Ramon" to="Ramón" />
+    <Word from="Garcia" to="García" />
+    <Word from="Gonzalez" to="González" />
+    <Word from="Jesus" to="Jesús" />
+    <Word from="Alvarez" to="Álvarez" />
+    <Word from="Damian" to="Damián" />
+    <Word from="Rene" to="René" />
+    <Word from="Nicolas" to="Nicolás" />
+    <Word from="Jonas" to="Jonás" />
+    <Word from="Lopez" to="López" />
+    <Word from="Hernandez" to="Hernández" />
+    <Word from="Bermudez" to="Bermúdez" />
+    <Word from="Fernandez" to="Fernández" />
+    <Word from="Suarez" to="Suárez" />
+    <Word from="Sofia" to="Sofía" />
+    <Word from="Seneca" to="Séneca" />
+    <Word from="Tokyo" to="Tokio" />
+    <Word from="Canada" to="Canadá" />
+    <Word from="Paris" to="París" />
+    <Word from="Turquia" to="Turquía" />
+    <Word from="Mexico" to="México" />
+    <Word from="Mejico" to="México" />
+    <Word from="Matias" to="Matías" />
+    <Word from="Valentin" to="Valentín" />
+    <Word from="mejicano" to="mexicano" />
+    <Word from="mejicanos" to="mexicanos" />
+    <Word from="mejicana" to="mexicana" />
+    <Word from="mejicanas" to="mexicanas" />
+    <!-- Creados por SE -->
+    <Word from="io" to="lo" />
+    <Word from="ia" to="la" />
+    <Word from="ie" to="le" />
+    <Word from="Io" to="lo" />
+    <Word from="Ia" to="la" />
+    <Word from="AI" to="Al" />
+    <Word from="Ie" to="le" />
+    <Word from="EI" to="El" />
+    <Word from="subaﬂuente" to="subafluente" />
+    <Word from="aﬂójalo" to="aflójalo" />
+    <Word from="Aﬂójalo" to="Aflójalo" />
+    <Word from="perdi" to="perdí" />
+    <Word from="Podria" to="Podría" />
+    <Word from="confia" to="confía" />
+    <Word from="pasaria" to="pasaría" />
+    <Word from="Podias" to="Podías" />
+    <Word from="responsabke" to="responsable" />
+    <Word from="Todavia" to="Todavía" />
+    <Word from="envien" to="envíen" />
+    <Word from="Queria" to="Quería" />
+    <Word from="tio" to="tío" />
+    <Word from="traido" to="traído" />
+    <Word from="Asi" to="Así" />
+    <Word from="elegi" to="elegí" />
+    <Word from="habria" to="habría" />
+    <Word from="encantaria" to="encantaría" />
+    <Word from="leido" to="leído" />
+    <Word from="conocias" to="conocías" />
+    <Word from="harias" to="harías" />
+    <Word from="Aqui" to="Aquí" />
+    <Word from="decidi" to="decidí" />
+    <Word from="mia" to="mía" />
+    <Word from="Crei" to="Creí" />
+    <Word from="podiamos" to="podíamos" />
+    <Word from="avisame" to="avísame" />
+    <Word from="debia" to="debía" />
+    <Word from="pensarias" to="pensarías" />
+    <Word from="reuniamos" to="reuníamos" />
+    <Word from="POÏ" to="por" />
+    <Word from="vendria" to="vendría" />
+    <Word from="caida" to="caída" />
+    <Word from="venian" to="venían" />
+    <Word from="compañias" to="compañías" />
+    <Word from="leiste" to="leíste" />
+    <Word from="Leiste" to="Leíste" />
+    <Word from="fiaria" to="fiaría" />
+    <Word from="Hungria" to="Hungría" />
+    <Word from="fotografia" to="fotografía" />
+    <Word from="cafeteria" to="cafetería" />
+    <Word from="Digame" to="Dígame" />
+    <Word from="debias" to="debías" />
+    <Word from="tendria" to="tendría" />
+    <Word from="CÏGO" to="creo" />
+    <Word from="anteg" to="antes" />
+    <Word from="SóIo" to="Solo" />
+    <Word from="Ilamándola" to="llamándola" />
+    <Word from="Cáﬂaté" to="Cállate" />
+    <Word from="Ilamaste" to="llamaste" />
+    <Word from="daria" to="daría" />
+    <Word from="Iargaba" to="largaba" />
+    <Word from="Yati" to="Y a ti" />
+    <Word from="querias" to="querías" />
+    <Word from="Iimpiarlo" to="limpiarlo" />
+    <Word from="Iargado" to="largado" />
+    <Word from="galeria" to="galería" />
+    <Word from="Bartomeu" to="Bertomeu" />
+    <Word from="Iocalizarlo" to="localizarlo" />
+    <Word from="Ilámame" to="llámame" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <WholeLines>
+    <!-- Todas las líneas -->
+    <Line from="No" to="No." />
+  </WholeLines>
+  <PartialLinesAlways />
+  <PartialLines>
+    <!-- Varios -->
+    <LinePart from="de gratis" to="gratis" />
+    <LinePart from="si quiera" to="siquiera" />
+    <LinePart from="Cada una de los" to="Cada uno de los" />
+    <LinePart from="Cada uno de las" to="Cada una de las" />
+    <!-- Uso incorrecto de haber / a ver -->
+    <LinePart from="haber que" to="a ver qué" />
+    <LinePart from="haber qué" to="a ver qué" />
+    <LinePart from="Haber si" to="A ver si" />
+    <!-- Ponombres exclamativos o interrogativos Parte 1 -->
+    <LinePart from=" que hora" to=" qué hora" />
+    <LinePart from="yo que se" to="yo qué sé" />
+    <LinePart from="Yo que se" to="Yo qué sé" />
+    <!-- Acentos al final de los signos de exclamación -->
+    <LinePart from=" tu!" to=" tú!" />
+    <LinePart from=" si!" to=" sí!" />
+    <LinePart from=" mi!" to=" mí!" />
+    <LinePart from=" el!" to=" él!" />
+    <!-- Acentos al final de los signos de interrogación -->
+    <LinePart from=" tu?" to=" tú?" />
+    <LinePart from=" si?" to=" sí?" />
+    <LinePart from=" mi?" to=" mí?" />
+    <LinePart from=" el?" to=" él?" />
+    <LinePart from=" aun?" to=" aún?" />
+    <LinePart from=" mas?" to=" más?" />
+    <LinePart from=" que?" to=" qué?" />
+    <LinePart from=" paso?" to=" pasó?" />
+    <LinePart from=" cuando?" to=" cuándo?" />
+    <LinePart from=" cuanto?" to=" cuánto?" />
+    <LinePart from=" cuanta?" to=" cuánta?" />
+    <LinePart from=" cuantas?" to=" cuántas?" />
+    <LinePart from=" cuantos?" to=" cuántos?" />
+    <LinePart from=" donde?" to=" dónde?" />
+    <LinePart from=" quien?" to=" quién?" />
+    <LinePart from=" como?" to=" cómo?" />
+    <LinePart from=" adonde?" to=" adónde?" />
+    <LinePart from=" cual?" to=" cuál?" />
+    <!-- Acentos en los signos de interrogación completos -->
+    <LinePart from="¿Si?" to="¿Sí?" />
+    <LinePart from="¿esta bien?" to="¿está bien?" />
+    <!-- Enunciados que son a la vez interrogativos y exclamativos -->
+    <LinePart from="¿Pero qué haces?" to="¡¿Pero qué haces?!" />
+    <LinePart from="¿pero qué haces?" to="¡¿pero qué haces?!" />
+    <LinePart from="¿Es que no me has escuchado?" to="¡¿Es que no me has escuchado?!" />
+    <LinePart from="¡¿es que no me has escuchado?!" to="¡¿es que no me has escuchado?!" />
+    <!-- Acentos al principio de los signos de interrogación con minúsculas -->
+    <LinePart from="¿aun" to="¿aún" />
+    <LinePart from="¿tu " to="¿tú " />
+    <LinePart from="¿que " to="¿qué " />
+    <LinePart from="¿sabes que" to="¿sabes qué" />
+    <LinePart from="¿sabes adonde" to="¿sabes adónde" />
+    <LinePart from="¿sabes cual" to="¿sabes cuál" />
+    <LinePart from="¿sabes quien" to="¿sabes quién" />
+    <LinePart from="¿sabes como" to="¿sabes cómo" />
+    <LinePart from="¿sabes cuan" to="¿sabes cuán" />
+    <LinePart from="¿sabes cuanto" to="¿sabes cuánto" />
+    <LinePart from="¿sabes cuanta" to="¿sabes cuánta" />
+    <LinePart from="¿sabes cuantos" to="¿sabes cuántos" />
+    <LinePart from="¿sabes cuantas" to="¿sabes cuántas" />
+    <LinePart from="¿sabes cuando" to="¿sabes cuándo" />
+    <LinePart from="¿sabes donde" to="¿sabes dónde" />
+    <LinePart from="¿sabe que" to="¿sabe qué" />
+    <LinePart from="¿sabe adonde" to="¿sabe adónde" />
+    <LinePart from="¿sabe cual" to="¿sabe cuál" />
+    <LinePart from="¿sabe quien" to="¿sabe quién" />
+    <LinePart from="¿sabe como" to="¿sabe cómo" />
+    <LinePart from="¿sabe cuan" to="¿sabe cuán" />
+    <LinePart from="¿sabe cuanto" to="¿sabe cuánto" />
+    <LinePart from="¿sabe cuanta" to="¿sabe cuánta" />
+    <LinePart from="¿sabe cuantos" to="¿sabe cuántos" />
+    <LinePart from="¿sabe cuantas" to="¿sabe cuántas" />
+    <LinePart from="¿sabe cuando" to="¿sabe cuándo" />
+    <LinePart from="¿sabe donde" to="¿sabe dónde" />
+    <LinePart from="¿saben que" to="¿saben qué" />
+    <LinePart from="¿saben adonde" to="¿saben adónde" />
+    <LinePart from="¿saben cual" to="¿saben cuál" />
+    <LinePart from="¿saben quien" to="¿saben quién" />
+    <LinePart from="¿saben como" to="¿saben cómo" />
+    <LinePart from="¿saben cuan" to="¿saben cuán" />
+    <LinePart from="¿saben cuanto" to="¿saben cuánto" />
+    <LinePart from="¿saben cuanta" to="¿saben cuánta" />
+    <LinePart from="¿saben cuantos" to="¿saben cuántos" />
+    <LinePart from="¿saben cuantas" to="¿saben cuántas" />
+    <LinePart from="¿saben cuando" to="¿saben cuándo" />
+    <LinePart from="¿saben donde" to="¿saben dónde" />
+    <LinePart from="¿de que" to="¿de qué" />
+    <LinePart from="¿de donde" to="¿de dónde" />
+    <LinePart from="¿de cual" to="¿de cuál" />
+    <LinePart from="¿de quien" to="¿de quién" />
+    <LinePart from="¿de cuanto" to="¿de cuánto" />
+    <LinePart from="¿de cuanta" to="¿de cuánta" />
+    <LinePart from="¿de cuantos" to="¿de cuántos" />
+    <LinePart from="¿de cuantas" to="¿de cuántas" />
+    <LinePart from="¿de cuando" to="¿de cuándo" />
+    <LinePart from="¿sobre que" to="¿sobre qué" />
+    <LinePart from="¿como " to="¿cómo " />
+    <LinePart from="¿cual " to="¿cuál " />
+    <LinePart from="¿en cual" to="¿en cuál" />
+    <LinePart from="¿cuando" to="¿cuándo" />
+    <LinePart from="¿hasta cual" to="¿hasta cuál" />
+    <LinePart from="¿hasta quien" to="¿hasta quién" />
+    <LinePart from="¿hasta cuanto" to="¿hasta cuánto" />
+    <LinePart from="¿hasta cuantas" to="¿hasta cuántas" />
+    <LinePart from="¿hasta cuantos" to="¿hasta cuántos" />
+    <LinePart from="¿hasta cuando" to="¿hasta cuándo" />
+    <LinePart from="¿hasta donde" to="¿hasta dónde" />
+    <LinePart from="¿hasta que" to="¿hasta qué" />
+    <LinePart from="¿hasta adonde" to="¿hasta adónde" />
+    <LinePart from="¿desde que" to="¿desde qué" />
+    <LinePart from="¿desde cuando" to="¿desde cuándo" />
+    <LinePart from="¿desde quien" to="¿desde quién" />
+    <LinePart from="¿desde donde" to="¿desde dónde" />
+    <LinePart from="¿cuanto" to="¿cuánto" />
+    <LinePart from="¿cuantos" to="¿cuántos" />
+    <LinePart from="¿donde" to="¿dónde" />
+    <LinePart from="¿adonde" to="¿adónde" />
+    <LinePart from="¿con que" to="¿con qué" />
+    <LinePart from="¿con cual" to="¿con cuál" />
+    <LinePart from="¿con quien" to="¿con quién" />
+    <LinePart from="¿con cuantos" to="¿con cuántos" />
+    <LinePart from="¿con cuantas" to="¿con cuántas" />
+    <LinePart from="¿con cuanta" to="¿con cuánta" />
+    <LinePart from="¿con cuanto" to="¿con cuánto" />
+    <LinePart from="¿para donde" to="¿para dónde" />
+    <LinePart from="¿para adonde" to="¿para adónde" />
+    <LinePart from="¿para cuando" to="¿para cuándo" />
+    <LinePart from="¿para que" to="¿para qué" />
+    <LinePart from="¿para quien" to="¿para quién" />
+    <LinePart from="¿para cuanto" to="¿para cuánto" />
+    <LinePart from="¿para cuanta" to="¿para cuánta" />
+    <LinePart from="¿para cuantos" to="¿para cuántos" />
+    <LinePart from="¿para cuantas" to="¿para cuántas" />
+    <LinePart from="¿a donde" to="¿a dónde" />
+    <LinePart from="¿a que" to="¿a qué" />
+    <LinePart from="¿a cual" to="¿a cuál" />
+    <LinePart from="¿a quien" to="¿a quien" />
+    <LinePart from="¿a como" to="¿a cómo" />
+    <LinePart from="¿a cuanto" to="¿a cuánto" />
+    <LinePart from="¿a cuanta" to="¿a cuánta" />
+    <LinePart from="¿a cuantos" to="¿a cuántos" />
+    <LinePart from="¿a cuantas" to="¿a cuántas" />
+    <LinePart from="¿por que" to="¿por qué" />
+    <LinePart from="¿por cual" to="¿por cuál" />
+    <LinePart from="¿por quien" to="¿por quién" />
+    <LinePart from="¿por cuanto" to="¿por cuánto" />
+    <LinePart from="¿por cuanta" to="¿por cuánta" />
+    <LinePart from="¿por cuantos" to="¿por cuántos" />
+    <LinePart from="¿por cuantas" to="¿por cuántas" />
+    <LinePart from="¿por donde" to="¿por dónde" />
+    <LinePart from="¿porque" to="¿por qué" />
+    <LinePart from="¿porqué" to="¿por qué" />
+    <LinePart from="¿y que" to="¿y qué" />
+    <LinePart from="¿y como" to="¿y cómo" />
+    <LinePart from="¿y cuando" to="¿y cuándo" />
+    <LinePart from="¿y cual" to="¿y cuál" />
+    <LinePart from="¿y quien" to="¿y quién" />
+    <LinePart from="¿y cuanto" to="¿y cuánto" />
+    <LinePart from="¿y cuanta" to="¿y cuánta" />
+    <LinePart from="¿y cuantos" to="¿y cuántos" />
+    <LinePart from="¿y cuantas" to="¿y cuántas" />
+    <LinePart from="¿y donde" to="¿y dónde" />
+    <LinePart from="¿y adonde" to="¿y adónde" />
+    <LinePart from="¿quien " to="¿quién " />
+    <LinePart from="¿esta " to="¿está " />
+    <LinePart from="¿estas " to="¿estás " />
+    <!-- Acentos al principio de los signos de interrogación con mayúsculas -->
+    <LinePart from="¿Aun" to="¿Aún" />
+    <LinePart from="¿Que " to="¿Qué " />
+    <LinePart from="¿Sabes que" to="¿Sabes qué" />
+    <LinePart from="¿Sabes adonde" to="¿Sabes adónde" />
+    <LinePart from="¿Sabes cual" to="¿Sabes cuál" />
+    <LinePart from="¿Sabes quien" to="¿Sabes quién" />
+    <LinePart from="¿Sabes como" to="¿Sabes cómo" />
+    <LinePart from="¿Sabes cuan" to="¿Sabes cuán" />
+    <LinePart from="¿Sabes cuanto" to="¿Sabes cuánto" />
+    <LinePart from="¿Sabes cuanta" to="¿Sabes cuánta" />
+    <LinePart from="¿Sabes cuantos" to="¿Sabes cuántos" />
+    <LinePart from="¿Sabes cuantas" to="¿Sabes cuántas" />
+    <LinePart from="¿Sabes cuando" to="¿Sabes cuándo" />
+    <LinePart from="¿Sabes donde" to="¿Sabes dónde" />
+    <LinePart from="¿Sabe que" to="¿Sabe qué" />
+    <LinePart from="¿Sabe adonde" to="¿Sabe adónde" />
+    <LinePart from="¿Sabe cual" to="¿Sabe cuál" />
+    <LinePart from="¿Sabe quien" to="¿Sabe quién" />
+    <LinePart from="¿Sabe como" to="¿Sabe cómo" />
+    <LinePart from="¿Sabe cuan" to="¿Sabe cuán" />
+    <LinePart from="¿Sabe cuanto" to="¿Sabe cuánto" />
+    <LinePart from="¿Sabe cuanta" to="¿Sabe cuánta" />
+    <LinePart from="¿Sabe cuantos" to="¿Sabe cuántos" />
+    <LinePart from="¿Sabe cuantas" to="¿Sabe cuántas" />
+    <LinePart from="¿Sabe cuando" to="¿Sabe cuándo" />
+    <LinePart from="¿Sabe donde" to="¿Sabe dónde" />
+    <LinePart from="¿Saben que" to="¿Saben qué" />
+    <LinePart from="¿Saben adonde" to="¿Saben adónde" />
+    <LinePart from="¿Saben cual" to="¿Saben cuál" />
+    <LinePart from="¿Saben quien" to="¿Saben quién" />
+    <LinePart from="¿Saben como" to="¿Saben cómo" />
+    <LinePart from="¿Saben cuan" to="¿Saben cuán" />
+    <LinePart from="¿Saben cuanto" to="¿Saben cuánto" />
+    <LinePart from="¿Saben cuanta" to="¿Saben cuánta" />
+    <LinePart from="¿Saben cuantos" to="¿Saben cuántos" />
+    <LinePart from="¿Saben cuantas" to="¿Saben cuántas" />
+    <LinePart from="¿Saben cuando" to="¿Saben cuándo" />
+    <LinePart from="¿Saben donde" to="¿Saben dónde" />
+    <LinePart from="¿De que" to="¿De qué" />
+    <LinePart from="¿De donde" to="¿De dónde" />
+    <LinePart from="¿De cual" to="¿De cuál" />
+    <LinePart from="¿De quien" to="¿De quién" />
+    <LinePart from="¿De cuanto" to="¿De cuánto" />
+    <LinePart from="¿De cuanta" to="¿De cuánta" />
+    <LinePart from="¿De cuantos" to="¿De cuántos" />
+    <LinePart from="¿De cuantas" to="¿De cuántas" />
+    <LinePart from="¿De cuando" to="¿De cuándo" />
+    <LinePart from="¿Desde que" to="¿Desde qué" />
+    <LinePart from="¿Desde cuando" to="¿Desde cuándo" />
+    <LinePart from="¿Desde quien" to="¿Desde quién" />
+    <LinePart from="¿Desde donde" to="¿Desde dónde" />
+    <LinePart from="¿Sobre que" to="¿Sobre qué" />
+    <LinePart from="¿Como " to="¿Cómo " />
+    <LinePart from="¿Cual " to="¿Cuál " />
+    <LinePart from="¿En cual" to="¿En cuál" />
+    <LinePart from="¿Cuando" to="¿Cuándo" />
+    <LinePart from="¿Hasta cual" to="¿Hasta cuál" />
+    <LinePart from="¿Hasta quien" to="¿Hasta quién" />
+    <LinePart from="¿Hasta cuanto" to="¿Hasta cuánto" />
+    <LinePart from="¿Hasta cuantas" to="¿Hasta cuántas" />
+    <LinePart from="¿Hasta cuantos" to="¿Hasta cuántos" />
+    <LinePart from="¿Hasta cuando" to="¿Hasta cuándo" />
+    <LinePart from="¿Hasta donde" to="¿Hasta dónde" />
+    <LinePart from="¿Hasta que" to="¿Hasta qué" />
+    <LinePart from="¿Hasta adonde" to="¿Hasta adónde" />
+    <LinePart from="¿Cuanto" to="¿Cuánto" />
+    <LinePart from="¿Cuantos" to="¿Cuántos" />
+    <LinePart from="¿Donde" to="¿Dónde" />
+    <LinePart from="¿Adonde" to="¿Adónde" />
+    <LinePart from="¿Con que" to="¿Con qué" />
+    <LinePart from="¿Con cual" to="¿Con cuál" />
+    <LinePart from="¿Con quien" to="¿Con quién" />
+    <LinePart from="¿Con cuantos" to="¿Con cuántos" />
+    <LinePart from="¿Con cuanta" to="¿Con cuántas" />
+    <LinePart from="¿Con cuanta" to="¿Con cuánta" />
+    <LinePart from="¿Con cuanto" to="¿Con cuánto" />
+    <LinePart from="¿Para donde" to="¿Para dónde" />
+    <LinePart from="¿Para adonde" to="¿Para adónde" />
+    <LinePart from="¿Para cuando" to="¿Para cuándo" />
+    <LinePart from="¿Para que" to="¿Para qué" />
+    <LinePart from="¿Para quien" to="¿Para quién" />
+    <LinePart from="¿Para cuanto" to="¿Para cuánto" />
+    <LinePart from="¿Para cuanta" to="¿Para cuánta" />
+    <LinePart from="¿Para cuantos" to="¿Para cuántos" />
+    <LinePart from="¿Para cuantas" to="¿Para cuántas" />
+    <LinePart from="¿A donde" to="¿A dónde" />
+    <LinePart from="¿A que" to="¿A qué" />
+    <LinePart from="¿A cual" to="¿A cuál" />
+    <LinePart from="¿A quien" to="¿A quien" />
+    <LinePart from="¿A como" to="¿A cómo" />
+    <LinePart from="¿A cuanto" to="¿A cuánto" />
+    <LinePart from="¿A cuanta" to="¿A cuánta" />
+    <LinePart from="¿A cuantos" to="¿A cuántos" />
+    <LinePart from="¿A cuantas" to="¿A cuántas" />
+    <LinePart from="¿Por que" to="¿Por qué" />
+    <LinePart from="¿Por cual" to="¿Por cuál" />
+    <LinePart from="¿Por quien" to="¿Por quién" />
+    <LinePart from="¿Por cuanto" to="¿Por cuánto" />
+    <LinePart from="¿Por cuanta" to="¿Por cuánta" />
+    <LinePart from="¿Por cuantos" to="¿Por cuántos" />
+    <LinePart from="¿Por cuantas" to="¿Por cuántas" />
+    <LinePart from="¿Por donde" to="¿Por dónde" />
+    <LinePart from="¿Porque" to="¿Por qué" />
+    <LinePart from="¿Porqué" to="¿Por qué" />
+    <LinePart from="¿Y que" to="¿Y qué" />
+    <LinePart from="¿Y como" to="¿Y cómo" />
+    <LinePart from="¿Y cuando" to="¿Y cuándo" />
+    <LinePart from="¿Y cual" to="¿Y cuál" />
+    <LinePart from="¿Y quien" to="¿Y quién" />
+    <LinePart from="¿Y cuanto" to="¿Y cuánto" />
+    <LinePart from="¿Y cuanta" to="¿Y cuánta" />
+    <LinePart from="¿Y cuantos" to="¿Y cuántos" />
+    <LinePart from="¿Y cuantas" to="¿Y cuántas" />
+    <LinePart from="¿Y donde" to="¿Y dónde" />
+    <LinePart from="¿Y adonde" to="¿Y adónde" />
+    <LinePart from="¿Quien " to="¿Quién " />
+    <LinePart from="¿Esta " to="¿Está " />
+    <!-- Tilde diacrítica en oraciones interrogativas o exclamativas indirectas -->
+    <LinePart from="el porque" to="el porqué" />
+    <LinePart from="su porque" to="su porqué" />
+    <LinePart from="los porqués" to="los porqués" />
+    <!-- aún -->
+    <LinePart from="aun," to="aún," />
+    <LinePart from="aun no" to="aún no" />
+    <!-- dé -->
+    <LinePart from=" de y " to=" dé y " />
+    <LinePart from=" nos de " to=" nos dé " />
+    <!-- tú -->
+    <LinePart from=" tu ya " to=" tú ya " />
+    <LinePart from="Tu ya " to="Tú ya " />
+    <!-- casos específicos antes de la coma -->
+    <LinePart from=" de, " to=" dé," />
+    <LinePart from=" mi, " to=" mí," />
+    <LinePart from=" tu, " to=" tú," />
+    <LinePart from=" el, " to=" él," />
+    <LinePart from=" te, " to=" té," />
+    <LinePart from=" mas, " to=" más," />
+    <LinePart from=" quien, " to=" quién," />
+    <LinePart from=" cual," to=" cuál," />
+    <LinePart from="porque, " to="porqué," />
+    <LinePart from="cuanto, " to="cuánto," />
+    <LinePart from="cuando, " to="cuándo," />
+    <!-- sé -->
+    <LinePart from=" se," to=" sé," />
+    <LinePart from="se donde" to="sé dónde" />
+    <LinePart from="se cuando" to="sé cuándo" />
+    <LinePart from="se adonde" to="sé adónde" />
+    <LinePart from="se como" to="sé cómo" />
+    <LinePart from="se cual" to="sé cuál" />
+    <LinePart from="se quien" to="sé quién" />
+    <LinePart from="se cuanto" to="sé cuánto" />
+    <LinePart from="se cuanta" to="sé cuánta" />
+    <LinePart from="se cuantos" to="sé cuántos" />
+    <LinePart from="se cuantas" to="sé cuántas" />
+    <LinePart from="se cuan" to="sé cuán" />
+    <!-- si/sí -->
+    <LinePart from=" el si " to=" el sí " />
+    <LinePart from="si mismo" to="sí mismo" />
+    <LinePart from="si misma" to="sí misma" />
+    <!-- Errores de "l" en vez de "i" en casos específicos -->
+    <LinePart from=" llegal" to=" ilegal" />
+    <LinePart from=" lluminar" to=" iluminar" />
+    <LinePart from="sllbato" to="silbato" />
+    <LinePart from="sllenclo" to="silencio" />
+    <LinePart from="clemencla" to="clemencia" />
+    <LinePart from="socledad" to="sociedad" />
+    <LinePart from="tlene" to="tiene" />
+    <LinePart from="tlempo" to="tiempo" />
+    <LinePart from="equlvocaba" to="equivocaba" />
+    <LinePart from="qulnce" to="quince" />
+    <LinePart from="comlen" to="comien" />
+    <LinePart from="historl" to="histori" />
+    <LinePart from="misterl" to="misteri" />
+    <LinePart from="vivencl" to="vivenci" />
+  </PartialLines>
+  <BeginLines />
+  <EndLines>
+    <Ending from=".»." to="»." />
+  </EndLines>
+  <RegularExpressions>
+    <!-- Abreviaturas compuestas -->
+    <RegEx find="\b[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
+    <RegEx find="\b[Dd](r|ra)\b\.?" replaceWith="D$1." />
+    <RegEx find="\b[Uu](d|ds)\b\.?" replaceWith="U$1." />
+    <RegEx find="(\d)(\s){0,1}([Aa])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 a. m.$7" />
+    <RegEx find="(\d)(\s){0,1}([Pp])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 p. m.$7" />
+    <RegEx find="(\d)(\s){0,1}(h)(s\b|r\b|rs\b){0,1}(\.){0,1}(\W){0,1}" replaceWith="$1 $3$6" />
+    <RegEx find="(\d)(\s){0,1}([Kk])(m\b|ms\b)(\.){0,1}(\W){0,1}" replaceWith="$1 km$6" />
+    <RegEx find="(\d)(\s){0,1}(s)(g\b|eg\b){0,1}(\.){0,1}(\W){0,1}" replaceWith="$1 s$6" />
+    <RegEx find="(\d)(\s){0,1}([Kk])(g\b|gs\b)(\.){0,1}(\W){0,1}" replaceWith="$1 kg$6" />
+    <RegEx find="(\d)(\s){0,1}(m)(t\b|ts\b){0,1}(\.){0,1}(\W){0,1}" replaceWith="$1 m$6" />
+    <RegEx find="(\d)KBs(\W){0,1}" replaceWith="$1 kB$2" />
+    <RegEx find="([Nn])°(\s){0,1}(\d)" replaceWith="$1.° $3" />
+    <RegEx find="([Nn])ro(\.){0,1}(\s){0,1}(\d)" replaceWith="$1.° $4" />
+    <!-- Signos invertidos -->
+    <RegEx find="\?¿(\W|\w)" replaceWith="? ¿$1" />
+    <RegEx find="\!¡(\W|\w)" replaceWith="! ¡$1" />
+    <RegEx find="\?¿¿(\W|\w)" replaceWith="? ¿$1" />
+    <RegEx find="\!¡¡(\W|\w)" replaceWith="! ¡$1" />
+    <!-- Inicio de línea -->
+    <RegEx find="^_(\s)" replaceWith="-$1" />
+    <RegEx find="^_(\w)" replaceWith="- $1" />
+    <!-- Uso de comillas según la recomendación de la RAE y la Wikipedia -->
+    <RegEx find="(«[^“«»]+)«" replaceWith="$1“" />
+    <RegEx find="(“[^«»”]+)»" replaceWith="$1”" />
+    <RegEx find="`" replaceWith="‘" />
+    <RegEx find="´" replaceWith="’" />
+    <RegEx find="([\wá-ú])(\.)(«|»)" replaceWith="$1»." />
+    <RegEx find="«(\?)" replaceWith="»?" />
+    <RegEx find="«(\!)" replaceWith="»!" />
+    <RegEx find="«\s" replaceWith="» " />
+    <RegEx find="«(\))" replaceWith="»)" />
+    <RegEx find="(\?)«" replaceWith="?»" />
+    <RegEx find="(\!)«" replaceWith="!»" />
+    <RegEx find="«(,)" replaceWith="»," />
+    <RegEx find="«(;)" replaceWith="»;" />
+    <RegEx find="«(:)" replaceWith="»:" />
+    <RegEx find="(¿)»" replaceWith="¿«" />
+    <RegEx find="(¡)»" replaceWith="¡«" />
+    <!-- Uso de comillas (ANSI) según la recomendación de la RAE («\x22» es el carácter «"») -->
+    <RegEx find="([\wá-ú])([\.,]) ?[\x22»]" replaceWith="$1»$2" />
+    <RegEx find="([\wá-ú])\?[\x22»](\s|$)" replaceWith="$1?».$2" />
+    <RegEx find="^(\.\.\.)(\s){0,1}\x22" replaceWith="$1«" />
+    <RegEx find="«\x22" replaceWith="«" />
+    <RegEx find="\x22»" replaceWith="»" />
+    <RegEx find="^\x22{2,}" replaceWith="«" />
+    <RegEx find="\x22{2,}$" replaceWith="»" />
+    <RegEx find="\x22\r" replaceWith="»" />
+    <RegEx find="^\x22" replaceWith="«" />
+    <RegEx find="\x22$" replaceWith="»." />
+    <RegEx find="([\wá-ú])\.[\x22»]" replaceWith="$1»." />
+    <RegEx find="\s\x22" replaceWith=" «" />
+    <RegEx find="\x22\s" replaceWith="» " />
+    <RegEx find="\x22(,)" replaceWith="»," />
+    <RegEx find="\x22(\.)" replaceWith="»." />
+    <RegEx find="\x22(;)" replaceWith="»;" />
+    <RegEx find="\x22(:)" replaceWith="»:" />
+    <RegEx find="(\!)\x22" replaceWith="!»" />
+    <RegEx find="\x22(\!)" replaceWith="»!" />
+    <RegEx find="(\?)\x22" replaceWith="?»" />
+    <RegEx find="\x22(\?)" replaceWith="»?" />
+    <RegEx find="\x22(¿)" replaceWith="«¿" />
+    <RegEx find="(¿)\x22" replaceWith="¿«" />
+    <RegEx find="\x22(¡)" replaceWith="«¡" />
+    <RegEx find="(¡)\x22" replaceWith="¡«" />
+    <RegEx find="\x22(\))" replaceWith="»)" />
+    <RegEx find="(\))\x22" replaceWith=")»" />
+    <RegEx find="(\()\x22" replaceWith="(«" />
+    <!-- Uso de comillas (Unicode) según la recomendación de la RAE («\u0022» es el carácter «"») -->
+    <RegEx find="^(\.\.\.)(\s){0,1}\u0022" replaceWith="$1«" />
+    <RegEx find="^\u0022{2,}" replaceWith="«" />
+    <RegEx find="\u0022{2,}$" replaceWith="»" />
+    <RegEx find="\u0022\r" replaceWith="»" />
+    <RegEx find="^\u0022" replaceWith="«" />
+    <RegEx find="\u0022$" replaceWith="»" />
+    <RegEx find="(\w)(\.)\u0022" replaceWith="$1»." />
+    <RegEx find="\s\u0022" replaceWith=" «" />
+    <RegEx find="\u0022\s" replaceWith="» " />
+    <RegEx find="\u0022(,)" replaceWith="»," />
+    <RegEx find="\u0022(\.)" replaceWith="»." />
+    <RegEx find="\u0022(;)" replaceWith="»;" />
+    <RegEx find="\u0022(:)" replaceWith="»:" />
+    <RegEx find="(\!)\u0022" replaceWith="!»" />
+    <RegEx find="\u0022(\!)" replaceWith="»!" />
+    <RegEx find="(\?)\u0022" replaceWith="?»" />
+    <RegEx find="\u0022(\?)" replaceWith="»?" />
+    <RegEx find="\u0022(¿)" replaceWith="«¿" />
+    <RegEx find="(¿)\u0022" replaceWith="¿«" />
+    <RegEx find="\u0022(¡)" replaceWith="«¡" />
+    <RegEx find="(¡)\u0022" replaceWith="¡«" />
+    <RegEx find="\u0022(\))" replaceWith="»)" />
+    <RegEx find="(\))\u0022" replaceWith=")»" />
+    <RegEx find="(\()\u0022" replaceWith="(«" />
+    <!-- Numeración -->
+    <RegEx find="([0-9])\.([0-9])\b" replaceWith="$1,$2" />
+    <RegEx find="(^|\s|[¡¿«])([0-9])(,|\.)?([0-9]{3})\b" replaceWith="$1$2$4" />
+    <RegEx find="(\d)\s(?=\d{2}\b)" replaceWith="$1-" />
+    <!-- "1 :", "2 :"... "n :" a "n:" -->
+    <RegEx find="(\d) ([:;])" replaceWith="$1$2" />
+    <!-- Corregir las comas y puntos por ej. «, ,» por «,» & «,,,» o similar por «...» -->
+    <RegEx find="(\.\.\.+)$" replaceWith="..." />
+    <RegEx find="(, ,+)$" replaceWith="," />
+    <RegEx find="(,\s),+\s" replaceWith="$1" />
+    <RegEx find="(\.\.\.),$" replaceWith="$1" />
+    <RegEx find="([\wá-ú])(\.\.)$" replaceWith="$1." />
+    <!-- Puntos innecesarios (complemento) -->
+    <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
+    <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
+    <RegEx find="([\wá-ú\x22»])\.([\?\!])" replaceWith="$1$2" />
+    <RegEx find="([\:\;])\." replaceWith="$1" />
+    <RegEx find="\.([\:\;])" replaceWith="$1" />
+    <RegEx find="\:+" replaceWith=":" />
+    <!-- Terminaciones ción/sión -->
+    <RegEx find="([sc]i)o(n)\b" replaceWith="$1ó$2" />
+    <RegEx find="([SC]I)O(N)\b" replaceWith="$1Ó$2" />
+    <!-- "i" en vez de "l" en terminaciones «clón» -->
+    <RegEx find="clón\b" replaceWith="ción" />
+    <!-- "si" en vez de "sl" -->
+    <RegEx find="\b([Ss])(l)\b" replaceWith="$1i" />
+    <!-- Para corregir por ej. raclones, perforaclones, opclones, etc -->
+    <RegEx find="([Rr]ac)l(o)" replaceWith="$1i$2" />
+    <RegEx find="([Oo]pc)l(o)" replaceWith="$1i$2" />
+    <!-- Para corregir por ej. tenldo, víctlmas, olvldarlo, legítlmo, etc -->
+    <RegEx find="([BbCcDdFfHhMmNnRrSsTtVv])l([bcdhmnrstv])" replaceWith="$1i$2" />
+    <!-- Corrige los errores en el ripeo de la «o» mayúscula por el cero «0» y viceversa -->
+    <RegEx find="(\d)O" replaceWith="$1 0" />
+    <RegEx find="(\d)[,\.]O" replaceWith="$1.0" />
+    <RegEx find="([A-Z])0" replaceWith="$1O" />
+    <RegEx find="\b0([A-Za-z])" replaceWith="O$1" />
+    <!-- Signos musicales -->
+    <RegEx find="[♪♫☺☹♥©☮☯Σ∞≡⇒π#](\r\n)[♪♫☺☹♥©☮☯Σ∞≡⇒π#]" replaceWith="$1" />
+    <!-- Tilde diacrítica antes del punto -->
+    <RegEx find="(\s)([dst])e\.(\s|\$)" replaceWith="$1$2é.$3" />
+    <RegEx find="(\s)mi\.(\s|\$)" replaceWith="$1mí.$2" />
+    <RegEx find="(\s)el\.(\s|\$)" replaceWith="$1él.$2" />
+    <RegEx find="(\s)tu\.(\s|\$)" replaceWith="$1tú.$2" />
+    <RegEx find="(\s)si\.(\s|\$)" replaceWith="$1sí.$2" />
+    <RegEx find="(\s)aun\.(\s|\$)" replaceWith="$1aún.$2" />
+    <RegEx find="(\s)mas\.(\s|\$)" replaceWith="$1más.$2" />
+    <RegEx find="(\s)quien\.(\s|\$)" replaceWith="$1quién.$2" />
+    <RegEx find="(\s)cual\.(\s|\$)" replaceWith="$1cuál.$2" />
+    <RegEx find="(\s)que\.(\s|\$)" replaceWith="$1qué.$2" />
+    <RegEx find="(\s)porque\.(\s|\$)" replaceWith="$1porqué.$2" />
+    <RegEx find="(\s)cuanto\.(\s|\$)" replaceWith="$1cuánto.$2" />
+    <RegEx find="(\s)cuando\.(\s|\$)" replaceWith="$1cuándo.$2" />
+    <!-- Prefijos; palabras compuestas (simple) -->
+    <RegEx find="(\b[Ee]x|\b[Ss]uper|\b[Aa]nti|\b[Pp]os|\b[Pp]re|\b[Pp]ro|\b[Vv]ice)[\s\x2D]([a-zá-ú]{3,20})(\b)" replaceWith="$1$2" />
+    <!-- Prefijos; palabras compuestas (números) -->
+    <RegEx find="(\b[Ss]ub|\b[Ss]uper)[\s\x2D](\d{2})(\b)" replaceWith="$1-$2$3" />
+    <!-- Prefijos; palabras compuestas (mayúsculas) -->
+    <RegEx find="(\b[Aa]nti|\b[Mm]ini|\b[Pp]os|\b[Pp]ro)\s([A-Z]{1,10})([A-Z][a-zá-ú]){0,10}(\b)" replaceWith="$1-$2$3" />
+    <!-- Casos de mayúsculas con dos puntos -->
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(a)" replaceWith="$1A" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(b)" replaceWith="$1B" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(c)" replaceWith="$1C" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(d)" replaceWith="$1D" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(e)" replaceWith="$1E" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(f)" replaceWith="$1F" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(g)" replaceWith="$1G" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(h)" replaceWith="$1H" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(i)" replaceWith="$1I" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(j)" replaceWith="$1J" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(k)" replaceWith="$1K" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(l)" replaceWith="$1L" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(m)" replaceWith="$1M" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(n)" replaceWith="$1N" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ñ)" replaceWith="$1Ñ" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(o)" replaceWith="$1O" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(p)" replaceWith="$1P" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(q)" replaceWith="$1Q" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(r)" replaceWith="$1R" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(s)" replaceWith="$1S" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(t)" replaceWith="$1T" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(u)" replaceWith="$1U" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(v)" replaceWith="$1V" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(w)" replaceWith="$1W" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(x)" replaceWith="$1X" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(y)" replaceWith="$1Y" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(z)" replaceWith="$1Z" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(á)" replaceWith="$1Á" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(é)" replaceWith="$1É" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(í)" replaceWith="$1Í" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ó)" replaceWith="$1Ó" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ú)" replaceWith="$1Ú" />
+    <!-- Usos correctos de la coma -->
+    <RegEx find="(\b[Pp]ero),(\s)([¡¿])" replaceWith="$1$2$3" />
+    <RegEx find="(\b[Aa]unque),(\s|$)" replaceWith="$1$2" />
+    <!-- Vocativos -->
+    <RegEx find="(\bHola|\bBueno|\bBien|\bVen|\bVen acá|\besto|\bBuenos días|\bFeliz cumpleaños|\bsiento)\s([A-Z][a-zá-ú]{3,12}\b|seño(r|ra|rita)\b|hij(o|a) mío\b|amig(o|a)\b)" replaceWith="$1, $2" />
+    <!-- «aún» cuando son sinónimos de «incluso» o «hasta» -->
+    <RegEx find="(\W|^)(\b[Aa])ú(n)(\s)(así\b|cuando\b|los\b|las\b|negar(te|se)\b)" replaceWith="$1$2u$3$4$5" />
+    <RegEx find="(\b[Nn]i)(\s)(a)ú(n)(\W|$)" replaceWith="$1$2$3u$4$5" />
+    <!-- «sí» -->
+    <RegEx find="\b([Ss])i(:|;|\.)" replaceWith="$1í$2" />
+    <!-- «sé» -->
+    <RegEx find="(\b[Ll]o|\b[Ll]a|\b[Ll]e)(\s)se(\W|$)" replaceWith="$1$2sé$3" />
+    <RegEx find="[Ss]e\s(dónde\b|cuándo\b|adónde\b|cómo\b|cuál\b|quién\b|cuánto\b|cuánta\b|cuántos\b|cuántas\b|cuán\b)" replaceWith="sé $1" />
+    <!-- «té» -->
+    <RegEx find="\b([Tt])e\s(verde\b|negro\b|perla\b|de manzanilla\b|de lim[óo]n\b|de jazm[íi]n\b)" replaceWith="$1é $2" />
+    <!-- Apóstrofo -->
+    <RegEx find="(\b[A-Z][a-zá-ú]{3,12})\s(’|')(\d\d(\s|$))" replaceWith="$1 $3" />
+    <RegEx find="(\b[A-Z]{2,5})(’|')(s)" replaceWith="(Ej. Devedés)$1$3" />
+    <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(s|m)(\W|$)" replaceWith="$1,$3 $4$5" />
+    <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(h)(\W|$)" replaceWith="$1:$3 $4$5" />
+    <!-- Porcentaje (debe llevar espacio) -->
+    <RegEx find="(\b\d{1,3})%(\W)" replaceWith="$1 %$2" />
+    <!-- Haz/has -->
+    <RegEx find="(\b)([Hh])as\s(la\b|lo\b|clic\b)(\W)" replaceWith="$1$2az $3$4" />
+    <RegEx find="(\b)([Hh])az\s(de\b)(\W)" replaceWith="$1$2as $3$4" />
+    <RegEx find="(\b)([Hh])as(le\b|nos\b|me\b)(\W)" replaceWith="$1$2az$3$4" />
+    <!-- Quitar itálicas en 3 o menos letras -->
+    <RegEx find="\x3ci\x3e(.{1,3})\x3c\/i\x3e" replaceWith="$1" />
+    <!-- Miscelánea -->
+    <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)mío" replaceWith="$1 de mí" />
+    <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)tuyo" replaceWith="$1 de ti" />
+    <!-- Punto antes de «¿» y «¡» -->
+    <RegEx find="([\wá-ú»])\s(?=(¿|¡)[A-ZÁ-Ú])" replaceWith="$1. " />
+    <!-- Espacios después del guión -->
+    <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
+    <!-- Punto antes del guión -->
+    <RegEx find="([^\.\?\!]) - " replaceWith="$1. - " />
+    <!-- Terminaciones en «ólogo», «ílogo» y «álogo» -->
+    <RegEx find="\Bo(log[ao]s?\b)" replaceWith="ó$1" />
+    <RegEx find="\Ba(log[ao]s?\b)" replaceWith="á$1" />
+    <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
+    <RegEx find="\bIes\b" replaceWith="les" />
+    <RegEx find="\bIos\b" replaceWith="los" />
+  </RegularExpressions>
+</OCRFixReplaceList>

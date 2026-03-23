@@ -1,0 +1,242 @@
+name: Build and release SeConv
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: 'Build configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      create_release:
+        description: 'Create GitHub release'
+        required: true
+        default: true
+        type: boolean
+      is_prerelease:
+        description: 'Mark as pre-release'
+        required: true
+        default: true
+        type: boolean
+      release_tag:
+        description: 'Release tag (e.g., v1.0.0-beta)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      - name: Publish Windows x64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true `
+            -o ./publish/windows-x64
+
+      - name: Publish Windows ARM64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r win-arm64 --self-contained true `
+            -p:PublishSingleFile=true `
+            -o ./publish/windows-arm64
+
+      - name: Remove PDB files
+        run: |
+          Get-ChildItem -Path "./publish/windows-x64/" -Recurse -Include *.pdb | Remove-Item -Force
+          Get-ChildItem -Path "./publish/windows-arm64/" -Recurse -Include *.pdb | Remove-Item -Force
+
+      - name: Create Windows ZIP packages
+        run: |
+          Compress-Archive -Path "./publish/windows-x64/*" -DestinationPath "./SeConv-Windows-x64.zip"
+          Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SeConv-Windows-ARM64.zip"
+
+      - name: Upload Windows ZIP packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip-packages
+          path: |
+            ./SeConv-Windows-x64.zip
+            ./SeConv-Windows-ARM64.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      - name: Publish macOS x64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r osx-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/macos-x64
+          find "./publish/macos-x64/" -name "*.pdb" -type f -delete
+
+      - name: Publish macOS ARM64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r osx-arm64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/macos-arm64
+          find "./publish/macos-arm64/" -name "*.pdb" -type f -delete
+
+      - name: Create macOS ZIP packages
+        run: |
+          cd ./publish/macos-x64 && zip -r ../../SeConv-macOS-x64.zip . && cd ../..
+          cd ./publish/macos-arm64 && zip -r ../../SeConv-macOS-ARM64.zip . && cd ../..
+
+      - name: Upload macOS ZIP packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-zip-packages
+          path: |
+            ./SeConv-macOS-x64.zip
+            ./SeConv-macOS-ARM64.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
+
+      - name: Publish Linux x64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/linux-x64
+
+      - name: Publish Linux ARM64
+        run: |
+          dotnet publish src/seconv/SeConv.csproj -c ${{ inputs.build_configuration }} -r linux-arm64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -o ./publish/linux-arm64
+
+      - name: Remove PDB files from Linux artifacts
+        run: |
+          find "./publish/linux-x64/" -name "*.pdb" -type f -delete
+          find "./publish/linux-arm64/" -name "*.pdb" -type f -delete
+
+      - name: Create Linux TAR packages
+        run: |
+          cd ./publish/linux-x64 && tar -czf ../../SeConv-Linux-x64.tar.gz . && cd ../..
+          cd ./publish/linux-arm64 && tar -czf ../../SeConv-Linux-ARM64.tar.gz . && cd ../..
+
+      - name: Upload Linux TAR packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-tar-packages
+          path: |
+            ./SeConv-Linux-x64.tar.gz
+            ./SeConv-Linux-ARM64.tar.gz
+
+
+  create-release:
+    if: ${{ inputs.create_release }}
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.release_tag }}" ]; then
+            echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
+          else
+            timestamp=$(date +"%Y%m%d-%H%M%S")
+            echo "tag=pre-release-${timestamp}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p ./release-assets
+
+          # Copy ZIP/TAR packages to release assets
+          cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
+          cp ./artifacts/macos-zip-packages/*.zip ./release-assets/
+          cp ./artifacts/linux-tar-packages/*.tar.gz ./release-assets/
+
+          # List all files that will be uploaded
+          echo "Release assets:"
+          ls -la ./release-assets/
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: SeConv ${{ steps.tag.outputs.tag }}
+          body: |
+            **Build Configuration:** ${{ inputs.build_configuration }}
+            **Build Date:** ${{ steps.date.outputs.date }}
+
+            ### Downloads
+            - **Windows x64:** [SeConv-Windows-x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-Windows-x64.zip)
+            - **Windows ARM64:** [SeConv-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-Windows-ARM64.zip)
+            - **macOS ARM64 (Apple Silicon):** [SeConv-macOS-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-macOS-ARM64.zip)
+            - **macOS x64 (Intel):** [SeConv-macOS-x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-macOS-x64.zip)
+            - **Linux x64:** [SeConv-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-Linux-x64.tar.gz)
+            - **Linux ARM64:** [SeConv-Linux-ARM64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SeConv-Linux-ARM64.tar.gz)
+
+            ### Installation
+            1. Download the appropriate package for your platform
+            2. Extract the archive
+            3. Run the `seconv` executable (may need execute permissions on Unix systems: `chmod +x seconv`)
+
+            *This is an automated build from the GitHub Actions workflow.*
+          draft: false
+          prerelease: ${{ inputs.is_prerelease }}
+          files: |
+            ./release-assets/SeConv-Windows-x64.zip
+            ./release-assets/SeConv-Windows-ARM64.zip
+            ./release-assets/SeConv-macOS-ARM64.zip
+            ./release-assets/SeConv-macOS-x64.zip
+            ./release-assets/SeConv-Linux-x64.tar.gz
+            ./release-assets/SeConv-Linux-ARM64.tar.gz

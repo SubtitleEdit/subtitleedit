@@ -1,0 +1,76 @@
+app-id: dk.nikse.subtitleedit
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.dotnet10
+command: SubtitleEdit
+
+# Make the dotnet10 SDK tools available to every module at build time
+build-options:
+  append-path: /usr/lib/sdk/dotnet10/bin
+  append-ld-library-path: /usr/lib/sdk/dotnet10/lib
+  env:
+    PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
+
+finish-args:
+  # Display
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  # Hardware acceleration
+  - --device=dri
+  # File access (subtitle files are typically in the home directory)
+  - --filesystem=home
+  # Network (optional online services: translation, TTS, speech-to-text, etc.)
+  - --share=network
+  # Audio (video playback via mpv)
+  - --socket=pulseaudio
+  # .NET single-file bundle extraction directory (persistent cache)
+  - --env=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/cache/.net
+
+modules:
+  - name: subtitleedit
+    buildsystem: simple
+    # Select the correct RID per host architecture
+    build-options:
+      arch:
+        x86_64:
+          env:
+            RUNTIME: linux-x64
+        aarch64:
+          env:
+            RUNTIME: linux-arm64
+    build-commands:
+      # Build and publish from source using the pre-fetched NuGet packages.
+      # --source points to the directory where flatpak-builder staged the .nupkg
+      # files from nuget-sources.json (dest: nuget-sources by default).
+      - |
+        . /usr/lib/sdk/dotnet10/enable.sh
+        dotnet publish src/UI/UI.csproj \
+          --configuration Release \
+          --runtime "$RUNTIME" \
+          --self-contained true \
+          -p:PublishSingleFile=true \
+          -p:RestoreLockedMode=false \
+          --source /run/build/subtitleedit/nuget-sources \
+          -o /app/bin
+
+      # Desktop entry
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.desktop /app/share/applications/dk.nikse.subtitleedit.desktop
+
+      # AppStream metainfo
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
+
+      # Icon (256x256 PNG from the source tree)
+      - install -Dm644 src/UI/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+
+    sources:
+      # Full repo checkout (path relative to this manifest: installer/flatpak/ -> ../../)
+      - type: dir
+        path: ../..
+
+      # NuGet packages pre-fetched by generate-nuget-sources.sh.
+      # flatpak-builder expands this JSON array and downloads every package
+      # into the nuget-sources/ directory before the build starts.
+      - nuget-sources.json

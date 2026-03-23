@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="ajövőnk" to="a jövőnk" />
+    <Word from="akkorjó" to="akkor jó" />
+    <Word from="Akkorjó" to="Akkor jó" />
+    <Word from="káris" to="kár is" />
+    <Word from="Káris" to="Kár is" />
+    <Word from="kétszeris" to="kétszer is" />
+    <Word from="tegyéljégre" to="tegyél jégre" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions>
+    <!-- nagy I-l javítások -->
+    <RegEx find="([\x41-\x5a\x61-\x7a\xc1-\xfc])II" replaceWith="$1ll" />
+    <RegEx find="II([\x61-\x7a\xe1-\xfc])" replaceWith="ll$1" />
+    <RegEx find="([\x61-\x7a\xe1-\xfc])I" replaceWith="$1l" />
+    <RegEx find="([\x20])I([^aeou\x41-\x5a\xc1-\xdc])" replaceWith="$1l$2" />
+    <RegEx find="\bl([bcdfghjklmnpqrstvwxz])" replaceWith="I$1" />
+    <RegEx find="([\x41-\x5a\xc1-\xdc])I([\x61-\x7a\xe1-\xfc])" replaceWith="$1l$2" />
+    <RegEx find="([\x61-\x7a\xe1-\xfc][\-])I([\x61-\x7a\xe1-\xfc])" replaceWith="$1l$2" />
+    <RegEx find="([\x41-\x5a\xc1-\xdc])I([\-][\x41-\x5a\xc1-\xdc][\x61-\x7a\xe1-\xfc])" replaceWith="$1l$2" />
+    <RegEx find="\b([AEÜÓ])I([^\x41-\x5a\xc1-\xdc])" replaceWith="$1l$2" />
+    <RegEx find="\bI([aáeéiíoóöuúüy\xf5\xfb])" replaceWith="l$1" />
+    <RegEx find="\b(?:II|ll)" replaceWith="Il" />
+    <RegEx find="([\xf5\xfb])I" replaceWith="$1l" />
+  </RegularExpressions>
+</OCRFixReplaceList>

@@ -1,0 +1,518 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="abitual" to="habitual" />
+    <Word from="àcerca" to="acerca" />
+    <Word from="acessor" to="assessor" />
+    <Word from="acólico" to="acólito" />
+    <Word from="açoreano" to="açoriano" />
+    <Word from="actor" to="ator" />
+    <Word from="actores" to="atores" />
+    <Word from="actuacao" to="atuação" />
+    <Word from="atuacao" to="atuação" />
+    <Word from="acucar" to="açúcar" />
+    <Word from="açucar" to="açúcar" />
+    <Word from="advinhar" to="adivinhar" />
+    <Word from="africa" to="África" />
+    <Word from="ajuisar" to="ajuizar" />
+    <Word from="album" to="álbum" />
+    <Word from="alcoolémia" to="alcoolemia" />
+    <Word from="aldião" to="aldeão" />
+    <Word from="algerino" to="argelino" />
+    <Word from="ameixeal" to="ameixial" />
+    <Word from="amiaça" to="ameaça" />
+    <Word from="analizar" to="analisar" />
+    <Word from="andáste" to="andaste" />
+    <Word from="anemona" to="anémona" />
+    <Word from="antartico" to="antártico" />
+    <Word from="antárctico" to="antártico" />
+    <Word from="antepôr" to="antepor" />
+    <Word from="apárte" to="aparte" />
+    <Word from="apiadeiro" to="apeadeiro" />
+    <Word from="apiar" to="apear" />
+    <Word from="apreciacao" to="apreciação" />
+    <Word from="arctico" to="ártico" />
+    <Word from="artico" to="ártico" />
+    <Word from="arrazar" to="arrasar" />
+    <Word from="artifice" to="artífice" />
+    <Word from="artifícial" to="artificial" />
+    <Word from="ascenção" to="ascensão" />
+    <!-- <Word from="assucar" to="açúcar" /> assucar é uma palavra existente no dicionário -->
+    <Word from="assúcar" to="açúcar" />
+    <Word from="aste" to="haste" />
+    <Word from="asterístico" to="asterisco" />
+    <Word from="averção" to="aversão" />
+    <Word from="avizar" to="avisar" />
+    <Word from="avulsso" to="avulso" />
+    <Word from="baínha" to="bainha" />
+    <Word from="banca-rota" to="bancarrota" />
+    <Word from="bandeija" to="bandeja" />
+    <Word from="bébé" to="bebé" />
+    <Word from="beige" to="bege" />
+    <Word from="benção" to="bênção" />
+    <Word from="beneficiência" to="beneficência" />
+    <Word from="beneficiente" to="beneficente" />
+    <Word from="benvinda" to="bem-vinda" />
+    <Word from="benvindo" to="bem-vindo" />
+    <Word from="boasvindas" to="boas-vindas" />
+    <Word from="borborinho" to="burburinho" />
+    <Word from="Brazil" to="Brasil" />
+    <Word from="bussula" to="bússola" />
+    <Word from="cabo-verdeano" to="cabo-verdiano" />
+    <Word from="caimbras" to="cãibras" />
+    <Word from="calcáreo" to="calcário" />
+    <Word from="calsado" to="calçado" />
+    <Word from="calvíce" to="calvície" />
+    <Word from="camoneano" to="camoniano" />
+    <Word from="campião" to="campeão" />
+    <Word from="cançacos" to="cansaços" />
+    <Word from="caracter" to="caráter" />
+    <Word from="carater" to="caráter" />
+    <Word from="caractéres" to="carateres" />
+    <Word from="caratéres" to="carateres" />
+    <Word from="catequeze" to="catequese" />
+    <Word from="catequisador" to="catequizador" />
+    <Word from="catequisar" to="catequizar" />
+    <Word from="chícara" to="xícara" />
+    <Word from="ciclano" to="sicrano" />
+    <Word from="cicrano" to="sicrano" />
+    <Word from="cidadães" to="cidadãos" />
+    <Word from="cidadões" to="cidadãos" />
+    <Word from="cincoenta" to="cinquenta" />
+    <Word from="cinseiro" to="cinzeiro" />
+    <Word from="cinsero" to="sincero" />
+    <Word from="citacoes" to="citações" />
+    <Word from="coalizão" to="colisão" />
+    <Word from="côdia" to="côdea" />
+    <Word from="combóio" to="comboio" />
+    <Word from="compôr" to="compor" />
+    <Word from="concerteza" to="com certeza" />
+    <Word from="constituia" to="constituía" />
+    <Word from="constituíu" to="constituiu" />
+    <Word from="contato" to="contacto" />
+    <Word from="contensão" to="contenção" />
+    <Word from="contribuicoes" to="contribuições" />
+    <Word from="côr" to="cor" />
+    <Word from="corassão" to="coração" />
+    <Word from="corçario" to="corsário" />
+    <Word from="corçário" to="corsário" />
+    <Word from="cornprimidosinbo" to="comprimidozinho" />
+    <!-- <Word from="cota-parte" to="quota-parte" /> é uma palavra existente no dicionário -->
+    <Word from="crâneo" to="crânio" />
+    <Word from="dE" to="de" />
+    <Word from="defenição" to="definição" />
+    <Word from="defenido" to="definido" />
+    <Word from="defenir" to="definir" />
+    <Word from="deficite" to="défice" />
+    <Word from="degladiar" to="digladiar" />
+    <Word from="deiche" to="deixe" />
+    <Word from="desinteria" to="disenteria" />
+    <Word from="despendio" to="dispêndio" />
+    <Word from="despêndio" to="dispêndio" />
+    <Word from="desplicência" to="displicência" />
+    <Word from="dificulidade" to="dificuldade" />
+    <Word from="director" to="diretor" />
+    <Word from="dispender" to="despender" />
+    <Word from="dispendio" to="dispêndio" />
+    <Word from="distribuido" to="distribuído" />
+    <Word from="druída" to="druida" />
+    <Word from="écrã" to="ecrã" />
+    <Word from="ecran" to="ecrã" />
+    <Word from="écran" to="ecrã" />
+    <Word from="êle" to="ele" />
+    <Word from="elice" to="hélice" />
+    <Word from="élice" to="hélice" />
+    <Word from="emiratos" to="emirados" />
+    <Word from="engolis-te" to="engoliste" />
+    <Word from="engulir" to="engolir" />
+    <Word from="enguliste" to="engoliste" />
+    <Word from="entertido" to="entretido" />
+    <Word from="entitular" to="intitular" />
+    <Word from="entreterimento" to="entretenimento" />
+    <Word from="entreti-me" to="entretive-me" />
+    <Word from="envólucro" to="invólucro" />
+    <Word from="erói" to="herói" />
+    <Word from="escluir" to="excluir" />
+    <Word from="esclusão" to="exclusão" />
+    <Word from="escrivões" to="escrivães" />
+    <Word from="esqueiro" to="isqueiro" />
+    <Word from="esquesito" to="esquisito" />
+    <Word from="estacoes" to="estações" />
+    <Word from="esteje" to="esteja" />
+    <Word from="excavação" to="escavação" />
+    <Word from="excavar" to="escavar" />
+    <Word from="exdrúxula" to="esdrúxula" />
+    <Word from="exdrúxulas" to="esdrúxulas" />
+    <Word from="exitar" to="hesitar" />
+    <Word from="explicacoes" to="explicações" />
+    <Word from="exquisito" to="esquisito" />
+    <Word from="extende" to="estende" />
+    <Word from="extender" to="estender" />
+    <Word from="fàcilmenfe" to="facilmente" />
+    <Word from="fàcilmente" to="facilmente" />
+    <Word from="fariam-lhe" to="far-lhe-iam" />
+    <Word from="FARMÁClAS" to="FARMÁCIAS" />
+    <Word from="farmecêutico" to="farmacêutico" />
+    <Word from="fassa" to="faça" />
+    <Word from="fébre" to="febre" />
+    <Word from="fecula" to="fécula" />
+    <Word from="fémea" to="fêmea" />
+    <Word from="femenino" to="feminino" />
+    <Word from="femininismo" to="feminismo" />
+    <Word from="físiologista" to="fisiologista" />
+    <Word from="fizémos" to="fizemos" />
+    <Word from="fizes-te" to="fizeste" />
+    <Word from="flôr" to="flor" />
+    <Word from="forão" to="foram" />
+    <Word from="formalisar" to="formalizar" />
+    <Word from="fôro" to="foro" />
+    <Word from="fos-te" to="foste" />
+    <Word from="fragância" to="fragrância" />
+    <Word from="françês" to="francês" />
+    <Word from="frasqutnho" to="frasquinho" />
+    <Word from="frustado" to="frustrado" />
+    <Word from="furá" to="furar" />
+    <Word from="gaz" to="gás" />
+    <Word from="gáz" to="gás" />
+    <Word from="geito" to="jeito" />
+    <Word from="geneceu" to="gineceu" />
+    <Word from="geropiga" to="jeropiga" />
+    <Word from="glicémia" to="glicemia" />
+    <Word from="gorgeta" to="gorjeta" />
+    <Word from="grangear" to="granjear" />
+    <Word from="guizar" to="guisar" />
+    <Word from="hectar" to="hectare" />
+    <Word from="herméticamente" to="hermeticamente" />
+    <Word from="hernia" to="hérnia" />
+    <Word from="higiéne" to="higiene" />
+    <Word from="hilariedade" to="hilaridade" />
+    <Word from="hiperacídez" to="hiperacidez" />
+    <Word from="hontem" to="ontem" />
+    <Word from="igiene" to="higiene" />
+    <Word from="igienico" to="higiénico" />
+    <Word from="igiénico" to="higiénico" />
+    <Word from="igreija" to="igreja" />
+    <Word from="iguasu" to="iguaçu" />
+    <Word from="ilacção" to="ilação" />
+    <Word from="imbigo" to="umbigo" />
+    <Word from="impecilho" to="empecilho" />
+    <Word from="íncas" to="incas" />
+    <Word from="incêsto" to="incesto" />
+    <Word from="inclusivé" to="inclusive" />
+    <Word from="incômodos" to="incómodos" />
+    <Word from="incontestávelmente" to="incontestavelmente" />
+    <Word from="incontestàvelmente" to="incontestavelmente" />
+    <Word from="indespensáveis" to="indispensáveis" />
+    <Word from="indespensável" to="indispensável" />
+    <Word from="India" to="Índia" />
+    <Word from="indiguinação" to="indignação" />
+    <Word from="indiguinado" to="indignado" />
+    <Word from="indiguinar" to="indignar" />
+    <Word from="inflacção" to="inflação" />
+    <Word from="ingreja" to="igreja" />
+    <Word from="INSCRICOES" to="INSCRIÇÕES" />
+    <Word from="intensão" to="intenção" />
+    <Word from="intertido" to="entretido" />
+    <Word from="intoxica" to="Intoxica" />
+    <Word from="intrega" to="entrega" />
+    <Word from="inverosímel" to="inverosímil" />
+    <Word from="iorgute" to="iogurte" />
+    <Word from="ipopótamo" to="hipopótamo" />
+    <Word from="ipsilon" to="ípsilon" />
+    <Word from="ipslon" to="ípsilon" />
+    <Word from="isquesito" to="esquisito" />
+    <Word from="juíz" to="juiz" />
+    <Word from="juiza" to="juíza" />
+    <Word from="júniores" to="juniores" />
+    <Word from="justanzente" to="justamente" />
+    <Word from="juz" to="jus" />
+    <Word from="kilo" to="quilo" />
+    <Word from="laboratório-porque" to="laboratório porque" />
+    <Word from="ladravaz" to="ladrava" />
+    <Word from="lamentàvelmente" to="lamentavelmente" />
+    <Word from="lampeão" to="lampião" />
+    <Word from="largartixa" to="lagartixa" />
+    <Word from="largarto" to="lagarto" />
+    <Word from="lêm" to="leem" />
+    <Word from="lêem" to="leem" />
+    <Word from="leucémia" to="leucemia" />
+    <Word from="licensa" to="licença" />
+    <Word from="linguísta" to="linguista" />
+    <Word from="lisongear" to="lisonjear" />
+    <Word from="logista" to="lojista" />
+    <Word from="maçajar" to="massajar" />
+    <Word from="Macfadden-o" to="Macfadden o" />
+    <Word from="mae" to="mãe" />
+    <Word from="magestade" to="majestade" />
+    <Word from="mãgua" to="mágoa" />
+    <Word from="mangerico" to="manjerico" />
+    <Word from="mangerona" to="manjerona" />
+    <Word from="manteem-se" to="mantêm-se" />
+    <Word from="mantega" to="manteiga" />
+    <Word from="mantem-se" to="mantém-se" />
+    <Word from="massiço" to="maciço" />
+    <Word from="massisso" to="maciço" />
+    <Word from="médica-Rio" to="médica Rio" />
+    <Word from="menistro" to="ministro" />
+    <Word from="merciaria" to="mercearia" />
+    <Word from="metrelhadora" to="metralhadora" />
+    <Word from="miscegenação" to="miscigenação" />
+    <Word from="misogenia" to="misoginia" />
+    <Word from="misogeno" to="misógino" />
+    <Word from="misógeno" to="misógino" />
+    <Word from="mº" to="º" />
+    <Word from="môlho" to="molho" />
+    <Word from="monumentânea" to="momentânea" />
+    <Word from="mortandela" to="mortadela" />
+    <Word from="morteIa" to="mortela" />
+    <Word from="muinto" to="muito" />
+    <Word from="nasaias" to="nasais" />
+    <Word from="nêle" to="nele" />
+    <Word from="nest" to="neste" />
+    <Word from="Nívea" to="Nivea" />
+    <Word from="Nivel" to="Nível" />
+    <Word from="nonagessimo" to="nonagésimo" />
+    <Word from="nonagéssimo" to="nonagésimo" />
+    <Word from="nornal" to="normal" />
+    <Word from="notàvelmente" to="notavelmente" />
+    <Word from="obcessão" to="obsessão" />
+    <Word from="obesidae" to="obesidade" />
+    <Word from="óbviamente" to="obviamente" />
+    <Word from="òbviamente" to="obviamente" />
+    <Word from="ofecina" to="oficina" />
+    <Word from="oje" to="hoje" />
+    <Word from="omem" to="homem" />
+    <Word from="opcoes" to="opções" />
+    <Word from="opóbrio" to="opróbrio" />
+    <Word from="opróbio" to="opróbrio" />
+    <Word from="orfão" to="órfão" />
+    <Word from="organigrama" to="organograma" />
+    <Word from="organisar" to="organizar" />
+    <Word from="orgão" to="órgão" />
+    <Word from="orta" to="horta" />
+    <Word from="óptima" to="ótima" />
+    <Word from="óptimas" to="ótimas" />
+    <Word from="óptimo" to="ótimo" />
+    <Word from="óptimos" to="ótimos" />
+    <Word from="paralização" to="paralisação" />
+    <Word from="paralizado" to="paralisado" />
+    <Word from="paralizar" to="paralisar" />
+    <Word from="paráste" to="paraste" />
+    <Word from="Pátria" to="pátria" />
+    <Word from="paúl" to="Paul" />
+    <Word from="pecalço" to="percalço" />
+    <Word from="pêga" to="pega" />
+    <Word from="periodo" to="período" />
+    <Word from="pertubar" to="perturbar" />
+    <Word from="perú" to="peru" />
+    <Word from="piqueno" to="pequeno" />
+    <Word from="pirinéus" to="Pirenéus" />
+    <Word from="poblema" to="problema" />
+    <Word from="pobrema" to="problema" />
+    <Word from="poden" to="podem" />
+    <Word from="poder-mos" to="pudermos" />
+    <Word from="ponteagudo" to="pontiagudo" />
+    <Word from="pontuacoes" to="pontuações" />
+    <Word from="prazeiroso" to="prazeroso" />
+    <Word from="precaridade" to="precariedade" />
+    <Word from="precizar" to="precisar" />
+    <Word from="preserverança" to="perseverança" />
+    <Word from="previlégio" to="privilégio" />
+    <Word from="primária-que" to="primária que" />
+    <Word from="priúdo" to="período" />
+    <Word from="probalidade" to="probabilidade" />
+    <Word from="progreso" to="progresso" />
+    <Word from="proibído" to="proibido" />
+    <Word from="proíbido" to="proibido" />
+    <Word from="própia" to="própria" />
+    <Word from="propiedade" to="propriedade" />
+    <Word from="propio" to="próprio" />
+    <Word from="própio" to="próprio" />
+    <Word from="provocacoes" to="provocações" />
+    <Word from="prsença" to="presença" />
+    <Word from="prustituta" to="prostituta" />
+    <Word from="pudérmos" to="pudermos" />
+    <Word from="púlico" to="público" />
+    <Word from="pús" to="pus" />
+    <Word from="pusémos" to="pusemos" />
+    <Word from="quadricomia" to="quadricromia" />
+    <Word from="quadriplicado" to="quadruplicado" />
+    <Word from="quaisqueres" to="quaisquer" />
+    <Word from="quer-a" to="quere-a" />
+    <Word from="quere-se" to="quer-se" />
+    <Word from="quer-o" to="quere-o" />
+    <Word from="químco" to="químico" />
+    <Word from="quises-te" to="quiseste" />
+    <Word from="quizer" to="quiser" />
+    <Word from="quizeram" to="quiseram" />
+    <Word from="quizesse" to="quisesse" />
+    <Word from="quizessem" to="quisessem" />
+    <Word from="raínha" to="rainha" />
+    <Word from="raíz" to="raiz" />
+    <Word from="raizes" to="raízes" />
+    <Word from="ratato" to="retrato" />
+    <Word from="razar" to="rasar" />
+    <Word from="rectaguarda" to="retaguarda" />
+    <Word from="rédia" to="rédea" />
+    <Word from="reestabelecer" to="restabelecer" />
+    <Word from="refeicoes" to="refeições" />
+    <Word from="refêrencia" to="referência" />
+    <Word from="regeitar" to="rejeitar" />
+    <Word from="regurjitar" to="regurgitar" />
+    <Word from="reinvidicação" to="reivindicação" />
+    <Word from="reinvidicar" to="reivindicar" />
+    <Word from="requer-a" to="requere-a" />
+    <Word from="requere-se" to="requer-se" />
+    <Word from="requer-o" to="requere-o" />
+    <Word from="requesito" to="requisito" />
+    <Word from="requisicoes" to="requisições" />
+    <Word from="RESIDENCIA" to="RESIDÊNCIA" />
+    <Word from="respiraçáo" to="respiração" />
+    <Word from="restablecer" to="restabelecer" />
+    <Word from="réstea" to="réstia" />
+    <Word from="ruborisar" to="ruborizar" />
+    <Word from="rúbrica" to="rubrica" />
+    <Word from="sàdia" to="sadia" />
+    <Word from="saiem" to="saem" />
+    <Word from="salchicha" to="salsicha" />
+    <Word from="salchichas" to="salsichas" />
+    <Word from="saloice" to="saloiice" />
+    <Word from="salvé" to="salve" />
+    <Word from="salve-raínha" to="salve-rainha" />
+    <Word from="salvé-rainha" to="salve-rainha" />
+    <Word from="salvé-raínha" to="salve-rainha" />
+    <Word from="sao" to="são" />
+    <Word from="sargeta" to="sarjeta" />
+    <Word from="seções" to="secções" />
+    <Word from="seija" to="seja" />
+    <Word from="seissentos" to="seiscentos" />
+    <Word from="seje" to="seja" />
+    <Word from="semiar" to="semear" />
+    <Word from="séniores" to="seniores" />
+    <Word from="sensibilidadc" to="sensibilidade" />
+    <Word from="sensívelmente" to="sensivelmente" />
+    <Word from="setessentos" to="setecentos" />
+    <Word from="siclano" to="sicrano" />
+    <Word from="Sifilis" to="Sífilis" />
+    <Word from="sifílis" to="sífilis" />
+    <Word from="sinão" to="senão" />
+    <Word from="sinmtoma" to="sintoma" />
+    <Word from="sintéticamente" to="sinteticamente" />
+    <Word from="sintetisa" to="sintetiza" />
+    <Word from="SÓ" to="só" />
+    <Word from="sôfra" to="sofra" />
+    <Word from="sôfregamente" to="sofregamente" />
+    <Word from="somáste" to="somaste" />
+    <Word from="sombracelha" to="sobrancelha" />
+    <Word from="sombrancelha" to="sobrancelha" />
+    <Word from="sombrancelhas" to="sobrancelhas" />
+    <Word from="suavisar" to="suavizar" />
+    <Word from="substituido" to="substituído" />
+    <Word from="suburbio" to="subúrbio" />
+    <!-- <Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
+    <Word from="suI" to="sul" />
+    <Word from="Suiça" to="Suíça" />
+    <Word from="suiças" to="suíças" />
+    <Word from="suiço" to="suíço" />
+    <Word from="suiços" to="suíços" />
+    <Word from="supôr" to="supor" />
+    <Word from="tabeliões" to="tabeliães" />
+    <Word from="taínha" to="tainha" />
+    <Word from="tava" to="estava" />
+    <Word from="têem" to="têm" />
+    <Word from="telemovel" to="telemóvel" />
+    <Word from="telémovel" to="telemóvel" />
+    <Word from="terminacoes" to="terminações" />
+    <Word from="toráxico" to="torácico" />
+    <Word from="tou" to="estou" />
+    <Word from="transpôr" to="transpor" />
+    <Word from="trasnporte" to="transporte" />
+    <Word from="tumors" to="tumores" />
+    <Word from="úmida" to="húmida" />
+    <Word from="umidade" to="unidade" />
+    <Word from="vai-vem" to="vaivém" />
+    <Word from="vegilância" to="vigilância" />
+    <Word from="vegilante" to="vigilante" />
+    <Word from="ventoínha" to="ventoinha" />
+    <Word from="verosímel" to="verosímil" />
+    <Word from="video" to="vídeo" />
+    <Word from="virus" to="vírus" />
+    <Word from="visiense" to="viseense" />
+    <Word from="voçe" to="você" />
+    <Word from="voçê" to="você" />
+    <Word from="vôo" to="voo" />
+    <Word from="xadrês" to="xadrez" />
+    <Word from="xafariz" to="chafariz" />
+    <Word from="xéxé" to="xexé" />
+    <Word from="xilindró" to="chilindró" />
+    <Word from="zaíre" to="Zaire" />
+    <Word from="zepelin" to="zepelim" />
+    <Word from="zig-zag" to="ziguezague" />
+    <Word from="zoô" to="zoo" />
+    <Word from="zôo" to="zoo" />
+    <Word from="zuar" to="zoar" />
+    <Word from="zum-zum" to="zunzum" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines>
+    <LinePart from="IN 6-E" to="N 6 E" />
+    <LinePart from="in tegrar-se" to="integrar-se" />
+    <LinePart from="in teresse" to="interesse" />
+    <LinePart from="in testinos" to="intestinos" />
+    <LinePart from="indica ção" to="indicação" />
+    <LinePart from="inte tino" to="intestino" />
+    <LinePart from="intes tinos" to="intestinos" />
+    <LinePart from="L da" to="Lda" />
+    <LinePart from="mal estar" to="mal-estar" />
+    <LinePart from="mastiga çáo" to="mastigação" />
+    <LinePart from="médi cas" to="médicas" />
+    <LinePart from="mineo rais" to="minerais" />
+    <LinePart from="mola res" to="molares" />
+    <LinePart from="movi mentos" to="movimentos" />
+    <LinePart from="movimen to" to="movimento" />
+    <LinePart from="N 5-Estendido" to="Nº 5 Estendido" />
+    <LinePart from="oxigé nio" to="oxigénio" />
+    <LinePart from="pod mos" to="podemos" />
+    <LinePart from="poder-se ia" to="poder-se-ia" />
+    <LinePart from="pos sibilidade" to="possibilidade" />
+    <LinePart from="possibi lidades" to="possibilidades" />
+    <LinePart from="pro duto" to="produto" />
+    <LinePart from="procu rar" to="procurar" />
+    <LinePart from="Q u e" to="Que" />
+    <LinePart from="qualifi cam" to="qualificam" />
+    <LinePart from="R egião" to="Região" />
+    <LinePart from="unsuficien temente" to="insuficientemente" />
+  </PartialLines>
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions>
+    <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+    <RegEx find="([0-9]) +º" replaceWith="$1º" />
+    <RegEx find="\Bcao\b" replaceWith="ção" />
+    <RegEx find="\Bcoes\b" replaceWith="ções" />
+    <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima -->
+    <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima -->
+    <RegEx find="\b(m|M)ae\b" replaceWith="$1ãe" />
+    <RegEx find="\Bdmnis\B" replaceWith="dminis" />
+    <RegEx find="\Blcól\B" replaceWith="lcoól" />
+    <RegEx find="\b(t|T)a[nm]b[eé]m\b" replaceWith="$1ambém" />
+    <RegEx find="\bzeppeli[mn]\b" replaceWith="zepelim" />
+    <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
+    <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
+    <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
+    <RegEx find="\b(s|S)u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
+    <RegEx find="\b(s|S)u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
+    <RegEx find="\b(p|P)rivelig[ie]\p{Ll}d" replaceWith="$1rivelegiad" />
+    <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
+    <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
+    <RegEx find="\b(c|C)orregi\B" replaceWith="$1orrigid" />
+    <RegEx find="(?&lt;=A|a)ssociacao" replaceWith="ssociação" />
+    <RegEx find="(?&lt;=N|n)inguem" replaceWith="inguém" />
+    <RegEx find="(?&lt;=g|G)rat(?:uí|úi)to" replaceWith="ratuito" />
+    <RegEx find="(?&lt;=d|D)esiquilíbr[ei]o" replaceWith="esequilíbrio" />
+    <RegEx find="\b[k|K]il(ogramas?|ómetros?)" replaceWith="qui$1" />
+  </RegularExpressions>
+</OCRFixReplaceList>

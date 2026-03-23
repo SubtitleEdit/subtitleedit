@@ -1,0 +1,1033 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="kellojo" to="kello jo" />
+    <Word from="onjo" to="on jo" />
+    <Word from="senjälkeen" to="sen jälkeen" />
+    <Word from="Tsäu" to="Tsau" />
+    <Word from="hydraulinenjousitus" to="hydraulinen jousitus" />
+    <Word from="Kevyetja" to="Kevyet ja" />
+    <Word from="Oleijo" to="Olet jo" />
+    <Word from="viimeinenjuna" to="viimeinen juna" />
+    <Word from="näyttääjotenkin" to="näyttää jotenkin" />
+    <Word from="onjoku" to="on joku" />
+    <Word from="Iapsuuteen" to="Lapsuuteen" />
+    <Word from="Ieikitjunillä" to="leikit junilla" />
+    <Word from="Sfiy" to="Stig" />
+    <Word from="Iukulasejani" to="Lukulasejani" />
+    <Word from="Ieikkiminen" to="Leikkiminen" />
+    <Word from="Käälikäärylepizzä" to="Kaalikäärylepizza" />
+    <Word from="suklääkästikkeen" to="suklaakastikkeen" />
+    <Word from="päistetun" to="paistetun" />
+    <Word from="bänäänin" to="banaanin" />
+    <Word from="pifi" to="piti" />
+    <Word from="aıkeasfaan" to="oikeastaan" />
+    <Word from="Stg" to="Stig" />
+    <Word from="sikainﬂuenssatja" to="sikainfluenssat ja" />
+    <Word from="Hienojuna" to="Hieno juna" />
+    <Word from="kiinnostuajunista" to="kiinnostua junista" />
+    <Word from="häyıyvetuıín" to="höyryveturin" />
+    <Word from="pienaismalli" to="pienoismalli" />
+    <Word from="ena" to="eno" />
+    <Word from="racfiosãhkäffájãnã" to="radiosähköttäjänä" />
+    <Word from="Amenkan" to="Amerikan" />
+    <Word from="laiva/la" to="laivalla" />
+    <Word from="0/in" to="Olin" />
+    <Word from="Junahaırasfus" to="Junaharrastus" />
+    <Word from="enasfa" to="enosta" />
+    <Word from="/Vıín" to="Niin" />
+    <Word from="Oliivarmasii" to="Olit varmasti" />
+    <Word from="Internetistäjuuri" to="Internetistä juuri" />
+    <Word from="huıjanjãnniffåvãàl" to="hurjan jännittävää." />
+    <Word from="Vaikkajunat" to="Vaikka junat" />
+    <Word from="kääntyija" to="kääntyi ja" />
+    <Word from="osaajotain" to="osaa jotain" />
+    <Word from="Ieikillämme" to="leikillämme" />
+    <Word from="Bellinjuna" to="Beltin juna" />
+    <Word from="tästäjohtolangasta" to="tästä johtolangasta" />
+    <Word from="tuntisijonkun" to="tuntisi jonkun" />
+    <Word from="Olgajotain" to="Olga jotain" />
+    <Word from="tulokseivuodesia" to="tulokset vuodesta" />
+    <Word from="tuloksetvuodesta" to="tulokset vuodesta" />
+    <Word from="Vainjalkapallo" to="Vain jalkapallo" />
+    <Word from="lloveyou" to="I love you" />
+    <Word from="poﬂ‹aisi" to="potkaisi" />
+    <Word from="minufulos" to="minut ulos" />
+    <Word from="Ieivänpaahdinl" to="leivänpaahdin!" />
+    <Word from="Ieivänpaahdinta" to="leivänpaahdinta" />
+    <Word from="asuajossain" to="asua jossain" />
+    <Word from="Koiratjuoksentelivat" to="Koirat juoksentelivat" />
+    <Word from="tietääjotain" to="tietää jotain" />
+    <Word from="osaatjuna" to="osaat juna" />
+    <Word from="va/as" to="valas" />
+    <Word from="va/asperhe" to="valasperhe" />
+    <Word from="koskeejotain" to="koskee jotain" />
+    <Word from="Iääkkeensä" to="lääkkeensä" />
+    <Word from="Iaulavan" to="laulavan" />
+    <Word from="Kuulitjään" to="Kuulit jään" />
+    <Word from="Ievolle" to="levolle" />
+    <Word from="Va/aa//e" to="Valaalle" />
+    <Word from="va/aa//a" to="valaalla" />
+    <Word from="Iähdenkin" to="lähdenkin" />
+    <Word from="Iakkiin" to="lakkiin" />
+    <Word from="Iohikäärmeellä" to="lohikäärmeellä" />
+    <Word from="Mikı" to="Mik!" />
+    <Word from="Iukossa" to="lukossa" />
+    <Word from="Va/aan" to="Valaan" />
+    <Word from="säve/mä" to="sävelmä" />
+    <Word from="jä//een" to="jälleen" />
+    <Word from="Pööı" to="Pöö!" />
+    <Word from="Hnjaa" to="Hiljaa" />
+    <Word from="Iiftasin" to="liftasin" />
+    <Word from="Jute//aan" to="Jutellaan" />
+    <Word from="Iohduttamaan" to="lohduttamaan" />
+    <Word from="L'lYPäfään" to="Hypätään" />
+    <Word from="Äırıı" to="Äiti!" />
+    <Word from="Fıııpı" to="Filip!" />
+    <Word from="Yr›r›ääı" to="Hyppää!" />
+    <Word from="Miki" to="Mik!" />
+    <Word from="Hengıräı" to="Hengitä!" />
+    <Word from="Va/as" to="Valas" />
+    <Word from="Ko///is" to="Koillis" />
+    <Word from="Audieja" to="Audie ja" />
+    <Word from="I/man" to="Ilman" />
+    <Word from="/entotukia/ukse/ta" to="lentotukialukselta" />
+    <Word from="/aivastosta" to="laivastosta" />
+    <Word from="/entotukikohtaan" to="lentotukikohtaan" />
+    <Word from="tu/ee" to="tulee" />
+    <Word from="akse/iva//at" to="akselivallat" />
+    <Word from="aııekırjoırerrıın" to="allekirjoitettiin" />
+    <Word from="Iitkua" to="litkua" />
+    <Word from="0li" to="Oli" />
+    <Word from="Iaskuvarjojoukkoihin" to="laskuvarjojoukkoihin" />
+    <Word from="Iaskuvarjojoukoissa" to="laskuvarjojoukoissa" />
+    <Word from="Tarvitsetjotain" to="Tarvitset jotain" />
+    <Word from="Ieukaremmi" to="leukaremmi" />
+    <Word from="Iainaatko" to="lainaatko" />
+    <Word from="päällikölleja" to="päällikölle ja" />
+    <Word from="Iähelläni" to="lähelläni" />
+    <Word from="Soti/aan" to="Sotilaan" />
+    <Word from="va//attava" to="vallattava" />
+    <Word from="viho//ise/ta" to="viholliselta" />
+    <Word from="/iittoutuneet" to="liittoutuneet" />
+    <Word from="voitjohtaa" to="voit johtaa" />
+    <Word from="pohditkojotain" to="pohditko jotain" />
+    <Word from="viho//ista" to="vihollista" />
+    <Word from="sejäisi" to="se jäisi" />
+    <Word from="Ientäjillä" to="lentäjillä" />
+    <Word from="Soltutl" to="Soltut!" />
+    <Word from="Iaulustamme" to="laulustamme" />
+    <Word from="Iakkiani" to="lakkiani" />
+    <Word from="Iiemeen" to="liemeen" />
+    <Word from="kanadalaıšia" to="kanadalaisia" />
+    <Word from="si//anpääasema" to="sillanpääasema" />
+    <Word from="vahvıštettiin" to="vahvıstettiin" />
+    <Word from="tu/ituki" to="tulituki" />
+    <Word from="eliittıjoukkoa" to="eliittijoukkoa" />
+    <Word from="paıkaııasıı" to="paikallasi!" />
+    <Word from="Ieikkinyt" to="leikkinyt" />
+    <Word from="Iujitettu" to="lujitettu" />
+    <Word from="Ete/ä" to="Etelä" />
+    <Word from="viho//isranna//e" to="vihollisrannalle" />
+    <Word from="sivusta/ta" to="sivustalta" />
+    <Word from="/oppuisi" to="loppuisi" />
+    <Word from="Iaskuvarjojoukkojen" to="laskuvarjojoukkojen" />
+    <Word from="päättänytjäädä" to="päättänyt jäädä" />
+    <Word from="Iuutnanteille" to="luutnanteille" />
+    <Word from="Iähtövalmiiksi" to="lähtövalmiiksi" />
+    <Word from="Iokoisat" to="lokoisat" />
+    <Word from="Korjaus/ukemat" to="Korjauslukemat" />
+    <Word from="tanke///e" to="tankeille" />
+    <Word from="kyııäı" to="kyllä!" />
+    <Word from="Iistiä" to="listiä" />
+    <Word from="Kunniamita/in" to="Kunniamitalin" />
+    <Word from="Vemon" to="Vernon" />
+    <Word from="fiedãn" to="Tiedän" />
+    <Word from="Eiıis" to="Elvis" />
+    <Word from="Inlemätionä" to="International" />
+    <Word from="holelfssä" to="hotellissa" />
+    <Word from="Hanıey" to="Harvey" />
+    <Word from="peikkä" to="pelkkä" />
+    <Word from="Ehislã" to="Elvistä" />
+    <Word from="Yﬂãllãvã" to="Yllättävä" />
+    <Word from="mahdolisuus" to="mahdollisuus" />
+    <Word from="loisteiaan" to="loisteliaan" />
+    <Word from="aku" to="alku" />
+    <Word from="Garonilie" to="Garonille" />
+    <Word from="Iikainen" to="likainen" />
+    <Word from="vaiehtelijoita" to="valehtelijoita" />
+    <Word from="puutariıaasi" to="puutarhaasi" />
+    <Word from="Garunin" to="Garonin" />
+    <Word from="oravaiettiä" to="oravalettiä" />
+    <Word from="paijon" to="paljon" />
+    <Word from="sutja" to="sut ja" />
+    <Word from="gospeikvartetissa" to="gospelkvartetissa" />
+    <Word from="Iauiajaksi" to="laulajaksi" />
+    <Word from="viihdyltäjä" to="viihdyttäjä" />
+    <Word from="hannaala" to="harmaata" />
+    <Word from="Iaulajalta" to="laulajalta" />
+    <Word from="saatjotain" to="saat jotain" />
+    <Word from="Löydänjonkun" to="Löydän jonkun" />
+    <Word from="pyüríyi" to="pyörtyi" />
+    <Word from="Cnıdupia" to="Crudupia" />
+    <Word from="Iiikaa" to="liikaa" />
+    <Word from="keıtaa" to="kertaa" />
+    <Word from="Thafs" to="That's" />
+    <Word from="Kappaietta" to="Kappaletta" />
+    <Word from="soijoka" to="soi joka" />
+    <Word from="Levytlä" to="Levyllä" />
+    <Word from="paiaamista" to="palaamista" />
+    <Word from="kuonnunn" to="kuormurin" />
+    <Word from="Tyttüystävät" to="Tyttöystävät" />
+    <Word from="kãpãlöifiin" to="käpälöitiin" />
+    <Word from="Oiko" to="Oliko" />
+    <Word from="tuipalo" to="tulipalo" />
+    <Word from="hebofiavaa" to="helpottavaa" />
+    <Word from="ongeina" to="ongelma" />
+    <Word from="ongeimia" to="ongelmia" />
+    <Word from="Ajateikaa" to="Ajatelkaa" />
+    <Word from="kuıki" to="kurki" />
+    <Word from="lhailen" to="Ihailen" />
+    <Word from="Lähtüsi" to="Lähtösi" />
+    <Word from="yhtiöile" to="yhtiölle" />
+    <Word from="eitoimi" to="ei toimi" />
+    <Word from="voijäädä" to="voi jäädä" />
+    <Word from="Pomkat" to="Porukat" />
+    <Word from="konıata" to="korvata" />
+    <Word from="konsentien" to="konserttien" />
+    <Word from="Sepã" to="Sepä" />
+    <Word from="hebolus" to="helpotus" />
+    <Word from="küyryssä" to="köyryssä" />
+    <Word from="repiat" to="replat" />
+    <Word from="kuikee" to="kulkee" />
+    <Word from="ponıkoita" to="porukoita" />
+    <Word from="naisetja" to="naiset ja" />
+    <Word from="tenıetuileeksi" to="tervetulleeksi" />
+    <Word from="yläpuolelia" to="yläpuolella" />
+    <Word from="kuullut180" to="kuullut 180" />
+    <Word from="Iapsellista" to="lapsellista" />
+    <Word from="esiinnytja" to="esiinnyt ja" />
+    <Word from="Iaulat" to="laulat" />
+    <Word from="Henanjestas" to="Herranjestas" />
+    <Word from="teilie" to="teille" />
+    <Word from="IIe" to="lle" />
+    <Word from="täilaisia" to="tällaisia" />
+    <Word from="Varu" to="Varo" />
+    <Word from="nimeliään" to="nimellään" />
+    <Word from="anneijaan" to="armeijaan" />
+    <Word from="penıstaa" to="perustaa" />
+    <Word from="minkkituıkkia" to="minkkiturkkia" />
+    <Word from="minkkituiiiilla" to="minkkiturkilla" />
+    <Word from="Tenıetuioa" to="Tervetuloa" />
+    <Word from="kuitalevyä" to="kultalevyä" />
+    <Word from="eiämässä" to="elämässä" />
+    <Word from="jutkaisua" to="julkaisua" />
+    <Word from="Foıt" to="Fort" />
+    <Word from="oien" to="olen" />
+    <Word from="asioilie" to="asioille" />
+    <Word from="Eitarvitsekaan" to="Ei tarvitsekaan" />
+    <Word from="pökenyin" to="pökerryin" />
+    <Word from="ylläiiyy" to="yllättyy" />
+    <Word from="komeaita" to="komealta" />
+    <Word from="Chadie" to="Charlie" />
+    <Word from="laulaisilteko" to="laulaisitteko" />
+    <Word from="Iaittaa" to="laittaa" />
+    <Word from="iyttärenne" to="tyttärenne" />
+    <Word from="pikkutyttünä" to="pikkutyttönä" />
+    <Word from="tyttükulta" to="tyttökulta" />
+    <Word from="vimuilua" to="virnuilua" />
+    <Word from="reporitereita" to="reporttereita" />
+    <Word from="vime" to="virne" />
+    <Word from="eijohdu" to="ei johdu" />
+    <Word from="eriiainen" to="erilainen" />
+    <Word from="Iasketa" to="lasketa" />
+    <Word from="kemıttu" to="kerrottu" />
+    <Word from="Manyja" to="Marty ja" />
+    <Word from="etteijutusta" to="ettei jutusta" />
+    <Word from="Katifomiassa" to="Kaliforniassa" />
+    <Word from="sun°filaudan" to="surffilaudan" />
+    <Word from="bnınetti" to="brunetti" />
+    <Word from="vaimiina" to="valmiina" />
+    <Word from="yiimääräiset" to="ylimääräiset" />
+    <Word from="leffatjää" to="leffat jää" />
+    <Word from="koin'lle" to="koirille" />
+    <Word from="Täilaisen" to="Tällaisen" />
+    <Word from="antanutjo" to="antanut jo" />
+    <Word from="Chaılien" to="Charlien" />
+    <Word from="ympäriliesi" to="ympärillesi" />
+    <Word from="Iyü" to="lyö" />
+    <Word from="lopan't" to="loparit" />
+    <Word from="hıisi" to="tulisi" />
+    <Word from="kuuiuvanijonnekin" to="kuuluvani jonnekin" />
+    <Word from="juhın" to="jutun" />
+    <Word from="miefkseni" to="mielikseni" />
+    <Word from="Tuisitko" to="Tulisitko" />
+    <Word from="Iıonäni" to="luonani" />
+    <Word from="äkää" to="alkaa" />
+    <Word from="yi" to="yli" />
+    <Word from="rupallelemaan" to="rupattelemaan" />
+    <Word from="Priscilialla" to="Priscillalla" />
+    <Word from="Hemmoltelet" to="Hemmotelet" />
+    <Word from="Hearlbreak" to="Heartbreak" />
+    <Word from="Holelia" to="Hotelia" />
+    <Word from="Nyton" to="Nyt on" />
+    <Word from="kiertueeile" to="kiertueelle" />
+    <Word from="Elvistã" to="Elvistä" />
+    <Word from="puoleila" to="puolella" />
+    <Word from="Äıä" to="Älä" />
+    <Word from="lnlemalional" to="International" />
+    <Word from="Iuottamustanne" to="luottamustanne" />
+    <Word from="Mycroftísta" to="Mycroftista" />
+    <Word from="Iopettako" to="lopettako" />
+    <Word from="Ielukauppa" to="lelukauppa" />
+    <Word from="Iomamatkalle" to="lomamatkalle" />
+    <Word from="Iyhyelle" to="lyhyelle" />
+    <Word from="Alkää" to="Älkää" />
+    <Word from="K_uka" to="Kuka" />
+    <Word from="IIa" to="lla" />
+    <Word from="Aitinne" to="Äitinne" />
+    <Word from="Vä/ikohtaus" to="Välikohtaus" />
+    <Word from="kuo//aan" to="kuollaan" />
+    <Word from="nä/kään" to="nälkään" />
+    <Word from="Su/je" to="Sulje" />
+    <Word from="Iäimäytit" to="läimäytit" />
+    <Word from="Iähetystössä" to="lähetystössä" />
+    <Word from="Iähetystöön" to="lähetystöön" />
+    <Word from="Iaosilainen" to="laosilainen" />
+    <Word from="Iiiketarjous" to="liiketarjous" />
+    <Word from="kaappavat" to="kaappaavat" />
+    <Word from="Ieivissään" to="leivissään" />
+    <Word from="EriC" to="Eric" />
+    <Word from="Voi/à" to="Voilà" />
+    <Word from="Crawleyı" to="Crawley!" />
+    <Word from="Iihaksiaan" to="lihaksiaan" />
+    <Word from="Iuenkaan" to="luenkaan" />
+    <Word from="Olemma" to="Olemme" />
+    <Word from="Iähtisitte" to="lähtisitte" />
+    <Word from="jotâin" to="jotain" />
+    <Word from="Eversi" to="Eversti" />
+    <Word from="Ieiriytyä" to="leiriytyä" />
+    <Word from="Iiikutte" to="liikutte" />
+    <Word from="Iääketiedettä" to="lääketiedettä" />
+    <Word from="Iivetä" to="livetä" />
+    <Word from="Iapsetkin" to="lapsetkin" />
+    <Word from="Iääkeluettelo" to="lääkeluettelo" />
+    <Word from="Iaatiko" to="laatikko" />
+    <Word from="hyvih" to="hyvin" />
+    <Word from="Ieukakuoppa" to="leukakuoppa" />
+    <Word from="Ientäjäni" to="lentäjäni" />
+    <Word from="Ieikkisi" to="leikkisi" />
+    <Word from="Iupaamastaan" to="lupaamastaan" />
+    <Word from="ku/taseni" to="kultaseni" />
+    <Word from="tu/en" to="tulen" />
+    <Word from="Iautalle" to="lautalle" />
+    <Word from="100_vuotiaaksi" to="100 vuotiaaksi" />
+    <Word from="_" to="" />
+    <Word from="Viiltäjã_Jackin" to="Viiltäjä Jackin" />
+    <Word from="keffärfkerro" to="kellarikerroksen" />
+    <Word from="tan/itsi" to="tarvitsi" />
+    <Word from="_Aivan" to="Aivan" />
+    <Word from="_Valosta" to="Valosta" />
+    <Word from="_Teemmekö" to="Teemmekö" />
+    <Word from="Viiltäjä_Jack" to="Viiltäjä Jack" />
+    <Word from="_Voi" to="Voi" />
+    <Word from="_Tiedätte" to="Tiedätte" />
+    <Word from="kulunutjo" to="kulunut jo" />
+    <Word from="Vuokra_auto" to="Vuokra-auto" />
+    <Word from="_Tuokaa" to="Tuokaa" />
+    <Word from="_Tunnetteko" to="Tunnetteko" />
+    <Word from="_Tiedämme" to="Tiedämme" />
+    <Word from="toissayön" to="toissa yön" />
+    <Word from="_Toki" to="Toki" />
+    <Word from="_Ammuttu" to="Ammuttu" />
+    <Word from="_Jahtasit" to="Jahtasit" />
+    <Word from="_Tunnenko" to="Tunnenko" />
+    <Word from="_Joku" to="Joku" />
+    <Word from="_Taivahan" to="Taivahan" />
+    <Word from="Kuorma_auto" to="Kuorma-auto" />
+    <Word from="_Vain" to="Vain" />
+    <Word from="Mesmer_klubille" to="Mesmer klubille" />
+    <Word from="0nslow'IIe" to="Onslow'lle" />
+    <Word from="Mesmer_klubi" to="Mesmer klubi" />
+    <Word from="_Anteeksi" to="Anteeksi" />
+    <Word from="Schrenk_Notzing" to="Schrenk Notzing" />
+    <Word from="_Tapoin" to="Tapoin" />
+    <Word from="_AIkää" to="Älkää" />
+    <Word from="0dotan" to="Odotan" />
+    <Word from="Iuonteenlu" to="luonteenlu" />
+    <Word from="Iempikaupunkini" to="lempikaupunkini" />
+    <Word from="Iavasta" to="lavasta" />
+    <Word from="Iämmittelijät" to="lämmittelijät" />
+    <Word from="Iaastaria" to="laastaria" />
+    <Word from="Riiuää" to="Riittää" />
+    <Word from="Käyuävätkö" to="Käyttävätkö" />
+    <Word from="Iähestykö" to="lähestykö" />
+    <Word from="Ieikekirja" to="leikekirja" />
+    <Word from="Ievyjään" to="levyjään" />
+    <Word from="Iahjoitamme" to="lahjoitamme" />
+    <Word from="Läppäätuohon" to="Läppää tuohon" />
+    <Word from="CIawdy" to="Clawdy" />
+    <Word from="mita" to="mitä" />
+    <Word from="jalkeen" to="jälkeen" />
+    <Word from="Cannabisjaponica" to="Cannabis japonica" />
+    <Word from="Ieningin" to="leningin" />
+    <Word from="kiıjoitatte" to="kirjoitatte" />
+    <Word from="kiıjoitetuksi" to="kirjoitetuksi" />
+    <Word from="kuluttuu" to="kuluttaa" />
+    <Word from="Iuvulta" to="luvulta" />
+    <Word from="Ieipomiskilpailuun" to="leipomiskilpailuun" />
+    <Word from="Maclntire" to="MacIntire" />
+    <Word from="Iehteemme" to="lehteemme" />
+    <Word from="Alä" to="Älä" />
+    <Word from="kysesssä" to="kyseessä" />
+    <Word from="Itsepuolustustal" to="Itsepuolustusta!" />
+    <Word from="Iiipasimesta" to="liipasimesta" />
+    <Word from="Iuutani" to="luutani" />
+    <Word from="Iahjansa" to="lahjansa" />
+    <Word from="Iähimmäisemme" to="lähimmäisemme" />
+    <Word from="Iuhistuu" to="luhistuu" />
+    <Word from="ıöyhkä" to="löyhkä" />
+    <Word from="Iehtileikkeleitä" to="lehtileikkeleitä" />
+    <Word from="vefieni" to="veljeni" />
+    <Word from="Iapselleni" to="lapselleni" />
+    <Word from="epänormaalinal" to="epänormaalina!" />
+    <Word from="Iuurankoja" to="luurankoja" />
+    <Word from="Iuurangoista" to="luurangoista" />
+    <Word from="päätiellel" to="päätielle!" />
+    <Word from="Valonneitsytta" to="Valonneitsyttä" />
+    <Word from="Iohikáármekuula" to="lohikäärmekuula" />
+    <Word from="yhdella" to="yhdellä" />
+    <Word from="Tasta" to="Tästä" />
+    <Word from="__" to="" />
+    <Word from="Alkáä" to="Älkää" />
+    <Word from="etta" to="että" />
+    <Word from="pitaa" to="pitää" />
+    <Word from="nälkáisiä" to="nälkäisiä" />
+    <Word from="Hyva" to="Hyvä" />
+    <Word from="hyvasta" to="hyvästä" />
+    <Word from="ruoastaja" to="ruoasta ja" />
+    <Word from="Kásivarteni" to="Käsivarteni" />
+    <Word from="käikki" to="kaikki" />
+    <Word from="Mozukustä" to="Mozukusta" />
+    <Word from="Etsivátkö" to="Etsivätkö" />
+    <Word from="Iohikáármekuulaa" to="lohikäärmekuulaa" />
+    <Word from="Valonneitsyttá" to="Valonneitsyttä" />
+    <Word from="taalla" to="täällä" />
+    <Word from="siemeniáán" to="siemeniään" />
+    <Word from="kunhän" to="kunhan" />
+    <Word from="äjättelen" to="ajattelen" />
+    <Word from="pelkuril" to="pelkuri!" />
+    <Word from="kyla" to="kylä" />
+    <Word from="hyökkáykseltä" to="hyökkäykseltä" />
+    <Word from="hyökkáisi" to="hyökkäisi" />
+    <Word from="hyökataan" to="hyökätään" />
+    <Word from="Voitjuoda" to="Voit juoda" />
+    <Word from="Iittaamisesta" to="littaamisesta" />
+    <Word from="Iahtenyt" to="lähtenyt" />
+    <Word from="kylasta" to="kylästä" />
+    <Word from="Etjuurikään" to="Et juurikaan" />
+    <Word from="sämältä" to="samalta" />
+    <Word from="käikkiällä" to="kaikkialla" />
+    <Word from="ehka" to="ehkä" />
+    <Word from="tiennytkaan" to="tiennytkään" />
+    <Word from="taistelenl" to="taistelen!" />
+    <Word from="Iiikkeita" to="liikkeitä" />
+    <Word from="Taistellaanl" to="Taistellaan!" />
+    <Word from="Odottämättomät" to="Odottamattomat" />
+    <Word from="näutinnot" to="nautinnot" />
+    <Word from="rikkään" to="rikkaan" />
+    <Word from="Iuotettavalta" to="luotettavalta" />
+    <Word from="elaa" to="elää" />
+    <Word from="pekkiã" to="pelkkiä" />
+    <Word from="jãkeen" to="jälkeen" />
+    <Word from="nörttejã" to="nörttejä" />
+    <Word from="penıskursseja" to="peruskursseja" />
+    <Word from="Suorititjo" to="Suoritit jo" />
+    <Word from="seinäilä" to="seinällä" />
+    <Word from="Iaiteta" to="laiteta" />
+    <Word from="hennostu" to="hermostu" />
+    <Word from="Coiumbiassa" to="Columbiassa" />
+    <Word from="Penıerssiä" to="Perverssejä" />
+    <Word from="sukupuoieimislã" to="sukupuolielimistä" />
+    <Word from="epãiooginen" to="epälooginen" />
+    <Word from="oisin" to="olisin" />
+    <Word from="iittoni" to="liittoni" />
+    <Word from="oisi" to="olisi" />
+    <Word from="asuntoia" to="asuntola" />
+    <Word from="pääsittejatkoseminaariini" to="pääsitte jatkoseminaariini" />
+    <Word from="Anıatkaapa" to="Arvatkaapa" />
+    <Word from="Iopussa" to="lopussa" />
+    <Word from="Oletjo" to="Olet jo" />
+    <Word from="Haiuan" to="Haluan" />
+    <Word from="luennoilie" to="luennoille" />
+    <Word from="Iintsata" to="lintsata" />
+    <Word from="oletjuuri" to="olet juuri" />
+    <Word from="Iuuietko" to="luuletko" />
+    <Word from="kylvyssã" to="kylvyssä" />
+    <Word from="vãlãhti" to="välähti" />
+    <Word from="Miettikãã" to="Miettikää" />
+    <Word from="insinöün" to="insinööri" />
+    <Word from="Menithalpaan" to="Menit halpaan" />
+    <Word from="Tukaa" to="Tulkaa" />
+    <Word from="Aarun" to="Aaron" />
+    <Word from="Kieleiläsi" to="Kielelläsi" />
+    <Word from="pystytjohonkin" to="pystyt johonkin" />
+    <Word from="KämppikseniWilliam" to="Kämppikseni William" />
+    <Word from="Iuolamies" to="luolamies" />
+    <Word from="keskianıon" to="keskiarvon" />
+    <Word from="kananosta" to="kartanosta" />
+    <Word from="päivälliselie" to="päivälliselle" />
+    <Word from="Iasagnea" to="lasagnea" />
+    <Word from="voitehota" to="voi tehota" />
+    <Word from="0lisit" to="Olisit" />
+    <Word from="menijuuri" to="meni juuri" />
+    <Word from="tapasivatjo" to="tapasivat jo" />
+    <Word from="knıunukoriiiliiset" to="kruunukorkilliset" />
+    <Word from="eijuo" to="ei juo" />
+    <Word from="Näytätuupuneeita" to="Näytät uupuneelta" />
+    <Word from="Etanıaakaan" to="Et arvaakaan" />
+    <Word from="lhanko" to="Ihanko" />
+    <Word from="yﬂtäkään" to="yritäkään" />
+    <Word from="serkkuniWinn" to="serkkuni Winn" />
+    <Word from="voijatkua" to="voi jatkua" />
+    <Word from="miehetja" to="miehet ja" />
+    <Word from="víesfiní" to="viestini" />
+    <Word from="kuullılsinusla" to="kuullut sinusta" />
+    <Word from="Tãmã" to="Tämä" />
+    <Word from="kelããn" to="ketään" />
+    <Word from="vedessãkãveijã" to="vedessäkävelijä" />
+    <Word from="/abrassa" to="labrassa" />
+    <Word from="akaa" to="alkaa" />
+    <Word from="Iiinaa" to="liinaa" />
+    <Word from="kanıainen" to="karvainen" />
+    <Word from="oten" to="olen" />
+    <Word from="kallaisesi" to="kaltaisesi" />
+    <Word from="pmffa" to="proffa" />
+    <Word from="tulittänne" to="tulit tänne" />
+    <Word from="Alalteko" to="Alatteko" />
+    <Word from="luuiisit" to="luulisit" />
+    <Word from="Pysãhdy" to="Pysähdy" />
+    <Word from="Paskathänestä" to="Paskat hänestä" />
+    <Word from="Pysãhdyheti" to="Pysähdy heti" />
+    <Word from="Heivetti" to="Helvetti" />
+    <Word from="Pidãlãn" to="Pidätän" />
+    <Word from="Vﬂru" to="Varo" />
+    <Word from="huolissasijostain" to="huolissasi jostain" />
+    <Word from="hurmaavatpuhelusi" to="hurmaavat puhelusi" />
+    <Word from="ystävysiyin" to="ystävystyin" />
+    <Word from="Cunya" to="Currya" />
+    <Word from="cunya" to="currya" />
+    <Word from="kohdaliani" to="kohdallani" />
+    <Word from="anıoista" to="arvoista" />
+    <Word from="Loputnäkevätnälkää" to="Loput näkevät nälkää" />
+    <Word from="oletollut" to="olet ollut" />
+    <Word from="jäikinıoan" to="jälkiruoan" />
+    <Word from="Saathänet" to="Saat hänet" />
+    <Word from="Kemın" to="Kerron" />
+    <Word from="kappaieiksi" to="kappaleiksi" />
+    <Word from="vuokıanja" to="vuokran ja" />
+    <Word from="iyperys" to="typerys" />
+    <Word from="mmanltisella" to="romanttisella" />
+    <Word from="ıakastellut" to="rakastellut" />
+    <Word from="jutteiimme" to="juttelimme" />
+    <Word from="vesimittann" to="vesimittarin" />
+    <Word from="kuikevat" to="kulkevat" />
+    <Word from="tavaratja" to="tavarat ja" />
+    <Word from="piiltaal" to="piittaat" />
+    <Word from="etehkä" to="et ehkä" />
+    <Word from="Lapsenvahtisituli" to="Lapsenvahtisi tuli" />
+    <Word from="Ymmänälkö" to="Ymmärrätkö" />
+    <Word from="iyiiãresi" to="tyttäresi" />
+    <Word from="myöhã" to="myöhä" />
+    <Word from="nähnytAaron" to="nähnyt Aaron" />
+    <Word from="haiunnut" to="halunnut" />
+    <Word from="Olitoikeassa" to="Olit oikeassa" />
+    <Word from="itseenijuuri" to="itseeni juuri" />
+    <Word from="lempinıokaani" to="lempiruokaani" />
+    <Word from="Iupaamaan" to="lupaamaan" />
+    <Word from="Teetsoimun" to="Teet solmun" />
+    <Word from="Senıice" to="Service" />
+    <Word from="Iasini" to="lasini" />
+    <Word from="Ieuassa" to="leuassa" />
+    <Word from="Iiikekumppaninsa" to="liikekumppaninsa" />
+    <Word from="Iiikekumppani" to="liikekumppani" />
+    <Word from="Iausuttiinkaan" to="lausuttiinkaan" />
+    <Word from="Iastauslaiturille" to="lastauslaiturille" />
+    <Word from="Oleko" to="Oletko" />
+    <Word from="tie/tä" to="tieltä" />
+    <Word from="Mayhew'IIe" to="Mayhew'lle" />
+    <Word from="Iakiasiaintoimisto" to="lakiasiaintoimisto" />
+    <Word from="Iakimiestä" to="lakimiestä" />
+    <Word from="ne//eensä" to="nelleensä" />
+    <Word from="ha//ituksiin" to="hallituksiin" />
+    <Word from="soti/aa//isiin" to="sotilaallisiin" />
+    <Word from="Iahtasit" to="lahtasit" />
+    <Word from="Tiestikö" to="Tiesitkö" />
+    <Word from="Iakimiehiä" to="lakimiehiä" />
+    <Word from="Äläkää" to="Älkää" />
+    <Word from="O/en" to="Olen" />
+    <Word from="minsta" to="minusta" />
+    <Word from="Iuennosta" to="luennosta" />
+    <Word from="Iakimiehestä" to="lakimiehestä" />
+    <Word from="Iopetatte" to="lopetatte" />
+    <Word from="0/it" to="0lit" />
+    <Word from="tu/it" to="tulit" />
+    <Word from="Mayhew'Ita" to="Mayhew'lta" />
+    <Word from="Iähietäisyydellä" to="lähietäisyydellä" />
+    <Word from="ennenkuin" to="ennen kuin" />
+    <Word from="nukkuä" to="nukkua" />
+    <Word from="ihmisia" to="ihmisiä" />
+    <Word from="elossä" to="elossa" />
+    <Word from="tiedettävá" to="tiedettävä" />
+    <Word from="Etsikáá" to="Etsikää" />
+    <Word from="Aıjaı" to="Aijai" />
+    <Word from="Välonneitsyen" to="Valonneitsyen" />
+    <Word from="Iupäustäsi" to="lupaustasi" />
+    <Word from="Yämikugyo" to="Yamikugyo" />
+    <Word from="epäonnistumisiä" to="epäonnistumisia" />
+    <Word from="Ymmárrätkö" to="Ymmärrätkö" />
+    <Word from="Iohikäärmekuula" to="lohikäärmekuula" />
+    <Word from="tasta" to="tästä" />
+    <Word from="taynna" to="täynnä" />
+    <Word from="mina" to="minä" />
+    <Word from="tata" to="tätä" />
+    <Word from="tyhmaa" to="tyhmää" />
+    <Word from="enemman" to="enemmän" />
+    <Word from="pátevöity" to="pätevöity" />
+    <Word from="kylla" to="kyllä" />
+    <Word from="ärvokästä" to="arvokasta" />
+    <Word from="selviytyjáksi" to="selviytyjäksi" />
+    <Word from="myyda" to="myydä" />
+    <Word from="hanet" to="hänet" />
+    <Word from="äpuäsi" to="apuasi" />
+    <Word from="Kukä" to="Kuka" />
+    <Word from="sänoi" to="sanoi" />
+    <Word from="äutän" to="autan" />
+    <Word from="Äla" to="Älä" />
+    <Word from="Han" to="Hän" />
+    <Word from="Mita" to="Mitä" />
+    <Word from="tama" to="tämä" />
+    <Word from="Olettiellamme" to="Olet tiellämme" />
+    <Word from="Kylani" to="Kyläni" />
+    <Word from="Iahdemme" to="lähdemme" />
+    <Word from="viela" to="vielä" />
+    <Word from="yhdeksan" to="yhdeksän" />
+    <Word from="Nasaviisaudet" to="Näsäviisaudet" />
+    <Word from="Láhempänä" to="Lähempänä" />
+    <Word from="tietaa" to="tietää" />
+    <Word from="mentava" to="mentävä" />
+    <Word from="onkään" to="onkaan" />
+    <Word from="tekemista" to="tekemistä" />
+    <Word from="Sina" to="Sinä" />
+    <Word from="sina" to="sinä" />
+    <Word from="kiitettävá" to="kiitettävä" />
+    <Word from="edellámme" to="edellämme" />
+    <Word from="eika" to="eikä" />
+    <Word from="Takanasﬂ" to="Takanasi!" />
+    <Word from="Iankaan" to="lankaan" />
+    <Word from="välloillensä" to="valloillensa" />
+    <Word from="siita" to="siitä" />
+    <Word from="Iohikaarmekuulan" to="lohikäärmekuulan" />
+    <Word from="Keta" to="Ketä" />
+    <Word from="nama" to="nämä" />
+    <Word from="ajateltavaal" to="ajateltavaa!" />
+    <Word from="olläkseni" to="ollakseni" />
+    <Word from="värmä" to="varma" />
+    <Word from="hanta" to="häntä" />
+    <Word from="hanelle" to="hänelle" />
+    <Word from="Osäätko" to="Osaatko" />
+    <Word from="rajahteita" to="räjähteitä" />
+    <Word from="Jyashil" to="Jyashi!" />
+    <Word from="Nama" to="Nämä" />
+    <Word from="sita" to="sitä" />
+    <Word from="koskään" to="koskaan" />
+    <Word from="Viekáá" to="Viekää" />
+    <Word from="Pidáttäkää" to="Pidättäkää" />
+    <Word from="Oclottakaal" to="Odottakaa!" />
+    <Word from="pelkáämá" to="pelkäämä" />
+    <Word from="ostävänne" to="ostavanne" />
+    <Word from="rovoillänne" to="rovoillanne" />
+    <Word from="Jonäin" to="Jonain" />
+    <Word from="piit'taa" to="piittaa" />
+    <Word from="&gt;" to="" />
+    <Word from="táysikuu" to="täysikuu" />
+    <Word from="sinuttänne" to="sinut tänne" />
+    <Word from="Iahtea" to="lähteä" />
+    <Word from="Paastaksemme" to="Päästäksemme" />
+    <Word from="Párjáämme" to="Pärjäämme" />
+    <Word from="hänskässä" to="hanskassa" />
+    <Word from="Tama" to="Tämä" />
+    <Word from="Menkaa" to="Menkää" />
+    <Word from="Häipykáá" to="Häipykää" />
+    <Word from="kasin" to="käsin" />
+    <Word from="Tata" to="Tätä" />
+    <Word from="Hylkaatkö" to="Hylkäätkö" />
+    <Word from="Paasta" to="Päästä" />
+    <Word from="ryöstäá" to="ryöstää" />
+    <Word from="Iivistä" to="livistä" />
+    <Word from="viivytát" to="viivytät" />
+    <Word from="Pysähtykáä" to="Pysähtykää" />
+    <Word from="kännoiltä" to="kannoilta" />
+    <Word from="kásken" to="käsken" />
+    <Word from="Pysähtykáá" to="Pysähtykää" />
+    <Word from="huonojátkä" to="huono jätkä" />
+    <Word from="kátyrini" to="kätyrini" />
+    <Word from="mitaan" to="mitään" />
+    <Word from="Missa" to="Missä" />
+    <Word from="kyntäván" to="kyntävän" />
+    <Word from="pärjánneet" to="pärjänneet" />
+    <Word from="ruokää" to="ruokaa" />
+    <Word from="märjojä" to="marjoja" />
+    <Word from="kuinkä" to="kuinka" />
+    <Word from="ollä" to="olla" />
+    <Word from="missa" to="missä" />
+    <Word from="Peráänny" to="Peräänny" />
+    <Word from="Pysykáä" to="Pysykää" />
+    <Word from="Vetelàt" to="Vetelät" />
+    <Word from="täppää" to="tappaa" />
+    <Word from="ketaan" to="ketään" />
+    <Word from="pelkaamaan" to="pelkäämään" />
+    <Word from="ovatja" to="ovat ja" />
+    <Word from="ymmarra" to="ymmärrä" />
+    <Word from="ystväni" to="ystäväni" />
+    <Word from="Kärpásiäkö" to="Kärpäsiäkö" />
+    <Word from="metsástät" to="metsästät" />
+    <Word from="Iiittya" to="liittyä" />
+    <Word from="Alá" to="Älä" />
+    <Word from="pyörtyá" to="pyörtyä" />
+    <Word from="nälästá" to="nälästä" />
+    <Word from="hyva" to="hyvä" />
+    <Word from="syömaan" to="syömään" />
+    <Word from="katyreita" to="kätyreitä" />
+    <Word from="Epáreilua" to="Epäreilua" />
+    <Word from="Läuttä" to="Lautta" />
+    <Word from="iltänä" to="iltana" />
+    <Word from="Täisimme" to="Taisimme" />
+    <Word from="Voihän" to="Voihan" />
+    <Word from="hittoläinen" to="hittolainen" />
+    <Word from="Jä" to="Ja" />
+    <Word from="Iohikáármekivi" to="lohikäärmekivi" />
+    <Word from="siina" to="siinä" />
+    <Word from="Iaake" to="lääke" />
+    <Word from="purrutjokin" to="purrut jokin" />
+    <Word from="tahan" to="tähän" />
+    <Word from="paasseet" to="päässeet" />
+    <Word from="Iaakkeen" to="lääkkeen" />
+    <Word from="Ieposija" to="leposija" />
+    <Word from="Kylla" to="Kyllä" />
+    <Word from="pitkalta" to="pitkältä" />
+    <Word from="eivat" to="eivät" />
+    <Word from="tanne" to="tänne" />
+    <Word from="taman" to="tämän" />
+    <Word from="Ehka" to="Ehkä" />
+    <Word from="han" to="hän" />
+    <Word from="mista" to="mistä" />
+    <Word from="pidat" to="pidät" />
+    <Word from="Joutukää" to="Joutukaa" />
+    <Word from="Hanen" to="Hänen" />
+    <Word from="sisallaan" to="sisällään" />
+    <Word from="Pysykáá" to="Pysykää" />
+    <Word from="Lähtekäá" to="Lähtekää" />
+    <Word from="tilään" to="tilaan" />
+    <Word from="paatella" to="päätellä" />
+    <Word from="isani" to="isäni" />
+    <Word from="paasemme" to="pääsemme" />
+    <Word from="haipyivat" to="häipyivät" />
+    <Word from="Tehán" to="Tehän" />
+    <Word from="Hyökkáätte" to="Hyökkäätte" />
+    <Word from="Iiikahdattekaan" to="liikahdattekaan" />
+    <Word from="jä" to="ja" />
+    <Word from="välmistäuduin" to="valmistauduin" />
+    <Word from="Hikavvassa" to="Hikawassa" />
+    <Word from="Kuolel" to="Kuole!" />
+    <Word from="hanen" to="hänen" />
+    <Word from="yhta" to="yhtä" />
+    <Word from="Sisalla" to="Sisällä" />
+    <Word from="ruumiissä" to="ruumiissa" />
+    <Word from="minka" to="minkä" />
+    <Word from="Iihää" to="lihaa" />
+    <Word from="Iuutä" to="luuta" />
+    <Word from="Sisàllàmme" to="Sisällämme" />
+    <Word from="Tottelel" to="Tottele!" />
+    <Word from="Äläjätä" to="Älä jätä" />
+    <Word from="aitisi" to="äitisi" />
+    <Word from="Mina" to="Minä" />
+    <Word from="ymmartamaan" to="ymmärtämään" />
+    <Word from="syödaan" to="syödään" />
+    <Word from="pähältä" to="pahalta" />
+    <Word from="Däkuän" to="Dakuan" />
+    <Word from="sirkutahti" to="sirkustähti" />
+    <Word from="Iapiota" to="lapiota" />
+    <Word from="mieltasi" to="mieltäsi" />
+    <Word from="pitaisi" to="pitäisi" />
+    <Word from="vieda" to="viedä" />
+    <Word from="táálläkäán" to="täälläkään" />
+    <Word from="taytyy" to="täytyy" />
+    <Word from="kivesta" to="kivestä" />
+    <Word from="etsia" to="etsiä" />
+    <Word from="Poikatytöstà" to="Poikatytöstä" />
+    <Word from="hyökkasi" to="hyökkäsi" />
+    <Word from="takaapain" to="takaapäin" />
+    <Word from="Iäskee" to="laskee" />
+    <Word from="haipya" to="häipyä" />
+    <Word from="tehclákseni" to="tehdäkseni" />
+    <Word from="piän" to="pian" />
+    <Word from="tyrkyttäá" to="tyrkyttää" />
+    <Word from="minuä" to="minua" />
+    <Word from="nálkáinen" to="nälkäinen" />
+    <Word from="Sydametön" to="Sydämetön" />
+    <Word from="hylata" to="hylätä" />
+    <Word from="yha" to="yhä" />
+    <Word from="käuniisti" to="kauniisti" />
+    <Word from="ihmisverestá" to="ihmisverestä" />
+    <Word from="Siiiä" to="Sinä" />
+    <Word from="häluät" to="haluat" />
+    <Word from="Iahemmin" to="lähemmin" />
+    <Word from="kayttaa" to="käyttää" />
+    <Word from="hyvaksi" to="hyväksi" />
+    <Word from="paase" to="pääse" />
+    <Word from="siivilla" to="siivillä" />
+    <Word from="jälkeläisá" to="jälkeläisiä" />
+    <Word from="syista" to="syistä" />
+    <Word from="pyháä" to="pyhää" />
+    <Word from="Tyhmat" to="Tyhmät" />
+    <Word from="pyytavat" to="pyytävät" />
+    <Word from="Hölynpölyäl" to="Hölynpölyä!" />
+    <Word from="Nakivat" to="Näkivät" />
+    <Word from="kannissa" to="kännissä" />
+    <Word from="kasivarren" to="käsivarren" />
+    <Word from="hánenlaisensa" to="hänenlaisensa" />
+    <Word from="solää" to="solaa" />
+    <Word from="Iiioitella" to="liioitella" />
+    <Word from="Iiioittele" to="liioittele" />
+    <Word from="Tiedathan" to="Tiedäthän" />
+    <Word from="pyhástä" to="pyhästä" />
+    <Word from="Iohikáármekivestä" to="lohikäärmekivestä" />
+    <Word from="Ymmárrát" to="Ymmärrät" />
+    <Word from="ärmonne" to="armonne" />
+    <Word from="näisten" to="naisten" />
+    <Word from="Iupäukseni" to="lupaukseni" />
+    <Word from="kekseliáisyytesi" to="kekseliäisyytesi" />
+    <Word from="Iaudalta" to="laudalta" />
+    <Word from="kestávyytesi" to="kestävyytesi" />
+    <Word from="taiclakaan" to="taidakaan" />
+    <Word from="tyttöystava" to="tyttöystävä" />
+    <Word from="sormissäni" to="sormissani" />
+    <Word from="räivoisän" to="raivoisan" />
+    <Word from="kärhun" to="karhun" />
+    <Word from="helvetista" to="helvetistä" />
+    <Word from="väi" to="vai" />
+    <Word from="poissä" to="poissa" />
+    <Word from="elamani" to="elämäni" />
+    <Word from="pitkátjalkasi" to="pitkät jalkasi" />
+    <Word from="Kadet" to="Kädet" />
+    <Word from="niita" to="niitä" />
+    <Word from="Kaske" to="Käske" />
+    <Word from="paastaa" to="päästää" />
+    <Word from="Pida" to="Pidä" />
+    <Word from="Iohikaarmekivi" to="lohikäärmekivi" />
+    <Word from="sinustä" to="sinusta" />
+    <Word from="syöksyyjo" to="syöksyy jo" />
+    <Word from="veljeasi" to="veljeäsi" />
+    <Word from="Odotä" to="Odota" />
+    <Word from="Pysáhdy" to="Pysähdy" />
+    <Word from="kivea" to="kiveä" />
+    <Word from="Missaan" to="Missään" />
+    <Word from="tiheámpi" to="tiheämpi" />
+    <Word from="Iuulitkaan" to="luulitkaan" />
+    <Word from="kaarmekuula" to="käärmekuula" />
+    <Word from="muttajätän" to="mutta jätän" />
+    <Word from="kuoletl" to="kuolet!" />
+    <Word from="Iohikaarmekuula" to="lohikäärmekuula" />
+    <Word from="kieltava" to="kieltävä" />
+    <Word from="Láhtekáá" to="Lähtekää" />
+    <Word from="Iohikáärmekuulaa" to="lohikäärmekuulaa" />
+    <Word from="hereilla" to="hereillä" />
+    <Word from="kaljupaa" to="kaljupää" />
+    <Word from="äntämällä" to="antamalla" />
+    <Word from="kuulän" to="kuulan" />
+    <Word from="täkäisin" to="takaisin" />
+    <Word from="puolikkään" to="puolikkaan" />
+    <Word from="pohjoisessaja" to="pohjoisessa ja" />
+    <Word from="metsasta" to="metsästä" />
+    <Word from="Iohikäärmekuulälle" to="lohikäärmekuulalle" />
+    <Word from="teita" to="teitä" />
+    <Word from="Linnutkään" to="Linnutkaan" />
+    <Word from="Puolikkään" to="Puolikkaan" />
+    <Word from="äntänut" to="antanut" />
+    <Word from="tiedan" to="tiedän" />
+    <Word from="heráttámássá" to="herättämässä" />
+    <Word from="Iäsin" to="lasin" />
+    <Word from="hätánä" to="hätänä" />
+    <Word from="Iöysitte" to="löysitte" />
+    <Word from="a//ı'gaal'torıh" to="alligaattorin" />
+    <Word from="Tyttbparka" to="tyttöparka" />
+    <Word from="bänãä" to="bänää" />
+    <Word from="Co/en" to="Colen" />
+    <Word from="Iapsikoıfin" to="lapsikortin" />
+    <Word from="rauhallisemminl" to="rauhallisemmin!" />
+    <Word from="Iahjasi" to="lahjasi" />
+    <Word from="Ruokihänet" to="Ruoki hänet" />
+    <Word from="Iöystymistä" to="löystymistä" />
+    <Word from="Iapsestaan" to="lapsestaan" />
+    <Word from="Iaatuaikaa" to="laatuaikaa" />
+    <Word from="Ioukkaannuit" to="loukkaannuit" />
+    <Word from="Ioistojuttu" to="loistojuttu" />
+    <Word from="Ioukkaavaa" to="loukkaavaa" />
+    <Word from="Ioukkaan" to="loukkaan" />
+    <Word from="l'ıedän" to="Tiedän" />
+    <Word from="Iyömästä" to="lyömästä" />
+    <Word from="C/ıâteauneuf" to="Châteauneuf" />
+    <Word from="Iikaisten" to="likaisten" />
+    <Word from="Iapsenlapseton" to="lapsenlapseton" />
+    <Word from="Ieukani" to="leukani" />
+    <Word from="Ientokonetta" to="lentokonetta" />
+    <Word from="Iorrainea" to="lorrainea" />
+    <Word from="Iastentarhaan" to="lastentarhaan" />
+    <Word from="Iupaavin" to="lupaavin" />
+    <Word from="Iastenhoitaja" to="lastenhoitaja" />
+    <Word from="Kegeleitã" to="Kegeleitä" />
+    <Word from="helkkaril" to="helkkari!" />
+    <Word from="Ieukaani" to="leukaani" />
+    <Word from="Iaihtuneen" to="laihtuneen" />
+    <Word from="Iahjoittamaan" to="lahjoittamaan" />
+    <Word from="trefﬂt" to="treffit" />
+    <Word from="Iöysyys" to="löysyys" />
+    <Word from="Diggleriã" to="Diggleriä" />
+    <Word from="Kuıfi//a" to="Kurtilla" />
+    <Word from="pysãhdellä" to="pysähdellä" />
+    <Word from="Iomaasi" to="lomaasi" />
+    <Word from="Iastattu" to="lastattu" />
+    <Word from="Iasinne" to="lasinne" />
+    <Word from="Iuihin" to="luihin" />
+    <Word from="Iastensuojelujuttuun" to="lastensuojelujuttuun" />
+    <Word from="Ieffaan" to="leffaan" />
+    <Word from="mulkkul" to="mulkku!" />
+    <Word from="Iapsenvahtia" to="lapsenvahtia" />
+    <Word from="Iähelläsi" to="lähelläsi" />
+    <Word from="stã" to="stä" />
+    <Word from="TOSi" to="Tosi" />
+    <Word from="Ioistoidea" to="loistoidea" />
+    <Word from="Tyısiä" to="Tylsiä" />
+    <Word from="lsi" to="Isi" />
+    <Word from="Iaastarin" to="laastarin" />
+    <Word from="Viewjatkuu" to="View jatkuu" />
+    <Word from="lnStylen" to="InStylen" />
+    <Word from="köriläsl" to="köriläs!" />
+    <Word from="Ieffoissa" to="leffoissa" />
+    <Word from="Ieffaseuraksi" to="leffaseuraksi" />
+    <Word from="Iueskelemaan" to="lueskelemaan" />
+    <Word from="Mitäjätkä" to="Mitä jätkä" />
+    <Word from="Iaukesitkaan" to="laukesitkaan" />
+    <Word from="Kiitã" to="Kiitä" />
+    <Word from="ÄãIiö" to="Ääliö" />
+    <Word from="Iyhytpöksy" to="lyhytpöksy" />
+    <Word from="Iacrosse" to="lacrosse" />
+    <Word from="Iöytãmãttã" to="löytämättä" />
+    <Word from="samojajuttuja" to="samoja juttuja" />
+    <Word from="Järvellel" to="Järvelle!" />
+    <Word from="Talouspaperitl" to="Talouspaperit!" />
+    <Word from="Älkäãs" to="Älkääs" />
+    <Word from="pillunaamal" to="pillunaama!" />
+    <Word from="poikaystävänsã" to="poikaystävänsä" />
+    <Word from="Iapsenvahti" to="lapsenvahti" />
+    <Word from="Nykistã" to="Nykistä" />
+    <Word from="Iaatuaikamme" to="laatuaikamme" />
+    <Word from="Käãnsin" to="Käänsin" />
+    <Word from="Iatinaksi" to="latinaksi" />
+    <Word from="yleensäjuo" to="yleensä juo" />
+    <Word from="kreisejãjuttuja" to="kreisejä juttuja" />
+    <Word from="Iiitostasi" to="liitostasi" />
+    <Word from="Mitäjos" to="Mitä jos" />
+    <Word from="Sinullaja" to="Sinulla ja" />
+    <Word from="Iempparini" to="lempparini" />
+    <Word from="Iienetkin" to="lienetkin" />
+    <Word from="Iuokkajuhla" to="luokkajuhla" />
+    <Word from="Iuokkakokouksesta" to="luokkakokouksesta" />
+    <Word from="Iukuteeman" to="lukuteeman" />
+    <Word from="Menejo" to="Mene jo" />
+    <Word from="Sinãjätit" to="Sinä jätit" />
+    <Word from="Iähtöãsi" to="lähtöäsi" />
+    <Word from="Iãäkikseen" to="lääkikseen" />
+    <Word from="puhuajostain" to="puhua jostain" />
+    <Word from="tavatajoku" to="tavata joku" />
+    <Word from="Iookia" to="lookia" />
+    <Word from="Iapsiystävällisempãnã" to="lapsiystävällisempänä" />
+    <Word from="isãnnälle" to="isännälle" />
+    <Word from="tã" to="tä" />
+    <Word from="Ieidi" to="leidi" />
+    <Word from="Kãvisikö" to="Kävisikö" />
+    <Word from="marisãtkä" to="marisätkä" />
+    <Word from="kännissäjärveen" to="kännissä järveen" />
+    <Word from="sinullajotain" to="sinulla jotain" />
+    <Word from="Iuntun" to="luntun" />
+    <Word from="Iunttu" to="lunttu" />
+    <Word from="Iukitsin" to="lukitsin" />
+    <Word from="jyystãä" to="jyystää" />
+    <Word from="Iuokkajuhlaan" to="luokkajuhlaan" />
+    <Word from="Michellestã" to="Michellestä" />
+    <Word from="Iuokkakokous" to="luokkakokous" />
+    <Word from="sinäja" to="sinä ja" />
+    <Word from="Sinãja" to="Sinä ja" />
+    <Word from="Sillãjoskus" to="Sillä joskus" />
+    <Word from="Iopetimme" to="lopetimme" />
+    <Word from="Ymmãrrãtkö" to="Ymmärrätkö" />
+    <Word from="kanssajoka" to="kanssa joka" />
+    <Word from="Iiioitellusti" to="liioitellusti" />
+    <Word from="Iaihalta" to="laihalta" />
+    <Word from="Miaja" to="Mia ja" />
+    <Word from="Mietitãänpã" to="Mietitäänpä" />
+    <Word from="Kyııä" to="Kyllä" />
+    <Word from="Pidãttelel" to="Pidättele!" />
+    <Word from="ymmärtãmisestä" to="ymmärtämisestä" />
+    <Word from="jajään" to="ja jään" />
+    <Word from="Selenaja" to="Selena ja" />
+    <Word from="Iuokkakokousta" to="luokkakokousta" />
+    <Word from="ákápussi" to="äkäpussi" />
+    <Word from="karkoituksen" to="karkotuksen" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <WholeLines>
+    <Line from="Katsokaa pa." to="Katsokaapa." />
+    <Line from="Mik!&#xD;&#xA;&quot;&quot;e“9iräı" to="Mik!&#xD;&#xA;-Hengitä!" />
+    <Line from="Tu lta!" to="Tulta!" />
+    <Line from="...0I1..." to="...on..." />
+    <Line from="Ken gän nauh oja?" to="Kengännauhoja?" />
+    <Line from="kãmmottãVãllã mUiStollã." to="kammottavana muistona." />
+    <Line from="Hän näki naisen menevän&#xD;&#xA;kellarikerroksen ksen asun to o nsä." to="Hän näki naisen menevän&#xD;&#xA;kellarikerroksen asuntoonsa." />
+    <Line from="Minä etsin käsiini miehen, joka&#xD;&#xA;on aurtanutiestradea ja minua:" to="Minä etsin käsiini miehen, joka&#xD;&#xA;on auttanut Lestradea ja minua:" />
+    <Line from="Huomaa erityisesti&#xD;&#xA;punaisella merkitty &quot;kitoris." to="Huomaa erityisesti&#xD;&#xA;punaisella merkitty &quot;klitoris&quot;." />
+    <Line from="Tulkaa, meillä on&#xD;&#xA;Ha vaıji-bileet suihkussa" to="Tulkaa, meillä on&#xD;&#xA;Havaiji-bileet suihkussa" />
+    <Line from="Ta rkoitatko että&#xD;&#xA;hänet myrkytettiin?" to="Tarkoitatko että&#xD;&#xA;hänet myrkytettiin?" />
+    <Line from="Odotta kaa soittoani&#xD;&#xA;Ievähdyspaikalla." to="Odottakaa soittoani&#xD;&#xA;levähdyspaikalla." />
+    <Line from="Nyt kuuntelet, perska rva." to="Nyt kuuntelet, perskarva." />
+    <Line from="Ta patko hänet sitten?" to="Tapatko hänet sitten?" />
+    <Line from="Seuraa vissa va/oissa." to="Seuraavissa valoissa." />
+    <Line from="Aıoıt rapattaa minut.&#xD;&#xA;- En." to="Aioit tapattaa minut.&#xD;&#xA;- En." />
+    <Line from="Todella vaku uttavaa." to="Todella vakuuttavaa." />
+    <Line from="I-le ovat tuolla alhaalla" to="He ovat tuolla alhaalla" />
+    <Line from="Nainen kuuluu minulle.&#xD;&#xA;- I-Iàivy siitä, ylikasvuinen hyttynen!" to="Nainen kuuluu minulle.&#xD;&#xA;- Häivy siitä, ylikasvuinen hyttynen!" />
+    <Line from="I-Ialuatte käyttää pyhàà kiveä&#xD;&#xA;dynastian aarteen löytämiseksi." to="Haluatte käyttää pyhàà kiveä&#xD;&#xA;dynastian aarteen löytämiseksi." />
+    <Line from="Mitäf?" to="Mitä.. ?" />
+    <Line from="Kuuluuko Hiru ko-klaanista mitään?&#xD;&#xA;- Ninjasoturit ovat edellämme." to="Kuuluuko Hiruko-klaanista mitään?&#xD;&#xA;- Ninjasoturit ovat edellämme." />
+    <Line from="Anteeksı} painoin kai... -" to="Anteeksi, painoin kai... -" />
+    <Line from="ja Rea! Ho usewíves." to="ja Real Housewives." />
+    <Line from="Et halu n n ut Julkkistansseihinkaan." to="Et halunnut Julkkistansseihinkaan." />
+    <Line from="Laard i käsi?" to="Laardikäsi?" />
+    <Line from="Varo kaa!" to="Varokaa!" />
+    <Line from="Näyttävät kö tytöt väh än&#xD;&#xA;h uorahtavi m m i lta?" to="Näyttävätkö tytöt vähän&#xD;&#xA;huorahtavimmilta?" />
+    <Line from="Stif... Ier." to="Stif... ler." />
+    <Line from="J u mantsu kka! M itä?" to="Jumantsukka! Mitä?" />
+    <Line from="Varasin Ch u m bawam ban," to="Varasin Chumbawamban," />
+    <Line from="J u malavita!" to="Jumalavita!" />
+    <Line from="S" to="Isi..." />
+    <Line from="Haluan kertoa jotai n" to="Haluan kertoa jotain" />
+    <Line from="I-Ialuatte" to="Haluatte" />
+  </WholeLines>
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions />
+</OCRFixReplaceList>

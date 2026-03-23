@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="@immatriculation" to="d'immatriculation" />
+    <Word from="acquer" to="acquér" />
+    <Word from="acteurjoue" to="acteur joue" />
+    <Word from="aerien" to="aérien" />
+    <Word from="agreable" to="agréable" />
+    <Word from="aientjamais" to="aient jamais" />
+    <Word from="AII" to="All" />
+    <Word from="aitjamais" to="ait jamais" />
+    <Word from="aitjus" to="ait jus" />
+    <Word from="alle" to="allé" />
+    <Word from="alles" to="allés" />
+    <Word from="appele" to="appelé" />
+    <Word from="apres" to="après" />
+    <Word from="aujourdhui" to="aujourd'hui" />
+    <Word from="aupres" to="auprès" />
+    <Word from="beaute" to="beauté" />
+    <Word from="cabossee" to="cabossée" />
+    <Word from="carj'" to="car j'" />
+    <Word from="Carj'" to="Car j'" />
+    <Word from="carla" to="car la" />
+    <Word from="CEdipe" to="Œdipe" />
+    <Word from="Cest" to="C'est" />
+    <Word from="c'etaient" to="c'étaient" />
+    <Word from="Cétaient" to="C'étaient" />
+    <Word from="c'etait" to="c'était" />
+    <Word from="C'etait" to="C'était" />
+    <Word from="Cétait" to="C'était" />
+    <Word from="choregraphiee" to="chorégraphiée" />
+    <Word from="cinema" to="cinéma" />
+    <Word from="cl'AIcatraz" to="d'Alcatraz" />
+    <Word from="cles" to="clés" />
+    <Word from="cœurjoie" to="cœur-joie" />
+    <Word from="completer" to="compléter" />
+    <Word from="costumiere" to="costumière" />
+    <Word from="cree" to="créé" />
+    <Word from="daccord" to="d'accord" />
+    <Word from="d'AIbert" to="d'Albert" />
+    <Word from="d'AIdous" to="d'Aldous" />
+    <Word from="d'AIec" to="d'Alec" />
+    <Word from="danniversaire" to="d'anniversaire" />
+    <Word from="d'Arra'bida" to="d'Arrabida" />
+    <Word from="d'autodérision" to="d'auto-dérision" />
+    <Word from="dautres" to="d'autres" />
+    <Word from="debattait" to="débattait" />
+    <Word from="decor" to="décor" />
+    <Word from="decorateurs" to="décorateurs" />
+    <Word from="decors" to="décors" />
+    <Word from="defi" to="défi" />
+    <Word from="dejà" to="déjà" />
+    <Word from="déjàm" to="déjà..." />
+    <Word from="dejeunait" to="déjeunait" />
+    <Word from="dengager" to="d'engager" />
+    <Word from="déquipement" to="d'équipement" />
+    <Word from="dérnièré" to="dernière" />
+    <Word from="Desole" to="Désolé" />
+    <Word from="dessayage" to="d'essayage" />
+    <Word from="dessence" to="d'essence" />
+    <Word from="détaient" to="c'étaient" />
+    <Word from="detail" to="détail" />
+    <Word from="dexcellents" to="d'excellents" />
+    <Word from="dexpérience" to="d'expérience" />
+    <Word from="dexpériences" to="d'expériences" />
+    <Word from="d'héro'l'ne" to="d'héroïne" />
+    <Word from="d'idees" to="d'idées" />
+    <Word from="d'intensite" to="d'intensité" />
+    <Word from="dontj" to="dont j" />
+    <Word from="doublaitAlfo" to="doublait Alfo" />
+    <Word from="DrNo" to="Dr No" />
+    <Word from="e'" to="é" />
+    <Word from="ecrit" to="écrit" />
+    <Word from="elegant" to="élégant" />
+    <Word from="Ellé" to="Elle" />
+    <Word from="én" to="en" />
+    <Word from="equipe" to="équipe" />
+    <Word from="erjus" to="er jus" />
+    <Word from="estjamais" to="est jamais" />
+    <Word from="ét" to="et" />
+    <Word from="etaient" to="étaient" />
+    <Word from="etait" to="était" />
+    <Word from="ete" to="été" />
+    <Word from="etiez" to="étiez" />
+    <Word from="etj'" to="et j'" />
+    <Word from="Etj'" to="Et j'" />
+    <Word from="etje" to="et je" />
+    <Word from="Etje" to="Et je" />
+    <Word from="EtsouvenL" to="Et souvent" />
+    <Word from="eviter" to="éviter" />
+    <Word from="Fabsence" to="l'absence" />
+    <Word from="fadapter" to="t'adapter" />
+    <Word from="fadore" to="j'adore" />
+    <Word from="Fâge" to="l'âge" />
+    <Word from="Fagent" to="l'agent" />
+    <Word from="faiessayé" to="j'ai essayé" />
+    <Word from="Failure" to="l'alllure" />
+    <Word from="Fambiance" to="l'ambiance" />
+    <Word from="Famener" to="l'amener" />
+    <Word from="Fanniversaire" to="l'anniversaire" />
+    <Word from="Fapparence" to="l'apparence" />
+    <Word from="Fapres" to="l'apres" />
+    <Word from="Faprès" to="l'après" />
+    <Word from="Farmée" to="l'armée" />
+    <Word from="Farrière" to="l'arrière" />
+    <Word from="Farrivée" to="l'arrivée" />
+    <Word from="Fascenseur" to="l'ascenseur" />
+    <Word from="Fascension" to="l'ascension" />
+    <Word from="Fassaut" to="l'assaut" />
+    <Word from="Fassomme" to="l'assomme" />
+    <Word from="Fatmosphère" to="l'atmosphère" />
+    <Word from="Fattention" to="l'attention" />
+    <Word from="Favalanche" to="l'avalanche" />
+    <Word from="Féclairage" to="l'éclairage" />
+    <Word from="Fécran" to="l'écran" />
+    <Word from="Fémotion" to="l'émotion" />
+    <Word from="Femplacement" to="l'emplacement" />
+    <Word from="Fendroit" to="l'endroit" />
+    <Word from="Fenseigne" to="l'enseigne" />
+    <Word from="Fensemble" to="l'ensemble" />
+    <Word from="Fentouraient" to="l'entouraient" />
+    <Word from="Fentrée" to="l'entrée" />
+    <Word from="Fépaisseur" to="l'épaisseur" />
+    <Word from="Fépoque" to="l'époque" />
+    <Word from="Féquipe" to="Équipe" />
+    <Word from="Fespace" to="l'espace" />
+    <Word from="fespérais" to="j'espérais" />
+    <Word from="Fespère" to="l'espère" />
+    <Word from="Festhétique" to="l'esthétique" />
+    <Word from="Fetranger" to="l'etranger" />
+    <Word from="Févasion" to="l'évasion" />
+    <Word from="Févoque" to="l'évoque" />
+    <Word from="Fexpérience" to="l'expérience" />
+    <Word from="Fexplique" to="l'explique" />
+    <Word from="Fexplosion" to="l'explosion" />
+    <Word from="Fextérieur" to="l'extérieur" />
+    <Word from="Fhabituelle" to="l'habituelle" />
+    <Word from="Fhélicoptère" to="l'hélicoptère" />
+    <Word from="Fhéliport" to="l'héliport" />
+    <Word from="Fhélistation" to="l'hélistation" />
+    <Word from="Fhonneur" to="l'honneur" />
+    <Word from="Fhorloge" to="l'horloge" />
+    <Word from="Fidée" to="l'idée" />
+    <Word from="Fimage" to="l'image" />
+    <Word from="Fimportance" to="l'importance" />
+    <Word from="Fimpression" to="l'impression" />
+    <Word from="Finfluence" to="l'influence" />
+    <Word from="Finscription" to="l'inscription" />
+    <Word from="Fintérieur" to="l'intérieur" />
+    <Word from="Fintrigue" to="l'intrigue" />
+    <Word from="Fobjectif" to="l'objectif" />
+    <Word from="Foccasion" to="l'occasion" />
+    <Word from="Fordre" to="l'ordre" />
+    <Word from="Forigine" to="l'origine" />
+    <Word from="frêre" to="frère" />
+    <Word from="gaylns" to="gaijins" />
+    <Word from="general" to="général" />
+    <Word from="hawaïennel" to="hawaïenne" />
+    <Word from="hawa'l'en" to="hawaïen" />
+    <Word from="Ia" to="la" />
+    <Word from="Ià" to="là" />
+    <Word from="Iaryngotomie" to="laryngotomie" />
+    <Word from="idee" to="idée" />
+    <Word from="idees" to="idées" />
+    <Word from="Ie" to="le" />
+    <Word from="Ies" to="les" />
+    <Word from="Iester" to="Lester" />
+    <Word from="II" to="Il" />
+    <Word from="Iimit" to="limit" />
+    <Word from="IIs" to="Ils" />
+    <Word from="immediatement" to="immédiatement" />
+    <Word from="insufflee" to="insufflée" />
+    <Word from="integrer" to="intégrer" />
+    <Word from="interessante" to="intéressante" />
+    <Word from="Iogions" to="logions" />
+    <Word from="Iorsqu" to="lorsqu" />
+    <Word from="isee" to="isée" />
+    <Word from="Iumiere" to="lumiere" />
+    <Word from="Iynchage" to="lynchage" />
+    <Word from="J'espere" to="J'espère" />
+    <Word from="Jessaie" to="J'essaie" />
+    <Word from="j'etais" to="j'étais" />
+    <Word from="J'etais" to="J'étais" />
+    <Word from="latéralémént" to="latéralement" />
+    <Word from="lci" to="Ici" />
+    <Word from="Lci" to="Ici" />
+    <Word from="lé-" to="là-" />
+    <Word from="lepidopteres" to="lépidoptères" />
+    <Word from="litteraire" to="littéraire" />
+    <Word from="ll" to="il" />
+    <Word from="Ll" to="Il" />
+    <Word from="lls" to="ils" />
+    <Word from="Lls" to="Ils" />
+    <Word from="maintenanu" to="maintenant" />
+    <Word from="maniere" to="manière" />
+    <Word from="mariee" to="mariée" />
+    <Word from="Mayer/ing" to="Mayerling" />
+    <Word from="meilleurjour" to="meilleur jour" />
+    <Word from="melange" to="mélange" />
+    <Word from="n'avaiént" to="n'avaient" />
+    <Word from="n'etait" to="n'était" />
+    <Word from="oitjamais" to="oit jamais" />
+    <Word from="oitjus" to="oit jus" />
+    <Word from="ontete" to="ont été" />
+    <Word from="operateur" to="opérateur" />
+    <Word from="ouvérté" to="ouverte" />
+    <Word from="Pépreuve" to="l'épreuve" />
+    <Word from="pere" to="père" />
+    <Word from="plateforme" to="plate-forme" />
+    <Word from="pourjouer" to="pour jouer" />
+    <Word from="precipice" to="précipice" />
+    <Word from="preferes" to="préférés" />
+    <Word from="premierjour" to="premier jour" />
+    <Word from="presenter" to="présenter" />
+    <Word from="prevu" to="prévu" />
+    <Word from="prevue" to="prévue" />
+    <Word from="propriete" to="propriété" />
+    <Word from="protègeraient" to="protégeraient" />
+    <Word from="qué" to="que" />
+    <Word from="qwangoissé" to="qu'angoissé" />
+    <Word from="realisateur" to="réalisateur" />
+    <Word from="reception" to="réception" />
+    <Word from="reévalu" to="réévalu" />
+    <Word from="repute" to="réputé" />
+    <Word from="reussi" to="réussi" />
+    <Word from="s'arrétait" to="s'arrêtait" />
+    <Word from="s'ave'rer" to="s'avérer" />
+    <Word from="scenario" to="scénario" />
+    <Word from="scene" to="scène" />
+    <Word from="scenes" to="scènes" />
+    <Word from="seances" to="séances" />
+    <Word from="sequence" to="séquence" />
+    <Word from="sﬂécrasa" to="s'écrasa" />
+    <Word from="speciale" to="spéciale" />
+    <Word from="Supen" to="Super" />
+    <Word from="torturee" to="torturée" />
+    <Word from="Uadmirable" to="L'admirable" />
+    <Word from="Uensemblier" to="L'ensemblier" />
+    <Word from="Uexplosion" to="L'explosion" />
+    <Word from="Uouvre" to="L'ouvre" />
+    <Word from="Vaise" to="l'aise" />
+    <Word from="vecu" to="vécu" />
+    <Word from="vehicules" to="véhicules" />
+    <Word from="Ÿappréciais" to="J'appréciais" />
+    <Word from="Ÿespère" to="J'espère" />
+    <Word from="ÿétrangle" to="s'étrangle" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <WholeLines>
+    <Line from="&quot;D'ac:c:ord.&quot;" to="&quot;D'accord.&quot;" />
+    <Line from="“i QUÎ gagne, qui perd," to="ni qui gagne, qui perd," />
+    <Line from="L'ac:c:ent est mis &#xD;&#xA; &#xD;&#xA; sur son trajet jusqu'en Suisse." to="L'accent est mis &#xD;&#xA; &#xD;&#xA; sur son trajet jusqu'en Suisse." />
+    <Line from="C'est la plus gentille chose &#xD;&#xA; &#xD;&#xA; qu'Hitchc:oc:k m'ait jamais dite." to="C'est la plus gentille chose &#xD;&#xA; &#xD;&#xA; qu'Hitchcock m'ait jamais dite." />
+    <Line from="Tout le monde, en revanche, qualifie &#xD;&#xA; &#xD;&#xA; Goldfinger d'aventu re structurée," to="Tout le monde, en revanche, qualifie &#xD;&#xA; &#xD;&#xA; Goldfinger d'aventure structurée," />
+    <Line from="et le film Shadow of a man &#xD;&#xA; &#xD;&#xA; a lancé sa carrière au cinéma." to="et le film &lt;i&gt;Shadow of a man&lt;/i&gt; &#xD;&#xA; &#xD;&#xA; a lancé sa carrière au cinéma." />
+    <Line from="En 1948, Young est passé à la réalisation &#xD;&#xA; &#xD;&#xA; avec One night with you." to="En 1948, Young est passé à la réalisation &#xD;&#xA; &#xD;&#xA; avec &lt;i&gt;One night with you&lt;/i&gt;." />
+    <Line from="Il a construit tous ces véhicules &#xD;&#xA; &#xD;&#xA; à C)c:ala, en Floride." to="Il a construit tous ces véhicules &#xD;&#xA; &#xD;&#xA; à Ocala, en Floride." />
+    <Line from="Tokyo Pop et A Taxing Woman? Return." to="Tokyo Pop et A Taxing Woman's Return." />
+    <Line from="Peter H u nt." to="Peter Hunt." />
+    <Line from="&quot;C'est bien mieux dans Peau. &#xD;&#xA; &#xD;&#xA; On peut sﬂéclabousser, faire du bruit.&quot;" to="&quot;C'est bien mieux dans l'eau. &#xD;&#xA; &#xD;&#xA; On peut s'éclabousser, faire du bruit.&quot;" />
+  </WholeLines>
+  <PartialLinesAlways />
+  <PartialLines>
+    <LinePart from=" I'" to=" l'" />
+    <LinePart from=" |'" to=" l'" />
+  </PartialLines>
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions />
+  <RegularExpressionsIfSpelledCorrectly>
+
+    <!-- ============================================================ -->
+    <!-- I / l CONFUSION FIXES (visual OCR errors, language-agnostic) -->
+    <!-- ============================================================ -->
+
+    <!-- [GEARS GRlNDlNG] → [GEARS GRINDING] : l→I inside all-caps brackets -->
+    <RegEx find="\[([A-Z ]*)l([A-Z ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+
+    <!-- [ABC] bracket with l mixed in caps -->
+    <RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlNG → SING : l inside all-caps word (two variants) -->
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+
+    <!-- SING l → SING I : trailing l in all-caps word -->
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+
+    <!-- l SING → I SING : leading l before all-caps word -->
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- chaIIenge → challenge : II→ll mid lowercase word -->
+    <RegEx find="\b([a-zæøåöäéèàùâêîôûëïœç]+)II([a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- traiIer → trailer : I→l mid lowercase word -->
+    <RegEx find="\b([a-zæøåöäéèàùâêîôûëïœç]+)I([a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- DavidI → Davidl : trailing I→l in capitalised word -->
+    <RegEx find="\b([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- BatailIe → Bataille : I→l mid capitalised word -->
+    <RegEx find="\b([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)I([a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- Iaisse → laisse : leading I→l before 3+ lowercase chars (avoids "Is", "Il" pronoun) -->
+    <RegEx find="\bI([a-zæøåöäéèàùâêîôûëïœç]{3,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- laisse → laisse already correct; lhomme → l'homme caught elsewhere -->
+    <!-- leading l → I before 2+ lowercase chars (e.g. lire OCR'd as Iire caught above; -->
+    <!-- this catches remaining: les, les, etc. — only fires if spellcheck passes as I+word) -->
+    <RegEx find="\bl([a-zæøåöäéèàùâêîôûëïœç]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- standalone l → I (Roman numerals, list markers) -->
+    <RegEx find="\bl\b" replaceWith="I" />
+
+    <!-- ============================================================ -->
+    <!-- FRENCH ELISION / APOSTROPHE FIXES                           -->
+    <!-- ============================================================ -->
+
+    <!-- l'ami, l'heure : ensure typographic apostrophe -->
+    <RegEx find="\bl['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="l'$1" />
+
+    <!-- c'est, j'ai, n'est, m'a, s'il, t'a, d'un : elision contractions -->
+    <RegEx find="\b([cjnmstd])['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="$1'$2" />
+
+    <!-- qu'il, qu'on : longer elision prefix -->
+    <RegEx find="\bqu['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="qu'$1" />
+
+    <!-- aujourd'hui : guard common compound -->
+    <RegEx find="\baujourd['']hui\b" replaceWith="aujourd'hui" />
+
+    <!-- ============================================================ -->
+    <!-- MISSING SPACE AFTER COMMON FRENCH PREPOSITIONS / ARTICLES   -->
+    <!-- (OCR sometimes merges a short word with the next capital)    -->
+    <!-- ============================================================ -->
+
+    <!-- deParis → de Paris -->
+    <RegEx find="\bde([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="de $1" />
+
+    <!-- duMonde → du Monde -->
+    <RegEx find="\bdu([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="du $1" />
+
+    <!-- enFrance → en France -->
+    <RegEx find="\ben([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="en $1" />
+
+    <!-- auRoi → au Roi -->
+    <RegEx find="\bau([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="au $1" />
+
+    <!-- leRoi → le Roi -->
+    <RegEx find="\ble([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="le $1" />
+
+    <!-- laReine → la Reine -->
+    <RegEx find="\bla([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="la $1" />
+
+    <!-- lesHommes → les Hommes -->
+    <RegEx find="\bles([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="les $1" />
+
+    <!-- unHomme → un Homme -->
+    <RegEx find="\bun([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="un $1" />
+
+    <!-- uneReine → une Reine -->
+    <RegEx find="\bune([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="une $1" />
+
+    <!-- surLa → sur La / surLe → sur Le -->
+    <RegEx find="\bsur([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="sur $1" />
+
+    <!-- parLe → par Le -->
+    <RegEx find="\bpar([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="par $1" />
+
+    <!-- ofDavid → of David (English proper nouns in French text) -->
+    <RegEx find="\bof([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+    <!-- inLondon → in London -->
+    <RegEx find="\bin([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="in $1" />
+
+  </RegularExpressionsIfSpelledCorrectly>
+</OCRFixReplaceList>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords />
+  <PartialWordsAlways />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary.
+         If new word(s) and longer than 4 chars and exists
+         in spelling dictionary, it is (or they are) accepted -->
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="ą" to="ą " />
+    <WordPart from="j" to=" j" />
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions />
+</OCRFixReplaceList>

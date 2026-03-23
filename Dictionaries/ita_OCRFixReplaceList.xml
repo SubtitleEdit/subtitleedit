@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="lN" to="IN" />
+    <Word from="lL" to="IL" />
+    <Word from="l" to="I" />
+  </WholeWords>
+  <PartialWordsAlways>
+    <!-- Will be replaced always -->
+    <WordPart from="¤" to="o" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+    <WordPart from="I\/I" to="M" />
+    <WordPart from="l\/I" to="M" />
+    <WordPart from="I\/l" to="M" />
+    <WordPart from="l\/l" to="M" />
+    <WordPart from="IVIa" to="Ma" />
+    <WordPart from="IVIe" to="Me" />
+    <WordPart from="IVIi" to="Mi" />
+    <WordPart from="IVIo" to="Mo" />
+    <WordPart from="IVIu" to="Mu" />
+    <WordPart from="IVIy" to="My" />
+  </PartialWordsAlways>
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary.
+          If new word(s) and longer than 5 chars and exists in spelling dictionary, it is (or they are) accepted -->
+    <WordPart from="IVI" to="M" />
+    <WordPart from="/" to="l" />
+    <WordPart from="|" to="I" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="m" to="rn" />
+    <WordPart from="l" to="i" />
+    <WordPart from="€" to="e" />
+    <WordPart from="I" to="l" />
+    <WordPart from="c" to="o" />
+    <WordPart from="i" to="t" />
+    <WordPart from="cc" to="oo" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="ii" to="ll" />
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="c" to="e" />
+    <WordPart from="I" to="t" />
+    <WordPart from="n" to="o" />
+    <WordPart from="s" to="e" />
+    <WordPart from="l-l" to="H" />
+    <WordPart from="l_" to="L" />
+    <WordPart from="°" to="o" />
+    <WordPart from=")/" to="y" />
+    <WordPart from=")'" to="y" />
+    <WordPart from="a’" to="d" />
+    <WordPart from="|" to="l" />
+    <WordPart from="¤" to="o" />
+    <WordPart from="vx/" to="w" />
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions>
+    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="([\p{Ll},] )(I)([oai][, \.])" replaceWith="$1l$3" />
+    <RegEx find="\b(I)([àì]|'[ \r\n])\b" replaceWith="l$2" />
+    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />  
+  </RegularExpressions>
+</OCRFixReplaceList>

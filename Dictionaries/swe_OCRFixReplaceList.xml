@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="lârt" to="lärt" />
+    <Word from="hedervårda" to="hedervärda" />
+    <Word from="stormâstare" to="stormästare" />
+    <Word from="Avfârd" to="Avfärd" />
+    <Word from="tâlten" to="tälten" />
+    <Word from="ârjag" to="är jag" />
+    <Word from="ärjag" to="är jag" />
+    <Word from="jâmlikar" to="jämlikar" />
+    <Word from="Riskakoﬂ" to="Riskakor" />
+    <Word from="Karamellen/" to="Karamellen" />
+    <Word from="Lngenüng" to="Ingenting" />
+    <Word from="ärju" to="är ju" />
+    <Word from="Sá" to="Så" />
+    <Word from="närjag" to="när jag" />
+    <Word from="alltjag" to="allt jag" />
+    <Word from="görjag" to="gör jag" />
+    <Word from="trorjag" to="tror jag" />
+    <Word from="varju" to="var ju" />
+    <Word from="görju" to="gör ju" />
+    <Word from="kanju" to="kan ju" />
+    <Word from="blirjag" to="blir jag" />
+    <Word from="sägerjag" to="säger jag" />
+    <Word from="behållerjag" to="behåller jag" />
+    <Word from="prøblem" to="problem" />
+    <Word from="räddadeju" to="räddade ju" />
+    <Word from="honøm" to="honom" />
+    <Word from="Ln" to="In" />
+    <Word from="svårﬂörtad" to="svårflörtad" />
+    <Word from="øch" to="och" />
+    <Word from="ﬂörtar" to="flörtar" />
+    <Word from="kännerjag" to="känner jag" />
+    <Word from="ﬂickan" to="flickan" />
+    <Word from="snø" to="snö" />
+    <Word from="gerju" to="ger ju" />
+    <Word from="køntakter" to="kontakter" />
+    <Word from="ølycka" to="olycka" />
+    <Word from="nølla" to="nolla" />
+    <Word from="sinnenajublar" to="sinnena jublar" />
+    <Word from="ijobbet" to="i jobbet" />
+    <Word from="Fårjag" to="Får jag" />
+    <Word from="Ar" to="Är" />
+    <Word from="liggerju" to="ligger ju" />
+    <Word from="um" to="om" />
+    <Word from="lbland" to="Ibland" />
+    <Word from="skjuterjag" to="skjuter jag" />
+    <Word from="Vaddå" to="Vad då" />
+    <Word from="pratarjämt" to="pratar jämt" />
+    <Word from="harju" to="har ju" />
+    <Word from="sitterjag" to="sitter jag" />
+    <Word from="häﬂa" to="härja" />
+    <Word from="sﬁäl" to="stjäl" />
+    <Word from="FÖU" to="Följ" />
+    <Word from="varförjag" to="varför jag" />
+    <Word from="sﬁärna" to="stjärna" />
+    <Word from="böﬂar" to="börjar" />
+    <Word from="böﬂan" to="början" />
+    <Word from="stäri" to="står" />
+    <Word from="pä" to="på" />
+    <Word from="harjag" to="har jag" />
+    <Word from="attjag" to="att jag" />
+    <Word from="Verkarjag" to="Verkar jag" />
+    <Word from="Kännerjag" to="Känner jag" />
+    <Word from="därjag" to="där jag" />
+    <Word from="tuﬁ" to="tuff" />
+    <Word from="lurarjag" to="lurar jag" />
+    <Word from="varjättebra" to="var jättebra" />
+    <Word from="allvan" to="allvar" />
+    <Word from="dethär" to="det här" />
+    <Word from="vaﬂe" to="varje" />
+    <Word from="FöUer" to="Följer" />
+    <Word from="personalmötetl" to="personalmötet!" />
+    <Word from="harjust" to="har just" />
+    <Word from="ärjätteduktig" to="är jätteduktig" />
+    <Word from="därja" to="där ja" />
+    <Word from="lngenüng" to="lngenting" />
+    <Word from="iluften" to="i luften" />
+    <Word from="ösen" to="öser" />
+    <Word from="tvâ" to="två" />
+    <Word from="Uejerna" to="Tjejerna" />
+    <Word from="hån*" to="hårt" />
+    <Word from="Ärjag" to="Är jag" />
+    <Word from="keL" to="Okej" />
+    <Word from="Förjag" to="För jag" />
+    <Word from="varjättekul" to="var jättekul" />
+    <Word from="kämpan" to="kämpar" />
+    <Word from="mycketjobb" to="mycket jobb" />
+    <Word from="Uus" to="ljus" />
+    <Word from="serjag" to="ser jag" />
+    <Word from="vetjag" to="vet jag" />
+    <Word from="fårjag" to="får jag" />
+    <Word from="hurjag" to="hur jag" />
+    <Word from="försökerjag" to="försöker jag" />
+    <Word from="tánagel" to="tånagel" />
+    <Word from="vaüe" to="varje" />
+    <Word from="Uudet" to="ljudet" />
+    <Word from="amhopa" to="allihopa" />
+    <Word from="Väü" to="Välj" />
+    <Word from="gäri" to="går" />
+    <Word from="rödüus" to="rödljus" />
+    <Word from="Uuset" to="ljuset" />
+    <Word from="Ridàn" to="Ridån" />
+    <Word from="viüa" to="vilja" />
+    <Word from="gåri" to="går i" />
+    <Word from="Hurdå" to="Hur då" />
+    <Word from="inter\/juar" to="intervjuar" />
+    <Word from="menarjag" to="menar jag" />
+    <Word from="spyrjag" to="spyr jag" />
+    <Word from="briüera" to="briljera" />
+    <Word from="Närjag" to="När jag" />
+    <Word from="ner\/ös" to="nervös" />
+    <Word from="ilivets" to="i livets" />
+    <Word from="nägot" to="något" />
+    <Word from="pà" to="på" />
+    <Word from="Lnnan" to="Innan" />
+    <Word from="Uf" to="Ut" />
+    <Word from="lnnan" to="Innan" />
+    <Word from="Dàren" to="Dåren" />
+    <Word from="Fàrjag" to="Får jag" />
+    <Word from="VadärdetdäL" to="Vad är det där" />
+    <Word from="smàtjuv" to="småtjuv" />
+    <Word from="tàgrånare" to="tågrånare" />
+    <Word from="ditàt" to="ditåt" />
+    <Word from="sä" to="så" />
+    <Word from="vàrdslösa" to="vårdslösa" />
+    <Word from="nàn" to="nån" />
+    <Word from="kommerjag" to="kommer jag" />
+    <Word from="ärjättebra" to="är jättebra" />
+    <Word from="ärjävligt" to="är jävligt" />
+    <Word from="àkerjag" to="åker jag" />
+    <Word from="ellerjapaner" to="eller japaner" />
+    <Word from="attjaga" to="att jaga" />
+    <Word from="eften" to="efter" />
+    <Word from="hästan" to="hästar" />
+    <Word from="Lntensivare" to="Intensivare" />
+    <Word from="fràgarjag" to="frågar jag" />
+    <Word from="pen/ers" to="pervers" />
+    <Word from="ràbarkade" to="råbarkade" />
+    <Word from="styrkon" to="styrkor" />
+    <Word from="Difåf" to="Ditåt" />
+    <Word from="händen" to="händer" />
+    <Word from="föﬁa" to="följa" />
+    <Word from="Idioten/" to="Idioter!" />
+    <Word from="Varförjagade" to="Varför jagade" />
+    <Word from="därförjag" to="därför jag" />
+    <Word from="forjag" to="for jag" />
+    <Word from="Iivsgladje" to="livsglädje" />
+    <Word from="narjag" to="när jag" />
+    <Word from="sajag" to="sa jag" />
+    <Word from="genastja" to="genast ja" />
+    <Word from="rockumentàren" to="rockumentären" />
+    <Word from="turne" to="turné" />
+    <Word from="fickjag" to="fick jag" />
+    <Word from="sager" to="säger" />
+    <Word from="Ijushårig" to="ljushårig" />
+    <Word from="tradgårdsolycka" to="trädgårdsolycka" />
+    <Word from="kvavdes" to="kvävdes" />
+    <Word from="dàrja" to="där ja" />
+    <Word from="hedersgaster" to="hedersgäster" />
+    <Word from="Nar" to="När" />
+    <Word from="smakiösa" to="smaklösa" />
+    <Word from="lan" to="Ian" />
+    <Word from="Lan" to="Ian" />
+    <Word from="eri" to="er i" />
+    <Word from="universitetsamne" to="universitetsämne" />
+    <Word from="garna" to="gärna" />
+    <Word from="ar" to="är" />
+    <Word from="baltdjur" to="bältdjur" />
+    <Word from="varjag" to="var jag" />
+    <Word from="àr" to="är" />
+    <Word from="förförstàrkare" to="förförstärkare" />
+    <Word from="arjattespeciell" to="är jättespeciell" />
+    <Word from="hàrgår" to="här går" />
+    <Word from="Ia" to="la" />
+    <Word from="Iimousinen" to="limousinen" />
+    <Word from="krickettra" to="kricketträ" />
+    <Word from="hårdrockvàrlden" to="hårdrockvärlden" />
+    <Word from="tràbit" to="träbit" />
+    <Word from="Mellanvastern" to="Mellanvästern" />
+    <Word from="arju" to="är ju" />
+    <Word from="turnen" to="turnén" />
+    <Word from="kanns" to="känns" />
+    <Word from="battre" to="bättre" />
+    <Word from="vàrldsturne" to="världsturne" />
+    <Word from="dar" to="där" />
+    <Word from="sjàlvantànder" to="självantänder" />
+    <Word from="jattelange" to="jättelänge" />
+    <Word from="berattade" to="berättade" />
+    <Word from="Sä" to="Så" />
+    <Word from="vandpunkten" to="vändpunkten" />
+    <Word from="Nàrjag" to="När jag" />
+    <Word from="lasa" to="läsa" />
+    <Word from="skitlàskigt" to="skitläskigt" />
+    <Word from="sambandsvàg" to="sambandsväg" />
+    <Word from="valdigt" to="väldigt" />
+    <Word from="Stamgaﬁel" to="Stämgaffel" />
+    <Word from="àrjag" to="är jag" />
+    <Word from="tajming" to="tajmning" />
+    <Word from="utgäng" to="utgång" />
+    <Word from="Hàråt" to="Häråt" />
+    <Word from="hàråt" to="häråt" />
+    <Word from="anvander" to="använder" />
+    <Word from="harjobbat" to="har jobbat" />
+    <Word from="imageide" to="imageidé" />
+    <Word from="klaﬁen" to="klaffen" />
+    <Word from="sjalv" to="själv" />
+    <Word from="dvarg" to="dvärg" />
+    <Word from="detjag" to="det jag" />
+    <Word from="dvargarna" to="dvärgarna" />
+    <Word from="fantasivàrld" to="fantasivärld" />
+    <Word from="ﬁolliga" to="Fjolliga" />
+    <Word from="mandoiinstràngar" to="mandollnsträngar" />
+    <Word from="mittjobb" to="mitt jobb" />
+    <Word from="Skajag" to="Ska jag" />
+    <Word from="landari" to="landar i" />
+    <Word from="gang" to="gäng" />
+    <Word from="Detjag" to="Det jag" />
+    <Word from="Narmre" to="Närmre" />
+    <Word from="Iåtjavelni" to="låtjäveln" />
+    <Word from="Hållerjag" to="Håller jag" />
+    <Word from="visionarer" to="visionärer" />
+    <Word from="Tülvad" to="Till vad" />
+    <Word from="militàrbas" to="militärbas" />
+    <Word from="jattegiada" to="jätteglada" />
+    <Word from="Fastjag" to="Fast jag" />
+    <Word from="såjag" to="så jag" />
+    <Word from="rockvarlden" to="rockvärlden" />
+    <Word from="saknarjag" to="saknar jag" />
+    <Word from="allafall" to="alla fall" />
+    <Word from="ﬁanta" to="fjanta" />
+    <Word from="Kràma" to="Kräma" />
+    <Word from="stammer" to="stämmer" />
+    <Word from="budbàrare" to="budbärare" />
+    <Word from="Iivsfiiosofi" to="livsfiiosofi" />
+    <Word from="förjämnan" to="för jämnan" />
+    <Word from="gillarjag" to="gillar jag" />
+    <Word from="Iarvat" to="larvat" />
+    <Word from="klararjag" to="klarar jag" />
+    <Word from="hattaﬁ'àr" to="hattaffär" />
+    <Word from="Dà" to="Då" />
+    <Word from="uppﬁnna" to="uppfinna" />
+    <Word from="Ràttfåglar" to="Råttfåglar" />
+    <Word from="Sväüboda" to="Sväljboda" />
+    <Word from="Påböﬂar" to="Påbörjar" />
+    <Word from="slutarju" to="slutar ju" />
+    <Word from="niﬁskebuüken" to="i fiskebutiken" />
+    <Word from="härjäkeln" to="här jäkeln" />
+    <Word from="Hßppa" to="Hoppa" />
+    <Word from="förstörds" to="förstördes" />
+    <Word from="varjättegoda" to="var jättegoda" />
+    <Word from="Kor\/" to="Korv" />
+    <Word from="brüléel" to="brülée!" />
+    <Word from="Hei" to="Hej" />
+    <Word from="älskarjordgubbsglass" to="älskar jordgubbsglass" />
+    <Word from="Snöbom" to="Snöboll" />
+    <Word from="SnöboH" to="Snöboll" />
+    <Word from="Snöbol" to="Snöboll" />
+    <Word from="snöboH" to="snöboll" />
+    <Word from="Läggerpå" to="Lägger på" />
+    <Word from="lngeﬂ" to="lnget!" />
+    <Word from="Sägerjättesmarta" to="Säger jättesmarta" />
+    <Word from="dopplen/äderradar" to="dopplerväderradar" />
+    <Word from="säkertjättefin" to="säkert jättefin" />
+    <Word from="ärjättefin" to="är jättefin" />
+    <Word from="verkarju" to="verkar ju" />
+    <Word from="blirju" to="blir ju" />
+    <Word from="kor\/" to="korv" />
+    <Word from="naturkatastroﬁ" to="naturkatastrof!" />
+    <Word from="stickerjag" to="stickerj ag" />
+    <Word from="jättebuﬁé" to="jättebuffé" />
+    <Word from="beﬁnner" to="befinner" />
+    <Word from="Spﬂng" to="Spring" />
+    <Word from="trecﬁe" to="tredje" />
+    <Word from="ryckerjag" to="rycker jag" />
+    <Word from="skullejag" to="skulle jag" />
+    <Word from="vetju" to="vet ju" />
+    <Word from="aﬂjag" to="att jag" />
+    <Word from="ﬂnns" to="finns" />
+    <Word from="ärlång" to="är lång" />
+    <Word from="kåra" to="kära" />
+    <Word from="ärﬁna" to="är ﬁna" />
+    <Word from="äri" to="är i" />
+    <Word from="hörden" to="hör den" />
+    <Word from="ättjäg" to="att jäg" />
+    <Word from="gär" to="går" />
+    <Word from="föri" to="för i" />
+    <Word from="Hurvisste" to="Hur visste" />
+    <Word from="ﬁck" to="fick" />
+    <Word from="ﬁnns" to="finns" />
+    <Word from="ﬁn" to="fin" />
+    <Word from="Fa" to="Bra." />
+    <Word from="bori" to="bor i" />
+    <Word from="fiendeplanl" to="fiendeplan!" />
+    <Word from="iförnamn" to="i förnamn" />
+    <Word from="detju" to="det ju" />
+    <Word from="Nüd" to="Niki" />
+    <Word from="hatarjag" to="hatar jag" />
+    <Word from="Klararjag" to="Klarar jag" />
+    <Word from="detaﬁer" to="detaljer" />
+    <Word from="vä/" to="väl" />
+    <Word from="smakarju" to="smakar ju" />
+    <Word from="Teacheﬂ" to="Teacher!" />
+    <Word from="imorse" to="i morse" />
+    <Word from="drickerjag" to="dricker jag" />
+    <Word from="ståri" to="står i" />
+    <Word from="Harjag" to="Har jag" />
+    <Word from="Talarjag" to="Talar jag" />
+    <Word from="undrarjag" to="undrar jag" />
+    <Word from="ålderjag" to="ålder jag" />
+    <Word from="vaﬁe" to="varje" />
+    <Word from="förfalskningl" to="förfalskning!" />
+    <Word from="Viﬁiiiam" to="William" />
+    <Word from="V\ﬁlliams" to="Williams" />
+    <Word from="attjobba" to="att jobba" />
+    <Word from="intei" to="inte i" />
+    <Word from="närV\ﬁlliam" to="när William" />
+    <Word from="V\ﬁlliam" to="William" />
+    <Word from="Eﬁersom" to="Eftersom" />
+    <Word from="Vlﬁlliam" to="William" />
+    <Word from="Iängejag" to="länge jag" />
+    <Word from="'ﬁdigare" to="Tidigare" />
+    <Word from="börjadei" to="började i" />
+    <Word from="merjust" to="mer just" />
+    <Word from="eﬁeråt" to="efteråt" />
+    <Word from="gjordejag" to="gjorde jag" />
+    <Word from="hadeju" to="hade ju" />
+    <Word from="gårvi" to="går vi" />
+    <Word from="köperjag" to="köper jag" />
+    <Word from="Måstejag" to="Måste jag" />
+    <Word from="kännerju" to="känner ju" />
+    <Word from="ﬂn" to="fin" />
+    <Word from="treviig" to="trevlig" />
+    <Word from="Grattisl" to="Grattis!" />
+    <Word from="kande" to="kände" />
+    <Word from="'llden" to="Tiden" />
+    <Word from="sakjag" to="sak jag" />
+    <Word from="klartjag" to="klart jag" />
+    <Word from="häﬁigt" to="häftigt" />
+    <Word from="Iämnarjag" to="lämnar jag" />
+    <Word from="gickju" to="gick ju" />
+    <Word from="skajag" to="ska jag" />
+    <Word from="Görjag" to="Gör jag" />
+    <Word from="måstejag" to="måste jag" />
+    <Word from="gra\/iditet" to="graviditet" />
+    <Word from="hittadqdin" to="hittade din" />
+    <Word from="ärjobbigt" to="är jobbigt" />
+    <Word from="Overdrivet" to="Överdrivet" />
+    <Word from="hOgtidlig" to="högtidlig" />
+    <Word from="Overtyga" to="Övertyga" />
+    <Word from="SKILSMASSA" to="SKILSMÄSSA" />
+    <Word from="brukarju" to="brukar ju" />
+    <Word from="lsabel" to="Isabel" />
+    <Word from="kundejag" to="kunde jag" />
+    <Word from="ärläget" to="är läget" />
+    <Word from="blirinte" to="blir inte" />
+    <Word from="ijakt" to="i jakt" />
+    <Word from="avjordens" to="av jordens" />
+    <Word from="90000O" to="900000" />
+    <Word from="9O0" to="900" />
+    <Word from="ärpå" to="är på" />
+    <Word from="ärproteserna" to="är proteserna" />
+    <Word from="ärytterst" to="är ytterst" />
+    <Word from="beborjorden" to="bebor jorden" />
+    <Word from="filmjag" to="film jag" />
+    <Word from="fokuserarpå" to="fokuserar på" />
+    <Word from="folkjag" to="folk jag" />
+    <Word from="föreställdejag" to="föreställde jag" />
+    <Word from="förpubliken" to="för publiken" />
+    <Word from="gilladejag" to="gillade jag" />
+    <Word from="hållerpå" to="håller på" />
+    <Word from="harpå" to="har på" />
+    <Word from="harplaner" to="har planer" />
+    <Word from="harprylar" to="har prylar" />
+    <Word from="kommerpubliken" to="kommer publiken" />
+    <Word from="kostymerpå" to="kostymer på" />
+    <Word from="litarpå" to="litar på" />
+    <Word from="lngen" to="Ingen" />
+    <Word from="lnom" to="Inom" />
+    <Word from="lnte" to="Inte" />
+    <Word from="ochjag" to="och jag" />
+    <Word from="Ochjag" to="Och jag" />
+    <Word from="ochjorden" to="och jorden" />
+    <Word from="omjag" to="om jag" />
+    <Word from="Omjag" to="Om jag" />
+    <Word from="passarperfekt" to="passar perfekt" />
+    <Word from="sättetjag" to="sättet jag" />
+    <Word from="silverpå" to="silver på" />
+    <Word from="skruvarjag" to="skruvar jag" />
+    <Word from="somjag" to="som jag" />
+    <Word from="Somjag" to="Som jag" />
+    <Word from="talarpå" to="talar på" />
+    <Word from="tänktejag" to="tänkte jag" />
+    <Word from="tapparjag" to="tappar jag" />
+    <Word from="tittarpå" to="tittar på" />
+    <Word from="visstejag" to="visste jag" />
+    <Word from="medjetpacks" to="med jetpacks" />
+    <Word from="sätterpå" to="sätter på" />
+    <Word from="stårpå" to="står på" />
+    <Word from="tillhörpå" to="tillhör på" />
+    <Word from="AIIa" to="Alla" />
+    <Word from="AIIt" to="Allt" />
+    <Word from="SIuta" to="Sluta" />
+    <Word from="ÖIen" to="Ölen" />
+    <Word from="BIått" to="Blått" />
+    <Word from="GIöm" to="Glöm" />
+    <Word from="SIäpp" to="Släpp" />
+    <Word from="BIås" to="Blås" />
+    <Word from="BIi" to="Bli" />
+    <Word from="Iatinos" to="latinos" />
+    <Word from="Iitegrann" to="litegrann" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="¤" to="o" />
+    <WordPart from="I" to="l" />
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="â" to="ä" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+    <WordPart from="m" to="rn" />
+    <WordPart from="l" to="i" />
+    <WordPart from="€" to="e" />
+    <WordPart from="c" to="o" />
+    <WordPart from="i" to="t" />
+    <WordPart from="cc" to="oo" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="n/" to="ry" />
+    <WordPart from="ae" to="æ" />
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="c" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="I" to="t" />
+    <WordPart from="n" to="o" />
+    <WordPart from="s" to="e" />
+    <WordPart from="å" to="ä" />
+    <WordPart from="à" to="å" />
+    <WordPart from="n/" to="rv" />
+    <WordPart from="djag" to="d jag" />
+    <WordPart from="sjag" to="s jag" />
+    <WordPart from="rjag" to="r jag" />
+    <WordPart from="tjag" to="t jag" />
+    <WordPart from="ejag" to="e jag" />
+    <WordPart from="ärp" to="är p" />
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways>
+    <LinePart from="Apollo 1 3" to="Apollo 13" />
+    <LinePart from=",.," to="..." />
+    <LinePart from=" l " to=" I " />
+    <LinePart from=" l." to=" I." />
+    <LinePart from=" l?" to=" I?" />
+    <LinePart from=" l!" to=" I!" />
+    <LinePart from=" . " to=". " />
+  </PartialLinesAlways>
+  <PartialLines />
+  <BeginLines>
+    <Beginning from="Ln " to="In " />
+    <Beginning from="U ppfattat" to="Uppfattat" />
+  </BeginLines>
+  <EndLines />
+  <RegularExpressions>
+    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="\bl\b" replaceWith="I" />
+  </RegularExpressions>
+  <RegularExpressionsIfSpelledCorrectly>
+
+    <!-- ============================================================ -->
+    <!-- SWEDISH CHARACTER CLASS (used throughout)                    -->
+    <!-- Swedish lowercase: a-z + å ä ö                              -->
+    <!-- é appears in loanwords (idé, café, resumé) — included       -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- I / l CONFUSION FIXES (visual OCR errors, language-agnostic) -->
+    <!-- ============================================================ -->
+
+    <!-- [GEAR GRlNDER] → [GEAR GRINDER] : l→I inside all-caps brackets -->
+    <RegEx find="\[([A-ZÅÄÖ ]*)l([A-ZÅÄÖ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+
+    <!-- [ABC] bracket with l mixed into caps -->
+    <RegEx find="\[([A-ZÅÄÖl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlNG → SING : l inside all-caps word -->
+    <RegEx find="\b([A-ZÅÄÖ]+)l([A-ZÅÄÖ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+
+    <!-- trailing l in all-caps word -->
+    <RegEx find="\b([A-ZÅÄÖ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+
+    <!-- leading l before all-caps word -->
+    <RegEx find="\bl([A-ZÅÄÖ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- chaIIenge → challenge : II→ll mid lowercase word -->
+    <RegEx find="\b([a-zåäöé]+)II([a-zåäöé]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- traIIer → trailer : I→l mid lowercase word -->
+    <RegEx find="\b([a-zåäöé]+)I([a-zåäöé]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- trailing I→l in capitalised word (e.g. StockholmI → Stockholml) -->
+    <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- I→l mid capitalised word (e.g. StockIholm → Stocklholm) -->
+    <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]+)I([a-zåäöé]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- Iäser → läser : leading I→l before 3+ lowercase chars -->
+    <!-- Swedish "I" not used as standalone pronoun (it's "jag") — 3-char min is safe -->
+    <RegEx find="\bI([a-zåäöé]{3,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- leading l→I before 2+ lowercase chars -->
+    <RegEx find="\bl([a-zåäöé]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- standalone l → I (Roman numerals, list markers, ordinals) -->
+    <RegEx find="\bl\b" replaceWith="I" />
+
+    <!-- ============================================================ -->
+    <!-- SWEDISH GENITIVE                                             -->
+    <!-- Swedish genitive adds -s directly, no apostrophe:           -->
+    <!--   Stockholms gator, kungens män                              -->
+    <!-- Apostrophe only for names ending in s/x/z:                  -->
+    <!--   Lass' bok, Marx' teorier                                   -->
+    <!-- Normalise English-style OCR apostrophes                      -->
+    <!-- ============================================================ -->
+
+    <!-- Lars's → Lars' : English-style OCR artefact on s-ending names -->
+    <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]*[sxzSXZ])['']s\b" spellCheck="$1" replaceWith="$1'" />
+
+    <!-- David's → Davids : remove apostrophe from normal genitive -->
+    <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
+
+    <!-- ============================================================ -->
+    <!-- SWEDISH COMPOUND WORDS — NOTE                                -->
+    <!-- Swedish, like Danish, writes compounds as ONE word:          -->
+    <!--   järnvägsstation, fotbollsplan, hälsovård                  -->
+    <!-- Missing-space rules only trigger on preposition + Capital,   -->
+    <!-- which is never a valid Swedish compound.                     -->
+    <!-- ============================================================ -->
+
+    <!-- iStockholm → i Stockholm -->
+    <RegEx find="\bi([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="i $1" />
+
+    <!-- påGotland → på Gotland -->
+    <RegEx find="\bpå([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="på $1" />
+
+    <!-- tillStockholm → till Stockholm -->
+    <RegEx find="\btill([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="till $1" />
+
+    <!-- frånGöteborg → från Göteborg -->
+    <RegEx find="\bfrån([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="från $1" />
+
+    <!-- medKungen → med Kungen -->
+    <RegEx find="\bmed([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="med $1" />
+
+    <!-- avKungen → av Kungen -->
+    <RegEx find="\bav([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="av $1" />
+
+    <!-- omSverige → om Sverige -->
+    <RegEx find="\bom([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="om $1" />
+
+    <!-- vidHavet → vid Havet -->
+    <RegEx find="\bvid([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="vid $1" />
+
+    <!-- förKungen → för Kungen -->
+    <RegEx find="\bför([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="för $1" />
+
+    <!-- urSkogen → ur Skogen -->
+    <RegEx find="\bur([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="ur $1" />
+
+    <!-- motNorr → mot Norr -->
+    <RegEx find="\bmot([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="mot $1" />
+
+    <!-- genomSkogen → genom Skogen -->
+    <RegEx find="\bgenom([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="genom $1" />
+
+    <!-- ============================================================ -->
+    <!-- RETAINED FROM ENGLISH (fire on proper nouns in Swedish text) -->
+    <!-- ============================================================ -->
+
+    <!-- ofLondon → of London -->
+    <RegEx find="\bof([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+    <!-- inStockholm → in Stockholm -->
+    <RegEx find="\bin([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="in $1" />
+
+  </RegularExpressionsIfSpelledCorrectly>
+</OCRFixReplaceList>

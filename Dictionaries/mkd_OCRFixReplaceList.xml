@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="5ВЕЗДЕНИ" to="ЅВЕЗДЕНИ" />
+    <Word from="5везден" to="ѕвезден" />
+    <Word from="непријателл" to="непријател" />
+    <Word from="едерацијата" to="федерацијата" />
+    <Word from="веке" to="веќе" />
+    <Word from="коОн" to="кон" />
+    <Word from="зЗона" to="зона" />
+    <Word from="пекачувања" to="покачувања" />
+    <Word from="гоподине" to="господине" />
+    <Word from="нишанете" to="нишаните" />
+    <Word from="Мможе" to="може" />
+    <Word from="секаваш" to="сеќаваш" />
+    <Word from="ПЗТУВЗЗТ" to="Патуваат" />
+    <Word from="нок" to="ноќ" />
+    <Word from="соовездието" to="соѕвездието" />
+    <Word from="априлт" to="април" />
+    <Word from="сСсигурно" to="сигурно" />
+    <Word from="ПРОЗКТИПОТ" to="Проектилот" />
+    <Word from="ТЕПВПОРТЗЦИјЗ" to="телепортација" />
+    <Word from="3з3" to="3" />
+    <Word from="лубови" to="љубови" />
+    <Word from="5ирни" to="ѕирни" />
+    <Word from="етолку" to="е толку" />
+    <Word from="тукутака" to="туку така" />
+    <Word from="добаре" to="добар е" />
+    <Word from="лоубовни" to="љубовни" />
+    <Word from="НЗРОДОТ" to="НАРОДОТ" />
+    <Word from="Пакв" to="Пак в" />
+    <Word from="Лубовта" to="Љубовта" />
+    <Word from="многуУ" to="многу" />
+    <Word from="5везди" to="ѕвезди" />
+    <Word from="5вездите" to="ѕвездите" />
+    <Word from="alубоморни" to="љубоморни" />
+    <Word from="убоморен" to="љубоморен" />
+    <Word from="ке" to="ќе" />
+    <Word from="сеуште" to="сѐ уште" />
+    <Word from="се се" to="сѐ се" />
+    <Word from="не не" to="не нѐ" />
+    <Word from="и и" to="и ѝ" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it is (they are) accepted -->
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions />
+</OCRFixReplaceList>

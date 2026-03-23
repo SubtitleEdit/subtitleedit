@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names with specific casing - and specific to Danish only -->
+<names>
+  <blacklist>
+    <name>Rabat</name>
+    <name>Heller</name>
+  </blacklist>
+  <name>Afghanistan</name>
+  <name>Afrika</name>
+  <name>Albanien</name>
+  <name>Aleksandr Isaejvitj Solzjenitsyn</name>
+  <name>Aleksandr Solzjenitsyn</name>
+  <name>Algeriet</name>
+  <name>Amerikansk Samoa</name>
+  <name>Amerikanske oversøiske øer</name>
+  <name>Antarktis</name>
+  <name>Antigua og Barbuda</name>
+  <name>Aquarium</name>
+  <name>Argentina</name>
+  <name>Armenien</name>
+  <name>Armfeldt</name>
+  <name>Ascensionøen</name>
+  <name>Aserbajdsjan</name>
+  <name>Asgård</name>
+  <name>Asien</name>
+  <name>Australasien</name>
+  <name>Australien</name>
+  <name>Bagindien</name>
+  <name>Bahnhofstrasse</name>
+  <name>Bahrain</name>
+  <name>Baron von Münchhausen</name>
+  <name>Bartok</name>
+  <name>Beaudine</name>
+  <name>Belgien</name>
+  <name>Belgisk Congo</name>
+  <name>Beyonces</name>
+  <name>Bosnien-Hercegovina</name>
+  <name>Botswana</name>
+  <name>Bouvetøen</name>
+  <name>Brahms</name>
+  <name>Brasilien</name>
+  <name>Britiske Territorium</name>
+  <name>Bulgarien</name>
+  <name>Burma</name>
+  <name>Bäckström</name>
+  <name>Caicosøerne</name>
+  <name>Cambodja</name>
+  <name>Cameroun</name>
+  <name>Canada</name>
+  <name>Caribien</name>
+  <name>Cartier</name>
+  <name>Cavanaughs</name>
+  <name>Caymanøerne</name>
+  <name>Centralafrika</name>
+  <name>Centralafrikanske Republik</name>
+  <name>Centralasien</name>
+  <name>Ceuta og Melilla</name>
+  <name>Chardonnay</name>
+  <name>Chewy</name>
+  <name>Chopin</name>
+  <name>Chopins</name>
+  <name>Chung</name>
+  <name>Clippertonøen</name>
+  <name>Cobain</name>
+  <name>Cocosøerne</name>
+  <name>Comorerne</name>
+  <name>Congo Brazzaville</name>
+  <name>Congo Kinshasa</name>
+  <name>Congo-Brazzaville</name>
+  <name>Congo-Kinshasa</name>
+  <name>Cookøerne</name>
+  <name>Corolla</name>
+  <name>Curaçao</name>
+  <name>Cypern</name>
+  <name>Danmark</name>
+  <name>De Amerikanske Jomfruøer</name>
+  <name>De Britiske Jomfruøer</name>
+  <name>De Forenede Arabiske Emirater</name>
+  <name>De Forenede Nationer</name>
+  <name>De Franske Besiddelser i Det Sydlige Indiske Ocean og Antarktis</name>
+  <name>De tidligere Nederlandske Antiller</name>
+  <name>Demokratiske Republik Congo</name>
+  <name>Den Centralafrikanske Republik</name>
+  <name>Den Demokratiske Republik Congo</name>
+  <name>Den Dominikanske Republik</name>
+  <name>Den Europæiske Union</name>
+  <name>Den Tjekkiske Republik</name>
+  <name>Det Britiske Territorium i Det Indiske Ocean</name>
+  <name>Det nordlige Amerika</name>
+  <name>Det sydlige Afrika</name>
+  <name>Diagonalstræde</name>
+  <name>Dickens</name>
+  <name>Diego Garcia</name>
+  <name>DiLaurentis</name>
+  <name>Dominica</name>
+  <name>Dominikanske Republik</name>
+  <name>Dostojevskij</name>
+  <name>DR Congo</name>
+  <name>Ecuador</name>
+  <name>Egerman</name>
+  <name>Egypten</name>
+  <name>Elfenbenskysten</name>
+  <name>England</name>
+  <name>Erlandson</name>
+  <name>Estland</name>
+  <name>Eswatini</name>
+  <name>Etiopien</name>
+  <name>Europa</name>
+  <name>Europæiske Union</name>
+  <name>Falcon</name>
+  <name>Falconberg</name>
+  <name>Falklandsøerne</name>
+  <name>Fields</name>
+  <name>Fiji</name>
+  <name>Filippinerne</name>
+  <name>Finland</name>
+  <name>Fjodor Dostojevskij</name>
+  <name>Fjodor Mikhajlovitj Dostojevskij</name>
+  <name>FN</name>
+  <name>Forrester</name>
+  <name>Frankrig</name>
+  <name>Fransk Guyana</name>
+  <name>Fransk Polynesien</name>
+  <name>Fulton</name>
+  <name>Fultons</name>
+  <name>Færøerne</name>
+  <name>Gatsby</name>
+  <name>Geographic</name>
+  <name>Georgien</name>
+  <name>Gerimax</name>
+  <name>Grækenland</name>
+  <name>Guangdong</name>
+  <name>Guarneri</name>
+  <name>Guinea-Bissau</name>
+  <name>Heard Island</name>
+  <name>Heard Island og McDonald Islands</name>
+  <name>Hepburn</name>
+  <name>Honduras</name>
+  <name>Hongkong</name>
+  <name>Hviderusland</name>
+  <name>Inc.</name>
+  <name>Indien</name>
+  <name>Indiske Ocean</name>
+  <name>Indokina</name>
+  <name>Indonesien</name>
+  <name>Irak</name>
+  <name>Iran</name>
+  <name>Irland</name>
+  <name>Island</name>
+  <name>Islas Malvinas</name>
+  <name>Italien</name>
+  <name>Juleøen</name>
+  <name>Juliard</name>
+  <name>Kahn</name>
+  <name>Kanariske øer</name>
+  <name>Kap Verde</name>
+  <name>Kasakhstan</name>
+  <name>Kirgisistan</name>
+  <name>Kretzinsky</name>
+  <name>Kroatien</name>
+  <name>Kuwait</name>
+  <name>København</name>
+  <name>Latinamerika</name>
+  <name>Leningrad</name>
+  <name>Letland</name>
+  <name>Lev Nikolaevitj Tolstoj</name>
+  <name>Lev Tolstoj</name>
+  <name>Libanon</name>
+  <name>Liberia</name>
+  <name>Libyen</name>
+  <name>Litauen</name>
+  <name>Lyman</name>
+  <name>Lymans</name>
+  <name>Macao</name>
+  <name>Madagaskar</name>
+  <name>Magnoliavej</name>
+  <name>Maldiverne</name>
+  <name>Mandelbaum</name>
+  <name>Mandelbaums</name>
+  <name>Marokko</name>
+  <name>Marshalløerne</name>
+  <name>Mauretanien</name>
+  <name>MBA</name>
+  <name>McClellan</name>
+  <name>McDonald Islands</name>
+  <name>Melanesien</name>
+  <name>Mellemamerika</name>
+  <name>Mellisas</name>
+  <name>Mickey Mouse</name>
+  <name>Mikronesien</name>
+  <name>Mikronesiske område</name>
+  <name>Mondeo</name>
+  <name>Mondeoen</name>
+  <name>Mongoliet</name>
+  <name>Monterey</name>
+  <name>MTV</name>
+  <name>Myanmar</name>
+  <name>Nadjim</name>
+  <name>Neumann</name>
+  <name>Nord-, Mellem- og Sydamerika</name>
+  <name>Nordafrika</name>
+  <name>Nordamerika</name>
+  <name>Nordeuropa</name>
+  <name>Nordkorea</name>
+  <name>Nordmakedonien</name>
+  <name>Nordmarianerne</name>
+  <name>Norge</name>
+  <name>Ny Kaledonien</name>
+  <name>Oceanien</name>
+  <name>Palæstina</name>
+  <name>Papua Ny Guinea</name>
+  <name>Petterson</name>
+  <name>Pitcairn</name>
+  <name>Pjotr Ilitj Tjajkovskij</name>
+  <name>Pjotr Tjajkovskij</name>
+  <name>Polen</name>
+  <name>Polynesien</name>
+  <name>Pransky</name>
+  <name>Primulavænget</name>
+  <name>Puttanesca</name>
+  <name>Republikken Congo</name>
+  <name>Réunion</name>
+  <name>Rintoul</name>
+  <name>Rosewood</name>
+  <name>Roskildevej</name>
+  <name>Rumænien</name>
+  <name>Rusland</name>
+  <name>Saint Barthélemy</name>
+  <name>Saint Kitts og Nevis</name>
+  <name>Saint Martin</name>
+  <name>Saint Pierre og Miquelon</name>
+  <name>Saint Vincent og Grenadinerne</name>
+  <name>Salomonøerne</name>
+  <name>San Marino</name>
+  <name>São Tomé og Príncipe</name>
+  <name>SAR Hongkong</name>
+  <name>SAR Macao</name>
+  <name>Saudi-Arabien</name>
+  <name>Savitsky</name>
+  <name>Schumanns</name>
+  <name>Schweiz</name>
+  <name>Serbien</name>
+  <name>Seychellerne</name>
+  <name>Sheng</name>
+  <name>Silverton</name>
+  <name>Singapore</name>
+  <name>Sint Maarten</name>
+  <name>Slovakiet</name>
+  <name>Slovenien</name>
+  <name>Slytherins</name>
+  <name>Solzjenitsyn</name>
+  <name>South Georgia og De Sydlige Sandwichøer</name>
+  <name>Spanien</name>
+  <name>Splendini</name>
+  <name>St. Helena</name>
+  <name>Storbritannien</name>
+  <name>Strombel</name>
+  <name>Subsaharisk Afrika</name>
+  <name>Surinam</name>
+  <name>Svalbard og Jan Mayen</name>
+  <name>Sydafrika</name>
+  <name>Sydafrikas</name>
+  <name>Sydamerika</name>
+  <name>Sydasien</name>
+  <name>Sydeuropa</name>
+  <name>Sydkorea</name>
+  <name>Sydsudan</name>
+  <name>Sydøstasien</name>
+  <name>Syrien</name>
+  <name>Tadsjikistan</name>
+  <name>Tchad</name>
+  <name>Tianjins</name>
+  <name>Timor-Leste</name>
+  <name>Tinsley</name>
+  <name>Tjajkovskij</name>
+  <name>Tjekkiet</name>
+  <name>Tjekkiske Republik</name>
+  <name>Tolstoj</name>
+  <name>Trinidad og Tobago</name>
+  <name>Trinity</name>
+  <name>Tristan da Cunha</name>
+  <name>Tunesien</name>
+  <name>Turkmenistan</name>
+  <name>Turks- og Caicosøerne</name>
+  <name>Turksøerne</name>
+  <name>Tyrkiet</name>
+  <name>Tyskland</name>
+  <name>UK</name>
+  <name>Ukraine</name>
+  <name>Ullman</name>
+  <name>Ungarn</name>
+  <name>USA</name>
+  <name>Usbekistan</name>
+  <name>Uzés</name>
+  <name>Vatikanstaten</name>
+  <name>Versace</name>
+  <name>Vestafrika</name>
+  <name>Vestasien</name>
+  <name>Vesteuropa</name>
+  <name>Vestsahara</name>
+  <name>Waldstein</name>
+  <name>Wallis og Futuna</name>
+  <name>Waterman</name>
+  <name>Wharton</name>
+  <name>Wylie</name>
+  <name>Yardley</name>
+  <name>Ydre Oceanien</name>
+  <name>Ækvatorialguinea</name>
+  <name>Østafrika</name>
+  <name>Østasien</name>
+  <name>Østeuropa</name>
+  <name>Østtimor</name>
+  <name>Åland</name>
+</names>

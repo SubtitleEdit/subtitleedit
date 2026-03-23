@@ -1,0 +1,16 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Subtitle Edit
+GenericName=Subtitle Editor
+Comment=A free, open source subtitle editor
+Exec=SubtitleEdit %F
+Icon=dk.nikse.subtitleedit
+Terminal=false
+StartupNotify=true
+StartupWMClass=SubtitleEdit
+Categories=AudioVideo;Video;
+
+# Subtitle file MIME types
+MimeType=application/x-subrip;text/x-ssa;application/x-matroska;video/x-matroska;
+

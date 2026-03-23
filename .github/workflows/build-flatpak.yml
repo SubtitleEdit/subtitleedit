@@ -1,0 +1,38 @@
+name: Build Flatpak
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Upload bundle as release asset'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-flatpak:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      - name: Update metainfo version/date from Se.cs
+        run: bash installer/flatpak/update-metainfo-version.sh
+
+      - name: Build flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: SubtitleEdit-linux-x64.flatpak
+          manifest-path: installer/flatpak/dk.nikse.subtitleedit.yaml
+          cache-key: flatpak-builder-${{ github.sha }}
+          arch: x86_64
+
+      - name: Upload flatpak bundle artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: flatpak-bundle
+          path: SubtitleEdit-linux-x64.flatpak
+          overwrite: true

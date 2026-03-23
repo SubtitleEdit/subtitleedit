@@ -1,0 +1,21 @@
+# Theme
+remote_theme: pages-themes/midnight@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+# Site settings
+title: Subtitle Edit
+tagline: A free and open source subtitle editor
+description: the subtitle editor :)
+url: https://subtitleedit.github.io
+baseurl: /subtitleedit
+
+# UI settings
+show_downloads: false
+
+# GitHub Pages defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"

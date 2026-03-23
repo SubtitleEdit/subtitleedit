@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+	<Package Name="Subtitle Edit"
+			 Language="1033"
+			 Version="$(var.ProductVersion)"
+			 Manufacturer="nikse.dk@gmail.com"
+			 UpgradeCode="82d638aa-36fa-4cf2-a8b9-023fd4acede2"
+			 InstallerVersion="500"
+			 Compressed="yes">
+
+		<SummaryInformation Description="Subtitle Edit - Subtitle editor"
+							Comments="Subtitle editing software" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="Subtitle Edit" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentRef Id="ApplicationShortcut" />
+			<ComponentRef Id="DesktopShortcut" />
+		</Feature>
+
+		<!-- UI -->
+		<ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+		<!-- License -->
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)installer/LICENSE.rtf" Overridable="yes" />
+
+		<!-- Icon -->
+		<Icon Id="icon.ico" SourceFile="$(var.ProjectDir)src/UI/SE.ico" />
+		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+		<!-- Add/Remove Programs -->
+		<Property Id="ARPHELPLINK" Value="https://github.com/SubtitleEdit/subtitleedit" />
+		<Property Id="ARPURLINFOABOUT" Value="https://github.com/SubtitleEdit/subtitleedit" />
+
+		<StandardDirectory Id="ProgramFiles6432Folder">
+			<Directory Id="INSTALLFOLDER" Name="Subtitle Edit">
+			</Directory>
+		</StandardDirectory>
+
+		<StandardDirectory Id="ProgramMenuFolder">
+			<Directory Id="ApplicationProgramsFolder" Name="Subtitle Edit"/>
+		</StandardDirectory>
+
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- Main executable -->
+			<Component Id="SubtitleEditExe">
+				<File Id="SubtitleEditExe" Source="$(var.SourceDir)SubtitleEdit.exe" />
+			</Component>
+
+			<!-- Additional files -->
+			<Component Id="avlibglesv2">
+				<File Source="$(var.SourceDir)av_libglesv2.dll" />
+			</Component>
+			<Component Id="libHarfBuzzSharp">
+				<File Source="$(var.SourceDir)libHarfBuzzSharp.dll" />
+			</Component>
+			<Component Id="libSkiaSharp">
+				<File Source="$(var.SourceDir)libSkiaSharp.dll" />
+			</Component>
+			<Component Id="LibmpvDll">
+				<File Source="$(var.SourceDir)libmpv-2.dll" />
+			</Component>
+		</ComponentGroup>
+
+		<!-- Start Menu Shortcut -->
+		<Component Id="ApplicationShortcut"
+				   Directory="ApplicationProgramsFolder">
+			<Shortcut Id="ApplicationStartMenuShortcut"
+					  Name="Subtitle Edit"
+					  Description="Subtitle editor"
+					  Target="[INSTALLFOLDER]SubtitleEdit.exe"
+					  WorkingDirectory="INSTALLFOLDER"
+					  Icon="icon.ico" />
+			<RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+			<RegistryValue Root="HKCU"
+						   Key="Software\SubtitleEdit\SubtitleEdit"
+						   Name="installed"
+						   Type="integer"
+						   Value="1"
+						   KeyPath="yes"/>
+		</Component>
+
+		<!-- Desktop Shortcut -->
+		<Component Id="DesktopShortcut"
+				   Directory="DesktopFolder">
+			<Shortcut Id="ApplicationDesktopShortcut"
+					  Name="Subtitle Edit"
+					  Description="Subtitle editor"
+					  Target="[INSTALLFOLDER]SubtitleEdit.exe"
+					  WorkingDirectory="INSTALLFOLDER"
+					  Icon="icon.ico" />
+			<RegistryValue Root="HKCU"
+						   Key="Software\SubtitleEdit\SubtitleEdit"
+						   Name="desktop"
+						   Type="integer"
+						   Value="1"
+						   KeyPath="yes"/>
+		</Component>
+
+	</Package>
+</Wix>

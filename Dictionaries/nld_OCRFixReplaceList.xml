@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="aandachtmag" to="aandacht mag" />
+    <Word from="agrariers" to="agrariërs" />
+    <Word from="AIleen" to="Alleen" />
+    <Word from="AIlemaal" to="Allemaal" />
+    <Word from="AIlemachtig" to="Allemachtig" />
+    <Word from="AIles" to="Alles" />
+    <Word from="AIs" to="Als" />
+    <Word from="benje" to="ben je" />
+    <Word from="Brittannie" to="Brittannië" />
+    <Word from="cliche" to="cliché" />
+    <Word from="dankje" to="dank je" />
+    <Word from="Dankje" to="Dank je" />
+    <Word from="datnietkunnen" to="dat niet kunnen" />
+    <Word from="definanciën" to="de financiën" />
+    <Word from="Denkje" to="Denk je" />
+    <Word from="deurbeI" to="deurbel" />
+    <Word from="éen" to="één" />
+    <Word from="eindetegemoet" to="einde tegemoet" />
+    <Word from="Ervanaf" to="Ervan af" />
+    <Word from="essentiile" to="essentiële" />
+    <Word from="genant" to="gênant" />
+    <Word from="gevaI" to="geval" />
+    <Word from="Girard" to="Gérard" />
+    <Word from="goedgeinformeerde" to="goedgeïnformeerde" />
+    <Word from="Grigoire" to="Grégoire" />
+    <Word from="heefthem" to="heeft hem" />
+    <Word from="heeftme" to="heeft me" />
+    <Word from="herfraseren" to="parafraseren" />
+    <Word from="hi" to="hè" />
+    <Word from="hii" to="hij" />
+    <Word from="hiinog" to="hij nog" />
+    <Word from="Iafaard" to="lafaard" />
+    <Word from="Iafaards" to="lafaards" />
+    <Word from="Iang" to="lang" />
+    <Word from="Iangdurig" to="langdurig" />
+    <Word from="Ias" to="las" />
+    <Word from="Iaten" to="laten" />
+    <Word from="Iater" to="later" />
+    <Word from="Iees" to="lees" />
+    <Word from="Ieger" to="leger" />
+    <Word from="Ieiden" to="leiden" />
+    <Word from="Ieidt" to="leidt" />
+    <Word from="Ietterlijk" to="letterlijk" />
+    <Word from="Iezen" to="lezen" />
+    <Word from="Iicht" to="licht" />
+    <Word from="Iiever" to="liever" />
+    <Word from="Iijken" to="lijken" />
+    <Word from="iin" to="één" />
+    <Word from="Iintje" to="lintje" />
+    <Word from="ikje" to="ik je" />
+    <Word from="IntegendeeI" to="Integendeel" />
+    <Word from="Iokale" to="lokale" />
+    <Word from="Ioopt" to="loopt" />
+    <Word from="Iopen" to="lopen" />
+    <Word from="Italie" to="Italië" />
+    <Word from="Iuisteren" to="luisteren" />
+    <Word from="Iukt" to="lukt" />
+    <Word from="Jolitis" to="Jolités" />
+    <Word from="kamervragen" to="Kamervragen" />
+    <Word from="komtje" to="komt je" />
+    <Word from="Labi" to="Labé" />
+    <Word from="landd" to="land" />
+    <Word from="ledere" to="Iedere" />
+    <Word from="ledereen" to="Iedereen" />
+    <Word from="lemand" to="Iemand" />
+    <Word from="lerland" to="Ierland" />
+    <Word from="lerse" to="Ierse" />
+    <Word from="liht" to="licht" />
+    <Word from="ln" to="In" />
+    <Word from="ls" to="Is" />
+    <Word from="luisterje" to="luister je" />
+    <Word from="Luisterje" to="Luister je" />
+    <Word from="Maakje" to="Maak je" />
+    <Word from="Maarja" to="Maar ja" />
+    <Word from="metje" to="met je" />
+    <Word from="metjou" to="met jou" />
+    <Word from="metmii" to="met mij" />
+    <Word from="mii" to="mij" />
+    <Word from="nietbedrogen" to="niet bedrogen" />
+    <Word from="nietwilt" to="niet wilt" />
+    <Word from="officiele" to="officiële" />
+    <Word from="oki" to="oké" />
+    <Word from="Omdatje" to="Omdat je" />
+    <Word from="Omdatjij" to="Omdat jij" />
+    <Word from="ondrrwerp" to="onderwerp" />
+    <Word from="ondrrzoek" to="onderzoek" />
+    <Word from="ovrrheidsgeld" to="overheidsgeld" />
+    <Word from="padvinderijpunten" to="padvinderspunten" />
+    <Word from="paranoide" to="paranoïde" />
+    <Word from="patienten" to="patiënten" />
+    <Word from="próbleem" to="probleem" />
+    <Word from="Scive" to="Scève" />
+    <Word from="stillouden" to="stilhouden" />
+    <Word from="Terzake" to="Ter zake" />
+    <Word from="trgen" to="tegen" />
+    <Word from="voorje" to="voor je" />
+    <Word from="voormii" to="voor mij" />
+    <Word from="wachtje" to="wacht je" />
+    <Word from="wachtze" to="wacht ze" />
+    <Word from="wantje" to="want je" />
+    <Word from="weI" to="wel" />
+    <Word from="zeggrn" to="zeggen" />
+    <Word from="Zii" to="Zij" />
+    <Word from="Ziiheeft" to="Zij heeft" />
+    <Word from="ziin" to="zijn" />
+    <Word from="zonderjou" to="zonder jou" />
+    <Word from="Zonderjou" to="Zonder jou" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it is (they are) accepted -->
+    <WordPart from="ĳ" to="ij" />
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressionsIfSpelledCorrectly>
+    <RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" />
+    <!-- David's (spell check "David") -->
+    <RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)['’]s\b" spellCheck="$1" replaceWith="$1's" />
+    <!-- there's  (spell check "there") -->
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <!-- SlNG to SING -->
+  </RegularExpressionsIfSpelledCorrectly>
+  <RegularExpressions>
+    <RegEx find="\blk(?=\p{Ll}{2})" replaceWith="Ik" />
+    <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+    <RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
+    <RegEx find="\beIk" replaceWith="elk" />
+    <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
+    <RegEx find="comite\b" replaceWith="comité" />
+  </RegularExpressions>
+  <RegularExpressionsIfSpelledCorrectly>
+
+    <!-- ============================================================ -->
+    <!-- DUTCH CHARACTER CLASS (used throughout)                      -->
+    <!-- Dutch lowercase: a-z + é è ë ï ij (digraph) ó ö ü          -->
+    <!-- The IJ/ij digraph is typographically significant in Dutch:   -->
+    <!--   "ijsberg" but capitalised as "IJsberg" (both letters cap)  -->
+    <!-- ë and ï (trema) mark separate syllables: geëerd, naïef      -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- CRITICAL DUTCH-SPECIFIC NOTES                                -->
+    <!--                                                              -->
+    <!-- 1. IJ DIGRAPH: Dutch treats IJ as a single unit. When a     -->
+    <!--    word starting with ij is capitalised, BOTH letters        -->
+    <!--    capitalise: IJsberg, IJmuiden, IJsselmeer.                -->
+    <!--    OCR frequently splits or miscases this digraph.           -->
+    <!--                                                              -->
+    <!-- 2. TUSSENVOEGSEL (insertion): Dutch names contain lowercase  -->
+    <!--    particles between first and last name:                    -->
+    <!--    "van", "de", "den", "der", "van de", "van den", "van der" -->
+    <!--    These are lowercase mid-name but capitalised when no      -->
+    <!--    forename precedes: "Van Gogh" but "Vincent van Gogh".     -->
+    <!--    Missing-space rules must not fire on these particles.     -->
+    <!--                                                              -->
+    <!-- 3. COMPOUND WORDS: Dutch compounds are written as one word   -->
+    <!--    like German: ziekenhuis, voetbalveld, spoorwegstation.    -->
+    <!--    Missing-space rules restricted to prepositions + Capital. -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- I / l CONFUSION FIXES (visual OCR errors, language-agnostic) -->
+    <!-- ============================================================ -->
+
+    <!-- [GEAR GRlNDER] → [GEAR GRINDER] : l→I inside all-caps brackets -->
+    <RegEx find="\[([A-Z ]*)l([A-Z ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+
+    <!-- [ABC] bracket with l mixed into caps -->
+    <RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlNG → SING : l inside all-caps word -->
+    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+
+    <!-- trailing l in all-caps word -->
+    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+
+    <!-- leading l before all-caps word -->
+    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- chaIIenge → challenge : II→ll mid lowercase word -->
+    <RegEx find="\b([a-zéèëïóöüij]+)II([a-zéèëïóöüij]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- traIIer → trailer : I→l mid lowercase word -->
+    <RegEx find="\b([a-zéèëïóöüij]+)I([a-zéèëïóöüij]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- trailing I→l in capitalised word (e.g. AmsterdamI → Amsterdaml) -->
+    <RegEx find="\b([A-Z][a-zéèëïóöüij]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- I→l mid capitalised word (e.g. AmstIerdam → Amstlerdam) -->
+    <RegEx find="\b([A-Z][a-zéèëïóöüij]+)I([a-zéèëïóöüij]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
+
+    <!-- Ilezen → llezen : leading I→l before 3+ lowercase chars     -->
+    <!-- Dutch "ik" (I) is only 2 chars — 3-char minimum is safe     -->
+    <RegEx find="\bI([a-zéèëïóöüij]{3,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- leading l→I before 2+ lowercase chars -->
+    <RegEx find="\bl([a-zéèëïóöüij]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- standalone l → I (Roman numerals, list markers) -->
+    <RegEx find="\bl\b" replaceWith="I" />
+
+    <!-- ============================================================ -->
+    <!-- IJ DIGRAPH FIXES                                             -->
+    <!-- ============================================================ -->
+
+    <!-- lJ → IJ : OCR reads capital I of IJ as lowercase l          -->
+    <!-- IJsberg OCR'd as lJsberg → IJsberg                          -->
+    <RegEx find="\blJ([a-zéèëïóöüij]+)\b" spellCheck="IJ$1" replaceWith="IJ$1" />
+
+    <!-- Ij → IJ : OCR lowercases second letter of digraph            -->
+    <!-- IJmuiden OCR'd as Ijmuiden → IJmuiden                       -->
+    <RegEx find="\bIj([a-zéèëïóöüij]+)\b" spellCheck="IJ$1" replaceWith="IJ$1" />
+
+    <!-- ij at start of sentence should be IJ (both caps)             -->
+    <!-- Only fires if spellcheck confirms IJ+rest is a known word    -->
+    <RegEx find="\bij([a-zéèëïóöüij]+)\b" spellCheck="IJ$1" replaceWith="IJ$1" />
+
+    <!-- lJ in all-caps context → IJ -->
+    <RegEx find="\b([A-Z]*)lJ([A-Z]*)\b" spellCheck="$1IJ$2" replaceWith="$1IJ$2" />
+
+    <!-- ============================================================ -->
+    <!-- DUTCH GENITIVE / APOSTROPHE                                  -->
+    <!-- Dutch genitive uses apostrophe + s for most words:           -->
+    <!--   Jan's fiets, Amsterdam's grachten                          -->
+    <!-- Words ending in a vowel also use apostrophe:                 -->
+    <!--   Anna's boek, foto's (plural), auto's (plural)             -->
+    <!-- This is opposite to German/Scandinavian — apostrophe IS      -->
+    <!-- correct in Dutch genitive and should be normalised to        -->
+    <!-- typographic apostrophe, not removed.                         -->
+    <!-- ============================================================ -->
+
+    <!-- Normalise straight apostrophe to typographic in genitive -->
+    <RegEx find="\b([A-Z][a-zéèëïóöüij]+)'s\b" spellCheck="$1" replaceWith="$1's" />
+
+    <!-- Normalise straight apostrophe in lowercase genitive/plural -->
+    <RegEx find="\b([a-zéèëïóöüij]+)'s\b" spellCheck="$1" replaceWith="$1's" />
+
+    <!-- Normalise straight apostrophe in vowel-ending plurals        -->
+    <!-- auto's, foto's, radio's, menu's                             -->
+    <RegEx find="\b([a-zéèëïóöüij]+[aeiouéèëïóöü])'s\b" spellCheck="$1" replaceWith="$1's" />
+
+    <!-- ============================================================ -->
+    <!-- DUTCH DIMINUTIVE — NOTE                                      -->
+    <!-- Dutch diminutive suffix -je/-tje/-pje/-kje is extremely      -->
+    <!-- common. OCR sometimes merges the suffix oddly but this is    -->
+    <!-- better handled by spellcheck than regex.                     -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- MISSING SPACE — PREPOSITIONS + CAPITALISED NOUN              -->
+    <!-- Restricted to prepositions that cannot start a Dutch         -->
+    <!-- compound. All guarded by spellCheck on the noun part.        -->
+    <!-- NOTE: "van", "de", "den", "der" deliberately OMITTED —      -->
+    <!-- these are tussenvoegsels and fire rate would be too high.    -->
+    <!-- ============================================================ -->
+
+    <!-- inAmsterdam → in Amsterdam -->
+    <RegEx find="\bin([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="in $1" />
+
+    <!-- opDe → op De / opHet → op Het -->
+    <RegEx find="\bop([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="op $1" />
+
+    <!-- aanDe → aan De -->
+    <RegEx find="\baan([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="aan $1" />
+
+    <!-- metJan → met Jan -->
+    <RegEx find="\bmet([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="met $1" />
+
+    <!-- uitAmsterdam → uit Amsterdam -->
+    <RegEx find="\buit([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="uit $1" />
+
+    <!-- naarAmsterdam → naar Amsterdam -->
+    <RegEx find="\bnaar([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="naar $1" />
+
+    <!-- overDe → over De -->
+    <RegEx find="\bover([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="over $1" />
+
+    <!-- onderDe → onder De -->
+    <RegEx find="\bonder([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="onder $1" />
+
+    <!-- voorDe → voor De -->
+    <RegEx find="\bvoor([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="voor $1" />
+
+    <!-- doorDe → door De -->
+    <RegEx find="\bdoor([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="door $1" />
+
+    <!-- bijHet → bij Het -->
+    <RegEx find="\bbij([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="bij $1" />
+
+    <!-- omHet → om Het -->
+    <RegEx find="\bom([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="om $1" />
+
+    <!-- teAmsterdam → te Amsterdam (formal/archaic locative) -->
+    <RegEx find="\bte([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="te $1" />
+
+    <!-- totAmsterdam → tot Amsterdam -->
+    <RegEx find="\btot([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="tot $1" />
+
+    <!-- ============================================================ -->
+    <!-- RETAINED FROM ENGLISH (fire on proper nouns in Dutch text)   -->
+    <!-- ============================================================ -->
+
+    <!-- ofLondon → of London -->
+    <RegEx find="\bof([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+  </RegularExpressionsIfSpelledCorrectly>
+</OCRFixReplaceList>
