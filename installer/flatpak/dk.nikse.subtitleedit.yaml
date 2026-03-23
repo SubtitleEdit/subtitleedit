@@ -17,7 +17,7 @@ finish-args:
   # Display
   - --share=ipc
   - --socket=wayland
-  - --socket=fallback-x11
+  - --socket=x11
   # Hardware acceleration
   - --device=dri
   # File access (subtitle files are typically in the home directory)
