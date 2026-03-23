@@ -121,6 +121,7 @@ using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
@@ -208,6 +209,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
 
         // Window view models
+        collection.AddTransient<AdvancedTtsSettingsViewModel>();
         collection.AddTransient<AddToNamesListViewModel>();
         collection.AddTransient<AddToOcrReplaceListViewModel>();
         collection.AddTransient<AddToUserDictionaryViewModel>();
