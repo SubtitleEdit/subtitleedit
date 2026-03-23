@@ -418,6 +418,38 @@ public class FfmpegGenerator
         return ffmpegLocation;
     }
 
+    /// <summary>
+    /// Check if FFmpeg has rubberband filter support.
+    /// </summary>
+    public static bool IsRubberbandAvailable()
+    {
+        try
+        {
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = "-filters",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                }
+            };
+#pragma warning disable CA1416 // Validate platform compatibility
+            _ = process.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(5000);
+            return output.Contains("rubberband");
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public static Process ChangeSpeed(string inputFileName, string outputFileName, float inputSpeed, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         var speed = Math.Max(0.5f, inputSpeed);
@@ -448,6 +480,72 @@ public class FfmpegGenerator
             {
                 FileName = GetFfmpegLocation(),
                 Arguments = $"-i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// VAD-based internal silence compression: detects all silence gaps between words/phrases
+    /// and shortens them to a maximum duration, preserving speech segments untouched.
+    /// This is the first line of defense before time-stretching — it reduces audio duration
+    /// without affecting phonemes at all.
+    /// </summary>
+    /// <param name="maxSilenceSeconds">Maximum allowed silence duration between words (e.g. 0.15 for 150ms)</param>
+    public static Process CompressInternalSilence(string inputFileName, string outputFileName, double maxSilenceSeconds = 0.15, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var maxSilence = maxSilenceSeconds.ToString("0.00", CultureInfo.InvariantCulture);
+        // silenceremove: stop_periods=-1 processes ALL silence gaps (not just first)
+        // stop_duration = max allowed silence length; stop_threshold = silence detection level
+        // This keeps all speech intact and only compresses pauses between words
+        var filter = $"silenceremove=stop_periods=-1:stop_duration={maxSilence}:stop_threshold=-40dB";
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// High-quality pitch-preserving time-stretch using FFmpeg's rubberband filter (WSOLA-based).
+    /// Rubberband produces significantly better speech quality than atempo, especially at higher
+    /// speed factors, because it uses a proper WSOLA algorithm designed for speech/music.
+    /// Falls back to atempo if rubberband is not available in the FFmpeg build.
+    /// </summary>
+    public static Process ChangeSpeedHighQuality(string inputFileName, string outputFileName, float inputSpeed, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var speed = Math.Max(0.5f, inputSpeed);
+        speed = Math.Min(100, speed);
+        speed = (float)Math.Round(speed, 3, MidpointRounding.AwayFromZero);
+
+        // rubberband filter: tempo parameter is the speed factor
+        // transients=smooth: smoother transient handling for speech
+        // engine=faster: use the faster engine (good enough for speech)
+        // window=short: short analysis window, better for speech than music
+        var speedStr = speed.ToString(CultureInfo.InvariantCulture);
+        var filter = $"rubberband=tempo={speedStr}:transients=smooth:engine=faster:window=short";
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }

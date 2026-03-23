@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -641,12 +642,36 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var p = item.Paragraph;
         var index = Lines.IndexOf(row);
         var next = index + 1 < Lines.Count ? Lines[index + 1] : null;
+
+        var doVad = Se.Settings.Video.TextToSpeech.VadSilenceCompressionEnabled;
+        var vadMaxSilence = Se.Settings.Video.TextToSpeech.VadMaxSilenceSeconds;
+        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled;
+
+        // Step 1: Trim silence from start and end
         var outputFileNameTrim = Path.Combine(_waveFolder, Guid.NewGuid() + ".wav");
         var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim);
 #pragma warning disable CA1416 // Validate platform compatibility
         _ = trimProcess.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
         await trimProcess.WaitForExitAsync(_cancellationToken);
+
+        var currentFile = outputFileNameTrim;
+
+        // Step 2: VAD-based internal silence compression
+        if (doVad)
+        {
+            var vadOutput = Path.Combine(_waveFolder, $"vad_{Guid.NewGuid()}.wav");
+            var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
+#pragma warning disable CA1416 // Validate platform compatibility
+            _ = vadProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+            await vadProcess.WaitForExitAsync(_cancellationToken);
+
+            if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
+            {
+                currentFile = vadOutput;
+            }
+        }
 
         var addDuration = 0d;
         if (next != null && p.EndTime.TotalMilliseconds < next.StepResult.Paragraph.StartTime.TotalMilliseconds)
@@ -659,14 +684,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        var mediaInfo = FfmpegMediaInfo.Parse(outputFileNameTrim);
+        var mediaInfo = FfmpegMediaInfo.Parse(currentFile);
         if (mediaInfo.Duration.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
         {
             return new TtsStepResult
             {
                 Paragraph = p,
                 Text = item.Text,
-                CurrentFileName = outputFileNameTrim,
+                CurrentFileName = currentFile,
                 SpeedFactor = 1.0f,
                 Voice = item.Voice,
             };
@@ -685,6 +710,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             };
         }
 
+        // Step 3: Time-stretching
         var ext = ".wav";
         var factor = (decimal)mediaInfo.Duration.TotalMilliseconds / divisor;
         var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
@@ -694,11 +720,30 @@ public partial class ReviewSpeechViewModel : ObservableObject
             outputFileName2 = Path.Combine(_waveFolder, $"{Path.GetFileNameWithoutExtension(overrideFileName)}_{Guid.NewGuid()}{ext}");
         }
 
-        var mergeProcess = FfmpegGenerator.ChangeSpeed(outputFileNameTrim, outputFileName2, (float)factor);
+        // Use rubberband (WSOLA) for high-quality stretch, or atempo as fallback
+        Process speedProcess;
+        if (doHighQualityStretch)
+        {
+            speedProcess = FfmpegGenerator.ChangeSpeedHighQuality(currentFile, outputFileName2, (float)factor);
+        }
+        else
+        {
+            speedProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
+        }
 #pragma warning disable CA1416 // Validate platform compatibility
-        _ = mergeProcess.Start();
+        _ = speedProcess.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
-        await mergeProcess.WaitForExitAsync(_cancellationToken);
+        await speedProcess.WaitForExitAsync(_cancellationToken);
+
+        // Fallback: if rubberband failed, retry with atempo
+        if (doHighQualityStretch && (!File.Exists(outputFileName2) || new FileInfo(outputFileName2).Length == 0))
+        {
+            var fallbackProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
+#pragma warning disable CA1416 // Validate platform compatibility
+            _ = fallbackProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+            await fallbackProcess.WaitForExitAsync(_cancellationToken);
+        }
 
         return new TtsStepResult
         {
