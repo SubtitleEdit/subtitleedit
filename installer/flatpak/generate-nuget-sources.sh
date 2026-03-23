@@ -16,8 +16,8 @@
 #
 # Usage (from repo root):
 #   ./installer/flatpak/generate-nuget-sources.sh
-#   ./installer/flatpak/generate-nuget-sources.sh \\
-#       "src/UI/UI.csproj" \\
+#   ./installer/flatpak/generate-nuget-sources.sh \
+#       "src/UI/UI.csproj" \
 #       "installer/flatpak/nuget-sources.json"
 
 set -e
@@ -61,12 +61,12 @@ if [ "$FLATPAK_OK" = "true" ]; then
     echo "Using flatpak-dotnet-generator.py (preferred)..."
     # NOTE: positional args (output, project) must come BEFORE --runtime to avoid
     # argparse nargs='+' greedily consuming them as additional runtime values.
-    python3 "$GENERATOR" \\
-        "$OUTPUT" \\
-        "$PROJECT_PATH" \\
-        --dotnet  "$DOTNET_VERSION" \\
-        --freedesktop "$FREEDESKTOP_VERSION" \\
-        --runtime linux-x64 \\
+    python3 "$GENERATOR" \
+        "$OUTPUT" \
+        "$PROJECT_PATH" \
+        --dotnet  "$DOTNET_VERSION" \
+        --freedesktop "$FREEDESKTOP_VERSION" \
+        --runtime linux-x64 \
         --runtime linux-arm64
 
 # ---------------------------------------------------------------------------
@@ -85,17 +85,17 @@ else
     trap 'rm -rf "$TMPDIR_PKGS"' EXIT
 
     echo "Restoring for linux-x64..."
-    dotnet restore "$PROJECT_PATH" \\
-        --packages "$TMPDIR_PKGS" \\
-        --runtime linux-x64 \\
-        -p:SelfContained=true \\
+    dotnet restore "$PROJECT_PATH" \
+        --packages "$TMPDIR_PKGS" \
+        --runtime linux-x64 \
+        -p:SelfContained=true \
         --verbosity quiet
 
     echo "Restoring for linux-arm64..."
-    dotnet restore "$PROJECT_PATH" \\
-        --packages "$TMPDIR_PKGS" \\
-        --runtime linux-arm64 \\
-        -p:SelfContained=true \\
+    dotnet restore "$PROJECT_PATH" \
+        --packages "$TMPDIR_PKGS" \
+        --runtime linux-arm64 \
+        -p:SelfContained=true \
         --verbosity quiet
 
     echo "Building $OUTPUT from restored packages..."
