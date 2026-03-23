@@ -214,6 +214,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayerInstance
             [
                 MpvPath,
                 Directory.GetCurrentDirectory(),
+                "/app/lib",
                 "/usr/local/lib",
                 "/usr/lib",
                 "/lib",
