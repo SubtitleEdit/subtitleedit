@@ -1324,6 +1324,11 @@ public partial class BatchConvertViewModel : ObservableObject
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MultipleReplace),
             },
+
+            RemoveTextForHearingImpaired = new BatchConvertConfig.RemoveTextForHearingImpairedSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.RemoveTextForHearingImpaired),
+            },
         };
     }
 

@@ -1654,7 +1654,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var list = interjections?.Interjections ?? new List<string>();
         var skipList = interjections?.SkipStartList ?? new List<string>();
 
-
         removeTextForHiLib.ReloadInterjection(list, skipList);
 
         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -1667,6 +1666,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        subtitle.RemoveEmptyLines();
         return subtitle;
     }
 
