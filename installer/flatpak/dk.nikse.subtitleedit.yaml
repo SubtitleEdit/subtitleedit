@@ -14,10 +14,12 @@ build-options:
     PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
 
 finish-args:
-  # Display
+  # Display — Avalonia (11.x) has no native Wayland backend yet, so X11/XWayland
+  # is always required.  Keep --socket=wayland for future native support and for
+  # embedded components (e.g. libmpv) that can use Wayland directly.
   - --share=ipc
+  - --socket=x11
   - --socket=wayland
-  - --socket=fallback-x11
   # Hardware acceleration
   - --device=dri
   # File access (subtitle files are typically in the home directory)
