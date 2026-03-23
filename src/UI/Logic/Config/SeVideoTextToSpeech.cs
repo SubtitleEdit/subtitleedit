@@ -38,6 +38,13 @@ public class SeVideoTextToSpeech
     public string EdgeTtsPitch { get; set; }
     public string EdgeTtsVolume { get; set; }
 
+    // VAD-based internal silence compression (shorten pauses between words before time-stretching)
+    public bool VadSilenceCompressionEnabled { get; set; }
+    public double VadMaxSilenceSeconds { get; set; }
+
+    // High-quality time-stretching using rubberband (WSOLA) instead of atempo
+    public bool HighQualityTimeStretchEnabled { get; set; }
+
     // Silence padding between segments (ms)
     public int SilencePaddingMs { get; set; }
 
@@ -75,6 +82,9 @@ public class SeVideoTextToSpeech
         EdgeTtsRate = string.Empty;
         EdgeTtsPitch = string.Empty;
         EdgeTtsVolume = string.Empty;
+        VadSilenceCompressionEnabled = false;
+        VadMaxSilenceSeconds = 0.15;
+        HighQualityTimeStretchEnabled = false;
         SilencePaddingMs = 0;
         OutputSampleRate = 0;
     }

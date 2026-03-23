@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
@@ -20,6 +21,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -56,14 +58,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isVoiceTestEnabled;
     [ObservableProperty] private bool _doReviewAudioClips;
     [ObservableProperty] private bool _doGenerateVideoFile;
-    [ObservableProperty] private bool _doProAudioChain;
-    [ObservableProperty] private bool _doAudioDucking;
-    [ObservableProperty] private string _audioDuckingVolume;
-    [ObservableProperty] private string _silencePaddingMs;
-    [ObservableProperty] private string _outputSampleRate;
-    [ObservableProperty] private string _edgeTtsRate;
-    [ObservableProperty] private string _edgeTtsPitch;
-    [ObservableProperty] private string _edgeTtsVolume;
     [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private bool _isGenerating;
     [ObservableProperty] private bool _isNotGenerating;
@@ -109,12 +103,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = string.Empty;
         ProgressText = string.Empty;
         DoneOrCancelText = string.Empty;
-        EdgeTtsRate = string.Empty;
-        EdgeTtsPitch = string.Empty;
-        EdgeTtsVolume = string.Empty;
-        AudioDuckingVolume = string.Empty;
-        SilencePaddingMs = string.Empty;
-        OutputSampleRate = string.Empty;
         IsVoiceTestEnabled = true;
         IsGenerating = false;
         IsNotGenerating = true;
@@ -177,14 +165,6 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         DoReviewAudioClips = Se.Settings.Video.TextToSpeech.ReviewAudioClips;
         DoGenerateVideoFile = Se.Settings.Video.TextToSpeech.GenerateVideoFile;
-        DoProAudioChain = Se.Settings.Video.TextToSpeech.ProAudioChainEnabled;
-        DoAudioDucking = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled;
-        AudioDuckingVolume = Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume.ToString();
-        SilencePaddingMs = Se.Settings.Video.TextToSpeech.SilencePaddingMs.ToString();
-        OutputSampleRate = Se.Settings.Video.TextToSpeech.OutputSampleRate.ToString();
-        EdgeTtsRate = Se.Settings.Video.TextToSpeech.EdgeTtsRate;
-        EdgeTtsPitch = Se.Settings.Video.TextToSpeech.EdgeTtsPitch;
-        EdgeTtsVolume = Se.Settings.Video.TextToSpeech.EdgeTtsVolume;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -212,14 +192,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         Se.Settings.Video.TextToSpeech.Voice = SelectedVoice?.Name ?? string.Empty;
         Se.Settings.Video.TextToSpeech.ReviewAudioClips = DoReviewAudioClips;
         Se.Settings.Video.TextToSpeech.GenerateVideoFile = DoGenerateVideoFile;
-        Se.Settings.Video.TextToSpeech.ProAudioChainEnabled = DoProAudioChain;
-        Se.Settings.Video.TextToSpeech.AudioDuckingEnabled = DoAudioDucking;
-        Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume = int.TryParse(AudioDuckingVolume, out var dv) ? dv : 15;
-        Se.Settings.Video.TextToSpeech.SilencePaddingMs = int.TryParse(SilencePaddingMs, out var sp) ? sp : 0;
-        Se.Settings.Video.TextToSpeech.OutputSampleRate = int.TryParse(OutputSampleRate, out var sr) ? sr : 0;
-        Se.Settings.Video.TextToSpeech.EdgeTtsRate = EdgeTtsRate;
-        Se.Settings.Video.TextToSpeech.EdgeTtsPitch = EdgeTtsPitch;
-        Se.Settings.Video.TextToSpeech.EdgeTtsVolume = EdgeTtsVolume;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -439,6 +411,15 @@ public partial class TextToSpeechViewModel : ObservableObject
     private async Task ShowEncodingSettings()
     {
         await _windowService.ShowDialogAsync<EncodingSettingsWindow, EncodingSettingsViewModel>(Window!, vm => { });
+    }
+
+    [RelayCommand]
+    private async Task ShowAdvancedSettings()
+    {
+        await _windowService.ShowDialogAsync<AdvancedTtsSettingsWindow, AdvancedTtsSettingsViewModel>(Window!, vm =>
+        {
+            vm.IsEdgeTtsEngine = SelectedEngine is EdgeTts;
+        });
     }
 
     [RelayCommand]
@@ -937,6 +918,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
+        var doVad = Se.Settings.Video.TextToSpeech.VadSilenceCompressionEnabled;
+        var vadMaxSilence = Se.Settings.Video.TextToSpeech.VadMaxSilenceSeconds;
+        var doHighQualityStretch = Se.Settings.Video.TextToSpeech.HighQualityTimeStretchEnabled;
+
         try
         {
             var resultList = new List<TtsStepResult>();
@@ -949,12 +934,34 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var item = previousStepResult[index];
                 var p = item.Paragraph;
                 var next = index + 1 < previousStepResult.Length ? previousStepResult[index + 1] : null;
+
+                // Step 1: Trim silence from start and end
                 var outputFileName1 = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, Guid.NewGuid() + ".wav");
                 var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileName1);
 #pragma warning disable CA1416 // Validate platform compatibility
                 _ = trimProcess.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
                 await trimProcess.WaitForExitAsync(cancellationToken);
+
+                var currentFile = outputFileName1;
+
+                // Step 2: VAD-based internal silence compression
+                // Compress pauses between words/phrases before touching tempo.
+                // This preserves phoneme quality by only removing redundant silence.
+                if (doVad)
+                {
+                    var vadOutput = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, $"vad_{Guid.NewGuid()}.wav");
+                    var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = vadProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await vadProcess.WaitForExitAsync(cancellationToken);
+
+                    if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
+                    {
+                        currentFile = vadOutput;
+                    }
+                }
 
                 var addDuration = 0d;
                 if (next != null && p.EndTime.TotalMilliseconds < next.Paragraph.StartTime.TotalMilliseconds)
@@ -967,19 +974,20 @@ public partial class TextToSpeechViewModel : ObservableObject
                     }
                 }
 
-                var mediaInfo = FfmpegMediaInfo.Parse(outputFileName1);
+                var mediaInfo = FfmpegMediaInfo.Parse(currentFile);
                 if (mediaInfo.Duration == null)
                 {
                     continue;
                 }
 
+                // If audio already fits after silence removal/compression, no time-stretching needed
                 if (mediaInfo.Duration.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
                 {
                     resultList.Add(new TtsStepResult
                     {
                         Paragraph = p,
                         Text = item.Text,
-                        CurrentFileName = outputFileName1,
+                        CurrentFileName = currentFile,
                         SpeedFactor = 1.0f,
                         Voice = item.Voice,
                     });
@@ -1002,6 +1010,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     continue;
                 }
 
+                // Step 3: Time-stretching (only for audio that still exceeds subtitle duration)
                 var ext = ".wav";
                 var factor = (decimal)mediaInfo.Duration.TotalMilliseconds / divisor;
                 var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
@@ -1020,11 +1029,30 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Voice = item.Voice,
                 });
 
-                var mergeProcess = FfmpegGenerator.ChangeSpeed(outputFileName1, outputFileName2, (float)factor);
+                // Use rubberband (WSOLA) for high-quality pitch-preserving stretch, or atempo as fallback
+                Process speedProcess;
+                if (doHighQualityStretch)
+                {
+                    speedProcess = FfmpegGenerator.ChangeSpeedHighQuality(currentFile, outputFileName2, (float)factor);
+                }
+                else
+                {
+                    speedProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
+                }
 #pragma warning disable CA1416 // Validate platform compatibility
-                _ = mergeProcess.Start();
+                _ = speedProcess.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
-                await mergeProcess.WaitForExitAsync(cancellationToken);
+                await speedProcess.WaitForExitAsync(cancellationToken);
+
+                // Fallback: if rubberband failed (not available in FFmpeg build), retry with atempo
+                if (doHighQualityStretch && (!File.Exists(outputFileName2) || new FileInfo(outputFileName2).Length == 0))
+                {
+                    var fallbackProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
+#pragma warning disable CA1416 // Validate platform compatibility
+                    _ = fallbackProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    await fallbackProcess.WaitForExitAsync(cancellationToken);
+                }
             }
             ProgressValue = 100;
 
