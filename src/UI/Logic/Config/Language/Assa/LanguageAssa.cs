@@ -122,6 +122,8 @@ public class LanguageAssa
     public string AdvancedEffectWordByWordDescription { get; set; }
     public string AdvancedEffectKaraoke { get; set; }
     public string AdvancedEffectKaraokeDescription { get; set; }
+    public string AdvancedEffectFancyKaraoke { get; set; }
+    public string AdvancedEffectFancyKaraokeDescription { get; set; }
     public string AdvancedEffectScrambleReveal { get; set; }
     public string AdvancedEffectScrambleRevealDescription { get; set; }
     public string AdvancedEffectRainbowPulse { get; set; }
@@ -166,7 +168,12 @@ public class LanguageAssa
     public string AdvancedEffectHeartsDescription { get; set; }
     public string AdvancedEffectWordSpacing { get; set; }
     public string AdvancedEffectWordSpacingDescription { get; set; }
+    public string AdvancedEffectFancyKaraokeInactiveOpacity { get; set; }
     public string AdvancedEffectWordSpacingPixels { get; set; }
+    public string AdvancedEffectSlowZoomOut { get; set; }
+    public string AdvancedEffectSlowZoomOutDescription { get; set; }
+    public string AdvancedEffectSlowZoomIn { get; set; }
+    public string AdvancedEffectSlowZoomInDescription { get; set; }
 
     public LanguageAssa()
     {
@@ -291,6 +298,8 @@ public class LanguageAssa
         AdvancedEffectWordByWordDescription = "Reveals text one word at a time over the subtitle duration";
         AdvancedEffectKaraoke = "Karaoke";
         AdvancedEffectKaraokeDescription = "Highlights each character in sequence, revealing the text left to right like karaoke lyrics";
+        AdvancedEffectFancyKaraoke = "Karaoke - active word pop";
+        AdvancedEffectFancyKaraokeDescription = "Enhances subtitles with a pre-marked active word (via \\u1 underline or highlight color) — dims inactive words and applies a pop-glow animation to the active word";
         AdvancedEffectScrambleReveal = "Scramble reveal";
         AdvancedEffectScrambleRevealDescription = "Scrambled characters decode into the real text from left to right";
         AdvancedEffectRainbowPulse = "Rainbow pulse";
@@ -335,6 +344,11 @@ public class LanguageAssa
         AdvancedEffectHeartsDescription = "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle";
         AdvancedEffectWordSpacing = "Word spacing";
         AdvancedEffectWordSpacingDescription = "Increases spacing between words using the \\fsp tag for better readability";
+        AdvancedEffectFancyKaraokeInactiveOpacity = "Inactive opacity (0-255)";
         AdvancedEffectWordSpacingPixels = "Spacing (pixels)";
+        AdvancedEffectSlowZoomOut = "Slow zoom-out";
+        AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";
+        AdvancedEffectSlowZoomIn = "Slow zoom-in";
+        AdvancedEffectSlowZoomInDescription = "Text starts at normal size and gently grows slightly over the subtitle duration";
     }
 }

@@ -189,6 +189,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     {
         var effect = SelectedOverrideTag;
         var result = new Subtitle();
+        _subtitle.Header = string.IsNullOrEmpty(_subtitle.Header) ? AdvancedSubStationAlpha.DefaultHeader : _subtitle.Header;
         result.Header = _subtitle.Header;
 
         if (effect == null || Paragraphs.Count == 0)
@@ -219,6 +220,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         }
 
         var transformed = effect.ApplyEffect(
+            _subtitle.Header,
             toAffect,
             _mediaInfo?.Dimension.Width ?? 1920,
             _mediaInfo?.Dimension.Height ?? 1080,

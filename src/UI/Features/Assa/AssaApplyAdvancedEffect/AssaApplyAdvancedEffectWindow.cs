@@ -74,6 +74,13 @@ public class AssaApplyAdvancedEffectWindow : Window
                     settingsStack.Children.Add(speedRow);
                     panel.Children.Add(settingsStack);
                 }
+                else if (item is AdvancedEffectFancyKaraoke fancyKaraokeItem)
+                {
+                    var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveOpacity, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(UiUtil.MakeNumericUpDownInt(0, 255, 0x90, 130, fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveAlpha)));
+                    panel.Children.Add(row);
+                }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
