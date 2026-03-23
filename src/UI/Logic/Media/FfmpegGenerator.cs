@@ -479,6 +479,127 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
+    /// <summary>
+    /// Add audio track to video with ducking - reduce original audio volume and mix with TTS audio.
+    /// </summary>
+    public static Process AddAudioTrackWithDucking(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, int originalVolumePercent, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+        var volumeFactor = Math.Clamp(originalVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Apply pro audio post-processing chain: low-pass, EQ warmth, compression, loudness normalization, noise gate, and fade in/out.
+    /// </summary>
+    public static Process ApplyProAudioChain(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        // Chain: low-pass 2400Hz → bass warmth +6dB@200Hz → treble reduce -5dB@2500Hz → noise gate → compression → loudness normalization → tiny fade in/out
+        var filters = string.Join(",",
+            "lowpass=f=2400",
+            "equalizer=f=200:t=h:width=100:g=6",
+            "equalizer=f=2500:t=h:width=500:g=-5",
+            "agate=threshold=0.01:ratio=2:attack=5:release=50",
+            "compand=attacks=0.3:decays=0.8:points=-80/-80|-45/-45|-27/-15|0/-3:soft-knee=6:gain=3",
+            "loudnorm=I=-16:LRA=11:TP=-1.5",
+            "afade=t=in:d=0.015",
+            "areverse,afade=t=in:d=0.015,areverse");
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName}\" -af \"{filters}\" \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Generate a silence audio file with a given duration in milliseconds.
+    /// </summary>
+    public static Process GenerateSilence(string outputFileName, int durationMs, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var seconds = (durationMs / 1000.0).ToString("0.000", CultureInfo.InvariantCulture);
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-f lavfi -i anullsrc=r=24000:cl=mono -t {seconds} \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Concatenate two audio files (used for appending silence padding to a segment).
+    /// </summary>
+    public static Process ConcatAudio(string inputFileName1, string inputFileName2, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"[0:a][1:a]concat=n=2:v=0:a=1[aout]\" -map \"[aout]\" \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Change sample rate of an audio file.
+    /// </summary>
+    public static Process ChangeSampleRate(string inputFileName, string outputFileName, int sampleRate, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-i \"{inputFileName}\" -ar {sampleRate} \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
     public static Process ConvertFormat(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         var processMakeVideo = new Process
