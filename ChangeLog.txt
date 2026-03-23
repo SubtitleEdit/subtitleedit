@@ -1,6 +1,15 @@
 
 Subtitle Edit Changelog
 
+v5.0.0-beta11 (xth March 2026)
+
+* Fix pixel-width error column background color - thx rRobis 
+* Fix Remove Text for Hearing Impaired not working in batch convert - thx MKBB-85/ivandrofly
+* Mac: Option+Backspace deletes the previous word - thx derzz
+* Add Edge-TTS engine + TTS audio improvements - thx Ironship
+* Fix burn-in logo preview hidden under video on Windows - thx Ironship
+
+-----------------------------------------------------------------------------------------------------
 
 v5.0.0-beta10 (22th March 2026)
 
