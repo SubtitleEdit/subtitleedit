@@ -103,7 +103,22 @@ public class VisualSyncWindow : Window
         };
 
         var labelInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.AdjustInfo));
-        var buttonSync = UiUtil.MakeButton(Se.Language.Sync.Sync, vm.SyncCommand);
+        var buttonSync = new SplitButton
+        {
+            Content = Se.Language.Sync.Sync,
+            Command = vm.SyncCommand,
+            Flyout = new MenuFlyout
+            {
+                Items =
+                {
+                    new MenuItem
+                    {
+                        Header = "Manual sync",
+                        Command = vm.ManualSyncCommand,
+                    },
+                },
+            },
+        };
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(labelInfo, buttonSync, buttonOk, buttonCancel);

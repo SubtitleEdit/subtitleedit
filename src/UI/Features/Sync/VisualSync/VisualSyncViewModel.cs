@@ -45,6 +45,8 @@ public partial class VisualSyncViewModel : ObservableObject
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private bool _updateAudioVisualizer;
+    private double _lastManualOffsetSeconds;
+    private double _lastManualSpeedFactor = 1.0;
 
     public VisualSyncViewModel(IWindowService windowService)
     {
@@ -345,8 +347,6 @@ public partial class VisualSyncViewModel : ObservableObject
             return;
         }
 
-        SetSyncFactorLabel(videoPlayerCurrentStartPos, videoPlayerCurrentEndPos);
-
         double subDiff = subEnd - subStart;
         double realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
 
@@ -355,6 +355,42 @@ public partial class VisualSyncViewModel : ObservableObject
 
         // adjust to starting position
         double adjust = videoPlayerCurrentStartPos - subStart * factor;
+
+        SetAdjustInfo(factor, adjust);
+        ApplySync(factor, adjust);
+    }
+
+    [RelayCommand]
+    private async Task ManualSync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<ManualSyncWindow, ManualSyncViewModel>(Window!, vm =>
+        {
+            vm.Initialize(new ObservableCollection<SubtitleLineViewModel>(_subtitleLines), _lastManualOffsetSeconds, _lastManualSpeedFactor);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        _lastManualOffsetSeconds = result.OffsetSeconds;
+        _lastManualSpeedFactor = result.SpeedFactor;
+
+        SetAdjustInfo(result.SpeedFactor, result.OffsetSeconds);
+        ApplySync(result.SpeedFactor, result.OffsetSeconds);
+    }
+
+    private void ApplySync(double factor, double adjust)
+    {
+        if (Math.Abs(factor) < 0.000001)
+        {
+            return;
+        }
 
         foreach (var p in Paragraphs)
         {
@@ -395,32 +431,12 @@ public partial class VisualSyncViewModel : ObservableObject
         Window?.Close();
     }
 
-    private void SetSyncFactorLabel(double videoPlayerCurrentStartPos, double videoPlayerCurrentEndPos)
+    private void SetAdjustInfo(double factor, double adjust)
     {
-        if (string.IsNullOrWhiteSpace(_videoFileName) || SelectedParagraphLeftIndex < 0 || SelectedParagraphRightIndex < 0)
-        {
-            return;
-        }
-
         AdjustInfo = string.Empty;
-        if (videoPlayerCurrentEndPos > videoPlayerCurrentStartPos)
+        if (Math.Abs(adjust) > 0.001 || Math.Abs(1 - factor) > 0.001)
         {
-            double subStart = Paragraphs[SelectedParagraphLeftIndex].Subtitle.StartTime.TotalSeconds;
-            double subEnd = Paragraphs[SelectedParagraphRightIndex].Subtitle.StartTime.TotalSeconds;
-
-            double subDiff = subEnd - subStart;
-            double realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
-
-            // speed factor
-            double factor = realDiff / subDiff;
-
-            // adjust to starting position
-            double adjust = videoPlayerCurrentStartPos - subStart * factor;
-
-            if (Math.Abs(adjust) > 0.001 || (Math.Abs(1 - factor)) > 0.001)
-            {
-                AdjustInfo = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);
-            }
+            AdjustInfo = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);
         }
     }
 
