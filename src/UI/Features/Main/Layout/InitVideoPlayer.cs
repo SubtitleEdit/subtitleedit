@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -132,6 +133,28 @@ public static class InitVideoPlayer
         }
 
         throw new InvalidOperationException("Failed to create video player control.");
+    }
+
+    /// <summary>
+    /// Creates a video player that avoids native window embedding on Windows.
+    /// On Windows, NativeControlHost (used by mpv-wid and VLC) creates a Win32 HWND
+    /// that always renders on top of Avalonia overlays (the "airspace problem"),
+    /// making logo/overlay previews invisible. Using software rendering avoids this.
+    /// On non-Windows or when mpv is unavailable, falls back to the default player.
+    /// </summary>
+    public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var player = new LibMpvDynamicPlayer();
+            if (player.CanLoad())
+            {
+                var view = new LibMpvDynamicSoftwareControl(player);
+                return MakeVideoPlayerControl(player, view);
+            }
+        }
+
+        return MakeVideoPlayer();
     }
 
     private static VideoPlayerControl MakeVideoPlayerControl(IVideoPlayerInstance videoPlayer, Control view)

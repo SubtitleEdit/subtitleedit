@@ -117,7 +117,7 @@ public class BurnInLogoWindow : Window
         };
 
         // Video player control
-        var videoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        var videoPlayerControl = InitVideoPlayer.MakeVideoPlayerPreferNonNative();
         videoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
         videoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
         vm.VideoPlayerControl = videoPlayerControl;
