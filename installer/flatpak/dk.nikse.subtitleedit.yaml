@@ -163,6 +163,7 @@ modules:
       - type: git
         url: https://github.com/FFmpeg/FFmpeg.git
         tag: n7.1.2
+        commit: 7003a8c4544b780eb0ab5c02ac4ad89d2132f2a2
 
   - name: libXpresent
     buildsystem: autotools
