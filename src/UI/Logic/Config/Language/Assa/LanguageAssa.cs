@@ -169,6 +169,7 @@ public class LanguageAssa
     public string AdvancedEffectWordSpacing { get; set; }
     public string AdvancedEffectWordSpacingDescription { get; set; }
     public string AdvancedEffectFancyKaraokeInactiveOpacity { get; set; }
+    public string AdvancedEffectFancyKaraokeGlowColor { get; set; }
     public string AdvancedEffectWordSpacingPixels { get; set; }
     public string AdvancedEffectSlowZoomOut { get; set; }
     public string AdvancedEffectSlowZoomOutDescription { get; set; }
@@ -345,6 +346,7 @@ public class LanguageAssa
         AdvancedEffectWordSpacing = "Word spacing";
         AdvancedEffectWordSpacingDescription = "Increases spacing between words using the \\fsp tag for better readability";
         AdvancedEffectFancyKaraokeInactiveOpacity = "Inactive opacity (0-255)";
+        AdvancedEffectFancyKaraokeGlowColor = "Active word glow color";
         AdvancedEffectWordSpacingPixels = "Spacing (pixels)";
         AdvancedEffectSlowZoomOut = "Slow zoom-out";
         AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";

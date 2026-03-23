@@ -76,10 +76,16 @@ public class AssaApplyAdvancedEffectWindow : Window
                 }
                 else if (item is AdvancedEffectFancyKaraoke fancyKaraokeItem)
                 {
-                    var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveOpacity, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    row.Children.Add(UiUtil.MakeNumericUpDownInt(0, 255, 0x90, 130, fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveAlpha)));
-                    panel.Children.Add(row);
+                    var opacityRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    opacityRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveOpacity, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    opacityRow.Children.Add(UiUtil.MakeNumericUpDownInt(0, 255, 0x90, 130, fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveAlpha)));
+                    var colorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
+                    colorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlowColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    colorRow.Children.Add(UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.GlowColor)));
+                    var settingsStack = new StackPanel { Spacing = 2 };
+                    settingsStack.Children.Add(opacityRow);
+                    settingsStack.Children.Add(colorRow);
+                    panel.Children.Add(settingsStack);
                 }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)
                 {

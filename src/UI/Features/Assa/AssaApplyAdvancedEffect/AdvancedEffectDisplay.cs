@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -1187,8 +1188,11 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     public string Description => Se.Language.Assa.AdvancedEffectFancyKaraokeDescription;
     public bool UsesAudio => false;
     public int InactiveAlpha { get; set; } = 100;
+    public Color GlowColor { get; set; } = Color.FromRgb(0xFF, 0xDD, 0x00); // &H00DDFF& in ASS BGR
 
     public override string ToString() => Name;
+
+    private static string ToAssColor(Color color) => $"&H{color.B:X2}{color.G:X2}{color.R:X2}&";
 
     public List<SubtitleLineViewModel> ApplyEffect(
         string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
@@ -1219,7 +1223,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
                 if (!string.IsNullOrEmpty(before))
                     sb.Append(inactiveTags).Append(before);
 
-                sb.Append("{\\alpha&H00&\\1c&HFFFFFF&\\bord2\\shad0\\blur4\\3c&H00DDFF&" +
+                sb.Append("{\\alpha&H00&\\1c&HFFFFFF&\\bord2\\shad0\\blur4\\3c" + ToAssColor(GlowColor) +
                           "\\fscx115\\fscy115\\t(0,250,\\fscx100\\fscy100)}").Append(active);
 
                 if (!string.IsNullOrEmpty(after))
