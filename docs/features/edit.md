@@ -104,11 +104,15 @@ Double-clicking a rule also opens the **Edit rule** dialog.
 |---|---|
 | `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
 | `Ctrl+D` | Duplicate the selected rule |
+| `Ctrl+F` | Find a rule by name / text |
+| `Ctrl+-` | Collapse all categories |
+| `Ctrl++` | Expand all categories |
 | `Delete` | Delete the selected rule (focus must be in the rules tree) |
 | `Space` | Toggle the selected node (category or rule) on/off |
 | `Escape` | Close the window |
+| `F1` | Open help |
 
-The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once.
+The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once (`Ctrl++` / `Ctrl+-`).
 
 ### Import / Export
 
