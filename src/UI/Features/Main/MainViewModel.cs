@@ -13282,6 +13282,89 @@ public partial class MainViewModel :
         return false;
     }
 
+    private bool TryHandleMacOptionBackspace(KeyEventArgs keyEventArgs)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
+            keyEventArgs.Key != Key.Back ||
+            keyEventArgs.KeyModifiers != KeyModifiers.Alt)
+        {
+            return false;
+        }
+
+        var textBox = GetFocusedTextBoxWrapper();
+        if (textBox == null)
+        {
+            return false;
+        }
+
+        if (!DeletePreviousWord(textBox))
+        {
+            return false;
+        }
+
+        keyEventArgs.Handled = true;
+        _shortcutManager.ClearKeys();
+        return true;
+    }
+
+    private static bool DeletePreviousWord(ITextBoxWrapper textBox)
+    {
+        var text = textBox.Text ?? string.Empty;
+
+        if (textBox.SelectionLength > 0)
+        {
+            textBox.SelectedText = string.Empty;
+            return true;
+        }
+
+        var caret = textBox.CaretIndex;
+        if (caret <= 0 || caret > text.Length)
+        {
+            return false;
+        }
+
+        var start = FindPreviousWordBoundary(text, caret);
+        if (start == caret)
+        {
+            return false;
+        }
+
+        textBox.Select(start, caret - start);
+        textBox.SelectedText = string.Empty;
+        textBox.CaretIndex = start;
+        return true;
+    }
+
+    private static int FindPreviousWordBoundary(string text, int caret)
+    {
+        var index = caret;
+
+        while (index > 0 && char.IsWhiteSpace(text[index - 1]))
+        {
+            index--;
+        }
+
+        if (index == 0)
+        {
+            return 0;
+        }
+
+        var deleteAlphaNumeric = IsAlphaNumericWordChar(text[index - 1]);
+        while (index > 0 &&
+               !char.IsWhiteSpace(text[index - 1]) &&
+               IsAlphaNumericWordChar(text[index - 1]) == deleteAlphaNumeric)
+        {
+            index--;
+        }
+
+        return index;
+    }
+
+    private static bool IsAlphaNumericWordChar(char c)
+    {
+        return char.IsLetterOrDigit(c) || c == '_';
+    }
+
     private readonly Lock _onKeyDownHandlerLock = new();
 
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
@@ -13298,6 +13381,12 @@ public partial class MainViewModel :
             }
 
             _lastKeyPressedMs = ms;
+            
+            // This allows option backspace on mac to delete the previous word
+            if (TryHandleMacOptionBackspace(keyEventArgs))
+            {
+                return;
+            }
 
             _shortcutManager.OnKeyPressed(this, keyEventArgs);
             if (_shortcutManager.GetActiveKeys().Count == 0)
