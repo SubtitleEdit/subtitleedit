@@ -104,9 +104,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
                 // Initialize mpv with native window embedding
                 InitializeWithNativeWindow(_nativeHandle);
 
-                // Subscribe to render requests
-                _mpvPlayer.RequestRender += OnMpvRequestRender;
-
                 _isInitialized = true;
                 System.Diagnostics.Debug.WriteLine("MpvPlayer initialized successfully with native window!");
             }
@@ -122,11 +119,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        if (_mpvPlayer != null)
-        {
-            _mpvPlayer.RequestRender -= OnMpvRequestRender;
-        }
-
         // Clean up resize timer
         if (_resizeTimer != null)
         {
@@ -182,13 +174,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         // Keep the video paused at the end
         _mpvPlayer.SetOptionString("keep-open", "always");
 
-        // Allow mpv to stay alive without a file loaded, and force it to
-        // create its rendering window immediately.  Without these the X11
-        // child window created by NativeControlHost has no content and the
-        // desktop shows through until a video file is opened.
-        _mpvPlayer.SetOptionString("idle", "yes");
-        _mpvPlayer.SetOptionString("force-window", "yes");
-        _mpvPlayer.SetOptionString("background-color", "#000000");
+        // On Linux, force mpv to create its rendering window immediately so
+        // the X11 child window has a black background before any file loads.
+        // Not needed on Windows/macOS where the native handle lifecycle differs.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            _mpvPlayer.SetOptionString("idle", "yes");
+            _mpvPlayer.SetOptionString("force-window", "yes");
+            _mpvPlayer.SetOptionString("background-color", "#000000");
+        }
 
         // Initialize mpv
         err = _mpvPlayer.Initialize();
@@ -203,22 +197,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             Cursor = new Cursor(StandardCursorType.Arrow);
             PlatformCursorManager.ForceArrowCursor();
         }, DispatcherPriority.Background);
-    }
-
-    private void ConfigureLinuxGpuContext()
-    {
-        if (_mpvPlayer == null)
-        {
-            return;
-        }
-
-        // Avalonia (11.x) has no native Wayland backend — it always renders
-        // through X11/XWayland even on Wayland sessions.  The wid handle we
-        // pass to mpv is therefore always an X11 window ID.
-        // Do NOT force gpu-context here: mpv will auto-detect the correct
-        // X11 context (GLX or EGL) from the wid window handle.
-        // Forcing gpu-context=wayland would cause a mismatch (Wayland surface
-        // for an X11 window), resulting in audio-only playback with no video.
     }
 
     private static string GetWindowIdString(IntPtr handle)
@@ -244,14 +222,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         }
 
         return handle.ToString();
-    }
-
-    private void OnMpvRequestRender()
-    {
-        // In wid mode mpv renders directly into its own X11 child window.
-        // Do NOT call InvalidateVisual() here — that would make Avalonia
-        // repaint the control area (with a black background) on every frame,
-        // causing flicker as Avalonia and mpv paint alternately.
     }
 
     public void LoadFile(string path)
