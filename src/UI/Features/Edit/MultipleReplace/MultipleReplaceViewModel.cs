@@ -860,12 +860,12 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             _ = FindRule();
         }
-        else if ((e.Key == Key.OemMinus || e.Key == Key.Subtract) && e.KeyModifiers == KeyModifiers.Control)
+        else if ((e.Key == Key.OemMinus || e.Key == Key.Subtract) && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
             e.Handled = true;
             CollapseAll();
         }
-        else if ((e.Key == Key.OemPlus || e.Key == Key.Add) && e.KeyModifiers == KeyModifiers.Control)
+        else if ((e.Key == Key.OemPlus || e.Key == Key.Add) && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
             e.Handled = true;
             ExpandAll();

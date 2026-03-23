@@ -6540,7 +6540,11 @@ public partial class MainViewModel :
         _undoRedoManager.StopChangeDetection();
         InsertBeforeSelectedItem();
         _undoRedoManager.StartChangeDetection();
-        EditTextBox.Focus();
+
+        if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
+        {
+            FocusEditTextBox();
+        }
     }
 
     [RelayCommand]
@@ -6549,7 +6553,11 @@ public partial class MainViewModel :
         _undoRedoManager.StopChangeDetection();
         InsertAfterSelectedItem();
         _undoRedoManager.StartChangeDetection();
-        EditTextBox.Focus();
+
+        if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
+        {
+            FocusEditTextBox();
+        }
     }
 
     [RelayCommand]
@@ -6571,7 +6579,11 @@ public partial class MainViewModel :
         }
         _updateAudioVisualizer = true;
         _undoRedoManager.StartChangeDetection();
-        EditTextBox.Focus();
+
+        if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
+        {
+            FocusEditTextBox();
+        }
     }
 
     [RelayCommand]

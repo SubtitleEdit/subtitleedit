@@ -80,6 +80,7 @@ public class SeTools
     public bool ImportTextTryToFindTimeCodes { get; set; }
     public bool SpeechToTextSelectedLinesPromptFistTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
+    public bool GridFocusTextboxAfterInsertNew { get; set; }
 
     public SeTools()
     {
@@ -132,6 +133,7 @@ public class SeTools
         ImportTextTryToFindTimeCodes = false;
         SpeechToTextSelectedLinesPromptFistTimeOnly = true;
         MultipleReplaceShowDotDotDotButtons = true;
+        GridFocusTextboxAfterInsertNew = true;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();
