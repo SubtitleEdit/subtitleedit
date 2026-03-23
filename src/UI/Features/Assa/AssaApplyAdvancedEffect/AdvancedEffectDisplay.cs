@@ -750,11 +750,11 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
                     {
                         string partText = fullParts[p].Content;
                         // Initial State: Deep Blue, Bottom-Anchored
-                        finalString.Append(@"{\an2\alpha&HFF&}").Append(partText.Substring(0, target.CharIndex))
+                        finalString.Append(@"{\alpha&HFF&}").Append(partText.Substring(0, target.CharIndex))
                                    .Append(@"{\alpha&H00&\1c&HFF8800&" + oceanTransforms + "}").Append(target.Character)
                                    .Append(@"{\alpha&HFF&}").Append(partText.Substring(target.CharIndex + 1));
                     }
-                    else finalString.Append(@"{\an2\alpha&HFF&}").Append(fullParts[p].Content);
+                    else finalString.Append(@"{\alpha&HFF&}").Append(fullParts[p].Content);
                 }
 
                 charLine.Text = finalString.ToString();
@@ -826,11 +826,11 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
                     {
                         string partText = fullParts[p].Content;
                         // Force \an2 (bottom center) so the letters grow UPWARDS from the ground
-                        finalString.Append(@"{\an2\alpha&HFF&}").Append(partText.Substring(0, target.CharIndex))
+                        finalString.Append(@"{\alpha&HFF&}").Append(partText.Substring(0, target.CharIndex))
                                    .Append(@"{\alpha&H00&" + waveTransforms + "}").Append(target.Character)
                                    .Append(@"{\alpha&HFF&}").Append(partText.Substring(target.CharIndex + 1));
                     }
-                    else finalString.Append(@"{\an2\alpha&HFF&}").Append(fullParts[p].Content);
+                    else finalString.Append(@"{\alpha&HFF&}").Append(fullParts[p].Content);
                 }
 
                 charLine.Text = finalString.ToString();
