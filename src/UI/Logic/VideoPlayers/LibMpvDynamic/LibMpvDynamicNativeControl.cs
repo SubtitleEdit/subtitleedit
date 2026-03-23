@@ -161,8 +161,20 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to set wid: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        // Set video output to use the embedded window
-        _mpvPlayer.SetOptionString("vo", "gpu");
+        // Set video output for the embedded window.
+        // On Linux, use Xvideo (xv) rather than GPU-accelerated output.
+        // Avalonia (11.x) always uses X11/XWayland — GPU outputs (vo=gpu)
+        // cause flickering because the compositor redraws the area between
+        // mpv frames.  Xvideo renders directly via the X11 Xv extension
+        // without an OpenGL context, avoiding the compositing conflict.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            _mpvPlayer.SetOptionString("vo", "xv,x11,gpu");
+        }
+        else
+        {
+            _mpvPlayer.SetOptionString("vo", "gpu");
+        }
 
         // Keep subtitles off (we'll handle them separately)
         _mpvPlayer.SetOptionString("sid", "no");
@@ -170,11 +182,13 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         // Keep the video paused at the end
         _mpvPlayer.SetOptionString("keep-open", "always");
 
-        // Platform-specific GPU context configuration
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            ConfigureLinuxGpuContext();
-        }
+        // Allow mpv to stay alive without a file loaded, and force it to
+        // create its rendering window immediately.  Without these the X11
+        // child window created by NativeControlHost has no content and the
+        // desktop shows through until a video file is opened.
+        _mpvPlayer.SetOptionString("idle", "yes");
+        _mpvPlayer.SetOptionString("force-window", "yes");
+        _mpvPlayer.SetOptionString("background-color", "#000000");
 
         // Initialize mpv
         err = _mpvPlayer.Initialize();
@@ -198,25 +212,13 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             return;
         }
 
-        try
-        {
-            var sessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLowerInvariant();
-            var waylandDisplay = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
-            var x11Display = Environment.GetEnvironmentVariable("DISPLAY");
-
-            if (sessionType == "wayland" || (!string.IsNullOrEmpty(waylandDisplay) && sessionType == null))
-            {
-                _mpvPlayer.SetOptionString("gpu-context", "wayland");
-            }
-            else if (sessionType == "x11" || (!string.IsNullOrEmpty(x11Display) && sessionType == null))
-            {
-                _mpvPlayer.SetOptionString("gpu-context", "x11egl");
-            }
-        }
-        catch
-        {
-            // Ignore detection errors; fallback to mpv defaults
-        }
+        // Avalonia (11.x) has no native Wayland backend — it always renders
+        // through X11/XWayland even on Wayland sessions.  The wid handle we
+        // pass to mpv is therefore always an X11 window ID.
+        // Do NOT force gpu-context here: mpv will auto-detect the correct
+        // X11 context (GLX or EGL) from the wid window handle.
+        // Forcing gpu-context=wayland would cause a mismatch (Wayland surface
+        // for an X11 window), resulting in audio-only playback with no video.
     }
 
     private static string GetWindowIdString(IntPtr handle)
@@ -246,9 +248,10 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private void OnMpvRequestRender()
     {
-        // With native window embedding, mpv handles rendering automatically
-        // We just need to invalidate to trigger any UI updates if needed
-        Dispatcher.UIThread.Post(() => InvalidateVisual(), DispatcherPriority.Render);
+        // In wid mode mpv renders directly into its own X11 child window.
+        // Do NOT call InvalidateVisual() here — that would make Avalonia
+        // repaint the control area (with a black background) on every frame,
+        // causing flicker as Avalonia and mpv paint alternately.
     }
 
     public void LoadFile(string path)
