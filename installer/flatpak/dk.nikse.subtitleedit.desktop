@@ -12,5 +12,5 @@ StartupWMClass=SubtitleEdit
 Categories=AudioVideo;Video;
 
 # Subtitle file MIME types
-MimeType=application/x-subrip;text/x-ssa;application/x-matroska;video/x-matroska;
+MimeType=application/x-subrip;text/x-ssa;application/x-matroska;video/x-matroska;text/vtt;application/x-ass;
 
