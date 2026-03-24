@@ -2111,6 +2111,37 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ExportCheetahCaptionOld()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var format = new CheetahCaptionOld();
+        using var ms = new MemoryStream();
+        format.Save(_subtitleFileName, ms, GetUpdateSubtitle(), false);
+
+        var fileName = await _fileHelper.PickSaveSubtitleFile(
+            Window!,
+            format,
+            GetNewFileName(),
+            $"Save {format.Name} file as");
+
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            File.WriteAllBytes(fileName, ms.ToArray());
+            ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
+        }
+    }
+
+    [RelayCommand]
     private async Task ExportCavena890()
     {
         if (Window == null)
