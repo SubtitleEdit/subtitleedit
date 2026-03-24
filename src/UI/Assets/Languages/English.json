@@ -132,6 +132,7 @@
     "doNoChange": "Do not change",
     "done": "Done",
     "doubleWords": "Double words",
+    "doubleLines": "Double lines",
     "download": "Download",
     "downloadX": "Download {0}",
     "downloadingX": "Downloading {0}",
@@ -247,6 +248,7 @@
     "insertAtPositionAndFocusTextBox": "Insert subtitle at video position and focus text box",
     "insertAtPositionNoFocusTextBox": "Insert subtitle at video position (no focus text box)",
     "insertBefore": "Insert before",
+    "insertLine": "Insert line",
     "insertNewSelection": "Insert new selection",
     "insertSubtitleAfterCurrentLine": "Insert subtitle after current line...",
     "insertSubtitleFileAtVideoPositionDotDotDot": "Insert subtitle file at video position...",
@@ -483,6 +485,7 @@
     "showCpsColumn": "Show \"Chars/sec\" column",
     "showDurationColumn": "Show \"Duration\" column",
     "showGapColumn": "Show \"Gap\" column",
+    "showStartColumn": "Show \"Start\" column",
     "showHideColumn": "Show \"Hide\" column",
     "showHistory": "Show history",
     "showLayerColumn": "Show \"Layer\" column",
@@ -491,6 +494,7 @@
     "showStyleColumn": "Show \"Style\" column",
     "showTimeCodes": "Show time codes",
     "showWpmColumn": "Show \"Words/min\" column",
+    "showPixelWidthColumn": "Show \"Pixel width\" column",
     "shrink": "Shrink",
     "singleBox": "Single box",
     "singleLineLengths": "Single line length:",
@@ -628,6 +632,7 @@
     "width": "Width",
     "windowPositionAndSize": "Window position and size",
     "wordsPerMin": "Words/min",
+    "pixelWidth": "Pixel width",
     "wpm": "Words/min",
     "xFiles": "{0:#,###,##0} files",
     "xFilesConvertedInY": "{0:#,###,##0} files converted in {1}",
@@ -688,6 +693,7 @@
       "mergeLinesWithSameTimeCodes": "Merge lines with same time codes...",
       "splitBreakLongLines": "Split/rebalance long lines...",
       "mergeShortLines": "Merge short lines...",
+      "renumber": "Renumber...",
       "removeTextForHearingImpaired": "_Remove text for hearing impaired...",
       "convertActors": "Convert actors...",
       "joinSubtitles": "_Join subtitles...",
@@ -707,6 +713,7 @@
       "spellCheckTitle": "_Spell check",
       "spellCheck": "_Spell check...",
       "findDoubleWords": "_Find double words...",
+      "findDoubleLines": "_Find double lines...",
       "addNameToNamesList": "_Add name to names list...",
       "getDictionaries": "_Get dictionaries...",
       "video": "_Video",
@@ -1129,6 +1136,7 @@
       "cpsGreaterThan": "CPS >",
       "lengthLessThan": "Length <",
       "lengthGreaterThan": "Length >",
+      "pixelLengthGreaterThan": "Pixel length >",
       "exactlyOneLine": "Exactly one line",
       "exactlyTwoLines": "Exactly two lines",
       "moreThanTwoLines": "More than two lines",
@@ -1148,7 +1156,9 @@
       "newCategory": "New category",
       "categoryName": "Category name",
       "exportReplaceRules": "Export rules",
-      "appliedRules": "Applied rules"
+      "appliedRules": "Applied rules",
+      "findRule": "Find rule",
+      "xLinesAffected": "{0:#,##0} lines affected"
     },
     "find": {
       "searchTextWatermark": "Search text...",
@@ -1341,6 +1351,10 @@
       "numberOfSmallGapsBridgedX": "Number of small gaps bridged: {0}",
       "percentFoPrevious": "Gap for previous (%)",
       "gapChange": "Gap change"
+    },
+    "renumber": {
+      "title": "Renumber",
+      "startFromNumber": "Start from number:"
     },
     "sortBy": {
       "title": "Sort subtitles",
@@ -1689,7 +1703,9 @@
     "pointSync": "Point sync",
     "pointSyncViaOther": "Point sync via other subtitle",
     "adjustmentX": "Adjustment: {0}",
-    "adjustAllShortcuts": "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms"
+    "adjustAllShortcuts": "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms",
+    "offsetInSeconds": "Offset in seconds",
+    "speedFactor": "Speed factor"
   },
   "translate": {
     "translateViaCopyPaste": "Auto-translate via copy/paste",
@@ -1941,6 +1957,8 @@
       "splitOddLinesAction": "Split odd lines action",
       "ocrUseWordSplitList": "OCR: use word split list",
       "speechToTextSelectedLinesPromptFistTimeOnly": "Speech to text: selected lines, prompt for language/engine first time only",
+      "multipleReplaceShowDotDotDotButtons": "Multiple replace: show context menu buttons",
+      "gridFocusTextboxAfterInsertNew": "Grid: focus text box after insert new subtitle",
       "useFocusedButtonBackgroundColor": "Use focused button background color",
       "focusedButtonBackgroundColor": "Focused button background color",
       "forceCrLfOnSave": "Force CR+LF on save (text subtitle files)",
@@ -2166,6 +2184,7 @@
       "goToPreviousError": "GoTo previous error",
       "addNameToNameList": "Add name to name list",
       "findDoubleWords": "Find double words",
+      "findDoubleLines": "Find double lines",
       "colorX": "Color {0}",
       "removeColor": "Remove color",
       "surroundWith": "Surround with...",
@@ -2296,7 +2315,8 @@
     "removeXFromUnknownWordsList": "Remove \"{0}\" from unknown words list",
     "downloadingPaddleOcrEngineDotDotDot": "Downloading Paddle OCR engine...",
     "downloadingPaddleOcrModelsDotDotDot": "Downloading Paddle OCR models...",
-    "paddleOcr": "Paddle OCR"
+    "paddleOcr": "Paddle OCR",
+    "binaryImageCompareInspectImageMatches": "\"Binary image compare\" - Inspect image matches"
   },
   "assa": {
     "assaDraw": "ASSA Draw",
@@ -2408,6 +2428,8 @@
     "advancedEffectWordByWordDescription": "Reveals text one word at a time over the subtitle duration",
     "advancedEffectKaraoke": "Karaoke",
     "advancedEffectKaraokeDescription": "Highlights each character in sequence, revealing the text left to right like karaoke lyrics",
+    "advancedEffectFancyKaraoke": "Karaoke - active word pop",
+    "advancedEffectFancyKaraokeDescription": "Enhances subtitles with a pre-marked active word (via \\u1 underline or highlight color) — dims inactive words and applies a pop-glow animation to the active word",
     "advancedEffectScrambleReveal": "Scramble reveal",
     "advancedEffectScrambleRevealDescription": "Scrambled characters decode into the real text from left to right",
     "advancedEffectRainbowPulse": "Rainbow pulse",
@@ -2449,7 +2471,16 @@
     "advancedEffectConfetti": "Confetti burst",
     "advancedEffectConfettiDescription": "Explosive burst of colorful spinning paper confetti from corner poppers and a center starburst at each subtitle",
     "advancedEffectHearts": "Hearts (rain)",
-    "advancedEffectHeartsDescription": "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle"
+    "advancedEffectHeartsDescription": "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle",
+    "advancedEffectWordSpacing": "Word spacing",
+    "advancedEffectWordSpacingDescription": "Increases spacing between words using the \\fsp tag for better readability",
+    "advancedEffectFancyKaraokeInactiveOpacity": "Inactive opacity (0-255)",
+    "advancedEffectFancyKaraokeGlowColor": "Active word glow color",
+    "advancedEffectWordSpacingPixels": "Spacing (pixels)",
+    "advancedEffectSlowZoomOut": "Slow zoom-out",
+    "advancedEffectSlowZoomOutDescription": "Text starts slightly larger and gently shrinks to normal size over the subtitle duration",
+    "advancedEffectSlowZoomIn": "Slow zoom-in",
+    "advancedEffectSlowZoomInDescription": "Text starts at normal size and gently grows slightly over the subtitle duration"
   },
   "about": {
     "title": "About Subtite Edit",
