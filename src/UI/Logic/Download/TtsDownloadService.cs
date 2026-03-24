@@ -121,7 +121,7 @@ public class TtsDownloadService : ITtsDownloadService
 
     public async Task<string> AllTalkVoiceSpeak(string inputText, AllTalkVoice voice, string language)
     {
-        var multipartContent = new MultipartFormDataContent();
+        using var multipartContent = new MultipartFormDataContent();
         var text = Utilities.UnbreakLine(inputText);
         multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
         multipartContent.Add(new StringContent("standard"), "text_filtering");
@@ -134,18 +134,39 @@ public class TtsDownloadService : ITtsDownloadService
         multipartContent.Add(new StringContent("false"), "output_file_timestamp");
         multipartContent.Add(new StringContent("false"), "autoplay");
         multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
-        var result = await _httpClient.PostAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl.TrimEnd('/') + "/api/tts-generate", multipartContent);
-        var bytes = await result.Content.ReadAsByteArrayAsync();
-        var resultJson = Encoding.UTF8.GetString(bytes);
 
-        if (!result.IsSuccessStatusCode)
+        HttpResponseMessage result;
+        try
         {
-            SeLogger.Error($"All Talk TTS failed calling API as base address {_httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
+            result = await _httpClient.PostAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl.TrimEnd('/') + "/api/tts-generate", multipartContent);
+        }
+        catch (HttpRequestException ex)
+        {
+            SeLogger.Error(ex, "AllTalk TTS server connection failed.");
+            throw new HttpRequestException("AllTalk TTS server is not reachable. Please check that the server is running.", ex);
+        }
+        catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+        {
+            SeLogger.Error(ex, "AllTalk TTS server request timed out.");
+            throw new HttpRequestException("AllTalk TTS server request timed out. Please check that the server is running.", ex);
         }
 
-        var jsonParser = new SeJsonParser();
-        var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
-        return allTalkOutput.Replace("\\\\", "\\");
+        using (result)
+        {
+            if (!result.IsSuccessStatusCode)
+            {
+                var errorBody = await result.Content.ReadAsStringAsync();
+                SeLogger.Error($"AllTalk TTS failed calling API at {_httpClient.BaseAddress}: Status code={result.StatusCode}" + Environment.NewLine + errorBody);
+                throw new HttpRequestException($"AllTalk TTS server returned error {(int)result.StatusCode} ({result.StatusCode}).");
+            }
+
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var resultJson = Encoding.UTF8.GetString(bytes);
+
+            var jsonParser = new SeJsonParser();
+            var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
+            return allTalkOutput.Replace("\\\\", "\\");
+        }
     }
 
     public async Task<bool> AllTalkIsInstalled()
