@@ -142,7 +142,10 @@ public partial class FindViewModel : ObservableObject
     {
         _findService = findService;
         _subs = subs;
-        SearchText = selectedText.Trim();
+        if (string.IsNullOrEmpty(SearchText))
+        {
+            SearchText = selectedText.Trim();
+        }
         _findResult = findResult;
 
         SearchHistory.Clear();
