@@ -14,6 +14,7 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private Color _speedBackgroundColor;
     [ObservableProperty] private string _text;
     [ObservableProperty] private bool _hasHistory;
+    [ObservableProperty] private double _historyButtonOpacity;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isPlayingEnabled;
 
@@ -32,6 +33,7 @@ public partial class ReviewRow : ObservableObject
         StepResult = new TtsStepResult();
         HistoryItems = new List<ReviewHistoryRow>();
         HasHistory = false;
+        HistoryButtonOpacity = 0.3;
     }
 
     internal void StartHistory()
@@ -58,5 +60,6 @@ public partial class ReviewRow : ObservableObject
         });
 
         HasHistory = true;
+        HistoryButtonOpacity = 1.0;
     }
 }
