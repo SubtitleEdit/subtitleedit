@@ -467,6 +467,21 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(line.Text))
+        {
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Warning,
+                    "Cannot regenerate audio with empty text",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
+            return;
+        }
+
         var isEngineInstalled = await engine.IsInstalled(SelectedRegion);
         if (!isEngineInstalled)
         {
