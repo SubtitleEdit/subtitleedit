@@ -190,10 +190,22 @@ https://github.com/SubtitleEdit/subtitleedit
         var aboveMaximumLineLengthCount = 0;
         var aboveMaximumLineWidthCount = 0;
         var belowMinimumGapCount = 0;
+        var gapCount = 0;
 
-        for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+        // Precompute next-same-track in a single backward pass (O(n)) to avoid O(n²) forward scans.
+        var paragraphs = _subtitle.Paragraphs;
+        var nextSameTrack = new Paragraph?[paragraphs.Count];
+        var firstByTrack = new Dictionary<int, int>(); // trackIndex -> list index of first seen (backwards)
+        for (var k = paragraphs.Count - 1; k >= 0; k--)
         {
-            var p = _subtitle.Paragraphs[i];
+            var trackIdx = paragraphs[k].TrackIndex;
+            nextSameTrack[k] = firstByTrack.TryGetValue(trackIdx, out var nextIdx) ? paragraphs[nextIdx] : null;
+            firstByTrack[trackIdx] = k;
+        }
+
+        for (int i = 0; i < paragraphs.Count; i++)
+        {
+            var p = paragraphs[i];
             allText.Append(p.Text);
 
             var len = GetLineLength(p);
@@ -216,30 +228,18 @@ https://github.com/SubtitleEdit/subtitleedit
             maximumWpm = Math.Max(wpm, maximumWpm);
             totalWpm += wpm;
 
-            Paragraph? next = null;
-            for (int j = i + 1; j < _subtitle.Paragraphs.Count; j++)
-            {
-                if (_subtitle.Paragraphs[j].TrackIndex == p.TrackIndex) { next = _subtitle.Paragraphs[j]; break; }
-            }
+            var next = nextSameTrack[i];
             if (next != null)
             {
                 var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
                 if (gap < gapMinimum)
-                {
                     gapMinimum = gap;
-                }
-
                 if (gap > gapMaximum)
-                {
                     gapMaximum = gap;
-                }
-
                 if (gap < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                {
                     belowMinimumGapCount++;
-                }
-
                 gapTotal += gap;
+                gapCount++;
             }
 
             foreach (var line in p.Text.SplitToLines())
@@ -355,13 +355,13 @@ https://github.com/SubtitleEdit/subtitleedit
         sb.AppendLine(string.Format(_l.WordsPerMinuteExceedingMaximum, Configuration.Settings.General.SubtitleMaximumWordsPerMinute, aboveMaximumWpmCount, ((double)aboveMaximumWpmCount / _subtitle.Paragraphs.Count) * 100.0));
         sb.AppendLine();
 
-        if (_subtitle.Paragraphs.Count > 1)
+        if (gapCount > 0)
         {
-            sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum) + ")");
-            sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
-            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
+            sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum, nextSameTrack) + ")");
+            sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum, nextSameTrack) + ")");
+            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / gapCount));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount, ((double)belowMinimumGapCount / gapCount) * 100.0));
             sb.AppendLine();
         }
 
@@ -446,15 +446,16 @@ https://github.com/SubtitleEdit/subtitleedit
         return string.Join(", ", indices);
     }
 
-    private string GetIndicesWithGap(double cps)
+    private string GetIndicesWithGap(double targetGap, Paragraph?[] nextSameTrack)
     {
         var indices = new List<string>();
-        for (var i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
+        var paragraphs = _subtitle.Paragraphs;
+        for (var i = 0; i < paragraphs.Count; i++)
         {
-            var p = _subtitle.Paragraphs[i];
-            var next = _subtitle.Paragraphs[i + 1];
-            var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-            if (Math.Abs(gap - cps) < 0.01)
+            var next = nextSameTrack[i];
+            if (next == null) continue;
+            var gap = next.StartTime.TotalMilliseconds - paragraphs[i].EndTime.TotalMilliseconds;
+            if (Math.Abs(gap - targetGap) < 0.01)
             {
                 if (indices.Count >= NumberOfLinesToShow)
                 {
