@@ -31,6 +31,11 @@ public class TrackHeaderPanel : Control
     public event EventHandler<int>? ActiveTrackChanged;
     public event EventHandler<int>? RenameRequested;
 
+    private static readonly IBrush BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
+    private static readonly IBrush ActiveOverlayBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
+    private static readonly IBrush TextBrush = new SolidColorBrush(Colors.White);
+    private static readonly Pen DividerPen = new Pen(new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)), 1);
+
     public TrackHeaderPanel()
     {
         AffectsRender<TrackHeaderPanel>(TracksProperty, ActiveTrackIndexProperty);
@@ -70,7 +75,7 @@ public class TrackHeaderPanel : Control
         var height = Bounds.Height;
         if (width <= 0 || height <= 0) return;
 
-        context.DrawRectangle(new SolidColorBrush(Color.FromArgb(255, 30, 30, 30)), null, new Rect(0, 0, width, height));
+        context.DrawRectangle(BackgroundBrush, null, new Rect(0, 0, width, height));
 
         var tracks = Tracks;
         var trackCount = Math.Max(1, tracks.Count);
@@ -84,7 +89,7 @@ public class TrackHeaderPanel : Control
             // Active track background
             if (i == ActiveTrackIndex)
             {
-                context.DrawRectangle(new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)), null,
+                context.DrawRectangle(ActiveOverlayBrush, null,
                     new Rect(0, trackY, width, trackRowHeight));
             }
 
@@ -102,13 +107,13 @@ public class TrackHeaderPanel : Control
                 FlowDirection.LeftToRight,
                 Typeface.Default,
                 11,
-                new SolidColorBrush(Colors.White));
+                TextBrush);
             context.DrawText(nameText, new Point(10, trackY + (trackRowHeight - nameText.Height) / 2));
 
             // Divider line
             if (i < trackCount - 1)
             {
-                context.DrawLine(new Pen(new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)), 1),
+                context.DrawLine(DividerPen,
                     new Point(0, trackY + trackRowHeight),
                     new Point(width, trackY + trackRowHeight));
             }

@@ -264,9 +264,10 @@ public partial class MainViewModel :
     public MenuItem MenuReopen { get; set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
 
+    // Initialized with a safe English default; name is updated in OnLoaded() after language is ready.
     public List<SubtitleTrack> SubtitleTracks { get; } = new List<SubtitleTrack>
     {
-        new SubtitleTrack(0, $"{Se.Language.Waveform.TrackDefaultName} 1", "#4B6EAF"),
+        new SubtitleTrack(0, "Track 1", "#4B6EAF"),
     };
 
     public Nikse.SubtitleEdit.Controls.TrackHeaderControl.TrackHeaderPanel? TrackHeaderPanel { get; set; }
@@ -11616,15 +11617,14 @@ public partial class MainViewModel :
 
     private static SKColor ParseHexToSkColor(string hex)
     {
-        hex = hex.TrimStart('#');
-        if (hex.Length < 6) return SKColors.White;
-        if (!byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) ||
-            !byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) ||
-            !byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
-        {
+        if (string.IsNullOrWhiteSpace(hex))
             return SKColors.White;
-        }
-        return new SKColor(r, g, b);
+        var normalized = hex.Trim();
+        if (!normalized.StartsWith("#", StringComparison.Ordinal))
+            normalized = "#" + normalized;
+        if (Color.TryParse(normalized, out var color))
+            return new SKColor(color.R, color.G, color.B, color.A);
+        return SKColors.White;
     }
 
     public Subtitle GetUpdateSubtitleOriginal(bool subtractVideoOffset = false)
@@ -11991,6 +11991,13 @@ public partial class MainViewModel :
 
     internal void OnLoaded()
     {
+        // Update the default track name now that language strings are fully loaded.
+        if (SubtitleTracks.Count > 0)
+        {
+            SubtitleTracks[0].Name = $"{Se.Language.Waveform.TrackDefaultName} 1";
+            TrackHeaderPanel?.InvalidateVisual();
+        }
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
         {
             Dispatcher.UIThread.Post(async void () =>
@@ -15002,6 +15009,8 @@ public partial class MainViewModel :
                 AudioVisualizer.Tracks = new List<SubtitleTrack> { SubtitleTracks[0] };
                 AudioVisualizer.ActiveTrackIndex = 0;
             }
+            if (TrackHeaderPanel != null)
+                TrackHeaderPanel.ActiveTrackIndex = 0;
         }
         else if (IsMultiTrackSupported && !wasMultiTrackSupported)
         {

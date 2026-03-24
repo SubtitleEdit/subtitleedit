@@ -305,6 +305,9 @@ public class AudioVisualizer : Control
     private readonly Dictionary<int, LinearGradientBrush> _fancyWaveformGradientCache = new(20);
     private readonly Dictionary<int, Pen> _fancyWaveformGlowPenCache = new(10);
 
+    // Per-track background brush cache (keyed by track index, cleared when Tracks changes)
+    private readonly Dictionary<int, IBrush> _trackBrushCache = new Dictionary<int, IBrush>();
+
     // Paragraph painting
     private IBrush _paintBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
     private IBrush _paintParagraphBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
@@ -388,6 +391,13 @@ public class AudioVisualizer : Control
     public event ParagraphNullableEventHandler? OnPrimarySingleClicked;
     public event ParagraphNullableEventHandler? OnPrimaryDoubleClicked;
     public event PositionEventHandler? OnSetStartAndOffsetTheRest;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == TracksProperty)
+            _trackBrushCache.Clear();
+    }
 
     public AudioVisualizer()
     {
@@ -838,6 +848,12 @@ public class AudioVisualizer : Control
         }
 
         _activeParagraph = p;
+        var pTrackIdx = p.TrackIndex;
+        if (ActiveTrackIndex != pTrackIdx)
+        {
+            ActiveTrackIndex = pTrackIdx;
+            OnActiveTrackChanged?.Invoke(this, pTrackIdx);
+        }
         _originalStartSeconds = p.StartTime.TotalSeconds;
         _originalEndSeconds = p.EndTime.TotalSeconds;
         _originalDurationSeconds = p.Duration.TotalSeconds;
@@ -1952,9 +1968,9 @@ public class AudioVisualizer : Control
         {
             backgroundBrush = _paintParagraphSelectedBackground;
         }
-        else if (trackCount > 1 && trackIdx < Tracks.Count && Color.TryParse(Tracks[trackIdx].Color, out var trackColor))
+        else if (trackCount > 1 && trackIdx < Tracks.Count)
         {
-            backgroundBrush = new SolidColorBrush(Color.FromArgb(40, trackColor.R, trackColor.G, trackColor.B));
+            backgroundBrush = GetTrackBackgroundBrush(trackIdx);
         }
         else
         {
@@ -2000,6 +2016,19 @@ public class AudioVisualizer : Control
                 }
             }
         }
+    }
+
+    private IBrush GetTrackBackgroundBrush(int trackIdx)
+    {
+        if (_trackBrushCache.TryGetValue(trackIdx, out var cached))
+            return cached;
+        IBrush brush;
+        if (trackIdx < Tracks.Count && Color.TryParse(Tracks[trackIdx].Color, out var trackColor))
+            brush = new SolidColorBrush(Color.FromArgb(40, trackColor.R, trackColor.G, trackColor.B));
+        else
+            brush = _paintParagraphBackground;
+        _trackBrushCache[trackIdx] = brush;
+        return brush;
     }
 
     private static readonly Pen TrackDividerPen = new Pen(new SolidColorBrush(Color.FromArgb(80, 200, 200, 200)), 1);
