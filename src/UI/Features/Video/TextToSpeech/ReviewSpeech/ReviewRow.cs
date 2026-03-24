@@ -14,7 +14,6 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private Color _speedBackgroundColor;
     [ObservableProperty] private string _text;
     [ObservableProperty] private bool _hasHistory;
-    [ObservableProperty] private double _historyButtonOpacity;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isPlayingEnabled;
 
@@ -33,7 +32,6 @@ public partial class ReviewRow : ObservableObject
         StepResult = new TtsStepResult();
         HistoryItems = new List<ReviewHistoryRow>();
         HasHistory = false;
-        HistoryButtonOpacity = 0.3;
     }
 
     internal void StartHistory()
@@ -48,18 +46,24 @@ public partial class ReviewRow : ObservableObject
         });
     }
 
-    internal void AddHistory(Voices.Voice voice, TtsResult speakResult)
+    internal void AddHistory(Voices.Voice voice, string processedFileName)
     {
         HistoryItems.Add(new ReviewHistoryRow
         {
             Number = HistoryItems.Count + 1,
-            FileName = speakResult.FileName,
+            FileName = processedFileName,
             VoiceName = voice.Name,
             Voice = voice,
             Speed = StepResult.SpeedFactor,
         });
 
         HasHistory = true;
-        HistoryButtonOpacity = 1.0;
+    }
+
+    public double HistoryButtonOpacity => HasHistory ? 1.0 : 0.3;
+
+    partial void OnHasHistoryChanged(bool value)
+    {
+        OnPropertyChanged(nameof(HistoryButtonOpacity));
     }
 }

@@ -542,18 +542,18 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        line.AddHistory(voice, speakResult);
-
         line.StepResult.CurrentFileName = speakResult.FileName;
         line.StepResult.Voice = voice;
 
         var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
-        var postProcessedFileName = await ApplyPostProcessingToFile(adjustSpeedStepResult.CurrentFileName);
+        var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
         adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
         line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
         line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
         line.StepResult = adjustSpeedStepResult;
         line.Voice = voice.ToString();
+
+        line.AddHistory(voice, line.StepResult.CurrentFileName);
 
         _skipAutoContinue = true;
         await PlayAudio(line.StepResult.CurrentFileName);
@@ -569,73 +569,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             // ignore
         }
-    }
-
-    private async Task<string> ApplyPostProcessingToFile(string currentFile)
-    {
-        var doProChain = Se.Settings.Video.TextToSpeech.ProAudioChainEnabled;
-        var silencePaddingMs = Se.Settings.Video.TextToSpeech.SilencePaddingMs;
-        var outputSampleRate = Se.Settings.Video.TextToSpeech.OutputSampleRate;
-
-        if (!doProChain && silencePaddingMs <= 0 && outputSampleRate <= 0)
-        {
-            return currentFile;
-        }
-
-        if (doProChain)
-        {
-            var proChainOutput = Path.Combine(_waveFolder, $"pro_{Guid.NewGuid()}.wav");
-            var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
-#pragma warning disable CA1416
-            _ = proProcess.Start();
-#pragma warning restore CA1416
-            await proProcess.WaitForExitAsync(_cancellationToken);
-
-            if (File.Exists(proChainOutput))
-            {
-                currentFile = proChainOutput;
-            }
-        }
-
-        if (silencePaddingMs > 0)
-        {
-            var silenceFile = Path.Combine(_waveFolder, $"pad_{Guid.NewGuid()}.wav");
-            var silenceProcess = FfmpegGenerator.GenerateSilence(silenceFile, silencePaddingMs);
-#pragma warning disable CA1416
-            _ = silenceProcess.Start();
-#pragma warning restore CA1416
-            await silenceProcess.WaitForExitAsync(_cancellationToken);
-
-            var paddedOutput = Path.Combine(_waveFolder, $"padded_{Guid.NewGuid()}.wav");
-            var concatProcess = FfmpegGenerator.ConcatAudio(currentFile, silenceFile, paddedOutput);
-#pragma warning disable CA1416
-            _ = concatProcess.Start();
-#pragma warning restore CA1416
-            await concatProcess.WaitForExitAsync(_cancellationToken);
-
-            SafeDelete(silenceFile);
-            if (File.Exists(paddedOutput))
-            {
-                currentFile = paddedOutput;
-            }
-        }
-
-        if (outputSampleRate > 0)
-        {
-            var resampledOutput = Path.Combine(_waveFolder, $"sr_{Guid.NewGuid()}.wav");
-            var srProcess = FfmpegGenerator.ChangeSampleRate(currentFile, resampledOutput, outputSampleRate);
-#pragma warning disable CA1416
-            _ = srProcess.Start();
-#pragma warning restore CA1416
-            await srProcess.WaitForExitAsync(_cancellationToken);
-
-            if (File.Exists(resampledOutput))
-            {
-                currentFile = resampledOutput;
-            }
-        }
-
-        return currentFile;
     }
 
     [RelayCommand]

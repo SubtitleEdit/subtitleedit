@@ -1102,69 +1102,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 ProgressText = $"Post-processing: segment {index + 1} of {previousStepResult.Length}";
                 var item = previousStepResult[index];
-                var currentFile = item.CurrentFileName;
 
-                // Apply pro audio chain (EQ, noise gate, compressor, loudness normalization, fade)
-                if (doProChain)
-                {
-                    var proChainOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"pro_{Guid.NewGuid()}.wav");
-                    var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = proProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await proProcess.WaitForExitAsync(cancellationToken);
-
-                    if (File.Exists(proChainOutput))
-                    {
-                        currentFile = proChainOutput;
-                    }
-                }
-
-                // Add silence padding at end of segment
-                if (silencePaddingMs > 0)
-                {
-                    var silenceFile = Path.Combine(Path.GetDirectoryName(currentFile)!, $"pad_{Guid.NewGuid()}.wav");
-                    var silenceProcess = FfmpegGenerator.GenerateSilence(silenceFile, silencePaddingMs);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = silenceProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await silenceProcess.WaitForExitAsync(cancellationToken);
-
-                    var paddedOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"padded_{Guid.NewGuid()}.wav");
-                    var concatProcess = FfmpegGenerator.ConcatAudio(currentFile, silenceFile, paddedOutput);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = concatProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await concatProcess.WaitForExitAsync(cancellationToken);
-
-                    DeleteFileNoError(silenceFile);
-                    if (File.Exists(paddedOutput))
-                    {
-                        currentFile = paddedOutput;
-                    }
-                }
-
-                // Change sample rate
-                if (outputSampleRate > 0)
-                {
-                    var resampledOutput = Path.Combine(Path.GetDirectoryName(currentFile)!, $"sr_{Guid.NewGuid()}.wav");
-                    var srProcess = FfmpegGenerator.ChangeSampleRate(currentFile, resampledOutput, outputSampleRate);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = srProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await srProcess.WaitForExitAsync(cancellationToken);
-
-                    if (File.Exists(resampledOutput))
-                    {
-                        currentFile = resampledOutput;
-                    }
-                }
+                var processedFile = await TtsPostProcessor.ApplyPostProcessing(item.CurrentFileName, Path.GetDirectoryName(item.CurrentFileName)!, cancellationToken);
 
                 resultList.Add(new TtsStepResult
                 {
                     Paragraph = item.Paragraph,
                     Text = item.Text,
-                    CurrentFileName = currentFile,
+                    CurrentFileName = processedFile,
                     SpeedFactor = item.SpeedFactor,
                     Voice = item.Voice,
                 });
