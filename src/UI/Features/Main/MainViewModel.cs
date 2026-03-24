@@ -8747,8 +8747,21 @@ public partial class MainViewModel :
         {
             return;
         }
+        
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        if (isAssa)
+        {
+            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            foreach (var item in selectedItems)
+            {
+                item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+            }
+        }
+        else
+        {
+            s.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+        }
 
-        s.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
         _updateAudioVisualizer = true;
     }
 
@@ -8769,7 +8782,20 @@ public partial class MainViewModel :
             return;
         }
 
-        s.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        if (isAssa)
+        {
+            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            foreach (var item in selectedItems)
+            {
+                item.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+            }
+        }
+        else
+        {
+            s.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+        }
+
         _updateAudioVisualizer = true;
     }
 
