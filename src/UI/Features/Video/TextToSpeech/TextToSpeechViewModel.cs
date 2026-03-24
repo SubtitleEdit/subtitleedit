@@ -910,15 +910,18 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         catch (HttpRequestException ex)
         {
-            SeLogger.Error($"TTS server error during speech generation: {ex.Message}");
+            SeLogger.Error(ex, "TTS server error during speech generation.");
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(
-                    Window!,
-                    "TTS server error: " + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                if (Window != null)
+                {
+                    await MessageBox.Show(
+                        Window,
+                        Se.Language.General.Error,
+                        "TTS server error: " + ex.Message,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             });
             return null;
         }

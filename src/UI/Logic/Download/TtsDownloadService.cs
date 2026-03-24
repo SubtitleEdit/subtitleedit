@@ -121,7 +121,7 @@ public class TtsDownloadService : ITtsDownloadService
 
     public async Task<string> AllTalkVoiceSpeak(string inputText, AllTalkVoice voice, string language)
     {
-        var multipartContent = new MultipartFormDataContent();
+        using var multipartContent = new MultipartFormDataContent();
         var text = Utilities.UnbreakLine(inputText);
         multipartContent.Add(new StringContent(Json.EncodeJsonText(text)), "text_input");
         multipartContent.Add(new StringContent("standard"), "text_filtering");
@@ -142,26 +142,31 @@ public class TtsDownloadService : ITtsDownloadService
         }
         catch (HttpRequestException ex)
         {
-            SeLogger.Error($"AllTalk TTS server connection failed: {ex.Message}");
+            SeLogger.Error(ex, "AllTalk TTS server connection failed.");
             throw new HttpRequestException("AllTalk TTS server is not reachable. Please check that the server is running.", ex);
         }
         catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
         {
-            SeLogger.Error($"AllTalk TTS server request timed out: {ex.Message}");
+            SeLogger.Error(ex, "AllTalk TTS server request timed out.");
             throw new HttpRequestException("AllTalk TTS server request timed out. Please check that the server is running.", ex);
         }
 
-        var bytes = await result.Content.ReadAsByteArrayAsync();
-        var resultJson = Encoding.UTF8.GetString(bytes);
-
-        if (!result.IsSuccessStatusCode)
+        using (result)
         {
-            SeLogger.Error($"All Talk TTS failed calling API as base address {_httpClient.BaseAddress} : Status code={result.StatusCode}" + Environment.NewLine + resultJson);
-        }
+            if (!result.IsSuccessStatusCode)
+            {
+                var errorBody = await result.Content.ReadAsStringAsync();
+                SeLogger.Error($"AllTalk TTS failed calling API at {_httpClient.BaseAddress}: Status code={result.StatusCode}" + Environment.NewLine + errorBody);
+                throw new HttpRequestException($"AllTalk TTS server returned error {(int)result.StatusCode} ({result.StatusCode}).");
+            }
 
-        var jsonParser = new SeJsonParser();
-        var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
-        return allTalkOutput.Replace("\\\\", "\\");
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var resultJson = Encoding.UTF8.GetString(bytes);
+
+            var jsonParser = new SeJsonParser();
+            var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
+            return allTalkOutput.Replace("\\\\", "\\");
+        }
     }
 
     public async Task<bool> AllTalkIsInstalled()

@@ -506,15 +506,25 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
         catch (HttpRequestException ex)
         {
-            IsRegenerateEnabled = true;
-            SeLogger.Error($"TTS server error during regeneration: {ex.Message}");
-            await MessageBox.Show(
-                Window!,
-                "TTS server error: " + ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            SeLogger.Error(ex, "TTS server error during regeneration.");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "TTS server error: " + ex.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
             return;
+        }
+        finally
+        {
+            IsRegenerateEnabled = true;
+            if (engine is Murf && oldStyle != null)
+            {
+                Se.Settings.Video.TextToSpeech.MurfStyle = oldStyle;
+            }
         }
 
         line.AddHistory(voice, speakResult);
@@ -530,13 +540,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         _skipAutoContinue = true;
         await PlayAudio(line.StepResult.CurrentFileName);
-
-        IsRegenerateEnabled = true;
-
-        if (engine is Murf && oldStyle != null)
-        {
-            Se.Settings.Video.TextToSpeech.MurfStyle = oldStyle;
-        }
     }
 
     private static void SafeDelete(string fileName)
