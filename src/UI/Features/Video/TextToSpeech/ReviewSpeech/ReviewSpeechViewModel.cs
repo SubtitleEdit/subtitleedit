@@ -547,6 +547,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
         var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
+
+        if (_cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
         line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
         line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
