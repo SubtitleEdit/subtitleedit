@@ -47,6 +47,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using static Nikse.SubtitleEdit.Logic.Ocr.BinaryOcrMatcher;
@@ -2367,8 +2368,30 @@ public partial class OcrViewModel : ObservableObject
         {
             item.Text = item.Text.Remove(idx, unknownWord.Word.FixedWord.Length).Insert(idx, word);
         }
+        else if (idx + 1 < item.Text.Length && item.Text.Substring(idx + 1).StartsWith(unknownWord.Word.FixedWord))
+        {
+            item.Text = item.Text.Remove(idx + 1, unknownWord.Word.FixedWord.Length).Insert(idx + 1, word);
+        }
+        else if (idx - 1 >= 0 && item.Text.Substring(idx - 1).StartsWith(unknownWord.Word.FixedWord))
+        {
+            item.Text = item.Text.Remove(idx - 1, unknownWord.Word.FixedWord.Length).Insert(idx - 1, word);
+        }
+        else
+        {
+            // fallback, try to find the word in text using regex using word boundary 
+            var pattern = @"\b" + Regex.Escape(unknownWord.Word.FixedWord) + @"\b";
+            var regex = new Regex(pattern);
+            var match = regex.Match(item.Text);
+            if (match.Success)
+            {
+                item.Text = item.Text.Remove(match.Index, unknownWord.Word.FixedWord.Length).Insert(match.Index, word);
+            }
+            else
+            {
+                Se.LogError($"OCR-repalce: Could not find word '{unknownWord.Word.FixedWord}' in text '{item.Text}' to replace with '{word}' at index {unknownWord.Word.WordIndex}");
+            }
+        }
     }
-
 
     public class OcrFixLineResultTemp
     {
