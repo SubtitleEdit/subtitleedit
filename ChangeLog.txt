@@ -8,6 +8,10 @@ v5.0.0-beta11 (xth March 2026)
 * Mac: Option+Backspace deletes the previous word - thx derzz
 * Add Edge-TTS engine + TTS audio improvements - thx Ironship
 * Fix burn-in logo preview hidden under video on Windows - thx Ironship
+* Improve mpv rendering on Linux - thx Ironship
+* Add Linux flatpak installer - thx Ironship
+* Add more ASSA advanced effect
+* Allow "manual sync" in visual sync - thx Bas
 
 -----------------------------------------------------------------------------------------------------
 
