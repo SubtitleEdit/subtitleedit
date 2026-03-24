@@ -275,6 +275,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 SuggestedFileName = suggestedFileName,
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
+                DefaultExtension = currentFormat.Extension.TrimStart('.'),
             };
 
             if (!string.IsNullOrEmpty(suggestedStartLocationPath))
