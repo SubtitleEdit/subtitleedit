@@ -106,9 +106,9 @@
       },
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
-        "requested": "[8.4.0, )",
-        "resolved": "8.4.0",
-        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+        "requested": "[8.4.1, )",
+        "resolved": "8.4.1",
+        "contentHash": "BTRteP8SvFyd/4KAreIFJBcxD2O9trLxLDD/p8YkSDDrfFOzy2U8cHyz6r+5Eh4kDhJdzAVglei6a+Bh4jCpUA=="
       },
       "Google.Cloud.TextToSpeech.V1": {
         "type": "Direct",
@@ -178,22 +178,22 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.47.1, )",
-        "resolved": "0.47.1",
-        "contentHash": "EizvQSusxkEYdQlo7MBq06bU4g5QOqTnQFJlEGQvKQT/E0RAhZ2TMmoUfk1G0JQgyDfeGRaMi7uSYYJZQ3kpvg=="
+        "requested": "[0.47.3, )",
+        "resolved": "0.47.3",
+        "contentHash": "KPODbBWz4zRs413KAHgy7N43bXCsAJyrCJMTajRan3Gl4epukJQKQxZeK1FVq/VvRZ4Y1MLz4Jc5UYSokwEojQ=="
       },
       "Simplecto.Avalonia.RichTextBox": {
         "type": "Direct",
-        "requested": "[1.6.3, )",
-        "resolved": "1.6.3",
-        "contentHash": "IF6a4M54lK7dQgS5IjRq+Zqn107rqBfN0cCa2hbFCwrNBD0eIF5BCnnyzmLc8hwlxXvTgGGXQChmd26LXgEm3A==",
+        "requested": "[1.6.5, )",
+        "resolved": "1.6.5",
+        "contentHash": "5XlHpP/3dUb60MAOgT79aZ2xr9UK6G+3w0QYI0upbr34lt8lhyh+ilrf7nhpWY0Ntk1VwoF8+MKM4jAyLiSm1Q==",
         "dependencies": {
-          "Avalonia": "11.2.8",
+          "Avalonia": "11.3.12",
           "Avalonia.Controls.ItemsRepeater": "11.1.5",
-          "Avalonia.Desktop": "11.2.8",
+          "Avalonia.Desktop": "11.3.12",
           "Avalonia.ReactiveUI": "11.2.8",
-          "Avalonia.Skia": "11.2.8",
-          "Avalonia.Themes.Fluent": "11.2.8",
+          "Avalonia.Skia": "11.3.12",
+          "Avalonia.Themes.Fluent": "11.3.12",
           "DocumentFormat.OpenXml": "3.2.0",
           "HtmlAgilityPack": "1.12.0"
         }
