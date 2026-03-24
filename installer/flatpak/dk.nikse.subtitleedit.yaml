@@ -17,7 +17,7 @@ finish-args:
   # Display
   - --share=ipc
   - --socket=wayland
-  - --socket=fallback-x11
+  - --socket=x11
   # Hardware acceleration
   - --device=dri
   # File access (subtitle files are typically in the home directory)
@@ -29,7 +29,218 @@ finish-args:
   # .NET single-file bundle extraction directory (persistent cache)
   - --env=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/cache/.net
 
+cleanup:
+  - '*.la'
+  - '*.a'
+
 modules:
+  # --- libmpv dependencies ---
+
+  - name: libass
+    config-opts:
+      - --disable-static
+      - --enable-asm
+      - --enable-harfbuzz
+      - --enable-fontconfig
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/libass/libass.git
+        tag: 0.17.4
+        commit: bbb3c7f1570a4a021e52683f3fbdf74fe492ae84
+
+  - name: uchardet
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_STATIC=0
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+      - /share/man
+    sources:
+      - type: archive
+        url: https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz
+        sha256: e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0
+
+  - name: libplacebo
+    buildsystem: meson
+    config-opts:
+      - -Dvulkan=enabled
+      - -Dshaderc=enabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/haasn/libplacebo.git
+        tag: v7.360.1
+        commit: cee9b076f2c63104ccfd497fa79c39a867293ec4
+
+  - name: rubberband
+    buildsystem: meson
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/breakfastquay/rubberband.git
+        tag: v4.0.0
+        commit: 1d95888bec3ae0a17c0c4af791810d5a63f6bc35
+
+  - name: mujs
+    no-autogen: true
+    make-args:
+      - release
+    make-install-args:
+      - prefix=/app
+      - install-shared
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://codeberg.org/ccxvii/mujs.git
+        tag: 1.3.8
+        commit: 307f18c4216420f2f56e22d8e7040baa39a6304a
+      - type: file
+        url: https://www.unicode.org/Public/16.0.0/ucd/UnicodeData.txt
+        sha256: ff58e5823bd095166564a006e47d111130813dcf8bf234ef79fa51a870edb48f
+      - type: file
+        url: https://www.unicode.org/Public/16.0.0/ucd/SpecialCasing.txt
+        sha256: 8d5de354eef79f2395a54c9c7dcebbaf3d30fc962d0f85611ea97aa973a0c451
+
+  # --- x264 encoder (needed for burn-in, blank video generation) ---
+
+  - name: x264
+    config-opts:
+      - --disable-cli
+      - --enable-shared
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://code.videolan.org/videolan/x264.git
+        commit: 0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee
+
+  # --- ffmpeg with rubberband + x264 + libass (overrides platform ffmpeg) ---
+
+  - name: ffmpeg
+    config-opts:
+      - --disable-debug
+      - --disable-doc
+      - --disable-static
+      - --enable-shared
+      - --enable-gnutls
+      - --enable-gpl
+      - --enable-version3
+      - --enable-libass
+      - --enable-libdav1d
+      - --enable-libfreetype
+      - --enable-libmp3lame
+      - --enable-libopus
+      - --enable-librubberband
+      - --enable-libtheora
+      - --enable-libv4l2
+      - --enable-libvorbis
+      - --enable-libvpx
+      - --enable-libwebp
+      - --enable-libx264
+      - --enable-libxml2
+      - --enable-vulkan
+      - --enable-encoder=png
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/ffmpeg/examples
+    sources:
+      - type: git
+        url: https://github.com/FFmpeg/FFmpeg.git
+        tag: n7.1.2
+        commit: 7003a8c4544b780eb0ab5c02ac4ad89d2132f2a2
+
+  - name: libXpresent
+    buildsystem: autotools
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/xorg/lib/libxpresent.git
+        tag: libXpresent-1.0.2
+        commit: 4d92149372461bf575e8a09b1064a2884c38c3aa
+
+  - name: hwdata
+    buildsystem: autotools
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://github.com/vcrhonek/hwdata/archive/refs/tags/v0.394.tar.gz
+        sha256: b7c3fd7214a3b7c49d2661db127a712dc11cffd1799f793947aa1cb20aaf3298
+
+  - name: libdisplay-info
+    buildsystem: meson
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://gitlab.freedesktop.org/emersion/libdisplay-info/-/archive/0.2.0/libdisplay-info-0.2.0.tar.gz
+        sha256: f7331fcaf5527251b84c8fb84238d06cd2f458422ce950c80e86c72927aa8c2b
+
+  # --- libmpv (video player library, no standalone player binary needed) ---
+
+  - name: libmpv
+    buildsystem: meson
+    config-opts:
+      - -Dlibmpv=true
+      - -Dcplayer=false
+      - -Dbuild-date=false
+      - -Dmanpage-build=disabled
+      - -Dalsa=disabled
+      - -Djavascript=enabled
+      - -Dlua=disabled
+      - -Dpulse=enabled
+      - -Duchardet=enabled
+      - -Dvulkan=enabled
+      - -Dwayland=enabled
+      - -Dx11=enabled
+      - -Ddrm=enabled
+      - -Degl=enabled
+      - -Degl-drm=enabled
+      - -Degl-wayland=enabled
+      - -Degl-x11=enabled
+      - -Dgl=enabled
+      - -Dgl-x11=enabled
+      - -Dplain-gl=enabled
+      - -Dvaapi=enabled
+      - -Dvdpau=enabled
+      - -Drubberband=enabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/applications
+      - /share/bash-completion
+      - /share/doc
+      - /share/icons
+      - /share/man
+      - /share/zsh
+    sources:
+      - type: git
+        url: https://github.com/mpv-player/mpv.git
+        tag: v0.41.0
+        commit: 41f6a645068483470267271e1d09966ca3b9f413
+
+  # --- SubtitleEdit application ---
+
   - name: subtitleedit
     buildsystem: simple
     # Select the correct RID per host architecture
