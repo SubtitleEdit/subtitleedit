@@ -788,6 +788,7 @@
     <!-- j -->
     <Word from="jedamput" to="jedanput" />
     <Word from="jedana" to="jedna" />
+    <Word from="jednio" to="jedino" />
     <Word from="jedns" to="jedna" />
     <Word from="jedbo" to="jedno" />
     <Word from="jedbom" to="jednom" />
@@ -2214,6 +2215,7 @@
     <Word from="resetujete" to="resetirate" />
     <Word from="resetujte" to="resetirajte" />
     <Word from="Resetujte" to="Resetirajte" />
+    <Word from="reud" to="redu" />
     <Word from="rijeđi" to="rjeđi" />
     <Word from="rješio" to="riješio" />
     <Word from="rokenrol" to="rock'n'roll" />
@@ -4434,6 +4436,7 @@
     <RegEx find="č[mn]p" replaceWith="čno" />
     <RegEx find="čnas" replaceWith="nčas" />
     <RegEx find="([čČ])ovi?j?e([kč])" replaceWith="$1ovje$2" />
+    <RegEx find="čq" replaceWith="ča" />
     <RegEx find="ćopa" replaceWith="šepa" />
     <RegEx find="ćuti" replaceWith="šuti" />
     <RegEx find="Ćuti" replaceWith="Šuti" />
