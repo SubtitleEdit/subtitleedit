@@ -16,8 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install xvfb
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - name: Install Flatpak build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder xvfb
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Update metainfo version/date from Se.cs
         run: bash installer/flatpak/update-metainfo-version.sh
