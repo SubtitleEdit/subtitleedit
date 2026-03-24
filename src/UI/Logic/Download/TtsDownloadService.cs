@@ -134,7 +134,23 @@ public class TtsDownloadService : ITtsDownloadService
         multipartContent.Add(new StringContent("false"), "output_file_timestamp");
         multipartContent.Add(new StringContent("false"), "autoplay");
         multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
-        var result = await _httpClient.PostAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl.TrimEnd('/') + "/api/tts-generate", multipartContent);
+
+        HttpResponseMessage result;
+        try
+        {
+            result = await _httpClient.PostAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl.TrimEnd('/') + "/api/tts-generate", multipartContent);
+        }
+        catch (HttpRequestException ex)
+        {
+            SeLogger.Error($"AllTalk TTS server connection failed: {ex.Message}");
+            throw new HttpRequestException("AllTalk TTS server is not reachable. Please check that the server is running.", ex);
+        }
+        catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+        {
+            SeLogger.Error($"AllTalk TTS server request timed out: {ex.Message}");
+            throw new HttpRequestException("AllTalk TTS server request timed out. Please check that the server is running.", ex);
+        }
+
         var bytes = await result.Content.ReadAsByteArrayAsync();
         var resultJson = Encoding.UTF8.GetString(bytes);
 

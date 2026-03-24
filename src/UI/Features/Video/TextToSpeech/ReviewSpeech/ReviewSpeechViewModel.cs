@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -498,7 +499,23 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Se.Settings.Video.TextToSpeech.MurfStyle = SelectedStyle;
         }
 
-        var speakResult = await engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
+        TtsResult speakResult;
+        try
+        {
+            speakResult = await engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            IsRegenerateEnabled = true;
+            SeLogger.Error($"TTS server error during regeneration: {ex.Message}");
+            await MessageBox.Show(
+                Window!,
+                "TTS server error: " + ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
 
         line.AddHistory(voice, speakResult);
 

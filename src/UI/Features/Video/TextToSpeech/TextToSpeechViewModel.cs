@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -905,6 +906,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
+            return null;
+        }
+        catch (HttpRequestException ex)
+        {
+            SeLogger.Error($"TTS server error during speech generation: {ex.Message}");
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await MessageBox.Show(
+                    Window!,
+                    "TTS server error: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            });
             return null;
         }
     }
