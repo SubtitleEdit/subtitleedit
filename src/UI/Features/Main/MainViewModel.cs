@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -167,6 +168,9 @@ public partial class MainViewModel :
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
 
+    [ObservableProperty]
+    private int _activeTrackIndex;
+
     [ObservableProperty] private string _editText;
     [ObservableProperty] private string _editTextCharactersPerSecond;
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackground;
@@ -218,6 +222,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
+    [ObservableProperty] private bool _isMultiTrackSupported;
     [ObservableProperty] private bool _hasFormatStyle;
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
     [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
@@ -258,6 +263,13 @@ public partial class MainViewModel :
     public TextBlock StatusTextLeftLabel { get; set; }
     public MenuItem MenuReopen { get; set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
+
+    public List<SubtitleTrack> SubtitleTracks { get; } = new List<SubtitleTrack>
+    {
+        new SubtitleTrack(0, $"{Se.Language.Waveform.TrackDefaultName} 1", "#4B6EAF"),
+    };
+
+    public Nikse.SubtitleEdit.Controls.TrackHeaderControl.TrackHeaderPanel? TrackHeaderPanel { get; set; }
 
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
@@ -3199,50 +3211,61 @@ public partial class MainViewModel :
         }
 
         var count = 0;
-        var total = Subtitles.Count;
-        var overWrite = result.ModeOverwrite; // either overwrite or insert mode (shift texts down)
-        for (var i = 0; i < subtitle.Paragraphs.Count && idx < Subtitles.Count; i++)
+        var pasteTrackIndex = SelectedSubtitle.TrackIndex;
+
+        // Build ordered list of flat indices on the paste track, starting from idx
+        var sameTrackIndices = new List<int>();
+        for (int j = idx; j < Subtitles.Count; j++)
         {
-            if (overWrite == false)
+            if (Subtitles[j].TrackIndex == pasteTrackIndex) sameTrackIndices.Add(j);
+        }
+
+        var overWrite = result.ModeOverwrite;
+        if (overWrite == false)
+        {
+            // Shift same-track entries down to make room (backward pass)
+            for (int k = sameTrackIndices.Count - 1; k > 0; k--)
             {
-                for (int j = total - 1; j > idx; j--)
+                int jCur = sameTrackIndices[k];
+                int jPrev = sameTrackIndices[k - 1];
+                if (result.ColumnsAll)
                 {
-                    if (result.ColumnsAll)
-                    {
-                        Subtitles[j].SetStartTimeOnly(Subtitles[j - 1].StartTime);
-                        Subtitles[j].EndTime = Subtitles[j - 1].EndTime;
-                        Subtitles[j].Text = Subtitles[j - 1].Text;
-                    }
-                    else if (result.ColumnsTextOnly)
-                    {
-                        Subtitles[j].Text = Subtitles[j - 1].Text;
-                    }
-                    else if (result.ColumnsTimeCodesOnly)
-                    {
-                        Subtitles[j].SetStartTimeOnly(Subtitles[j - 1].StartTime);
-                        Subtitles[j].EndTime = Subtitles[j - 1].EndTime;
-                    }
+                    Subtitles[jCur].SetStartTimeOnly(Subtitles[jPrev].StartTime);
+                    Subtitles[jCur].EndTime = Subtitles[jPrev].EndTime;
+                    Subtitles[jCur].Text = Subtitles[jPrev].Text;
+                }
+                else if (result.ColumnsTextOnly)
+                {
+                    Subtitles[jCur].Text = Subtitles[jPrev].Text;
+                }
+                else if (result.ColumnsTimeCodesOnly)
+                {
+                    Subtitles[jCur].SetStartTimeOnly(Subtitles[jPrev].StartTime);
+                    Subtitles[jCur].EndTime = Subtitles[jPrev].EndTime;
                 }
             }
+        }
 
+        // Paste into same-track slots in order
+        for (var i = 0; i < subtitle.Paragraphs.Count && i < sameTrackIndices.Count; i++)
+        {
+            var targetIdx = sameTrackIndices[i];
             if (result.ColumnsAll)
             {
-                Subtitles[idx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
-                Subtitles[idx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
-                Subtitles[idx].Text = subtitle.Paragraphs[i].Text;
+                Subtitles[targetIdx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
+                Subtitles[targetIdx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
+                Subtitles[targetIdx].Text = subtitle.Paragraphs[i].Text;
             }
             else if (result.ColumnsTextOnly)
             {
-                Subtitles[idx].Text = subtitle.Paragraphs[i].Text;
+                Subtitles[targetIdx].Text = subtitle.Paragraphs[i].Text;
             }
             else if (result.ColumnsTimeCodesOnly)
             {
-                Subtitles[idx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
-                Subtitles[idx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
+                Subtitles[targetIdx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
+                Subtitles[targetIdx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
             }
-
             count++;
-            idx++;
         }
     }
 
@@ -6319,15 +6342,26 @@ public partial class MainViewModel :
         }
 
         var list = new List<SubtitleLineViewModel>();
+        // Single backward pass to build next-per-track lookup
+        var nextByIndex = new SubtitleLineViewModel?[Subtitles.Count];
+        var firstByTrack = new Dictionary<int, SubtitleLineViewModel>();
+        for (int i = Subtitles.Count - 1; i >= 0; i--)
+        {
+            var trackIdx = Subtitles[i].TrackIndex;
+            nextByIndex[i] = firstByTrack.TryGetValue(trackIdx, out var n) ? n : null;
+            firstByTrack[trackIdx] = Subtitles[i];
+        }
+        var prevByTrack = new Dictionary<int, SubtitleLineViewModel>();
         for (int i = 0; i < Subtitles.Count; i++)
         {
-            SubtitleLineViewModel? s = Subtitles[i];
-            var prev = i > 0 ? Subtitles[i - 1] : null;
-            var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
+            var s = Subtitles[i];
+            prevByTrack.TryGetValue(s.TrackIndex, out var prev);
+            var next = nextByIndex[i];
             if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
             {
                 list.Add(s);
             }
+            prevByTrack[s.TrackIndex] = s;
         }
 
         var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list.ToList()); });
@@ -6598,6 +6632,7 @@ public partial class MainViewModel :
         if (Subtitles.Count == 0)
         {
             _insertService.InsertBefore(SelectedSubtitleFormat, _subtitle, Subtitles, 0, string.Empty);
+            Subtitles[0].TrackIndex = ActiveTrackIndex;
             Renumber();
             SelectAndScrollToRow(0);
         }
@@ -6605,6 +6640,7 @@ public partial class MainViewModel :
         {
             var lastIndex = Subtitles.Count - 1;
             _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, lastIndex, string.Empty);
+            Subtitles[lastIndex + 1].TrackIndex = ActiveTrackIndex;
             Renumber();
             SelectAndScrollToRow(lastIndex + 1);
         }
@@ -8578,6 +8614,7 @@ public partial class MainViewModel :
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
+        newParagraph.TrackIndex = ActiveTrackIndex;
         _undoRedoManager.StopChangeDetection();
         var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         var next = Subtitles.GetOrNull(idx + 1);
@@ -9065,7 +9102,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = Subtitles.Skip(idx + 1).FirstOrDefault(x => x.TrackIndex == s.TrackIndex);
         if (next == null)
         {
             return;
@@ -9093,7 +9130,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = Subtitles.Skip(idx + 1).FirstOrDefault(x => x.TrackIndex == s.TrackIndex);
         if (next == null)
         {
             return;
@@ -11523,7 +11560,71 @@ public partial class MainViewModel :
             _subtitle.Paragraphs.Add(p);
         }
 
+        // For ASS/SSA with multiple tracks: inject SE_Track_N styles and set paragraph.Extra
+        if (IsMultiTrackSupported && SubtitleTracks.Count > 1)
+        {
+            InjectMultiTrackAssStyles();
+        }
+
         return _subtitle;
+    }
+
+    private void InjectMultiTrackAssStyles()
+    {
+        // Alignment per track index: 0=bottom-center, 1=top-center, 2=bottom-left, 3=bottom-right, then cycle
+        var alignments = new[] { "2", "8", "1", "3", "4", "6", "7", "9", "5" };
+
+        var header = _subtitle.Header ?? GetDefaultAssaHeader();
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(header);
+
+        // Remove any stale SE_Track_ styles
+        styles.RemoveAll(s => s.Name.StartsWith("SE_Track_", StringComparison.Ordinal));
+
+        // Add one style per track
+        for (var i = 0; i < SubtitleTracks.Count; i++)
+        {
+            var track = SubtitleTracks[i];
+            var styleName = $"SE_Track_{i}";
+
+            var style = new SsaStyle
+            {
+                Name = styleName,
+                Alignment = alignments[i % alignments.Length],
+                Primary = ParseHexToSkColor(track.Color),
+            };
+
+            styles.Add(style);
+        }
+
+        _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+
+        // Assign paragraph.Extra = SE_Track_N for all paragraphs that don't have a user-customized style.
+        // "Default" is treated as no user style (it's the ASS default and gets replaced by the track style).
+        foreach (var p in _subtitle.Paragraphs)
+        {
+            var currentStyle = p.Extra;
+            var isDefaultOrEmpty = string.IsNullOrEmpty(currentStyle) ||
+                                   string.Equals(currentStyle, "Default", StringComparison.OrdinalIgnoreCase) ||
+                                   currentStyle.StartsWith("SE_Track_", StringComparison.Ordinal);
+            if (!isDefaultOrEmpty) continue;
+
+            // Clamp to valid range in case of stale/imported TrackIndex values
+            var trackIdx = Math.Clamp(p.TrackIndex, 0, SubtitleTracks.Count - 1);
+            p.Extra = $"SE_Track_{trackIdx}";
+        }
+    }
+
+    private static SKColor ParseHexToSkColor(string hex)
+    {
+        hex = hex.TrimStart('#');
+        if (hex.Length < 6) return SKColors.White;
+        if (!byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) ||
+            !byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) ||
+            !byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
+        {
+            return SKColors.White;
+        }
+        return new SKColor(r, g, b);
     }
 
     public Subtitle GetUpdateSubtitleOriginal(bool subtractVideoOffset = false)
@@ -12890,6 +12991,7 @@ public partial class MainViewModel :
         {
             var index = Subtitles.IndexOf(selectedItem);
             _insertService.InsertBefore(SelectedSubtitleFormat, _subtitle, Subtitles, index, string.Empty);
+            Subtitles[index].TrackIndex = ActiveTrackIndex;
             Renumber();
             SelectAndScrollToRow(index);
             _updateAudioVisualizer = true;
@@ -12903,6 +13005,7 @@ public partial class MainViewModel :
         {
             var index = Subtitles.IndexOf(selectedItem);
             _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, index, string.Empty);
+            Subtitles[index + 1].TrackIndex = ActiveTrackIndex;
             Renumber();
             SelectAndScrollToRow(index + 1);
             _updateAudioVisualizer = true;
@@ -14263,6 +14366,8 @@ public partial class MainViewModel :
 
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
     {
+        // TrackIndex is already set correctly on e.Paragraph from the waveform click position
+        ActiveTrackIndex = e.Paragraph.TrackIndex;
         var index = _insertService.InsertInCorrectPosition(Subtitles, e.Paragraph);
         SelectAndScrollToRow(index);
         Renumber();
@@ -14272,6 +14377,35 @@ public partial class MainViewModel :
         {
             FocusEditTextBox();
         }
+    }
+
+    public void AddSubtitleTrack()
+    {
+        var colors = new[] { "#4B6EAF", "#AF4B6E", "#6EAF4B", "#AF9B4B", "#9B4BAF" };
+        var idx = SubtitleTracks.Count;
+        var color = colors[idx % colors.Length];
+        SubtitleTracks.Add(new SubtitleTrack(idx, $"{Se.Language.Waveform.TrackDefaultName} {idx + 1}", color));
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.Tracks = new List<SubtitleTrack>(SubtitleTracks);
+        }
+        TrackHeaderPanel?.InvalidateVisual();
+    }
+
+    public async Task RenameSubtitleTrack(int trackIndex)
+    {
+        if (trackIndex < 0 || trackIndex >= SubtitleTracks.Count || Window == null) return;
+
+        var current = SubtitleTracks[trackIndex];
+        var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+        {
+            vm.Initialize(Se.Language.Waveform.RenameTrack, current.Name, 250, 40, true);
+        });
+
+        if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text)) return;
+
+        current.Name = result.Text.Trim();
+        TrackHeaderPanel?.InvalidateVisual();
     }
 
     internal void AudioVisualizerOnVideoPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)
@@ -14855,6 +14989,29 @@ public partial class MainViewModel :
         IsFormatAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
         HasFormatStyle = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        var wasMultiTrackSupported = IsMultiTrackSupported;
+        IsMultiTrackSupported = IsFormatAssa || IsFormatSsa;
+
+        if (!IsMultiTrackSupported && wasMultiTrackSupported)
+        {
+            // Switching away from ASS/SSA: collapse to single-track view but preserve TrackIndex
+            // so switching back to ASS restores multi-track without data loss.
+            ActiveTrackIndex = 0;
+            if (AudioVisualizer != null)
+            {
+                AudioVisualizer.Tracks = new List<SubtitleTrack> { SubtitleTracks[0] };
+                AudioVisualizer.ActiveTrackIndex = 0;
+            }
+        }
+        else if (IsMultiTrackSupported && !wasMultiTrackSupported)
+        {
+            // Switching back to ASS/SSA: restore the full track list
+            if (AudioVisualizer != null)
+            {
+                AudioVisualizer.Tracks = new List<SubtitleTrack>(SubtitleTracks);
+            }
+            TrackHeaderPanel?.InvalidateVisual();
+        }
         ShowLayer = IsFormatAssa && Se.Settings.Appearance.ShowLayer;
         ShowLayerFilterIcon = IsFormatAssa && Se.Settings.Appearance.ShowLayer && _visibleLayers != null;
 

@@ -67,6 +67,12 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformParagraphRightColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphRightColor));
 
+    public static readonly StyledProperty<List<SubtitleTrack>> TracksProperty =
+        AvaloniaProperty.Register<AudioVisualizer, List<SubtitleTrack>>(nameof(Tracks), new List<SubtitleTrack>());
+
+    public static readonly StyledProperty<int> ActiveTrackIndexProperty =
+        AvaloniaProperty.Register<AudioVisualizer, int>(nameof(ActiveTrackIndex), 0);
+
     public WavePeakData2? WavePeaks
     {
         get => GetValue(WavePeaksProperty);
@@ -186,6 +192,17 @@ public class AudioVisualizer : Control
         }
     }
 
+    public List<SubtitleTrack> Tracks
+    {
+        get => GetValue(TracksProperty);
+        set => SetValue(TracksProperty, value);
+    }
+
+    public int ActiveTrackIndex
+    {
+        get => GetValue(ActiveTrackIndexProperty);
+        set => SetValue(ActiveTrackIndexProperty, value);
+    }
 
     public SubtitleLineViewModel? SelectedParagraph { get; set; }
 
@@ -365,6 +382,7 @@ public class AudioVisualizer : Control
     public event ParagraphEventHandler? OnToggleSelection;
     public event PositionEventHandler? OnHorizontalScroll;
     public event ParagraphEventHandler? OnNewSelectionInsert;
+    public event EventHandler<int>? OnActiveTrackChanged;
     public event ParagraphEventHandler? OnDeletePressed;
     public event ParagraphEventHandler? OnSelectRequested;
     public event ParagraphNullableEventHandler? OnPrimarySingleClicked;
@@ -385,7 +403,9 @@ public class AudioVisualizer : Control
             ZoomFactorProperty,
             VerticalZoomFactorProperty,
             CurrentVideoPositionSecondsProperty,
-            AllSelectedParagraphsProperty);
+            AllSelectedParagraphsProperty,
+            TracksProperty,
+            ActiveTrackIndexProperty);
 
         PointerMoved += OnPointerMoved;
         PointerEntered += OnPointerEntered;
@@ -797,6 +817,11 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.New;
             NewSelectionParagraph = new SubtitleLineViewModel();
 
+            var newTrackIdx = GetTrackIndexFromY(point.Y);
+            ActiveTrackIndex = newTrackIdx;
+            NewSelectionParagraph.TrackIndex = newTrackIdx;
+            OnActiveTrackChanged?.Invoke(this, newTrackIdx);
+
             var deltaX = point.X; // - _startPointerPosition.X;
             var deltaSeconds = RelativeXPositionToSeconds(deltaX);
             _newSelectionSeconds = deltaSeconds;
@@ -1013,9 +1038,22 @@ public class AudioVisualizer : Control
         var newStart = _originalStartSeconds;
         var newEnd = _originalEndSeconds;
 
-        var currentIndex = _displayableParagraphs.IndexOf(_activeParagraph);
-        var previous = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-        var next = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
+        // Only consider neighbors on the same track to avoid cross-track blocking
+        var currentTrack = _activeParagraph?.TrackIndex ?? 0;
+        var activeGlobalIndex = _activeParagraph != null ? _displayableParagraphs.IndexOf(_activeParagraph) : -1;
+        SubtitleLineViewModel? previous = null;
+        SubtitleLineViewModel? next = null;
+        if (activeGlobalIndex >= 0)
+        {
+            for (int k = activeGlobalIndex - 1; k >= 0; k--)
+            {
+                if (_displayableParagraphs[k].TrackIndex == currentTrack) { previous = _displayableParagraphs[k]; break; }
+            }
+            for (int k = activeGlobalIndex + 1; k < _displayableParagraphs.Count; k++)
+            {
+                if (_displayableParagraphs[k].TrackIndex == currentTrack) { next = _displayableParagraphs[k]; break; }
+            }
+        }
 
         if (_isShiftDown || Se.Settings.Waveform.AllowOverlap)
         {
@@ -1023,10 +1061,18 @@ public class AudioVisualizer : Control
             next = null;
         }
 
-        if (NewSelectionParagraph == _activeParagraph)
+        if (NewSelectionParagraph == _activeParagraph && _activeParagraph != null)
         {
-            previous = _displayableParagraphs.LastOrDefault(p => p.StartTime < _activeParagraph.StartTime);
-            next = _displayableParagraphs.FirstOrDefault(p => p.StartTime > _activeParagraph.EndTime);
+            previous = null;
+            next = null;
+            for (int k = activeGlobalIndex - 1; k >= 0; k--)
+            {
+                if (_displayableParagraphs[k].TrackIndex == currentTrack && _displayableParagraphs[k].StartTime < _activeParagraph.StartTime) { previous = _displayableParagraphs[k]; break; }
+            }
+            for (int k = activeGlobalIndex + 1; k < _displayableParagraphs.Count; k++)
+            {
+                if (_displayableParagraphs[k].TrackIndex == currentTrack && _displayableParagraphs[k].StartTime > _activeParagraph.EndTime) { next = _displayableParagraphs[k]; break; }
+            }
         }
 
         switch (_interactionMode)
@@ -1035,15 +1081,12 @@ public class AudioVisualizer : Control
                 newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
                 newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
 
-                // Check if the paragraph already overlaps with neighbors
+                // Check if the paragraph already overlaps with neighbors (same track only)
                 bool alreadyOverlapping = false;
-                if (_activeParagraph != null && currentIndex >= 0)
+                if (activeGlobalIndex >= 0)
                 {
-                    var prevParagraph = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-                    var nextParagraph = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
-
-                    bool alreadyOverlapsPrevious = prevParagraph != null && _originalStartSeconds < prevParagraph.EndTime.TotalSeconds;
-                    bool alreadyOverlapsNext = nextParagraph != null && _originalEndSeconds > nextParagraph.StartTime.TotalSeconds;
+                    bool alreadyOverlapsPrevious = previous != null && _originalStartSeconds < previous.EndTime.TotalSeconds;
+                    bool alreadyOverlapsNext = next != null && _originalEndSeconds > next.StartTime.TotalSeconds;
                     alreadyOverlapping = alreadyOverlapsPrevious || alreadyOverlapsNext;
                 }
 
@@ -1094,7 +1137,7 @@ public class AudioVisualizer : Control
                 var newPrevEnd = _originalPreviousEndSeconds + deltaSeconds - StartPositionSeconds;
                 if (_activeParagraphPrevious != null)
                 {
-                    _activeParagraph.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
+                    _activeParagraph!.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
                     _activeParagraphPrevious.EndTime = TimeSpan.FromSeconds(newPrevEnd);
                 }
 
@@ -1104,7 +1147,7 @@ public class AudioVisualizer : Control
                 var newNextStart = _originalNextStartSeconds + deltaSeconds - StartPositionSeconds;
                 if (_activeParagraphNext != null)
                 {
-                    _activeParagraph.EndTime = TimeSpan.FromSeconds(newEnd);
+                    _activeParagraph!.EndTime = TimeSpan.FromSeconds(newEnd);
                     _activeParagraphNext.SetStartTimeOnly(TimeSpan.FromSeconds(newNextStart));
                 }
 
@@ -1135,7 +1178,7 @@ public class AudioVisualizer : Control
                     newStart = previous.EndTime.TotalSeconds + MinGapSeconds + 0.001;
                 }
 
-                if (newStart < _activeParagraph.EndTime.TotalSeconds - 0.1)
+                if (newStart < _activeParagraph!.EndTime.TotalSeconds - 0.1)
                 {
                     _activeParagraph.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
                 }
@@ -1163,7 +1206,7 @@ public class AudioVisualizer : Control
                     newEnd = next.StartTime.TotalSeconds - 0.001 - MinGapSeconds;
                 }
 
-                if (newEnd > _activeParagraph.StartTime.TotalSeconds + 0.1)
+                if (newEnd > _activeParagraph!.StartTime.TotalSeconds + 0.1)
                 {
                     _activeParagraph.EndTime = TimeSpan.FromSeconds(newEnd);
                 }
@@ -1213,14 +1256,23 @@ public class AudioVisualizer : Control
         }
     }
 
+    private int GetTrackIndexFromY(double y)
+    {
+        var trackCount = Math.Max(1, Tracks.Count);
+        var trackRowHeight = Bounds.Height / trackCount;
+        if (Bounds.Height <= 0 || trackRowHeight <= 0) return 0;
+        return Math.Clamp((int)(y / trackRowHeight), 0, trackCount - 1);
+    }
+
     private SubtitleLineViewModel? HitTestParagraph(Point point)
     {
         var pointX = point.X;
         var startPosSeconds = StartPositionSeconds;
+        var clickedTrack = GetTrackIndexFromY(point.Y);
 
         // Check NewSelectionParagraph first as it's typically the active interaction target
         var newSelection = NewSelectionParagraph;
-        if (newSelection != null)
+        if (newSelection != null && newSelection.TrackIndex == clickedTrack)
         {
             var left = SecondsToXPosition(newSelection.StartTime.TotalSeconds - startPosSeconds);
             var right = SecondsToXPosition(newSelection.EndTime.TotalSeconds - startPosSeconds);
@@ -1247,6 +1299,11 @@ public class AudioVisualizer : Control
         for (var i = 0; i < _displayableParagraphs.Count; i++)
         {
             var p = _displayableParagraphs[i];
+            if (p.TrackIndex != clickedTrack)
+            {
+                continue;
+            }
+
             var left = SecondsToXPosition(p.StartTime.TotalSeconds - startPosSeconds);
             var right = SecondsToXPosition(p.EndTime.TotalSeconds - startPosSeconds);
 
@@ -1278,31 +1335,39 @@ public class AudioVisualizer : Control
             }
         }
 
-        // If we found an edge, check for adjacent paragraphs that might be closer
+        // If we found an edge, check for adjacent paragraphs on the same track that might be closer
         if (closestEdgeParagraph != null)
         {
             if (isClosestEdgeLeft && closestEdgeIndex > 0)
             {
-                // Check if previous paragraph's right edge is closer
-                var prev = _displayableParagraphs[closestEdgeIndex - 1];
-                var prevRight = SecondsToXPosition(prev.EndTime.TotalSeconds - startPosSeconds);
-                var distToPrevRight = Math.Abs(pointX - prevRight);
-
-                if (distToPrevRight <= ResizeMargin && distToPrevRight < closestEdgeDistance)
+                // Search backward for the nearest same-track predecessor
+                for (int k = closestEdgeIndex - 1; k >= 0; k--)
                 {
-                    return prev;
+                    var prev = _displayableParagraphs[k];
+                    if (prev.TrackIndex != clickedTrack) continue;
+                    var prevRight = SecondsToXPosition(prev.EndTime.TotalSeconds - startPosSeconds);
+                    var distToPrevRight = Math.Abs(pointX - prevRight);
+                    if (distToPrevRight <= ResizeMargin && distToPrevRight < closestEdgeDistance)
+                    {
+                        return prev;
+                    }
+                    break; // only check the immediate same-track neighbor
                 }
             }
             else if (!isClosestEdgeLeft && closestEdgeIndex < _displayableParagraphs.Count - 1)
             {
-                // Check if next paragraph's left edge is closer
-                var next = _displayableParagraphs[closestEdgeIndex + 1];
-                var nextLeft = SecondsToXPosition(next.StartTime.TotalSeconds - startPosSeconds);
-                var distToNextLeft = Math.Abs(pointX - nextLeft);
-
-                if (distToNextLeft <= ResizeMargin && distToNextLeft < closestEdgeDistance)
+                // Search forward for the nearest same-track successor
+                for (int k = closestEdgeIndex + 1; k < _displayableParagraphs.Count; k++)
                 {
-                    return next;
+                    var next = _displayableParagraphs[k];
+                    if (next.TrackIndex != clickedTrack) continue;
+                    var nextLeft = SecondsToXPosition(next.StartTime.TotalSeconds - startPosSeconds);
+                    var distToNextLeft = Math.Abs(pointX - nextLeft);
+                    if (distToNextLeft <= ResizeMargin && distToNextLeft < closestEdgeDistance)
+                    {
+                        return next;
+                    }
+                    break; // only check the immediate same-track neighbor
                 }
             }
 
@@ -1398,6 +1463,7 @@ public class AudioVisualizer : Control
         using (context.PushClip(boundsRect))
         {
             DrawAllGridLines(context, ref renderCtx);
+            DrawTrackDividers(context, ref renderCtx);
             DrawWaveForm(context, ref renderCtx);
             DrawSpectrogram(context, ref renderCtx);
             DrawTimeLine(context, ref renderCtx);
@@ -1873,15 +1939,35 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var height = renderCtx.Height;
+        // Calculate track row bounds
+        var trackCount = Math.Max(1, Tracks.Count);
+        var trackRowHeight = renderCtx.Height / trackCount;
+        var trackIdx = Math.Clamp(paragraph.TrackIndex, 0, trackCount - 1);
+        var yStart = trackIdx * trackRowHeight;
+        var yEnd = yStart + trackRowHeight;
 
-        // Draw background rectangle
-        context.FillRectangle(AllSelectedParagraphs.Contains(paragraph) ? _paintParagraphSelectedBackground : _paintParagraphBackground,
-            new Rect(currentRegionLeft, 0, currentRegionWidth, height));
+        // Determine background brush - use track color tint if multi-track
+        IBrush backgroundBrush;
+        if (AllSelectedParagraphs.Contains(paragraph))
+        {
+            backgroundBrush = _paintParagraphSelectedBackground;
+        }
+        else if (trackCount > 1 && trackIdx < Tracks.Count && Color.TryParse(Tracks[trackIdx].Color, out var trackColor))
+        {
+            backgroundBrush = new SolidColorBrush(Color.FromArgb(40, trackColor.R, trackColor.G, trackColor.B));
+        }
+        else
+        {
+            backgroundBrush = _paintParagraphBackground;
+        }
 
-        // Draw left and right borders
-        context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, height));
-        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, height));
+        // Draw background rectangle within track row
+        context.FillRectangle(backgroundBrush,
+            new Rect(currentRegionLeft, yStart, currentRegionWidth, trackRowHeight));
+
+        // Draw left and right borders within track row
+        context.DrawLine(_paintLeft, new Point(currentRegionLeft, yStart), new Point(currentRegionLeft, yEnd));
+        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, yStart), new Point(currentRegionRight - 1, yEnd));
 
         // Draw clipped text
         var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
@@ -1890,7 +1976,7 @@ public class AudioVisualizer : Control
             text = text.Substring(0, 100).TrimEnd() + "...";
         }
 
-        var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
+        var textBounds = new Rect(currentRegionLeft + 1, yStart, currentRegionWidth - 3, trackRowHeight);
 
         using (context.PushClip(textBounds))
         {
@@ -1900,7 +1986,7 @@ public class AudioVisualizer : Control
                 text = string.Join("  ", arr);
                 var formattedText = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                     _typeface, _fontSize, _paintText);
-                context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14));
+                context.DrawText(formattedText, new Point(currentRegionLeft + 3, yStart + 14));
             }
             else
             {
@@ -1909,10 +1995,24 @@ public class AudioVisualizer : Control
                 {
                     var formattedText = new FormattedText(line, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                         _typeface, _fontSize, _paintText);
-                    context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14 + addY));
+                    context.DrawText(formattedText, new Point(currentRegionLeft + 3, yStart + 14 + addY));
                     addY += formattedText.Height;
                 }
             }
+        }
+    }
+
+    private static readonly Pen TrackDividerPen = new Pen(new SolidColorBrush(Color.FromArgb(80, 200, 200, 200)), 1);
+
+    private void DrawTrackDividers(DrawingContext context, ref RenderContext renderCtx)
+    {
+        var trackCount = Tracks.Count;
+        if (trackCount <= 1) return;
+        var trackRowHeight = renderCtx.Height / trackCount;
+        for (var i = 1; i < trackCount; i++)
+        {
+            var y = i * trackRowHeight;
+            context.DrawLine(TrackDividerPen, new Point(0, y), new Point(renderCtx.Width, y));
         }
     }
 

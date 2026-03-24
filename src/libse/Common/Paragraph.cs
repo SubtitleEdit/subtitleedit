@@ -37,6 +37,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public int Layer { get; set; }
 
+        public int TrackIndex { get; set; }
+
         public string Id { get; }
 
         public string Language { get; set; }
@@ -82,6 +84,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             MarginV = paragraph.MarginV;
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
+            TrackIndex = paragraph.TrackIndex;
             Id = generateNewId ? GenerateId() : paragraph.Id;
             Language = paragraph.Language;
             Style = paragraph.Style;

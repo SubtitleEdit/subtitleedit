@@ -44,6 +44,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     private int _layer;
 
     [ObservableProperty]
+    private int _trackIndex;
+
+    [ObservableProperty]
     private double _gap;
 
     [ObservableProperty]
@@ -85,6 +88,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = p.Style;
         Actor = p.Actor;
         Layer = p.Layer;
+        TrackIndex = p.TrackIndex;
         Number = p.Number;
         Extra = p.Extra;
 
@@ -106,6 +110,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = paragraph.Style;
         Actor = paragraph.Actor;
         Layer = paragraph.Layer;
+        TrackIndex = paragraph.TrackIndex;
         Number = paragraph.Number;
         StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds);
         EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds);
@@ -132,6 +137,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Language = Language,
             Region = Region,
             Layer = Layer,
+            TrackIndex = TrackIndex,
             Bookmark = Bookmark,
         };
 
@@ -156,6 +162,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Language = Language,
             Region = Region,
             Layer = Layer,
+            TrackIndex = TrackIndex,
             Bookmark = Bookmark,
         };
 
@@ -166,7 +173,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         return p;
     }
-    
+
     public int PixelWidth
     {
         get

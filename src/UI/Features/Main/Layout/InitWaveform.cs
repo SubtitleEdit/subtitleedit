@@ -8,6 +8,8 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Controls.TrackHeaderControl;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Projektanker.Icons.Avalonia;
@@ -46,6 +48,7 @@ public class InitWaveform
         };
 
         // waveform area
+        var isNewAudioVisualizer = vm.AudioVisualizer == null;
         if (vm.AudioVisualizer == null)
         {
             vm.AudioVisualizer = new AudioVisualizer
@@ -264,8 +267,57 @@ public class InitWaveform
             vm.AudioVisualizer.RemoveControlFromParent();
         }
 
-        Grid.SetRow(vm.AudioVisualizer, 0);
-        mainGrid.Children.Add(vm.AudioVisualizer);
+        // Create waveform area with track header panel on the left
+        var waveformAreaGrid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+            RowDefinitions = new RowDefinitions("*"),
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Height = double.NaN,
+        };
+
+        var trackHeaderPanel = new TrackHeaderPanel
+        {
+            Tracks = vm.SubtitleTracks,
+            ActiveTrackIndex = vm.ActiveTrackIndex,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Width = 90,
+            Height = double.NaN,
+        };
+        trackHeaderPanel.Bind(TrackHeaderPanel.IsVisibleProperty, new Binding(nameof(vm.IsMultiTrackSupported)) { Source = vm });
+        vm.TrackHeaderPanel = trackHeaderPanel;
+        trackHeaderPanel.ActiveTrackChanged += (s, idx) =>
+        {
+            vm.ActiveTrackIndex = idx;
+            if (vm.AudioVisualizer != null)
+                vm.AudioVisualizer.ActiveTrackIndex = idx;
+            trackHeaderPanel.InvalidateVisual();
+        };
+        trackHeaderPanel.RenameRequested += (s, idx) => _ = vm.RenameSubtitleTrack(idx);
+        // Only subscribe once — OnActiveTrackChanged would accumulate on each MakeWaveform call otherwise
+        if (isNewAudioVisualizer)
+        {
+            vm.AudioVisualizer.OnActiveTrackChanged += (s, idx) =>
+            {
+                vm.ActiveTrackIndex = idx;
+                if (vm.TrackHeaderPanel != null)
+                {
+                    vm.TrackHeaderPanel.ActiveTrackIndex = idx;
+                    vm.TrackHeaderPanel.InvalidateVisual();
+                }
+            };
+        }
+        Grid.SetColumn(trackHeaderPanel, 0);
+        waveformAreaGrid.Children.Add(trackHeaderPanel);
+
+        vm.AudioVisualizer.Tracks = vm.IsMultiTrackSupported
+            ? vm.SubtitleTracks
+            : new List<SubtitleTrack> { vm.SubtitleTracks[0] };
+        vm.AudioVisualizer.ActiveTrackIndex = vm.ActiveTrackIndex;
+        Grid.SetColumn(vm.AudioVisualizer, 1);
+        waveformAreaGrid.Children.Add(vm.AudioVisualizer);
+        Grid.SetRow(waveformAreaGrid, 0);
+        mainGrid.Children.Add(waveformAreaGrid);
 
         // Footer
         var controlsPanel = new StackPanel
@@ -571,6 +623,18 @@ public class InitWaveform
         };
         Attached.SetIcon(toggleButtonCenter, IconNames.AlignHorizontalCenter);
         toggleButtonCenter.IsCheckedChanged += (s, e) => vm.WaveformCenterCheckedChanged();
+
+        var buttonAddTrack = new Button
+        {
+            Content = Se.Language.Waveform.AddTrack,
+            Margin = new Thickness(4, 0, 4, 0),
+            FontSize = 11,
+            VerticalAlignment = VerticalAlignment.Center,
+            [ToolTip.TipProperty] = Se.Language.Waveform.AddTrackToolTip,
+        };
+        buttonAddTrack.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultiTrackSupported)) { Source = vm });
+        buttonAddTrack.Click += (s, e) => vm.AddSubtitleTrack();
+        controlsPanel.Children.Add(buttonAddTrack);
 
         var settingMore = GetToolbarSettingFor(SeWaveformToolbarItemType.More);
         var buttonMore = new Button

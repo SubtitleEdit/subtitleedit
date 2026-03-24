@@ -31,6 +31,10 @@ public class LanguageWaveform
     public string SetVideoPositionAndPause { get; set; }
     public string SetVideopositionAndPauseAndCenter { get; set; }
     public string SetVideoposition { get; set; }
+    public string AddTrack { get; set; }
+    public string AddTrackToolTip { get; set; }
+    public string TrackDefaultName { get; set; }
+    public string RenameTrack { get; set; }
 
     public LanguageWaveform()
     {
@@ -65,5 +69,9 @@ public class LanguageWaveform
         SetVideoPositionAndPause = "Set video position and pause";
         SetVideopositionAndPauseAndCenter = "Set video position, pause, and center";
         SetVideoposition = "Set video position";
+        AddTrack = "+ Track";
+        AddTrackToolTip = "Add a new subtitle track (ASS/SSA only)";
+        TrackDefaultName = "Track";
+        RenameTrack = "Rename track";
     }
 }
