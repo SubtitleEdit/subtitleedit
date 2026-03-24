@@ -355,6 +355,7 @@
     <Word from="detelina" to="djetelina" />
     <Word from="devac" to="djevac" />
     <Word from="dezert" to="desert" />
+    <Word from="diđe" to="diže" />
     <Word from="diluje" to="dila" />
     <Word from="diluju" to="dilaju" />
     <Word from="disajni" to="dišni" />
@@ -463,6 +464,8 @@
     <Word from="džanki" to="ovisnik" />
     <Word from="dželat" to="krvnik" />
     <Word from="đubre" to="smeće" />
+    <Word from="đta" to="šta" />
+    <Word from="đto" to="što" />
     <!-- e -->
     <Word from="edukovani" to="educirani" />
     <Word from="edukovat" to="educirat" />
@@ -803,6 +806,7 @@
     <Word from="Ješću" to="Jest ću" />
     <Word from="ješćeš" to="jest ćeš" />
     <Word from="ješćemo" to="jest ćemo" />
+    <Word from="jle" to="jel" />
     <Word from="jop" to="još" />
     <Word from="jos" to="još" />
     <Word from="jošp" to="još" />
@@ -1192,6 +1196,7 @@
     <Word from="Mislo" to="Mislio" />
     <Word from="misiliš" to="misliš" />
     <Word from="mje" to="moje" />
+    <Word from="mlao" to="malo" />
     <Word from="mlaže" to="mlađe" />
     <Word from="mlažeg" to="mlađeg" />
     <Word from="mleo" to="mljeo" />
