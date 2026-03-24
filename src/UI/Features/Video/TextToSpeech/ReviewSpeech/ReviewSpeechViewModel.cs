@@ -469,12 +469,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(line.Text))
         {
-            await MessageBox.Show(
-                Window!,
-                "Cannot regenerate audio with empty text",
-                "Warning",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Warning,
+                    "Cannot regenerate audio with empty text",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
             return;
         }
 
