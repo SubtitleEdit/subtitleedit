@@ -214,6 +214,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayerInstance
             [
                 MpvPath,
                 Directory.GetCurrentDirectory(),
+                "/app/lib",
                 "/usr/local/lib",
                 "/usr/lib",
                 "/lib",
@@ -414,31 +415,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayerInstance
         SetOptionString("vo", "libmpv");
         SetOptionString("gpu-api", "opengl");
 
-        // Platform-specific GPU context configuration
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            // On Linux, configure gpu-context based on display server
-            try
-            {
-                var sessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLowerInvariant();
-                var waylandDisplay = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
-                var x11Display = Environment.GetEnvironmentVariable("DISPLAY");
-
-                if (sessionType == "wayland" || (!string.IsNullOrEmpty(waylandDisplay) && sessionType == null))
-                {
-                    SetOptionString("gpu-context", "wayland");
-                }
-                else if (sessionType == "x11" || (!string.IsNullOrEmpty(x11Display) && sessionType == null))
-                {
-                    SetOptionString("gpu-context", "x11");
-                }
-                // else: don't force gpu-context, mpv will autodetect
-            }
-            catch
-            {
-                // Ignore detection errors; fallback to mpv defaults
-            }
-        }
+        // On Linux, do NOT force gpu-context.  Avalonia (11.x) has no native
+        // Wayland backend — it always provides an X11/XWayland OpenGL context,
+        // so let mpv auto-detect from the context it receives.
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);

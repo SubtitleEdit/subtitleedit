@@ -104,9 +104,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
                 // Initialize mpv with native window embedding
                 InitializeWithNativeWindow(_nativeHandle);
 
-                // Subscribe to render requests
-                _mpvPlayer.RequestRender += OnMpvRequestRender;
-
                 _isInitialized = true;
                 System.Diagnostics.Debug.WriteLine("MpvPlayer initialized successfully with native window!");
             }
@@ -122,11 +119,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        if (_mpvPlayer != null)
-        {
-            _mpvPlayer.RequestRender -= OnMpvRequestRender;
-        }
-
         // Clean up resize timer
         if (_resizeTimer != null)
         {
@@ -161,8 +153,20 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to set wid: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        // Set video output to use the embedded window
-        _mpvPlayer.SetOptionString("vo", "gpu");
+        // Set video output for the embedded window.
+        // On Linux, use Xvideo (xv) rather than GPU-accelerated output.
+        // Avalonia (11.x) always uses X11/XWayland — GPU outputs (vo=gpu)
+        // cause flickering because the compositor redraws the area between
+        // mpv frames.  Xvideo renders directly via the X11 Xv extension
+        // without an OpenGL context, avoiding the compositing conflict.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            _mpvPlayer.SetOptionString("vo", "xv,x11,gpu");
+        }
+        else
+        {
+            _mpvPlayer.SetOptionString("vo", "gpu");
+        }
 
         // Keep subtitles off (we'll handle them separately)
         _mpvPlayer.SetOptionString("sid", "no");
@@ -170,10 +174,14 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         // Keep the video paused at the end
         _mpvPlayer.SetOptionString("keep-open", "always");
 
-        // Platform-specific GPU context configuration
+        // On Linux, force mpv to create its rendering window immediately so
+        // the X11 child window has a black background before any file loads.
+        // Not needed on Windows/macOS where the native handle lifecycle differs.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            ConfigureLinuxGpuContext();
+            _mpvPlayer.SetOptionString("idle", "yes");
+            _mpvPlayer.SetOptionString("force-window", "yes");
+            _mpvPlayer.SetOptionString("background-color", "#000000");
         }
 
         // Initialize mpv
@@ -189,34 +197,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             Cursor = new Cursor(StandardCursorType.Arrow);
             PlatformCursorManager.ForceArrowCursor();
         }, DispatcherPriority.Background);
-    }
-
-    private void ConfigureLinuxGpuContext()
-    {
-        if (_mpvPlayer == null)
-        {
-            return;
-        }
-
-        try
-        {
-            var sessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLowerInvariant();
-            var waylandDisplay = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
-            var x11Display = Environment.GetEnvironmentVariable("DISPLAY");
-
-            if (sessionType == "wayland" || (!string.IsNullOrEmpty(waylandDisplay) && sessionType == null))
-            {
-                _mpvPlayer.SetOptionString("gpu-context", "wayland");
-            }
-            else if (sessionType == "x11" || (!string.IsNullOrEmpty(x11Display) && sessionType == null))
-            {
-                _mpvPlayer.SetOptionString("gpu-context", "x11egl");
-            }
-        }
-        catch
-        {
-            // Ignore detection errors; fallback to mpv defaults
-        }
     }
 
     private static string GetWindowIdString(IntPtr handle)
@@ -242,13 +222,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         }
 
         return handle.ToString();
-    }
-
-    private void OnMpvRequestRender()
-    {
-        // With native window embedding, mpv handles rendering automatically
-        // We just need to invalidate to trigger any UI updates if needed
-        Dispatcher.UIThread.Post(() => InvalidateVisual(), DispatcherPriority.Render);
     }
 
     public void LoadFile(string path)
