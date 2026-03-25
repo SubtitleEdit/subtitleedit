@@ -16,11 +16,9 @@ public interface IYtDlpDownloadService
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp.exe";
-    private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp_linux";
-    private const string LinuxAarch64Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp_linux_aarch64.zip";
-    private const string MacUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp_macos";
-    private const string MacUrlArm = "https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp_macos";
+    private const string WindowsUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp.exe";
+    private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_linux";
+    private const string MacUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_macos";
 
     public YtDlpDownloadService(HttpClient httpClient)
     {
@@ -60,7 +58,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return MacUrlArm;
+            return MacUrl;
         }
 
         throw new PlatformNotSupportedException("Unsupported OS platform");
