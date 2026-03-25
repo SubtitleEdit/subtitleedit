@@ -1150,6 +1150,33 @@ public partial class BatchConvertViewModel : ObservableObject
         UpdateOutputProperties();
     }
 
+    [RelayCommand]
+    private void SelectAll()
+    {
+        foreach (BatchConvertFunction batchConvertFunction in BatchFunctions)
+        {
+            batchConvertFunction.IsSelected = true;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertSelection()
+    {
+        foreach (BatchConvertFunction batchConvertFunction in BatchFunctions)
+        {
+            batchConvertFunction.IsSelected = !batchConvertFunction.IsSelected;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNone()
+    {
+        foreach (BatchConvertFunction batchConvertFunction in BatchFunctions)
+        {
+            batchConvertFunction.IsSelected = false;
+        }
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
