@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     assStyle = GetAssStyleFromRegion(region.InnerText, xml);
                 }
 
-                var text = assStyle + ReadParagraph(node, xml);
+                var text = assStyle + ReadParagraph(node, xml).TrimEnd();
                 var p = new Paragraph(begin, end, text);
                 subtitle.Paragraphs.Add(p);
             }
@@ -662,7 +662,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return pText.ToString().TrimEnd();
+            return pText.ToString();
         }
 
         public static string RemoveTags(string text)
