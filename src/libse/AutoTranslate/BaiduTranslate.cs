@@ -121,13 +121,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             foreach (var item in transResult)
             {
                 var dst = parser.GetFirstObject(item, "dst");
-                if (!string.IsNullOrEmpty(dst))
-                {
-                    translations.Add(Json.DecodeJsonText(dst));
-                }
+                translations.Add(string.IsNullOrEmpty(dst) ? string.Empty : Json.DecodeJsonText(dst));
             }
 
-            return string.Join("\n", translations).Trim();
+            return string.Join(Environment.NewLine, translations).Trim();
         }
 
         private static string CalculateMd5Hash(string input)
