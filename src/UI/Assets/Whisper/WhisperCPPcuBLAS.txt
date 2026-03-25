@@ -1,4 +1,4 @@
-﻿Whisper CPP 1.8.3
+﻿Whisper CPP 1.8.4
 
   -t N,      --threads N         [4      ] number of threads to use during computation
   -p N,      --processors N      [1      ] number of processors to use during computation

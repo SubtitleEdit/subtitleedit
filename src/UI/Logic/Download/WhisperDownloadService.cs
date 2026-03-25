@@ -21,14 +21,14 @@ public interface IWhisperDownloadService
 public class WhisperDownloadService : IWhisperDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-blas-bin-x64.zip";
-    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/WhisperCppMac.zip";
-    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/WhisperCppMac.zip";
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/WhisperCppLinux64.zip";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-blas-bin-x64.zip";
+    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-mac.zip";
+    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-mac.zip";
+    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-vulkan-linux64.zip";
 
-    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.8.3/whisper-cublas-12.4.0-bin-x64.zip";
-    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/WhisperCppWindowsVulcan.zip";
-    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/WhisperCppCudaLinux64.zip";
+    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.8.4/whisper-cublas-12.4.0-bin-x64.zip";
+    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-vulkan-x64.zip";
+    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-cuda-linux64.zip";
     
     private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
 

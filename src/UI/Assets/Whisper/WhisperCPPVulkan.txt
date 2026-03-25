@@ -1,4 +1,4 @@
-﻿Whisper CPP 1.8.3
+﻿Whisper CPP 1.8.4
 
 If you get an error, try running with "-fa false" to disable flash attention, which is not compatible with all GPUs.
 
