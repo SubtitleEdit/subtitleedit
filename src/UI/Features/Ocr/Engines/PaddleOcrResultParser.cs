@@ -66,7 +66,9 @@ public class PaddleOcrResultParser
     {
         // Extract text using regex
         var textMatch = Regex.Match(input, @"\([""'](.*)[""'],");
-        var text = textMatch.Groups[1].Value;
+        var text = textMatch.Groups[1].Value
+            .Replace("\\'", "'")
+            .Replace("\\\"", "\"");
 
         // Extract confidence using regex
         input = input.Replace(" ", string.Empty);
