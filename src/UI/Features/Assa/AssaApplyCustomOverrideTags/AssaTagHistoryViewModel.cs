@@ -26,6 +26,7 @@ public partial class AssaTagHistoryViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        Se.Settings.Assa.LastOverrideTags= OverrideTags.ToList();
         OkPressed = true;
         Close();
     }
@@ -45,7 +46,6 @@ public partial class AssaTagHistoryViewModel : ObservableObject
         }
 
         var tag = SelectedOverrideTag;
-        Se.Settings.Assa.LastOverrideTags.Remove(tag);
         OverrideTags.Remove(tag);
         SelectedOverrideTag = OverrideTags.FirstOrDefault();
     }
@@ -63,6 +63,10 @@ public partial class AssaTagHistoryViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             Close();
+        }
+        else if (e.Key == Key.Enter)
+        {
+            Ok();
         }
     }
 }

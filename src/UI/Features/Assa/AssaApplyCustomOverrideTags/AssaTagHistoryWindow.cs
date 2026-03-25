@@ -23,8 +23,7 @@ public class AssaTagHistoryWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(200) },
+                new RowDefinition { Height = new GridLength(300) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -38,10 +37,6 @@ public class AssaTagHistoryWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var label = UiUtil.MakeLabel(Se.Language.Assa.OverrideTagsHistory);
-        Grid.SetRow(label, 0);
-        grid.Children.Add(label);
-
         var listBox = new ListBox
         {
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OverrideTags)) { Mode = BindingMode.OneWay },
@@ -49,8 +44,8 @@ public class AssaTagHistoryWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        Grid.SetRow(listBox, 1);
-        grid.Children.Add(listBox);
+        listBox.DoubleTapped += (s, e) => vm.OkCommand.Execute(null);
+        grid.Add(listBox, 0);
 
         var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteItemCommand);
         var panelDelete = new StackPanel
@@ -58,15 +53,13 @@ public class AssaTagHistoryWindow : Window
             Orientation = Orientation.Horizontal,
             Children = { buttonDelete },
         };
-        Grid.SetRow(panelDelete, 2);
-        grid.Children.Add(panelDelete);
+        grid.Add(panelDelete, 1);
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        Grid.SetRow(panelButtons, 3);
-        grid.Children.Add(panelButtons);
+        grid.Add(panelButtons, 2);
 
         Content = grid;
 
