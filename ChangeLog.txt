@@ -12,6 +12,8 @@ v5.0.0-beta11 (xth March 2026)
 * Add Linux flatpak installer - thx Ironship
 * Add more ASSA advanced effect
 * Allow "manual sync" in visual sync - thx Bas
+* Fix for "count" in find-window - thx ivandrofly
+* Fix for missing space in italic text in IMSC 1.1 - thx Ironship
 
 -----------------------------------------------------------------------------------------------------
 
