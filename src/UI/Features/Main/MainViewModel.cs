@@ -7300,20 +7300,10 @@ public partial class MainViewModel :
 
         if ((result.FindNextPressed || result.FindPreviousPressed) && !string.IsNullOrEmpty(result.SearchText))
         {
-            var findMode = FindService.FindMode.CaseSensitive;
-            if (result.FindTypeCanseInsensitive)
-            {
-                findMode = FindService.FindMode.CaseInsensitive;
-            }
-            else if (result.FindTypeRegularExpression)
-            {
-                findMode = FindService.FindMode.RegularExpression;
-            }
-
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var currentCharIndex = EditTextBox.CaretIndex;
             var subs = Subtitles.Select(p => p.Text).ToList();
-            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, findMode);
+            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
             if (result.FindNextPressed)
@@ -7488,20 +7478,10 @@ public partial class MainViewModel :
 
         if ((result.FindNextPressed || result.ReplacePressed || result.ReplaceAllPressed) && !string.IsNullOrEmpty(result.SearchText))
         {
-            var findMode = FindService.FindMode.CaseSensitive;
-            if (result.FindTypeCanseInsensitive)
-            {
-                findMode = FindService.FindMode.CaseInsensitive;
-            }
-            else if (result.FindTypeRegularExpression)
-            {
-                findMode = FindService.FindMode.RegularExpression;
-            }
-
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var currentCharIndex = EditTextBox.CaretIndex;
             var subs = Subtitles.Select(p => p.Text).ToList();
-            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, findMode);
+            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
             if (result.FindNextPressed)

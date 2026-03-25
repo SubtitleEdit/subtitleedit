@@ -16,9 +16,10 @@ public partial class FindViewModel : ObservableObject
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private bool _wholeWord;
     [ObservableProperty] private bool _findTypeNormal;
-    [ObservableProperty] private bool _findTypeCanseInsensitive;
-    [ObservableProperty] private bool _findTypeRegularExpression;
     [ObservableProperty] private string _countResult;
+
+    [ObservableProperty]
+    public partial FindMode FindMode { get; set; }
 
     public Window? Window { get; set; }
 
@@ -41,24 +42,18 @@ public partial class FindViewModel : ObservableObject
     {
         WholeWord = Se.Settings.Edit.Find.FindWholeWords;
 
-        if (Se.Settings.Edit.Find.FindSearchType == nameof(FindMode.CaseInsensitive))
+        FindMode = Se.Settings.Edit.Find.FindSearchType switch
         {
-            FindTypeCanseInsensitive = true;
-        }
-        else if (Se.Settings.Edit.Find.FindSearchType == nameof(FindMode.CaseSensitive))
-        {
-            FindTypeNormal = true;
-        }
-        else
-        {
-            FindTypeRegularExpression = true;
-        }
+            nameof(FindMode.CaseInsensitive) => FindMode.CaseInsensitive,
+            nameof(FindMode.CaseSensitive) => FindMode.CaseSensitive,
+            _ => FindMode.RegularExpression
+        };
     }
 
     private void SaveSettings()
     {
         Se.Settings.Edit.Find.FindWholeWords = WholeWord;
-        Se.Settings.Edit.Find.FindSearchType.ToString();
+        Se.Settings.Edit.Find.FindSearchType = FindMode.ToString();
     }
 
     [RelayCommand]
@@ -98,11 +93,7 @@ public partial class FindViewModel : ObservableObject
             return;
         }
 
-        _findService.Initialize(
-            _subs,
-            0,
-            WholeWord,
-            FindTypeNormal ? FindMode.CaseSensitive : FindTypeCanseInsensitive ? FindMode.CaseInsensitive : FindMode.RegularExpression);
+        _findService.Initialize(_subs, 0, WholeWord, FindMode);
 
         var count = _findService.Count(SearchText);
 
