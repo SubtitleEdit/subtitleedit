@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -10,7 +11,7 @@ public class AssaTagHistoryWindow : Window
     public AssaTagHistoryWindow(AssaTagHistoryViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Assa.ResolutionResamplerTitle;
+        Title = Se.Language.Assa.OverrideTagsHistory;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 450;
@@ -23,7 +24,7 @@ public class AssaTagHistoryWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(200) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -37,7 +38,28 @@ public class AssaTagHistoryWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-     
+        var label = UiUtil.MakeLabel(Se.Language.Assa.OverrideTagsHistory);
+        Grid.SetRow(label, 0);
+        grid.Children.Add(label);
+
+        var listBox = new ListBox
+        {
+            [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OverrideTags)) { Mode = BindingMode.OneWay },
+            [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOverrideTag)) { Mode = BindingMode.TwoWay },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        Grid.SetRow(listBox, 1);
+        grid.Children.Add(listBox);
+
+        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteItemCommand);
+        var panelDelete = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { buttonDelete },
+        };
+        Grid.SetRow(panelDelete, 2);
+        grid.Children.Add(panelDelete);
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

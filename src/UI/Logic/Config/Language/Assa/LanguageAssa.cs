@@ -175,6 +175,7 @@ public class LanguageAssa
     public string AdvancedEffectSlowZoomOutDescription { get; set; }
     public string AdvancedEffectSlowZoomIn { get; set; }
     public string AdvancedEffectSlowZoomInDescription { get; set; }
+    public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
     {
@@ -352,5 +353,6 @@ public class LanguageAssa
         AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";
         AdvancedEffectSlowZoomIn = "Slow zoom-in";
         AdvancedEffectSlowZoomInDescription = "Text starts at normal size and gently grows slightly over the subtitle duration";
+        OverrideTagsHistory = "Override tags history";
     }
 }

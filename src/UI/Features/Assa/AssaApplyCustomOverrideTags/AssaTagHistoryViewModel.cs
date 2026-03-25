@@ -3,11 +3,9 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 
@@ -18,9 +16,6 @@ public partial class AssaTagHistoryViewModel : ObservableObject
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
-    private Subtitle _subtitle = new();
-
-    public Subtitle ResultSubtitle => _subtitle;
 
     public AssaTagHistoryViewModel()
     {
@@ -29,7 +24,7 @@ public partial class AssaTagHistoryViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task Ok()
+    private void Ok()
     {
         OkPressed = true;
         Close();
@@ -39,6 +34,20 @@ public partial class AssaTagHistoryViewModel : ObservableObject
     private void Cancel()
     {
         Close();
+    }
+
+    [RelayCommand]
+    private void DeleteItem()
+    {
+        if (SelectedOverrideTag == null)
+        {
+            return;
+        }
+
+        var tag = SelectedOverrideTag;
+        Se.Settings.Assa.LastOverrideTags.Remove(tag);
+        OverrideTags.Remove(tag);
+        SelectedOverrideTag = OverrideTags.FirstOrDefault();
     }
 
     private void Close()
