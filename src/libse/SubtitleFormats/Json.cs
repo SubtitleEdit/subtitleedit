@@ -76,6 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var unescaped = System.Text.RegularExpressions.Regex.Unescape(unicodeString);
                         sb.Append(unescaped);
                         i += 5;
+                        keepNext = false;
                     }
                 }
                 else
