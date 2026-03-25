@@ -283,6 +283,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.LaraApiSecret = apiSecret.Trim();
         }
 
+        if (engineType == typeof(BaiduTranslate))
+        {
+            var baiduApiKey = $"{apiId.Trim()}|{apiSecret.Trim()}";
+            Configuration.Settings.Tools.BaiduUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.BaiduApiKey = baiduApiKey;
+            Se.Settings.AutoTranslate.BaiduUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.BaiduApiKey = baiduApiKey;
+        }
+
         if (engineType == typeof(PerplexityTranslate))
         {
             Configuration.Settings.Tools.PerplexityApiKey = apiKey.Trim();
@@ -938,8 +947,12 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Configuration.Settings.Tools.BaiduUrl,
             });
 
-            ApiKeyText = Configuration.Settings.Tools.BaiduApiKey;
-            ApiKeyIsVisible = true;
+            var baiduKey = Configuration.Settings.Tools.BaiduApiKey ?? string.Empty;
+            var baiduParts = baiduKey.Split('|');
+            ApiIdText = baiduParts.Length >= 1 ? baiduParts[0].Trim() : string.Empty;
+            ApiSecretText = baiduParts.Length >= 2 ? baiduParts[1].Trim() : string.Empty;
+            ApiIdIsVisible = true;
+            ApiSecretIsVisible = true;
 
             return;
         }
