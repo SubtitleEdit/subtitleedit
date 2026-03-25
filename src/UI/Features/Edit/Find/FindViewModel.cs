@@ -15,7 +15,6 @@ public partial class FindViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _searchHistory;
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private bool _wholeWord;
-    [ObservableProperty] private bool _findTypeNormal;
     [ObservableProperty] private string _countResult;
 
     [ObservableProperty]
@@ -50,7 +49,7 @@ public partial class FindViewModel : ObservableObject
         };
     }
 
-    private void SaveSettings()
+    public void SaveSettings()
     {
         Se.Settings.Edit.Find.FindWholeWords = WholeWord;
         Se.Settings.Edit.Find.FindSearchType = FindMode.ToString();

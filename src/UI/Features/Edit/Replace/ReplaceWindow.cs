@@ -199,5 +199,6 @@ public class ReplaceWindow : Window
 
         Activated += delegate { textBoxFind.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+        Closing += (_, _) => vm.SaveSettings();
     }
 }

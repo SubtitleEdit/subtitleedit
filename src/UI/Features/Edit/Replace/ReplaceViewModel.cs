@@ -111,6 +111,12 @@ public partial class ReplaceViewModel : ObservableObject
         }
     }
 
+    internal void SaveSettings()
+    {
+        Se.Settings.Edit.Find.FindWholeWords = WholeWord;
+        Se.Settings.Edit.Find.FindSearchType = FindMode.ToString();
+    }
+    
     internal void OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
