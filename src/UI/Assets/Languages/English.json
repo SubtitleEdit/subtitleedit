@@ -2480,7 +2480,14 @@
     "advancedEffectSlowZoomOut": "Slow zoom-out",
     "advancedEffectSlowZoomOutDescription": "Text starts slightly larger and gently shrinks to normal size over the subtitle duration",
     "advancedEffectSlowZoomIn": "Slow zoom-in",
-    "advancedEffectSlowZoomInDescription": "Text starts at normal size and gently grows slightly over the subtitle duration"
+    "advancedEffectSlowZoomInDescription": "Text starts at normal size and gently grows slightly over the subtitle duration",
+    "advancedEffectFadeIn": "Transition - fade-in",
+    "advancedEffectFadeInDescription": "A per-line fade-in effect where the screen starts black and reveals the video.",
+    "advancedEffectFadeOut": "Transition - fade-out",
+    "advancedEffectFadeOutDescription": "A per-line fade-out effect where the screen ends black.",
+    "advancedEffectTvClose": "Transition - TV close",
+    "advancedEffectTvCloseDescription": "Black bars grow inward from top and bottom while the middle fades to white (black top / white middle / black bottom). Second half is solid black.",
+    "overrideTagsHistory": "Override tags history"
   },
   "about": {
     "title": "About Subtite Edit",
