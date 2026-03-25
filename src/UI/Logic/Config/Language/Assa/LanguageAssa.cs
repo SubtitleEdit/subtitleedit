@@ -175,6 +175,12 @@ public class LanguageAssa
     public string AdvancedEffectSlowZoomOutDescription { get; set; }
     public string AdvancedEffectSlowZoomIn { get; set; }
     public string AdvancedEffectSlowZoomInDescription { get; set; }
+    public string AdvancedEffectFadeIn { get; set; }
+    public string AdvancedEffectFadeInDescription { get; set; }
+    public string AdvancedEffectFadeOut { get; set; }
+    public string AdvancedEffectFadeOutDescription { get; set; }
+    public string AdvancedEffectTvClose { get; set; }
+    public string AdvancedEffectTvCloseDescription { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -353,6 +359,12 @@ public class LanguageAssa
         AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";
         AdvancedEffectSlowZoomIn = "Slow zoom-in";
         AdvancedEffectSlowZoomInDescription = "Text starts at normal size and gently grows slightly over the subtitle duration";
+        AdvancedEffectFadeIn = "Transition - fade-in";
+        AdvancedEffectFadeInDescription = "A per-line fade-in effect where the screen starts black and reveals the video.";
+        AdvancedEffectFadeOut = "Transition - fade-out";
+        AdvancedEffectFadeOutDescription = "A per-line fade-out effect where the screen ends black.";
+        AdvancedEffectTvClose = "Transition - TV close";
+        AdvancedEffectTvCloseDescription = "Black bars grow inward from top and bottom while the middle fades to white (black top / white middle / black bottom). Second half is solid black.";
         OverrideTagsHistory = "Override tags history";
     }
 }
