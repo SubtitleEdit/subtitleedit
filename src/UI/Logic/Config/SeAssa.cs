@@ -10,7 +10,8 @@ public class SeAssa
     public bool AutoSetResolution { get; set; }
     public bool AutoSetResolutionConvert { get; set; }
     public List<SeAssaStyle> StoredStyles { get; set; }
-    public string LastOverrideTag { get; internal set; }
+    public string LastOverrideTag { get; set; }
+    public List<string> LastOverrideTags { get; set; }
     public int ProgressBarHeight { get; set; }
     public string ProgressBarForegroundColor { get; set; }
     public string ProgressBarBackgroundColor { get; set; }
@@ -38,7 +39,8 @@ public class SeAssa
 
         StoredStyles = new List<SeAssaStyle>();
         LastOverrideTag = OverrideTagDisplay.List().First().Tag;
-        
+        LastOverrideTags = new List<string>();
+
         ProgressBarHeight = 40;
         ProgressBarForegroundColor = "#FF0000";
         ProgressBarBackgroundColor = "#80000000";

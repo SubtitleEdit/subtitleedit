@@ -29,6 +29,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         var buttonUseOverrideTag = UiUtil.MakeButton(Se.Language.General.Use, vm.UseCommand);
         var buttonAppendOverrideTag = UiUtil.MakeButton(Se.Language.General.Append, vm.AppendCommand);
         var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand);
+        var buttonHistory = UiUtil.MakeButton(Se.Language.General.History, vm.ShowHistoryCommand).WithBindIsVisible(nameof(vm.IsHistoryVisible));
         var panelOverrideTags = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -38,6 +39,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
                 buttonUseOverrideTag,
                 buttonAppendOverrideTag,
                 buttonClear,
+                buttonHistory,
             }
         };
 

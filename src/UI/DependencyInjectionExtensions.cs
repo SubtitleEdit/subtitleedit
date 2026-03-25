@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
+using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Assa.AssaImageColorPicker;
 using Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
@@ -231,6 +232,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaSingleStyleViewModel>();
         collection.AddTransient<AssaStylePickerViewModel>();
         collection.AddTransient<AssaStylesViewModel>();
+        collection.AddTransient<AssaTagHistoryViewModel>();
         collection.AddTransient<AudioToTextWhisperViewModel>();
         collection.AddTransient<AudioVisualizerUndockedViewModel>();
         collection.AddTransient<AutoTranslateViewModel>();

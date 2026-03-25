@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
@@ -26,6 +27,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private bool _isAudioVisualizerVisible;
+    [ObservableProperty] private bool _isHistoryVisible;
     [ObservableProperty] private string _currentTag;
     [ObservableProperty] private bool _adjustAll;
     [ObservableProperty] private bool _adjustSelectedLines;
@@ -39,6 +41,8 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     public ComboBox ComboBoxLeft { get; set; }
     public ComboBox ComboBoxRight { get; set; }
 
+    private readonly IWindowService _windowService;
+
     private readonly string _tempSubtitleFileName;
     private readonly SubtitleFormat _assaFormat;
     private LibMpvDynamicPlayer? _mpvPlayer;
@@ -49,8 +53,10 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
 
-    public AssaApplyCustomOverrideTagsViewModel()
+    public AssaApplyCustomOverrideTagsViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+
         OverrideTags = new ObservableCollection<OverrideTagDisplay>(OverrideTagDisplay.List());
         _videoFileName = string.Empty;
         VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
@@ -70,6 +76,8 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
         SelectedOverrideTag = OverrideTags.FirstOrDefault(p => p.Tag == Se.Settings.Assa.LastOverrideTag) ?? OverrideTags[0];
 
         _tempSubtitleFileName = System.IO.Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
+
+        IsHistoryVisible = Se.Settings.Assa.LastOverrideTags.Count > 0;
     }
 
     public void Initialize(
@@ -160,6 +168,24 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ShowHistory()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaTagHistoryWindow, AssaTagHistoryViewModel>(Window, (vm) => 
+        { 
+        });
+
+        if (result.OkPressed && !string.IsNullOrEmpty(result.SelectedOverrideTag))
+        {
+            CurrentTag = result.SelectedOverrideTag;
+        }
+    }
+
+    [RelayCommand]
     private void Append()
     {
         var tag = SelectedOverrideTag;
@@ -241,7 +267,15 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
         {
             // ignore
         }
-        Se.Settings.Assa.LastOverrideTag = SelectedOverrideTag?.Tag ?? string.Empty;
+
+        var tag = SelectedOverrideTag?.Tag ?? string.Empty;
+        if (!string.IsNullOrEmpty(tag))
+        {
+            Se.Settings.Assa.LastOverrideTag = tag;
+
+            Se.Settings.Assa.LastOverrideTags.Remove(tag);
+            Se.Settings.Assa.LastOverrideTags.Insert(0, tag);
+        }
     }
 
     internal async void OnLoaded()
