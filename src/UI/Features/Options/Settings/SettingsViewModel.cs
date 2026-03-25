@@ -463,9 +463,7 @@ public partial class SettingsViewModel : ObservableObject
         LibMpvStatus = Se.Language.General.NotInstalled;
         LibMpvPath = string.Empty;
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
-        IsLibVlcDownloadVisible = OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.X64 ||
-                                  OperatingSystem.IsWindows() ||
-                                  OperatingSystem.IsLinux();
+        IsLibVlcDownloadVisible = OperatingSystem.IsWindows(); 
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();
