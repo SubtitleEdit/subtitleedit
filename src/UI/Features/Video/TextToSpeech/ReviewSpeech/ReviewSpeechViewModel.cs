@@ -542,16 +542,24 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        line.AddHistory(voice, speakResult);
-
         line.StepResult.CurrentFileName = speakResult.FileName;
         line.StepResult.Voice = voice;
 
         var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
+        var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
+
+        if (_cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
         line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
         line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
         line.StepResult = adjustSpeedStepResult;
         line.Voice = voice.ToString();
+
+        line.AddHistory(voice, line.StepResult.CurrentFileName);
 
         _skipAutoContinue = true;
         await PlayAudio(line.StepResult.CurrentFileName);

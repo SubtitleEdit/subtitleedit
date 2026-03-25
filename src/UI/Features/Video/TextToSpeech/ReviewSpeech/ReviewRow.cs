@@ -46,17 +46,24 @@ public partial class ReviewRow : ObservableObject
         });
     }
 
-    internal void AddHistory(Voices.Voice voice, TtsResult speakResult)
+    internal void AddHistory(Voices.Voice voice, string processedFileName)
     {
         HistoryItems.Add(new ReviewHistoryRow
         {
             Number = HistoryItems.Count + 1,
-            FileName = speakResult.FileName,
+            FileName = processedFileName,
             VoiceName = voice.Name,
             Voice = voice,
             Speed = StepResult.SpeedFactor,
         });
 
         HasHistory = true;
+    }
+
+    public double HistoryButtonOpacity => HasHistory ? 1.0 : 0.3;
+
+    partial void OnHasHistoryChanged(bool value)
+    {
+        OnPropertyChanged(nameof(HistoryButtonOpacity));
     }
 }

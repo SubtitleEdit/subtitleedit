@@ -130,6 +130,7 @@ public class ReviewSpeechWindow : Window
 
                         var buttonHistory = UiUtil.MakeButton(vm.ShowHistoryCommand, IconNames.DotsVertical).WithBindEnabled(nameof(ReviewRow.HasHistory));
                         buttonHistory.CommandParameter = item;
+                        buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
                         if (Se.Settings.Appearance.ShowHints)
                         {
                             ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
