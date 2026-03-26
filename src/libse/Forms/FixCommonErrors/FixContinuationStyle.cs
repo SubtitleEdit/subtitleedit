@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (_names == null)
             {
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                var nameList = new NameList(Configuration.DictionariesDirectory, language, false, string.Empty);
                 _names = nameList.GetAllNames();
 
                 if (_names == null)

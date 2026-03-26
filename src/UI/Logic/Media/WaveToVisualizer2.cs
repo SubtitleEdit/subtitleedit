@@ -524,7 +524,7 @@ public class WavePeakGenerator2 : IDisposable
     /// <param name="peakFileName">Path of the output file (writing is skipped if null/empty)</param>
     public WavePeakData2 GeneratePeaks(int delayInMilliseconds, string peakFileName)
     {
-        int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, Header.SampleRate);
+        int peaksPerSecond = Math.Min(Se.Settings.Waveform.WaveformMinimumSampleRate, Header.SampleRate);
 
         // ensure that peaks per second is a factor of the sample rate
         while (Header.SampleRate % peaksPerSecond != 0)
@@ -676,7 +676,7 @@ public class WavePeakGenerator2 : IDisposable
 
     public static WavePeakData2 GenerateEmptyPeaks(string peakFileName, int totalSeconds)
     {
-        var peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
+        var peaksPerSecond = Se.Settings.Waveform.WaveformMinimumSampleRate;
         var peaks = new List<WavePeak2>
         {
             new WavePeak2(1000, -1000)

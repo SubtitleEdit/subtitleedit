@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -10,12 +9,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class ShotChangeHelper
     {
-        private static string GetShotChangesFileName(string videoFileName)
+        private static string GetShotChangesFileName(string videoFileName, string shotChangeDirectory)
         {
-            var dir = Configuration.ShotChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(dir))
+            if (!Directory.Exists(shotChangeDirectory))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(shotChangeDirectory);
             }
 
             var videoFileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName)
@@ -27,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var newFileName = $"{MovieHasher.GenerateHash(videoFileName)}_{videoFileNameWithoutExtension}.shotchanges";
-            newFileName = Path.Combine(dir, newFileName);
+            newFileName = Path.Combine(shotChangeDirectory, newFileName);
             return newFileName;
         }
 
@@ -36,12 +34,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
         /// <returns>Return file name of existing shot changes, or null</returns>
-        private static string FindShotChangesFileName(string videoFileName)
+        private static string FindShotChangesFileName(string videoFileName, string shotChangeDirectory)
         {
-            var dir = Configuration.ShotChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(dir))
+            if (!Directory.Exists(shotChangeDirectory))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(shotChangeDirectory);
             }
 
             var videoFileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName)
@@ -54,14 +51,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var hash = MovieHasher.GenerateHash(videoFileName);
 
-            var newFileName = Path.Combine(dir, $"{hash}_{videoFileNameWithoutExtension}.shotchanges");
+            var newFileName = Path.Combine(shotChangeDirectory, $"{hash}_{videoFileNameWithoutExtension}.shotchanges");
             if (File.Exists(newFileName))
             {
                 return newFileName;
             }
 
             var searchFileName = $"{hash}*.shotchanges";
-            var files = Directory.GetFiles(dir, searchFileName);
+            var files = Directory.GetFiles(shotChangeDirectory, searchFileName);
             if (files.Length > 0)
             {
                 return files[0];
@@ -75,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
         /// <returns>List of shot changes in seconds</returns>
-        public static List<double> FromDisk(string videoFileName)
+        public static List<double> FromDisk(string videoFileName, string shotChangeDirectory)
         {
             var list = new List<double>();
 
@@ -84,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return list;
             }
 
-            var shotChangesFileName = FindShotChangesFileName(videoFileName);
+            var shotChangesFileName = FindShotChangesFileName(videoFileName, shotChangeDirectory);
             if (shotChangesFileName == null)
             {
                 return list;
@@ -106,23 +103,23 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
         /// <param name="list">List of shot changes in seconds</param>
-        public static void SaveShotChanges(string videoFileName, List<double> list)
+        public static void SaveShotChanges(string videoFileName, string shotChangeDirectory, List<double> list)
         {
             var sb = new StringBuilder();
             foreach (var d in list)
             {
                 sb.AppendLine(d.ToString(CultureInfo.InvariantCulture));
             }
-            File.WriteAllText(GetShotChangesFileName(videoFileName), sb.ToString().Trim());
+            File.WriteAllText(GetShotChangesFileName(videoFileName, shotChangeDirectory), sb.ToString().Trim());
         }
 
         /// <summary>
         /// Delete shot changes file associated with video file
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
-        public static void DeleteShotChanges(string videoFileName)
+        public static void DeleteShotChanges(string videoFileName, string shotChangeDirectory)
         {
-            var shotChangesFileName = GetShotChangesFileName(videoFileName);
+            var shotChangesFileName = GetShotChangesFileName(videoFileName, shotChangeDirectory);
             if (File.Exists(shotChangesFileName))
             {
                 File.Delete(shotChangesFileName);

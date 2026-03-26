@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             _subtitleFormat = subtitleFormat;
             _languageCode = languageCode;
-            _namesList = new NameList(Configuration.DictionariesDirectory, languageCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _namesList = new NameList(Configuration.DictionariesDirectory, languageCode, false, string.Empty);
             _nameListInclMulti = _namesList.GetAllNames();
         }
 

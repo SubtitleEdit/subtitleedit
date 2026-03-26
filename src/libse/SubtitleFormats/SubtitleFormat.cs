@@ -371,34 +371,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle105(),
                     new UnknownSubtitle106(),
                     new UnknownSubtitle107(),
-                };
-
-                foreach (var pluginFileName in Configuration.GetPlugins())
-                {
-                    try
-                    {
-                        var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                        foreach (var exportedType in assembly.GetExportedTypes())
-                        {
-                            try
-                            {
-                                var pluginObject = Activator.CreateInstance(exportedType);
-                                if (pluginObject is SubtitleFormat po)
-                                {
-                                    _allSubtitleFormats.Insert(1, po);
-                                }
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
+                };               
 
                 _subtitleFormatsWithDefaultOrder = new List<SubtitleFormat>(_allSubtitleFormats);
                 _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);

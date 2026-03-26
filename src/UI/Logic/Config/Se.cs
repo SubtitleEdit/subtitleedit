@@ -85,7 +85,9 @@ public class Se
         // Sync libse Configuration so it uses the same data folder as Se.
         // Without this, Configuration.GetDataDirectory() uses its own heuristics and may
         // create or return %AppData%\Subtitle Edit even when running in portable mode.
-        Configuration.DataDirectoryOverride = DataFolder;
+        Configuration.DataDirectory = DataFolder;
+        Configuration.BaseDirectory = Se.DataFolder;
+        NetflixQualityCheck.NetflixCheckShotChange.ShotChangeDirectory = Se.ShotChangesFolder;
     }
 
     public static string DictionariesFolder => Path.Combine(DataFolder, "Dictionaries");

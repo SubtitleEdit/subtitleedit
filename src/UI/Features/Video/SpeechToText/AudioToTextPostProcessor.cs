@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             var subtitle = new Subtitle(inputSubtitle);
 
             // fix casing for names
-            var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            var nameList = new NameList(Configuration.DictionariesDirectory, language, false, string.Empty);
             var nameListInclMulti = nameList.GetAllNames();
             if (nameListInclMulti.Contains("US") && language == "en")
             {

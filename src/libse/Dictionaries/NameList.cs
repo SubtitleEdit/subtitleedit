@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 try
                 {
-                    LoadNamesList(Configuration.Settings.WordLists.NamesUrl);
+                    //LoadNamesList(Configuration.Settings.WordLists.NamesUrl);
                 }
                 catch (Exception exception)
                 {

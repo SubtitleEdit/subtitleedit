@@ -171,7 +171,10 @@ public partial class NOcrDbEditViewModel : ObservableObject
         Characters.Clear();
         Characters.AddRange(characters);
 
-        SelectedCharacter = characters.Contains(selectCharacter) ? selectCharacter : characters.FirstOrDefault();
+        SelectedCharacter = selectCharacter == null
+            ? characters.FirstOrDefault()
+            : characters.Contains(selectCharacter) ? selectCharacter : characters.FirstOrDefault();
+
         CharactersChanged();
     }
 

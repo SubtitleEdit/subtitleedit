@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             CustomStart = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore;
             CustomEnd = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter;
             var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            NameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            NameList = new NameList(Configuration.DictionariesDirectory, languageName, false, string.Empty);
         }
 
     }

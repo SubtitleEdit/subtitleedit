@@ -1748,11 +1748,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (!Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
                 {
                     // Use default ANSI encoding
-                    foreach (var enc in Configuration.AvailableEncodings)
+                    foreach (var enc in Encoding.GetEncodings())
                     {
                         if (Configuration.Settings.General.DefaultEncoding.StartsWith(enc.CodePage + ":", StringComparison.Ordinal))
                         {
-                            return enc;
+                            return enc.GetEncoding();
                         }
                     }
                 }
@@ -1785,8 +1785,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             try
             {
-                foreach (var enc in Configuration.AvailableEncodings)
+                foreach (var e in Encoding.GetEncodings())
                 {
+                    var enc = e.GetEncoding();
                     if (enc.WebName == Configuration.Settings.General.DefaultEncoding && enc.WebName != Encoding.Unicode.WebName && enc.WebName != Encoding.UTF8.WebName)
                     {
                         encoding = enc;

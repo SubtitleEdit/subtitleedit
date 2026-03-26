@@ -1895,7 +1895,7 @@ public class AudioVisualizer : Control
         using (context.PushClip(textBounds))
         {
             var arr = text.SplitToLines();
-            if (Configuration.Settings.VideoControls.WaveformUnwrapText)
+            if (Se.Settings.Waveform.WaveformUnwrapText)
             {
                 text = string.Join("  ", arr);
                 var formattedText = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,

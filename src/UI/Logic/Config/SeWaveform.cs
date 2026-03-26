@@ -49,6 +49,8 @@ public class SeWaveform
     public bool AllowOverlap { get; set; }
     public string SingleClickAction { get; set; }
     public string DoubleClickAction { get; set; }
+    public bool WaveformUnwrapText { get; set; }
+    public int WaveformMinimumSampleRate { get; set; }
 
     public SeWaveform()
     {
@@ -90,6 +92,7 @@ public class SeWaveform
         SeekSilenceSeekForward = true;
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;
+        WaveformMinimumSampleRate = 126;
 
         ToolbarItems =
         [

@@ -42,7 +42,7 @@ public class SpellCheckWordLists2
         _dictionaryFolder = Se.DictionariesFolder;
         _languageName = fiveLetterName ?? throw new NullReferenceException(nameof(fiveLetterName));
         _doSpell = doSpell ?? throw new NullReferenceException(nameof(doSpell));
-        _nameList = new NameList(_dictionaryFolder, fiveLetterName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+        _nameList = new NameList(_dictionaryFolder, fiveLetterName, false, string.Empty);
         _names = _nameList.GetNames();
         var namesMultiWordList = _nameList.GetMultiNames();
         if (Configuration.Settings.Tools.RememberUseAlwaysList)
@@ -449,7 +449,7 @@ public class SpellCheckWordLists2
 
         _wordsWithDashesOrPeriods.Add(word);
 
-        var namesList = new NameList(_dictionaryFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+        var namesList = new NameList(_dictionaryFolder, _languageName, false, string.Empty);
         namesList.Add(word);
         return true;
     }

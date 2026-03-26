@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckShotChange : INetflixQualityChecker
 {
+    public static string ShotChangeDirectory = string.Empty;
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (!controller.VideoExists)
@@ -19,7 +21,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             return;
         }
 
-        var shotChanges = ShotChangeHelper.FromDisk(controller.VideoFileName);
+        var shotChanges = ShotChangeHelper.FromDisk(controller.VideoFileName, ShotChangeDirectory);
         if (shotChanges == null || shotChanges.Count == 0)
         {
             return;

@@ -280,7 +280,7 @@ public partial class FixNamesViewModel : ObservableObject
     internal void OnLoaded(RoutedEventArgs e)
     {
         DictionaryLoader.UnpackIfNotFound().ConfigureAwait(false);
-        _nameList = new NameList(Se.DictionariesFolder, _language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+        _nameList = new NameList(Se.DictionariesFolder, _language, false, string.Empty);
 
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;
         FindAllNames();

@@ -404,8 +404,7 @@ public partial class MainViewModel :
         _casingToggler = casingToggler;
         _pasteFromClipboardHelper = pasteFromClipboardHelper;
 
-        _loading = true;
-        Configuration.DataDirectoryOverride = Se.DataFolder;
+        _loading = true; 
         EditText = string.Empty;
         EditTextCharactersPerSecond = string.Empty;
         EditTextCharactersPerSecondBackground = Brushes.Transparent;
