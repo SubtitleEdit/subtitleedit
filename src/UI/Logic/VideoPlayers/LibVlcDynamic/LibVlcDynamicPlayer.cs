@@ -287,7 +287,6 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
                 LibVlcPath,
                 Directory.GetCurrentDirectory(),
                 "/Applications/Subtitle Edit.app/Contents/Frameworks",
-                "/Users/nikolajolsson/Library/Application Support/Subtitle Edit",
                 "/opt/local/lib",
                 "/usr/local/lib",
                 "/opt/homebrew/lib",
