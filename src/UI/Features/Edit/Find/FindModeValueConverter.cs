@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Avalonia;
 using Avalonia.Data.Converters;
 using Nikse.SubtitleEdit.Logic;
 
@@ -14,6 +15,11 @@ public class FindModeValueConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return parameter;
+        if (value is true)
+        {
+            return parameter;
+        }
+
+        return AvaloniaProperty.UnsetValue;
     }
 }
