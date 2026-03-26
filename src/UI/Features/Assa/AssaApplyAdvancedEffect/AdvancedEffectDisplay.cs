@@ -37,6 +37,8 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectRain(),
             new AdvancedEffectRainbowPulse(),
             new AdvancedEffectScrambleReveal(),
+            new AdvancedEffectSlideInLeft(),
+            new AdvancedEffectSlideInRight(),
             new AdvancedEffectSlowZoomIn(),
             new AdvancedEffectSlowZoomOut(),
             new AdvancedEffectSnow(),

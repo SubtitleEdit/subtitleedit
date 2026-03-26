@@ -181,6 +181,10 @@ public class LanguageAssa
     public string AdvancedEffectFadeOutDescription { get; set; }
     public string AdvancedEffectTvClose { get; set; }
     public string AdvancedEffectTvCloseDescription { get; set; }
+    public string AdvancedEffectSlideInLeft { get; set; }
+    public string AdvancedEffectSlideInLeftDescription { get; set; }
+    public string AdvancedEffectSlideInRight { get; set; }
+    public string AdvancedEffectSlideInRightDescription { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -365,6 +369,10 @@ public class LanguageAssa
         AdvancedEffectFadeOutDescription = "A per-line fade-out effect where the screen ends black.";
         AdvancedEffectTvClose = "Transition - TV close";
         AdvancedEffectTvCloseDescription = "Black bars grow inward from top and bottom while the middle fades to white (black top / white middle / black bottom). Second half is solid black.";
+        AdvancedEffectSlideInLeft = "Slide in from left";
+        AdvancedEffectSlideInLeftDescription = "Text slides in from off-screen left, holds, then exits back to the left";
+        AdvancedEffectSlideInRight = "Slide in from right";
+        AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
         OverrideTagsHistory = "Override tags history";
     }
 }
