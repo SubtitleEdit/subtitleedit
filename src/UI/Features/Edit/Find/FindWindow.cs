@@ -103,8 +103,8 @@ public class FindWindow : Window
             Margin = new Thickness(0, 0, 50, 0),
             Children =
             {
-                buttonFindPrevious,
                 buttonFindNext,
+                buttonFindPrevious,
                 buttonCount,
                 textBlockCountResult
             }
