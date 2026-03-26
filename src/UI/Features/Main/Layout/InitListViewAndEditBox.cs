@@ -118,7 +118,7 @@ public static partial class InitListViewAndEditBox
         var notNullConverter = new NotNullConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
-        var gapConverter = new DoubleToNoDecimalHideMaxConverter();
+        var gapConverter = new DoubleToDisplayShortConverter();
         var inverseBooleanConverter = new InverseBooleanConverter();
         var textOneLineShortConverter = new TextOneLineShortConverter();
         var booleanToGridLengthConverter = new BooleanToGridLengthConverter();
