@@ -6,6 +6,7 @@ public partial class FindService
     {
         CaseSensitive,
         CaseInsensitive,
-        RegularExpression
+        RegularExpression,
+        None,
     }
 }

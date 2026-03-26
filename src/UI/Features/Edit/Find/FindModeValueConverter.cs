@@ -20,6 +20,6 @@ public class FindModeValueConverter : IValueConverter
             return parameter;
         }
 
-        return AvaloniaProperty.UnsetValue;
+        return FindService.FindMode.None;
     }
 }
