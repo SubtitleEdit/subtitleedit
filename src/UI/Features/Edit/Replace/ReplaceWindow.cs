@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -79,12 +80,18 @@ public class ReplaceWindow : Window
             }
         };
 
+        var valueConverter = new FindModeValueConverter();
         var radioButtonNormal = new RadioButton
         {
             Content = Se.Language.Edit.Find.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeNormal)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.CaseSensitive,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var radioButtonCaseInsensitive = new RadioButton
@@ -92,7 +99,12 @@ public class ReplaceWindow : Window
             Content = Se.Language.Edit.Find.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeCanseInsensitive)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.CaseInsensitive,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var radioButtonRegularExpression = new RadioButton
@@ -100,7 +112,12 @@ public class ReplaceWindow : Window
             Content = Se.Language.General.RegularExpression,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeRegularExpression)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.RegularExpression,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var panelFindTypes = new StackPanel
@@ -182,5 +199,6 @@ public class ReplaceWindow : Window
 
         Activated += delegate { textBoxFind.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+        Closing += (_, _) => vm.SaveSettings();
     }
 }

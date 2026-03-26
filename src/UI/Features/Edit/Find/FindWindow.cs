@@ -38,13 +38,20 @@ public class FindWindow : Window
             Margin = new Thickness(0, 0, 0, 10),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.WholeWord)) { Mode = BindingMode.TwoWay }
         };
+        
+        var valueConverter = new FindModeValueConverter();
 
         var radioButtonCaseSensitive = new RadioButton
         {
             Content = Se.Language.Edit.Find.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeNormal)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.CaseSensitive,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var radioButtonCaseInsensitive = new RadioButton
@@ -52,7 +59,12 @@ public class FindWindow : Window
             Content = Se.Language.Edit.Find.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeCanseInsensitive)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.CaseInsensitive,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var radioButtonRegularExpression = new RadioButton
@@ -60,7 +72,12 @@ public class FindWindow : Window
             Content = Se.Language.General.RegularExpression,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 3),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindTypeRegularExpression)) { Mode = BindingMode.TwoWay }
+            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
+            {
+                Converter = valueConverter,
+                ConverterParameter = FindService.FindMode.RegularExpression,
+                Mode = BindingMode.TwoWay
+            }
         };
 
         var panelFindTypes = new StackPanel
@@ -138,5 +155,6 @@ public class FindWindow : Window
 
         Activated += delegate { textBoxFind.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+        Closing += (_, _) => vm.SaveSettings();
     }
 }
