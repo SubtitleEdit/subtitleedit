@@ -11910,6 +11910,12 @@ public partial class MainViewModel :
 
                     var result =
                         await ShowDialogAsync<DownloadLibMpvWindow, DownloadLibMpvViewModel>();
+
+                    if (!string.IsNullOrEmpty(result.LibMpvFileName))
+                    {
+                        InitializeLibMpv();
+                        SetLayout(Se.Settings.General.LayoutNumber);
+                    }
                 }
                 catch (Exception e)
                 {
