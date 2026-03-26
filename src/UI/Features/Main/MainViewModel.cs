@@ -13351,9 +13351,25 @@ public partial class MainViewModel :
 
     private bool TryHandleMacOptionBackspace(KeyEventArgs keyEventArgs)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
-            keyEventArgs.Key != Key.Back ||
-            keyEventArgs.KeyModifiers != KeyModifiers.Alt)
+        return TryHandleMacTextDelete(
+            keyEventArgs,
+            static keyEvent => keyEvent.Key == Key.Back && keyEvent.KeyModifiers == KeyModifiers.Alt,
+            DeletePreviousWord);
+    }
+
+    private bool TryHandleMacCommandDelete(KeyEventArgs keyEventArgs)
+    {
+        return TryHandleMacTextDelete(
+            keyEventArgs,
+            static keyEvent =>
+                (keyEvent.Key == Key.Back || keyEvent.Key == Key.Delete) &&
+                keyEvent.KeyModifiers == KeyModifiers.Meta,
+            DeleteToLineStart);
+    }
+
+    private bool TryHandleMacTextDelete(KeyEventArgs keyEventArgs, Func<KeyEventArgs, bool> isKeyMatch, Func<ITextBoxWrapper, bool> deleteAction)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || !isKeyMatch(keyEventArgs))
         {
             return false;
         }
@@ -13364,7 +13380,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        if (!DeletePreviousWord(textBox))
+        if (!deleteAction(textBox))
         {
             return false;
         }
@@ -13375,6 +13391,20 @@ public partial class MainViewModel :
     }
 
     private static bool DeletePreviousWord(ITextBoxWrapper textBox)
+    {
+        return DeleteFromCaretToBoundary(textBox, FindPreviousWordBoundary);
+    }
+
+    private static bool DeleteToLineStart(ITextBoxWrapper textBox)
+    {
+        return DeleteFromCaretToBoundary(textBox, static (text, caret) =>
+        {
+            var previousLineBreak = text.LastIndexOf('\n', Math.Max(0, caret - 1));
+            return previousLineBreak < 0 ? 0 : previousLineBreak + 1;
+        });
+    }
+
+    private static bool DeleteFromCaretToBoundary(ITextBoxWrapper textBox, Func<string, int, int> findBoundary)
     {
         var text = textBox.Text ?? string.Empty;
 
@@ -13390,7 +13420,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var start = FindPreviousWordBoundary(text, caret);
+        var start = findBoundary(text, caret);
         if (start == caret)
         {
             return false;
@@ -13448,6 +13478,12 @@ public partial class MainViewModel :
             }
 
             _lastKeyPressedMs = ms;
+
+            // This allows command+delete on mac to delete to line start.
+            if (TryHandleMacCommandDelete(keyEventArgs))
+            {
+                return;
+            }
 
             // This allows option backspace on mac to delete the previous word
             if (TryHandleMacOptionBackspace(keyEventArgs))
