@@ -404,7 +404,7 @@ public partial class MainViewModel :
         _casingToggler = casingToggler;
         _pasteFromClipboardHelper = pasteFromClipboardHelper;
 
-        _loading = true; 
+        _loading = true;
         EditText = string.Empty;
         EditTextCharactersPerSecond = string.Empty;
         EditTextCharactersPerSecondBackground = Brushes.Transparent;
@@ -452,7 +452,7 @@ public partial class MainViewModel :
 
         SubtitleFormats = [.. SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop()];
         _changingFormatProgrammatically = true;
-        SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p => 
+        SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p =>
             p.FriendlyName == Se.Settings.General.DefaultSubtitleFormat ||
             p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
         _changingFormatProgrammatically = false;
@@ -895,7 +895,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             ApplyAssaStyles(result);
-            _subtitle.Footer = result.ResultSubtitle.Footer;               
+            _subtitle.Footer = result.ResultSubtitle.Footer;
         }
     }
 
@@ -3400,7 +3400,7 @@ public partial class MainViewModel :
         {
             return;
         }
-        
+
         if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
         {
             await VideoOpenFile(result.VideoFileName);
@@ -6044,7 +6044,7 @@ public partial class MainViewModel :
 
         if (Subtitles.Count == 0 && string.IsNullOrEmpty(_subtitleFileName))
         {
-            SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p => 
+            SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p =>
                 p.FriendlyName == Se.Settings.General.DefaultSubtitleFormat ||
                 p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
         }
@@ -6428,7 +6428,7 @@ public partial class MainViewModel :
         var viewModel = await ShowDialogAsync<LanguageWindow, LanguageViewModel>();
         if (viewModel.OkPressed && viewModel.SelectedLanguage != null)
         {
-            await LoadLanguage(viewModel.SelectedLanguage.FileName);           
+            await LoadLanguage(viewModel.SelectedLanguage.FileName);
         }
     }
 
@@ -6464,7 +6464,7 @@ public partial class MainViewModel :
     {
         await _folderHelper.OpenFolder(Window!, Se.DataFolder);
     }
-    
+
     [RelayCommand]
     private void ToggleShowColumnStartTime()
     {
@@ -7312,18 +7312,17 @@ public partial class MainViewModel :
         if ((result.FindNextPressed || result.FindPreviousPressed) && !string.IsNullOrEmpty(result.SearchText))
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-            var currentCharIndex = EditTextBox.CaretIndex;
             var subs = Subtitles.Select(p => p.Text).ToList();
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
             if (result.FindNextPressed)
             {
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, currentCharIndex + 1);
+                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
             }
             else
             {
-                idx = _findService.FindPrevious(result.SearchText, subs, currentLineIndex, currentCharIndex - 1);
+                idx = _findService.FindPrevious(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionStart - 1);
             }
 
             if (idx < 0)
@@ -7490,14 +7489,13 @@ public partial class MainViewModel :
         if ((result.FindNextPressed || result.ReplacePressed || result.ReplaceAllPressed) && !string.IsNullOrEmpty(result.SearchText))
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-            var currentCharIndex = EditTextBox.CaretIndex;
             var subs = Subtitles.Select(p => p.Text).ToList();
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
             if (result.FindNextPressed)
             {
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, currentCharIndex + 1);
+                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
             }
             else if (result.ReplaceAllPressed)
             {
@@ -7524,7 +7522,7 @@ public partial class MainViewModel :
                     EditTextBox.SelectedText = result.ReplaceText;
                 }
 
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, currentCharIndex + 1);
+                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
             }
 
             if (idx < 0)
@@ -8738,7 +8736,7 @@ public partial class MainViewModel :
         {
             return;
         }
-        
+
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
         {
@@ -9274,7 +9272,7 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
         {
-            mpv.StepOneFrameBack(); 
+            mpv.StepOneFrameBack();
             return;
         }
 
@@ -9294,7 +9292,7 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
         {
-            mpv.StepOneFrameForward(); 
+            mpv.StepOneFrameForward();
             return;
         }
 
@@ -13450,7 +13448,7 @@ public partial class MainViewModel :
             }
 
             _lastKeyPressedMs = ms;
-            
+
             // This allows option backspace on mac to delete the previous word
             if (TryHandleMacOptionBackspace(keyEventArgs))
             {
@@ -14819,7 +14817,7 @@ public partial class MainViewModel :
             });
 
             return;
-        }      
+        }
     }
 
     internal void SubtitleTextBoxGotFocus()
