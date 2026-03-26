@@ -327,6 +327,9 @@ jobs:
             echo "Signing x64 app..."
             codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-x64.app"
             codesign --verify --verbose "./SubtitleEdit-x64.app"
+          else
+            # Remove broken/conflicting signature from unsigned build (workaround for startup failures)
+            codesign --remove-signature "./SubtitleEdit-x64.app" 2>/dev/null || true
           fi
       
           # Create DMG for x64
@@ -444,6 +447,9 @@ jobs:
             echo "Signing ARM64 app..."
             codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-ARM64.app"
             codesign --verify --verbose "./SubtitleEdit-ARM64.app"
+          else
+            # Remove broken/conflicting signature from unsigned build (workaround for startup failures)
+            codesign --remove-signature "./SubtitleEdit-ARM64.app" 2>/dev/null || true
           fi
       
           # Create DMG for ARM64
