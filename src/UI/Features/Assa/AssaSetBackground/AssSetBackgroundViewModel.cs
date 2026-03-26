@@ -1,4 +1,4 @@
-ï»¿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -77,6 +78,13 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.ProgressBarSquareCorners);
         BoxStyles.Add(Se.Language.Assa.ProgressBarRoundedCorners);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxCircle);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxSpikes);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxBubbles);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxWave);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxHexagon);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxTornPaper);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxCloud);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxTornPaperDouble);
 
         VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
 
@@ -289,9 +297,249 @@ public partial class AssSetBackgroundViewModel : ObservableObject
             return
                 $"{{\\p1}}m {centerX} {centerY - radiusY} b {centerX + ox} {centerY - radiusY} {centerX + radiusX} {centerY - oy} {centerX + radiusX} {centerY} b {centerX + radiusX} {centerY + oy} {centerX + ox} {centerY + radiusY} {centerX} {centerY + radiusY} b {centerX - ox} {centerY + radiusY} {centerX - radiusX} {centerY + oy} {centerX - radiusX} {centerY} b {centerX - radiusX} {centerY - oy} {centerX - ox} {centerY - radiusY} {centerX} {centerY - radiusY}{{\\p0}}";
         }
+        else if (BoxStyleIndex == 3) // Spikes
+        {
+            return GenerateSpikesBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 4) // Bubbles
+        {
+            return GenerateBubblesBox(left, right, top, bottom);
+        }
+
+        else if (BoxStyleIndex == 5) // Wave
+        {
+            return GenerateWaveBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 6) // Hexagon
+        {
+            return GenerateHexagonBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 7) // Torn paper
+        {
+            return GenerateTornPaperBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 8) // Cloud
+        {
+            return GenerateCloudBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 9) // Torn paper (top & bottom)
+        {
+            return GenerateTornPaperDoubleBox(left, right, top, bottom);
+        }
 
         // Square corners (default)
         return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    private static string GenerateWaveBox(int left, int right, int top, int bottom)
+    {
+        const int amplitude = 6;
+        var halfWaves = Math.Max(4, Math.Min(12, (right - left) / 30));
+        var segW = (right - left) / (double)halfWaves;
+
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top} ");
+
+        // Top edge: alternating up/down bezier bumps (left to right)
+        for (var i = 0; i < halfWaves; i++)
+        {
+            var x = left + i * segW;
+            var xEnd = left + (i + 1) * segW;
+            var yCtrl = i % 2 == 0 ? top - amplitude : top + amplitude;
+            sb.Append($"b {(int)(x + segW / 3)} {yCtrl} {(int)(x + 2 * segW / 3)} {yCtrl} {(int)xEnd} {top} ");
+        }
+
+        // Right edge
+        sb.Append($"l {right} {bottom} ");
+
+        // Bottom edge: mirror wave pattern (right to left)
+        for (var i = halfWaves - 1; i >= 0; i--)
+        {
+            var x = left + i * segW;
+            var yCtrl = i % 2 == 0 ? bottom + amplitude : bottom - amplitude;
+            sb.Append($"b {(int)(x + 2 * segW / 3)} {yCtrl} {(int)(x + segW / 3)} {yCtrl} {(int)x} {bottom} ");
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateHexagonBox(int left, int right, int top, int bottom)
+    {
+        var cy = (top + bottom) / 2;
+        var chamfer = Math.Min((bottom - top) / 2, (right - left) / 5);
+        return $"{{\\p1}}m {left + chamfer} {top} l {right - chamfer} {top} {right} {cy} {right - chamfer} {bottom} {left + chamfer} {bottom} {left} {cy}{{\\p0}}";
+    }
+
+    private static string GenerateTornPaperBox(int left, int right, int top, int bottom)
+    {
+        var rng = new Random((left * 397) ^ (top * 613) ^ right);
+        const int maxTearH = 22;
+        var count = Math.Max(3, (right - left) / 28);
+        var segW = (right - left) / (double)count;
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top} ");
+        for (var i = 0; i < count; i++)
+        {
+            var tipX = (int)(left + i * segW + segW * (0.2 + rng.NextDouble() * 0.6));
+            var tipY = top - rng.Next(8, maxTearH + 1);
+            var endX = i == count - 1 ? right : (int)(left + (i + 1) * segW);
+            sb.Append($"l {tipX} {tipY} {endX} {top} ");
+        }
+        sb.Append($"l {right} {bottom} {left} {bottom}");
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateCloudBox(int left, int right, int top, int bottom)
+    {
+        const double k = 0.5523;
+        var w = right - left;
+        var h = bottom - top;
+
+        // Single target radius keeps all bumps roughly the same size on every edge.
+        // Clamp so tiny boxes still look cloud-like and large boxes don't get huge bumps.
+        var targetR = Math.Clamp(Math.Min(w, h) / 4.0, 14.0, 48.0);
+
+        // Snap each edge's count to the nearest integer, then recompute the exact radius
+        // so bumps fill the edge perfectly with no gaps.
+        var hCount = Math.Max(2, (int)Math.Round(w / (2.0 * targetR)));
+        var hR = w / (2.0 * hCount);
+
+        var vCount = Math.Max(1, (int)Math.Round(h / (2.0 * targetR)));
+        var vR = h / (2.0 * vCount);
+
+        var sb = new StringBuilder();
+        var curX = (double)left;
+        var curY = (double)top;
+        sb.Append($"m {left} {top} ");
+
+        // Top edge: bell-curved bump heights — taller in the middle, shorter at the ends
+        for (var i = 0; i < hCount; i++)
+        {
+            var t = hCount > 1 ? (double)i / (hCount - 1) : 0.5;
+            var bell = 1.0 - 4.0 * (t - 0.5) * (t - 0.5); // 1 at centre, 0 at edges
+            var bumpH = hR * (0.6 + 0.9 * bell);            // 0.6×hR at edges ? 1.5×hR at centre
+            sb.Append($"b {(int)curX} {(int)(top - bumpH * k)} {(int)(curX + hR * (1 - k))} {(int)(top - bumpH)} {(int)(curX + hR)} {(int)(top - bumpH)} ");
+            sb.Append($"b {(int)(curX + hR * (1 + k))} {(int)(top - bumpH)} {(int)(curX + 2 * hR)} {(int)(top - bumpH * k)} {(int)(curX + 2 * hR)} {top} ");
+            curX += 2 * hR;
+        }
+
+        // Right edge: uniform bumps rightward (top ? bottom)
+        curY = top;
+        for (var i = 0; i < vCount; i++)
+        {
+            sb.Append($"b {(int)(right + vR * k)} {(int)curY} {(int)(right + vR)} {(int)(curY + vR * (1 - k))} {(int)(right + vR)} {(int)(curY + vR)} ");
+            sb.Append($"b {(int)(right + vR)} {(int)(curY + vR * (1 + k))} {(int)(right + vR * k)} {(int)(curY + 2 * vR)} {right} {(int)(curY + 2 * vR)} ");
+            curY += 2 * vR;
+        }
+
+        // Bottom edge: uniform bumps downward (right ? left)
+        curX = right;
+        for (var i = 0; i < hCount; i++)
+        {
+            sb.Append($"b {(int)curX} {(int)(bottom + hR * k)} {(int)(curX - hR * (1 - k))} {(int)(bottom + hR)} {(int)(curX - hR)} {(int)(bottom + hR)} ");
+            sb.Append($"b {(int)(curX - hR * (1 + k))} {(int)(bottom + hR)} {(int)(curX - 2 * hR)} {(int)(bottom + hR * k)} {(int)(curX - 2 * hR)} {bottom} ");
+            curX -= 2 * hR;
+        }
+
+        // Left edge: uniform bumps leftward (bottom ? top)
+        curY = bottom;
+        for (var i = 0; i < vCount; i++)
+        {
+            sb.Append($"b {(int)(left - vR * k)} {(int)curY} {(int)(left - vR)} {(int)(curY - vR * (1 - k))} {(int)(left - vR)} {(int)(curY - vR)} ");
+            sb.Append($"b {(int)(left - vR)} {(int)(curY - vR * (1 + k))} {(int)(left - vR * k)} {(int)(curY - 2 * vR)} {left} {(int)(curY - 2 * vR)} ");
+            curY -= 2 * vR;
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateTornPaperDoubleBox(int left, int right, int top, int bottom)
+    {
+        var rng = new Random((left * 397) ^ (top * 613) ^ right);
+        const int maxTearH = 22;
+        var count = Math.Max(3, (right - left) / 28);
+        var segW = (right - left) / (double)count;
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top} ");
+        for (var i = 0; i < count; i++)
+        {
+            var tipX = (int)(left + i * segW + segW * (0.2 + rng.NextDouble() * 0.6));
+            var tipY = top - rng.Next(8, maxTearH + 1);
+            var endX = i == count - 1 ? right : (int)(left + (i + 1) * segW);
+            sb.Append($"l {tipX} {tipY} {endX} {top} ");
+        }
+        sb.Append($"l {right} {bottom} ");
+        for (var i = count - 1; i >= 0; i--)
+        {
+            var tipX = (int)(left + i * segW + segW * (0.2 + rng.NextDouble() * 0.6));
+            var tipY = bottom + rng.Next(8, maxTearH + 1);
+            var endX = i == 0 ? left : (int)(left + i * segW);
+            sb.Append($"l {tipX} {tipY} {endX} {bottom} ");
+        }
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateSpikesBox(int left, int right, int top, int bottom)
+    {
+        const int spikeH = 8;
+        var count = Math.Max(2, (right - left) / 20);
+        var spikeW = (right - left) / (double)count;
+
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top} ");
+
+        // Top edge: spikes pointing up (left to right)
+        for (var i = 0; i < count; i++)
+        {
+            var tipX = (int)(left + i * spikeW + spikeW / 2.0);
+            var endX = (int)(left + (i + 1) * spikeW);
+            sb.Append($"l {tipX} {top - spikeH} {endX} {top} ");
+        }
+
+        // Right edge
+        sb.Append($"l {right} {bottom} ");
+
+        // Bottom edge: spikes pointing down (right to left)
+        for (var i = count - 1; i >= 0; i--)
+        {
+            var tipX = (int)(left + i * spikeW + spikeW / 2.0);
+            var endX = (int)(left + i * spikeW);
+            sb.Append($"l {tipX} {bottom + spikeH} {endX} {bottom} ");
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateBubblesBox(int left, int right, int top, int bottom)
+    {
+        const double k = 0.5523;
+        var count = Math.Max(2, (right - left) / 18);
+        var d = (right - left) / (double)count;
+        var r = d / 2.0;
+
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top} ");
+
+        // Top edge: bubbles pointing up (left to right)
+        for (var i = 0; i < count; i++)
+        {
+            var bx = left + i * d;
+            sb.Append($"b {(int)bx} {(int)(top - r * k)} {(int)(bx + r * (1 - k))} {(int)(top - r)} {(int)(bx + r)} {(int)(top - r)} ");
+            sb.Append($"b {(int)(bx + r * (1 + k))} {(int)(top - r)} {(int)(bx + 2 * r)} {(int)(top - r * k)} {(int)(bx + 2 * r)} {top} ");
+        }
+
+        // Right edge
+        sb.Append($"l {right} {bottom} ");
+
+        // Bottom edge: bubbles pointing down (right to left)
+        for (var i = count - 1; i >= 0; i--)
+        {
+            var bx = left + i * d;
+            sb.Append($"b {(int)(bx + 2 * r)} {(int)(bottom + r * k)} {(int)(bx + r * (1 + k))} {(int)(bottom + r)} {(int)(bx + r)} {(int)(bottom + r)} ");
+            sb.Append($"b {(int)(bx + r * (1 - k))} {(int)(bottom + r)} {(int)bx} {(int)(bottom + r * k)} {(int)bx} {bottom} ");
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
     }
 
     private string GenerateUniqueStyleName()

@@ -67,6 +67,11 @@ public class LanguageAssa
     public string BackgroundBoxCircle { get; set; }
     public string BackgroundBoxSpikes { get; set; }
     public string BackgroundBoxBubbles { get; set; }
+    public string BackgroundBoxWave { get; set; }
+    public string BackgroundBoxHexagon { get; set; }
+    public string BackgroundBoxTornPaper { get; set; }
+    public string BackgroundBoxCloud { get; set; }
+    public string BackgroundBoxTornPaperDouble { get; set; }
 
     public string StylesTitle { get; set; }
     public string StylesInFile { get; set; }
@@ -257,6 +262,11 @@ public class LanguageAssa
         BackgroundBoxCircle = "Circle";
         BackgroundBoxSpikes = "Spikes";
         BackgroundBoxBubbles = "Bubbles";
+        BackgroundBoxWave = "Wave";
+        BackgroundBoxHexagon = "Hexagon";
+        BackgroundBoxTornPaper = "Torn paper";
+        BackgroundBoxCloud = "Cloud";
+        BackgroundBoxTornPaperDouble = "Torn paper (top & bottom)";
 
         StylesTitle = "Advanced Sub Station Alpha styles";
         StylesInFile = "Styles in file";
