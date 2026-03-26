@@ -110,23 +110,21 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 throw new Exception(Error);
             }
 
-            // Parse translation result
+            // Parse translation result - Baidu returns one array element per line of input
             var transResult = parser.GetArrayElementsByName(json, "trans_result");
             if (transResult.Count == 0)
             {
                 return string.Empty;
             }
 
-            var firstResult = transResult[0];
-            var dst = parser.GetFirstObject(firstResult, "dst");
-
-            if (string.IsNullOrEmpty(dst))
+            var translations = new List<string>();
+            foreach (var item in transResult)
             {
-                return string.Empty;
+                var dst = parser.GetFirstObject(item, "dst");
+                translations.Add(string.IsNullOrEmpty(dst) ? string.Empty : Json.DecodeJsonText(dst));
             }
 
-            var outputText = Json.DecodeJsonText(dst).Trim();
-            return outputText;
+            return string.Join(Environment.NewLine, translations).Trim();
         }
 
         private static string CalculateMd5Hash(string input)
