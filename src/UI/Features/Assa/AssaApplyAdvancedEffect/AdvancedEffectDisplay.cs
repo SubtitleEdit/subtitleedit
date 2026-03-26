@@ -25,6 +25,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectConfetti(),
             new AdvancedEffectEndCreditsScroll(),
             new AdvancedEffectFadeIn(),
+            new AdvancedEffectFadeInOut(),
             new AdvancedEffectFadeOut(),
             new AdvancedEffectFancyKaraoke(),
             new AdvancedEffectFireflies(),
