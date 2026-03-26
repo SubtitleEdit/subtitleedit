@@ -182,21 +182,23 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         private static SsaStyle GetDefaultStyle()
         {
-            SsaStyle style = null;
-            var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
-            if (storageCategories != null && storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
-            {
-                var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
-                style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
-                if (style != null)
-                {
-                    style.Tertiary = style.Outline;
-                }
-            }
+            return new SsaStyle();
 
-            style = style ?? new SsaStyle();
+            //SsaStyle style = null;
+            //var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
+            //if (storageCategories != null && storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
+            //{
+            //    var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
+            //    style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
+            //    if (style != null)
+            //    {
+            //        style.Tertiary = style.Outline;
+            //    }
+            //}
 
-            return style;
+            //style = style ?? new SsaStyle();
+
+            //return style;
         }
 
         private static void LoadStylesFromAdvancedSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)

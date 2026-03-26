@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class SubtitleSettings
     {
-        public List<AssaStorageCategory> AssaStyleStorageCategories { get; set; }
-        public List<string> AssaOverrideTagHistory { get; set; }
         public bool AssaResolutionAutoNew { get; set; }
         public bool AssaResolutionPromptChange { get; set; }
         public bool AssaShowScaledBorderAndShadow { get; set; }
@@ -109,8 +106,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
 
         public SubtitleSettings()
         {
-            AssaStyleStorageCategories = new List<AssaStorageCategory>();
-            AssaOverrideTagHistory = new List<string>();
             AssaResolutionAutoNew = true;
             AssaResolutionPromptChange = true;
             AssaShowScaledBorderAndShadow = true;

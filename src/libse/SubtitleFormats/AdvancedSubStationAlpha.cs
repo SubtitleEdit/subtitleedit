@@ -19,25 +19,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                var defaultStyle = string.Empty;
-                var defaultCategory = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.SingleOrDefault(item => item.IsDefault);
-                if (defaultCategory == null || defaultCategory.Styles.Count == 0)
-                {
-                    defaultStyle = new SsaStyle().ToRawAss();
-                }
-                else
-                {
-                    foreach (var defaultCategoryStyle in defaultCategory.Styles)
-                    {
-                        defaultStyle += defaultCategoryStyle.ToRawAss();
-                        if (defaultCategory.Styles.IndexOf(defaultCategoryStyle) != defaultCategory.Styles.Count - 1)
-                        {
-                            defaultStyle += Environment.NewLine;
-                        }
-                    }
-                }
+                return new SsaStyle().ToRawAss();
 
-                return defaultStyle;
+                //var defaultStyle = string.Empty;
+                //var defaultCategory = Configuration.Settings.SubtitleSettings.AssaStyleDefaultCategory;
+                //if (defaultCategory == null || defaultCategory.Styles.Count == 0)
+                //{
+                //    defaultStyle = new SsaStyle().ToRawAss();
+                //}
+                //else
+                //{
+                //    foreach (var defaultCategoryStyle in defaultCategory.Styles)
+                //    {
+                //        defaultStyle += defaultCategoryStyle.ToRawAss();
+                //        if (defaultCategory.Styles.IndexOf(defaultCategoryStyle) != defaultCategory.Styles.Count - 1)
+                //        {
+                //            defaultStyle += Environment.NewLine;
+                //        }
+                //    }
+                //}
+
+                //return defaultStyle;
             }
         }
 
