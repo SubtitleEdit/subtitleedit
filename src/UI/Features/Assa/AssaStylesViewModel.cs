@@ -339,11 +339,7 @@ public partial class AssaStylesViewModel : ObservableObject
         var ssaStyles = FileStyles.Where(p => p.UsageCount > 0 && p.Name != selectedStyle.Name).Select(p => p.ToSsaStyle()).ToList();
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            var styles = ssaStyles.Select(p => new StyleDisplay(p)
-            {
-                Name = MakeUniqueName(p.Name, StorageStyles)
-            }).ToList();
-
+            var styles = ssaStyles.Select(p => new StyleDisplay(p)).ToList();
             vm.Initialize(styles, Se.Language.General.Ok, true);
         });
 

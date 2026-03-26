@@ -895,7 +895,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             ApplyAssaStyles(result);
-            _subtitle.Footer = result.ResultSubtitle.Footer;
+            _subtitle.Footer = result.ResultSubtitle.Footer;               
         }
     }
 
@@ -905,11 +905,22 @@ public partial class MainViewModel :
         var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
         var first = styles.FirstOrDefault() ?? "Default";
 
-        foreach (var s in Subtitles)
+        for (var i = 0; i < Subtitles.Count; i++)
         {
+            var s = Subtitles[i];
+
             if (string.IsNullOrEmpty(s.Style) || !styles.Contains(s.Style))
             {
                 s.Style = first;
+            }
+
+            if (i < result.ResultSubtitle.Paragraphs.Count)
+            {
+                var extra = result.ResultSubtitle.Paragraphs[i].Extra;
+                if (!string.IsNullOrEmpty(extra))
+                {
+                    s.Style = extra.TrimStart('*');
+                }
             }
         }
     }
