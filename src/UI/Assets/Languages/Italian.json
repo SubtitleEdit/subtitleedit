@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 24.03.2026 di bovirus",
+  "TranslatedBy": "v. 26.03.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -2479,7 +2479,14 @@
     "AdvancedEffectSlowZoomOut": "Zoom - lento",
     "AdvancedEffectSlowZoomOutDescription": "Il testo inizia leggermente più grande e si riduce gradualmente alle dimensioni normali per tutta la durata del sottotitolo",
     "AdvancedEffectSlowZoomIn": "Zoom+ lento",
-    "AdvancedEffectSlowZoomInDescription": "Il testo inizia con dimensioni normali e cresce leggermente durante la durata dei sottotitoli"
+    "AdvancedEffectSlowZoomInDescription": "Il testo inizia con dimensioni normali e cresce leggermente durante la durata dei sottotitoli",
+    "AdvancedEffectFadeIn": "Transizione: dissolvenza in apertura",
+    "AdvancedEffectFadeInDescription": "Un effetto di dissolvenza in apertura per riga in cui lo schermo inizia nero e rivela il video.",
+    "AdvancedEffectFadeOut": "Transizione: dissolvenza in chiusura",
+    "AdvancedEffectFadeOutDescription": "Un effetto di dissolvenza per riga in cui lo schermo termina in nero.",
+    "AdvancedEffectTvClose": "Transizione: chiusura TV",
+    "AdvancedEffectTvCloseDescription": "Le barre nere crescono verso l'interno dall'alto e dal basso mentre la parte centrale sfuma in bianco (parte superiore nera/parte centrale bianca/parte inferiore nera).\r\nLa seconda metà è completamente nera.",
+    "OverrideTagsHistory": "Sostituisci cronologia tag"
   },
   "About": {
     "Title": "Info su Subtitle Edit",
