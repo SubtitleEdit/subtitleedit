@@ -136,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic
 
            // var subtitle = new Subtitle(inputSubtitle, false);
             var sb = new StringBuilder();
+            var sbOriginal = new StringBuilder();
             var deleteIndices = new List<int>();
             var first = true;
             var firstIndex = 0;
@@ -182,10 +183,12 @@ namespace Nikse.SubtitleEdit.Logic
                 if (breakMode == BreakMode.UnbreakNoSpace)
                 {
                     sb.Append(addText);
+                    sbOriginal.Append(inputSubtitle[index].OriginalText);
                 }
                 else
                 {
                     sb.AppendLine(addText);
+                    sbOriginal.AppendLine(inputSubtitle[index].OriginalText);
                 }
 
                 endMilliseconds = inputSubtitle[index].EndTime.TotalMilliseconds;
@@ -216,6 +219,29 @@ namespace Nikse.SubtitleEdit.Logic
 
             currentParagraph.Text = text;
 
+            var originalText = sbOriginal.ToString().TrimEnd();
+            if (!string.IsNullOrEmpty(originalText))
+            {
+                originalText = HtmlUtil.FixInvalidItalicTags(originalText);
+                if (breakMode == BreakMode.Unbreak)
+                {
+                    originalText = Utilities.UnbreakLine(originalText);
+                }
+                else if (breakMode == BreakMode.UnbreakNoSpace)
+                {
+                    originalText = originalText.Replace(" " + Environment.NewLine + " ", string.Empty)
+                        .Replace(Environment.NewLine + " ", string.Empty)
+                        .Replace(" " + Environment.NewLine, string.Empty)
+                        .Replace(Environment.NewLine, string.Empty);
+                }
+                else if (breakMode == BreakMode.KeepBreaks)
+                {
+                    originalText = Utilities.AutoBreakLine(originalText, inputSubtitle.AutoDetectGoogleLanguage());
+                }
+
+                currentParagraph.OriginalText = originalText;
+            }
+
             //display time
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(endMilliseconds);
 
@@ -242,9 +268,11 @@ namespace Nikse.SubtitleEdit.Logic
 
             var currentParagraph = selectedItems[0];
             var currentText = Utilities.UnbreakLine(currentParagraph.Text);
+            var currentOriginalText = Utilities.UnbreakLine(currentParagraph.OriginalText);
 
             var nextParagraph = selectedItems[1];
             var nextText = Utilities.UnbreakLine(nextParagraph.Text);
+            var nextOriginalText = Utilities.UnbreakLine(nextParagraph.OriginalText);
 
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(subtitles.Select(p=>new Paragraph(p.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)));
@@ -252,6 +280,14 @@ namespace Nikse.SubtitleEdit.Logic
             var dialogHelper = new DialogSplitMerge { DialogStyle = Enum.Parse<DialogType>(Se.Settings.General.DialogStyle), TwoLetterLanguageCode = language };
             var dialogText = dialogHelper.FixDashes("- " + currentText.TrimStart(' ', '-') + Environment.NewLine + "- " + nextText.TrimStart(' ', '-'));
             currentParagraph.Text = dialogText;
+
+            if (!string.IsNullOrWhiteSpace(currentOriginalText) || !string.IsNullOrWhiteSpace(nextOriginalText))
+            {
+                var dialogOriginalText = dialogHelper.FixDashes("- " + currentOriginalText.TrimStart(' ', '-') 
+                                                                     + Environment.NewLine + "- " 
+                                                                     + nextOriginalText.TrimStart(' ', '-'));
+                currentParagraph.OriginalText = dialogOriginalText;
+            }
 
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(nextParagraph.EndTime.TotalMilliseconds);
 

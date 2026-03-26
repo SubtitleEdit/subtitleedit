@@ -13027,7 +13027,7 @@ public partial class MainViewModel :
         _mergeManager.MergeSelectedLines(Subtitles,
             SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList());
 
-        SelectAndScrollToRow(index - 1);
+        SelectAndScrollToRow(index);
         Renumber();
     }
 
