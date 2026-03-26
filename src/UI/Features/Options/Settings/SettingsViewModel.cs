@@ -1798,6 +1798,7 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
+        LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         SetLibVlcStatus();
     }
 

@@ -550,6 +550,7 @@ public partial class MainViewModel :
 
         InitializeFfmpeg();
         InitializeLibMpv();
+        LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         LoadShortcuts();
 
         StartTimers();
