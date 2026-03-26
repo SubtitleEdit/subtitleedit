@@ -7,13 +7,24 @@ v5.0.0-beta11 (xth March 2026)
 * Fix Remove Text for Hearing Impaired not working in batch convert - thx MKBB-85/ivandrofly
 * Mac: Option+Backspace deletes the previous word - thx derzz
 * Add Edge-TTS engine + TTS audio improvements - thx Ironship
-* Fix burn-in logo preview hidden under video on Windows - thx Ironship
+* Fix burn-in logo preview hidden under video on Windows with libmpv wid - thx Ironship
 * Improve mpv rendering on Linux - thx Ironship
 * Add Linux flatpak installer - thx Ironship
 * Add more ASSA advanced effect
 * Allow "manual sync" in visual sync - thx Bas
 * Fix for "count" in find-window - thx ivandrofly
 * Fix for missing space in italic text in IMSC 1.1 - thx Ironship
+* Update whisper.cpp to 1.8.4
+* Add ASSA override tag history
+* Fix for Baidu Translate - thx Ironship
+* Fix: prevent portable from creating AppData\Subtitle Edit\Dictionaries - thx Ironship
+* Improve Find-window - thx ivandrofly
+* Update yt-dlp
+* Add more ASSA background boxes
+* Add keypad horizontal scrolling to the audio visualizer - thx derzz
+* Fix for merge lines selected item/original - thx derzz
+* Fix gap is shown in ms, not in frames - thx accessallareas 
+* Fix build for mac with SIP disabled - thx Ironship/ilikepeaches
 
 -----------------------------------------------------------------------------------------------------
 
