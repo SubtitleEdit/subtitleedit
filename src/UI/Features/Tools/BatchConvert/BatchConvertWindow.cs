@@ -344,6 +344,27 @@ public class BatchConvertWindow : Window
             Height = 300,
             DataContext = vm,
             ItemsSource = vm.BatchFunctions,
+            ContextFlyout = new MenuFlyout()
+            {
+                Items =
+                {
+                    new MenuItem()
+                    {
+                        Header =Se.Language.General.SelectAll,
+                        Command = vm.SelectAllCommand,
+                    },
+                    new MenuItem()
+                    {
+                        Header = Se.Language.General.InvertSelection,
+                        Command = vm.InvertSelectionCommand,
+                    },
+                    new MenuItem()
+                    {
+                        Header =Se.Language.General.SelectNone,
+                        Command = vm.SelectNoneCommand,
+                    }
+                }
+            },
             Columns =
             {
                 new DataGridTemplateColumn

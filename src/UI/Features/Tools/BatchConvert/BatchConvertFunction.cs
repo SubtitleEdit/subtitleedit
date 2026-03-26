@@ -4,14 +4,18 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
-public class BatchConvertFunction
+public partial class BatchConvertFunction : ObservableObject
 {
     public BatchConvertFunctionType Type { get; set; }
     public string Name { get; set; }
-    public bool IsSelected { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+
     public Control View { get; set; }
 
     public override string ToString()
