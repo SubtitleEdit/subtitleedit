@@ -17,8 +17,17 @@ namespace Nikse.SubtitleEdit.Core.Common
         private readonly IEnumerable<Encoding> _encodings;
 
         public static readonly string BaseDirectory = GetBaseDirectory();
-        public static readonly string DataDirectory = GetDataDirectory();
-        public static string DataDirectoryOverride = string.Empty;
+        public static string DataDirectory = GetDataDirectory();
+        private static string _dataDirectoryOverride = string.Empty;
+        public static string DataDirectoryOverride
+        {
+            get => _dataDirectoryOverride;
+            set
+            {
+                _dataDirectoryOverride = value;
+                DataDirectory = GetDataDirectory();
+            }
+        }
         public static readonly string TesseractOriginalDirectory = BaseDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static string DictionariesDirectory => GetDataDirectory() + "Dictionaries" + Path.DirectorySeparatorChar;
         public static string SpectrogramsDirectory => GetDataDirectory() + "Spectrograms" + Path.DirectorySeparatorChar;
