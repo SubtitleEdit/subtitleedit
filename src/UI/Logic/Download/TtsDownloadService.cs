@@ -61,6 +61,17 @@ public interface ITtsDownloadService
 
     Task<bool> DownloadGoogleVoiceList(string googleKeyFile, MemoryStream ms, CancellationToken cancellationToken);
     Task<bool> DownloadGoogleVoiceSpeak(string text, GoogleVoice googleVoice, string model, string googleKeyFile, MemoryStream ms, CancellationToken cancellationToken);
+
+    Task DownloadMistralSpeechVoiceList(MemoryStream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+
+    Task<bool> DownloadMistralSpeechSpeak(
+        string inputText,
+        MistralVoice voice,
+        string model,
+        string apiKey,
+        MemoryStream stream,
+        IProgress<float>? progress,
+        CancellationToken cancellationToken);
 }
 
 public class TtsDownloadService : ITtsDownloadService
@@ -560,5 +571,73 @@ public class TtsDownloadService : ITtsDownloadService
     private class GoogleTtsResponse
     {
         public string? audioContent { get; set; }
+    }
+
+    public async Task DownloadMistralSpeechVoiceList(MemoryStream ms, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        var url = "https://api.mistral.ai/v1/audio/voices?limit=10000";
+
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+        requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
+        requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Se.Settings.Video.TextToSpeech.MistralApiKey);
+
+        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+
+        if (!result.IsSuccessStatusCode)
+        {
+            SeLogger.Error($"Mistral TTS failed calling API address {url} : Status code={result.StatusCode}");
+            return;
+        }
+
+        await result.Content.CopyToAsync(ms, cancellationToken);
+    }
+
+    public async Task<bool> DownloadMistralSpeechSpeak(
+        string inputText,
+        MistralVoice voice,
+        string model,
+        string apiKey,
+        MemoryStream stream,
+        IProgress<float>? progress,
+        CancellationToken cancellationToken)
+    {
+        var url = "https://api.mistral.ai/v1/audio/speech";
+        var text = Utilities.UnbreakLine(inputText);
+
+        var data = "{ \"model\": \"" + Json.EncodeJsonText(model) +
+                   "\", \"input\": \"" + Json.EncodeJsonText(text) +
+                   "\", \"voice_id\": \"" + Json.EncodeJsonText(voice.VoiceId) +
+                   "\", \"response_format\": \"mp3\" }";
+
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+        requestMessage.Content = new StringContent(data, Encoding.UTF8);
+        requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+        requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey.Trim());
+
+        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+        var responseBytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
+
+        if (!result.IsSuccessStatusCode)
+        {
+            var error = Encoding.UTF8.GetString(responseBytes).Trim();
+            SeLogger.Error($"Mistral TTS failed calling API at {url} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
+            return false;
+        }
+
+        // Response is JSON with base64-encoded audio in "audio_data" field
+        var responseJson = Encoding.UTF8.GetString(responseBytes);
+        var parser = new SeJsonParser();
+        var audioData = parser.GetFirstObject(responseJson, "audio_data");
+        if (string.IsNullOrEmpty(audioData))
+        {
+            SeLogger.Error("Mistral TTS: No audio_data in response" + Environment.NewLine + responseJson);
+            return false;
+        }
+
+        var audioBytes = Convert.FromBase64String(audioData);
+        await stream.WriteAsync(audioBytes, cancellationToken);
+        return true;
     }
 }

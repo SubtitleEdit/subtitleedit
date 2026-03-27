@@ -23,6 +23,8 @@ public class SeVideoTextToSpeech
     public double ElevenLabsStyleeExaggeration { get; set; }
     public string MurfApiKey { get; set; }
     public string MurfStyle { get; set; }
+    public string MistralApiKey { get; set; }
+    public string MistralModel { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
 
@@ -74,6 +76,8 @@ public class SeVideoTextToSpeech
         AllTalkUrl = "http://127.0.0.1:7851";
         MurfApiKey = string.Empty;
         MurfStyle = "Conversational";
+        MistralApiKey = string.Empty;
+        MistralModel = "voxtral-mini-tts-2603";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
         ProAudioChainEnabled = false;

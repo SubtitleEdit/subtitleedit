@@ -124,6 +124,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             new AllTalk(ttsDownloadService),
             new ElevenLabs(ttsDownloadService),
             new AzureSpeech(ttsDownloadService),
+            new MistralSpeech(ttsDownloadService),
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService)
         ];
@@ -152,6 +153,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             SelectedEngine = lastEngine;
         }
 
+        if (SelectedEngine != null)
+        {
+            HasLanguageParameter = SelectedEngine.HasLanguageParameter;
+            HasApiKey = SelectedEngine.HasApiKey;
+            HasRegion = SelectedEngine.HasRegion;
+            HasModel = SelectedEngine.HasModel;
+            HasKeyFile = SelectedEngine.HasKeyFile;
+            IsEdgeTtsEngine = SelectedEngine is EdgeTts;
+        }
+
         var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
         if (lastVoice == null)
         {
@@ -175,6 +186,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is ElevenLabs)
         {
             ApiKey = Se.Settings.Video.TextToSpeech.ElevenLabsApiKey;
+        }
+        else if (SelectedEngine is MistralSpeech)
+        {
+            ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
         }
         else if (SelectedEngine is Murf)
         {
@@ -203,6 +218,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.ElevenLabsApiKey = ApiKey;
             Se.Settings.Video.TextToSpeech.ElevenLabsModel = SelectedModel ?? string.Empty;
+        }
+        else if (SelectedEngine is MistralSpeech)
+        {
+            Se.Settings.Video.TextToSpeech.MistralApiKey = ApiKey;
+            Se.Settings.Video.TextToSpeech.MistralModel = SelectedModel ?? "voxtral-mini-tts-2603";
         }
         else if (SelectedEngine is Murf)
         {
@@ -1260,6 +1280,24 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.First();
                 }
                 IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is MistralSpeech)
+            {
+                ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.MistralModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is Murf)
+            {
+                ApiKey = Se.Settings.Video.TextToSpeech.MurfApiKey;
+            }
+            else if (SelectedEngine is GoogleSpeech)
+            {
+                ApiKey = Se.Settings.Video.TextToSpeech.GoogleApiKey;
+                KeyFile = Se.Settings.Video.TextToSpeech.GoogleKeyFile;
             }
         });
     }

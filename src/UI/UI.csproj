@@ -81,6 +81,7 @@
 		<None Remove="Assets\TextToSpeech\AllTalkVoices.json" />
 		<None Remove="Assets\TextToSpeech\AzureVoices.json" />
 		<None Remove="Assets\TextToSpeech\ElevenLabsVoices.json" />
+		<None Remove="Assets\TextToSpeech\MistralVoices.json" />
 		<None Remove="Assets\TextToSpeech\MurfVoices.json" />
 		<None Remove="Assets\TextToSpeech\PiperVoices.json" />
 		<None Remove="Assets\Themes.zip" />
@@ -172,6 +173,7 @@
 		<AvaloniaResource Include="Assets\TextToSpeech\AllTalkVoices.json" />
 		<AvaloniaResource Include="Assets\TextToSpeech\AzureVoices.json" />
 		<AvaloniaResource Include="Assets\TextToSpeech\ElevenLabsVoices.json" />
+		<AvaloniaResource Include="Assets\TextToSpeech\MistralVoices.json" />
 		<AvaloniaResource Include="Assets\TextToSpeech\MurfVoices.json" />
 		<AvaloniaResource Include="Assets\TextToSpeech\GoogleVoices.json" />
 		<AvaloniaResource Include="Assets\TextToSpeech\PiperVoices.json" />
