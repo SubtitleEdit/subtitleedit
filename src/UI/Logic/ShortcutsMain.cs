@@ -34,7 +34,10 @@ public static class ShortcutsMain
     public static List<ShortCut> GetAllShortcuts(MainViewModel vm)
     {
         var shortcuts = new List<ShortCut>();
-        var keys = Se.Settings.Shortcuts.ToDictionary(p => p.ActionName, p => p);
+        var keys = Se.Settings.Shortcuts
+            .GroupBy(p => p.ActionName)
+            .Select(g => g.First())
+            .ToDictionary(p => p.ActionName, p => p);
         foreach (var shortcut in GetAllAvailableShortcuts(vm))
         {
             shortcuts.Add(keys.TryGetValue(shortcut.Name, out var match)
