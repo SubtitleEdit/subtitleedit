@@ -34,7 +34,7 @@ public partial class FixNamesViewModel : ObservableObject
     private NameList? _nameList;
     private List<string> _nameListInclMulti;
     private string _language;
-    private const string ExpectedEndChars = " ,.!?:;�')]<-\"\r\n";
+    private const string ExpectedEndChars = " ,.!?:;…')]<-\"\r\n";
     private readonly HashSet<string> _usedNames;
     private string _oldNames;
     private readonly System.Timers.Timer _previewTimer;
@@ -113,7 +113,7 @@ public partial class FixNamesViewModel : ObservableObject
                 while (startIndex >= 0 && startIndex < text.Length &&
                        textToLower.Substring(startIndex).Contains(name.ToLowerInvariant()) && name.Length > 1 && name != name.ToLowerInvariant())
                 {
-                    var startOk = startIndex == 0 || "([ --'>\r\n��\"���".Contains(text[startIndex - 1]);
+                    var startOk = startIndex == 0 || "([ --'>\r\n¿¡\"”“„".Contains(text[startIndex - 1]);
                     if (startOk)
                     {
                         var end = startIndex + name.Length;

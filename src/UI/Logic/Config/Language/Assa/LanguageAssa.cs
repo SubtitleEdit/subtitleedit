@@ -72,6 +72,8 @@ public class LanguageAssa
     public string BackgroundBoxTornPaper { get; set; }
     public string BackgroundBoxCloud { get; set; }
     public string BackgroundBoxTornPaperDouble { get; set; }
+    public string BackgroundBoxStarburst { get; set; }
+    public string BackgroundBoxScroll { get; set; }
 
     public string StylesTitle { get; set; }
     public string StylesInFile { get; set; }
@@ -267,6 +269,8 @@ public class LanguageAssa
         BackgroundBoxTornPaper = "Torn paper";
         BackgroundBoxCloud = "Cloud";
         BackgroundBoxTornPaperDouble = "Torn paper (top & bottom)";
+        BackgroundBoxStarburst = "Starburst";
+        BackgroundBoxScroll = "Scroll / Parchment";
 
         StylesTitle = "Advanced Sub Station Alpha styles";
         StylesInFile = "Styles in file";

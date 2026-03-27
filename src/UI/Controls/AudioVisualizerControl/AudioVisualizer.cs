@@ -605,7 +605,16 @@ public class AudioVisualizer : Control
         var delta = InvertMouseWheel ? -e.Delta.Y : e.Delta.Y;
 
         e.Handled = true;
-        var newStart = StartPositionSeconds + delta / 2;
+        // Handle both vertical (Y) and horizontal (X) trackpad scrolling
+        var scrollDelta = delta;
+        
+        // If Y delta is negligible but X delta is significant (trackpad horizontal scroll)
+        if (Math.Abs(delta) < 0.1 && Math.Abs(e.Delta.X) > 0.1)
+        {
+            scrollDelta = InvertMouseWheel ? -e.Delta.X : e.Delta.X;
+        }
+        
+        var newStart = StartPositionSeconds + scrollDelta / 2;
         if (newStart < 0)
         {
             newStart = 0;

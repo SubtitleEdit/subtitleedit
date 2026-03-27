@@ -85,6 +85,8 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxTornPaper);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxCloud);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxTornPaperDouble);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxStarburst);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxScroll);
 
         VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
 
@@ -326,6 +328,14 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         {
             return GenerateTornPaperDoubleBox(left, right, top, bottom);
         }
+        else if (BoxStyleIndex == 10) // Starburst
+        {
+            return GenerateStarburstBox(left, right, top, bottom);
+        }
+        else if (BoxStyleIndex == 11) // Scroll / Parchment
+        {
+            return GenerateScrollBox(left, right, top, bottom);
+        }
 
         // Square corners (default)
         return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom}{{\\p0}}";
@@ -540,6 +550,58 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         }
 
         return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateStarburstBox(int left, int right, int top, int bottom)
+    {
+        var cx = (left + right) / 2.0;
+        var cy = (top + bottom) / 2.0;
+        var a = (right - left) / 2.0;
+        var b = (bottom - top) / 2.0;
+
+        var baseSpikeOut = Math.Clamp(Math.Min(a, b) * 0.55, 8.0, 28.0);
+        var rng = new Random((left * 397) ^ (top * 613) ^ right);
+
+        // Random spike count per subtitle: 9–20 spikes
+        var numSpikes = rng.Next(9, 21);
+        var numPoints = numSpikes * 2;
+
+        var sb = new StringBuilder();
+        for (var i = 0; i < numPoints; i++)
+        {
+            var angle = i * 2.0 * Math.PI / numPoints - Math.PI / 2.0;
+            var cos = Math.Cos(angle);
+            var sin = Math.Sin(angle);
+            var ellipseR = (a * b) / Math.Sqrt(b * b * cos * cos + a * a * sin * sin);
+            double r;
+            if (i % 2 == 0) // outer spike: very wide random range
+            {
+                r = ellipseR + baseSpikeOut * (0.1 + rng.NextDouble() * 2.4);
+            }
+            else // inner valley: wide random depth
+            {
+                r = ellipseR * (0.50 + rng.NextDouble() * 0.40);
+            }
+            var px = (int)(cx + r * cos);
+            var py = (int)(cy + r * sin);
+            sb.Append(i == 0 ? $"m {px} {py} " : $"l {px} {py} ");
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    private static string GenerateScrollBox(int left, int right, int top, int bottom)
+    {
+        var h = bottom - top;
+        var curve = Math.Max(10, Math.Min(30, h / 2));
+        var q = h / 4;
+
+        // Left and right edges are S-curves (bezier), top and bottom are straight lines
+        return $"{{\\p1}}m {left} {top} " +
+               $"l {right} {top} " +
+               $"b {right + curve} {top + q} {right - curve} {bottom - q} {right} {bottom} " +
+               $"l {left} {bottom} " +
+               $"b {left - curve} {bottom - q} {left + curve} {top + q} {left} {top}{{\\p0}}";
     }
 
     private string GenerateUniqueStyleName()
