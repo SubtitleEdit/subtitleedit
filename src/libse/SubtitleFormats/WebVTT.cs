@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -358,6 +358,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 1);
                 subtitle.Paragraphs.Clear();
                 subtitle.Paragraphs.AddRange(merged.Paragraphs);
+            }
+
+            // Merge consecutive cues with identical time codes (common in WebVTT as alternative to line breaks)
+            for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
+            {
+                var current = subtitle.Paragraphs[i];
+                var nextParagraph = subtitle.Paragraphs[i + 1];
+                if (current.StartTime.TotalMilliseconds == nextParagraph.StartTime.TotalMilliseconds &&
+                    current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds &&
+                    current.Region == nextParagraph.Region)
+                {
+                    current.Text = current.Text + Environment.NewLine + nextParagraph.Text;
+                    subtitle.Paragraphs.RemoveAt(i + 1);
+                }
             }
 
             subtitle.Renumber();
