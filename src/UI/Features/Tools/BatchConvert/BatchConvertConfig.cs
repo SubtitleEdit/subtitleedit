@@ -160,6 +160,7 @@ public class BatchConvertConfig
     public class RemoveLineBreaksSettings
     {
         public bool IsActive { get; set; }
+        public bool OnlyShortLines { get; set; }
     }
 
     public class DeleteLinesSettings

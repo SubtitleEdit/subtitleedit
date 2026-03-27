@@ -20,4 +20,5 @@ public enum BatchConvertFunctionType
     BridgeGaps,
     ApplyMinGap,
     SplitBreakLongLines,
+    RemoveLineBreaks,
 }

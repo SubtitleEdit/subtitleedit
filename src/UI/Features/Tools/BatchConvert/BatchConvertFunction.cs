@@ -39,6 +39,7 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.DeleteLines, Se.Language.General.DeleteLines, ViewDeleteLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.RemoveTextForHearingImpaired, Se.Language.General.RemoveTextForHearingImpaired, ViewRemoveTextForHearingImpaired.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.RemoveFormatting, Se.Language.General.RemoveFormatting, ViewRemoveFormatting.Make(vm) , activeFunctions),
+            MakeFunction(BatchConvertFunctionType.RemoveLineBreaks, Se.Language.General.UnbreakLines, ViewRemoveLineBreaks.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AddFormatting, Se.Language.Tools.BatchConvert.AddFormatting, ViewAddFormatting.Make(vm) , activeFunctions),
             MakeFunction(BatchConvertFunctionType.SplitBreakLongLines,  Se.Language.Tools.SplitBreakLongLines.Title, ViewSplitBreakLongLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.OffsetTimeCodes,  Se.Language.General.OffsetTimeCodes, ViewOffsetTimeCodes.Make(vm), activeFunctions),
