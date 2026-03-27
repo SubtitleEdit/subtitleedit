@@ -1,0 +1,8 @@
+Qwen3-ASR family includes Qwen3-ASR-0.6B, 
+which supports language identification and ASR (Automatic Speech Recognition).
+
+Qwen3-Forced-Aligner-0.6B supports timestamp prediction 
+
+Uses GGUF quantized models for efficient inference.
+
+https://github.com/woct0rdho/qwen3-asr.cpp

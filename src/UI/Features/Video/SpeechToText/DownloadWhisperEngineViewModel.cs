@@ -36,6 +36,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
 
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IChatLlmDownloadService _chatLlmDownloadService;
+    private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
     private Task? _downloadTask;
     private readonly Timer _timer;
     private readonly CancellationTokenSource _cancellationTokenSource;
@@ -48,11 +49,13 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
     public DownloadWhisperEngineViewModel(
         IWhisperDownloadService whisperDownloadService, 
         IZipUnpacker zipUnpacker, 
-        IChatLlmDownloadService chatLlmDownloadService)
+        IChatLlmDownloadService chatLlmDownloadService,
+        IQwen3AsrCppDownloadService qwen3AsrCppDownloadService)
     {
         _whisperDownloadService = whisperDownloadService;
         _zipUnpacker = zipUnpacker;
         _chatLlmDownloadService = chatLlmDownloadService;
+        _qwen3AsrCppDownloadService = qwen3AsrCppDownloadService;
 
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -234,6 +237,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
+
+            if (Engine is Qwen3AsrCppEngine qwen3AsrCppEngineMac)
+            {
+                path = Path.Combine(folder, qwen3AsrCppEngineMac.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -260,7 +272,16 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     LinuxHelper.MakeExecutable(path);
                 }
             }
-            
+
+            if (Engine is Qwen3AsrCppEngine qwen3AsrCppEngineLinux)
+            {
+                path = Path.Combine(folder, qwen3AsrCppEngineLinux.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
             if (Engine is WhisperEngineCTranslate2)
             {
                 path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
@@ -336,6 +357,11 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
         {
             var dir = Engine.GetAndCreateWhisperFolder();
             _downloadTask = _chatLlmDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+        }
+        else if (Engine is Qwen3AsrCppEngine)
+        {
+            var dir = Engine.GetAndCreateWhisperFolder();
+            _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
     }
 

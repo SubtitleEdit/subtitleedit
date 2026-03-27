@@ -208,6 +208,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<IWhisperDownloadService, WhisperDownloadService>();
         collection.AddHttpClient<IYtDlpDownloadService, YtDlpDownloadService>();
         collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
+        collection.AddHttpClient<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
 
         // Window view models
         collection.AddTransient<AdvancedTtsSettingsViewModel>();

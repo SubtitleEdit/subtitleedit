@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -114,6 +115,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
     private string _chatLlmText = string.Empty;
+    private string _qwen3AsrOutputJsonPath = string.Empty;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -149,6 +151,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             //Engines.Add(new ChatLlmCppEngine());
+            Engines.Add(new Qwen3AsrCppEngine());
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -168,7 +171,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         ResultAudioClips = new List<AudioClip>();
 
         IsTranscribeEnabled = true;
-        IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine;
+        IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine and not Qwen3AsrCppEngine;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -315,6 +318,12 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             if (SelectedEngine is ChatLlmCppEngine chatLlm)
             {
                 ProcessChatLlmTranscription(settings, chatLlm);
+                return;
+            }
+
+            if (SelectedEngine is Qwen3AsrCppEngine qwen3Asr)
+            {
+                ProcessQwen3AsrCppTranscription(settings);
                 return;
             }
 
@@ -484,6 +493,115 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
 
         _timerWhisper.Start();
+    }
+
+    private void ProcessQwen3AsrCppTranscription(SeAudioToText settings)
+    {
+        var jsonPath = _qwen3AsrOutputJsonPath;
+        if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
+        {
+            Dispatcher.UIThread.Invoke<Task>(async () =>
+            {
+                LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
+                LogToConsole($"Speech to text: Could not find output JSON file{Environment.NewLine}");
+                ProgressValue = 100;
+                IsTranscribeEnabled = true;
+                await Task.CompletedTask;
+            });
+            return;
+        }
+
+        try
+        {
+            var jsonText = File.ReadAllText(jsonPath);
+            var jsonDoc = JsonDocument.Parse(jsonText);
+            var words = jsonDoc.RootElement.GetProperty("words");
+
+            var subtitle = new Subtitle();
+            var currentText = new StringBuilder();
+            var startTime = 0.0;
+            var endTime = 0.0;
+            var first = true;
+
+            foreach (var word in words.EnumerateArray())
+            {
+                var text = word.GetProperty("word").GetString() ?? string.Empty;
+                var start = word.GetProperty("start").GetDouble();
+                var end = word.GetProperty("end").GetDouble();
+
+                if (first)
+                {
+                    startTime = start;
+                    first = false;
+                }
+
+                var newParagraph = false;
+                if (currentText.Length > 0 && (start - endTime > 0.5 || currentText.Length + text.Length > 80))
+                {
+                    newParagraph = true;
+                }
+
+                if (newParagraph)
+                {
+                    subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
+                    currentText.Clear();
+                    startTime = start;
+                }
+
+                if (currentText.Length > 0)
+                {
+                    currentText.Append(' ');
+                }
+
+                currentText.Append(text);
+                endTime = end;
+            }
+
+            if (currentText.Length > 0)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
+            }
+
+            FixNegativeDuration(subtitle);
+            var postProcessedSubtitle = PostProcess(subtitle);
+
+            if (_audioClips != null && ResultAudioClips.Count > 0)
+            {
+                var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
+                if (outputAudioClip != null)
+                {
+                    outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
+                }
+            }
+
+            Dispatcher.UIThread.Invoke<Task>(async () =>
+            {
+                LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
+                ProgressValue = 100;
+                await MakeResult(postProcessedSubtitle);
+            });
+        }
+        catch (Exception ex)
+        {
+            Dispatcher.UIThread.Invoke<Task>(async () =>
+            {
+                LogToConsole($"Speech to text ({settings.WhisperChoice}) failed: {ex.Message}{Environment.NewLine}");
+                ProgressValue = 100;
+                IsTranscribeEnabled = true;
+                await Task.CompletedTask;
+            });
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(jsonPath);
+            }
+            catch
+            {
+                // ignore
+            }
+        }
     }
 
     /// <summary>
@@ -1502,6 +1620,47 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             }
         }
 
+        if (engine is Qwen3AsrCppEngine qwen3Asr)
+        {
+            var modelAligner = qwen3Asr.ForcedAlignerModel;
+            var displayModelAligner = new WhisperModelDisplay
+            {
+                Model = modelAligner,
+                Display = modelAligner.Name + " (forced aligner for timestamps)",
+                Engine = engine,
+            };
+            if (!engine.IsModelInstalled(modelAligner))
+            {
+                var answer = await MessageBox.Show(
+                                Window!,
+                                $"Download {modelAligner}?",
+                                $"'Qwen3 ASR CPP' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                var models = new ObservableCollection<WhisperModelDisplay>
+                {
+                    displayModelAligner
+                };
+                var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+                    Window!, viewModel =>
+                    {
+                        viewModel.SetModels(models, SelectedEngine, displayModelAligner);
+                        viewModel.StartDownload();
+                    });
+
+                if (!vm.OkPressed)
+                {
+                    return;
+                }
+            }
+        }
+
         if (language.Code != "en" && IsModelEnglishOnly(model.Model))
         {
             var answer = await MessageBox.Show(
@@ -1736,6 +1895,47 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             var p = new Process
             {
                 StartInfo = new ProcessStartInfo(exe, chatLlmParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
+        if (engine is Qwen3AsrCppEngine qwen3Asr)
+        {
+            var exe = qwen3Asr.GetExecutable();
+            var alignerModel = qwen3Asr.ForcedAlignerModel;
+            _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
+            var qwen3Params = $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, qwen3Params)
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
@@ -2251,7 +2451,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Parameters = "--standard";
         }
 
-        IsTranslateVisible = !(engine is ChatLlmCppEngine);
+        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine);
 
         SaveSettings();
     }
