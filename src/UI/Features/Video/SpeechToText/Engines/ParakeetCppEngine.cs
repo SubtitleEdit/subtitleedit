@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Avalonia.Platform;
+﻿using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -15,18 +14,17 @@ public class ParakeetCppEngine : ISpeechToTextEngine
     public static string StaticName => "Parakeet.cpp";
     public string Name => StaticName;
     public string Choice => WhisperChoice.ParakeetCpp;
-    public string Url => "https://github.com/jason-ni/parakeet.cpp";
+    public string Url => "https://github.com/Frikallo/parakeet.cpp";
 
+    // The 110M model is English-only; the 600M TDT model is multilingual.
+    // Languages here reflect what the 600M model supports.
     public List<WhisperLanguage> Languages =>
         new()
         {
-            // Core Canary & Parakeet Supported
             new WhisperLanguage("en", "english"),
             new WhisperLanguage("es", "spanish"),
             new WhisperLanguage("fr", "french"),
             new WhisperLanguage("de", "german"),
-        
-            // Frequently Used NeMo Multilingual Models
             new WhisperLanguage("it", "italian"),
             new WhisperLanguage("pt", "portuguese"),
             new WhisperLanguage("zh", "chinese"),
@@ -35,43 +33,35 @@ public class ParakeetCppEngine : ISpeechToTextEngine
             new WhisperLanguage("ru", "russian"),
             new WhisperLanguage("pl", "polish"),
             new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("nl", "dutch")
+            new WhisperLanguage("nl", "dutch"),
         };
 
-    public List<WhisperModel> Models
-    {
-        get
+    // Each model requires both a .safetensors weights file and a vocab.txt file.
+    // The Urls list contains both downloads in order: [weights, vocab].
+    public List<WhisperModel> Models =>
+        new()
         {
-            return new[]
+            new WhisperModel
             {
-                new WhisperModel
-                {
-                    Name = "qwen3-asr-0.6b.bin",
-                    Size = "1 GB",
-                    Urls =
-                    [
-                        "https://modelscope.cn/models/judd2024/chatllm_quantized_qwen3/resolve/master/qwen3-asr-0.6b.bin"
-                    ]
-                },
-                new WhisperModel
-                {
-                    Name = "qwen3-asr-1.7b.bin",
-                    Size = "2.5 GB",
-                    Urls =
-                    [
-                        "https://modelscope.cn/models/judd2024/chatllm_quantized_qwen3/resolve/master/qwen3-asr-1.7b.bin"
-                    ]
-                },
-            }.ToList();
-        }
-    }
-
-    public WhisperModel ForcedAlignerModel => new WhisperModel
-    {
-        Name = "qwen3-focedaligner-0.6b.bin",
-        Size = "1 GB",
-        Urls = [ "https://modelscope.cn/models/judd2024/chatllm_quantized_qwen3/resolve/master/qwen3-focedaligner-0.6b.bin" ],
-    };
+                Name = "parakeet-tdt_ctc-110m",
+                Size = "450 MB",
+                Urls =
+                [
+                    "https://huggingface.co/nvidia/parakeet-tdt_ctc-110m/resolve/main/model.safetensors",
+                    "https://huggingface.co/nvidia/parakeet-tdt_ctc-110m/resolve/main/vocab.txt",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-600m",
+                Size = "2.4 GB",
+                Urls =
+                [
+                    "https://huggingface.co/nvidia/parakeet-tdt-600m/resolve/main/model.safetensors",
+                    "https://huggingface.co/nvidia/parakeet-tdt-600m/resolve/main/vocab.txt",
+                ],
+            },
+        };
 
     public string Extension => string.Empty;
     public string UnpackSkipFolder => string.Empty;
@@ -90,7 +80,7 @@ public class ParakeetCppEngine : ISpeechToTextEngine
             Directory.CreateDirectory(baseFolder);
         }
 
-        var folder = Path.Combine(baseFolder, "ChatLLM.cpp");
+        var folder = Path.Combine(baseFolder, "parakeet.cpp");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -99,42 +89,74 @@ public class ParakeetCppEngine : ISpeechToTextEngine
         return folder;
     }
 
+    // Each model gets its own sub-folder to keep weights + vocab together.
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
         var baseFolder = GetAndCreateWhisperFolder();
-        return baseFolder;
+        if (whisperModel == null)
+        {
+            return baseFolder;
+        }
+
+        var modelFolder = Path.Combine(baseFolder, whisperModel.Name);
+        if (!Directory.Exists(modelFolder))
+        {
+            Directory.CreateDirectory(modelFolder);
+        }
+
+        return modelFolder;
     }
 
     public string GetExecutable()
     {
-        var fullPath = Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
-        return fullPath;
+        return Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
     }
 
+    // A model is considered installed when both model.safetensors and vocab.txt
+    // are present in the model sub-folder and the weights file is non-trivially sized.
     public bool IsModelInstalled(WhisperModel model)
     {
-        var baseFolder = GetAndCreateWhisperFolder();
-        var modelFileName = Path.Combine(baseFolder, model.Name);
-        if (!File.Exists(modelFileName))
+        var modelFolder = GetAndCreateWhisperModelFolder(model);
+
+        var weightsFile = Path.Combine(modelFolder, "model.safetensors");
+        if (!File.Exists(weightsFile) || new FileInfo(weightsFile).Length < 10_000_000)
         {
             return false;
         }
 
-        var fileInfo = new FileInfo(modelFileName);
-        return fileInfo.Length > 10_000_000;
+        var vocabFile = Path.Combine(modelFolder, "vocab.txt");
+        return File.Exists(vocabFile);
     }
 
+    // Returns the path to the model.safetensors file used on the CLI:
+    //   parakeet <model.safetensors> <audio.wav> --vocab <vocab.txt>
     public string GetModelForCmdLine(string modelName)
     {
-        var baseFolder = GetAndCreateWhisperFolder();
-        var modelFileName = Path.Combine(baseFolder, modelName);
-        return modelFileName;
+        var modelFolder = Path.Combine(GetAndCreateWhisperFolder(), modelName);
+        return Path.Combine(modelFolder, "model.safetensors");
     }
 
-    public override string ToString()
+    // Convenience helper so callers can build the --vocab argument.
+    public string GetVocabForCmdLine(string modelName)
     {
-        return Name;
+        var modelFolder = Path.Combine(GetAndCreateWhisperFolder(), modelName);
+        return Path.Combine(modelFolder, "vocab.txt");
     }
+
+    // Returns the download destination for a given URL inside the model's folder.
+    public string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url)
+    {
+        var folder = GetAndCreateWhisperModelFolder(whisperModel);
+        var fileNameOnly = Path.GetFileName(url);
+        return Path.Combine(folder, fileNameOnly);
+    }
+
+    public string GetExecutableFileName() =>
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "parakeet.exe" : "parakeet";
+
+    public bool CanBeDownloaded() => true;
+
+    public override string ToString() => Name;
 
     public async Task<string> GetHelpText()
     {
@@ -143,31 +165,6 @@ public class ParakeetCppEngine : ISpeechToTextEngine
 
         await using var stream = AssetLoader.Open(uri);
         using var reader = new StreamReader(stream);
-
-        var contents = await reader.ReadToEndAsync();
-        return contents;
-    }
-
-    public string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url)
-    {
-        var folder = GetAndCreateWhisperModelFolder(whisperModel);
-        var fileNameOnly = Path.GetFileName(url);
-        var fileName = Path.Combine(folder, fileNameOnly);
-        return fileName;
-    }
-
-    public string GetExecutableFileName()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return "main.exe";
-        }
-
-        return "main";
-    }
-
-    public bool CanBeDownloaded()
-    {
-        return true;
+        return await reader.ReadToEndAsync();
     }
 }
