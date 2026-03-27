@@ -17,8 +17,8 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
     private readonly HttpClient _httpClient;
 
     private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-win64.zip";
-    private const string MacArmUrl = "";
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-linux.zip";
+    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-mac.zip";
+    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-linux.zip";
 
     public Qwen3AsrCppDownloadService(HttpClient httpClient)
     {
@@ -44,7 +44,7 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return MacArmUrl; // e.g., for M1, M2, M3, M4, M5 chips
+            return MacArmUrl;
         }
 
         throw new PlatformNotSupportedException();
