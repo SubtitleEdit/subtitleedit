@@ -289,6 +289,9 @@ public partial class MainViewModel :
     private List<int>? _visibleLayers;
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
+    private ObservableCollection<SubtitleLineViewModel>? _waveformSubtitlesCache;
+    private bool _waveformSubtitlesDirty = true;
+    private bool _waveformCachedNoLayers = true;
     private CancellationTokenSource _videoOpenTokenSource;
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
     private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
@@ -14034,6 +14037,7 @@ public partial class MainViewModel :
 
     private void StartTimers()
     {
+        Subtitles.CollectionChanged += (_, _) => _waveformSubtitlesDirty = true;
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         _positionTimer.Tick += (s, e) =>
         {
@@ -14050,11 +14054,17 @@ public partial class MainViewModel :
                 }
 
                 var noLayers = _visibleLayers == null || !Se.Settings.Assa.HideLayersFromWaveform || _visibleLayers.Count == 0;
-                var subtitle = new ObservableCollection<SubtitleLineViewModel>(
-                    Subtitles
-                        .OrderBy(p => p.StartTime.TotalMilliseconds)
-                        .Where(p => noLayers || _visibleLayers!.Contains(p.Layer))
-                );
+                if (_waveformSubtitlesDirty || noLayers != _waveformCachedNoLayers || _updateAudioVisualizer)
+                {
+                    _waveformSubtitlesCache = new ObservableCollection<SubtitleLineViewModel>(
+                        Subtitles
+                            .OrderBy(p => p.StartTime.TotalMilliseconds)
+                            .Where(p => noLayers || _visibleLayers!.Contains(p.Layer))
+                    );
+                    _waveformSubtitlesDirty = false;
+                    _waveformCachedNoLayers = noLayers;
+                }
+                var subtitle = _waveformSubtitlesCache!;
 
                 var mediaPlayerSeconds = vp.Position;
                 var startPos = mediaPlayerSeconds - 0.01;
@@ -14134,11 +14144,21 @@ public partial class MainViewModel :
                         {
                             SubtitleLineViewModel? firstMatch = null;
                             var matchFound = false;
-                            for (var i = 0; i < subtitle.Count; i++)
+                            var lo = 0;
+                            var hi = subtitle.Count;
+                            while (lo < hi)
+                            {
+                                var mid = (lo + hi) / 2;
+                                if (subtitle[mid].StartTime.TotalSeconds <= mediaPlayerSeconds)
+                                    lo = mid + 1;
+                                else
+                                    hi = mid;
+                            }
+                            var scanStart = Math.Max(0, lo - 20);
+                            for (var i = scanStart; i < lo; i++)
                             {
                                 var p = subtitle[i];
-                                if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
-                                    mediaPlayerSeconds <= p.EndTime.TotalSeconds)
+                                if (mediaPlayerSeconds <= p.EndTime.TotalSeconds)
                                 {
                                     if (firstMatch == null)
                                     {
