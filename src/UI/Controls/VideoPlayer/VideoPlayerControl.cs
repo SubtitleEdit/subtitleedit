@@ -586,11 +586,22 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
             _positionTimer.Tick += (s, e) =>
             {
+                // Duration and IsPlaying change infrequently — poll every 5th tick (~250 ms)
+                // instead of every 50 ms to reduce P/Invoke overhead on the UI thread.
+                // Polled first so that ProgressText below always uses the current Duration.
+                _slowPollCounter++;
+                if (_slowPollCounter >= 5)
+                {
+                    _slowPollCounter = 0;
+                    Duration = _videoPlayerInstance.Duration;
+                    SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
+                }
+
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;
                 var pos = _videoPlayerInstance.Position;
                 if (IsSmpteTimingEnabled)
                 {
-                    pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment 
+                    pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
                 }
 
                 SetPositionDisplayOnly(pos);
@@ -614,16 +625,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 {
                     ProgressText =
                         $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()} / {TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()}{postFix}";
-                }
-
-                // Duration and IsPlaying change infrequently — poll every 5th tick (~250 ms)
-                // instead of every 50 ms to reduce P/Invoke overhead on the UI thread.
-                _slowPollCounter++;
-                if (_slowPollCounter >= 5)
-                {
-                    _slowPollCounter = 0;
-                    Duration = _videoPlayerInstance.Duration;
-                    SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
                 }
             };
             _positionTimer.Start();

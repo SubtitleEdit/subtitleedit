@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Assa;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -40,7 +41,8 @@ public class SeVideo
         BurnIn = new();
         Transparent = new();
         TextToSpeech = new();
-        VideoPlayer = "mpv-wid";
+        // mpv-wid uses a native OS window (NativeControlHost) and is not supported on macOS.
+        VideoPlayer = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mpv-opengl" : "mpv-wid";
         Volume = 60;
         ShowStopButton = true;
         ShowFullscreenButton = true;
