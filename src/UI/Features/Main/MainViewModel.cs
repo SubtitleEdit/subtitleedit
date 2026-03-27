@@ -14154,8 +14154,7 @@ public partial class MainViewModel :
                                 else
                                     hi = mid;
                             }
-                            var scanStart = Math.Max(0, lo - 20);
-                            for (var i = scanStart; i < lo; i++)
+                            for (var i = 0; i < lo; i++)
                             {
                                 var p = subtitle[i];
                                 if (mediaPlayerSeconds <= p.EndTime.TotalSeconds)
