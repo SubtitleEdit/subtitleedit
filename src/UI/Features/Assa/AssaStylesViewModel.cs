@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Skia;
@@ -703,6 +703,8 @@ public partial class AssaStylesViewModel : ObservableObject
             var s = new SeAssaStyle(style);
             Se.Settings.Assa.StoredStyles.Add(s);
         }
+
+        Se.SaveSettings();
     }
 
     private void LoadSettings()
