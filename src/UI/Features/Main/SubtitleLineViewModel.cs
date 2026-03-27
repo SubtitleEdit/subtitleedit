@@ -171,6 +171,11 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
+            if (!Se.Settings.General.ShowColumnPixelWidth && !Se.Settings.General.ColorTextTooWide)
+            {
+                return 0;
+            }
+
             var text = HtmlUtil.RemoveHtmlTags(Text, true);
             var lines = text.SplitToLines();
             var maxWidth = 0;
