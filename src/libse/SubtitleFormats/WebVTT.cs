@@ -366,7 +366,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var current = subtitle.Paragraphs[i];
                 var nextParagraph = subtitle.Paragraphs[i + 1];
                 if (current.StartTime.TotalMilliseconds == nextParagraph.StartTime.TotalMilliseconds &&
-                    current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds)
+                    current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds &&
+                    current.Region == nextParagraph.Region)
                 {
                     current.Text = current.Text + Environment.NewLine + nextParagraph.Text;
                     subtitle.Paragraphs.RemoveAt(i + 1);
