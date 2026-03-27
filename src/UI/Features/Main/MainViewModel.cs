@@ -12485,7 +12485,7 @@ public partial class MainViewModel :
             ffmpegProcess.BeginOutputReadLine();
             ffmpegProcess.BeginErrorReadLine();
 
-            _ = Task.Run(() =>
+            _ = Task.Run(async () =>
             {
                 while (!ffmpegProcess.HasExited)
                 {
@@ -12503,7 +12503,7 @@ public partial class MainViewModel :
                         break;
                     }
 
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
 
                 if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
