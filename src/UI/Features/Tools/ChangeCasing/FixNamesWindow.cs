@@ -37,7 +37,6 @@ public class FixNamesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Title
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Name title
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Names
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Extra names label
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Extra names entry
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Hits title
@@ -62,15 +61,6 @@ public class FixNamesWindow : Window
 
         row++;
         grid.Add(MakeNamesView(vm), row, 0);
-
-        row++;
-        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, vm.NamesSelectAllCommand);
-        var buttonInvertSelection = UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.NamesInvertSelectionCommand);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonSelectAll,
-            buttonInvertSelection
-        );  
-        grid.Add(panelButtons, row, 0);
 
         row++;
         var labelExtraNames = UiUtil.MakeLabel(lang.ExtraNames);
@@ -117,8 +107,8 @@ public class FixNamesWindow : Window
     {
         var dataGrid = new DataGrid
         {
-            Height = double.NaN, 
-            ItemsSource = vm.Names, 
+            Height = double.NaN,
+            ItemsSource = vm.Names,
             CanUserSortColumns = false,
             SelectionMode = DataGridSelectionMode.Single,
             DataContext = vm,
@@ -151,6 +141,11 @@ public class FixNamesWindow : Window
             IsReadOnly = true,
         });
 
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.NamesSelectAllCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.InvertSelection, Command = vm.NamesInvertSelectionCommand });
+        dataGrid.ContextFlyout = flyout;
+
         var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         return border;
     }
@@ -162,17 +157,27 @@ public class FixNamesWindow : Window
             Height = double.NaN,
             ItemsSource = vm.Hits,
             CanUserSortColumns = false,
-            IsReadOnly = true,
+            IsReadOnly = false,
             SelectionMode = DataGridSelectionMode.Single,
             DataContext = vm,
         };
 
-        dataGrid.Columns.Add(new DataGridCheckBoxColumn
+        dataGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Se.Language.General.Apply,
-            Binding = new Binding(nameof(FixNameHitItem.IsEnabled)),
-            Width = new DataGridLength(80),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            IsReadOnly = false,
+            CellTemplate = new FuncDataTemplate<FixNameHitItem>(static (_, _) => new Border
+            {
+                Background = Brushes.Transparent, // Prevents highlighting
+                Padding = new Thickness(4),
+                Child = new CheckBox
+                {
+                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNameHitItem.IsEnabled)),
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                }
+            }),
+            Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
         });
         dataGrid.Columns.Add(new DataGridTextColumn
         {
@@ -180,6 +185,7 @@ public class FixNamesWindow : Window
             Binding = new Binding(nameof(FixNameHitItem.LineIndexDisplay)),
             Width = new DataGridLength(140),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            IsReadOnly = true
         });
         dataGrid.Columns.Add(new DataGridTextColumn
         {
@@ -187,6 +193,7 @@ public class FixNamesWindow : Window
             Binding = new Binding(nameof(FixNameHitItem.Before)),
             Width = new DataGridLength(220),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            IsReadOnly = true
         });
         dataGrid.Columns.Add(new DataGridTextColumn
         {
@@ -194,7 +201,13 @@ public class FixNamesWindow : Window
             Binding = new Binding(nameof(FixNameHitItem.After)),
             Width = new DataGridLength(1, DataGridLengthUnitType.Star),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            IsReadOnly = true
         });
+
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.HitsSelectAllCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.InvertSelection, Command = vm.HitsInvertSelectionCommand });
+        dataGrid.ContextFlyout = flyout;
 
         var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         return border;

@@ -1,8 +1,11 @@
-﻿namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class FixNameHitItem
+namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
+
+public partial class FixNameHitItem : ObservableObject
 {
-    public bool IsEnabled { get; set; }
+    [ObservableProperty] private bool _isEnabled;
+
     public string Name { get; set; }
     public int LineIndex { get; set; }
     public int LineIndexDisplay { get; set; }
