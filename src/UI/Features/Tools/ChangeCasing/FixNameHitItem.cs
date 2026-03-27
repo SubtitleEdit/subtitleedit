@@ -4,8 +4,7 @@ namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
 public partial class FixNameHitItem : ObservableObject
 {
-    [ObservableProperty]
-    public partial bool IsEnabled { get; set; }
+    [ObservableProperty] private bool _isEnabled;
 
     public string Name { get; set; }
     public int LineIndex { get; set; }
