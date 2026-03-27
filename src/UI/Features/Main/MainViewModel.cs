@@ -268,6 +268,7 @@ public partial class MainViewModel :
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
     private bool _updateAudioVisualizer;
+    private bool _mpvPreviewDirty = true; // true = subtitle preview needs refresh in mpv
     private string? _subtitleFileName;
     private string? _subtitleFileNameOriginal;
     private bool _converted;
@@ -14032,8 +14033,32 @@ public partial class MainViewModel :
 
     private bool _avLastScrolling = false;
 
+    private void OnSubtitlesCollectionChangedForMpv(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        _mpvPreviewDirty = true;
+        if (e.NewItems != null)
+            foreach (SubtitleLineViewModel item in e.NewItems)
+                item.PropertyChanged += OnSubtitleItemChangedForMpv;
+        if (e.OldItems != null)
+            foreach (SubtitleLineViewModel item in e.OldItems)
+                item.PropertyChanged -= OnSubtitleItemChangedForMpv;
+    }
+
+    private void OnSubtitleItemChangedForMpv(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
+            or nameof(SubtitleLineViewModel.StartTime)
+            or nameof(SubtitleLineViewModel.EndTime))
+        {
+            _mpvPreviewDirty = true;
+        }
+    }
+
     private void StartTimers()
     {
+        Subtitles.CollectionChanged += OnSubtitlesCollectionChangedForMpv;
+        foreach (var item in Subtitles)
+            item.PropertyChanged += OnSubtitleItemChangedForMpv;
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         _positionTimer.Tick += (s, e) =>
         {
@@ -14178,9 +14203,10 @@ public partial class MainViewModel :
             UpdateTitleStatus();
             UpdateGaps();
             var vp = GetVideoPlayerControl();
-            if (vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
             {
                 var subtitle = GetUpdateSubtitle();
+                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
                 var hasVisibleLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
                 if (hasVisibleLayers)
                 {
@@ -14319,7 +14345,7 @@ public partial class MainViewModel :
 
         vp.Position = newPosition;
 
-        _updateAudioVisualizer = true; // Update the audio visualizer position
+        _updateAudioVisualizer = true;
     }
 
     internal void AudioVisualizerOnStatus(object sender, ParagraphEventArgs e)

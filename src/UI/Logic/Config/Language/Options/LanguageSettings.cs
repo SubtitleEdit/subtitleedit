@@ -487,7 +487,7 @@ public class LanguageSettings
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
         MpvVideoOutput = "Video output  (mpv)";
         MpvOpenGl = "libmpv - OpenGL";
-        MpvWidRendering = "libmpv - Native Window ID rendering";
+        MpvWidRendering = "libmpv - Native Window ID rendering (faster on Windows/Linux)";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
         VlcWidRendering = "libVLC - Native Window ID rendering";
         WaveFormsAndSpectrogramFoldersContainsX = "\"Waveforms\" and \"spectrogram\" folders contains {0}";

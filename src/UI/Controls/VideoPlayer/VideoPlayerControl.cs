@@ -170,6 +170,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonFullScreenCollapse;
         private readonly Icon _iconVolume;
         private DispatcherTimer? _positionTimer;
+        private int _slowPollCounter;
         private IVideoPlayerInstance _videoPlayerInstance;
         private string _videoFileName;
         private readonly Grid _gridProgress; // Reference to the controls grid
@@ -526,6 +527,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             await _videoPlayerInstance.LoadFile(videoFileName);
             _videoPlayerInstance.Volume = Volume;
             _positionTimer?.Stop();
+            _slowPollCounter = 4; // force Duration+icon update on the very first tick
             StartPositionTimer();
             _videoPlayerInstance.Pause();
             _textBlockPlayerName.Text = _videoPlayerInstance.Name;
@@ -584,11 +586,22 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
             _positionTimer.Tick += (s, e) =>
             {
+                // Duration and IsPlaying change infrequently — poll every 5th tick (~250 ms)
+                // instead of every 50 ms to reduce P/Invoke overhead on the UI thread.
+                // Polled first so that ProgressText below always uses the current Duration.
+                _slowPollCounter++;
+                if (_slowPollCounter >= 5)
+                {
+                    _slowPollCounter = 0;
+                    Duration = _videoPlayerInstance.Duration;
+                    SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
+                }
+
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;
                 var pos = _videoPlayerInstance.Position;
                 if (IsSmpteTimingEnabled)
                 {
-                    pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment 
+                    pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
                 }
 
                 SetPositionDisplayOnly(pos);
@@ -613,11 +626,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     ProgressText =
                         $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()} / {TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()}{postFix}";
                 }
-
-                //TODO: move to a slower timer or events
-                Duration = _videoPlayerInstance.Duration;
-                var isPlaying = _videoPlayerInstance.IsPlaying;
-                SetPlayPauseIcon(isPlaying);
             };
             _positionTimer.Start();
         }
