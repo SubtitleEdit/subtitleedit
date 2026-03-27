@@ -267,7 +267,17 @@ public partial class MainViewModel :
 
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
-    private bool _updateAudioVisualizer;
+    private bool _updateAudioVisualizerValue;
+    private bool _updateAudioVisualizer
+    {
+        get => _updateAudioVisualizerValue;
+        set
+        {
+            _updateAudioVisualizerValue = value;
+            if (value) _mpvPreviewDirty = true;
+        }
+    }
+    private bool _mpvPreviewDirty = true; // true = subtitle preview needs refresh in mpv
     private string? _subtitleFileName;
     private string? _subtitleFileNameOriginal;
     private bool _converted;
@@ -14034,6 +14044,7 @@ public partial class MainViewModel :
 
     private void StartTimers()
     {
+        Subtitles.CollectionChanged += (_, _) => _mpvPreviewDirty = true;
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         _positionTimer.Tick += (s, e) =>
         {
@@ -14178,8 +14189,9 @@ public partial class MainViewModel :
             UpdateTitleStatus();
             UpdateGaps();
             var vp = GetVideoPlayerControl();
-            if (vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
             {
+                _mpvPreviewDirty = false;
                 var subtitle = GetUpdateSubtitle();
                 var hasVisibleLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
                 if (hasVisibleLayers)
