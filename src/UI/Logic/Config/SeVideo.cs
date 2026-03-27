@@ -40,7 +40,7 @@ public class SeVideo
         BurnIn = new();
         Transparent = new();
         TextToSpeech = new();
-        VideoPlayer = "mpv-opengl";
+        VideoPlayer = "mpv-wid";
         Volume = 60;
         ShowStopButton = true;
         ShowFullscreenButton = true;
