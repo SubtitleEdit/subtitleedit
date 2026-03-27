@@ -268,6 +268,9 @@ public partial class MainViewModel :
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
     private bool _updateAudioVisualizerValue;
+    // Property wrapper: every subtitle mutation that triggers an audio visualizer repaint
+    // also marks the mpv preview dirty. Pure video-position changes (seeking) bypass this
+    // by assigning directly to _updateAudioVisualizerValue to avoid false positives.
     private bool _updateAudioVisualizer
     {
         get => _updateAudioVisualizerValue;
@@ -14191,8 +14194,8 @@ public partial class MainViewModel :
             var vp = GetVideoPlayerControl();
             if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
             {
-                _mpvPreviewDirty = false;
                 var subtitle = GetUpdateSubtitle();
+                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
                 var hasVisibleLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
                 if (hasVisibleLayers)
                 {
@@ -14331,7 +14334,10 @@ public partial class MainViewModel :
 
         vp.Position = newPosition;
 
-        _updateAudioVisualizer = true; // Update the audio visualizer position
+        // Bypass the property wrapper: this is a pure seek, not a subtitle content change.
+        // Setting _mpvPreviewDirty here would cause unnecessary GetUpdateSubtitle() calls
+        // during waveform scrubbing without any actual subtitle data changing.
+        _updateAudioVisualizerValue = true;
     }
 
     internal void AudioVisualizerOnStatus(object sender, ParagraphEventArgs e)
