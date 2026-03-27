@@ -297,6 +297,9 @@ public class AudioVisualizer : Control
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
     private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
+    private static readonly Cursor _cursorArrow = new Cursor(StandardCursorType.Arrow);
+    private static readonly Cursor _cursorHand = new Cursor(StandardCursorType.Hand);
+    private static readonly Cursor _cursorSizeWestEast = new Cursor(StandardCursorType.SizeWestEast);
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
     private bool _isCtrlDown;
@@ -1204,21 +1207,21 @@ public class AudioVisualizer : Control
             {
                 if (p == NewSelectionParagraph && NewSelectionParagraph?.Duration.TotalMilliseconds < 10)
                 {
-                    Cursor = new Cursor(StandardCursorType.Arrow);
+                    Cursor = _cursorArrow;
                 }
                 else
                 {
-                    Cursor = new Cursor(StandardCursorType.SizeWestEast);
+                    Cursor = _cursorSizeWestEast;
                 }
             }
             else
             {
-                Cursor = new Cursor(StandardCursorType.Hand);
+                Cursor = _cursorHand;
             }
         }
         else
         {
-            Cursor = new Cursor(StandardCursorType.Arrow);
+            Cursor = _cursorArrow;
         }
     }
 
