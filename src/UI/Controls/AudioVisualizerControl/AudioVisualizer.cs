@@ -300,6 +300,8 @@ public class AudioVisualizer : Control
     private readonly Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
+    private readonly HashSet<int> _paragraphStartPositions = new();
+    private readonly HashSet<int> _paragraphEndPositions = new();
     private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
@@ -1936,14 +1938,14 @@ public class AudioVisualizer : Control
 
         var startPositionMilliseconds = renderCtx.StartPositionSeconds * 1000.0;
         var endPositionMilliseconds = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, renderCtx.StartPositionSeconds, renderCtx.ZoomFactor) * 1000.0;
-        var paragraphStartSet = new HashSet<int>();
-        var paragraphEndSet = new HashSet<int>();
+        _paragraphStartPositions.Clear();
+        _paragraphEndPositions.Clear();
         foreach (var p in _displayableParagraphs)
         {
             if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
             {
-                paragraphStartSet.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
-                paragraphEndSet.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
+                _paragraphStartPositions.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
+                _paragraphEndPositions.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
             }
         }
 
@@ -1968,12 +1970,12 @@ public class AudioVisualizer : Control
                     context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                     context.DrawLine(_paintPenCursor, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
-                else if (paragraphStartSet.Contains(pos))
+                else if (_paragraphStartPositions.Contains(pos))
                 {
                     context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                     context.DrawLine(_paintShotChangeParagraphStartPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
-                else if (paragraphEndSet.Contains(pos))
+                else if (_paragraphEndPositions.Contains(pos))
                 {
                     context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                     context.DrawLine(_paintShotChangeParagraphEndPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
