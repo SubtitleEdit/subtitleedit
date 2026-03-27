@@ -296,6 +296,12 @@ public class AudioVisualizer : Control
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
+    private readonly Pen _paintShotChangeThickPen = new Pen(Brushes.AntiqueWhite, 2);
+    private readonly Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
+    private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
+    private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
+    private readonly HashSet<int> _paragraphStartPositions = new();
+    private readonly HashSet<int> _paragraphEndPositions = new();
     private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
     private static readonly Cursor _cursorArrow = new Cursor(StandardCursorType.Arrow);
     private static readonly Cursor _cursorHand = new Cursor(StandardCursorType.Hand);
@@ -1935,14 +1941,14 @@ public class AudioVisualizer : Control
 
         var startPositionMilliseconds = renderCtx.StartPositionSeconds * 1000.0;
         var endPositionMilliseconds = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, renderCtx.StartPositionSeconds, renderCtx.ZoomFactor) * 1000.0;
-        var paragraphStartList = new List<int>();
-        var paragraphEndList = new List<int>();
+        _paragraphStartPositions.Clear();
+        _paragraphEndPositions.Clear();
         foreach (var p in _displayableParagraphs)
         {
             if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
             {
-                paragraphStartList.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
-                paragraphEndList.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
+                _paragraphStartPositions.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
+                _paragraphEndPositions.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
             }
         }
 
@@ -1964,32 +1970,22 @@ public class AudioVisualizer : Control
                 if (currentPositionPos == pos)
                 {
                     // shot change and current pos are the same
-                    var pen1 = new Pen(Brushes.AntiqueWhite, 2);
-                    context.DrawLine(pen1, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                     context.DrawLine(_paintPenCursor, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
-                else if (paragraphStartList.Contains(pos))
+                else if (_paragraphStartPositions.Contains(pos))
                 {
-                    var pen1 = new Pen(Brushes.AntiqueWhite, 2);
-                    context.DrawLine(pen1, new Point(pos, 0), new Point(pos, renderCtx.Height));
-
-                    var brush = new SolidColorBrush(Color.FromArgb(175, 0, 100, 0));
-                    var pen2 = new Pen(brush, 2, dashStyle: DashStyle.Dash);
-                    context.DrawLine(pen2, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeParagraphStartPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
-                else if (paragraphEndList.Contains(pos))
+                else if (_paragraphEndPositions.Contains(pos))
                 {
-                    var pen1 = new Pen(Brushes.AntiqueWhite, 2);
-                    context.DrawLine(pen1, new Point(pos, 0), new Point(pos, renderCtx.Height));
-
-                    var brush = new SolidColorBrush(Color.FromArgb(175, 110, 10, 10));
-                    var pen2 = new Pen(brush, 2, dashStyle: DashStyle.Dash);
-                    context.DrawLine(pen2, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeThickPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeParagraphEndPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
                 else
                 {
-                    var pen = new Pen(Brushes.AntiqueWhite, 1);
-                    context.DrawLine(pen, new Point(pos, 0), new Point(pos, renderCtx.Height));
+                    context.DrawLine(_paintShotChangeThinPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
                 }
             }
         }
