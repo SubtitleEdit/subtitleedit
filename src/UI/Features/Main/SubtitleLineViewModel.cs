@@ -282,7 +282,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         get
         {
             if (Se.Settings.General.ColorDurationTooShort &&
-                Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds || Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds || Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds ||
+                Se.Settings.General.ColorTimeCodeOverlap && Gap < 0)
             {
                 return new SolidColorBrush(_errorColor);
             }
@@ -327,6 +328,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(GapBackgroundBrush));
+        OnPropertyChanged(nameof(DurationBackgroundBrush));
     }
 
     public IBrush GapBackgroundBrush
