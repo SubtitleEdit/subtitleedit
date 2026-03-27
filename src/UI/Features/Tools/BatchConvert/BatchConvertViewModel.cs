@@ -245,6 +245,7 @@ public partial class BatchConvertViewModel : ObservableObject
         OutputEncodingLabel = string.Empty;
         StatusText = string.Empty;
         DeleteActorsOrStyles = string.Empty;
+        OffsetTimeCodesForward = true;
         FunctionContainer = new ScrollViewer();
         FromFrameRates = new ObservableCollection<double>
         {
