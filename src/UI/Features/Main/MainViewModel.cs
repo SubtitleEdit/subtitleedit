@@ -12503,7 +12503,7 @@ public partial class MainViewModel :
                         break;
                     }
 
-                    await Task.Delay(100).ConfigureAwait(false);
+                    await Task.Delay(100, _videoOpenTokenSource.Token).ConfigureAwait(false);
                 }
 
                 if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
