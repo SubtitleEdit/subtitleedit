@@ -412,6 +412,7 @@
     <Word from="dosap" to="došao" />
     <!-- nije za regex [ni dospeo - ni dospeju - mora ostati ovako] -->
     <Word from="dospe" to="dospio" />
+    <Word from="dospelih" to="dospjelih" />
     <Word from="Dospećemo" to="Dospjet ćemo" />
     <Word from="dospeo" to="dospio" />
     <Word from="dospeju" to="dospiju" />
@@ -1910,6 +1911,7 @@
     <Word from="predelu" to="predjelu" />
     <Word from="Preći" to="Prijeći" />
     <Word from="preći" to="prijeći" />
+    <Word from="prećutao" to="prešutio" />
     <Word from="prećutati" to="prešutjeti" />
     <Word from="prećutkuje" to="prešućuje" />
     <Word from="predame" to="preda me" />
@@ -3129,6 +3131,8 @@
     <Word from="zanimap" to="zanimaš" />
     <Word from="zaoravo" to="zapravo" />
     <Word from="zaot" to="zato" />
+    <Word from="Zapakujte" to="Zapakirajte" />
+    <Word from="zapakujte" to="zapakirajte" />
     <Word from="zapakujete" to="zapakirate" />
     <Word from="zaplena" to="zapljena" />
     <Word from="zapleni" to="zaplijeni" />
@@ -4324,6 +4328,7 @@
     <LinePart from="u jutro" to="ujutro" />
     <LinePart from="u reci" to="u rijeci" />
     <LinePart from="ući unutra" to="ući" />
+    <LinePart from="Umeš da budeš" to="Znaš biti" />
     <LinePart from="umeju da budu" to="znaju biti" />
     <LinePart from="vas je lagao" to="vam je lagao" />
     <LinePart from="voli da bude" to="volim biti" />
@@ -4334,6 +4339,7 @@
     <LinePart from="zna da bude" to="zna biti" />
     <LinePart from="zna ko" to="zna tko" />
     <LinePart from="znam ko" to="znam tko" />
+    <LinePart from="Znaš li ko" to="Znaš li tko" />
     <LinePart from="znati ko" to="znati tko" />
     <LinePart from="žele da budu" to="žele biti" />
     <LinePart from="želi da bude" to="želi biti" />
