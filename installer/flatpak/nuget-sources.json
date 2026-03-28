@@ -106,13 +106,6 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/avalonia.skia/11.2.8/avalonia.skia.11.2.8.nupkg",
-        "sha512": "2cc710d3b097c8a8d2158656ee0d8cf094f40cf839a443844190bdee1d46ab83bc16bd94aad765b33e10940f1fb4ea666a52ae13c2af8fef486583f9f6da8261",
-        "dest": "nuget-sources",
-        "dest-filename": "avalonia.skia.11.2.8.nupkg"
-    },
-    {
-        "type": "file",
         "url": "https://api.nuget.org/v3-flatcontainer/avalonia.skia/11.3.12/avalonia.skia.11.3.12.nupkg",
         "sha512": "05a0b4d371fbf688b468a2cb21a619f84fd28e52d95d4a99e0c7e4166e85825733a5b80770ddfd5e08911cb8a76bcef74a3c0a204063befb95f7e141a0e3d52f",
         "dest": "nuget-sources",
@@ -155,10 +148,10 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/communitytoolkit.mvvm/8.4.0/communitytoolkit.mvvm.8.4.0.nupkg",
-        "sha512": "5e9705a1ad58b19f0b3ce956ac40226337402a7b17d067fbb5fd987e9ecee2a100c2d76f15537932b18618599599023542257fe67df32b193dc2b30542b2c30b",
+        "url": "https://api.nuget.org/v3-flatcontainer/communitytoolkit.mvvm/8.4.1/communitytoolkit.mvvm.8.4.1.nupkg",
+        "sha512": "fc228949834b3593d3a6adaedb358129f15a964733ca0e2cd2c77dadc9d4520eaa6456a33e77790a5a1e609c850e2b697c5592aac56a0258debc30b7760c2a3d",
         "dest": "nuget-sources",
-        "dest-filename": "communitytoolkit.mvvm.8.4.0.nupkg"
+        "dest-filename": "communitytoolkit.mvvm.8.4.1.nupkg"
     },
     {
         "type": "file",
@@ -208,13 +201,6 @@
         "sha512": "e352f41791acf50fbef0e6e6e9a6fd631f19cdf305b34658d14dddfe0fb15bacb46ebb21376ee75a68b6256154a598ba2d82059ab6466bc3381d156a6ed91ffc",
         "dest": "nuget-sources",
         "dest-filename": "google.apis.1.72.0.nupkg"
-    },
-    {
-        "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/google.apis.auth/1.69.0/google.apis.auth.1.69.0.nupkg",
-        "sha512": "a2ca73f248755a301fd8d0fb7cedffc1a691e22176cf6618893286aefac99046bab34bd00693079665dfbbfcfff8d851fc1fa94a1276dd54145c7c11a9658350",
-        "dest": "nuget-sources",
-        "dest-filename": "google.apis.auth.1.69.0.nupkg"
     },
     {
         "type": "file",
@@ -278,13 +264,6 @@
         "sha512": "1fb4d67bc75d0f138f0a475f0cb26a475aa67b8770c5dc7b5a47fbc73d6e5bfb8c459fef4c629a476ce8cf16746cfb2872725113a243ec60764295a449d55f79",
         "dest": "nuget-sources",
         "dest-filename": "grpc.net.common.2.71.0.nupkg"
-    },
-    {
-        "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/harfbuzzsharp/8.3.1.1/harfbuzzsharp.8.3.1.1.nupkg",
-        "sha512": "ed1d94447956fa595c4867fe3eeb4a7b67c97e00e0da5a72762362212cbf25e62be5936e59617c94a1cbd4e6bbd0ac902854d0d36866bd920ed6a85ae663ac8c",
-        "dest": "nuget-sources",
-        "dest-filename": "harfbuzzsharp.8.3.1.1.nupkg"
     },
     {
         "type": "file",
@@ -428,13 +407,6 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/microsoft.extensions.logging.abstractions/6.0.0/microsoft.extensions.logging.abstractions.6.0.0.nupkg",
-        "sha512": "bfb1b4b98242104803d1a65a1a051d0b8e481fbc987fa2f4b58a610ab459b4d24e8753c515c32a376dd2c6804d1ce2d39624b972a81c68e92481958e1a8a31df",
-        "dest": "nuget-sources",
-        "dest-filename": "microsoft.extensions.logging.abstractions.6.0.0.nupkg"
-    },
-    {
-        "type": "file",
         "url": "https://api.nuget.org/v3-flatcontainer/microsoft.extensions.options/10.0.5/microsoft.extensions.options.10.0.5.nupkg",
         "sha512": "0d6315c66c94cbec6a812c0c4405ddee935ade9b656dbf73e126c4be62adab6f9eb34c8658f26fdf89e5bfe5fd1cbb1e8dedd9cb8ceecf3a82accc6a1c7c521f",
         "dest": "nuget-sources",
@@ -467,6 +439,13 @@
         "sha512": "aadd40a7fb514e2e826af16d5c99819f31e9201bfe3178bcc76499b8d768942e5ff4f27dd4a9ddddc44c97476879b345a37512c9679210cba8c7ca29895b5d49",
         "dest": "nuget-sources",
         "dest-filename": "microsoft.netcore.app.host.linux-arm64.10.0.5.nupkg"
+    },
+    {
+        "type": "file",
+        "url": "https://api.nuget.org/v3-flatcontainer/microsoft.netcore.app.host.linux-x64/10.0.5/microsoft.netcore.app.host.linux-x64.10.0.5.nupkg",
+        "sha512": "ccbd35ef7d2c36924004eacc68862366f5f5758181ec59c81c76c506ec54a11c7108a0b13bf83e5dcdce1eae68991d11d538fd545ad865c90fc52021eed33724",
+        "dest": "nuget-sources",
+        "dest-filename": "microsoft.netcore.app.host.linux-x64.10.0.5.nupkg"
     },
     {
         "type": "file",
@@ -820,24 +799,17 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/sharpcompress/0.47.1/sharpcompress.0.47.1.nupkg",
-        "sha512": "c48c1b72d91d7a32fb3f839bc1eef9099b8ae6a24258c0dc296335519f358f77cbfd1fddd3e8226b0950594e77c1b0b6f7851058f3f39591cad82e6784dcd73d",
+        "url": "https://api.nuget.org/v3-flatcontainer/sharpcompress/0.47.3/sharpcompress.0.47.3.nupkg",
+        "sha512": "f03a567da961c6c92ad7da5c6d9a58339ec9739bf19c63a9fd44b629053911382571ffd63106365ddcde01db12a1e76921c81871bf8c410026ca41e37a6afca2",
         "dest": "nuget-sources",
-        "dest-filename": "sharpcompress.0.47.1.nupkg"
+        "dest-filename": "sharpcompress.0.47.3.nupkg"
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/simplecto.avalonia.richtextbox/1.6.3/simplecto.avalonia.richtextbox.1.6.3.nupkg",
-        "sha512": "bfa6346d540b6b305dd066979cb67efbddb6cf78b4735d952b7c251f3079680a2e0598cc1d116930f4945ec0e971d2771c54f672b50641c0469c6c7dfe4ed078",
+        "url": "https://api.nuget.org/v3-flatcontainer/simplecto.avalonia.richtextbox/1.6.5/simplecto.avalonia.richtextbox.1.6.5.nupkg",
+        "sha512": "05ac0430fbcb3c128503c8c4032271325b098a0ad345351eb222b43b0dff713c50508d339a88c33034f1f053f4aa78f670ad4aa88c17044d4cf054404c9f36f4",
         "dest": "nuget-sources",
-        "dest-filename": "simplecto.avalonia.richtextbox.1.6.3.nupkg"
-    },
-    {
-        "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/skiasharp/2.88.9/skiasharp.2.88.9.nupkg",
-        "sha512": "3a2ffa5e05f45cdb80e6735ee947e91e08ff145fc50c7882e75d44b6ae0c2cd733420d15b6a4274a186b3a79d463a1273e27ff7fd79a51d0937251ebb6ef761d",
-        "dest": "nuget-sources",
-        "dest-filename": "skiasharp.2.88.9.nupkg"
+        "dest-filename": "simplecto.avalonia.richtextbox.1.6.5.nupkg"
     },
     {
         "type": "file",
@@ -1048,13 +1020,6 @@
         "sha512": "5989a57ef273b689a663e961a0fe09d9b1d88438e5478358efc4b165de3b2674fa9579c301ce12d2d2fa5f33295f2acb42eceea2ebebf70c733da6364ceaf94d",
         "dest": "nuget-sources",
         "dest-filename": "system.private.uri.4.3.0.nupkg"
-    },
-    {
-        "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/system.reactive/6.0.0/system.reactive.6.0.0.nupkg",
-        "sha512": "9303ea0efe2b4b1782bbeb87ce88469e7dbde14ad441f153d2d79a518f7fe8aec76f6407d69b726a0383f1f272232c833fd79421f7ba56dfda110f45deb48b72",
-        "dest": "nuget-sources",
-        "dest-filename": "system.reactive.6.0.0.nupkg"
     },
     {
         "type": "file",
