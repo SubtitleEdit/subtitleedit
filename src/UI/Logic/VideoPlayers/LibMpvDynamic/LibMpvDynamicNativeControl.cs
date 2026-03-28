@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
@@ -17,6 +17,10 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private Timer? _resizeTimer;
     private bool _isResizing;
 
+    // Toggling visibility of the embedded HWND during live resize makes the video
+    // child window jump to the top-left corner for a frame on Windows 11.
+    private static bool ShouldHideNativeControlDuringResize => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
     public LibMpvDynamicPlayer? Player => _mpvPlayer;
 
     public LibMpvDynamicNativeControl(LibMpvDynamicPlayer mpvPlayer)
@@ -27,10 +31,13 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         // Force arrow cursor immediately
         Cursor = new Cursor(StandardCursorType.Arrow);
 
-        // Initialize resize timer - wait for resize to finish before showing video again
-        _resizeTimer = new Timer(10); // 10ms after resize stops
-        _resizeTimer.AutoReset = false;
-        _resizeTimer.Elapsed += OnResizeFinished;
+        // Only Linux still needs the temporary hide/show workaround during live resize.
+        if (ShouldHideNativeControlDuringResize)
+        {
+            _resizeTimer = new Timer(10); // 10ms after resize stops
+            _resizeTimer.AutoReset = false;
+            _resizeTimer.Elapsed += OnResizeFinished;
+        }
 
         // Handle when control is loaded
         Loaded += (s, e) =>
@@ -45,7 +52,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         base.OnPropertyChanged(change);
 
         // Detect window resize
-        if (change.Property.Name == nameof(Bounds) && _isInitialized && _mpvPlayer != null)
+        if (ShouldHideNativeControlDuringResize && change.Property.Name == nameof(Bounds) && _isInitialized && _mpvPlayer != null)
         {
             var newBounds = (Rect)change.NewValue!;
             var oldBounds = (Rect)(change.OldValue ?? new Rect());
@@ -61,6 +68,11 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private void OnResizeStarted()
     {
+        if (!ShouldHideNativeControlDuringResize)
+        {
+            return;
+        }
+
         if (!_isResizing && _mpvPlayer != null)
         {
             _isResizing = true;
@@ -76,6 +88,11 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private void OnResizeFinished(object? sender, ElapsedEventArgs e)
     {
+        if (!ShouldHideNativeControlDuringResize)
+        {
+            return;
+        }
+
         // Resize has stopped, show the control again
         Dispatcher.UIThread.Post(() =>
         {
@@ -128,6 +145,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             _resizeTimer = null;
         }
 
+        _isResizing = false;
         _isInitialized = false;
         base.DestroyNativeControlCore(control);
     }
