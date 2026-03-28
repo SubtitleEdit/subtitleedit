@@ -8054,6 +8054,7 @@ public partial class MainViewModel :
     }
 
     private SubtitleLineViewModel? _setEndAtKeyUpLine;
+    private bool _setEndAtKeyUpLineGoToNext = false;
 
     [RelayCommand]
     private void InsertSubtitleAtVideoPositionSetEndAtKeyUp()
@@ -8085,27 +8086,29 @@ public partial class MainViewModel :
         }
 
         _setEndAtKeyUpLine = newParagraph;
+        _setEndAtKeyUpLineGoToNext = false;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
         _updateAudioVisualizer = true;
     }
-    
+
     [RelayCommand]
-    private void SetSubtitleStartAtVideoPositionSetEndAtKeyUp()
+    private void SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext()
     {
         var selectedSubtitle = SelectedSubtitle;
         if (selectedSubtitle == null)
         {
             return;
         }
-        
+
         if (_setEndAtKeyUpLine != null)
         {
             return;
         }
 
         var vp = GetVideoPlayerControl();
-        if (vp == null || !vp.VideoPlayerInstance.IsPlaying)
+        var idx = Subtitles.IndexOf(selectedSubtitle);
+        if (vp == null || !vp.VideoPlayerInstance.IsPlaying || idx < 0)
         {
             return;
         }
@@ -8113,6 +8116,7 @@ public partial class MainViewModel :
         var startMs = vp.Position * 1000.0;
         selectedSubtitle.StartTime = TimeSpan.FromMilliseconds(startMs);
         _setEndAtKeyUpLine = selectedSubtitle;
+        _setEndAtKeyUpLineGoToNext = true;
         _updateAudioVisualizer = true;
     }
 
@@ -13686,6 +13690,7 @@ public partial class MainViewModel :
         if (_setEndAtKeyUpLine != null)
         {
             _setEndAtKeyUpLine = null;
+            _setEndAtKeyUpLineGoToNext = false;
         }
 
         _shortcutManager.OnKeyReleased(this, e);
@@ -14098,6 +14103,15 @@ public partial class MainViewModel :
                 if (_setEndAtKeyUpLine != null)
                 {
                     _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayerInstance.Position);
+                    if (_setEndAtKeyUpLineGoToNext)
+                    {
+                        var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
+                        if (idx >= 0)
+                        {
+                            SelectAndScrollToRow(idx + 1);
+                        }
+                        _setEndAtKeyUpLineGoToNext = false;
+                    }
                 }
 
                 var noLayers = _visibleLayers == null || !Se.Settings.Assa.HideLayersFromWaveform || _visibleLayers.Count == 0;

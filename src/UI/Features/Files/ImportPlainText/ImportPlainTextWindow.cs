@@ -223,7 +223,7 @@ public class ImportPlainTextWindow : Window
         var panelSplit = UiUtil.MakeHorizontalPanel(labelSplit, comboBoxSplit);
 
         var labelGap = UiUtil.MakeLabel(Se.Language.File.Import.GapMs);
-        var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs));
+        var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 100000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs));
         numericUpDownGap.ValueChanged += vm.GapChanged;
         var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap).WithMarginTop(30);
 

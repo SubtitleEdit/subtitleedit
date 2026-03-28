@@ -306,7 +306,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlayFromStartOfVideoCommand), Se.Language.General.PlayFromStartOfVideo },
         { nameof(MainViewModel.RemoveBlankLinesCommand), Se.Language.General.RemoveBlankLines },
         { nameof(MainViewModel.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), Se.Language.General.NewSubtitleStartKeyDownSetEndKeyUp },
-        { nameof(MainViewModel.SetSubtitleStartAtVideoPositionSetEndAtKeyUpCommand), Se.Language.General.SetSubtitleStartAtVideoPositionSetEndAtKeyUp },
+        { nameof(MainViewModel.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand), Se.Language.General.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext },
         { nameof(MainViewModel.SpeechToTextSelectedLinesCommand), Se.Language.General.SpeechToTextSelectedLines },
         { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), Se.Language.General.SpeechToTextSelectedLinesPromptAlways },
         { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), Se.Language.General.SpeechToTextSelectedLinesPromptFirstTime },
@@ -590,7 +590,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlayFromStartOfVideoCommand, nameof(vm.PlayFromStartOfVideoCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RemoveBlankLinesCommand, nameof(vm.RemoveBlankLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand, nameof(vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpCommand, nameof(vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand, nameof(vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesCommand, nameof(vm.SpeechToTextSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), ShortcutCategory.General);
