@@ -752,7 +752,7 @@ public partial class SettingsViewModel : ObservableObject
         _customContinuationStyleGapPrefixAddSpace = general.CustomContinuationStyleGapPrefixAddSpace;
 
         var video = Se.Settings.Video;
-        var videoPlayer = VideoPlayers.FirstOrDefault(p => p.Code == video.VideoPlayer);
+        var videoPlayer = VideoPlayers.FirstOrDefault(p => p.Code.Equals(video.VideoPlayer, StringComparison.OrdinalIgnoreCase));
         if (videoPlayer != null)
         {
             SelectedVideoPlayer = videoPlayer;

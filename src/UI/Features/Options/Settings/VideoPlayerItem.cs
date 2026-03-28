@@ -25,20 +25,18 @@ public partial class VideoPlayerItem : ObservableObject
     public static List<VideoPlayerItem> ListVideoPlayerItem()
     {
         var result = new List<VideoPlayerItem>();
-        result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvOpenGl, Code = "mpv-opengl" });
-        
+        result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvOpenGl, Code = VideoPlayerName.MpvOpenGl });
+
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvWidRendering, Code = "mpv-wid" });
+            result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvWidRendering, Code = VideoPlayerName.MpvWid });
         }
 
-        result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvSoftwareRendering, Code = "mpv-sw" });
+        result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvSoftwareRendering, Code = VideoPlayerName.MpvSw });
 
-        if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.X64 || 
-            OperatingSystem.IsWindows() ||
-            OperatingSystem.IsLinux())
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux())
         {
-            result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.VlcWidRendering, Code = "vlc" });
+            result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.VlcWidRendering, Code = VideoPlayerName.Vlc });
         }
 
         return result;

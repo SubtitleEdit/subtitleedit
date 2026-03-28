@@ -28,7 +28,7 @@ public partial class BurnInEffectViewModel : ObservableObject
         VideoFileName = string.Empty;
         Effects = new ObservableCollection<BurnInEffectItem>(BurnInEffectItem.List());
         SelectedEffects = new ObservableCollection<BurnInEffectItem>();
-        CheckBoxes = new List<CheckBox>();  
+        CheckBoxes = new List<CheckBox>();
     }
 
     public void Initialize(string videoFileName, List<BurnInEffectItem> selectedEffects)
@@ -37,7 +37,7 @@ public partial class BurnInEffectViewModel : ObservableObject
         {
             VideoFileName = videoFileName;
 
-            foreach (var effect in Effects.Where(p=>selectedEffects.Any(s => s.Name == p.Name)))
+            foreach (var effect in Effects.Where(p => selectedEffects.Any(s => s.Name == p.Name)))
             {
                 AddSelectedEffect(effect);
                 if (CheckBoxes.Any(c => c.Name == effect.Type.ToString()))

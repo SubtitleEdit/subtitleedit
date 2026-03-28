@@ -51,7 +51,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             var oldBounds = (Rect)(change.OldValue ?? new Rect());
 
             // Check if size actually changed
-            if (Math.Abs(newBounds.Width - oldBounds.Width) > 1 || 
+            if (Math.Abs(newBounds.Width - oldBounds.Width) > 1 ||
                 Math.Abs(newBounds.Height - oldBounds.Height) > 1)
             {
                 OnResizeStarted();
@@ -64,7 +64,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         if (!_isResizing && _mpvPlayer != null)
         {
             _isResizing = true;
-            
+
             // Hide the native control during resize to prevent flashing
             IsVisible = false;
         }

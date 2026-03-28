@@ -73,7 +73,7 @@ public static class InitVideoPlayer
             vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null);
         };
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
-        control.SurfacePointerPressed += (_,_) => vm.VideoPlayerAreaPointerPressed();
+        control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
 
         Grid.SetRow(control, 0);
         mainGrid.Children.Add(control);
@@ -85,7 +85,7 @@ public static class InitVideoPlayer
     {
         try
         {
-            if (Se.Settings.Video.VideoPlayer.Equals("vlc", StringComparison.OrdinalIgnoreCase))
+            if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.Vlc, StringComparison.OrdinalIgnoreCase))
             {
                 var player = new LibVlcDynamicPlayer();
                 if (player.CanLoad())
@@ -95,7 +95,7 @@ public static class InitVideoPlayer
                 }
             }
 
-            if (Se.Settings.Video.VideoPlayer.Equals("mpv-wid", StringComparison.OrdinalIgnoreCase))
+            if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.MpvWid, StringComparison.OrdinalIgnoreCase))
             {
                 var player = new LibMpvDynamicPlayer();
                 if (player.CanLoad())
@@ -105,7 +105,7 @@ public static class InitVideoPlayer
                 }
             }
 
-            if (Se.Settings.Video.VideoPlayer.Equals("mpv-sw", StringComparison.OrdinalIgnoreCase))
+            if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.MpvSw, StringComparison.OrdinalIgnoreCase))
             {
                 var player = new LibMpvDynamicPlayer();
                 if (player.CanLoad())
@@ -115,7 +115,7 @@ public static class InitVideoPlayer
                 }
             }
 
-            if (Se.Settings.Video.VideoPlayer.StartsWith("mpv", StringComparison.OrdinalIgnoreCase)) // mpv-opengl
+            if (Se.Settings.Video.VideoPlayer.StartsWith("mpv", StringComparison.OrdinalIgnoreCase)) // VideoPlayerCodes.MpvOpenGl
             {
                 var player = new LibMpvDynamicPlayer();
                 if (player.CanLoad())
@@ -144,7 +144,7 @@ public static class InitVideoPlayer
     /// </summary>
     public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
         {
             var player = new LibMpvDynamicPlayer();
             if (player.CanLoad())

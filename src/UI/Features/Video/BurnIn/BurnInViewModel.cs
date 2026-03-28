@@ -1704,7 +1704,7 @@ public partial class BurnInViewModel : ObservableObject
         if (_loading || !string.IsNullOrEmpty(GetValidationError()))
         {
             return;
-        }        
+        }
 
         var text = "This is a test";
 
@@ -1925,6 +1925,6 @@ public partial class BurnInViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             UpdateNonAssaPreview();
-        }); 
+        });
     }
 }

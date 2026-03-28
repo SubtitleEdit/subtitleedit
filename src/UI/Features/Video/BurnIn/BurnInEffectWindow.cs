@@ -5,7 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
