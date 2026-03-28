@@ -4,13 +4,15 @@ Subtitle Edit Changelog
 v5.0.0-beta12 (xth March 2026)
 
 * Add Ukrainian translation - thx iohomenetyou
+* Add Portuguese (Brazil) translation - thx igorruckert
 * Add Mistral TTS engine
 * Add Qwen3 ASR engine
-* Performance fixes - thx Ironship
+* Nice performance fixes - thx Ironship
 * Fix ASSA save storage style (in some cases) - thx writetome1/Ironship
 * Add setting for waveform-auto-focus - thx abc16361 
 * WebVTT now auto-merges lines with same time codes - thx xiaomotalktech/Ironship
 * Fixes for fix-names - thx ivandrofly
+* Fix duration cell not turning red on subtitle overlap - thx papioski1111/ivandrofly
 
 -----------------------------------------------------------------------------------------------------
 
