@@ -14,6 +14,8 @@ v5.0.0-beta12 (xth March 2026)
 * WebVTT now auto-merges lines with same time codes - thx xiaomotalktech/Ironship
 * Fixes for fix-names - thx ivandrofly
 * Fix duration cell not turning red on subtitle overlap - thx papioski1111/ivandrofly
+* Fix for "Convert frame" reverse conversion (and other improvements) - thx larsk2 
+* Disable space key for waveform buttons (use "Enter" if you want to use keyboard) - thx darnn
 
 -----------------------------------------------------------------------------------------------------
 
