@@ -1504,14 +1504,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private Subtitle RemoveLineBreaks(Subtitle subtitle)
     {
-        if (!_config.OffsetTimeCodes.IsActive)
+        if (!_config.RemoveLineBreaks.IsActive)
         {
             return subtitle;
         }
 
         foreach (var paragraph in subtitle.Paragraphs)
         {
-            paragraph.Text = Utilities.UnbreakLine(paragraph.Text);
+            paragraph.Text = _config.RemoveLineBreaks.OnlyShortLines
+                ? Nikse.SubtitleEdit.Core.Forms.FixCommonErrors.Helper.FixShortLines(paragraph.Text, Language)
+                : Utilities.UnbreakLine(paragraph.Text);
         }
 
         return subtitle;

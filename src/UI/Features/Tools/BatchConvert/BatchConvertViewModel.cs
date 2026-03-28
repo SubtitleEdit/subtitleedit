@@ -86,6 +86,9 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private bool _formattingRemoveAlignmentTags;
     [ObservableProperty] private bool _formattingRemoveColors;
 
+    // Remove line breaks
+    [ObservableProperty] private bool _removeLineBreaksOnlyShortLines;
+
     // Offset time codes
     [ObservableProperty] private bool _offsetTimeCodesForward;
     [ObservableProperty] private bool _offsetTimeCodesBack;
@@ -1356,6 +1359,12 @@ public partial class BatchConvertViewModel : ObservableObject
             RemoveTextForHearingImpaired = new BatchConvertConfig.RemoveTextForHearingImpairedSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.RemoveTextForHearingImpaired),
+            },
+
+            RemoveLineBreaks = new BatchConvertConfig.RemoveLineBreaksSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.RemoveLineBreaks),
+                OnlyShortLines = RemoveLineBreaksOnlyShortLines,
             },
         };
     }
