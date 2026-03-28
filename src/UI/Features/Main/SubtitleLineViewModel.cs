@@ -1,12 +1,14 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using SkiaSharp;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using SkiaSharp;
+using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Main;
@@ -166,11 +168,16 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         return p;
     }
-    
+
     public int PixelWidth
     {
         get
         {
+            if (!Se.Settings.General.ShowColumnPixelWidth && !Se.Settings.General.ColorTextTooWide)
+            {
+                return 0;
+            }
+
             var text = HtmlUtil.RemoveHtmlTags(Text, true);
             var lines = text.SplitToLines();
             var maxWidth = 0;
@@ -243,8 +250,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                         return new SolidColorBrush(_errorColor);
                     }
                 }
-            } 
-            
+            }
+
             if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
             {
                 var text = HtmlUtil.RemoveHtmlTags(Text, true);
@@ -261,20 +268,32 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
-    private static readonly Dictionary<(string name, int size), SKFont> _fontCache = [];
+    private static readonly Dictionary<(string name, int size), (SKFont font, SKShaper shaper)> _fontCache = [];
 
     private static int CalculatePixelWidth(string line)
     {
-        var general = Se.Settings.General;
-        var key = (name: general.ColorTextTooWideFontName, size: general.ColorTextTooWideFontSize);
-        if (!_fontCache.TryGetValue(key, out var font))
+        if (string.IsNullOrEmpty(line))
         {
-            var typeface = SKTypeface.FromFamilyName(key.name) ?? SKTypeface.Default;
-            font = new SKFont(typeface, key.size);
-            _fontCache[key] = font;
+            return 0;
         }
 
-        return (int)Math.Ceiling(font.MeasureText(line));
+        var general = Se.Settings.General;
+        var key = (name: general.ColorTextTooWideFontName, size: general.ColorTextTooWideFontSize);
+
+        if (!_fontCache.TryGetValue(key, out var entry))
+        {
+            var typeface = SKTypeface.FromFamilyName(key.name) ?? SKTypeface.Default;
+            entry = (new SKFont(typeface, key.size), new SKShaper(typeface));
+            _fontCache[key] = entry;
+        }
+
+        var result = entry.shaper.Shape(line, entry.font);
+        if (result.Points.Length == 0)
+        {
+            return 0;
+        }
+
+        return (int)Math.Ceiling(result.Points.Last().X + entry.font.Size);
     }
 
     public IBrush DurationBackgroundBrush
