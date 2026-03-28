@@ -20,6 +20,33 @@ using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
+public class NonSpaceButton : Button
+{
+    protected override Type StyleKeyOverride => typeof(Button);
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Space)
+        {
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        if (e.Key == Key.Space)
+        {
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyUp(e);
+    }
+}
+
 public class InitWaveform
 {
     public class SortedControl
@@ -277,7 +304,7 @@ public class InitWaveform
         controlsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsWaveformToolbarVisible)));
 
         var settingPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.Play);
-        var buttonPlay = new Button
+        var buttonPlay = new NonSpaceButton
         {
             Margin = new Thickness(settingPlay.LeftMargin, 0, settingPlay.RightMargin, 0),
             FontSize = settingPlay.FontSize,
@@ -289,7 +316,7 @@ public class InitWaveform
         vm.ButtonWaveformPlay = buttonPlay;
 
         var settingPlaySelection = GetToolbarSettingFor(SeWaveformToolbarItemType.PlaySelection);
-        var buttonPlaySelectedLines = new Button
+        var buttonPlaySelectedLines = new NonSpaceButton
         {
             Margin = new Thickness(settingPlaySelection.LeftMargin, 0, settingPlaySelection.RightMargin, 0),
             FontSize = settingPlaySelection.FontSize,
@@ -300,7 +327,7 @@ public class InitWaveform
         Attached.SetIcon(buttonPlaySelectedLines, IconNames.PlayPlaylist);
 
         var settingSelectionRepeat = GetToolbarSettingFor(SeWaveformToolbarItemType.Repeat);
-        var buttonPlaySelectedLinesRepeat = new Button
+        var buttonPlaySelectedLinesRepeat = new NonSpaceButton
         {
             Margin = new Thickness(settingSelectionRepeat.LeftMargin, 0, settingSelectionRepeat.RightMargin, 0),
             FontSize = settingSelectionRepeat.FontSize,
@@ -312,7 +339,7 @@ public class InitWaveform
         Attached.SetIcon(buttonPlaySelectedLinesRepeat, IconNames.Refresh);
 
         var settingPlayNext = GetToolbarSettingFor(SeWaveformToolbarItemType.PlayNext);
-        var buttonPlayNext = new Button
+        var buttonPlayNext = new NonSpaceButton
         {
             Margin = new Thickness(settingPlayNext.LeftMargin, 0, settingPlayNext.RightMargin, 0),
             FontSize = settingPlayNext.FontSize,
@@ -323,7 +350,7 @@ public class InitWaveform
         Attached.SetIcon(buttonPlayNext, IconNames.SkipNext);
 
         var settingPlayNew = GetToolbarSettingFor(SeWaveformToolbarItemType.New);
-        var buttonNew = new Button
+        var buttonNew = new NonSpaceButton
         {
             Margin = new Thickness(settingPlayNew.LeftMargin, 0, settingPlayNew.RightMargin, 0),
             FontSize = settingPlayNew.FontSize,
@@ -334,7 +361,7 @@ public class InitWaveform
         Attached.SetIcon(buttonNew, IconNames.Plus);
 
         var settingOffsetTheRest = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStartAndOffsetTheRest);
-        var buttonSetStartAndOffsetTheRest = new Button
+        var buttonSetStartAndOffsetTheRest = new NonSpaceButton
         {
             Margin = new Thickness(settingOffsetTheRest.LeftMargin, 0, settingOffsetTheRest.RightMargin, 0),
             FontSize = settingOffsetTheRest.FontSize,
@@ -345,7 +372,7 @@ public class InitWaveform
         Attached.SetIcon(buttonSetStartAndOffsetTheRest, IconNames.ArrowExpandRight);
 
         var settingSetStart = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStart);
-        var buttonSetStart = new Button
+        var buttonSetStart = new NonSpaceButton
         {
             Margin = new Thickness(settingSetStart.LeftMargin, 0, settingSetStart.RightMargin, 0),
             FontSize = settingSetStart.FontSize,
@@ -356,7 +383,7 @@ public class InitWaveform
         Attached.SetIcon(buttonSetStart, IconNames.RayStart);
 
         var settingSetEnd = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStart);
-        var buttonSetEnd = new Button
+        var buttonSetEnd = new NonSpaceButton
         {
             Margin = new Thickness(settingSetEnd.LeftMargin, 0, settingSetEnd.RightMargin, 0),
             FontSize = settingSetEnd.FontSize,
@@ -364,10 +391,11 @@ public class InitWaveform
             FontWeight = FontWeight.Bold,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SetEndHint, shortcuts, nameof(vm.WaveformSetEndCommand)),
         };
+        //buttonSetEnd.KeyUp += vm.KeyDownIgnoreAfterShortcuts;
         Attached.SetIcon(buttonSetEnd, IconNames.RayEnd);
 
         var settingRemoveBlank = GetToolbarSettingFor(SeWaveformToolbarItemType.RemoveBlankLines);
-        var buttonRemoveBlankLines = new Button
+        var buttonRemoveBlankLines = new NonSpaceButton
         {
             Margin = new Thickness(settingRemoveBlank.LeftMargin, 0, settingRemoveBlank.RightMargin, 0),
             FontSize = settingRemoveBlank.FontSize,
@@ -573,7 +601,7 @@ public class InitWaveform
         toggleButtonCenter.IsCheckedChanged += (s, e) => vm.WaveformCenterCheckedChanged();
 
         var settingMore = GetToolbarSettingFor(SeWaveformToolbarItemType.More);
-        var buttonMore = new Button
+        var buttonMore = new NonSpaceButton
         {
             Margin = new Thickness(settingMore.LeftMargin, 0, settingMore.RightMargin, 0),
         };
@@ -648,7 +676,7 @@ public class InitWaveform
         Button buttonNew,
         Button buttonSetStartAndOffsetTheRest,
         Button buttonSetStart,
-        Button buttonSetEnd,
+        NonSpaceButton buttonSetEnd,
         Button buttonRemoveBlankLines,
         Icon iconHorizontal,
         StackPanel panelHorizontalZoom,

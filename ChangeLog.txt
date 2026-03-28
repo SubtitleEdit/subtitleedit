@@ -5,6 +5,7 @@ v5.0.0-beta12 (xth March 2026)
 
 * Add Ukrainian translation - thx iohomenetyou
 * Add Portuguese (Brazil) translation - thx igorruckert
+* Update Italian translation - thx bovirus
 * Add Mistral TTS engine
 * Add Qwen3 ASR engine
 * Nice performance fixes - thx Ironship
