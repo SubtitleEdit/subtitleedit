@@ -277,23 +277,32 @@ public partial class SubtitleLineViewModel : ObservableObject
             return 0;
         }
 
-        var general = Se.Settings.General;
-        var key = (name: general.ColorTextTooWideFontName, size: general.ColorTextTooWideFontSize);
 
-        if (!_fontCache.TryGetValue(key, out var entry))
+        try
         {
-            var typeface = SKTypeface.FromFamilyName(key.name) ?? SKTypeface.Default;
-            entry = (new SKFont(typeface, key.size), new SKShaper(typeface));
-            _fontCache[key] = entry;
+            var general = Se.Settings.General;
+            var key = (name: general.ColorTextTooWideFontName, size: general.ColorTextTooWideFontSize);
+
+            if (!_fontCache.TryGetValue(key, out var entry))
+            {
+                var typeface = SKTypeface.FromFamilyName(key.name) ?? SKTypeface.Default;
+                entry = (new SKFont(typeface, key.size), new SKShaper(typeface));
+                _fontCache[key] = entry;
+            }
+
+            var result = entry.shaper.Shape(line, entry.font);
+            if (result.Points.Length == 0)
+            {
+                return 0;
+            }
+
+            return (int)Math.Ceiling(result.Points.Last().X + entry.font.Size);
         }
-
-        var result = entry.shaper.Shape(line, entry.font);
-        if (result.Points.Length == 0)
+        catch (Exception exception)
         {
+            Se.LogError(exception, "Error calculating pixel width for line: " + line);
             return 0;
         }
-
-        return (int)Math.Ceiling(result.Points.Last().X + entry.font.Size);
     }
 
     public IBrush DurationBackgroundBrush
