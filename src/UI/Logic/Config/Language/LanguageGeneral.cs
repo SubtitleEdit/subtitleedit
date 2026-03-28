@@ -311,6 +311,7 @@ public class LanguageGeneral
     public string NewDotDotDot { get; set; }
     public string NewProfile { get; set; }
     public string NewSubtitleStartKeyDownSetEndKeyUp { get; set; }
+    public string SetSubtitleStartAtVideoPositionSetEndAtKeyUp { get; set; }
     public string No { get; set; }
     public string NoFilesToConvert { get; set; }
     public string NoLanguageCode { get; set; }
@@ -955,6 +956,7 @@ public class LanguageGeneral
         NewDotDotDot = "New...";
         NewProfile = "New profile";
         NewSubtitleStartKeyDownSetEndKeyUp = "Insert subtitle: Start on key down, set end on key up";
+        SetSubtitleStartAtVideoPositionSetEndAtKeyUp = "Set start at video position set end on key up, and go to next";
         No = "No";
         NoFilesToConvert = "No files to convert";
         NoLanguageCode = "No language code";

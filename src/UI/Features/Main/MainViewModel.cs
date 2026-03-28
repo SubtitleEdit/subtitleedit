@@ -8089,6 +8089,32 @@ public partial class MainViewModel :
         Renumber();
         _updateAudioVisualizer = true;
     }
+    
+    [RelayCommand]
+    private void SetSubtitleStartAtVideoPositionSetEndAtKeyUp()
+    {
+        var selectedSubtitle = SelectedSubtitle;
+        if (selectedSubtitle == null)
+        {
+            return;
+        }
+        
+        if (_setEndAtKeyUpLine != null)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || !vp.VideoPlayerInstance.IsPlaying)
+        {
+            return;
+        }
+
+        var startMs = vp.Position * 1000.0;
+        selectedSubtitle.StartTime = TimeSpan.FromMilliseconds(startMs);
+        _setEndAtKeyUpLine = selectedSubtitle;
+        _updateAudioVisualizer = true;
+    }
 
     [RelayCommand]
     private void VideoFullScreen()
