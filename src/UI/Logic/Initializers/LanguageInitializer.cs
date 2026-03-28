@@ -38,6 +38,7 @@ public class LanguageInitializer() : ILanguageInitializer
         "Norwegian",
         "Polish",
         "Portuguese",
+        "Portuguese (Brazil)",
         "Romanian",
         "Russian",
         "Slovak",
