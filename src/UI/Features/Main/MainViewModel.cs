@@ -5438,7 +5438,10 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>();
+        var result = await ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(vm =>
+        {
+            vm.Initialize(_videoFileName, _mediaInfo);
+        });
         if (result.OkPressed)
         {
             ChangeFrameRateViewModel.ChangeFrameRate(Subtitles, result.SelectedFromFrameRate, result.SelectedToFrameRate);
