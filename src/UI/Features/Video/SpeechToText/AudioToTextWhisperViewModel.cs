@@ -138,14 +138,14 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         {
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
         }
-        
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
             (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
             (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
             Engines.Add(new WhisperEngineCTranslate2());
         }
-        
+
         Engines.Add(new WhisperEngineOpenAi());
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -1288,6 +1288,19 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                model.Name == "distil-large-v3";
     }
 
+
+    [RelayCommand]
+    private void ShowWebLink()
+    {
+        var engine = SelectedEngine;
+        if (Window == null || engine == null)
+        {
+            return;
+        }
+
+        UiUtil.OpenUrl(engine.Url);
+    }
+
     [RelayCommand]
     private void ViewWhisperLogFile()
     {
@@ -2108,8 +2121,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
     private static string GetWhisperTranslateParameter(ISpeechToTextEngine engine)
     {
-        if (engine.Choice == new WhisperEnginePurfviewFasterWhisperXxl().Choice || 
-            engine.Choice == new WhisperEngineOpenAi().Choice || 
+        if (engine.Choice == new WhisperEnginePurfviewFasterWhisperXxl().Choice ||
+            engine.Choice == new WhisperEngineOpenAi().Choice ||
             engine.Choice == new WhisperEngineCTranslate2().Choice)
         {
             return "--task translate ";
@@ -2550,7 +2563,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         var files = e.DataTransfer.TryGetFiles();
         if (files != null)
         {
-            Dispatcher.UIThread.Post(async() =>
+            Dispatcher.UIThread.Post(async () =>
             {
                 await AddFiles(files.Select(p => p.Path.LocalPath).ToArray());
             });

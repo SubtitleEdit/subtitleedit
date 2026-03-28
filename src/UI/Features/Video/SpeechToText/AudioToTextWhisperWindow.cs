@@ -42,8 +42,21 @@ public class AudioToTextWhisperWindow : Window
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10);
-
         comboEngine.SelectionChanged += vm.OnEngineChanged;
+        var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
+            .WithMarginLeft(5)
+            .WithMarginTop(10);
+        var panelEngineControls = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                comboEngine,
+                buttonEngineWebsite
+            }
+        };
 
         var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10);
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
@@ -314,93 +327,44 @@ public class AudioToTextWhisperWindow : Window
 
         var row = 0;
 
-        grid.Children.Add(labelConsoleLog);
-        Grid.SetRow(labelConsoleLog, row);
-        Grid.SetColumn(labelConsoleLog, 2);
-        Grid.SetRowSpan(labelConsoleLog, 2);
+        grid.Add(labelConsoleLog, row, 2, 2, 1);
         row++;
 
-        grid.Children.Add(consoleLogAndBatchView);
-        Grid.SetRow(consoleLogAndBatchView, row);
-        Grid.SetColumn(consoleLogAndBatchView, 2);
-        Grid.SetRowSpan(consoleLogAndBatchView, 8);
-        grid.Children.Add(consoleLogOnlyView);
-        Grid.SetRow(consoleLogOnlyView, row);
-        Grid.SetColumn(consoleLogOnlyView, 2);
-        Grid.SetRowSpan(consoleLogOnlyView, 8);
+        grid.Add(consoleLogAndBatchView, row, 2, 8);
+        grid.Add(consoleLogOnlyView, row, 2, 8);
         row++;
 
-        grid.Children.Add(labelEngine);
-        Grid.SetRow(labelEngine, row);
-        Grid.SetColumn(labelEngine, 0);
-
-        grid.Children.Add(comboEngine);
-        Grid.SetRow(comboEngine, row);
-        Grid.SetColumn(comboEngine, 1);
+        grid.Add(labelEngine, row, 0);
+        grid.Add(panelEngineControls, row, 1);
         row++;
 
-        grid.Children.Add(labelLanguage);
-        Grid.SetRow(labelLanguage, row);
-        Grid.SetColumn(labelLanguage, 0);
-
-        grid.Children.Add(comboLanguage);
-        Grid.SetRow(comboLanguage, row);
-        Grid.SetColumn(comboLanguage, 1);
+        grid.Add(labelLanguage, row, 0);
+        grid.Add(comboLanguage, row, 1);
         row++;
 
-        grid.Children.Add(labelModel);
-        Grid.SetRow(labelModel, row);
-        Grid.SetColumn(labelModel, 0);
-
-        grid.Children.Add(panelModelControls);
-        Grid.SetRow(panelModelControls, row);
-        Grid.SetColumn(panelModelControls, 1);
+        grid.Add(labelModel, row, 0);
+        grid.Add(panelModelControls, row, 1);
         row++;
 
-        grid.Children.Add(labelTranslateToEnglish);
-        Grid.SetRow(labelTranslateToEnglish, row);
-        Grid.SetColumn(labelTranslateToEnglish, 0);
-
-        grid.Children.Add(checkTranslateToEnglish);
-        Grid.SetRow(checkTranslateToEnglish, row);
-        Grid.SetColumn(checkTranslateToEnglish, 1);
+        grid.Add(labelTranslateToEnglish, row, 0);
+        grid.Add(checkTranslateToEnglish, row, 1);
         row++;
 
-        grid.Children.Add(labelPostProcessing);
-        Grid.SetRow(labelPostProcessing, row);
-        Grid.SetColumn(labelPostProcessing, 0);
-
-        grid.Children.Add(panelPostProcessingControls);
-        Grid.SetRow(panelPostProcessingControls, row);
-        Grid.SetColumn(panelPostProcessingControls, 1);
+        grid.Add(labelPostProcessing, row, 0);
+        grid.Add(panelPostProcessingControls, row, 1);
         row++;
 
-        grid.Children.Add(labelAdvancedSettings);
-        Grid.SetRow(labelAdvancedSettings, row);
-        Grid.SetColumn(labelAdvancedSettings, 0);
-
-        grid.Children.Add(buttonAdvancedSettings);
-        Grid.SetRow(buttonAdvancedSettings, row);
-        Grid.SetColumn(buttonAdvancedSettings, 1);
+        grid.Add(labelAdvancedSettings, row, 0);
+        grid.Add(buttonAdvancedSettings, row, 1);
         row++;
 
-        grid.Children.Add(textBoxAdvancedSettings);
-        Grid.SetRow(textBoxAdvancedSettings, row);
-        Grid.SetColumn(textBoxAdvancedSettings, 0);
-        Grid.SetColumnSpan(textBoxAdvancedSettings, 2);
+        grid.Add(textBoxAdvancedSettings, row, 0, 1, 2);
         row++;
 
-        grid.Children.Add(panelProgress);
-        Grid.SetRow(panelProgress, row);
-        Grid.SetColumn(panelProgress, 0);
-        Grid.SetColumnSpan(panelProgress, 3);
-        Grid.SetRowSpan(panelProgress, 2);
-
+        grid.Add(panelProgress, row, 0, 2, 3);
         row++;
-        grid.Children.Add(buttonPanel);
-        Grid.SetRow(buttonPanel, row);
-        Grid.SetColumn(buttonPanel, 0);
-        Grid.SetColumnSpan(buttonPanel, 3);
+
+        grid.Add(buttonPanel, row, 0, 1, 3);
 
         Content = grid;
 
