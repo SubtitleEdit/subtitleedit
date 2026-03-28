@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 26.03.2026 di bovirus",
+  "TranslatedBy": "v. 28.03.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -2375,6 +2375,13 @@
     "BackgroundBoxCircle": "Cerchio",
     "BackgroundBoxSpikes": "Picchi",
     "BackgroundBoxBubbles": "Bolle",
+    "BackgroundBoxWave": "Onda",
+    "BackgroundBoxHexagon": "Esagono",
+    "BackgroundBoxTornPaper": "Carta strappata",
+    "BackgroundBoxCloud": "Nuvola",
+    "BackgroundBoxTornPaperDouble": "Carta strappata (in alto e in basso)",
+    "BackgroundBoxStarburst": "Esplosione di stelle",
+    "BackgroundBoxScroll": "Scorrimento/pergamena",
     "StylesTitle": "Stili ASSA",
     "StylesInFile": "Stili nel file",
     "StylesSaved": "Stili salvati",
@@ -2486,6 +2493,12 @@
     "AdvancedEffectFadeOutDescription": "Un effetto di dissolvenza per riga in cui lo schermo termina in nero.",
     "AdvancedEffectTvClose": "Transizione: chiusura TV",
     "AdvancedEffectTvCloseDescription": "Le barre nere crescono verso l'interno dall'alto e dal basso mentre la parte centrale sfuma in bianco (parte superiore nera/parte centrale bianca/parte inferiore nera).\r\nLa seconda metà è completamente nera.",
+    "AdvancedEffectSlideInLeft": "Ingresso da sinistra",
+    "AdvancedEffectSlideInLeftDescription": "Il testo scorre da sinistra fuori dallo schermo, si mantiene, quindi esce di nuovo a sinistra",
+    "AdvancedEffectSlideInRight": "Ingresso da destra",
+    "AdvancedEffectSlideInRightDescription": "Il testo scorre da destra fuori dallo schermo, si blocca, quindi esce di nuovo a destra",
+    "AdvancedEffectFadeInOut": "Dissolvenza in entrata/uscita",
+    "AdvancedEffectFadeInOutDescription": "Il testo appare in dissolvenza all'inizio e in dissolvenza alla fine di ciascun sottotitolo",
     "OverrideTagsHistory": "Sostituisci cronologia tag"
   },
   "About": {
