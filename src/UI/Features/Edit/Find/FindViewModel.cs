@@ -117,6 +117,21 @@ public partial class FindViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (e.Key == Key.Delete && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            if (!string.IsNullOrWhiteSpace(SearchText) &&
+                SearchHistory.Contains(SearchText))
+            {
+                SearchHistory.Remove(SearchText);
+                SearchText = string.Empty;
+                e.Handled = true;
+            }
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/edit", "find");
+        }
     }
 
     internal void FindTextBoxKeyDown(object? sender, KeyEventArgs e)
@@ -125,7 +140,7 @@ public partial class FindViewModel : ObservableObject
         {
             e.Handled = true;
             FindNext();
-        }
+        }       
     }
 
     internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult)

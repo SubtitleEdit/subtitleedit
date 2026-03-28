@@ -2300,9 +2300,14 @@ public static class UiUtil
         }
     }
 
-    public static void ShowHelp(string helpName)
+    public static void ShowHelp(string helpName, string section = "")
     {
         var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit/{helpName}.html");
+        if (!string.IsNullOrEmpty(section))
+        {
+            helpUrl += $"#{section}";
+        }
+
         OpenUrl(helpUrl);
     }
 

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Logic;
@@ -198,7 +199,7 @@ public class ReplaceWindow : Window
         Content = grid;
 
         Activated += delegate { textBoxFind.Focus(); }; // hack to make OnKeyDown work
-        KeyDown += vm.OnKeyDown;
+        AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);
         Closing += (_, _) => vm.SaveSettings();
     }
 }
