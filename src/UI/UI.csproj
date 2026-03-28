@@ -144,7 +144,7 @@
 		<AvaloniaResource Include="Assets\Ocr.zip" />
 		<None Remove="Assets\about.png" />
 		<AvaloniaResource Include="Assets\about.png" />
-		<None Remove="Assets\Whisper\CTranslate2.txt" />
+		<None Remove="Assets\Whisper\WhisperCTranslate2.txt" />
 		<AvaloniaResource Include="Assets\Whisper\WhisperCTranslate2.txt" />
 	</ItemGroup>
 
