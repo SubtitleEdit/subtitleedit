@@ -18,14 +18,11 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
     public Window? Window { get; set; }
 
-    [ObservableProperty]
-    public partial string StatusText { get; set; } = string.Empty;
+    [ObservableProperty] private string _statusText;
 
-    [ObservableProperty]
-    public partial string ChangeLogText { get; set; } = string.Empty;
+    [ObservableProperty] private string _changeLogText;
 
-    [ObservableProperty]
-    public partial bool IsDownloadLinkVisible { get; set; }
+    [ObservableProperty] private bool _isDownloadLinkVisible;
 
     public async Task CheckForUpdates()
     {
