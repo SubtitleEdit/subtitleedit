@@ -43,6 +43,7 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _nativeHandle = CreateRenderTargetHandle(parent.Handle);
+        var handleDescriptor = _ownedChildHandle != IntPtr.Zero ? "HWND" : parent.HandleDescriptor;
 
         if (!_isInitialized && _vlcPlayer != null)
         {
@@ -61,7 +62,7 @@ public class LibVlcDynamicNativeControl : NativeControlHost
             }
         }
 
-        return new PlatformHandle(_nativeHandle, "HWND");
+        return new PlatformHandle(_nativeHandle, handleDescriptor);
     }
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)

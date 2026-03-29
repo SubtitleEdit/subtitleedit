@@ -108,6 +108,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _nativeHandle = CreateRenderTargetHandle(parent.Handle);
+        var handleDescriptor = _ownedChildHandle != IntPtr.Zero ? "HWND" : parent.HandleDescriptor;
 
         if (!_isInitialized && _mpvPlayer != null)
         {
@@ -127,7 +128,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             }
         }
 
-        return new PlatformHandle(_nativeHandle, "HWND");
+        return new PlatformHandle(_nativeHandle, handleDescriptor);
     }
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
