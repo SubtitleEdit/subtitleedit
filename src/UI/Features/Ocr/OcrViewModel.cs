@@ -43,7 +43,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -429,6 +428,20 @@ public partial class OcrViewModel : ObservableObject
     {
         IsOcrRunning = false;
         _cancellationTokenSource.Cancel();
+    }
+
+    private void UpdateOcrProgress(int currentItemNumber, int totalItems)
+    {
+        if (totalItems <= 0)
+        {
+            ProgressValue = 0;
+            ProgressText = Se.Language.Ocr.RunningOcrDotDotDot;
+            return;
+        }
+
+        var clampedItemNumber = Math.Clamp(currentItemNumber, 0, totalItems);
+        ProgressValue = clampedItemNumber * 100.0 / totalItems;
+        ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, clampedItemNumber, totalItems);
     }
 
     [RelayCommand]
@@ -1510,6 +1523,10 @@ public partial class OcrViewModel : ObservableObject
     private void RunPaddleOcr(List<int> selectedIndices, OcrEngineType engineType, CancellationToken cancellationToken)
     {
         var numberOfImages = selectedIndices.Count;
+        var selectedLineOrdinals = selectedIndices
+            .Select((lineIndex, ordinal) => new { lineIndex, ordinal })
+            .ToDictionary(p => p.lineIndex, p => p.ordinal + 1);
+        var maxShownProgress = 0;
         var ocrEngine = new PaddleOcr();
         var language = SelectedPaddleOcrLanguage?.Code ?? "en";
         var mode = Se.Settings.Ocr.PaddleOcrMode;
@@ -1546,15 +1563,13 @@ public partial class OcrViewModel : ObservableObject
             lock (BatchLock)
             {
                 var number = p.Index;
-                if (!selectedIndices.Contains(number))
+                if (!selectedLineOrdinals.TryGetValue(number, out var currentItemNumber))
                 {
                     return;
                 }
 
-                var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
-                var pctString = percentage.ToString(CultureInfo.InvariantCulture);
-                ProgressValue = number / (double)OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, number + 1, OcrSubtitleItems.Count);
+                maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
+                UpdateOcrProgress(maxShownProgress, numberOfImages);
 
                 var scrollToIndex = number;
                 var item = p.Item;
@@ -1588,9 +1603,13 @@ public partial class OcrViewModel : ObservableObject
     private void RunGoogleLensOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var numberOfImages = selectedIndices.Count;
+        var selectedLineOrdinals = selectedIndices
+            .Select((lineIndex, ordinal) => new { lineIndex, ordinal })
+            .ToDictionary(p => p.lineIndex, p => p.ordinal + 1);
+        var maxShownProgress = 0;
         var ocrEngine = new GoogleLensOcr();
         var language = SelectedGoogleLensLanguage?.Code ?? "en";
-        Se.Settings.Ocr.PaddleOcrLastLanguage = language;
+        Se.Settings.Ocr.GoogleLensOcrLastLanguage = language;
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
         var count = 0;
@@ -1623,15 +1642,13 @@ public partial class OcrViewModel : ObservableObject
             lock (BatchLock)
             {
                 var number = p.Index;
-                if (!selectedIndices.Contains(number))
+                if (!selectedLineOrdinals.TryGetValue(number, out var currentItemNumber))
                 {
                     return;
                 }
 
-                var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
-                var pctString = percentage.ToString(CultureInfo.InvariantCulture);
-                ProgressValue = number / (double)OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, number + 1, OcrSubtitleItems.Count);
+                maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
+                UpdateOcrProgress(maxShownProgress, numberOfImages);
 
                 var scrollToIndex = number;
                 var item = p.Item;
@@ -1655,9 +1672,13 @@ public partial class OcrViewModel : ObservableObject
     private void RunGoogleLensOcrSharp(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var numberOfImages = selectedIndices.Count;
+        var selectedLineOrdinals = selectedIndices
+            .Select((lineIndex, ordinal) => new { lineIndex, ordinal })
+            .ToDictionary(p => p.lineIndex, p => p.ordinal + 1);
+        var maxShownProgress = 0;
         var ocrEngine = new GoogleLensOcrSharp(new Lens());
         var language = SelectedGoogleLensLanguage?.Code ?? "en";
-        Se.Settings.Ocr.PaddleOcrLastLanguage = language;
+        Se.Settings.Ocr.GoogleLensOcrLastLanguage = language;
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
         var count = 0;
@@ -1690,15 +1711,13 @@ public partial class OcrViewModel : ObservableObject
             lock (BatchLock)
             {
                 var number = p.Index;
-                if (!selectedIndices.Contains(number))
+                if (!selectedLineOrdinals.TryGetValue(number, out var currentItemNumber))
                 {
                     return;
                 }
 
-                var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
-                var pctString = percentage.ToString(CultureInfo.InvariantCulture);
-                ProgressValue = number / (double)OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, number + 1, OcrSubtitleItems.Count);
+                maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
+                UpdateOcrProgress(maxShownProgress, numberOfImages);
 
                 var scrollToIndex = number;
                 var item = p.Item;
@@ -1767,16 +1786,16 @@ public partial class OcrViewModel : ObservableObject
 
     private async Task RunNOcrLoop(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        foreach (var i in selectedIndices)
+        for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
         {
+            var i = selectedIndices[processedIndex];
             if (cancellationToken.IsCancellationRequested)
             {
                 IsOcrRunning = false;
                 return;
             }
 
-            ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-            ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+            UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
             var item = OcrSubtitleItems[i];
             var bitmap = item.GetSkBitmap();
@@ -2152,16 +2171,16 @@ public partial class OcrViewModel : ObservableObject
 
     private async Task RunBinaryImageCompareOcrLoop(BinaryOcrDb db, List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        foreach (var i in selectedIndices)
+        for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
         {
+            var i = selectedIndices[processedIndex];
             if (cancellationToken.IsCancellationRequested)
             {
                 IsOcrRunning = false;
                 return;
             }
 
-            ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-            ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+            UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
             var item = OcrSubtitleItems[i];
             var bitmap = item.GetSkBitmap();
@@ -2613,15 +2632,15 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            foreach (var i in selectedIndices)
+            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
+                var i = selectedIndices[processedIndex];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
@@ -2642,15 +2661,15 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            foreach (var i in selectedIndices)
+            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
+                var i = selectedIndices[processedIndex];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
@@ -2673,15 +2692,15 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            foreach (var i in selectedIndices)
+            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
+                var i = selectedIndices[processedIndex];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
@@ -2704,15 +2723,15 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            foreach (var i in selectedIndices)
+            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
+                var i = selectedIndices[processedIndex];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
@@ -2735,15 +2754,15 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            foreach (var i in selectedIndices)
+            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
+                var i = selectedIndices[processedIndex];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                ProgressValue = i * 100.0 / OcrSubtitleItems.Count;
-                ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, i + 1, OcrSubtitleItems.Count);
+                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
 
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
