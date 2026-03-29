@@ -997,8 +997,8 @@ public partial class MainViewModel :
         {
             lastParagraph = new SubtitleLineViewModel()
             {
-                StartTime = TimeSpan.FromSeconds(0),
-                EndTime = TimeSpan.FromSeconds(2000),
+                StartTime = TimeSpan.FromSeconds(firstParagraph != null ? firstParagraph.StartTime.TotalSeconds : 0),
+                EndTime = TimeSpan.FromSeconds(firstParagraph != null ? firstParagraph.EndTime.TotalSeconds : 2),
                 Text = string.Empty
             };
         }
@@ -2828,9 +2828,9 @@ public partial class MainViewModel :
             }
 
             var proposedEndTime = selectedLine.StartTime + optimalDuration;
-            if (proposedEndTime.TotalMilliseconds < Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (proposedEndTime.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
-                proposedEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                proposedEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
             }
 
             var fallbackEndTime = selectedLine.StartTime + maxDuration;
@@ -6034,6 +6034,7 @@ public partial class MainViewModel :
 
         UpdateVideoOffsetStatus();
         SetLibSeSettings();
+        SubtitleLineViewModel.ErrorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
         var selectedSubtitleFormatName = SelectedSubtitleFormat.Name;
         SubtitleFormats.Clear();
@@ -11396,7 +11397,7 @@ public partial class MainViewModel :
             return true;
         }
 
-        var currentSubtitleHash = GetFastHash();
+        var currentSubtitleHash = GetFastHashOriginal();
         if (_changeSubtitleHashOriginal != currentSubtitleHash && !IsEmptyOriginal)
         {
             string promptText = string.Format(Se.Language.General.SaveChangesToXOriginal, Se.Language.General.Untitled);

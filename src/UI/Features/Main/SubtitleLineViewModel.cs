@@ -60,7 +60,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
 
     private bool _skipUpdate = false;
-    private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
+    public static Color ErrorColor { get; set; } = Se.Settings.General.ErrorColor.FromHexToColor();
 
     public SubtitleLineViewModel()
     {
@@ -238,7 +238,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 if (CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
-                    return new SolidColorBrush(_errorColor);
+                    return new SolidColorBrush(ErrorColor);
                 }
 
                 var text = HtmlUtil.RemoveHtmlTags(Text, true);
@@ -247,7 +247,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 {
                     if (line.Length > Se.Settings.General.SubtitleLineMaximumLength)
                     {
-                        return new SolidColorBrush(_errorColor);
+                        return new SolidColorBrush(ErrorColor);
                     }
                 }
             }
@@ -259,7 +259,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
                     {
-                        return new SolidColorBrush(_errorColor);
+                        return new SolidColorBrush(ErrorColor);
                     }
                 }
             }
@@ -314,7 +314,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds || Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds ||
                 Se.Settings.General.ColorTimeCodeOverlap && Gap < 0)
             {
-                return new SolidColorBrush(_errorColor);
+                return new SolidColorBrush(ErrorColor);
             }
 
             return new SolidColorBrush(Colors.Transparent);
@@ -328,7 +328,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorDurationTooLong &&
                 CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
-                return new SolidColorBrush(_errorColor);
+                return new SolidColorBrush(ErrorColor);
             }
 
             return new SolidColorBrush(Colors.Transparent);
@@ -342,7 +342,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorDurationTooLong &&
                 WordsPerMinute > Se.Settings.General.SubtitleMaximumWordsPerMinute)
             {
-                return new SolidColorBrush(_errorColor);
+                return new SolidColorBrush(ErrorColor);
             }
 
             return new SolidColorBrush(Colors.Transparent);
@@ -367,7 +367,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorGapTooShort &&
                 Gap < Se.Settings.General.MinimumMillisecondsBetweenLines)
             {
-                return new SolidColorBrush(_errorColor);
+                return new SolidColorBrush(ErrorColor);
             }
 
             return new SolidColorBrush(Colors.Transparent);
