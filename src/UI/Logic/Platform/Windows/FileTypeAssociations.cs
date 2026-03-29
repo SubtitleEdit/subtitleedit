@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
@@ -51,7 +52,7 @@ internal static class FileTypeAssociationsHelper
     /// Registers the file association using both the legacy ProgID method 
     /// and the modern OpenWithProgids fallback.
     /// </summary>
-    internal static void SetFileAssociation(string ext, string exePath, string appName)
+    internal static void SetFileAssociation(string ext, string exePath, string appName, string iconPath = "")
     {
 #pragma warning disable CA1416
         string progId = $"{appName}{ext}";
@@ -65,7 +66,10 @@ internal static class FileTypeAssociationsHelper
 
             using (var iconKey = rootKey.CreateSubKey("DefaultIcon"))
             {
-                iconKey.SetValue("", $"\"{exePath}\",0");
+                var iconValue = !string.IsNullOrEmpty(iconPath) && File.Exists(iconPath)
+                    ? $"\"{iconPath}\",0"
+                    : $"\"{exePath}\",0";
+                iconKey.SetValue("", iconValue);
             }
 
             using (var cmdKey = rootKey.CreateSubKey(@"shell\open\command"))

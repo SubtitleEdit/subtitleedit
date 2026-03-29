@@ -20,14 +20,9 @@ public static class FileTypeAssociationsManager
             return;
         }
 
-        var folder = Path.Combine(Se.DataFolder, "FileTypes");
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-
         foreach (var item in fileTypeAssociations)
         {
+            GetIconPath(item);
             item.IsAssociated = FileTypeAssociationsHelper.IsDefault(item.Extension, "SubtitleEdit5");
         }
     }
@@ -97,7 +92,7 @@ public static class FileTypeAssociationsManager
             if (item.IsAssociated)
             {
                 var iconFileName = GetIconPath(item);
-                FileTypeAssociationsHelper.SetFileAssociation(ext, exeFileName, "SubtitleEdit5");
+                FileTypeAssociationsHelper.SetFileAssociation(ext, exeFileName, "SubtitleEdit5", iconFileName);
             }
             else
             {
