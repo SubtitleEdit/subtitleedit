@@ -278,7 +278,6 @@ public partial class SubtitleLineViewModel : ObservableObject
             return 0;
         }
 
-
         try
         {
             var general = Se.Settings.General;
