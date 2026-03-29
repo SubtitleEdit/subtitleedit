@@ -69,6 +69,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         set
         {
             field = value;
+            _errorBrush = new SolidColorBrush(value);
         }
     } = Se.Settings.General.ErrorColor.FromHexToColor();
 
