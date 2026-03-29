@@ -128,6 +128,87 @@ print(f"  Written {len(sources)} sources to {output}")
 PYTHON
 fi
 
+# ---------------------------------------------------------------------------
+# 4. Ensure x64 runtime packs are present
+#
+# flatpak-dotnet-generator.py runs dotnet restore inside the x64 SDK
+# container, so x64 runtime packs are already on disk and never downloaded —
+# they therefore don't appear in the generated JSON.  The flatpak-builder
+# sandbox has no such pre-installed packs, so the build would fail.
+# This step detects any arm64 runtime/host packs in the output and adds
+# the matching x64 (and arch-neutral ILLink.Tasks) entries if missing.
+# ---------------------------------------------------------------------------
+python3 - "$OUTPUT" << 'PYTHON'
+import sys, json, urllib.request, urllib.error, base64, binascii, hashlib
+
+output = sys.argv[1]
+data   = json.load(open(output))
+existing = {s["dest-filename"] for s in data}
+
+def nuget_entry(name, version):
+    filename = f"{name}.{version}.nupkg"
+    if filename in existing:
+        return None
+    base_url = f"https://api.nuget.org/v3-flatcontainer/{name}/{version}/{filename}"
+    print(f"  Fetching hash for missing package: {filename}", flush=True)
+    # Prefer the lightweight .sha512 endpoint, but some runtime packs only expose the .nupkg.
+    try:
+        with urllib.request.urlopen(base_url + ".sha512") as r:
+            sha512_b64 = r.read().decode().strip()
+        sha512_hex = binascii.hexlify(base64.b64decode(sha512_b64)).decode()
+    except urllib.error.HTTPError as error:
+        if error.code != 404:
+            raise
+        with urllib.request.urlopen(base_url) as r:
+            sha512_hex = hashlib.sha512(r.read()).hexdigest()
+    return {
+        "type": "file",
+        "url": base_url,
+        "sha512": sha512_hex,
+        "dest": "nuget-sources",
+        "dest-filename": filename,
+    }
+
+added = []
+for src in data:
+    fn = src["dest-filename"]
+    # Detect arm64 runtime/host packs and derive x64 counterpart
+    for arm64_suffix in [".runtime.linux-arm64.", ".app.host.linux-arm64."]:
+        if arm64_suffix in fn:
+            # e.g. microsoft.netcore.app.runtime.linux-arm64.10.0.5.nupkg
+            #   -> microsoft.netcore.app.runtime.linux-x64.10.0.5.nupkg
+            x64_fn = fn.replace("linux-arm64", "linux-x64")
+            if x64_fn not in existing and x64_fn not in {e["dest-filename"] for e in added}:
+                # strip .nupkg suffix, then split name from version (last 3 parts)
+                name_ver = x64_fn[:-len(".nupkg")]
+                parts = name_ver.split(".")
+                version = ".".join(parts[-3:])
+                name    = ".".join(parts[:-3])
+                entry = nuget_entry(name, version)
+                if entry:
+                    added.append(entry)
+
+# Derive ILLink.Tasks version from netcore runtime pack version
+PREFIX = "microsoft.netcore.app.runtime.linux-arm64."
+SUFFIX = ".nupkg"
+for src in data:
+    fn = src["dest-filename"]
+    if fn.startswith(PREFIX) and fn.endswith(SUFFIX):
+        version = fn[len(PREFIX):-len(SUFFIX)]
+        entry = nuget_entry("microsoft.net.illink.tasks", version)
+        if entry:
+            added.append(entry)
+        break
+
+if added:
+    data.extend(added)
+    data.sort(key=lambda s: s["dest-filename"])
+    open(output, "w").write(json.dumps(data, indent=4) + "\n")
+    print(f"  Added {len(added)} missing x64 package(s).")
+else:
+    print("  All x64 runtime packages already present.")
+PYTHON
+
 echo ""
 echo "\u2713 Generated: $OUTPUT"
 echo "  Commit this file alongside src/UI/packages.lock.json and the manifest."
