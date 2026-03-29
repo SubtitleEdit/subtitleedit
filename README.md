@@ -48,6 +48,18 @@ Because *Subtitle Edit* is not signed with an Apple developer certificate, macOS
    ````
 
 ### Linux
+
+#### Flatpak (any distribution)
+
+A Flatpak package is available from the [Releases](https://github.com/SubtitleEdit/subtitleedit/releases) page. It bundles all required dependencies (mpv, ffmpeg) — no separate installation needed.
+
+```bash
+flatpak install SubtitleEdit-linux-x64.flatpak
+flatpak run dk.nikse.subtitleedit
+```
+
+#### Native packages
+
 Requires mpv and ffmpeg (ffmpeg is normally already installed) to enable video functionality.
 
 #### Debian/Ubuntu
