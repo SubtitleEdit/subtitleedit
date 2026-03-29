@@ -109,7 +109,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette);
             //TODO: multi track
         }
-        else if ((item.FileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || item.FileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.Format.StartsWith("Matroska", StringComparison.Ordinal))
+        else if ((item.FileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || item.FileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) &&
+                 item.Format.StartsWith("Matroska", StringComparison.Ordinal))
         {
             using (var matroska = new MatroskaFile(item.FileName))
             {
@@ -157,7 +158,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                                 break;
                             }
                         }
-                        else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
+                        else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) ||
+                                 track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                         {
                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                             {
@@ -206,7 +208,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                   item.FileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase) ||
                   item.FileName.EndsWith(".mpg", StringComparison.OrdinalIgnoreCase) ||
                   item.FileName.EndsWith(".mpeg", StringComparison.OrdinalIgnoreCase)) &&
-                  item.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
+                 item.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
         {
             if (item.ImageSubtitle != null)
             {
@@ -415,7 +417,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var msub = sub[index];
                 DvbSubPes? pes = null;
                 var data = msub.GetData(track);
-                if (data != null && data.Length > 9 && data[0] == 15 && data[1] >= SubtitleSegment.PageCompositionSegment && data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
+                if (data != null && data.Length > 9 && data[0] == 15 && data[1] >= SubtitleSegment.PageCompositionSegment &&
+                    data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
                 {
                     var buffer = new byte[data.Length + 3];
                     Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
@@ -541,6 +544,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     {
                         subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
                     }
+
                     clusterStream.Position = 0;
                     var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes, lastBitmapObjects);
                     foreach (var sup in list)
@@ -555,6 +559,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                             subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
                         }
                     }
+
                     clusterStream = new MemoryStream();
                 }
             }
@@ -591,6 +596,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             int length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
             position += length;
         }
+
         return false;
     }
 
@@ -828,6 +834,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 param.OverridePosition = position;
             }
+
             imageParameters.Add(param);
 
             if (cancellationToken.IsCancellationRequested)
@@ -900,6 +907,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             exportHandler.CreateParagraph(imageParameters[i]);
             exportHandler.WriteParagraph(imageParameters[i]);
         }
+
         exportHandler.WriteFooter();
         item.Status = Se.Language.General.Converted;
     }
@@ -948,7 +956,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
 
             var path = MakeOutputFileName(item, f.Extension);
-            var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             format.Save(path, fileStream, item.Subtitle, true);
             item.Status = Se.Language.General.Converted;
         }
@@ -1393,7 +1401,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var subtitles = new ObservableCollection<SubtitleLineViewModel>(subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)));
-        var fixedCount = DurationsBridgeGaps2.BridgeGaps(subtitles, minMsBetweenLines, _config.BridgeGaps.PercentForLeft, maxMs, fixedIndexes, dic, Configuration.Settings.General.UseTimeFormatHHMMSSFF);
+        var fixedCount = DurationsBridgeGaps2.BridgeGaps(subtitles, minMsBetweenLines, _config.BridgeGaps.PercentForLeft, maxMs, fixedIndexes, dic,
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF);
 
         for (var i = 0; i < subtitles.Count && i < subtitle.Paragraphs.Count; i++)
         {
@@ -1574,7 +1583,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
         else if (c.AdjustmentType == AdjustDurationType.Fixed)
         {
-            subtitle.SetFixedDuration(null, c.FixedMilliseconds * 1000.0);
+            subtitle.SetFixedDuration(null, c.FixedMilliseconds);
         }
         else if (c.AdjustmentType == AdjustDurationType.Seconds)
         {
@@ -1713,63 +1722,68 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var reBreak = _config.MergeLinesWithSameTimeCodes.AutoBreak;
         var makeDialog = _config.MergeLinesWithSameTimeCodes.MergeDialog;
-        var singleMergeSubtitles = new List<Paragraph>();
-        var mergedText = string.Empty;
+        var removed = new HashSet<int>();
 
         for (var i = 1; i < subtitle.Paragraphs.Count; i++)
         {
-            var p = subtitle.Paragraphs[i - 1];
+            if (removed.Contains(i))
+            {
+                continue;
+            }
 
+            var p = subtitle.Paragraphs[i - 1];
             var next = subtitle.Paragraphs[i];
-            if (MergeSameTimeCodesViewModel.QualifiesForMerge(new SubtitleLineViewModel(p, subtitle.OriginalFormat), new SubtitleLineViewModel(next, subtitle.OriginalFormat),
+
+            if (!MergeSameTimeCodesViewModel.QualifiesForMerge(
+                    new SubtitleLineViewModel(p, subtitle.OriginalFormat),
+                    new SubtitleLineViewModel(next, subtitle.OriginalFormat),
                     _config.MergeLinesWithSameTimeCodes.MaxMillisecondsDifference))
             {
-                if (!singleMergeSubtitles.Contains(p))
-                {
-                    singleMergeSubtitles.Add(p);
-                }
+                continue;
+            }
 
-                if (!singleMergeSubtitles.Contains(next))
-                {
-                    singleMergeSubtitles.Add(next);
-                }
+            var nextText = next.Text
+                .Replace("{\\an1}", string.Empty)
+                .Replace("{\\an2}", string.Empty)
+                .Replace("{\\an3}", string.Empty)
+                .Replace("{\\an4}", string.Empty)
+                .Replace("{\\an5}", string.Empty)
+                .Replace("{\\an6}", string.Empty)
+                .Replace("{\\an7}", string.Empty)
+                .Replace("{\\an8}", string.Empty)
+                .Replace("{\\an9}", string.Empty);
 
-                var nextText = next.Text
-                    .Replace("{\\an1}", string.Empty)
-                    .Replace("{\\an2}", string.Empty)
-                    .Replace("{\\an3}", string.Empty)
-                    .Replace("{\\an4}", string.Empty)
-                    .Replace("{\\an5}", string.Empty)
-                    .Replace("{\\an6}", string.Empty)
-                    .Replace("{\\an7}", string.Empty)
-                    .Replace("{\\an8}", string.Empty)
-                    .Replace("{\\an9}", string.Empty);
-
-                mergedText = p.Text;
-                if (mergedText.StartsWith("<i>", StringComparison.Ordinal) && mergedText.EndsWith("</i>", StringComparison.Ordinal) &&
-                    nextText.StartsWith("<i>", StringComparison.Ordinal) && nextText.EndsWith("</i>", StringComparison.Ordinal))
-                {
-                    mergedText = MergeSameTimeCodesViewModel.GetMergedLines(mergedText.Remove(mergedText.Length - 4), nextText.Remove(0, 3), makeDialog);
-                }
-                else
-                {
-                    mergedText = MergeSameTimeCodesViewModel.GetMergedLines(mergedText, nextText, makeDialog);
-                }
-
-                if (reBreak)
-                {
-                    mergedText = Utilities.AutoBreakLine(mergedText, language);
-                }
+            string mergedText;
+            if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) &&
+                nextText.StartsWith("<i>", StringComparison.Ordinal) && nextText.EndsWith("</i>", StringComparison.Ordinal))
+            {
+                mergedText = MergeSameTimeCodesViewModel.GetMergedLines(
+                    p.Text.Remove(p.Text.Length - 4),
+                    nextText.Remove(0, 3),
+                    makeDialog);
             }
             else
             {
-                if (singleMergeSubtitles.Count > 0)
-                {
-                    singleMergeSubtitles.Clear();
-                    mergedText = string.Empty;
-                }
+                mergedText = MergeSameTimeCodesViewModel.GetMergedLines(p.Text, nextText, makeDialog);
             }
+
+            if (reBreak)
+            {
+                mergedText = Utilities.AutoBreakLine(mergedText, language);
+            }
+
+            p.Text = mergedText;
+            p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
+            removed.Add(i);
         }
+
+        // rebuild subtitle without removed paragraphs
+        var kept = subtitle.Paragraphs
+            .Where((_, idx) => !removed.Contains(idx))
+            .ToList();
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(kept);
+        subtitle.Renumber();
 
         return subtitle;
     }
@@ -1781,23 +1795,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        var mergedIndexes = new List<int>();
         var removed = new HashSet<int>();
         var maxMsBetween = _config.MergeLinesWithSameTexts.MaxMillisecondsBetweenLines;
         var fixIncrementing = _config.MergeLinesWithSameTexts.IncludeIncrementingLines;
-        var numberOfMerges = 0;
-        Paragraph? p = null;
-        var lineNumbers = new List<int>();
-        for (var i = 1; i < subtitle.Paragraphs.Count; i++)
+
+        for (var i = 0; i < subtitle.Paragraphs.Count - 1; i++)
         {
-            if (removed.Contains(i - 1))
+            if (removed.Contains(i))
             {
                 continue;
             }
 
-            p = subtitle.Paragraphs[i - 1];
+            var p = subtitle.Paragraphs[i];
 
-            for (var j = i; j < subtitle.Paragraphs.Count; j++)
+            for (var j = i + 1; j < subtitle.Paragraphs.Count; j++)
             {
                 if (removed.Contains(j))
                 {
@@ -1806,37 +1817,21 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
                 var next = subtitle.Paragraphs[j];
                 var incrementText = string.Empty;
-                if ((MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) ||
-                     fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)))
+
+                if (MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) ||
+                    (fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)))
                 {
-                    p.Text = next.Text;
                     p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
                     if (!string.IsNullOrEmpty(incrementText))
                     {
                         p.Text = incrementText;
                     }
-
-                    if (lineNumbers.Count > 0)
-                    {
-                        lineNumbers.Add(next.Number);
-                    }
                     else
                     {
-                        lineNumbers.Add(p.Number);
-                        lineNumbers.Add(next.Number);
+                        p.Text = next.Text;
                     }
 
                     removed.Add(j);
-                    numberOfMerges++;
-                    if (!mergedIndexes.Contains(j))
-                    {
-                        mergedIndexes.Add(j);
-                    }
-
-                    if (!mergedIndexes.Contains(i - 1))
-                    {
-                        mergedIndexes.Add(i - 1);
-                    }
                 }
                 else
                 {
@@ -1844,6 +1839,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             }
         }
+
+        var kept = subtitle.Paragraphs
+            .Where((_, idx) => !removed.Contains(idx))
+            .ToList();
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(kept);
+        subtitle.Renumber();
 
         return subtitle;
     }
