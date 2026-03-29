@@ -60,7 +60,17 @@ public partial class SubtitleLineViewModel : ObservableObject
 
 
     private bool _skipUpdate = false;
-    public static Color ErrorColor { get; set; } = Se.Settings.General.ErrorColor.FromHexToColor();
+
+    private static SolidColorBrush _errorBrush = new SolidColorBrush(Se.Settings.General.ErrorColor.FromHexToColor());
+    private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+    public static Color ErrorColor
+    {
+        get => field;
+        set
+        {
+            field = value;
+        }
+    } = Se.Settings.General.ErrorColor.FromHexToColor();
 
     public SubtitleLineViewModel()
     {
@@ -238,7 +248,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 if (CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
-                    return new SolidColorBrush(ErrorColor);
+                    return _errorBrush;
                 }
 
                 var text = HtmlUtil.RemoveHtmlTags(Text, true);
@@ -247,7 +257,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 {
                     if (line.Length > Se.Settings.General.SubtitleLineMaximumLength)
                     {
-                        return new SolidColorBrush(ErrorColor);
+                        return _errorBrush;
                     }
                 }
             }
@@ -259,12 +269,12 @@ public partial class SubtitleLineViewModel : ObservableObject
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
                     {
-                        return new SolidColorBrush(ErrorColor);
+                        return _errorBrush;
                     }
                 }
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return _transparentBrush;
         }
     }
 
@@ -310,14 +320,14 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if (Se.Settings.General.ColorDurationTooShort &&
-                Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds || Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds ||
-                Se.Settings.General.ColorTimeCodeOverlap && Gap < 0)
+            if ((Se.Settings.General.ColorDurationTooShort && Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds) ||
+                (Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds) ||
+                (Se.Settings.General.ColorTimeCodeOverlap && Gap < 0))
             {
-                return new SolidColorBrush(ErrorColor);
+                return _errorBrush;
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return _transparentBrush;
         }
     }
 
@@ -328,10 +338,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorDurationTooLong &&
                 CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
-                return new SolidColorBrush(ErrorColor);
+                return _errorBrush;
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return _transparentBrush;
         }
     }
 
@@ -342,10 +352,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorDurationTooLong &&
                 WordsPerMinute > Se.Settings.General.SubtitleMaximumWordsPerMinute)
             {
-                return new SolidColorBrush(ErrorColor);
+                return _errorBrush;
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return _transparentBrush;
         }
     }
 
@@ -367,10 +377,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorGapTooShort &&
                 Gap < Se.Settings.General.MinimumMillisecondsBetweenLines)
             {
-                return new SolidColorBrush(ErrorColor);
+                return _errorBrush;
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return _transparentBrush;
         }
     }
 
