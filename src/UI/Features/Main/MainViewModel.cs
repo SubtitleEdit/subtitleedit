@@ -12159,6 +12159,7 @@ public partial class MainViewModel :
         await vp.Open(videoFileName);
         _videoFileName = videoFileName;
         _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
 
         if (IsValidUrl(videoFileName))
         {
