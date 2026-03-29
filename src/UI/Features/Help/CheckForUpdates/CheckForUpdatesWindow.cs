@@ -29,14 +29,9 @@ public class CheckForUpdatesWindow : Window
         };
         statusLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
-        var downloadLink = new TextBlock
-        {
-            Text = Se.Language.Help.CheckForUpdatesDownloadNewVersion,
-            Foreground = UiUtil.MakeLinkForeground(),
-            Cursor = new Cursor(StandardCursorType.Hand),
-            Margin = new Thickness(0, 0, 0, 4),
-            DataContext = vm,
-        };
+        var downloadLink = UiUtil.MakeLink(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
+        downloadLink.Margin = new Thickness(0, 0, 0, 4);
+        downloadLink.DataContext = vm;
         downloadLink.PointerPressed += (_, _) => vm.OpenDownloadPageCommand.Execute(null);
         downloadLink.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
 
