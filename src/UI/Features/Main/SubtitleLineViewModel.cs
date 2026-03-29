@@ -269,10 +269,11 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     private static readonly Dictionary<(string name, int size), (SKFont font, SKShaper shaper)> _fontCache = [];
+    private static bool _skipCalculatePixelWidth = false;
 
     private static int CalculatePixelWidth(string line)
     {
-        if (string.IsNullOrEmpty(line))
+        if (string.IsNullOrEmpty(line) || _skipCalculatePixelWidth)
         {
             return 0;
         }
@@ -301,6 +302,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         catch (Exception exception)
         {
             Se.LogError(exception, "Error calculating pixel width for line: " + line);
+            _skipCalculatePixelWidth = true;
             return 0;
         }
     }
