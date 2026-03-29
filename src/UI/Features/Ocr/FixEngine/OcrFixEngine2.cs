@@ -337,8 +337,8 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
                 {
                     if (_threeLetterIsoLanguageName == "eng" &&
                         w.EndsWith("in", StringComparison.Ordinal) &&
-                        w.Contains(word + "'") &&
-                        DoSpell(word + "g"))
+                        result.Contains(w + "'") &&
+                        DoSpell(w + "g"))
                     {
                         // avoid words like "workin'" or "holdin'"
                     }
