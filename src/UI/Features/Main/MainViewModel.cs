@@ -11656,6 +11656,8 @@ public partial class MainViewModel :
                              ?? SelectedSubtitleFormat;
         }
 
+        newFileName += subtitleFormat.Extension;
+
         var saveAsResult = await _fileHelper.PickSaveSubtitleFileAs(
             Window!,
             subtitleFormat,
