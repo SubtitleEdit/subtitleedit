@@ -16,6 +16,9 @@ v5.0.0-beta12 (xth March 2026)
 * Fix duration cell not turning red on subtitle overlap - thx papioski1111/ivandrofly
 * Fix for "Convert frame" reverse conversion (and other improvements) - thx larsk2 
 * Disable space key for waveform buttons (use "Enter" if you want to use keyboard) - thx darnn
+* Check for subtitles in ".m4a + .m4b" files - thx Battletoadz
+* Fix for ErrorColor update after Options - Setting
+* Fix mpv native resize flicker on Windows - thx Ironship
 
 -----------------------------------------------------------------------------------------------------
 
