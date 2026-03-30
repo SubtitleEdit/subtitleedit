@@ -183,15 +183,18 @@ public class Piper : ITtsEngine
 
         var fileNameOnly = Guid.NewGuid() + ".wav";
         var process = StartPiperProcess(piperVoice, text, fileNameOnly);
+        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
         await process.WaitForExitAsync(cancellationToken);
+        var stderrOutput = await stderrTask;
 
         if (process.ExitCode != 0)
         {
             Se.LogError($"Piper process exited with code {process.ExitCode} - Parameters: "
                 + $"Voice: {piperVoice}, "
-                + $"Text: {text}"
-                + $"FileName: {process.StartInfo.FileName}"
+                + $"Text: {text}, "
+                + $"FileName: {process.StartInfo.FileName}, "
                 + $"Parameters: {process.StartInfo.Arguments}"
+                + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}")
                 );
         }
 
@@ -211,6 +214,7 @@ public class Piper : ITtsEngine
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,
+                RedirectStandardError = true,
             }
         };
 
