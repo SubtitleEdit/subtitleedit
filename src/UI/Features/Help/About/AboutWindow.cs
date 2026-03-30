@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
-namespace Nikse.SubtitleEdit.Features.Help;
+namespace Nikse.SubtitleEdit.Features.Help.About;
 
 public class AboutWindow : Window
 {
