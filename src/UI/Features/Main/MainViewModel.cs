@@ -10140,7 +10140,7 @@ public partial class MainViewModel :
                 }
             }
 
-            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf") &&
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
                 fileSize > 2000 || ext == ".m4s")
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
@@ -10186,8 +10186,7 @@ public partial class MainViewModel :
             }
 
 
-            if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".mov" || ext == ".3gp" || ext == ".cmaf" ||
-                ext == ".m4s")
+            if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".mov" || ext == ".3gp" || ext == ".cmaf" || ext == ".m4s" || ext == ".m4a" || ext == ".m4b")
             {
                 var f = new IsmtDfxp();
                 if (f.IsMine(null, fileName))
