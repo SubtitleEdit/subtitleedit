@@ -10007,10 +10007,10 @@ public partial class MainViewModel :
         {
             if (isAssa)
             {
-                if (tb.Text.Contains("{\\" + assaOn + " }"))
+                if (tb.Text.Contains("{\\" + assaOn + "}"))
                 {
                     tb.Text = tb.Text.Replace("{\\" + assaOn + "}", string.Empty)
-                        .Replace("{\\" + assaOff + "0}", string.Empty);
+                        .Replace("{\\" + assaOff + "}", string.Empty);
                 }
                 else
                 {
