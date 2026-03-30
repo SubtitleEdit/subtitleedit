@@ -446,15 +446,18 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var answer = await MessageBox.Show(
-            Window!,
-            Se.Language.General.Delete,
-            string.Format(Se.Language.Edit.MultipleReplace.DeleteCategoryConfirm, node.CategoryName),
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-        if (answer != MessageBoxResult.Yes)
+        if (Se.Settings.General.PromptDeleteLines)
         {
-            return;
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.General.Delete,
+                string.Format(Se.Language.Edit.MultipleReplace.DeleteCategoryConfirm, node.CategoryName),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         Nodes.Remove(node);
@@ -792,15 +795,18 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var answer = await MessageBox.Show(
-            Window!,
-            Se.Language.General.Delete,
-            string.Format(Se.Language.Edit.MultipleReplace.DeleteRuleConfirm, node.Find),
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-        if (answer != MessageBoxResult.Yes)
+        if (Se.Settings.General.PromptDeleteLines)
         {
-            return;
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.General.Delete,
+                string.Format(Se.Language.Edit.MultipleReplace.DeleteRuleConfirm, node.Find),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         if (node.Parent != null && node.Parent.SubNodes != null)
