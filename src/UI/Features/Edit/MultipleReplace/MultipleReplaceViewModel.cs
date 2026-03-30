@@ -439,11 +439,25 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CategoryDelete(RuleTreeNode? node)
+    private async Task CategoryDeleteAsync(RuleTreeNode? node)
     {
         if (node == null)
         {
             return;
+        }
+
+        if (Se.Settings.General.PromptDeleteLines)
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.General.Delete,
+                string.Format(Se.Language.Edit.MultipleReplace.DeleteCategoryConfirm, node.CategoryName),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         Nodes.Remove(node);
@@ -774,11 +788,25 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void NodeDelete(RuleTreeNode? node)
+    private async Task NodeDeleteAsync(RuleTreeNode? node)
     {
         if (node == null)
         {
             return;
+        }
+
+        if (Se.Settings.General.PromptDeleteLines)
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.General.Delete,
+                string.Format(Se.Language.Edit.MultipleReplace.DeleteRuleConfirm, node.Find),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         if (node.Parent != null && node.Parent.SubNodes != null)
@@ -929,7 +957,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
-    internal void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
+    internal async void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Delete)
         {
@@ -944,7 +972,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     idx = parent.SubNodes.IndexOf(node);
                 }
 
-                NodeDelete(node);
+                await NodeDeleteAsync(node);
 
                 if (parent != null && parent.SubNodes != null && idx >= 0)
                 {
