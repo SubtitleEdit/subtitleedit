@@ -428,7 +428,7 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             var answer = MessageBoxResult.Yes;
 
-            if (Se.Settings.General.PromptDeleteLines)
+            if (Se.Settings.General.PromptBeforeDelete)
             {
                 if (selectedItems.Count == 1)
                 {
@@ -839,7 +839,7 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             var answer = MessageBoxResult.Yes;
 
-            if (Se.Settings.General.PromptDeleteLines)
+            if (Se.Settings.General.PromptBeforeDelete)
             {
                 answer = await MessageBox.Show(
                     Window!,
@@ -889,7 +889,7 @@ public partial class AssaStylesViewModel : ObservableObject
         {
             var answer = MessageBoxResult.Yes;
 
-            if (Se.Settings.General.PromptDeleteLines)
+            if (Se.Settings.General.PromptBeforeDelete)
             {
                 answer = await MessageBox.Show(
                     Window!,

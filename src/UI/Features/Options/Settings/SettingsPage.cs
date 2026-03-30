@@ -222,7 +222,7 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.General,
         [
             MakeNumericSettingInt(Se.Language.Options.Settings.NewEmptyDefaultMs, nameof(_vm.NewEmptyDefaultMs)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.PromptDeleteLines, nameof(_vm.PromptDeleteLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
             MakeCheckboxSetting(Se.Language.Options.Settings.UseFrameMode, nameof(_vm.UseFrameMode)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
             MakeCheckboxSetting(Se.Language.General.LockTimeCodes, nameof(_vm.LockTimeCodes)),

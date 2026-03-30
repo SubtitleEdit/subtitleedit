@@ -79,7 +79,7 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         }
 
         var answer = MessageBoxResult.Yes;
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             answer = await MessageBox.Show(
                 Window,

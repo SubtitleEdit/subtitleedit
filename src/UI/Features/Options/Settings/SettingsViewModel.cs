@@ -69,7 +69,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _mpvPreviewShadowWidth;
 
     [ObservableProperty] private int? _newEmptyDefaultMs;
-    [ObservableProperty] private bool _promptDeleteLines;
+    [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
     [ObservableProperty] private bool _useFrameMode;
@@ -546,7 +546,7 @@ public partial class SettingsViewModel : ObservableObject
         UseFrameMode = general.UseFrameMode;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
-        PromptDeleteLines = general.PromptDeleteLines;
+        PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
         AutoBackupOn = general.AutoBackupOn;
@@ -1131,7 +1131,7 @@ public partial class SettingsViewModel : ObservableObject
         general.UseFrameMode = UseFrameMode;
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
-        general.PromptDeleteLines = PromptDeleteLines;
+        general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
         general.AutoBackupOn = AutoBackupOn;
@@ -1662,7 +1662,7 @@ public partial class SettingsViewModel : ObservableObject
     private async Task EmptyWaveformsAndSpectrograms()
     {
         var answer = MessageBoxResult.Yes;
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             answer = await MessageBox.Show(
                 Window!,

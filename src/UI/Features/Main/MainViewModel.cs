@@ -12735,7 +12735,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var title = Se.Language.General.Delete;
 
@@ -12816,7 +12816,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var title = Se.Language.General.Delete;
 

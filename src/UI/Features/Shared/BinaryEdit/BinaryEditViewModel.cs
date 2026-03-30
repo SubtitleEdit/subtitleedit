@@ -1584,7 +1584,7 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             var answer = MessageBoxResult.Yes;
 
-            if (Se.Settings.General.PromptDeleteLines)
+            if (Se.Settings.General.PromptBeforeDelete)
             {
                 if (selectedItems.Count == 1)
                 {
