@@ -119,7 +119,6 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         Engines =
         [
-            new Piper(ttsDownloadService),
             new EdgeTts(),
             new AllTalk(ttsDownloadService),
             new ElevenLabs(ttsDownloadService),
@@ -128,6 +127,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService)
         ];
+
+        if (!OperatingSystem.IsMacOS())
+        {
+            Engines.Insert(0, new Piper(ttsDownloadService));
+        }
     }
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
