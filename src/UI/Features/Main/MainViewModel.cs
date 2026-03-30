@@ -11585,8 +11585,7 @@ public partial class MainViewModel :
             {
                 newFileName = GetFileNameWithoutExtension(_videoFileName);
             }
-
-            if (!string.IsNullOrEmpty(_subtitleFileName))
+            else if (!string.IsNullOrEmpty(_subtitleFileName))
             {
                 newFileName = GetFileNameWithoutExtension(_subtitleFileName);
             }
