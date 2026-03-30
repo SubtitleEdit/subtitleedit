@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
@@ -14,8 +14,22 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private LibMpvDynamicPlayer? _mpvPlayer;
     private bool _isInitialized;
     private IntPtr _nativeHandle;
+    private IntPtr _ownedChildHandle;
     private Timer? _resizeTimer;
     private bool _isResizing;
+
+    private const uint WS_CHILD = 0x40000000;
+    private const uint WS_VISIBLE = 0x10000000;
+    private const uint WS_CLIPSIBLINGS = 0x04000000;
+    private const uint WS_CLIPCHILDREN = 0x02000000;
+
+    // Linux still needs the temporary hide/show workaround during live resize.
+    private static bool ShouldHideNativeControlDuringResize => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+    // On Windows, use a dedicated child HWND for the embedded renderer instead of
+    // the parent host handle. Reusing the parent handle makes native video jump to
+    // the top-left corner during live resize.
+    private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
     public LibMpvDynamicPlayer? Player => _mpvPlayer;
 
@@ -24,15 +38,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         _mpvPlayer = mpvPlayer;
         ClipToBounds = true;
 
-        // Force arrow cursor immediately
         Cursor = new Cursor(StandardCursorType.Arrow);
 
-        // Initialize resize timer - wait for resize to finish before showing video again
-        _resizeTimer = new Timer(10); // 10ms after resize stops
-        _resizeTimer.AutoReset = false;
-        _resizeTimer.Elapsed += OnResizeFinished;
+        if (ShouldHideNativeControlDuringResize)
+        {
+            _resizeTimer = new Timer(10);
+            _resizeTimer.AutoReset = false;
+            _resizeTimer.Elapsed += OnResizeFinished;
+        }
 
-        // Handle when control is loaded
         Loaded += (s, e) =>
         {
             Cursor = new Cursor(StandardCursorType.Arrow);
@@ -44,13 +58,11 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     {
         base.OnPropertyChanged(change);
 
-        // Detect window resize
-        if (change.Property.Name == nameof(Bounds) && _isInitialized && _mpvPlayer != null)
+        if (ShouldHideNativeControlDuringResize && change.Property.Name == nameof(Bounds) && _isInitialized && _mpvPlayer != null)
         {
             var newBounds = (Rect)change.NewValue!;
             var oldBounds = (Rect)(change.OldValue ?? new Rect());
 
-            // Check if size actually changed
             if (Math.Abs(newBounds.Width - oldBounds.Width) > 1 ||
                 Math.Abs(newBounds.Height - oldBounds.Height) > 1)
             {
@@ -61,29 +73,33 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private void OnResizeStarted()
     {
+        if (!ShouldHideNativeControlDuringResize)
+        {
+            return;
+        }
+
         if (!_isResizing && _mpvPlayer != null)
         {
             _isResizing = true;
-
-            // Hide the native control during resize to prevent flashing
             IsVisible = false;
         }
 
-        // Reset timer - resize is ongoing
         _resizeTimer?.Stop();
         _resizeTimer?.Start();
     }
 
     private void OnResizeFinished(object? sender, ElapsedEventArgs e)
     {
-        // Resize has stopped, show the control again
+        if (!ShouldHideNativeControlDuringResize)
+        {
+            return;
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
             if (_isResizing && _mpvPlayer != null)
             {
                 _isResizing = false;
-
-                // Show the control again
                 IsVisible = true;
             }
         });
@@ -91,8 +107,8 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
-        // Get the native window handle from the parent
-        _nativeHandle = parent.Handle;
+        _nativeHandle = CreateRenderTargetHandle(parent.Handle);
+        var handleDescriptor = _ownedChildHandle != IntPtr.Zero ? "HWND" : parent.HandleDescriptor;
 
         if (!_isInitialized && _mpvPlayer != null)
         {
@@ -101,7 +117,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
                 _mpvPlayer.PlayerSubName = "wid";
                 System.Diagnostics.Debug.WriteLine($"Initializing mpv with native window handle: {_nativeHandle}");
 
-                // Initialize mpv with native window embedding
                 InitializeWithNativeWindow(_nativeHandle);
 
                 _isInitialized = true;
@@ -113,13 +128,11 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             }
         }
 
-        // Return the native handle as the platform handle
-        return new PlatformHandle(_nativeHandle, "HWND");
+        return new PlatformHandle(_nativeHandle, handleDescriptor);
     }
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        // Clean up resize timer
         if (_resizeTimer != null)
         {
             _resizeTimer.Stop();
@@ -128,8 +141,47 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             _resizeTimer = null;
         }
 
+        if (_ownedChildHandle != IntPtr.Zero)
+        {
+            DestroyWindow(_ownedChildHandle);
+            _ownedChildHandle = IntPtr.Zero;
+        }
+
+        _nativeHandle = IntPtr.Zero;
+        _isResizing = false;
         _isInitialized = false;
         base.DestroyNativeControlCore(control);
+    }
+
+    private IntPtr CreateRenderTargetHandle(IntPtr parentHandle)
+    {
+        if (!ShouldUseOwnedChildHandle)
+        {
+            return parentHandle;
+        }
+
+        _ownedChildHandle = CreateWindowExW(
+            0,
+            "STATIC",
+            string.Empty,
+            WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+            0,
+            0,
+            1,
+            1,
+            parentHandle,
+            IntPtr.Zero,
+            IntPtr.Zero,
+            IntPtr.Zero);
+
+        if (_ownedChildHandle == IntPtr.Zero)
+        {
+            var error = Marshal.GetLastWin32Error();
+            System.Diagnostics.Debug.WriteLine($"Failed to create mpv child host window: {error}. Falling back to parent handle.");
+            return parentHandle;
+        }
+
+        return _ownedChildHandle;
     }
 
     private void InitializeWithNativeWindow(IntPtr windowHandle)
@@ -139,11 +191,8 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             return;
         }
 
-        // Load the libmpv library
         _mpvPlayer.LoadLib();
 
-        // Set the window ID (wid) option before initialization
-        // This tells mpv to embed itself in the provided window handle
         var widString = GetWindowIdString(windowHandle);
         System.Diagnostics.Debug.WriteLine($"Setting wid to: {widString}");
 
@@ -153,12 +202,6 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to set wid: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        // Set video output for the embedded window.
-        // On Linux, use Xvideo (xv) rather than GPU-accelerated output.
-        // Avalonia (11.x) always uses X11/XWayland — GPU outputs (vo=gpu)
-        // cause flickering because the compositor redraws the area between
-        // mpv frames.  Xvideo renders directly via the X11 Xv extension
-        // without an OpenGL context, avoiding the compositing conflict.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             _mpvPlayer.SetOptionString("vo", "xv,x11,gpu");
@@ -168,15 +211,9 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             _mpvPlayer.SetOptionString("vo", "gpu");
         }
 
-        // Keep subtitles off (we'll handle them separately)
         _mpvPlayer.SetOptionString("sid", "no");
-
-        // Keep the video paused at the end
         _mpvPlayer.SetOptionString("keep-open", "always");
 
-        // On Linux, force mpv to create its rendering window immediately so
-        // the X11 child window has a black background before any file loads.
-        // Not needed on Windows/macOS where the native handle lifecycle differs.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             _mpvPlayer.SetOptionString("idle", "yes");
@@ -184,14 +221,12 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             _mpvPlayer.SetOptionString("background-color", "#000000");
         }
 
-        // Initialize mpv
         err = _mpvPlayer.Initialize();
         if (err < 0)
         {
             throw new InvalidOperationException($"Failed to initialize mpv: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        // After initialization, ensure cursor is reset
         Dispatcher.UIThread.Post(() =>
         {
             Cursor = new Cursor(StandardCursorType.Arrow);
@@ -201,28 +236,40 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private static string GetWindowIdString(IntPtr handle)
     {
-        // Convert the window handle to a string format that mpv expects
-        // On Windows, this is a decimal string
-        // On Linux (X11), this is a decimal string
-        // On macOS, this needs special handling
-
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             return handle.ToString();
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            // X11 window ID
             return handle.ToString();
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            // macOS NSView pointer needs to be passed as-is
             return handle.ToString();
         }
 
         return handle.ToString();
     }
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr CreateWindowExW(
+        uint dwExStyle,
+        string lpClassName,
+        string lpWindowName,
+        uint dwStyle,
+        int x,
+        int y,
+        int nWidth,
+        int nHeight,
+        IntPtr hWndParent,
+        IntPtr hMenu,
+        IntPtr hInstance,
+        IntPtr lpParam);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DestroyWindow(IntPtr hWnd);
 
     public void LoadFile(string path)
     {

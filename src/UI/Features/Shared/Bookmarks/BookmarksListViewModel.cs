@@ -71,7 +71,7 @@ public partial class BookmarksListViewModel : ObservableObject
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var result = await MessageBox.Show(
                 Window,

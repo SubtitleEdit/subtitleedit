@@ -230,11 +230,15 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private FormUrlEncodedContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
+            var sourceLang = sourceLanguageCode.Contains("-")
+                ? sourceLanguageCode.Substring(0, sourceLanguageCode.IndexOf('-'))
+                : sourceLanguageCode;
+
             var array = new List<KeyValuePair<string, string>>()
             {
                 new KeyValuePair<string, string>("text", text),
                 new KeyValuePair<string, string>("target_lang", targetLanguageCode),
-                new KeyValuePair<string, string>("source_lang", sourceLanguageCode),
+                new KeyValuePair<string, string>("source_lang", sourceLang),
             };
 
             var targetLanguages = GetSupportedTargetLanguages();

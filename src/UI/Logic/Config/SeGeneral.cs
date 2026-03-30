@@ -68,7 +68,7 @@ public class SeGeneral
     public int SubtitleMaximumDisplayMilliseconds { get; set; }
     public int MinimumMillisecondsBetweenLines { get; set; }
     public int NewEmptyDefaultMs { get; set; }
-    public bool PromptDeleteLines { get; set; }
+    public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
     public bool RememberPositionAndSize { get; set; }
     public bool UndockVideoControls { get; set; }
@@ -183,7 +183,7 @@ public class SeGeneral
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;
-        PromptDeleteLines = true;
+        PromptBeforeDelete = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;

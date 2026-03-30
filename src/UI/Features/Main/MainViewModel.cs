@@ -2828,7 +2828,7 @@ public partial class MainViewModel :
             }
 
             var proposedEndTime = selectedLine.StartTime + optimalDuration;
-            if (proposedEndTime.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
+            if (proposedEndTime.TotalMilliseconds - selectedLine.StartTime.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
                 proposedEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
             }
@@ -5387,6 +5387,7 @@ public partial class MainViewModel :
 
         var result = _windowService.ShowWindow<AdjustAllTimesWindow, AdjustAllTimesViewModel>(Window, (window, vm) =>
         {
+            _adjustAllTimesViewModel = vm;
             var selectedCount = SubtitleGrid.SelectedItems.Count;
             vm.Initialize(this, selectedCount); // uses call from IAdjustCallback: Adjust
         });
@@ -9645,7 +9646,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (atTextBoxPosition && atTextBoxPosition && vp != null)
+        if (atVideoPosition && atTextBoxPosition && vp != null)
         {
             _splitManager.Split(Subtitles, s, vp.Position, EditTextBox.SelectionStart);
         }
@@ -10007,10 +10008,10 @@ public partial class MainViewModel :
         {
             if (isAssa)
             {
-                if (tb.Text.Contains("{\\" + assaOn + " }"))
+                if (tb.Text.Contains("{\\" + assaOn + "}"))
                 {
                     tb.Text = tb.Text.Replace("{\\" + assaOn + "}", string.Empty)
-                        .Replace("{\\" + assaOff + "0}", string.Empty);
+                        .Replace("{\\" + assaOff + "}", string.Empty);
                 }
                 else
                 {
@@ -10140,7 +10141,7 @@ public partial class MainViewModel :
                 }
             }
 
-            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf") &&
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
                 fileSize > 2000 || ext == ".m4s")
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
@@ -10186,8 +10187,7 @@ public partial class MainViewModel :
             }
 
 
-            if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".mov" || ext == ".3gp" || ext == ".cmaf" ||
-                ext == ".m4s")
+            if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".mov" || ext == ".3gp" || ext == ".cmaf" || ext == ".m4s" || ext == ".m4a" || ext == ".m4b")
             {
                 var f = new IsmtDfxp();
                 if (f.IsMine(null, fileName))
@@ -10739,13 +10739,13 @@ public partial class MainViewModel :
 
     private void UpdateProgress(long position, long total, string statusMessage)
     {
-        var percent = (int)Math.Round(position * 100.0 / total);
+        var percent = (int)Math.Round(position * 100.0 / total, MidpointRounding.AwayFromZero);
         if (percent == _lastProgressPercent)
         {
             return;
         }
 
-        ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
+        ShowStatus(string.Format("{0}, {1:0}%", statusMessage, percent));
         _lastProgressPercent = percent;
     }
 
@@ -11586,8 +11586,7 @@ public partial class MainViewModel :
             {
                 newFileName = GetFileNameWithoutExtension(_videoFileName);
             }
-
-            if (!string.IsNullOrEmpty(_subtitleFileName))
+            else if (!string.IsNullOrEmpty(_subtitleFileName))
             {
                 newFileName = GetFileNameWithoutExtension(_subtitleFileName);
             }
@@ -12159,6 +12158,7 @@ public partial class MainViewModel :
         await vp.Open(videoFileName);
         _videoFileName = videoFileName;
         _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
 
         if (IsValidUrl(videoFileName))
         {
@@ -12735,7 +12735,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var title = Se.Language.General.Delete;
 
@@ -12816,7 +12816,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var title = Se.Language.General.Delete;
 

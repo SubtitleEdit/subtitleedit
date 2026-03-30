@@ -284,7 +284,7 @@ public partial class ExportImageBasedViewModel : ObservableObject
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var answer = await MessageBox.Show(
                 Window,

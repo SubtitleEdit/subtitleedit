@@ -170,19 +170,20 @@ function IsDotNet10Installed(): Boolean;
 var
   FindRec: TFindRec;
   RuntimePath: String;
+  ResultCode: Integer;
+  Output: AnsiString;
+  TmpFile: String;
 begin
   Result := False;
-  // Look in the Desktop App shared framework folder
-  RuntimePath := ExpandConstant('{pf}\dotnet\shared\Microsoft.WindowsDesktop.App\');
-  
-  // Search for any directory starting with '10.'
+
+  // Primary check: look for a 10.x folder in the default install location
+  RuntimePath := ExpandConstant('{pf}\dotnet\shared\Microsoft.NETCore.App\');
   if FindFirst(RuntimePath + '10.*', FindRec) then
   begin
     try
       repeat
         if FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0 then
         begin
-          // If we find at least one directory starting with 10., we are good.
           Result := True;
           break;
         end;
@@ -191,9 +192,25 @@ begin
       FindClose(FindRec);
     end;
   end;
-  
+
+  if Result then
+    Exit;
+
+  // Fallback: run "dotnet --list-runtimes" for non-default install locations
+  TmpFile := ExpandConstant('{tmp}\dotnet_runtimes.txt');
+  if Exec('cmd.exe', '/C dotnet --list-runtimes > "' + TmpFile + '" 2>&1',
+          '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    if (ResultCode = 0) and LoadStringFromFile(TmpFile, Output) then
+    begin
+      if Pos('Microsoft.NETCore.App 10.', String(Output)) > 0 then
+        Result := True;
+    end;
+    DeleteFile(TmpFile);
+  end;
+
   if not Result then
-    Log('No .NET 10.x runtime folders found in ' + RuntimePath);
+    Log('No .NET 10.x runtime found (checked folder + dotnet CLI)');
 end;
 
 
