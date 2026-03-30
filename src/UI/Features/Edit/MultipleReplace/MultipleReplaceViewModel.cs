@@ -446,7 +446,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var answer = await MessageBox.Show(
                 Window!,
@@ -795,7 +795,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        if (Se.Settings.General.PromptDeleteLines)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
             var answer = await MessageBox.Show(
                 Window!,
