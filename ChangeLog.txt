@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.0.0-beta12 (xth March 2026)
+v5.0.0-beta12 (30th March 2026)
 
 * Add Ukrainian translation - thx iohomenetyou
 * Add Portuguese (Brazil) translation - thx igorruckert
@@ -19,6 +19,7 @@ v5.0.0-beta12 (xth March 2026)
 * Check for subtitles in ".m4a + .m4b" files - thx Battletoadz
 * Fix for ErrorColor update after Options - Setting
 * Fix mpv native resize flicker on Windows - thx Ironship
+* Prompt for delete rules/groups in Multiple Replace - thx ivandrofly
 
 -----------------------------------------------------------------------------------------------------
 
