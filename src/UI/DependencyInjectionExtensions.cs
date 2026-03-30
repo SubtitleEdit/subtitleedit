@@ -30,6 +30,7 @@ using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Help;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
@@ -215,6 +216,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AddToNamesListViewModel>();
         collection.AddTransient<AddToOcrReplaceListViewModel>();
         collection.AddTransient<AddToUserDictionaryViewModel>();
+        collection.AddTransient<AboutViewModel>();
         collection.AddTransient<AdjustAllTimesViewModel>();
         collection.AddTransient<AdjustDurationViewModel>();
         collection.AddTransient<AlignmentPickerViewModel>();
