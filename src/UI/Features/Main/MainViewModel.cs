@@ -5387,6 +5387,7 @@ public partial class MainViewModel :
 
         var result = _windowService.ShowWindow<AdjustAllTimesWindow, AdjustAllTimesViewModel>(Window, (window, vm) =>
         {
+            _adjustAllTimesViewModel = vm;
             var selectedCount = SubtitleGrid.SelectedItems.Count;
             vm.Initialize(this, selectedCount); // uses call from IAdjustCallback: Adjust
         });
@@ -10738,13 +10739,13 @@ public partial class MainViewModel :
 
     private void UpdateProgress(long position, long total, string statusMessage)
     {
-        var percent = (int)Math.Round(position * 100.0 / total);
+        var percent = (int)Math.Round(position * 100.0 / total, MidpointRounding.AwayFromZero);
         if (percent == _lastProgressPercent)
         {
             return;
         }
 
-        ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
+        ShowStatus(string.Format("{0}, {1:0}%", statusMessage, percent));
         _lastProgressPercent = percent;
     }
 
