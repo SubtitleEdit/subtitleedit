@@ -2828,7 +2828,7 @@ public partial class MainViewModel :
             }
 
             var proposedEndTime = selectedLine.StartTime + optimalDuration;
-            if (proposedEndTime.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
+            if (proposedEndTime.TotalMilliseconds - selectedLine.StartTime.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
                 proposedEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
             }
