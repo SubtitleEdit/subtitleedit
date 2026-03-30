@@ -18,9 +18,9 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
     public Window? Window { get; set; }
 
-    [ObservableProperty] private string _statusText;
+    [ObservableProperty] private string _statusText = string.Empty;
 
-    [ObservableProperty] private string _changeLogText;
+    [ObservableProperty] private string _changeLogText = string.Empty;
 
     [ObservableProperty] private bool _isDownloadLinkVisible;
 

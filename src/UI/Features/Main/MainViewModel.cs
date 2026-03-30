@@ -1245,9 +1245,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowCheckForUpdates()
     {
-        var newWindow = new CheckForUpdatesWindow(new CheckForUpdatesViewModel());
-        await newWindow.ShowDialog(Window!);
-        _shortcutManager.ClearKeys();
+        await ShowDialogAsync<CheckForUpdatesWindow, CheckForUpdatesViewModel>();
     }
 
     [RelayCommand]
