@@ -9645,7 +9645,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (atTextBoxPosition && atTextBoxPosition && vp != null)
+        if (atVideoPosition && atTextBoxPosition && vp != null)
         {
             _splitManager.Split(Subtitles, s, vp.Position, EditTextBox.SelectionStart);
         }
