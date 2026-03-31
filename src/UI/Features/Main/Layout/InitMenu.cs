@@ -316,12 +316,18 @@ public static class InitMenu
                 {
                     Header = l.RightToLeftMode,
                     Command = vm.RightToLeftToggleCommand,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)),
                     Icon = new Projektanker.Icons.Avalonia.Icon
                     {
                         Value = IconNames.CheckBold,
                         VerticalAlignment = VerticalAlignment.Center,
-                        [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)),
                     }
+                },
+                new MenuItem
+                {
+                    Header = l.RightToLeftMode,
+                    Command = vm.RightToLeftToggleCommand,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)) { Converter = new InverseBooleanConverter() },
                 },
                 new MenuItem
                 {
