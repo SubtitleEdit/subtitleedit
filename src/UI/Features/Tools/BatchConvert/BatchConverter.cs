@@ -279,6 +279,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 await RunPaddleOcr(imageSubtitle, item, cancellationToken);
             }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
+            {
+                await RunOllamaOcr(imageSubtitle, item, cancellationToken);
+            }
             else
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
@@ -790,6 +794,31 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             await Task.Delay(100);
             checkCount++;
         }
+    }
+    
+    private async Task RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        var ollamaOcr = new OllamaOcr();
+
+        _ = Task.Run(async () =>
+        {
+            //for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            //{
+                // var i = selectedIndices[processedIndex];
+                // if (cancellationToken.IsCancellationRequested)
+                // {
+                //     return;
+                // }
+
+                // var item = OcrSubtitleItems[i];
+                // var bitmap = item.GetSkBitmap();
+                //
+                // var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
+                // item.Text = text;
+
+                //OcrFixLineAndSetText(i, item);
+         //   }
+        });
     }
 
     private void WriteToImageBasedFormat(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
