@@ -440,9 +440,6 @@ public partial class BinaryEditViewModel : ObservableObject
         // VobSub (.sub + .idx)
         else if (FileUtil.IsVobSub(fileName))
         {
-            var vobSub = new VobSubParser(true);
-
-
             var vobSubParser = new VobSubParser(true);
             string idxFileName = Path.ChangeExtension(fileName, ".idx");
             vobSubParser.OpenSubIdx(fileName, idxFileName);
@@ -490,10 +487,13 @@ public partial class BinaryEditViewModel : ObservableObject
         var baseNamesToTry = new[] { baseName, baseName2 };
         foreach (var ext in videoExtensions)
         {
-            var testFileName = baseName + ext;
-            if (File.Exists(testFileName))
+            foreach (var bName in baseNamesToTry)
             {
-                return testFileName;
+                var testFileName = bName + ext;
+                if (File.Exists(testFileName))
+                {
+                    return testFileName;
+                }
             }
         }
 
@@ -1287,7 +1287,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var newItem = new BinarySubtitleItem(selectedItem);
-        newItem.EndTime = TimeSpan.FromMicroseconds(selectedItem.StartTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines);
+        newItem.EndTime = TimeSpan.FromMilliseconds(selectedItem.StartTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines);
         newItem.StartTime = TimeSpan.FromMilliseconds(newItem.EndTime.TotalMilliseconds - Se.Settings.General.NewEmptyDefaultMs);
         var selectedIndex = SubtitleGrid.SelectedIndex;
         Subtitles.Insert(selectedIndex, newItem);
