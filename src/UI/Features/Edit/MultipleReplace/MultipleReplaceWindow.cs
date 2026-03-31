@@ -284,6 +284,22 @@ public class MultipleReplaceWindow : Window
         treeView.SelectionChanged += vm.RulesTreeView_SelectionChanged;
         treeView.KeyDown += vm.RulesTreeView_KeyDown;
         treeView.DoubleTapped += (_, e) => vm.TreeViewDoubleTapped(e);
+        treeView.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
+        {
+            var isContextClick = e.InitialPressMouseButton == MouseButton.Right ||
+                (System.OperatingSystem.IsMacOS() && e.InitialPressMouseButton == MouseButton.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control));
+            if (isContextClick)
+            {
+                var node = vm.SelectedNode;
+                if (node == null)
+                    vm.TreeOpenContextMenuCommand.Execute(null);
+                else if (node.IsCategory)
+                    vm.NodeCategoryOpenContextMenuCommand.Execute(node);
+                else
+                    vm.NodeOpenContextMenuCommand.Execute(node);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Bubble);
 
         var scrollViewer = new ScrollViewer
         {
