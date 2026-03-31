@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Help;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
@@ -1237,9 +1238,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowAbout()
     {
-        var newWindow = new AboutWindow(new AboutViewModel());
-        await newWindow.ShowDialog(Window!);
-        _shortcutManager.ClearKeys();
+        await ShowDialogAsync<AboutWindow, AboutViewModel>();
     }
 
     [RelayCommand]
