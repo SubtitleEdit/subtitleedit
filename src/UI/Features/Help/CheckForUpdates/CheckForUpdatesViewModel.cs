@@ -82,7 +82,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
             return;
         }
 
-        await Window.Launcher.LaunchUriAsync(new Uri(ReleasesUrl));
+        UiUtil.OpenUrl(ReleasesUrl);
     }
 
     [RelayCommand]

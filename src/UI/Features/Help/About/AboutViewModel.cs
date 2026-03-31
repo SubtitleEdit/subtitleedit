@@ -49,7 +49,7 @@ public partial class AboutViewModel : ObservableObject
             return;
         }
 
-        await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/sponsors/niksedk"));
+        UiUtil.OpenUrl("https://github.com/sponsors/niksedk");
     }
 
     [RelayCommand]
