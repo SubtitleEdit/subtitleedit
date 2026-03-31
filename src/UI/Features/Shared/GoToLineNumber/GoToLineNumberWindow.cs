@@ -27,10 +27,6 @@ public class GoToLineNumberWindow : Window
             {
                 Mode = BindingMode.TwoWay,
             },
-            [!NumericUpDown.MaximumProperty] = new Binding(nameof(vm.MaxLineNumber))
-            {
-                Mode = BindingMode.OneWay,
-            },
             Minimum = 1,
             Increment = 1,          // Only step in whole numbers
             FormatString = "F0",    // Show 0 decimal places
