@@ -1002,7 +1002,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        foreach (var subtitle in selectedItems)
+        foreach (var subtitle in itemsToResize)
         {
             if (subtitle.Bitmap == null)
             {
@@ -1574,14 +1574,14 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void DeleteSectedLines()
     {
-        var selectedItems = SubtitleGrid?.SelectedItems;
-        if (selectedItems == null || selectedItems.Count == 0)
-        {
-            return;
-        }
-
         Dispatcher.UIThread.Post(async void () =>
         {
+            var selectedItems = SubtitleGrid?.SelectedItems?.Cast<BinarySubtitleItem>().ToList();
+            if (selectedItems == null || selectedItems.Count == 0)
+            {
+                return;
+            }
+
             var answer = MessageBoxResult.Yes;
 
             if (Se.Settings.General.PromptBeforeDelete)
