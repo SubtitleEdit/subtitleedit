@@ -6,7 +6,7 @@ The Qwen3-Forced-Aligner-0.6B model can generate precise timestamps, making it u
 
 These models use GGUF quantization for efficient and fast inference, even on local machines.
 
-Advanced settings are appended before the required model/audio/output arguments.
+Advanced settings are prepended before the required model/audio/output arguments.
 
 Useful optional arguments:
 -t 8          Set number of CPU threads
