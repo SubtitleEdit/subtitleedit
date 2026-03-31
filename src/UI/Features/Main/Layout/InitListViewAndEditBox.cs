@@ -743,7 +743,7 @@ public static partial class InitListViewAndEditBox
 
         var extendToLineAfterMenuItem = new MenuItem { Header = Se.Language.General.ExtendAfter, DataContext = vm };
         extendToLineAfterMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
-        extendToLineAfterMenuItem.Command = vm.ExtendSelectedToPreviousCommand;
+        extendToLineAfterMenuItem.Command = vm.ExtendSelectedToNextCommand;
         flyout.Items.Add(extendToLineAfterMenuItem);
         vm.MenuItemExtendToLineAfter = extendToLineAfterMenuItem;
 
