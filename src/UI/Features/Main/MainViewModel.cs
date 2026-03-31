@@ -50,7 +50,8 @@ using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
-using Nikse.SubtitleEdit.Features.Help;
+using Nikse.SubtitleEdit.Features.Help.About;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
@@ -1239,6 +1240,12 @@ public partial class MainViewModel :
         var newWindow = new AboutWindow(new AboutViewModel());
         await newWindow.ShowDialog(Window!);
         _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private async Task ShowCheckForUpdates()
+    {
+        await ShowDialogAsync<CheckForUpdatesWindow, CheckForUpdatesViewModel>();
     }
 
     [RelayCommand]

@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Features.Help;
+namespace Nikse.SubtitleEdit.Features.Help.About;
 
 public partial class AboutViewModel : ObservableObject
 {
@@ -37,7 +37,7 @@ public partial class AboutViewModel : ObservableObject
         {
             return;
         }
-        
+
         await Window.Launcher.LaunchUriAsync(new Uri("https://www.paypal.com/donate/?hosted_button_id=4XEHVLANCQBCU"));
     }
 
@@ -48,7 +48,7 @@ public partial class AboutViewModel : ObservableObject
         {
             return;
         }
-        
+
         await Window.Launcher.LaunchUriAsync(new Uri("https://github.com/sponsors/niksedk"));
     }
 
@@ -69,6 +69,6 @@ public partial class AboutViewModel : ObservableObject
         {
             e.Handled = true;
             UiUtil.ShowHelp();
-        }   
+        }
     }
 }

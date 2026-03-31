@@ -741,14 +741,19 @@ public static class InitMenu
             {
                 new MenuItem
                 {
-                    Header = l.About,
-                    Command = vm.ShowAboutCommand,
+                    Header = l.CheckForUpdates,
+                    Command = vm.ShowCheckForUpdatesCommand,
                 },
                 new Separator(),
                 new MenuItem
                 {
                     Header = l.Help,
                     Command = vm.ShowHelpCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.About,
+                    Command = vm.ShowAboutCommand,
                 },
             }
         });
