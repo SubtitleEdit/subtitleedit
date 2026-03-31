@@ -799,26 +799,25 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private async Task RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         var ollamaOcr = new OllamaOcr();
-
-        _ = Task.Run(async () =>
+        var url = Se.Settings.Ocr.OllamaUrl;
+        var model = Se.Settings.Ocr.OllamaModel;
+        var language = Se.Settings.Ocr.OllamaLanguage;
+        item.Subtitle = new Subtitle();
+        for (var i = 0; i < imageSubtitles.Count; i++)
         {
-            //for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
-            //{
-                // var i = selectedIndices[processedIndex];
-                // if (cancellationToken.IsCancellationRequested)
-                // {
-                //     return;
-                // }
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+            var text = await ollamaOcr.Ocr(bitmap, url, model, language, cancellationToken);
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
 
-                // var item = OcrSubtitleItems[i];
-                // var bitmap = item.GetSkBitmap();
-                //
-                // var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
-                // item.Text = text;
-
-                //OcrFixLineAndSetText(i, item);
-         //   }
-        });
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                break;
+            }
+        }
     }
 
     private void WriteToImageBasedFormat(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
