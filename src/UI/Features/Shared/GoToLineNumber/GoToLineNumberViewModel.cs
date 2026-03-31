@@ -31,9 +31,13 @@ public partial class GoToLineNumberViewModel : ObservableObject
         MaxLineNumber = maxLineNumber;
     }
 
-    [RelayCommand]                   
-    private void Ok() 
+    [RelayCommand]
+    private void Ok()
     {
+        if (LineNumber > MaxLineNumber)
+        {
+            LineNumber = MaxLineNumber;
+        }
         OkPressed = LineNumber != null;
         Window?.Close();
     }
