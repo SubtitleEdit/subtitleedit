@@ -292,11 +292,17 @@ public class MultipleReplaceWindow : Window
             {
                 var node = vm.SelectedNode;
                 if (node == null)
+                {
                     vm.TreeOpenContextMenuCommand.Execute(null);
+                }
                 else if (node.IsCategory)
+                {
                     vm.NodeCategoryOpenContextMenuCommand.Execute(node);
+                }
                 else
+                {
                     vm.NodeOpenContextMenuCommand.Execute(node);
+                }
                 e.Handled = true;
             }
         }, RoutingStrategies.Bubble);
