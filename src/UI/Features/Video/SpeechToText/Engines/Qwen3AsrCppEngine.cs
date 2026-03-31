@@ -72,15 +72,33 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
                         "https://huggingface.co/OpenVoiceOS/qwen3-asr-0.6b-f16/resolve/main/qwen3-asr-0.6b-f16.gguf"
                     ]
                 },
-                //new WhisperModel
-                //{
-                //    Name = "qwen3-asr-1.7b-q8_0.gguf",
-                //    Size = "2.5 GB",
-                //    Urls =
-                //    [
-                //        "https://huggingface.co/FlippyDora/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf"
-                //    ]
-                //},
+                new WhisperModel
+                {
+                    Name = "qwen3-asr-0.6b-q8_0.gguf",
+                    Size = "1.3 GB",
+                    Urls =
+                    [
+                        "https://huggingface.co/OpenVoiceOS/qwen3-asr-0.6b-q8-0/resolve/main/qwen3-asr-0.6b-q8_0.gguf"
+                    ]
+                },
+                new WhisperModel
+                {
+                    Name = "qwen3-asr-1.7b-f16.gguf",
+                    Size = "4.4 GB",
+                    Urls =
+                    [
+                        "https://huggingface.co/FlippyDora/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-f16.gguf"
+                    ]
+                },
+                new WhisperModel
+                {
+                    Name = "qwen3-asr-1.7b-q8_0.gguf",
+                    Size = "3.0 GB",
+                    Urls =
+                    [
+                        "https://huggingface.co/FlippyDora/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf"
+                    ]
+                },
             }.ToList();
         }
     }
