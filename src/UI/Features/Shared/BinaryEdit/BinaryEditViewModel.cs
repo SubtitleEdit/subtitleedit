@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -583,6 +584,8 @@ public partial class BinaryEditViewModel : ObservableObject
             imageParameter.StartTime = Subtitles[i].StartTime;
             imageParameter.EndTime = Subtitles[i].EndTime;
             imageParameter.Index = i;
+            imageParameter.IsForced = Subtitles[i].IsForced;
+            imageParameter.OverridePosition = new SKPointI(Subtitles[i].X, Subtitles[i].Y);
 
             exportHandler.CreateParagraph(imageParameter);
             exportHandler.WriteParagraph(imageParameter);
