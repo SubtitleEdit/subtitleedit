@@ -352,6 +352,37 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void TreeOpenContextMenu()
+    {
+        var contextMenu = new ContextMenu
+        {
+            Items =
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.Edit.MultipleReplace.NewCategory,
+                    Command = CategoryAddCategoryCommand,
+                    CommandParameter = (RuleTreeNode?)null,
+                },
+                new Separator(),
+                new MenuItem
+                {
+                    Header = Se.Language.General.ImportDotDotDot,
+                    Command = CategoryImportCommand,
+                    CommandParameter = (RuleTreeNode?)null,
+                },
+            }
+        };
+
+        RulesTreeView.ContextMenu = contextMenu;
+        contextMenu.Closing += (_, _) =>
+        {
+            RulesTreeView.ContextMenu = null;
+        };
+        contextMenu.Open();
+    }
+
+    [RelayCommand]
     private async Task CategoryEdit(RuleTreeNode? node)
     {
         if (node == null)
@@ -372,11 +403,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryAddCategory(RuleTreeNode? node)
     {
-        if (node == null)
-        {
-            return;
-        }
-
         var category = new RuleTreeNode(node, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
         var result = await _windowService.ShowDialogAsync<EditCategoryWindow, EditCategoryViewModel>(Window!,
             vm =>
@@ -468,7 +494,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryImport(RuleTreeNode? node)
     {
-        if (node == null || Window == null)
+        if (Window == null)
         {
             return;
         }
