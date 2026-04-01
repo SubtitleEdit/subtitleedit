@@ -276,7 +276,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
-        collection.AddTransient<CheckForUpdatesViewModel>();
+        collection.AddHttpClient<CheckForUpdatesViewModel>();
         collection.AddTransient<ColorPickerViewModel>();
         collection.AddTransient<ColumnPasteViewModel>();
         collection.AddTransient<CompareViewModel>();
