@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 public interface IQwen3TtsCppDownloadService
 {
     Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadModels(string modelsFolder, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken);
 }
 
 public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
@@ -35,10 +35,13 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), stream, progress, cancellationToken);
     }
 
-    public async Task DownloadModels(string modelsFolder, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
+        titleProgress?.Invoke("Downloading Qwen3 TTS models (1/3): Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf");
         await DownloadHelper.DownloadFileAsync(_httpClient, TtsModelUrl, Path.Combine(modelsFolder, "Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf"), progress, cancellationToken);
+        titleProgress?.Invoke("Downloading Qwen3 TTS models (2/3): qwen3-tts-tokenizer-q8_0.gguf");
         await DownloadHelper.DownloadFileAsync(_httpClient, TokenizerModelUrl, Path.Combine(modelsFolder, "qwen3-tts-tokenizer-q8_0.gguf"), progress, cancellationToken);
+        titleProgress?.Invoke("Downloading Qwen3 TTS models (3/3): WavTokenizer-Large-75-Q4_0.gguf");
         await DownloadHelper.DownloadFileAsync(_httpClient, WavTokenizerModelUrl, Path.Combine(modelsFolder, "WavTokenizer-Large-75-Q4_0.gguf"), progress, cancellationToken);
     }
 

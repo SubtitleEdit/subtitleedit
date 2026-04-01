@@ -438,8 +438,13 @@ public partial class DownloadTtsViewModel : ObservableObject
             ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
         _downloadTaskQwen3TtsModels =
-            _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), downloadProgress, _cancellationTokenSource.Token);
+            _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     internal void OnKeyDown(KeyEventArgs e)

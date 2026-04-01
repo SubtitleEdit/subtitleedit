@@ -120,13 +120,13 @@ public partial class TextToSpeechViewModel : ObservableObject
         Engines =
         [
             new EdgeTts(),
-            new Qwen3TtsCpp(),
             new AllTalk(ttsDownloadService),
             new ElevenLabs(ttsDownloadService),
             new AzureSpeech(ttsDownloadService),
             new MistralSpeech(ttsDownloadService),
             new Murf(ttsDownloadService),
-            new GoogleSpeech(ttsDownloadService)
+            new GoogleSpeech(ttsDownloadService),
+            new Qwen3TtsCpp(),
         ];
 
         if (!OperatingSystem.IsMacOS())
@@ -577,12 +577,17 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private async Task<bool> IsEngineInstalled(ITtsEngine engine)
     {
+        if (Window == null)
+        {
+            return false;
+        }
+
         if (engine is Qwen3TtsCpp)
         {
             if (!await engine.IsInstalled(SelectedRegion))
             {
                 var answer = await MessageBox.Show(
-                    Window!,
+                    Window,
                     "Download Qwen3 TTS?",
                     $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Download and use Qwen3 TTS?",
                     MessageBoxButtons.YesNoCancel,
@@ -593,7 +598,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return false;
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsCpp());
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadQwen3TtsCpp());
                 if (!dlResult.OkPressed)
                 {
                     return false;
@@ -603,7 +608,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             if (!Qwen3TtsCpp.IsModelsInstalled())
             {
                 var answer = await MessageBox.Show(
-                    Window!,
+                    Window,
                     "Download Qwen3 TTS models?",
                     $"{Environment.NewLine}\"Qwen3 TTS\" requires models (~2.8 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
