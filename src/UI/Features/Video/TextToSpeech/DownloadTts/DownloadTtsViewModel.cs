@@ -36,21 +36,26 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTask;
     private Task? _downloadTaskVoiceModel;
     private Task? _downloadTaskVoiceConfig;
+    private Task? _downloadTaskQwen3TtsCpp;
+    private Task? _downloadTaskQwen3TtsModels;
     private readonly Timer _timer = new();
 
     private readonly ITtsDownloadService _ttsDownloadService;
+    private readonly IQwen3TtsCppDownloadService _qwen3TtsCppDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MemoryStream _downloadStream;
     private readonly MemoryStream _downloadStreamModel;
     private readonly MemoryStream _downloadStreamConfig;
+    private readonly MemoryStream _downloadStreamQwen3TtsCpp;
     private readonly IZipUnpacker _zipUnpacker;
     private readonly object _lock = new();
     private string _modelFileName;
     private string _configFileName;
 
-    public DownloadTtsViewModel(ITtsDownloadService ttsDownloadService, IZipUnpacker zipUnpacker)
+    public DownloadTtsViewModel(ITtsDownloadService ttsDownloadService, IZipUnpacker zipUnpacker, IQwen3TtsCppDownloadService qwen3TtsCppDownloadService)
     {
         _ttsDownloadService = ttsDownloadService;
+        _qwen3TtsCppDownloadService = qwen3TtsCppDownloadService;
         _zipUnpacker = zipUnpacker;
 
         _cancellationTokenSource = new CancellationTokenSource();
@@ -58,6 +63,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStream = new MemoryStream();
         _downloadStreamModel = new MemoryStream();
         _downloadStreamConfig = new MemoryStream();
+        _downloadStreamQwen3TtsCpp = new MemoryStream();
 
         _modelFileName = string.Empty;
         _configFileName = string.Empty;
@@ -202,6 +208,89 @@ public partial class DownloadTtsViewModel : ObservableObject
                     Error = ex?.Message ?? "Unknown error";
                 }
             }
+
+            if (_downloadTaskQwen3TtsCpp is { IsCompleted: true })
+            {
+                _timer.Stop();
+
+                if (_downloadStreamQwen3TtsCpp.Length == 0)
+                {
+                    ProgressText = "Download failed";
+                    Error = "No data received";
+                    return;
+                }
+
+                var folder = Qwen3TtsCpp.GetSetFolder();
+                try
+                {
+                    _downloadStreamQwen3TtsCpp.Position = 0;
+                    _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCpp, folder, string.Empty, true, new List<string>(), null);
+                    _downloadStreamQwen3TtsCpp.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    ProgressText = "Unpack failed: " + ex.Message;
+                    Error = ex.Message;
+                    Se.LogError(ex);
+                    return;
+                }
+
+                var exePath = Qwen3TtsCpp.GetExecutableFileName();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    if (File.Exists(exePath))
+                    {
+                        LinuxHelper.MakeExecutable(exePath);
+                    }
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (File.Exists(exePath))
+                    {
+                        MacHelper.MakeExecutable(exePath);
+                    }
+                }
+
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskQwen3TtsCpp is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskQwen3TtsCpp.Exception?.InnerException ?? _downloadTaskQwen3TtsCpp.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
+
+            if (_downloadTaskQwen3TtsModels is { IsCompleted: true })
+            {
+                _timer.Stop();
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskQwen3TtsModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskQwen3TtsModels.Exception?.InnerException ?? _downloadTaskQwen3TtsModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
         }
     }
 
@@ -319,6 +408,38 @@ public partial class DownloadTtsViewModel : ObservableObject
             downloadProgress, _cancellationTokenSource.Token);
         _downloadTaskVoiceConfig = _ttsDownloadService.DownloadPiperVoice(configUrl, _downloadStreamConfig,
             downloadProgressNull, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadQwen3TtsCpp()
+    {
+        TitleText = "Downloading Qwen3 TTS";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        _downloadTaskQwen3TtsCpp =
+            _qwen3TtsCppDownloadService.DownloadEngine(_downloadStreamQwen3TtsCpp, downloadProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadQwen3TtsModels()
+    {
+        TitleText = "Downloading Qwen3 TTS models (~2.8 GB)";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        _downloadTaskQwen3TtsModels =
+            _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), downloadProgress, _cancellationTokenSource.Token);
     }
 
     internal void OnKeyDown(KeyEventArgs e)

@@ -249,6 +249,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 continue;
             }
 
+            if (engineItem is Qwen3TtsCpp && (!File.Exists(Qwen3TtsCpp.GetExecutableFileName()) || !Qwen3TtsCpp.IsModelsInstalled()))
+            {
+                continue;
+            }
+
             Engines.Add(engineItem);
         }
 
