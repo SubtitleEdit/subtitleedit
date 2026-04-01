@@ -777,6 +777,8 @@ public partial class MainViewModel :
         var idx = SubtitleGrid.SelectedIndex;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
