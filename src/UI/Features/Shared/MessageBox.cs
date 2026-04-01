@@ -49,7 +49,8 @@ public class MessageBox : Window
     private static string CustomButton2Text { get; set; } = string.Empty;
     private MessageBoxResult _result = MessageBoxResult.None;
     private readonly bool _hasCancel;
-    private readonly bool _hasOnlyOk;    
+    private readonly bool _hasOnlyOk;
+    private readonly bool _hasNo;
 
     private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null)
     {
@@ -185,6 +186,7 @@ public class MessageBox : Window
             case MessageBoxButtons.YesNo:
                 AddButton(Se.Language.General.Yes, MessageBoxResult.Yes);
                 AddButton(Se.Language.General.No, MessageBoxResult.No);
+                _hasNo = true;
                 break;
             case MessageBoxButtons.YesNoCancel:
                 AddButton(Se.Language.General.Yes, MessageBoxResult.Yes);
@@ -252,6 +254,12 @@ public class MessageBox : Window
         if (e.Key == Key.Escape && _hasCancel)
         {
             _result = MessageBoxResult.Cancel;
+            Close(_result);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape && _hasNo)
+        {
+            _result = MessageBoxResult.No;
             Close(_result);
             e.Handled = true;
         }
