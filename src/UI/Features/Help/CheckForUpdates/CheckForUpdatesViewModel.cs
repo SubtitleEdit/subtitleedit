@@ -15,6 +15,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 {
     private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
     private const string ReleasesUrl = "https://github.com/SubtitleEdit/subtitleedit/releases";
+    private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+)", RegexOptions.Compiled);
 
     public Window? Window { get; set; }
 
@@ -35,8 +36,8 @@ public partial class CheckForUpdatesViewModel : ObservableObject
             httpClient.Timeout = TimeSpan.FromSeconds(15);
             var content = await httpClient.GetStringAsync(ChangeLogUrl);
 
-            var latestVersion = ParseLatestVersion(content);
             ChangeLogText = ParseLatestChangeLog(content);
+            var latestVersion = ParseLatestVersion(ChangeLogText);
 
             if (string.IsNullOrEmpty(latestVersion))
             {
@@ -68,10 +69,25 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
     private static string ParseLatestChangeLog(string changeLogContent)
     {
-        var separatorIndex = changeLogContent.IndexOf("-----", StringComparison.Ordinal);
-        return separatorIndex > 0
-            ? changeLogContent[..separatorIndex].Trim()
-            : changeLogContent.Trim();
+        const string releaseSeparator = "-----------------------------------------------------------------------------------------------------";
+        var separatorIndex = changeLogContent.IndexOf(releaseSeparator, StringComparison.Ordinal);
+        if (separatorIndex > 0)
+        {
+            var changeLog = changeLogContent[..separatorIndex].Trim();
+            if (!UnreleasedChangeLogRegex.IsMatch(changeLog))
+            {
+                return changeLog;
+            }
+
+            // get next change log which is current released version
+            var releaseChangeLogIndex = changeLogContent.IndexOf(releaseSeparator, separatorIndex + releaseSeparator.Length, StringComparison.Ordinal);
+            if (releaseChangeLogIndex > 0)
+            {
+                return changeLogContent[(separatorIndex + releaseSeparator.Length) ..releaseChangeLogIndex].Trim();
+            }
+        }
+
+        return changeLogContent.Trim();
     }
 
     [RelayCommand]
