@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 
 v5.0.0-beta13 (xth April 2026)
 
+* Add Turkish translation - thx Hayri
 * Fix for binedit not setting correct position - thx KingGainer999 
 * Fix a few binedit issues
 * Fix extend to line after - thx laccka
