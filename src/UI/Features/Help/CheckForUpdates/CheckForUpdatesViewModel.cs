@@ -16,6 +16,14 @@ public partial class CheckForUpdatesViewModel : ObservableObject
     private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
     private const string ReleasesUrl = "https://github.com/SubtitleEdit/subtitleedit/releases";
 
+    private readonly HttpClient _httpClient;
+
+    public CheckForUpdatesViewModel(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+        _httpClient.Timeout = TimeSpan.FromSeconds(15);
+    }
+
     public Window? Window { get; set; }
 
     [ObservableProperty] private string _statusText = string.Empty;
@@ -31,9 +39,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
         try
         {
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(15);
-            var content = await httpClient.GetStringAsync(ChangeLogUrl);
+            var content = await _httpClient.GetStringAsync(ChangeLogUrl);
 
             var latestVersion = ParseLatestVersion(content);
             ChangeLogText = ParseLatestChangeLog(content);
