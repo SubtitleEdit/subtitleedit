@@ -77,15 +77,37 @@ public class AssaApplyAdvancedEffectWindow : Window
                 }
                 else if (item is AdvancedEffectFancyKaraoke fancyKaraokeItem)
                 {
+                    var autoDetectActiveWordRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    autoDetectActiveWordRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeAutoDetectActiveWord, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    autoDetectActiveWordRow.Children.Add(UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.AutoDetectActiveWord)));
+
+                    var activeGlowRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
+                    activeGlowRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlow, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    var applyGlowCheckBox = UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.ApplyGlow));
+                    activeGlowRow.Children.Add(applyGlowCheckBox);
+                    var activeGlowColorPicker = UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.GlowColor));
+                    // Show/hide the row based on the checkbox state
+                    activeGlowColorPicker.Bind(ColorPicker.IsVisibleProperty, new Binding(nameof(CheckBox.IsChecked)) { Source = applyGlowCheckBox, Mode = BindingMode.OneWay });
+                    activeGlowRow.Children.Add(activeGlowColorPicker);
+
+                    var activeColorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
+                    activeColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeActiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    activeColorRow.Children.Add(UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.ActiveWordColor)));
+
+                    var inactiveColorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
+                    inactiveColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    inactiveColorRow.Children.Add(UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveWordColor)));
+
                     var opacityRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
                     opacityRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveOpacity, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
                     opacityRow.Children.Add(UiUtil.MakeNumericUpDownInt(0, 255, 0x90, 130, fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveAlpha)));
-                    var colorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
-                    colorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlowColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    colorRow.Children.Add(UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.GlowColor)));
+
                     var settingsStack = new StackPanel { Spacing = 2 };
+                    settingsStack.Children.Add(autoDetectActiveWordRow);
+                    settingsStack.Children.Add(activeGlowRow);
+                    settingsStack.Children.Add(activeColorRow);
+                    settingsStack.Children.Add(inactiveColorRow);
                     settingsStack.Children.Add(opacityRow);
-                    settingsStack.Children.Add(colorRow);
                     panel.Children.Add(settingsStack);
                 }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)

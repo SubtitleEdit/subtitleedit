@@ -175,8 +175,11 @@ public class LanguageAssa
     public string AdvancedEffectHeartsDescription { get; set; }
     public string AdvancedEffectWordSpacing { get; set; }
     public string AdvancedEffectWordSpacingDescription { get; set; }
+    public string AdvancedEffectFancyKaraokeAutoDetectActiveWord { get; set; }
+    public string AdvancedEffectFancyKaraokeGlow { get; set; }
+    public string AdvancedEffectFancyKaraokeActiveColor { get; set; }
+    public string AdvancedEffectFancyKaraokeInactiveColor { get; set; }
     public string AdvancedEffectFancyKaraokeInactiveOpacity { get; set; }
-    public string AdvancedEffectFancyKaraokeGlowColor { get; set; }
     public string AdvancedEffectWordSpacingPixels { get; set; }
     public string AdvancedEffectSlowZoomOut { get; set; }
     public string AdvancedEffectSlowZoomOutDescription { get; set; }
@@ -372,8 +375,11 @@ public class LanguageAssa
         AdvancedEffectHeartsDescription = "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle";
         AdvancedEffectWordSpacing = "Word spacing";
         AdvancedEffectWordSpacingDescription = "Increases spacing between words using the \\fsp tag for better readability";
+        AdvancedEffectFancyKaraokeAutoDetectActiveWord = "Auto-detect active word";
+        AdvancedEffectFancyKaraokeGlow = "Active word glow";
+        AdvancedEffectFancyKaraokeActiveColor = "Active color";
+        AdvancedEffectFancyKaraokeInactiveColor = "Inactive color";
         AdvancedEffectFancyKaraokeInactiveOpacity = "Inactive opacity (0-255)";
-        AdvancedEffectFancyKaraokeGlowColor = "Active word glow color";
         AdvancedEffectWordSpacingPixels = "Spacing (pixels)";
         AdvancedEffectSlowZoomOut = "Slow zoom-out";
         AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";
