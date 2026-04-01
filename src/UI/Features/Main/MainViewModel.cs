@@ -899,6 +899,8 @@ public partial class MainViewModel :
         {
             ApplyAssaStyles(result);
             _subtitle.Footer = result.ResultSubtitle.Footer;
+            _mpvReloader.Reset();
+            _mpvPreviewDirty = true;
         }
     }
 
@@ -926,6 +928,9 @@ public partial class MainViewModel :
                 }
             }
         }
+
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
@@ -945,6 +950,8 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             _subtitle.Header = result.Header;
+            _mpvReloader.Reset();
+            _mpvPreviewDirty = true;
         }
     }
 
@@ -966,6 +973,8 @@ public partial class MainViewModel :
         {
             _subtitle.Header = result.Header;
             _subtitle.Footer = result.Footer;
+            _mpvReloader.Reset();
+            _mpvPreviewDirty = true;
         }
     }
 
@@ -1026,6 +1035,8 @@ public partial class MainViewModel :
         }
 
         Renumber();
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
         _updateAudioVisualizer = true;
     }
 
@@ -1061,6 +1072,8 @@ public partial class MainViewModel :
 
         Renumber();
         _updateAudioVisualizer = true;
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
@@ -1079,6 +1092,8 @@ public partial class MainViewModel :
         SetSubtitles(result.ResultSubtitle);
         _subtitle.Header = result.ResultSubtitle.Header;
         ShowStatus(Se.Language.Main.AssaResolutionResamplerDone);
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
@@ -1115,6 +1130,8 @@ public partial class MainViewModel :
 
         _subtitle.Header = result.ResultSubtitle.Header;
         SetSubtitles(result.ResultSubtitle);
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
@@ -1136,6 +1153,9 @@ public partial class MainViewModel :
         {
             vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
         });
+
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     [RelayCommand]
@@ -1166,6 +1186,8 @@ public partial class MainViewModel :
         var x = result.ResultX;
         var y = result.ResultY;
         selectedItem.Text = $"{{\\pos({x},{y})}}" + RemovePositionTags(selectedItem.Text);
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     private static string RemovePositionTags(string text)
@@ -6060,6 +6082,9 @@ public partial class MainViewModel :
                 p.FriendlyName == Se.Settings.General.DefaultSubtitleFormat ||
                 p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
         }
+
+        _mpvReloader.Reset();
+        _mpvPreviewDirty = true;
     }
 
     public VideoPlayerControl? GetVideoPlayerControl()
