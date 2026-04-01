@@ -17,9 +17,9 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/qwen3-tts-win64.zip";
-    private const string MacArmUrl = "";
-    private const string LinuxUrl = "";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/qwen3-tts-cli-win64.zip";
+    private const string MacUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/qwen3-tts-cli-mac.zip";
+    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/qwen3-tts-cli-linux64.zip";
 
     private const string TtsModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf";
     private const string TokenizerModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-tokenizer-q8_0.gguf";
@@ -56,7 +56,7 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return MacArmUrl;
+            return MacUrl;
         }
 
         throw new PlatformNotSupportedException();
