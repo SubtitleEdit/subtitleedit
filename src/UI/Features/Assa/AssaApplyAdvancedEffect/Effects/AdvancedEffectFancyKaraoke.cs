@@ -7,20 +7,56 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 
 /// <summary>
 /// Fancy karaoke effect for subtitles with a pre-marked active word (via {\u1} underline
 /// or a highlight \1c color). Dims inactive words and pops the active word with a glow.
+///
+/// Set AutoDetectActiveWord = true to auto-sequence whole words (word-by-word karaoke).
+/// Set ActiveWordColor to choose the color used for the active word.
+/// Set ApplyGlow to enable/disable the glow effect for the active word.
 /// </summary>
 public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 {
     public string Name => Se.Language.Assa.AdvancedEffectFancyKaraoke;
     public string Description => Se.Language.Assa.AdvancedEffectFancyKaraokeDescription;
     public bool UsesAudio => false;
+
+    /// <summary>
+    /// When true, ignore explicit active-word markup and auto-sequence whole words
+    /// (one subtitle per word, timing = duration / wordCount).
+    /// </summary>
+    public bool AutoDetectActiveWord { get; set; } = false;
+
+    /// <summary>
+    /// Alpha value used for inactive words (ASS \alpha uses hex).
+    /// </summary>
     public int InactiveAlpha { get; set; } = 100;
+
+    /// <summary>
+    /// Glow color used for the active word's 3c (ASS BGR).
+    /// </summary>
     public Color GlowColor { get; set; } = Color.FromRgb(0xFF, 0xDD, 0x00); // &H00DDFF& in ASS BGR
+
+    /// <summary>
+    /// Color used for the active word's primary color (\1c). Default white.
+    /// </summary>
+    public Color ActiveWordColor { get; set; } = Color.FromRgb(0xFF, 0xFF, 0xFF);
+
+    /// <summary>
+    /// Color used for inactive words' primary color (\1c). Default dim gray.
+    /// This ensures color is explicitly reset after the active word so subsequent words are not colored.
+    /// </summary>
+    public Color InactiveWordColor { get; set; } = Color.FromRgb(0x80, 0x80, 0x80);
+
+    /// <summary>
+    /// When true, apply the glow (3c, blur, scale transform) to the active word.
+    /// When false, the active word will be colored but without the glow/pop styling.
+    /// </summary>
+    public bool ApplyGlow { get; set; } = true;
 
     public override string ToString() => Name;
 
@@ -32,13 +68,27 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         var result = new List<SubtitleLineViewModel>();
         foreach (var sub in subtitles)
         {
+            // If auto mode is enabled, attempt auto-sequencing by words.
+            if (AutoDetectActiveWord)
+            {
+                var auto = TryAutoSequenceByWords(sub);
+                if (auto != null)
+                {
+                    result.AddRange(auto);
+                    continue;
+                }
+                // If auto failed (e.g., no words), fall through to normal behavior.
+            }
+
+            // Normal behavior: parse active word from explicit markup and render single line.
             var parsed = ParseActiveWord(sub.Text);
             var newSub = new SubtitleLineViewModel(sub, generateNewId: true);
             string posTags = ExtractPositionalTags(sub.Text);
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
 
-            string inactiveTags = $"{{\\alpha&H{InactiveAlpha:X2}&\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
+            // Inactive tags now explicitly set \1c to InactiveWordColor so color resets after active word.
+            string inactiveTags = $"{{\\alpha&H{InactiveAlpha:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
 
             if (parsed == null || string.IsNullOrEmpty(parsed.Value.Active))
             {
@@ -55,8 +105,22 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
                 if (!string.IsNullOrEmpty(before))
                     sb.Append(inactiveTags).Append(before);
 
-                sb.Append("{\\alpha&H00&\\1c&HFFFFFF&\\bord2\\shad0\\blur4\\3c" + ToAssColor(GlowColor) +
-                          "\\fscx115\\fscy115\\t(0,250,\\fscx100\\fscy100)}").Append(active);
+                // Build active tag depending on ApplyGlow
+                string activeTag;
+                if (ApplyGlow)
+                {
+                    activeTag = "{\\alpha&H00&\\1c" + ToAssColor(ActiveWordColor) +
+                                "\\bord2\\shad0\\blur4\\3c" + ToAssColor(GlowColor) +
+                                "\\fscx115\\fscy115\\t(0,250,\\fscx100\\fscy100)}";
+                }
+                else
+                {
+                    // No glow: only set alpha and primary color; keep border/shadow minimal
+                    activeTag = "{\\alpha&H00&\\1c" + ToAssColor(ActiveWordColor) +
+                                "\\bord0\\shad0\\blur0\\fscx100\\fscy100}";
+                }
+
+                sb.Append(activeTag).Append(active);
 
                 if (!string.IsNullOrEmpty(after))
                     sb.Append(inactiveTags).Append(after);
@@ -65,6 +129,125 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             newSub.Text = sb.ToString();
             result.Add(newSub);
         }
+        return result;
+    }
+
+    /// <summary>
+    /// Attempt to auto-sequence the subtitle by whole words.
+    /// Returns a list of generated SubtitleLineViewModel if successful, otherwise null.
+    /// </summary>
+    private List<SubtitleLineViewModel>? TryAutoSequenceByWords(SubtitleLineViewModel sub)
+    {
+        // Remove SSA tags for tokenization and normalize newlines.
+        var cleanText = Utilities.RemoveSsaTags(sub.Text);
+        if (string.IsNullOrWhiteSpace(cleanText)) return null;
+        cleanText = cleanText.Replace("\r\n", "\n").Replace("\r", "\n");
+
+        // Tokenize into runs of non-whitespace (words/punctuation) and whitespace (spaces/newlines)
+        var matches = Regex.Matches(cleanText, @"\S+|\s+");
+        var tokens = new List<string>(matches.Count);
+        foreach (Match m in matches) tokens.Add(m.Value);
+
+        // Count words (non-whitespace tokens)
+        var wordCount = tokens.Count(t => !string.IsNullOrWhiteSpace(t));
+        if (wordCount == 0) return null;
+
+        var totalMs = sub.Duration.TotalMilliseconds;
+        var msPerWord = totalMs / wordCount;
+
+        string posTags = ExtractPositionalTags(sub.Text);
+        // Inactive tags explicitly include InactiveWordColor so color is reset for non-active words and spaces.
+        string inactiveTags = $"{{\\alpha&H{InactiveAlpha:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
+
+        // Build active tag depending on ApplyGlow
+        string activeTags;
+        if (ApplyGlow)
+        {
+            activeTags = "{\\alpha&H00&\\1c" + ToAssColor(ActiveWordColor) +
+                         "\\bord2\\shad0\\blur4\\3c" + ToAssColor(GlowColor) +
+                         "\\fscx115\\fscy115\\t(0,250,\\fscx100\\fscy100)}";
+        }
+        else
+        {
+            activeTags = "{\\alpha&H00&\\1c" + ToAssColor(ActiveWordColor) +
+                         "\\bord0\\shad0\\blur0\\fscx100\\fscy100}";
+        }
+
+        var result = new List<SubtitleLineViewModel>();
+
+        for (int w = 0; w < wordCount; w++)
+        {
+            var line = new SubtitleLineViewModel(sub, generateNewId: true);
+            var start = sub.StartTime.Add(TimeSpan.FromMilliseconds(w * msPerWord));
+            var end = w == wordCount - 1
+                ? sub.EndTime
+                : sub.StartTime.Add(TimeSpan.FromMilliseconds((w + 1) * msPerWord));
+            line.StartTime = start;
+            line.EndTime = end;
+
+            // Build text for this word index
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
+
+            string? currentColor = null;
+            int localWordCounter = 0;
+
+            foreach (var token in tokens)
+            {
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    // whitespace may contain newlines; convert '\n' to SSA line break and ensure whitespace is dimmed
+                    if (token.Contains("\n"))
+                    {
+                        var parts = token.Split('\n');
+                        for (var p = 0; p < parts.Length; p++)
+                        {
+                            if (parts[p].Length > 0)
+                            {
+                                // Ensure spaces before newline are dimmed
+                                if (currentColor != inactiveTags)
+                                {
+                                    sb.Append(inactiveTags);
+                                    currentColor = inactiveTags;
+                                }
+                                sb.Append(parts[p]);
+                            }
+                            if (p < parts.Length - 1)
+                            {
+                                sb.Append(@"\N");
+                                currentColor = null; // reset color after line break
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // regular spaces: ensure they are dimmed (inactive)
+                        if (currentColor != inactiveTags)
+                        {
+                            sb.Append(inactiveTags);
+                            currentColor = inactiveTags;
+                        }
+                        sb.Append(token);
+                    }
+                    continue;
+                }
+
+                // Non-whitespace token = a word/punctuation group
+                // Only the current word is active
+                var colorTag = localWordCounter == w ? activeTags : inactiveTags;
+                if (colorTag != currentColor)
+                {
+                    sb.Append(colorTag);
+                    currentColor = colorTag;
+                }
+                sb.Append(token);
+                localWordCounter++;
+            }
+
+            line.Text = sb.ToString();
+            result.Add(line);
+        }
+
         return result;
     }
 
@@ -113,9 +296,6 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         string highlightColor;
         if (colorCounts.Count == 1)
         {
-            // Only one color tag in the line — treat it as the active word only if it is
-            // distinctly colorful (e.g. \c&H00FFFF& cyan). A plain white or grey tag is
-            // just a style reset and should not be mistaken for a highlight.
             var singleColor = colorCounts.Keys.First();
             if (!IsColorfulAssColor(singleColor)) return null;
             highlightColor = singleColor;
@@ -184,4 +364,3 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         return Math.Max(r, Math.Max(g, b)) - Math.Min(r, Math.Min(g, b)) > 40;
     }
 }
-
