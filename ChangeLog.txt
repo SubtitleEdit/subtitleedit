@@ -1,6 +1,22 @@
 
 Subtitle Edit Changelog
 
+
+v5.0.0-beta13 (xth April 2026)
+
+* Fix for binedit not setting correct position - thx KingGainer999 
+* Fix a few binedit issues
+* Fix extend to line after - thx laccka
+* Go to line: clamp out-of-range value to max subtitle count - thx ivandrofly
+* Fix a few batch convert issues
+* Improve multiple-replace context menu - thx ivandrofly
+* Add check-for-updates menu item - thx ivandrofly
+* Fix re-calc duration issue
+* Fix split issue
+* Fix issue with toggle tags in text box for ASSA
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta12 (30th March 2026)
 
 * Add Ukrainian translation - thx iohomenetyou
