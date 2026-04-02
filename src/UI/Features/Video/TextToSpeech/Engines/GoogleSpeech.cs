@@ -184,4 +184,9 @@ public class GoogleSpeech : ITtsEngine
             "Studio"
         });
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

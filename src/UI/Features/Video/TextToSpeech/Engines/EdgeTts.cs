@@ -212,4 +212,9 @@ public class EdgeTts : ITtsEngine
             new EdgeTtsVoice("pl-PL-ZofiaNeural", "Female"),
         ];
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
 public class LanguageVideo
 {

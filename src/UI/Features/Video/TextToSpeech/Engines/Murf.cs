@@ -186,4 +186,9 @@ public class Murf : ITtsEngine
     {
         return Task.FromResult(new[] { "GEN2" });
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

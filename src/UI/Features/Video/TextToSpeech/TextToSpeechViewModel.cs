@@ -257,7 +257,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = string.Empty;
         ProgressValue = 0.0;
         _waveFolder = waveFolder;
-        //_mediaInfo = mediaInfo;
     }
 
     [RelayCommand]
@@ -418,10 +417,18 @@ public partial class TextToSpeechViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowTestVoiceSettings()
     {
-        var result = await _windowService.ShowDialogAsync<VoiceSettingsWindow, VoiceSettingsViewModel>(Window!, vm => { });
-
         var engine = SelectedEngine;
-        if (result.RefreshVoices && engine != null)
+        if (engine == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<VoiceSettingsWindow, VoiceSettingsViewModel>(Window!, vm => 
+        {
+            vm.Initialize(engine);
+        });
+
+        if (result.RefreshVoices)
         {
             await RefreshVoices(engine);
         }

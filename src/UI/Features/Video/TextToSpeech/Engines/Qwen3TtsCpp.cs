@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -198,5 +199,55 @@ public class Qwen3TtsCpp : ITtsEngine
         }
 
         return process;
+    }
+
+    private static string GetUniqueDestinationFileName(string folder, string baseName)
+    {
+        var candidate = Path.Combine(folder, baseName + ".wav");
+        if (!File.Exists(candidate))
+        {
+            return candidate;
+        }
+
+        var number = 1;
+        do
+        {
+            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
+            number++;
+        } while (File.Exists(candidate));
+
+        return candidate;
+    }
+
+    public bool ImportVoice(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return false;
+        }
+
+        var voicesFolder = GetSetVoicesFolder();
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+
+        if (Path.GetExtension(fileName).Equals(".wav", StringComparison.OrdinalIgnoreCase))
+        {
+            File.Copy(fileName, destinationFileName, overwrite: false);
+            return true;
+        }
+
+        var process = FfmpegGenerator.ConvertFormat(fileName, destinationFileName);
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        {
+            _ = process.Start();
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Process.Start() is not supported on this platform.");
+        }
+
+        process.WaitForExit();
+
+        return File.Exists(destinationFileName);
     }
 }

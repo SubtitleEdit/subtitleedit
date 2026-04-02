@@ -29,4 +29,5 @@ public interface ITtsEngine
         string? region,
         string? model,
         CancellationToken cancellationToken);
+    bool ImportVoice(string fileName);
 }

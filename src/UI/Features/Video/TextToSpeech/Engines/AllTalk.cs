@@ -169,4 +169,9 @@ public class AllTalk : ITtsEngine
 
         return new TtsResult { FileName = outputFileName, Text = text };
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

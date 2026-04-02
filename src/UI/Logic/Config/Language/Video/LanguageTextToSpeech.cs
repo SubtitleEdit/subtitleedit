@@ -24,6 +24,9 @@ public class LanguageTextToSpeech
     public string AutoContinuePlaying { get; set; }
     public string AddingAudioToVideoFileDotDotDot { get; set; }
     public string PreparingMergeDotDotDot { get; set; }
+    public string ImportVoiceDotDotDot { get; set; }
+    public string VoiceImportSuccessTitle { get; set; }
+    public string VoiceXImported { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -49,5 +52,8 @@ public class LanguageTextToSpeech
         AutoContinuePlaying = "Auto-continue playing";
         AddingAudioToVideoFileDotDotDot = "Adding audio to video file...";
         PreparingMergeDotDotDot = "Preparing merge...";
+        ImportVoiceDotDotDot = "Import voice...";
+        VoiceImportSuccessTitle = "Voice imported";
+        VoiceXImported = "Voice '{0}' imported successfully";
     }
 }

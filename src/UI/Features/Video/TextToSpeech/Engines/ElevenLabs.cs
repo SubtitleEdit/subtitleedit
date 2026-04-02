@@ -312,4 +312,9 @@ public class ElevenLabs : ITtsEngine
             "eleven_multilingual_v2"
         });
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

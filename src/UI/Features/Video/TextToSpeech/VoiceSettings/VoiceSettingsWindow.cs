@@ -29,10 +29,11 @@ public class VoiceSettingsWindow : Window
 
         var textBox = UiUtil.MakeTextBox(250, vm, nameof(vm.VoiceTestText));
 
+        var buttonImport = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.ImportVoiceDotDotDot, vm.ImportVoiceCommand).WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
         var buttonRefresh = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.RefreshVoices, vm.RefreshVoiceListCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonRefresh, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonImport, buttonRefresh, buttonOk, buttonCancel);
 
         var grid = new Grid
         {

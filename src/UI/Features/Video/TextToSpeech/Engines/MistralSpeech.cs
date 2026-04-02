@@ -167,4 +167,9 @@ public class MistralSpeech : ITtsEngine
             "voxtral-mini-tts-2603",
         });
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }

@@ -192,4 +192,9 @@ public class AzureSpeech : ITtsEngine
     {
         return Task.FromResult(Array.Empty<string>());
     }
+
+    public bool ImportVoice(string fileName)
+    {
+        return false;
+    }
 }
