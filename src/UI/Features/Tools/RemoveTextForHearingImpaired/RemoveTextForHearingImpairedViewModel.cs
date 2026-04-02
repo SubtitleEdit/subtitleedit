@@ -229,14 +229,13 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         var skipList = interjections?.SkipStartList ?? new List<string>();
         _removeTextForHiLib.ReloadInterjection(list, skipList);
 
-        var count = 0;
         var newFixes = new List<RemoveItem>();
+        var twoLetterIsoLanguageName = SelectedLanguage == null ? "en" : SelectedLanguage.Code;
         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
             var p = _subtitle.Paragraphs[index];
             _removeTextForHiLib.WarningIndex = index - 1;
-            var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index,
-                SelectedLanguage == null ? "en" : SelectedLanguage.Code);
+            var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
             if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
             {
                 var apply = true;
@@ -245,10 +244,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
                 {
                     apply = oldItem.Apply;
                 }
-
-                var item = new RemoveItem(apply, index, p.Text, newText, p);
-                newFixes.Add(item);
-                count++;
+                newFixes.Add(new RemoveItem(apply, index, p.Text, newText, p));
             }
         }
 
