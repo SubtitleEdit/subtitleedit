@@ -16,7 +16,7 @@ public class AdvancedTtsSettingsWindow : Window
     public AdvancedTtsSettingsWindow(AdvancedTtsSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Advanced TTS settings";
+        Title = Se.Language.Video.TextToSpeech.AdvancedTtsSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MaxWidth = 550;
@@ -32,51 +32,48 @@ public class AdvancedTtsSettingsWindow : Window
             Children =
             {
                 MakeSection(vm,
-                    "Pro audio post-processing",
+                    Se.Language.Video.TextToSpeech.ProAudioPostProcessing,
                     nameof(vm.DoProAudioChain),
-                    "Applies EQ warmth, noise gate, compression, loudness normalization (-16 LUFS), and fade in/out to each segment."),
+                    Se.Language.Video.TextToSpeech.ProAudioPostProcessingDescription),
 
                 MakeSection(vm,
-                    "Audio ducking",
+                    Se.Language.Video.TextToSpeech.AudioDucking,
                     nameof(vm.DoAudioDucking),
-                    "Reduces the original video audio volume and mixes it with the TTS audio, so the original soundtrack is still faintly audible.",
-                    "Original volume %",
+                    Se.Language.Video.TextToSpeech.AudioDuckingDescription,
+                    Se.Language.Video.TextToSpeech.OriginalVolumePercent,
                     nameof(vm.AudioDuckingVolume),
                     50),
 
                 MakeSection(vm,
-                    "VAD silence compression",
+                    Se.Language.Video.TextToSpeech.VadSilenceCompression,
                     nameof(vm.DoVadSilenceCompression),
-                    "Shortens pauses between words before changing tempo. Uses Voice Activity Detection to compress only silence gaps " +
-                    "while keeping speech untouched. This is the preferred first step — it reduces duration without any quality loss.",
-                    "Max silence (ms)",
+                    Se.Language.Video.TextToSpeech.VadSilenceCompressionDescription,
+                    Se.Language.Video.TextToSpeech.MaxSilenceMs,
                     nameof(vm.VadMaxSilenceMs),
                     50),
 
                 MakeSectionWithStatus(vm,
-                    "High-quality time-stretch (WSOLA/rubberband)",
+                    Se.Language.Video.TextToSpeech.HighQualityTimeStretch,
                     nameof(vm.DoHighQualityTimeStretch),
                     nameof(vm.RubberbandStatus),
-                    "Uses the rubberband algorithm (WSOLA) instead of the default atempo filter for pitch-preserving speed changes. " +
-                    "Produces more natural-sounding speech, especially at higher speed factors. " +
-                    "Requires librubberband in your FFmpeg build — falls back to atempo automatically if unavailable."),
+                    Se.Language.Video.TextToSpeech.HighQualityTimeStretchDescription),
 
-                MakeFieldRow(vm, "Silence padding (ms)", nameof(vm.SilencePaddingMs), 50,
-                    "Adds a short silence at the end of each segment. Useful for breathing room between sentences."),
+                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.SilencePaddingMs, nameof(vm.SilencePaddingMs), 50,
+                    Se.Language.Video.TextToSpeech.SilencePaddingMsDescription),
 
-                MakeFieldRow(vm, "Output sample rate (0 = default)", nameof(vm.OutputSampleRate), 60,
-                    "Resamples all segments to the specified sample rate (e.g. 44100, 48000). Set to 0 to keep the original rate."),
+                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.OutputSampleRate, nameof(vm.OutputSampleRate), 60,
+                    Se.Language.Video.TextToSpeech.OutputSampleRateDescription),
 
-                MakeFieldRow(vm, "Edge-TTS rate", nameof(vm.EdgeTtsRate), 120,
-                    "Speech rate for Edge-TTS, e.g. \"+50%\", \"-30%\", or \"+0%\" for default.",
+                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsRate, nameof(vm.EdgeTtsRate), 120,
+                    Se.Language.Video.TextToSpeech.EdgeTtsRateDescription,
                     nameof(vm.IsEdgeTtsEngine)),
 
-                MakeFieldRow(vm, "Edge-TTS pitch", nameof(vm.EdgeTtsPitch), 120,
-                    "Pitch adjustment for Edge-TTS, e.g. \"+10Hz\", \"-5Hz\", or \"+0Hz\" for default.",
+                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsPitch, nameof(vm.EdgeTtsPitch), 120,
+                    Se.Language.Video.TextToSpeech.EdgeTtsPitchDescription,
                     nameof(vm.IsEdgeTtsEngine)),
 
-                MakeFieldRow(vm, "Edge-TTS volume", nameof(vm.EdgeTtsVolume), 120,
-                    "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.",
+                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsVolume, nameof(vm.EdgeTtsVolume), 120,
+                    Se.Language.Video.TextToSpeech.EdgeTtsVolumeDescription,
                     nameof(vm.IsEdgeTtsEngine)),
             }
         };
