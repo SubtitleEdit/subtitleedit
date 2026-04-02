@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Edit.AlignmentPicker;
 
@@ -9,21 +10,21 @@ public class AlignmentPickerWindow: Window
     public AlignmentPickerWindow(AlignmentPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Choose alignment";
+        Title = Se.Language.General.ChooseAlignment;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;
         DataContext = vm;
 
-        var buttonAn1 = UiUtil.MakeButton("Top-left", vm.An1Command).WithMinWidth(100);
-        var buttonAn2 = UiUtil.MakeButton("Top-center", vm.An2Command).WithMinWidth(100);
-        var buttonAn3 = UiUtil.MakeButton("Top-right", vm.An3Command).WithMinWidth(100);
-        var buttonAn4 = UiUtil.MakeButton("Middle-left", vm.An4Command).WithMinWidth(100);
-        var buttonAn5 = UiUtil.MakeButton("Middle-center", vm.An5Command).WithMinWidth(100);
-        var buttonAn6 = UiUtil.MakeButton("Middle-right", vm.An6Command).WithMinWidth(100);
-        var buttonAn7 = UiUtil.MakeButton("Bottom-left", vm.An7Command).WithMinWidth(100);
-        var buttonAn8 = UiUtil.MakeButton("Bottom-center", vm.An8Command).WithMinWidth(100);
-        var buttonAn9 = UiUtil.MakeButton("Bottom-right", vm.An9Command).WithMinWidth(100);
+        var buttonAn1 = UiUtil.MakeButton(Se.Language.General.TopLeft, vm.An1Command).WithMinWidth(100);
+        var buttonAn2 = UiUtil.MakeButton(Se.Language.General.TopCenter, vm.An2Command).WithMinWidth(100);
+        var buttonAn3 = UiUtil.MakeButton(Se.Language.General.TopRight, vm.An3Command).WithMinWidth(100);
+        var buttonAn4 = UiUtil.MakeButton(Se.Language.General.MiddleLeft, vm.An4Command).WithMinWidth(100);
+        var buttonAn5 = UiUtil.MakeButton(Se.Language.General.MiddleCenter, vm.An5Command).WithMinWidth(100);
+        var buttonAn6 = UiUtil.MakeButton(Se.Language.General.MiddleRight, vm.An6Command).WithMinWidth(100);
+        var buttonAn7 = UiUtil.MakeButton(Se.Language.General.BottomLeft, vm.An7Command).WithMinWidth(100);
+        var buttonAn8 = UiUtil.MakeButton(Se.Language.General.BottomCenter, vm.An8Command).WithMinWidth(100);
+        var buttonAn9 = UiUtil.MakeButton(Se.Language.General.BottomRight, vm.An9Command).WithMinWidth(100);
 
         var grid = new Grid
         {

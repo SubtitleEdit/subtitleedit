@@ -646,6 +646,9 @@ public class LanguageGeneral
     public string PlayCurrent { get; set; }
     public string LeftMargin { get; set; }
     public string RightMargin { get; set; }
+    public string Installed { get; set; }
+    public string AdvancedDotDotDot { get; set; }
+    public string ChooseAlignment { get; set; }
 
     public LanguageGeneral()
     {
@@ -1291,5 +1294,8 @@ public class LanguageGeneral
         PlayCurrent = "Play current";   
         LeftMargin = "Left margin";
         RightMargin = "Right margin";
+        Installed = "Installed";
+        AdvancedDotDotDot = "Advanced...";
+        ChooseAlignment = "Choose alignment";
     }
 }

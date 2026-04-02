@@ -463,7 +463,7 @@ public partial class SettingsViewModel : ObservableObject
         LibMpvStatus = Se.Language.General.NotInstalled;
         LibMpvPath = string.Empty;
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
-        IsLibVlcDownloadVisible = OperatingSystem.IsWindows(); 
+        IsLibVlcDownloadVisible = OperatingSystem.IsWindows();
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();
@@ -1167,7 +1167,7 @@ public partial class SettingsViewModel : ObservableObject
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
-        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;   
+        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontName = SelectedFontName == FontNames.First()
             ? new Label().FontFamily.Name
@@ -1443,11 +1443,11 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (!string.IsNullOrEmpty(FfmpegPath) && File.Exists(FfmpegPath))
         {
-            FfmpegStatus = "Installed";
+            FfmpegStatus = Se.Language.General.Installed;
         }
         else if (File.Exists(DownloadFfmpegViewModel.GetFfmpegFileName()))
         {
-            FfmpegStatus = "Installed";
+            FfmpegStatus = Se.Language.General.Installed;
         }
         else
         {
@@ -1457,7 +1457,7 @@ public partial class SettingsViewModel : ObservableObject
             }
             else
             {
-                FfmpegStatus = "Not installed";
+                FfmpegStatus = Se.Language.General.NotInstalled;
             }
         }
     }
@@ -1466,11 +1466,11 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (!string.IsNullOrEmpty(LibMpvPath) && File.Exists(LibMpvPath))
         {
-            LibMpvStatus = "Installed";
+            LibMpvStatus = Se.Language.General.Installed;
         }
         else
         {
-            LibMpvStatus = "Not installed";
+            LibMpvStatus = Se.Language.General.NotInstalled;
         }
     }
 
@@ -1483,11 +1483,11 @@ public partial class SettingsViewModel : ObservableObject
             {
                 if (canLoad)
                 {
-                    LibVlcStatus = "Installed";
+                    LibVlcStatus = Se.Language.General.Installed;
                 }
                 else
                 {
-                    LibVlcStatus = "Not installed";
+                    LibVlcStatus = Se.Language.General.NotInstalled;
                 }
             });
         });
@@ -1552,9 +1552,9 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        var viewModel = await _windowService.ShowDialogAsync<SyntaxColorTooWideSettingsWindow, SyntaxColorTooWideSettingsViewModel>(Window, vm => 
+        var viewModel = await _windowService.ShowDialogAsync<SyntaxColorTooWideSettingsWindow, SyntaxColorTooWideSettingsViewModel>(Window, vm =>
         {
-            vm.Initialize(ColorTextTooWidePixels, ColorTextTooWideFontName, ColorTextTooWideFontSize); 
+            vm.Initialize(ColorTextTooWidePixels, ColorTextTooWideFontName, ColorTextTooWideFontSize);
         });
 
         if (viewModel.OkPressed)

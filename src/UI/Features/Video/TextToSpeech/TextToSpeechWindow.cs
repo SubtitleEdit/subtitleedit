@@ -286,7 +286,7 @@ public class TextToSpeechWindow : Window
             }
         };
 
-        var buttonAdvanced = UiUtil.MakeButton("Advanced...", vm.ShowAdvancedSettingsCommand)
+        var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand)
             .WithMarginTop(5);
 
         var grid = new Grid

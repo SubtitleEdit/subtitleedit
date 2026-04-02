@@ -414,7 +414,7 @@ public class SettingsPage : UserControl
                 },
                 [!StackPanel.IsVisibleProperty] = new Binding(nameof(_vm.IsLibMpvDownloadVisible)) { Source = _vm }
             }),
-            new SettingsItem("Subtitle preview properties", () => MakeMpvPreviewSettings(_vm)),
+            new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
             new SettingsItem(Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
             {
                 Children =
