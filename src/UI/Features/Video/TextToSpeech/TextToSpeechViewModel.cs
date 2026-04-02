@@ -423,14 +423,19 @@ public partial class TextToSpeechViewModel : ObservableObject
         var engine = SelectedEngine;
         if (result.RefreshVoices && engine != null)
         {
-            var voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
-            Voices.Clear();
-            foreach (var voice in voices)
-            {
-                Voices.Add(voice);
-            }
-            SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
+            await RefreshVoices(engine);
         }
+    }
+
+    private async Task RefreshVoices(ITtsEngine engine)
+    {
+        var voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
+        Voices.Clear();
+        foreach (var voice in voices)
+        {
+            Voices.Add(voice);
+        }
+        SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
     }
 
     [RelayCommand]
@@ -603,6 +608,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     return false;
                 }
+                
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
             }
 
             if (!Qwen3TtsCpp.IsModelsInstalled())
