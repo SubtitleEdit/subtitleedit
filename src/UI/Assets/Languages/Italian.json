@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 28.03.2026 di bovirus",
+  "TranslatedBy": "v. 02.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -2480,10 +2480,10 @@
     "AdvancedEffectHeartsDescription": "Cuori disegnati Bezier in tre forme piovono dolcemente dalla parte superiore dello schermo, cadendo e svanendo durante ogni sottotitolo",
     "AdvancedEffectWordSpacing": "Spaziatura parole",
     "AdvancedEffectWordSpacingDescription": "Aumenta la spaziatura tra le parole usando il tag \\fsp per una migliore leggibilità",
-    "AdvancedEffectFancyKaraokeAutoDetectActiveWord": "Rileva automaticamente la parola attiva",
+    "AdvancedEffectFancyKaraokeAutoDetectActiveWord": "Rileva automaticamente parola attiva",
     "AdvancedEffectFancyKaraokeGlow": "Bagliore parola attiva",
-    "AdvancedEffectFancyKaraokeActiveColor": "Colore attivo",
-    "AdvancedEffectFancyKaraokeInactiveColor": "Colore inattivo",
+    "AdvancedEffectFancyKaraokeActiveColor": "Colore attiva",
+    "AdvancedEffectFancyKaraokeInactiveColor": "Colore non attiva",
     "AdvancedEffectFancyKaraokeInactiveOpacity": "Opacità non attiva (0-255)",
     "AdvancedEffectWordSpacingPixels": "Spaziatura (pixel)",
     "AdvancedEffectSlowZoomOut": "Zoom - lento",
