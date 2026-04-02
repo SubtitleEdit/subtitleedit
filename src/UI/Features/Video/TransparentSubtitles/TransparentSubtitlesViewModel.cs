@@ -1080,20 +1080,20 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         if (SelectedFontBoxType.BoxType == FontBoxType.None)
         {
-            FontOutlineText = "Outline";
-            FontShadowText = "Shadow";
+            FontOutlineText = Se.Language.General.Outline;
+            FontShadowText = Se.Language.General.Shadow; 
         }
 
         if (SelectedFontBoxType.BoxType == FontBoxType.OneBox)
         {
-            FontOutlineText = "Outline";
-            FontShadowText = "Box";
+            FontOutlineText = Se.Language.General.Outline;
+            FontShadowText = Se.Language.General.Box;
         }
 
         if (SelectedFontBoxType.BoxType == FontBoxType.BoxPerLine)
         {
-            FontOutlineText = "Box";
-            FontShadowText = "Shadow";
+            FontOutlineText = Se.Language.General.Box;
+            FontShadowText = Se.Language.General.Shadow; 
         }
 
         UpdateNonAssaPreview();
