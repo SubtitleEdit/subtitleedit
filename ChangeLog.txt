@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta13 (xth April 2026)
+v5.0.0-beta13 (2nd April 2026)
 
 * Add Turkish translation - thx Hayri
 * Update Italian translation - thx bovirus
