@@ -112,6 +112,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 10000,
                 DefaultValue = 2.0,
+                Number = 2.0,
             },
             new()
             {
@@ -122,6 +123,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 10000,
                 DefaultValue = 2.0,
+                Number = 2.0,
             },
             new()
             {
@@ -132,6 +134,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 99,
                 DefaultValue = 15,
+                Number = 15,
             },
             new()
             {
@@ -142,6 +145,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 99,
                 DefaultValue = 20,
+                Number = 20,
             },
             new()
             {
@@ -151,6 +155,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 200,
                 DefaultValue = 42,
+                Number = 42,
             },
             new()
             {
@@ -160,6 +165,7 @@ public class ModifySelectionRule
                 NumberMinValue = 0,
                 NumberMaxValue = 200,
                 DefaultValue = 42,
+                Number = 42,
             },
             new()
             {
@@ -168,7 +174,8 @@ public class ModifySelectionRule
                 HasNumber = true,
                 NumberMinValue = 0,
                 NumberMaxValue = 200,
-                DefaultValue = 42,
+                DefaultValue = Se.Settings.General.SubtitleLineMaximumPixelWidth,
+                Number = Se.Settings.General.SubtitleLineMaximumPixelWidth,
             },
             new()
             {
@@ -221,7 +228,7 @@ public class ModifySelectionRule
                 HasMultiSelect = true,
                 MultiSelectItems = lines
                     .Where(p=>!string.IsNullOrEmpty(p.Actor))
-                    .DistinctBy(p => p.Style)
+                    .DistinctBy(p => p.Actor)
                     .Select(p=> new MultiSelectItem(p.Actor))
                     .OrderBy(s => s.Name)
                     .ToList(),

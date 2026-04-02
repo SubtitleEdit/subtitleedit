@@ -178,6 +178,6 @@ public partial class ModifySelectionViewModel : ObservableObject
 
     internal void OnRuleChanged()
     {
-        _isDirty = true;
+        _isDirty = true;        
     }
 }
