@@ -1029,10 +1029,15 @@ public partial class MainViewModel :
             else
             {
                 var newP = new SubtitleLineViewModel(p, assa);
-                newP.StartTime = lastParagraph!.StartTime;
+                newP.StartTime = lastParagraph.StartTime;
                 newP.EndTime = lastParagraph.EndTime;
-                var insertIndex = lastParagraph == null ? 0 : Subtitles.IndexOf(lastParagraph) + 1;
+                var insertIndex = Subtitles.IndexOf(lastParagraph) + 1;
+                if (insertIndex <= 0)
+                {
+                    insertIndex = Subtitles.Count;
+                }
                 Subtitles.Insert(insertIndex, newP);
+                lastParagraph = newP;
             }
         }
 
@@ -1066,11 +1071,7 @@ public partial class MainViewModel :
         }
 
         _subtitle = result.ResultSubtitle;
-        for (var index = 0; index < result.ResultSubtitle.Paragraphs.Count; index++)
-        {
-            var p = result.ResultSubtitle.Paragraphs[index];
-            Subtitles.Insert(index, new SubtitleLineViewModel(p, SelectedSubtitleFormat));
-        }
+        SetSubtitles(_subtitle);
 
         Renumber();
         _updateAudioVisualizer = true;
@@ -3241,13 +3242,12 @@ public partial class MainViewModel :
         }
 
         var count = 0;
-        var total = Subtitles.Count;
-        var overWrite = result.ModeOverwrite; // either overwrite or insert mode (shift texts down)
+        var overWrite = result.ModeOverwrite;
         for (var i = 0; i < subtitle.Paragraphs.Count && idx < Subtitles.Count; i++)
         {
-            if (overWrite == false)
+            if (!overWrite)
             {
-                for (int j = total - 1; j > idx; j--)
+                for (int j = Subtitles.Count - 1; j > idx; j--)
                 {
                     if (result.ColumnsAll)
                     {
@@ -3287,7 +3287,6 @@ public partial class MainViewModel :
             idx++;
         }
     }
-
 
     [RelayCommand]
     private void ColumnTextUp()
@@ -9968,31 +9967,23 @@ public partial class MainViewModel :
             _pendingScrollIndex = index;
         }
 
-        try
+        Dispatcher.UIThread.Post(() =>
         {
-            var item = Subtitles[index];
-            Dispatcher.UIThread.Post(() =>
+            int indexToScroll;
+            lock (_scrollLock)
             {
-                int indexToScroll;
-                lock (_scrollLock)
-                {
-                    indexToScroll = _pendingScrollIndex;
-                    _pendingScrollIndex = -1;
-                }
+                indexToScroll = _pendingScrollIndex;
+                _pendingScrollIndex = -1;
+            }
 
-                // Only execute if this is the latest scroll request
-                if (indexToScroll >= 0 && indexToScroll < Subtitles.Count)
-                {
-                    var itemToScroll = Subtitles[indexToScroll];
-                    SubtitleGrid.SelectedItem = itemToScroll;
-                    SubtitleGrid.ScrollIntoView(itemToScroll, null);
-                }
-            });
-        }
-        catch
-        {
-            // ignore
-        }
+            // Only execute if this is the latest scroll request
+            if (indexToScroll >= 0 && indexToScroll < Subtitles.Count)
+            {
+                var itemToScroll = Subtitles[indexToScroll];
+                SubtitleGrid.SelectedItem = itemToScroll;
+                SubtitleGrid.ScrollIntoView(itemToScroll, null);
+            }
+        });
     }
 
     public void SelectAndScrollToSubtitle(SubtitleLineViewModel subtitle)
@@ -12658,50 +12649,32 @@ public partial class MainViewModel :
     public int GetFastHash()
     {
         var pre = _subtitleFileName + SelectedEncoding.DisplayName;
-        unchecked // Overflow is fine, just wrap
+
+        unchecked
         {
             var hash = 17;
-            hash = hash * 23 + pre.GetHashCode();
+            hash = hash * 23 + (pre?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitle.Header?.Trim().GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitle.Footer?.Trim().GetHashCode() ?? 0);
 
-            if (_subtitle.Header != null)
-            {
-                hash = hash * 23 + _subtitle.Header.Trim().GetHashCode();
-            }
-
-            if (_subtitle.Footer != null)
-            {
-                hash = hash * 23 + _subtitle.Footer.Trim().GetHashCode();
-            }
-
-            var max = Subtitles.Count;
-            for (var i = 0; i < max; i++)
+            var count = Subtitles.Count;
+            for (var i = 0; i < count; i++)
             {
                 var p = Subtitles[i];
-                hash = hash * 23 + p.Number.GetHashCode();
+
+                hash = hash * 23 + p.Number; 
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
 
-                foreach (var line in p.Text.SplitToLines())
+                if (p.Text != null)
                 {
-                    hash = hash * 23 + line.GetHashCode();
+                    hash = hash * 23 + p.Text.GetHashCode();
                 }
 
-                if (p.Style != null)
-                {
-                    hash = hash * 23 + p.Style.GetHashCode();
-                }
-
-                if (p.Extra != null)
-                {
-                    hash = hash * 23 + p.Extra.GetHashCode();
-                }
-
-                if (p.Actor != null)
-                {
-                    hash = hash * 23 + p.Actor.GetHashCode();
-                }
-
-                hash = hash * 23 + p.Layer.GetHashCode();
+                hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
+                hash = hash * 23 + p.Layer;
             }
 
             return hash;
@@ -12711,52 +12684,33 @@ public partial class MainViewModel :
     public int GetFastHashOriginal()
     {
         _subtitleOriginal ??= new Subtitle();
+        var pre = _subtitleOriginal + SelectedEncoding.DisplayName;
 
-        var pre = _subtitleFileNameOriginal + SelectedEncoding.DisplayName;
-        unchecked // Overflow is fine, just wrap
+        unchecked
         {
             var hash = 17;
-            hash = hash * 23 + pre.GetHashCode();
+            hash = hash * 23 + (pre?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleOriginal.Header?.Trim().GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleOriginal.Footer?.Trim().GetHashCode() ?? 0);
 
-            if (_subtitleOriginal.Header != null)
-            {
-                hash = hash * 23 + _subtitleOriginal.Header.Trim().GetHashCode();
-            }
-
-            if (_subtitleOriginal.Footer != null)
-            {
-                hash = hash * 23 + _subtitleOriginal.Footer.Trim().GetHashCode();
-            }
-
-            var max = Subtitles.Count;
-            for (var i = 0; i < max; i++)
+            var count = Subtitles.Count;
+            for (var i = 0; i < count; i++)
             {
                 var p = Subtitles[i];
-                hash = hash * 23 + p.Number.GetHashCode();
+
+                hash = hash * 23 + p.Number; 
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
 
-                foreach (var line in p.OriginalText.SplitToLines())
+                if (p.OriginalText != null)
                 {
-                    hash = hash * 23 + line.GetHashCode();
+                    hash = hash * 23 + p.OriginalText.GetHashCode();
                 }
 
-                if (p.Style != null)
-                {
-                    hash = hash * 23 + p.Style.GetHashCode();
-                }
-
-                if (p.Extra != null)
-                {
-                    hash = hash * 23 + p.Extra.GetHashCode();
-                }
-
-                if (p.Actor != null)
-                {
-                    hash = hash * 23 + p.Actor.GetHashCode();
-                }
-
-                hash = hash * 23 + p.Layer.GetHashCode();
+                hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
+                hash = hash * 23 + p.Layer;
             }
 
             return hash;
@@ -12810,9 +12764,11 @@ public partial class MainViewModel :
 
         try
         {
-            var indicesToRemove = selectedItems
-                .Select(Subtitles.IndexOf)
-                .Where(i => i >= 0)
+            var selectedSet = new HashSet<SubtitleLineViewModel>(selectedItems);
+            var indicesToRemove = Subtitles
+                .Select((s, i) => (s, i))
+                .Where(x => selectedSet.Contains(x.s))
+                .Select(x => x.i)
                 .OrderByDescending(i => i)
                 .ToList();
 
@@ -13535,6 +13491,48 @@ public partial class MainViewModel :
 
     private readonly Lock _onKeyDownHandlerLock = new();
 
+    private static readonly HashSet<Key> AllowedSingleKeyShortcuts = new HashSet<Key>
+    {
+        Key.Escape,
+        Key.Tab,
+        Key.PageUp,
+        Key.PageDown,
+        Key.BrowserBack,
+        Key.BrowserForward,
+        Key.BrowserFavorites,
+        Key.BrowserHome,
+        Key.Execute,
+        Key.ExSel,
+        Key.LaunchApplication1,
+        Key.LaunchApplication2,
+        Key.LaunchMail,
+        Key.Insert,
+        Key.F1,
+        Key.F2,
+        Key.F3,
+        Key.F4,
+        Key.F5,
+        Key.F6,
+        Key.F7,
+        Key.F8,
+        Key.F9,
+        Key.F10,
+        Key.F11,
+        Key.F12,
+        Key.F13,
+        Key.F14,
+        Key.F15,
+        Key.F16,
+        Key.F17,
+        Key.F18,
+        Key.F19,
+        Key.F20,
+        Key.F21,
+        Key.F22,
+        Key.F23,
+        Key.F24,
+    };
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -13574,49 +13572,7 @@ public partial class MainViewModel :
                 if (currentKeys.Count == 1 && (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Shift))
                 {
                     var key = currentKeys.First();
-                    var allowedSingleKeyShortcuts = new HashSet<Key>
-                    {
-                        Key.Escape,
-                        Key.Tab,
-                        Key.PageUp,
-                        Key.PageDown,
-                        Key.BrowserBack,
-                        Key.BrowserForward,
-                        Key.BrowserFavorites,
-                        Key.BrowserHome,
-                        Key.Execute,
-                        Key.ExSel,
-                        Key.LaunchApplication1,
-                        Key.LaunchApplication2,
-                        Key.LaunchMail,
-                        Key.Insert,
-                        Key.F1,
-                        Key.F2,
-                        Key.F3,
-                        Key.F4,
-                        Key.F5,
-                        Key.F6,
-                        Key.F7,
-                        Key.F8,
-                        Key.F9,
-                        Key.F10,
-                        Key.F11,
-                        Key.F12,
-                        Key.F13,
-                        Key.F14,
-                        Key.F15,
-                        Key.F16,
-                        Key.F17,
-                        Key.F18,
-                        Key.F19,
-                        Key.F20,
-                        Key.F21,
-                        Key.F22,
-                        Key.F23,
-                        Key.F24,
-                    };
-
-                    if (!allowedSingleKeyShortcuts.Contains(key))
+                    if (!AllowedSingleKeyShortcuts.Contains(key))
                     {
                         if (EditTextBox.IsFocused)
                         {
@@ -13952,7 +13908,8 @@ public partial class MainViewModel :
             return;
         }
 
-        StatusTextRight = $"{Subtitles.IndexOf(item) + 1}/{Subtitles.Count}";
+        var idx = Subtitles.IndexOf(item);
+        StatusTextRight = $"{idx + 1}/{Subtitles.Count}";
         if (item == SelectedSubtitle && item.Text == EditText)
         {
             return;
@@ -13962,7 +13919,7 @@ public partial class MainViewModel :
         {
             _subtitleGridSelectionChangedSkip = true;
             SelectedSubtitle = item;
-            SelectedSubtitleIndex = Subtitles.IndexOf(item);
+            SelectedSubtitleIndex = idx;
         }
         finally
         {
@@ -14081,7 +14038,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.ColorTextTooLong &&
                 lineLenghts[i].Length > Se.Settings.General.SubtitleLineMaximumLength)
             {
-                tb.Background = new SolidColorBrush(_errorColor);
+                tb.Background = _errorBrush;
             }
 
             PanelSingleLineLengthsOriginal.Children.Add(tb);
@@ -14092,14 +14049,14 @@ public partial class MainViewModel :
 
         EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorTextTooLong &&
                                                         cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds
-            ? new SolidColorBrush(_errorColor)
-            : new SolidColorBrush(Colors.Transparent);
+            ? _errorBrush
+            : _transparentBrush;
 
         EditTextTotalLengthBackgroundOriginal = Se.Settings.General.ColorTextTooLong &&
                                                 totalLength > Se.Settings.General.SubtitleLineMaximumLength *
                                                 lines.Count
-            ? new SolidColorBrush(_errorColor)
-            : new SolidColorBrush(Colors.Transparent);
+            ? _errorBrush
+            : _transparentBrush;
     }
 
     private bool _avLastScrolling = false;
@@ -14150,6 +14107,7 @@ public partial class MainViewModel :
                         {
                             SelectAndScrollToRow(idx + 1);
                         }
+                        _setEndAtKeyUpLine = null;
                         _setEndAtKeyUpLineGoToNext = false;
                     }
                 }
