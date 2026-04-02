@@ -5,6 +5,9 @@ Subtitle Edit Changelog
 v5.0.0-beta13 (xth April 2026)
 
 * Add Turkish translation - thx Hayri
+* Update Italian translation - thx bovirus
+* Add Inno Setup Portguese.isl - thx Blackspirits
+* Update pt_PT_se.xml with new words - thx Blackspirits
 * Fix for binedit not setting correct position - thx KingGainer999 
 * Fix a few binedit issues
 * Fix extend to line after - thx laccka
@@ -17,6 +20,8 @@ v5.0.0-beta13 (xth April 2026)
 * Fix issue with toggle tags in text box for ASSA
 * Add parameters for ASSA advanced karaoke effect - thx peruchali
 * Fix mpv not updating after change (regression from beta12)
+* Fix some missing entries in the language file - thx potplayer-fanpack
+* Add experimental Qwen3 TTS
 
 -----------------------------------------------------------------------------------------------------
 
