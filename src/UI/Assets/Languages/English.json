@@ -311,6 +311,7 @@
     "newDotDotDot": "New...",
     "newProfile": "New profile",
     "newSubtitleStartKeyDownSetEndKeyUp": "Insert subtitle: Start on key down, set end on key up",
+    "setSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Set start at video position set end on key up, and go to next",
     "no": "No",
     "noFilesToConvert": "No files to convert",
     "noLanguageCode": "No language code",
@@ -644,7 +645,10 @@
     "copyToClipboard": "Copy to clipboard",
     "playCurrent": "Play current",
     "leftMargin": "Left margin",
-    "rightMargin": "Right margin"
+    "rightMargin": "Right margin",
+    "installed": "Installed",
+    "advancedDotDotDot": "Advanced...",
+    "chooseAlignment": "Choose alignment"
   },
   "main": {
     "menu": {
@@ -748,6 +752,7 @@
       "helpTitle": "_Help",
       "help": "_Help...",
       "about": "_About...",
+      "checkForUpdates": "_Check for updates...",
       "fixRightToLeftViaUnicodeControlCharacters": "Fix RTL via Unicode control chars (selected lines)",
       "removeUnicodeControlCharacters": "Remove Unicode control chars (selected lines)",
       "reverseRightToLeftStartEnd": "Reverse RTL start/end (selected lines)",
@@ -1137,6 +1142,8 @@
       "lengthLessThan": "Length <",
       "lengthGreaterThan": "Length >",
       "pixelLengthGreaterThan": "Pixel length >",
+      "gapLessThan": "Gap in ms <",
+      "gapGreaterThan": "Gap in ms >",
       "exactlyOneLine": "Exactly one line",
       "exactlyTwoLines": "Exactly two lines",
       "moreThanTwoLines": "More than two lines",
@@ -1158,7 +1165,11 @@
       "exportReplaceRules": "Export rules",
       "appliedRules": "Applied rules",
       "findRule": "Find rule",
-      "xLinesAffected": "{0:#,##0} lines affected"
+      "xLinesAffected": "{0:#,##0} lines affected",
+      "deleteCategoryConfirm": "Delete category '{0}'?",
+      "deleteRuleConfirm": "Delete rule '{0}'?",
+      "findWhat": "Find what",
+      "descriptionOptional": "Description (optional)"
     },
     "find": {
       "searchTextWatermark": "Search text...",
@@ -1295,7 +1306,9 @@
       "backToFixList": "Back to fix list",
       "applyFixesAndClose": "Apply fixes & close",
       "fixCommonOcrErrorsStep2": "Fix common errors, step 2 (apply fixes)",
-      "fixCommonOcrErrorsStep2FixesFoundX": "Fix common errors, step 2 - Fixes found: {0}"
+      "fixCommonOcrErrorsStep2FixesFoundX": "Fix common errors, step 2 - Fixes found: {0}",
+      "action": "Action",
+      "applySelectedFixes": "Apply selected fixes"
     },
     "adjustDurations": {
       "title": "Adjust durations",
@@ -1476,6 +1489,24 @@
       "percentage": "Percentage",
       "resizeImagesInfo": "Enter the percentage to resize images.\nPreview updates automatically."
     },
+    "removeTextForHearingImpaired": {
+      "title": "Remove text for hearing impaired",
+      "interjections": "Interjections",
+      "skipIfStartWith": "Skip if start with",
+      "removeTextBetween": "Remove text between",
+      "brackets": "Brackets",
+      "curlyBrackets": "Curly brackets",
+      "parentheses": "Parentheses",
+      "and": "and",
+      "onlySeparateLines": "Only separate lines",
+      "removeTextBeforeColon": "Remove text before colon",
+      "onlyIfTextIsUppercase": "Only if text is uppercase",
+      "onlyOnSeparateLine": "Only on separate line",
+      "ifLineIsUppercase": "If line is uppercase",
+      "ifLineContains": "If line contains",
+      "ifLineOnlyContainsMusicSymbols": "If line only contains music symbols",
+      "removeInterjections": "Remove interjections"
+    },
     "pickAlignmentTitle": "Choose alignment",
     "pickFontNameTitle": "Choose font name",
     "colorPickerTitle": "Choose color",
@@ -1577,7 +1608,15 @@
       "selectModel": "Select model",
       "viewWhisperLogFile": "View Whisper log file",
       "reDownloadX": "Re-download {0}",
-      "downloadingSpeechToTextModel": "Downloading speech-to-text model"
+      "downloadingSpeechToTextModel": "Downloading speech-to-text model",
+      "whisperPostProcessingTitle": "Whisper post-processing",
+      "adjustTimings": "Adjust timings",
+      "mergeShortLines": "Merge short lines",
+      "breakSplitLongLines": "Break/split long lines",
+      "fixShortDuration": "Fix short duration",
+      "fixCasing": "Fix casing",
+      "addPeriods": "Add periods",
+      "changeUnderlineToColor": "Change underline to color"
     },
     "textToSpeech": {
       "title": "Text to speech",
@@ -1601,7 +1640,10 @@
       "regenerateAudio": "Regenerate audio",
       "autoContinuePlaying": "Auto-continue playing",
       "addingAudioToVideoFileDotDotDot": "Adding audio to video file...",
-      "preparingMergeDotDotDot": "Preparing merge..."
+      "preparingMergeDotDotDot": "Preparing merge...",
+      "importVoiceDotDotDot": "Import voice...",
+      "voiceImportSuccessTitle": "Voice imported",
+      "voiceXImported": "Voice '{0}' imported successfully"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generate/import shot changes",
@@ -1643,7 +1685,9 @@
     "addRemoveEmbeddedSubtitlesTitle": "Add/remove embedded subtitles",
     "addCurrentSubtitle": "Add current subtitle",
     "titleOrLanguage": "Title/language",
-    "viewMatroskaTrackX": "View Matroska track - {0}"
+    "viewMatroskaTrackX": "View Matroska track - {0}",
+    "resolutionSeparator": "x",
+    "openFromUrlTitle": "Open video file from URL"
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",
@@ -1716,7 +1760,11 @@
     "reCopyTextToClipboard": "Re-copy text to clipboard (for translator/AI)",
     "blockXOfY": "Block {0} of {1}",
     "noTextInClipboard": "No text in clipboard",
-    "textInClipboardIsSameAsSourceText": "The text in clipboard is the same as the source text, please try again."
+    "textInClipboardIsSameAsSourceText": "The text in clipboard is the same as the source text, please try again.",
+    "lineMerge": "Line merge",
+    "delayInSecondsBetweenRequests": "Delay in seconds between requests",
+    "maxBytesPerRequest": "Max bytes per request",
+    "promptText": "Prompt text"
   },
   "options": {
     "settings": {
@@ -1809,7 +1857,7 @@
       "maxLines": "Max number of lines",
       "unbreakSubtitlesShortThan": "Unbreak subtitles shorter than",
       "newEmptyDefaultMs": "Default new subtitle duration (ms)",
-      "promptDeleteLines": "Prompt for delete lines",
+      "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "autoBackupOn": "Auto-backup",
       "autoBackupIntervalMinutes": "Auto-backup interval (minutes)",
@@ -1974,7 +2022,8 @@
       "allSettings": "All settings",
       "uiScale": "UI scale (%)",
       "waveformToolbarItems": "Waveform toolbar items",
-      "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color"
+      "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color",
+      "subtitlePreviewProperties": "Subtitle preview properties"
     },
     "shortcuts": {
       "title": "Shortcuts",
@@ -2245,7 +2294,13 @@
     }
   },
   "help": {
-    "aboutSubtitleEdit": "About Subtitle Edit"
+    "aboutSubtitleEdit": "About Subtitle Edit",
+    "checkForUpdates": "Check for updates",
+    "checkForUpdatesChecking": "Checking for updates...",
+    "checkForUpdatesUpToDate": "You are running the latest version.",
+    "checkForUpdatesNewVersionAvailable": "New version available: {0}",
+    "checkForUpdatesUnableToCheck": "Unable to check for updates.",
+    "checkForUpdatesDownloadNewVersion": "Download new version"
   },
   "ocr": {
     "linesToDraw": "Lines to draw",
