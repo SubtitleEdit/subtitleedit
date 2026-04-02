@@ -131,6 +131,7 @@
     "DoNoChange": "Não alterar",
     "Done": "Concluído",
     "DoubleWords": "Palavras duplas",
+    "DoubleLines": "Linhas duplas",
     "Download": "Baixar",
     "DownloadX": "Baixar {0}",
     "DownloadingX": "Baixando {0}",
@@ -246,6 +247,7 @@
     "InsertAtPositionAndFocusTextBox": "Inserir legenda na posição do vídeo e focar caixa de texto",
     "InsertAtPositionNoFocusTextBox": "Inserir legenda na posição do vídeo (sem caixa de texto focada)",
     "InsertBefore": "Inserir antes",
+    "InsertLine": "Inserir linha",
     "InsertNewSelection": "Inserir nova seleção",
     "InsertSubtitleAfterCurrentLine": "Inserir legenda após a linha atual...",
     "InsertSubtitleFileAtVideoPositionDotDotDot": "Inserir arquivo de legenda na posição do vídeo...",
@@ -308,6 +310,7 @@
     "NewDotDotDot": "Novo...",
     "NewProfile": "Novo perfil",
     "NewSubtitleStartKeyDownSetEndKeyUp": "Inserir legenda: Início com seta para baixo, fim com seta para cima",
+    "SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Definir início na posição do vídeo, definir fim com tecla para cima e ir para próximo",
     "No": "Não",
     "NoFilesToConvert": "Nenhum arquivo para converter",
     "NoLanguageCode": "Nenhum código de idioma",
@@ -482,6 +485,7 @@
     "ShowCpsColumn": "Mostrar coluna \"Caracteres/seg.\"",
     "ShowDurationColumn": "Mostrar coluna \"Duração\"",
     "ShowGapColumn": "Mostrar coluna \"Pausa\"",
+    "ShowStartColumn": "Mostrar coluna \"Início\"",
     "ShowHideColumn": "Mostrar coluna \"Ocultar\"",
     "ShowHistory": "Mostrar histórico",
     "ShowLayerColumn": "Mostrar coluna \"Camada\"",
@@ -490,6 +494,7 @@
     "ShowStyleColumn": "Mostrar coluna \"Estilo\"",
     "ShowTimeCodes": "Mostrar códigos de tempo",
     "ShowWpmColumn": "Mostrar coluna \"Palavras/min.\"",
+    "ShowPixelWidthColumn": "Mostrar coluna \"Largura do pixel\"",
     "Shrink": "Encolher",
     "SingleBox": "Caixa única",
     "SingleLineLengths": "Comprimento linha única:",
@@ -627,6 +632,7 @@
     "Width": "Largura",
     "WindowPositionAndSize": "Posição e tamanho da janela",
     "WordsPerMin": "Palavras/min.",
+    "PixelWidth": "Largura do pixel",
     "Wpm": "Palavras/min.",
     "XFiles": "{0:#,###,##0} arquivos",
     "XFilesConvertedInY": "{0:#,###,##0} arquivos convertidos em {1}",
@@ -638,7 +644,10 @@
     "CopyToClipboard": "Copiar para a área de transferência",
     "PlayCurrent": "Reproduzir atual",
     "LeftMargin": "Margem esquerda",
-    "RightMargin": "Margem direita"
+    "RightMargin": "Margem direita",
+    "Installed": "Instalado",
+    "AdvancedDotDotDot": "Avançado...",
+    "ChooseAlignment": "Escolha o alinhamento"
   },
   "Main": {
     "AudioTrackIsNowX": "A faixa de áudio agora é \"{0}",
@@ -783,6 +792,7 @@
       "MergeLinesWithSameTimeCodes": "Unir linhas com os mesmos códigos de tempo...",
       "SplitBreakLongLines": "Dividir",
       "MergeShortLines": "Mesclar linhas curtas...",
+      "Renumber": "Numerar novamente...",
       "RemoveTextForHearingImpaired": "_Remover texto para surdos...",
       "ConvertActors": "Converter atores...",
       "JoinSubtitles": "_Juntar legendas...",
@@ -802,6 +812,7 @@
       "SpellCheckTitle": "_Verificação ortográfica",
       "SpellCheck": "_Verificação ortográfica...",
       "FindDoubleWords": "_Localizar palavras duplicadas",
+      "FindDoubleLines": "_Localizar linhas duplas...",
       "AddNameToNamesList": "_Adicionar nome à lista de nomes...",
       "GetDictionaries": "_Obter dicionários...",
       "Video": "_Vídeo",
@@ -836,6 +847,7 @@
       "HelpTitle": "A_juda",
       "Help": "_Ajuda",
       "About": "So_bre...",
+      "CheckForUpdates": "_Verificar por atualizações...",
       "FixRightToLeftViaUnicodeControlCharacters": "Corrigir RTL via caracteres de controle Unicode (linhas selecionadas)",
       "RemoveUnicodeControlCharacters": "Remover caracteres de controle Unicode (das linhas selecionadas)",
       "ReverseRightToLeftStartEnd": "Reverter início/fim RTL (para linhas selecionadas)",
@@ -1130,6 +1142,9 @@
       "CpsGreaterThan": "CPS maior que",
       "LengthLessThan": "Tamanho menor que",
       "LengthGreaterThan": "Tamanho maior que",
+      "PixelLengthGreaterThan": "Tamanhdo do pixel maior que",
+      "GapLessThan": "Pausa em ms <",
+      "GapGreaterThan": "Pausa em ms >",
       "ExactlyOneLine": "Exatamente uma linha",
       "ExactlyTwoLines": "Exatamente duas linhas",
       "MoreThanTwoLines": "Mais de duas linhas",
@@ -1149,7 +1164,13 @@
       "NewCategory": "Nova categoria",
       "CategoryName": "Nome da categoria",
       "ExportReplaceRules": "Exportar regras",
-      "AppliedRules": "Regras aplicadas"
+      "AppliedRules": "Regras aplicadas",
+      "FindRule": "Localizar regra",
+      "XLinesAffected": "{0:#,##0} linhas afetadas",
+      "DeleteCategoryConfirm": "Excluir categoria '{0}'?",
+      "DeleteRuleConfirm": "Excluir regra '{0}'?",
+      "FindWhat": "Localizar o que",
+      "DescriptionOptional": "Descrição (opcional)"
     },
     "Find": {
       "SearchTextWatermark": "Pesquisar texto...",
@@ -1294,7 +1315,9 @@
       "BackToFixList": "Voltar à lista de correções",
       "ApplyFixesAndClose": "Aplicar correções e fechar",
       "FixCommonOcrErrorsStep2": "Corrija erros comuns, etapa 2 (aplicar correções)",
-      "FixCommonOcrErrorsStep2FixesFoundX": "Corrigir erros comuns, etapa 2 – Correções encontradas: {0}"
+      "FixCommonOcrErrorsStep2FixesFoundX": "Corrigir erros comuns, etapa 2 – Correções encontradas: {0}",
+      "Action": "Ação",
+      "ApplySelectedFixes": "Aplicar correções selecionadas"
     },
     "AdjustDurations": {
       "Title": "Ajustar durações",
@@ -1350,6 +1373,10 @@
       "NumberOfSmallGapsBridgedX": "Número de pequenos intervalos interligados: {0}",
       "PercentFoPrevious": "Pausa para anterior (%)",
       "GapChange": "Mudança de pausa"
+    },
+    "Renumber": {
+      "Title": "Numerar novamente",
+      "StartFromNumber": "Iniciar do número:"
     },
     "SortBy": {
       "Title": "Classificar legendas",
@@ -1470,6 +1497,24 @@
       "ResizeImages": "Redimensionar imagens",
       "Percentage": "Porcentagem",
       "ResizeImagesInfo": "Insira a porcentagem para redimensionar as imagens.\r\nVisualize as alterações automaticamente."
+    },
+    "RemoveTextForHearingImpaired": {
+      "Title": "Remover texto para deficientes auditivos",
+      "Interjections": "Interjeições",
+      "SkipIfStartWith": "Pular se começar com",
+      "RemoveTextBetween": "Remover texto entre",
+      "Brackets": "Colchetes",
+      "CurlyBrackets": "Chaves",
+      "Parentheses": "Parênteses",
+      "And": "e",
+      "OnlySeparateLines": "Somente linhas separadas",
+      "RemoveTextBeforeColon": "Remover texto antes dos dois pontos",
+      "OnlyIfTextIsUppercase": "Somente se o texto estiver em letras maiúsculas",
+      "OnlyOnSeparateLine": "Somente em linha separada",
+      "IfLineIsUppercase": "Se a linha estiver em maiúscula",
+      "IfLineContains": "Se a linha contiver",
+      "IfLineOnlyContainsMusicSymbols": "Se a linha contiver apenas símbolos musicais",
+      "RemoveInterjections": "Remover interjeições"
     }
   },
   "SpellCheck": {
@@ -1523,6 +1568,8 @@
     "AddCurrentSubtitle": "Adicionar legenda atual",
     "TitleOrLanguage": "Título/idioma",
     "ViewMatroskaTrackX": "Ver trilha Matroska - {0}",
+    "ResolutionSeparator": "x",
+    "OpenFromUrlTitle": "Abrir arquivo de vídeo da URL",
     "BurnIn": {
       "Title": "Gerar vídeo com legendas fixas",
       "InfoAssaOff": "Nota: estilo Advanced Substation Alpha suportado.",
@@ -1590,7 +1637,15 @@
       "SelectModel": "Selecionar modelo",
       "ViewWhisperLogFile": "Ver arquivo de registro do Whisper",
       "ReDownloadX": "Baixar novamente {0}",
-      "DownloadingSpeechToTextModel": "Baixando modelo de fala para texto"
+      "DownloadingSpeechToTextModel": "Baixando modelo de fala para texto",
+      "WhisperPostProcessingTitle": "Pós-processamento do Whisper",
+      "AdjustTimings": "Ajustar tempos",
+      "MergeShortLines": "Unir linhas curtas",
+      "BreakSplitLongLines": "Quebrar/dividir linhas longas",
+      "FixShortDuration": "Corrigir curta duração",
+      "FixCasing": "Corrigir maiúsculas/minúsculas",
+      "AddPeriods": "Adicionar pontos",
+      "ChangeUnderlineToColor": "Alterar sublinhado para cor"
     },
     "TextToSpeech": {
       "Title": "Texto para fala",
@@ -1614,7 +1669,31 @@
       "RegenerateAudio": "Regenerar áudio",
       "AutoContinuePlaying": "Continuar reproduzindo automaticamente",
       "AddingAudioToVideoFileDotDotDot": "Adicionando áudio ao arquivo de vídeo...",
-      "PreparingMergeDotDotDot": "Preparando união..."
+      "PreparingMergeDotDotDot": "Preparando união...",
+      "ImportVoiceDotDotDot": "Importar voz...",
+      "VoiceImportSuccessTitle": "Voz importada",
+      "VoiceXImported": "Voz '{0}' importada com sucesso",
+      "AdvancedTtsSettings": "Configurações avançadas de TTS",
+      "ProAudioPostProcessing": "Pós-processamento de áudio profissional",
+      "ProAudioPostProcessingDescription": "Aplica calor de equalização, gate de ruído, compressão, normalização de volume (-16 LUFS) e fade in/out a cada segmento.",
+      "AudioDucking": "Ducking de áudio",
+      "AudioDuckingDescription": "Reduz o volume do áudio do vídeo original e mistura-o com o áudio TTS, para que a faixa de áudio original ainda seja ligeiramente audível.",
+      "OriginalVolumePercent": "% do volume original",
+      "VadSilenceCompression": "Compressão de silêncio VAD",
+      "VadSilenceCompressionDescription": "Encurta as pausas entre as palavras antes de alterar o andamento. Usa detecção de atividade de voz para compactar apenas os intervalos de silêncio, mantendo a fala intacta. Este é o primeiro passo preferido – reduz a duração sem qualquer perda de qualidade.",
+      "MaxSilenceMs": "Silêncio máximo (ms)",
+      "HighQualityTimeStretch": "Alongamento de tempo de alta qualidade (WSOLA/elástico)",
+      "HighQualityTimeStretchDescription": "Usa o algoritmo elástico (WSOLA) em vez do filtro atempo padrão para alterações de velocidade que preservam o tom. Produz uma fala com som mais natural, especialmente em fatores de velocidade mais elevados. Requer librubberband em sua compilação FFmpeg - volta ao atempo automaticamente se não estiver disponível.",
+      "SilencePaddingMs": "Preenchimento de silêncio (ms)",
+      "SilencePaddingMsDescription": "Adiciona um breve silêncio no final de cada segmento. Útil para pausas entre as frases.",
+      "OutputSampleRate": "Taxa de amostragem de saída (0 = padrão)",
+      "OutputSampleRateDescription": "Reamostra todos os segmentos para a taxa de amostragem especificada (por exemplo, 44100, 48000). Defina como 0 para manter a taxa original.",
+      "EdgeTtsRate": "Taxa Edge-TTS",
+      "EdgeTtsRateDescription": "Taxa de fala para Edge-TTS, por ex. \"+50%\", \"-30%\" ou \"+0%\" como padrão.",
+      "EdgeTtsPitch": "Tom Edge-TTS",
+      "EdgeTtsPitchDescription": "Ajuste de tom para Edge-TTS, por ex. \"+10Hz\", \"-5Hz\" ou \"+0Hz\" como padrão.",
+      "EdgeTtsVolume": "Volume Edge-TTS",
+      "EdgeTtsVolumeDescription": "Ajuste de volume para Edge-TTS, por ex. \"+20%\", \"-10%\" ou \"+0%\" como padrão."
     },
     "ShotChanges": {
       "TitleGenerateOrImport": "Gerar/importar mudanças de cena",
@@ -1688,7 +1767,9 @@
     "PointSync": "Ponto de sincronização...",
     "PointSyncViaOther": "Pontos de sincronização via outra legenda",
     "AdjustmentX": "Ajuste: {0}",
-    "AdjustAllShortcuts": "Atalhos de teclado:\r\n\r\n• Shift + Esquerda/Direita: Mover 10 ms\r\n• Ctrl + Esquerda/Direita: Mover 100 ms\r\n• Alt + Esquerda/Direita: Mover 500 ms"
+    "AdjustAllShortcuts": "Atalhos de teclado:\r\n\r\n• Shift + Esquerda/Direita: Mover 10 ms\r\n• Ctrl + Esquerda/Direita: Mover 100 ms\r\n• Alt + Esquerda/Direita: Mover 500 ms",
+    "OffsetInSeconds": "Deslocamento em segundos",
+    "SpeedFactor": "Fator de velocidade"
   },
   "Translate": {
     "TranslateViaCopyPaste": "Traduzir automaticamente via copiar/colar...",
@@ -1699,7 +1780,11 @@
     "ReCopyTextToClipboard": "Copiar novamente texto para a área de transferência (para tradutor/IA)",
     "BlockXOfY": "Bloco {0} de {1}",
     "NoTextInClipboard": "Nenhum texto na área de transferência",
-    "TextInClipboardIsSameAsSourceText": "O texto na área de transferência é igual ao texto fonte. Tente novamente."
+    "TextInClipboardIsSameAsSourceText": "O texto na área de transferência é igual ao texto fonte. Tente novamente.",
+    "LineMerge": "Unir linha",
+    "DelayInSecondsBetweenRequests": "Atraso em segundos entre solicitações",
+    "MaxBytesPerRequest": "Máximo de bytes por solicitação",
+    "PromptText": "Texto de solicitação"
   },
   "Options": {
     "Settings": {
@@ -1792,7 +1877,7 @@
       "MaxLines": "Colorir texto se tiver mais de {0} linhas",
       "UnbreakSubtitlesShortThan": "Unir legendas menores que",
       "NewEmptyDefaultMs": "Duração padrão da nova legenda (ms)",
-      "PromptDeleteLines": "Confirmar eliminação de linhas",
+      "PromptBeforeDelete": "Avisar antes de excluir",
       "RememberPositionAndSize": "Lembrar tamanho e posição da janela principal",
       "AutoBackupOn": "Backup automático",
       "AutoBackupIntervalMinutes": "Intervalo de backup automático (minutos)",
@@ -1940,6 +2025,8 @@
       "SplitOddLinesAction": "Ação de dividir linhas ímpares",
       "OcrUseWordSplitList": "OCR: use lista de divisão de palavras",
       "SpeechToTextSelectedLinesPromptFistTimeOnly": "Fala em texto: linhas selecionadas, solicitação de idioma/mecanismo apenas na primeira vez",
+      "MultipleReplaceShowDotDotDotButtons": "Substituição múltipla: mostra botões do menu de contexto",
+      "GridFocusTextboxAfterInsertNew": "Grade: focar caixa de texto após inserir nova legenda",
       "UseFocusedButtonBackgroundColor": "Use a cor de fundo do botão em foco",
       "FocusedButtonBackgroundColor": "Cor de fundo do botão em foco",
       "ForceCrLfOnSave": "Forçar CR+LF ao salvar (arquivos de legenda de texto)",
@@ -1955,7 +2042,8 @@
       "AllSettings": "Todas as configurações",
       "UiScale": "Escala da interface (%)",
       "WaveformToolbarItems": "Itens da barra de ferramentas da forma de onda",
-      "MatchIconColorToDarkTheme": "Combinar cor do ícone com a cor de primeiro plano do tema escuro"
+      "MatchIconColorToDarkTheme": "Combinar cor do ícone com a cor de primeiro plano do tema escuro",
+      "SubtitlePreviewProperties": "Propriedades de pré-visualização de legendas"
     },
     "Shortcuts": {
       "Title": "Atalhos",
@@ -2165,6 +2253,7 @@
       "GoToPreviousError": "Ir para erro anterior",
       "AddNameToNameList": "Adicionar nome à lista de nomes",
       "FindDoubleWords": "Encontrar palavras duplas",
+      "FindDoubleLines": "Localizar linhas duplas",
       "ColorX": "Cor {0}",
       "RemoveColor": "Remover cor",
       "SurroundWith": "Cercar com...",
@@ -2225,7 +2314,13 @@
     }
   },
   "Help": {
-    "AboutSubtitleEdit": "Sobre o Subtitle Edit"
+    "AboutSubtitleEdit": "Sobre o Subtitle Edit",
+    "CheckForUpdates": "Verifique por atualizações",
+    "CheckForUpdatesChecking": "Verificando atualizações...",
+    "CheckForUpdatesUpToDate": "Você está executando a versão mais recente.",
+    "CheckForUpdatesNewVersionAvailable": "Nova versão disponível: {0}",
+    "CheckForUpdatesUnableToCheck": "Não foi possível verificar se há atualizações.",
+    "CheckForUpdatesDownloadNewVersion": "Baixar nova versão"
   },
   "Ocr": {
     "LinesToDraw": "Linhas para desenhar",
@@ -2295,7 +2390,8 @@
     "RemoveXFromUnknownWordsList": "Remover \"{0}\" da lista de palavras desconhecidas",
     "DownloadingPaddleOcrEngineDotDotDot": "Baixando o mecanismo Paddle OCR...",
     "DownloadingPaddleOcrModelsDotDotDot": "Baixando modelos Paddle OCR...",
-    "PaddleOcr": "Paddle OCR"
+    "PaddleOcr": "Paddle OCR",
+    "BinaryImageCompareInspectImageMatches": "\"Comparação de imagens binárias\" - inspecionar correspondências de imagens"
   },
   "Assa": {
     "AssaDraw": "Desenho ASSA",
@@ -2355,6 +2451,13 @@
     "BackgroundBoxCircle": "Círculo",
     "BackgroundBoxSpikes": "Espinhos",
     "BackgroundBoxBubbles": "Bolhas",
+    "BackgroundBoxWave": "Onda",
+    "BackgroundBoxHexagon": "Hexágono",
+    "BackgroundBoxTornPaper": "Papel rasgado",
+    "BackgroundBoxCloud": "Nuvem",
+    "BackgroundBoxTornPaperDouble": "Papel rasgado (superior e inferior)",
+    "BackgroundBoxStarburst": "Explosão estelar",
+    "BackgroundBoxScroll": "Rolagem / Pergaminho",
     "StylesTitle": "Estilos alfa avançados de subestação",
     "StylesInFile": "Estilos em arquivo",
     "StylesSaved": "Estilos salvos",
@@ -2407,6 +2510,8 @@
     "AdvancedEffectWordByWordDescription": "Revela o texto, uma palavra por vez, durante a duração da legenda",
     "AdvancedEffectKaraoke": "Karaokê",
     "AdvancedEffectKaraokeDescription": "Destaca cada caractere em sequência, revelando o texto da esquerda para a direita, como letras de karaokê",
+    "AdvancedEffectFancyKaraoke": "Karaokê - palavra ativa pop",
+    "AdvancedEffectFancyKaraokeDescription": "Aprimora as legendas com uma palavra ativa pré-marcada (por meio de sublinhado ou cor de destaque) — escurece as palavras inativas e aplica uma animação pop-glow à palavra ativa",
     "AdvancedEffectScrambleReveal": "Revelação de embaralhamento",
     "AdvancedEffectScrambleRevealDescription": "Caracteres embaralhados são decodificados no texto real da esquerda para a direita",
     "AdvancedEffectRainbowPulse": "Pulso arco-íris",
@@ -2448,7 +2553,32 @@
     "AdvancedEffectConfetti": "Explosão de confete",
     "AdvancedEffectConfettiDescription": "Explosão explosiva de confetes de papel giratório colorido de poppers de canto e uma estrela central em cada legenda",
     "AdvancedEffectHearts": "Corações (chuva)",
-    "AdvancedEffectHeartsDescription": "Corações desenhados em Bézier em três formas chovem suavemente do topo da tela, caindo e desaparecendo ao longo de cada legenda"
+    "AdvancedEffectHeartsDescription": "Corações desenhados em Bézier em três formas chovem suavemente do topo da tela, caindo e desaparecendo ao longo de cada legenda",
+    "AdvancedEffectWordSpacing": "Espaçamento entre palavras",
+    "AdvancedEffectWordSpacingDescription": "Aumenta o espaçamento entre palavras usando a tag \\fsp para melhor legibilidade",
+    "AdvancedEffectFancyKaraokeAutoDetectActiveWord": "Detectar automaticamente a palavra ativa",
+    "AdvancedEffectFancyKaraokeGlow": "Brilho da palavra ativa",
+    "AdvancedEffectFancyKaraokeActiveColor": "Cor ativa",
+    "AdvancedEffectFancyKaraokeInactiveColor": "Cor inativa",
+    "AdvancedEffectFancyKaraokeInactiveOpacity": "Opacidade inativa (0-255)",
+    "AdvancedEffectWordSpacingPixels": "Espaçamento (pixels)",
+    "AdvancedEffectSlowZoomOut": "Diminuição lenta do zoom",
+    "AdvancedEffectSlowZoomOutDescription": "O texto começa um pouco maior e diminui suavemente para o tamanho normal ao longo da duração da legenda",
+    "AdvancedEffectSlowZoomIn": "Aumento lento do zoom",
+    "AdvancedEffectSlowZoomInDescription": "O texto começa no tamanho normal e aumenta ligeiramente ao longo da duração da legenda",
+    "AdvancedEffectFadeIn": "Transição - fade-in",
+    "AdvancedEffectFadeInDescription": "Um efeito de fade-in por linha onde a tela começa preta e revela o vídeo.",
+    "AdvancedEffectFadeOut": "Transição - fade-out",
+    "AdvancedEffectFadeOutDescription": "Um efeito de fade-out por linha em que a tela fica preta.",
+    "AdvancedEffectTvClose": "Transição - Desligar TV",
+    "AdvancedEffectTvCloseDescription": "As barras pretas crescem para dentro, de cima para baixo, enquanto o meio fica branco (parte superior preta/meio branco/fundo preto).\r\nA segunda metade é preta sólida.",
+    "AdvancedEffectSlideInLeft": "Deslizar da esquerda",
+    "AdvancedEffectSlideInLeftDescription": "O texto desliza da esquerda para fora da tela, é mantido e sai de volta para a esquerda",
+    "AdvancedEffectSlideInRight": "Deslizar da direita",
+    "AdvancedEffectSlideInRightDescription": "O texto desliza da direita para fora da tela, é mantido e sai de volta para a direita",
+    "AdvancedEffectFadeInOut": "Fade in/out",
+    "AdvancedEffectFadeInOutDescription": "O texto aparece gradualmente no início e desaparece no final de cada legenda",
+    "OverrideTagsHistory": "Substituir histórico de tags"
   },
   "About": {
     "Title": "Sobre o Subtitle Edit",
