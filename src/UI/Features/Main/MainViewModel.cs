@@ -11337,6 +11337,8 @@ public partial class MainViewModel :
 
     private void SetSubtitles(Subtitle subtitle)
     {
+        SubtitleGrid.ItemsSource = null;
+
         Subtitles.Clear();
         foreach (var p in subtitle.Paragraphs)
         {
@@ -11345,11 +11347,16 @@ public partial class MainViewModel :
 
         Renumber();
         UpdateGaps();
+
+        SubtitleGrid.ItemsSource = Subtitles;
+
         _updateAudioVisualizer = true;
     }
 
     private void SetSubtitles(List<SubtitleLineViewModel> subtitles)
     {
+        SubtitleGrid.ItemsSource = null;
+
         Subtitles.Clear();
         foreach (var p in subtitles)
         {
@@ -11358,6 +11365,8 @@ public partial class MainViewModel :
 
         Renumber();
         UpdateGaps();
+
+        SubtitleGrid.ItemsSource = Subtitles;
         _updateAudioVisualizer = true;
     }
 
