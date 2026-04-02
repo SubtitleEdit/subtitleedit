@@ -17,6 +17,8 @@ public enum RuleType
     LengthLessThan,
     LengthGreaterThan,
     PixelWidthLengthGreaterThan,
+    GapLessThan,
+    GapGreaterThan,
     ExactlyOneLine,
     ExactlyTwoLines,
     MoreThanTwoLines,

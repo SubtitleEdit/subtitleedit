@@ -179,6 +179,26 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.GapLessThan,
+                Name = l.GapLessThan,
+                HasNumber = true,
+                NumberMinValue = 0,
+                NumberMaxValue = 9999999,
+                DefaultValue = 10000,
+                Number = 10000,
+            },
+            new()
+            {
+                RuleType = RuleType.GapGreaterThan,
+                Name = l.GapGreaterThan,
+                HasNumber = true,
+                NumberMinValue = 0,
+                NumberMaxValue = 9999999,
+                DefaultValue = 10000,
+                Number = 10000,
+            },
+            new()
+            {
                 RuleType = RuleType.ExactlyOneLine,
                 Name = l.ExactlyOneLine,
             },
@@ -334,6 +354,12 @@ public class ModifySelectionRule
 
             case RuleType.PixelWidthLengthGreaterThan:
                 return item.PixelWidth > (int)Number;
+
+            case RuleType.GapLessThan:
+                return item.Gap < Number;
+
+            case RuleType.GapGreaterThan:
+                return item.Gap > Number;
 
             case RuleType.ExactlyOneLine:
                 return (text?.Split('\n').Length ?? 0) == 1;
