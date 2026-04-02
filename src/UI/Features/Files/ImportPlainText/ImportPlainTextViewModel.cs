@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
@@ -38,8 +40,9 @@ public partial class ImportPlainTextViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private Subtitle _subtitle = new Subtitle();
-    private string  _videoFileName = string.Empty;
+    private string _videoFileName = string.Empty;
     private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
     private readonly List<string> _textExtensions = new List<string>
     {
         "*.txt",
@@ -48,9 +51,10 @@ public partial class ImportPlainTextViewModel : ObservableObject
     private bool _dirty;
     private readonly System.Timers.Timer _timerUpdatePreview;
 
-    public ImportPlainTextViewModel(IFileHelper fileHelper)
+    public ImportPlainTextViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
+        _windowService = windowService;
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         Files = new ObservableCollection<DisplayFile>();
         SplitAtOptions = new ObservableCollection<string>
@@ -93,7 +97,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
                     subtitles = TimeCodeCalculator.CalculateFixedTimeCodes(subtitles, FixedDurationMs, MinGapMs);
                 }
                 else
-                { 
+                {
                     subtitles = TimeCodeCalculator.CalculateTimeCodes(
                         subtitles,
                         Se.Settings.General.SubtitleOptimalCharactersPerSeconds,
@@ -242,9 +246,45 @@ public partial class ImportPlainTextViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void AlignScriptWithTimestampsFromWhisper()
+    private async Task AlignScriptWithTimestampsFromWhisper()
     {
+        if (Window == null)
+        {
+            return;
+        }
 
+        // Wait for any pending preview update to finish populating Subtitles.
+        if (_dirty)
+        {
+            await Task.Delay(500);
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+        {
+            var picked = await _fileHelper.PickOpenVideoFile(Window, "Open video file for transcription");
+            if (string.IsNullOrEmpty(picked))
+            {
+                return;
+            }
+
+            _videoFileName = picked;
+        }
+
+        var whisperVm = await _windowService.ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(
+            Window,
+            viewModel => { viewModel.Initialize(_videoFileName, -1); });
+
+        if (!whisperVm.OkPressed || whisperVm.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        ScriptSyncService.SyncScript(Subtitles.ToList(), whisperVm.TranscribedSubtitle);
     }
 
 

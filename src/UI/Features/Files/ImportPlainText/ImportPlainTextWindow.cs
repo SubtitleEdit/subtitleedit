@@ -70,7 +70,7 @@ public class ImportPlainTextWindow : Window
         var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaWhisper, vm.AlignScriptWithTimestampsFromWhisperCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaWhisper, buttonOk, buttonCancel);
 
         grid.Add(panelImport, 0);
         grid.Add(MakeTextBoxAndControlsView(vm), 1);
