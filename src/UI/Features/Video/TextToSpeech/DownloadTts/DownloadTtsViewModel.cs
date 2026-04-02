@@ -224,7 +224,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 try
                 {
                     _downloadStreamQwen3TtsCpp.Position = 0;
-                    _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCpp, folder, string.Empty, true, new List<string>(), null);
+                    _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCpp, folder, string.Empty, false, new List<string>(), null);
                     _downloadStreamQwen3TtsCpp.Dispose();
                 }
                 catch (Exception ex)

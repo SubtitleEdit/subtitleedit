@@ -11911,6 +11911,9 @@ public partial class MainViewModel :
 
     private void CleanUp()
     {
+        _positionTimer.Stop();
+        _slowTimer.Stop();
+
         if (_findViewModel != null)
         {
             _findViewModel.Window?.Close();
