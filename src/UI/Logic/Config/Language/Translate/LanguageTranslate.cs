@@ -11,6 +11,10 @@ public class LanguageTranslate
     public string BlockXOfY { get; set; }
     public string NoTextInClipboard { get; set; }
     public string TextInClipboardIsSameAsSourceText { get; set; }
+    public string LineMerge { get; set; }
+    public string DelayInSecondsBetweenRequests { get; set; }
+    public string MaxBytesPerRequest { get; set; }
+    public string PromptText { get; set; }
 
     public LanguageTranslate()
     {
@@ -23,5 +27,9 @@ public class LanguageTranslate
         BlockXOfY = "Block {0} of {1}";
         NoTextInClipboard = "No text in clipboard";
         TextInClipboardIsSameAsSourceText = "The text in clipboard is the same as the source text, please try again.";
+        LineMerge = "Line merge";
+        DelayInSecondsBetweenRequests = "Delay in seconds between requests";
+        MaxBytesPerRequest = "Max bytes per request";
+        PromptText = "Prompt text";
     }
 }

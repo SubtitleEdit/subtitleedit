@@ -14,7 +14,7 @@ public class WhisperPostProcessingWindow : Window
     public WhisperPostProcessingWindow(WhisperPostProcessingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Whisper post-processing";
+        Title = Se.Language.Video.AudioToText.WhisperPostProcessingTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
@@ -23,25 +23,25 @@ public class WhisperPostProcessingWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelAdjustTimings = UiUtil.MakeTextBlock("Adjust timings");
+        var labelAdjustTimings = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.AdjustTimings);
         var checkAdjustTimings = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.AdjustTimings));
 
-        var labelMergeShortLines = UiUtil.MakeTextBlock("Merge short lines");
+        var labelMergeShortLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.MergeShortLines);
         var checkMergeShortLines = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.MergeShortLines));
 
-        var labelBreakSplitLongLines = UiUtil.MakeTextBlock("Break/split long lines");
+        var labelBreakSplitLongLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.BreakSplitLongLines);
         var checkBreakSplitLongLines = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.BreakSplitLongLines));
 
-        var labelFixShortDuration = UiUtil.MakeTextBlock("Fix short duration");
+        var labelFixShortDuration = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.FixShortDuration);
         var checkFixShortDuration = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.FixShortDuration));
 
-        var labelFixCasing = UiUtil.MakeTextBlock("Fix casing");
+        var labelFixCasing = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.FixCasing);
         var checkFixCasing = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.FixCasing));
 
-        var labelAddPeriods = UiUtil.MakeTextBlock("Add periods");
+        var labelAddPeriods = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.AddPeriods);
         var checkAddPeriods = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.AddPeriods));
 
-        var labelChangeUnderlineToColor = UiUtil.MakeTextBlock("Change underline to color");
+        var labelChangeUnderlineToColor = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.ChangeUnderlineToColor);
         var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.ChangeUnderlineToColor));
         var colorPickerUnderlineToColor = new ColorPicker()
         {

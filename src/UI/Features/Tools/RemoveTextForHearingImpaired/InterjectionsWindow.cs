@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
@@ -12,7 +13,7 @@ public class InterjectionsWindow : Window
     public InterjectionsWindow(InterjectionsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Interjections";
+        Title = Se.Language.Tools.RemoveTextForHearingImpaired.Interjections;
         CanResize = false;
         Width = 700;
         Height = 600;
@@ -23,13 +24,13 @@ public class InterjectionsWindow : Window
 
         var labelInterjections = new Label
         {
-            Content = "Interjections",
+            Content = Se.Language.Tools.RemoveTextForHearingImpaired.Interjections,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
         var labelSkipIfStartWith = new Label
         {
-            Content = "Skip if start with",
+            Content = Se.Language.Tools.RemoveTextForHearingImpaired.SkipIfStartWith,
             VerticalAlignment = VerticalAlignment.Center,
         };
 

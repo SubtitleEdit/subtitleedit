@@ -20,6 +20,14 @@ public class LanguageAudioToText
     public string ViewWhisperLogFile { get; set; }
     public string ReDownloadX { get; set; }
     public string? DownloadingSpeechToTextModel { get; set; }
+    public string WhisperPostProcessingTitle { get; set; }
+    public string AdjustTimings { get; set; }
+    public string MergeShortLines { get; set; }
+    public string BreakSplitLongLines { get; set; }
+    public string FixShortDuration { get; set; }
+    public string FixCasing { get; set; }
+    public string AddPeriods { get; set; }
+    public string ChangeUnderlineToColor { get; set; }
 
     public LanguageAudioToText()
     {
@@ -40,6 +48,14 @@ public class LanguageAudioToText
         SelectModel = "Select model";
         ViewWhisperLogFile = "View Whisper log file";
         ReDownloadX = "Re-download {0}";
-        DownloadingSpeechToTextModel = "Downloading speech-to-text model";  
+        DownloadingSpeechToTextModel = "Downloading speech-to-text model";
+        WhisperPostProcessingTitle = "Whisper post-processing";
+        AdjustTimings = "Adjust timings";
+        MergeShortLines = "Merge short lines";
+        BreakSplitLongLines = "Break/split long lines";
+        FixShortDuration = "Fix short duration";
+        FixCasing = "Fix casing";
+        AddPeriods = "Add periods";
+        ChangeUnderlineToColor = "Change underline to color";
     }
 }

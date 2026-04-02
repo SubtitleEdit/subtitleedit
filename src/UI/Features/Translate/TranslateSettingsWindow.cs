@@ -31,10 +31,10 @@ public class TranslateSettingsWindow : Window
             CanResize = false;
         }
 
-        var labelMerge = UiUtil.MakeTextBlock("Line merge");
+        var labelMerge = UiUtil.MakeTextBlock(Se.Language.Translate.LineMerge);
         var comboMerge = UiUtil.MakeComboBox(vm.MergeOptions, vm, nameof(vm.SelectedMergeOptions));
 
-        var labelDelay = UiUtil.MakeTextBlock("Delay in seconds between requests");
+        var labelDelay = UiUtil.MakeTextBlock(Se.Language.Translate.DelayInSecondsBetweenRequests);
         var delayNumericUpDown = new NumericUpDown
         {
             Minimum = 0,
@@ -53,7 +53,7 @@ public class TranslateSettingsWindow : Window
             Source = vm,
         });
 
-        var labelMaxBytes = UiUtil.MakeTextBlock("Max bytes per request");
+        var labelMaxBytes = UiUtil.MakeTextBlock(Se.Language.Translate.MaxBytesPerRequest);
         var maxBytesNumericUpDown = new NumericUpDown //TODO: UiUtil.MakeNumericUpDown
         {
             Minimum = 0,
@@ -72,7 +72,7 @@ public class TranslateSettingsWindow : Window
             Source = vm,
         });
 
-        var labelPrompt = UiUtil.MakeTextBlock("Prompt text", vm, null, nameof(vm.PromptIsVisible));
+        var labelPrompt = UiUtil.MakeTextBlock(Se.Language.Translate.PromptText, vm, null, nameof(vm.PromptIsVisible));
         var promptTextBox = new TextBox
         {
             AcceptsReturn = true,

@@ -75,7 +75,7 @@ public class BlankVideoWindow : Window
 
         var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
         var textBoxWidth = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoWidth));
-        var labelX = UiUtil.MakeLabel("x");
+        var labelX = UiUtil.MakeLabel(Se.Language.Video.ResolutionSeparator);
         var textBoxHeight = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoHeight));
         var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
         var panelResolution = new StackPanel

@@ -19,7 +19,7 @@ public class RemoveTextForHearingImpairedWindow : Window
     public RemoveTextForHearingImpairedWindow(RemoveTextForHearingImpairedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Remove text for hearing impaired";
+        Title = Se.Language.Tools.RemoveTextForHearingImpaired.Title;
         Width = 910;
         Height = 640;
         MinWidth = 800;
@@ -95,14 +95,14 @@ public class RemoveTextForHearingImpairedWindow : Window
 
     private Border MakeRemoveBetweenView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var labelTitle = UiUtil.MakeLabel("Remove text between");
+        var labelTitle = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween);
 
-        var comboBoxBrackets = UiUtil.MakeCheckBox("Brackets", vm, nameof(vm.IsRemoveBracketsOn));
-        var comboBoxCurlyBrackets = UiUtil.MakeCheckBox("Curly brackets", vm, nameof(vm.IsRemoveCurlyBracketsOn));
-        var comboBoxParentheses = UiUtil.MakeCheckBox("Parentheses", vm, nameof(vm.IsRemoveParenthesesOn));
+        var comboBoxBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Brackets, vm, nameof(vm.IsRemoveBracketsOn));
+        var comboBoxCurlyBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.CurlyBrackets, vm, nameof(vm.IsRemoveCurlyBracketsOn));
+        var comboBoxParentheses = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Parentheses, vm, nameof(vm.IsRemoveParenthesesOn));
 
         var textBoxCustomStart = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomStart));
-        var labelAnd = UiUtil.MakeLabel("and");
+        var labelAnd = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.And);
         var textBoxCustomEnd = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomEnd));
         var panelCustom = new StackPanel
         {
@@ -115,7 +115,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             }
         };
         var checkBoxOnlySeparateLine = UiUtil
-            .MakeCheckBox("Only separate lines", vm, nameof(vm.IsOnlySeparateLine))
+            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlySeparateLines, vm, nameof(vm.IsOnlySeparateLine))
             .WithMarginTop(5);
 
         var grid = new Grid
@@ -149,12 +149,12 @@ public class RemoveTextForHearingImpairedWindow : Window
 
     private static Border MakeBeforeColonView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxBrackets = UiUtil.MakeCheckBox("Remove text before colon", vm, nameof(vm.IsRemoveTextBeforeColonOn));
+        var comboBoxBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBeforeColon, vm, nameof(vm.IsRemoveTextBeforeColonOn));
         var comboBoxUppercase = UiUtil
-            .MakeCheckBox("Only if text is uppercase", vm, nameof(vm.IsRemoveTextBeforeColonUppercaseOn))
+            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlyIfTextIsUppercase, vm, nameof(vm.IsRemoveTextBeforeColonUppercaseOn))
             .WithMarginLeft(10);
         var comboBoxSeparateLine = UiUtil
-            .MakeCheckBox("Only on separate line", vm, nameof(vm.IsRemoveTextBeforeColonSeparateLineOn))
+            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlyOnSeparateLine, vm, nameof(vm.IsRemoveTextBeforeColonSeparateLineOn))
             .WithMarginLeft(10);
 
         var grid = new Grid
@@ -182,13 +182,13 @@ public class RemoveTextForHearingImpairedWindow : Window
 
     private static Border MakeUppercaseLineView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxLineUppercase = UiUtil.MakeCheckBox("If line is uppercase", vm, nameof(vm.IsRemoveTextUppercaseLineOn));
+        var comboBoxLineUppercase = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineIsUppercase, vm, nameof(vm.IsRemoveTextUppercaseLineOn));
         return UiUtil.MakeBorderForControl(comboBoxLineUppercase).WithMarginBottom(5);
     }
 
     private static Border MakeLineContainsView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxLineContains = UiUtil.MakeCheckBox("If line contains", vm, nameof(vm.IsRemoveTextContainsOn));
+        var comboBoxLineContains = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineContains, vm, nameof(vm.IsRemoveTextContainsOn));
         var textBoxContains = UiUtil.MakeTextBox(120, vm, nameof(vm.TextContains)).WithMarginLeft(5);
         var panelContains = new StackPanel
         {
@@ -206,14 +206,14 @@ public class RemoveTextForHearingImpairedWindow : Window
     private static Border MakeMusicSymbolsContainsView(RemoveTextForHearingImpairedViewModel vm)
     {
         var comboBoxMusicSymbols =
-            UiUtil.MakeCheckBox("If line only contains music symbols", vm, nameof(vm.IsRemoveOnlyMusicSymbolsOn));
+            UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineOnlyContainsMusicSymbols, vm, nameof(vm.IsRemoveOnlyMusicSymbolsOn));
         return UiUtil.MakeBorderForControl(comboBoxMusicSymbols).WithMarginBottom(5);
     }
 
     private static Border MakeInterjectionsView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxInterjections = UiUtil.MakeCheckBox("Remove interjections", vm, nameof(vm.IsRemoveInterjectionsOn));
-        var buttonEdit = UiUtil.MakeButton("Edit", vm.EditInterjectionsCommand);
+        var comboBoxInterjections = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveInterjections, vm, nameof(vm.IsRemoveInterjectionsOn));
+        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditInterjectionsCommand);
 
         var panelInterjections = new StackPanel
         {
@@ -238,7 +238,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         };
         
         var checkBoxOnlySeparateLine = UiUtil
-            .MakeCheckBox("Only separate lines", vm, nameof(vm.IsInterjectionsSeparateLineOn))
+            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlySeparateLines, vm, nameof(vm.IsInterjectionsSeparateLineOn))
             .WithMarginTop(5);
 
         var grid = new Grid
@@ -299,21 +299,21 @@ public class RemoveTextForHearingImpairedWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = "#",
+                    Header = Se.Language.General.NumberSymbol,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveItem.IndexDisplay)),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
-                    Header = "Before",
+                    Header = Se.Language.General.Before,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveItem.Before)),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
-                    Header = "After",
+                    Header = Se.Language.General.After,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveItem.After)),
                     IsReadOnly = true,

@@ -15,6 +15,8 @@ public class LanguageMultipleReplace
     public string XLinesAffected { get; set; }
     public string DeleteCategoryConfirm { get; set; }
     public string DeleteRuleConfirm { get; set; }
+    public string FindWhat { get; set; }
+    public string DescriptionOptional { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -30,5 +32,7 @@ public class LanguageMultipleReplace
         XLinesAffected = "{0:#,##0} lines affected";
         DeleteCategoryConfirm = "Delete category '{0}'?";
         DeleteRuleConfirm = "Delete rule '{0}'?";
+        FindWhat = "Find what";
+        DescriptionOptional = "Description (optional)";
     }
 }

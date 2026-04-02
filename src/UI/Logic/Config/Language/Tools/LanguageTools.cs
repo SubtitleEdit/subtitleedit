@@ -22,6 +22,7 @@ public class LanguageTools
     public LanguageMergeLineswithSameTimeCodes MergeLinesWithSameTimeCodes { get; set; } = new();
     public LanguageNetflixCheckAndFix NetflixCheckAndFix { get; set; } = new();
     public LanguageImageBasedEdit ImageBasedEdit { get; set; } = new();
+    public LanguageRemoveTextForHearingImpaired RemoveTextForHearingImpaired { get; set; } = new();
     public string PickAlignmentTitle { get; set; }
     public string PickFontNameTitle { get; set; }
     public string ColorPickerTitle { get; set; }

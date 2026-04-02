@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
@@ -15,18 +16,18 @@ public class EditRuleWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelFindWhat = UiUtil.MakeLabel("Find what");
+        var labelFindWhat = UiUtil.MakeLabel(Se.Language.Edit.MultipleReplace.FindWhat);
         var textBoxFindWhat = UiUtil.MakeTextBox(300, vm, nameof(vm.FindWhat));
 
-        var labelReplaceWith = UiUtil.MakeLabel("Replace with");
+        var labelReplaceWith = UiUtil.MakeLabel(Se.Language.General.ReplaceWith);
         var textBoxReplaceWith = UiUtil.MakeTextBox(300, vm, nameof(vm.ReplaceWith));
 
-        var labelDescription = UiUtil.MakeLabel("Description (optional)");
+        var labelDescription = UiUtil.MakeLabel(Se.Language.Edit.MultipleReplace.DescriptionOptional);
         var textBoxDescription = UiUtil.MakeTextBox(300, vm, nameof(vm.Description));
 
-        var radioButtonRegularExpression = UiUtil.MakeRadioButton("Regular expression", vm, nameof(vm.IsRegularExpression));
-        var radioButtonCaseSensitive = UiUtil.MakeRadioButton("Case sensitive", vm, nameof(vm.IsCaseSensitive));
-        var radioButtonCaseInsensitive = UiUtil.MakeRadioButton("Case insensitive", vm, nameof(vm.IsCaseInsensitive));
+        var radioButtonRegularExpression = UiUtil.MakeRadioButton(Se.Language.General.RegularExpression, vm, nameof(vm.IsRegularExpression));
+        var radioButtonCaseSensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseSensitive, vm, nameof(vm.IsCaseSensitive));
+        var radioButtonCaseInsensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseInsensitive, vm, nameof(vm.IsCaseInsensitive));
         var panelType = new StackPanel
         {
             Orientation = Orientation.Vertical,

@@ -3,6 +3,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
@@ -13,7 +14,7 @@ public class OpenFromUrlWindow : Window
     public OpenFromUrlWindow(OpenFromUrlViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Open video file from URL";
+        Title = Se.Language.Video.OpenFromUrlTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
 
@@ -23,7 +24,7 @@ public class OpenFromUrlWindow : Window
 
         var label = new Label
         {
-            Content = "Url",
+            Content = Se.Language.General.Url,
             VerticalAlignment = VerticalAlignment.Center,
         };
 

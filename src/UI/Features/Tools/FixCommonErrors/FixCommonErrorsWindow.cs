@@ -258,21 +258,21 @@ public class FixCommonErrorsWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = "#",
+                    Header = Se.Language.General.NumberSymbol,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(FixDisplayItem.Number)),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
-                    Header = "Action",
+                    Header = Se.Language.Tools.FixCommonErrors.Action,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(FixDisplayItem.Action)),
                     IsReadOnly = true,
                 },
                 new DataGridTemplateColumn
                 {
-                    Header = "Before",
+                    Header = Se.Language.General.Before,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
@@ -289,7 +289,7 @@ public class FixCommonErrorsWindow : Window
                 },
                 new DataGridTemplateColumn
                 {
-                    Header = "After",
+                    Header = Se.Language.General.After,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
@@ -310,10 +310,10 @@ public class FixCommonErrorsWindow : Window
         dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
 
         var buttonBarFixes = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton("Select all", _vm.FixesSelectAllCommand),
-            UiUtil.MakeButton("Inverse selection", _vm.FixesInverseSelectedCommand),
-            UiUtil.MakeButton("Refresh fixes", _vm.DoRefreshFixesCommand),
-            UiUtil.MakeButton("Apply selected fixes", _vm.DoApplyFixesCommand)
+            UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand),
+            UiUtil.MakeButton(Se.Language.General.InvertSelection, _vm.FixesInverseSelectedCommand),
+            UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand),
+            UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand)
         );
         buttonBarFixes.WithMarginTop(2);
 
