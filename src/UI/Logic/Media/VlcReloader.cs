@@ -151,14 +151,16 @@ public class VlcReloader : IVlcReloader
                     _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
                     _mpvTextFileExtension = format.Extension;
                     await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    vlc.SubRemove();
-                    vlc.SubAdd(_mpvTextFileName);
+                    await vlc.SubAdd(_mpvTextFileName);
                     _retryCount--;
                 }
                 else
                 {
+                    DeleteTempMpvFileName();
+                    _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
+                    _mpvTextFileExtension = format.Extension;
                     await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    vlc.SubReload();
+                    await vlc.SubAdd(_mpvTextFileName);
                 }
                 _mpvTextOld = text;
             }

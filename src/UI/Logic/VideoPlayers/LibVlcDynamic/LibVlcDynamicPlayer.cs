@@ -67,7 +67,15 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
     private delegate long libvlc_media_get_duration(IntPtr media);
     private libvlc_media_get_duration? _libvlc_media_get_duration;
 
-    // LibVLC Video Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__video.html#g8f55326b8b51aecb59d8b8a446c3f118
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void libvlc_media_add_option(IntPtr media, byte[] options);
+    private libvlc_media_add_option? _libvlc_media_add_option;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void libvlc_media_player_set_media(IntPtr mediaPlayer, IntPtr media);
+    private libvlc_media_player_set_media? _libvlc_media_player_set_media;
+
+    // LibVLC Video Controls
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void libvlc_video_get_size(IntPtr mediaPlayer, UInt32 number, out UInt32 x, out UInt32 y);
     private libvlc_video_get_size? _libvlc_video_get_size;
@@ -185,6 +193,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, int trackNumber);
     private libvlc_video_set_spu? _libvlc_video_set_spu;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate IntPtr libvlc_video_get_spu_description(IntPtr mediaPlayer);
+    private libvlc_video_get_spu_description? _libvlc_video_get_spu_description;
 
     /// <summary>
     /// Callback prototype to allocate and lock a picture buffer. Whenever a new video frame needs to be decoded, the lock callback is invoked. Depending on the video chroma, one or three pixel planes of adequate dimensions must be returned via the second parameter. Those planes must be aligned on 32-bytes boundaries.
@@ -310,9 +322,12 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
         _libvlc_media_release = (libvlc_media_release)GetDllType(typeof(libvlc_media_release), "libvlc_media_release");
         _libvlc_media_parse_with_options = (libvlc_media_parse_with_options)GetDllType(typeof(libvlc_media_parse_with_options), "libvlc_media_parse_with_options");
         _libvlc_media_get_duration = (libvlc_media_get_duration)GetDllType(typeof(libvlc_media_get_duration), "libvlc_media_get_duration");
+        _libvlc_media_add_option = (libvlc_media_add_option)GetDllType(typeof(libvlc_media_add_option), "libvlc_media_add_option");
+        _libvlc_media_player_set_media = (libvlc_media_player_set_media)GetDllType(typeof(libvlc_media_player_set_media), "libvlc_media_player_set_media");
 
         _libvlc_video_get_size = (libvlc_video_get_size)GetDllType(typeof(libvlc_video_get_size), "libvlc_video_get_size");
         _libvlc_video_set_spu = (libvlc_video_set_spu)GetDllType(typeof(libvlc_video_set_spu), "libvlc_video_set_spu");
+        _libvlc_video_get_spu_description = (libvlc_video_get_spu_description)GetDllType(typeof(libvlc_video_get_spu_description), "libvlc_video_get_spu_description");
         _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
         _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
         _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
@@ -401,23 +416,53 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
 
     private string? _currentSubtitleFileName;
 
-    public void SubAdd(string fileName)
+    public Task SubAdd(string fileName)
     {
-        if (_mediaPlayer == IntPtr.Zero || _libvlc_media_player_add_slave == null)
+        _currentSubtitleFileName = fileName;
+        if (_mediaPlayer == IntPtr.Zero || _libVlc == IntPtr.Zero || string.IsNullOrEmpty(_fileName) ||
+            _libvlc_media_new_path == null || _libvlc_media_add_option == null || _libvlc_media_player_set_media == null)
         {
-            return;
+            return Task.CompletedTask;
         }
 
-        try
+        return Task.Run(() =>
         {
-            _currentSubtitleFileName = fileName;
-            var fileUri = new Uri(fileName).AbsoluteUri;
-            _libvlc_media_player_add_slave(_mediaPlayer, 1, GetUtf8Bytes(fileUri), true);
-        }
-        catch
-        {
-            // Ignore
-        }
+            try
+            {
+                var savedTime = _libvlc_media_player_get_time?.Invoke(_mediaPlayer) ?? 0;
+                var wasPlaying = IsPlaying;
+
+                var media = _libvlc_media_new_path(_libVlc, GetUtf8Bytes(_fileName));
+                _libvlc_media_add_option(media, GetUtf8Bytes($"--sub-file={fileName}"));
+                _libvlc_media_player_set_media(_mediaPlayer, media);
+                _libvlc_media_release?.Invoke(media);
+
+                ApplyWindowHandle();
+                _libvlc_media_player_play?.Invoke(_mediaPlayer);
+
+                var timeout = 3000;
+                var elapsed = 0;
+                while (elapsed < timeout)
+                {
+                    System.Threading.Thread.Sleep(50);
+                    elapsed += 50;
+                    if ((_libvlc_media_player_get_length?.Invoke(_mediaPlayer) ?? 0) > 0)
+                    {
+                        break;
+                    }
+                }
+
+                _libvlc_media_player_set_time?.Invoke(_mediaPlayer, savedTime);
+                if (!wasPlaying)
+                {
+                    _libvlc_media_player_set_pause?.Invoke(_mediaPlayer, 1);
+                }
+            }
+            catch
+            {
+                // Ignore
+            }
+        });
     }
 
     public void SubRemove()
@@ -441,8 +486,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
     {
         if (_currentSubtitleFileName != null)
         {
-            SubRemove();
-            SubAdd(_currentSubtitleFileName);
+            _ = SubAdd(_currentSubtitleFileName);
         }
     }
 
