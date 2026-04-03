@@ -433,7 +433,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
                 var wasPlaying = IsPlaying;
 
                 var media = _libvlc_media_new_path(_libVlc, GetUtf8Bytes(_fileName));
-                _libvlc_media_add_option(media, GetUtf8Bytes($"--sub-file={fileName}"));
+                _libvlc_media_add_option(media, GetUtf8Bytes($":sub-file={fileName}"));
                 _libvlc_media_player_set_media(_mediaPlayer, media);
                 _libvlc_media_release?.Invoke(media);
 
@@ -452,6 +452,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
                     }
                 }
 
+                _libvlc_video_set_spu?.Invoke(_mediaPlayer, 0);
                 _libvlc_media_player_set_time?.Invoke(_mediaPlayer, savedTime);
                 if (!wasPlaying)
                 {
