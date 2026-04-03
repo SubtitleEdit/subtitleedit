@@ -416,78 +416,127 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
 
     private string? _currentSubtitleFileName;
 
-    public Task SubAdd(string fileName)
+    private int _slaveCount = 0;
+
+    public async Task SubAdd(string fileName)
     {
         _currentSubtitleFileName = fileName;
-        if (_mediaPlayer == IntPtr.Zero || _libVlc == IntPtr.Zero || string.IsNullOrEmpty(_fileName) ||
-            _libvlc_media_new_path == null || _libvlc_media_add_option == null || _libvlc_media_player_set_media == null)
+
+        if (_mediaPlayer == IntPtr.Zero || _libvlc_media_player_add_slave == null)
+            return;
+
+        // --- HYBRID LOGIC ---
+        // If we've added more than 100 slaves, the track list is getting messy.
+        // Let's do a full media refresh to clear the internal VLC cache.
+        if (_slaveCount > 100)
         {
-            return Task.CompletedTask;
+            await HardReloadWithSub(fileName);
+            return;
         }
 
-        return Task.Run(() =>
+        await Task.Run(() =>
         {
             try
             {
-                var savedTime = _libvlc_media_player_get_time?.Invoke(_mediaPlayer) ?? 0;
-                var wasPlaying = IsPlaying;
+                string uriPath = PathToUri(fileName);
+                byte[] pathBytes = GetUtf8Bytes(uriPath);
 
-                var media = _libvlc_media_new_path(_libVlc, GetUtf8Bytes(_fileName));
-                _libvlc_media_add_option(media, GetUtf8Bytes($":sub-file={fileName}"));
-                _libvlc_media_player_set_media(_mediaPlayer, media);
-                _libvlc_media_release?.Invoke(media);
+                int result = _libvlc_media_player_add_slave(_mediaPlayer, 0, pathBytes, true);
 
-                ApplyWindowHandle();
-                _libvlc_media_player_play?.Invoke(_mediaPlayer);
-
-                var timeout = 3000;
-                var elapsed = 0;
-                while (elapsed < timeout)
+                if (result == 0)
                 {
+                    _slaveCount++; // Increment our tracker
+
+                    // Small delay to ensure VLC registered the new track
                     System.Threading.Thread.Sleep(50);
-                    elapsed += 50;
-                    if ((_libvlc_media_player_get_length?.Invoke(_mediaPlayer) ?? 0) > 0)
-                    {
-                        break;
-                    }
-                }
 
-                _libvlc_video_set_spu?.Invoke(_mediaPlayer, 0);
-                _libvlc_media_player_set_time?.Invoke(_mediaPlayer, savedTime);
-                if (!wasPlaying)
-                {
-                    _libvlc_media_player_set_pause?.Invoke(_mediaPlayer, 1);
+                    // Find the highest ID to ensure we show the LATEST version of the file
+                    int newestId = GetHighestSpuId();
+                    if (newestId != -1)
+                    {
+                        _libvlc_video_set_spu?.Invoke(_mediaPlayer, newestId);
+                    }
+
+                    // Force a frame refresh by "nudging" the time
+                    long currentTime = _libvlc_media_player_get_time?.Invoke(_mediaPlayer) ?? 0;
+
+                    // Seeking to the exact same time often works, 
+                    // but +1ms is a guaranteed trigger for the subtitle decoder.
+                    _libvlc_media_player_set_time?.Invoke(_mediaPlayer, currentTime + 1);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore
+                System.Diagnostics.Debug.WriteLine($"SubAdd Error: {ex.Message}");
             }
         });
     }
 
-    public void SubRemove()
+    private int GetHighestSpuId()
     {
-        if (_mediaPlayer == IntPtr.Zero || _libvlc_video_set_spu == null)
+        IntPtr pTrackList = _libvlc_video_get_spu_description?.Invoke(_mediaPlayer) ?? IntPtr.Zero;
+        if (pTrackList == IntPtr.Zero) return -1;
+
+        int highestId = -1;
+        IntPtr pCurrent = pTrackList;
+
+        while (pCurrent != IntPtr.Zero)
         {
-            return;
+            var track = Marshal.PtrToStructure<TrackDescription>(pCurrent);
+            if (track.Id > highestId) highestId = track.Id;
+            pCurrent = track.PNext;
         }
 
-        try
-        {
-            _libvlc_video_set_spu(_mediaPlayer, -1);
-        }
-        catch
-        {
-            // Ignore
-        }
+        _libvlc_track_description_release?.Invoke(pTrackList);
+        return highestId;
     }
 
-    public void SubReload()
+    private async Task HardReloadWithSub(string subFileName)
     {
-        if (_currentSubtitleFileName != null)
+        // Save current state
+        long currentTime = _libvlc_media_player_get_time?.Invoke(_mediaPlayer) ?? 0;
+        bool wasPlaying = IsPlaying;
+
+        // Reset the counter
+        _slaveCount = 0;
+
+        // Re-load the video (this destroys the old media and its 100 slaves)
+        await LoadFile(_fileName);
+
+        // Restore time
+        _libvlc_media_player_set_time?.Invoke(_mediaPlayer, currentTime);
+
+        // Add the sub fresh (it will now be ID 1 again)
+        await SubAdd(subFileName);
+
+        if (wasPlaying) Play();
+    }
+
+    private static string PathToUri(string path)
+    {
+        // libvlc_media_player_add_slave expects a URI, not a raw file path
+        if (path.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
         {
-            _ = SubAdd(_currentSubtitleFileName);
+            return path;
+        }
+
+        return new Uri(path).AbsoluteUri;
+    }
+
+    public void SubRemove()
+    {
+        if (_mediaPlayer == IntPtr.Zero || _libvlc_video_set_spu == null) return;
+
+        // -1 disables subtitle rendering
+        _libvlc_video_set_spu(_mediaPlayer, -1);
+    }
+
+    public async Task SubReload()
+    {
+        if (!string.IsNullOrEmpty(_currentSubtitleFileName))
+        {
+            SubRemove(); // Clear current view
+            await SubAdd(_currentSubtitleFileName); // Inject fresh file
         }
     }
 
@@ -980,7 +1029,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
 
             _libvlc_audio_set_track(_mediaPlayer, next.id);
             return new AudioTrackInfo()
-            { 
+            {
                 FfIndex = next.id,
                 Id = next.id,
                 Title = next.name,
