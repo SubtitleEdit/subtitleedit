@@ -8,6 +8,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckTextForHiUseBrackets(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (controller.Language == "jp")

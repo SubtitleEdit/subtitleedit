@@ -8,6 +8,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckMinDuration : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckMinDuration(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         for (int index = 0; index < subtitle.Paragraphs.Count; index++)

@@ -107,7 +107,7 @@ public partial class MergeShortLinesViewModel : ObservableObject
             }
             else
             {
-                FixesInfo = $"Lines merged: {mergeResult.MergeCount}";
+                FixesInfo = string.Format(Se.Language.Tools.MergeShortLines.LinesMergedX, mergeResult.MergeCount);
             }
         });
     }

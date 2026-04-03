@@ -8,6 +8,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckTwoFramesGap : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckTwoFramesGap(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (controller.Language == "ja")

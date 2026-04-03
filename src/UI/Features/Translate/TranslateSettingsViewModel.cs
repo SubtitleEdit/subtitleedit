@@ -143,8 +143,8 @@ public partial class TranslateSettingsViewModel : ObservableObject
 
         MergeOptions = new ObservableCollection<string>
         {
-            "Default",
-            "Translate each line separately",
+            Se.Language.General.Default,
+            Se.Language.Translate.TranslateEachLineSeparately,
         };
         SelectedMergeOptions = MergeOptions[0];
 

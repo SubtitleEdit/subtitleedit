@@ -15,6 +15,7 @@ public class LanguageTranslate
     public string DelayInSecondsBetweenRequests { get; set; }
     public string MaxBytesPerRequest { get; set; }
     public string PromptText { get; set; }
+    public string TranslateEachLineSeparately { get; set; }
 
     public LanguageTranslate()
     {
@@ -31,5 +32,6 @@ public class LanguageTranslate
         DelayInSecondsBetweenRequests = "Delay in seconds between requests";
         MaxBytesPerRequest = "Max bytes per request";
         PromptText = "Prompt text";
+        TranslateEachLineSeparately = "Translate each line separately";
     }
 }

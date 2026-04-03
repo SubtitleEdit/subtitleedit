@@ -10,6 +10,13 @@ public class NetflixCheckWhiteSpace : INetflixQualityChecker
     private static readonly Regex SpacesBeforePunctuation = new Regex(@"[^\s]( |\n|\r\n)[!?).,؟،…]", RegexOptions.Compiled);
     private static readonly Regex TwoPlusConsequentSpaces = new Regex(@"( |\n|\r\n){2,}", RegexOptions.Compiled);
 
+    public string Name { get; set; }
+
+    public NetflixCheckWhiteSpace(string name)
+    {
+        Name = name;
+    }
+
     private static void AddWhiteSpaceWarning(Paragraph p, NetflixQualityController report, string issue, int pos)
     {
         string timeCode = p.StartTime.ToHHMMSSFF();

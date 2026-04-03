@@ -97,7 +97,7 @@ public static class MergeShortLinesHelper
                 var fix = new MergeShortLinesItem(
                     Se.Language.Tools.MergeShortLines.Title,
                     index + 1,
-                    $"Merged line {j + 1} into {index + 1} - {current.Text.Replace(Environment.NewLine, " ⏎ ")}",
+                    string.Format(Se.Language.Tools.MergeShortLines.MergedLineInfo, j + 1, index + 1, current.Text.Replace(Environment.NewLine, " ⏎ ")),
                     new SubtitleLineViewModel(current));
                 fixes.Add(fix);
 

@@ -11,6 +11,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckMaxLineLength : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckMaxLineLength(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         foreach (var p in subtitle.Paragraphs)

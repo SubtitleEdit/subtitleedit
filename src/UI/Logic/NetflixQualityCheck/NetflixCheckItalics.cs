@@ -5,6 +5,12 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
 public class NetflixCheckItalics : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckItalics(string name)
+    {
+        Name = name;
+    }
 
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {

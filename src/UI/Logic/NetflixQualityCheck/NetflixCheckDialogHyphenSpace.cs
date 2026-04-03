@@ -8,6 +8,14 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckDialogHyphenSpace : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckDialogHyphenSpace(string name)
+    {
+        Name = name;        
+    }
+
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (controller.Language == "ja")

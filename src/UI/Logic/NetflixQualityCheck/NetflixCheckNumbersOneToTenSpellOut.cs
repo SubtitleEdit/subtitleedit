@@ -12,6 +12,13 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
     private static readonly Regex NumberOneToNine = new Regex(@"\b\d\b", RegexOptions.Compiled);
     private static readonly Regex NumberTen = new Regex(@"\b10\b", RegexOptions.Compiled);
 
+    public string Name { get; set; }
+
+    public NetflixCheckNumbersOneToTenSpellOut(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (controller.Language == "ja" || controller.Language == "ar")

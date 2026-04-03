@@ -12,6 +12,13 @@ public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
     private static readonly Regex NumberStartInside = new Regex(@"[\.,!] \d+ [A-Za-z]", RegexOptions.Compiled);
     private static readonly Regex NumberStartInside2 = new Regex(@"[\.,!]\r\n\d+ [A-Za-z]", RegexOptions.Compiled);
 
+    public string Name { get; set; }
+
+    public NetflixCheckStartNumberSpellOut(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         foreach (var p in subtitle.Paragraphs)

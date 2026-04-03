@@ -113,7 +113,7 @@ public class VisualSyncWindow : Window
                 {
                     new MenuItem
                     {
-                        Header = "Manual sync",
+                        Header = Se.Language.General.ManualSync,
                         Command = vm.ManualSyncCommand,
                     },
                 },

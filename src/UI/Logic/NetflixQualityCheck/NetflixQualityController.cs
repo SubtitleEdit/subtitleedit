@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -299,25 +300,25 @@ public class NetflixQualityController
     public static List<INetflixQualityChecker> GetAllCheckers()
     {
         return new List<INetflixQualityChecker>
-            {
-                new NetflixCheckBridgeGaps(),
-                new NetflixCheckDialogHyphenSpace(),
-                new NetflixCheckEllipsesNotThreeDots(),
-                new NetflixCheckGlyph(),
-                new NetflixCheckItalics(),
-                new NetflixCheckMaxCps(),
-                new NetflixCheckMaxDuration(),
-                new NetflixCheckMaxLineLength(),
-                new NetflixCheckMinDuration(),
-                new NetflixCheckNumberOfLines(),
-                new NetflixCheckNumbersOneToTenSpellOut(),
-                new NetflixCheckShotChange(),
-                new NetflixCheckStartNumberSpellOut(),
-                new NetflixCheckTextForHiUseBrackets(),
-                new NetflixCheckTimedTextFrameRate(),
-                new NetflixCheckTwoFramesGap(),
-                new NetflixCheckWhiteSpace(),
-            };
+        {
+            new NetflixCheckBridgeGaps(Se.Language.Tools.BridgeGaps.Title),
+            new NetflixCheckDialogHyphenSpace(Se.Language.Tools.NetflixCheckAndFix.DialogHyphenSpace),
+            new NetflixCheckEllipsesNotThreeDots(Se.Language.Tools.NetflixCheckAndFix.EllipsesNotThreeDots),
+            new NetflixCheckGlyph(Se.Language.Tools.NetflixCheckAndFix.OnlyAllowedGlyphs),
+            new NetflixCheckItalics(Se.Language.Tools.NetflixCheckAndFix.Italics),
+            new NetflixCheckMaxCps(Se.Language.Tools.NetflixCheckAndFix.MaxCharsSec),
+            new NetflixCheckMaxDuration(Se.Language.Tools.NetflixCheckAndFix.MaxDuration),
+            new NetflixCheckMaxLineLength(Se.Language.Tools.NetflixCheckAndFix.MaxLineLength),
+            new NetflixCheckMinDuration(Se.Language.Tools.NetflixCheckAndFix.MinDuration),
+            new NetflixCheckNumberOfLines(Se.Language.Tools.NetflixCheckAndFix.MaxNumberOfLines),
+            new NetflixCheckNumbersOneToTenSpellOut(Se.Language.Tools.NetflixCheckAndFix.OneToTenSpellOut),
+            new NetflixCheckShotChange(Se.Language.Tools.NetflixCheckAndFix.ShotChanges),
+            new NetflixCheckStartNumberSpellOut(Se.Language.Tools.NetflixCheckAndFix.StartNumberSpellOut),
+            new NetflixCheckTextForHiUseBrackets(Se.Language.Tools.NetflixCheckAndFix.TextforHiUseBrackets),
+            new NetflixCheckTimedTextFrameRate(Se.Language.Tools.NetflixCheckAndFix.FrameRate),
+            new NetflixCheckTwoFramesGap(Se.Language.Tools.NetflixCheckAndFix.TwoFrameGrap),
+            new NetflixCheckWhiteSpace(Se.Language.Tools.NetflixCheckAndFix.WhiteSpace),
+        };
     }
 
     public void RunChecks(Subtitle subtitle)

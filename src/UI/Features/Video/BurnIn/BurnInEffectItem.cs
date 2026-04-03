@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -76,15 +77,15 @@ public class BurnInEffectItem(string name, BurnInEffectType type)
     {
         return
         [
-            new BurnInEffectItem("Fix right-to-left", BurnInEffectType.FixRightToLeft),
-            new BurnInEffectItem("Fade in/out", BurnInEffectType.FadeInOut),
-            new BurnInEffectItem("Font size change", BurnInEffectType.SlowFontSizeChange),
-            new BurnInEffectItem("Increase font kerning", BurnInEffectType.IncreaseFontKerning),
-            new BurnInEffectItem("Scroll up", BurnInEffectType.SrollUp),
-            new BurnInEffectItem("Scroll down", BurnInEffectType.ScrollDown),
-            new BurnInEffectItem("Rotate in", BurnInEffectType.RotateIn),
-            new BurnInEffectItem("Tilt bounce", BurnInEffectType.TiltBounce),
-            new BurnInEffectItem("Font size bounce in", BurnInEffectType.FontSizeBounceIn)
+            new BurnInEffectItem(Se.Language.General.FixRightToLeft, BurnInEffectType.FixRightToLeft),
+            new BurnInEffectItem(Se.Language.General.FadeInOut, BurnInEffectType.FadeInOut),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.SlowFontSizeChange, BurnInEffectType.SlowFontSizeChange),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.IncreaseFontKerning, BurnInEffectType.IncreaseFontKerning),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.ScrollUp, BurnInEffectType.SrollUp),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.ScrollDown, BurnInEffectType.ScrollDown),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.RotateIn, BurnInEffectType.RotateIn),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.TiltBounce, BurnInEffectType.TiltBounce),
+            new BurnInEffectItem(Se.Language.Tools.BatchConvert.FontSizeBounceIn, BurnInEffectType.FontSizeBounceIn)
         ];
     }
 }

@@ -44,6 +44,7 @@ public class LanguageBurnIn
     public string VideoFileSize { get; set; }
     public string OneBox { get; set; }
     public string BoxPerLine { get; set; }
+    public string LogoInfo { get; set; }
 
     public LanguageBurnIn()
     {
@@ -89,5 +90,6 @@ public class LanguageBurnIn
         OneBox = "One box";
         BoxPerLine = "Box per line";
         UseSourceResolution = "Use source resolution";
+        LogoInfo = "Pick a PNG image and drag it to position it on the video.";
     }
 }

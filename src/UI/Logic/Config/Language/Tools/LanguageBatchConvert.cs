@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Features.Video.BurnIn;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
@@ -26,6 +27,13 @@ public class LanguageBatchConvert
     public string EditProperties { get; set; }
     public string EditAttachments { get; set; }
     public string ErrorsExportedX { get; set; }
+    public string SlowFontSizeChange { get; set; }
+    public string IncreaseFontKerning { get; set; }
+    public string ScrollUp { get; set; }
+    public string ScrollDown { get; set; }
+    public string RotateIn { get; set; }
+    public string TiltBounce { get; set; }
+    public string FontSizeBounceIn { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -51,5 +59,12 @@ public class LanguageBatchConvert
         EditProperties = "Edit properties";
         EditAttachments = "Edit attachments";
         ErrorsExportedX = "Errors exported: {0}";
+        SlowFontSizeChange = "Slow font size change";
+        IncreaseFontKerning = "Increase font kerning";
+        ScrollUp = "Scroll up";
+        ScrollDown = "Scroll down";
+        RotateIn = "Rotate in";
+        TiltBounce = "Tilt bounce";
+        FontSizeBounceIn = "Font size bounce in";
     }
 }

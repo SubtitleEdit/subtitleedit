@@ -7,6 +7,14 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
 public class NetflixCheckTimedTextFrameRate : INetflixQualityChecker
 {
+
+    public string Name { get; set; }
+
+    public NetflixCheckTimedTextFrameRate(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (subtitle?.Header != null && subtitle.Header.Contains("ttp:frameRate="))

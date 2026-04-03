@@ -111,31 +111,9 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
         Checks.Clear();
         foreach (var checker in NetflixQualityController.GetAllCheckers())
         {
-            var name = GetFriendlyCheckerName(checker.GetType().Name);
+            var name = checker.Name;
             Checks.Add(new NetflixCheckDisplayItem(checker, name, true));
         }
-    }
-
-    private static string GetFriendlyCheckerName(string typeName)
-    {
-        // Remove common prefix
-        if (typeName.StartsWith("NetflixCheck", StringComparison.Ordinal))
-        {
-            typeName = typeName.Substring("NetflixCheck".Length);
-        }
-
-        // Insert spaces before capitals
-        var chars = new List<char>();
-        for (int i = 0; i < typeName.Length; i++)
-        {
-            var c = typeName[i];
-            if (i > 0 && char.IsUpper(c) && (char.IsLower(typeName[i - 1]) || (i + 1 < typeName.Length && char.IsLower(typeName[i + 1]))))
-            {
-                chars.Add(' ');
-            }
-            chars.Add(c);
-        }
-        return new string(chars.ToArray());
     }
 
     private void LoadSettings()

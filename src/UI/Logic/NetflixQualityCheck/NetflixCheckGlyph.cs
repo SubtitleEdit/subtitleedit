@@ -13,6 +13,13 @@ public class NetflixCheckGlyph : INetflixQualityChecker
 {
     private static HashSet<int>? _netflixGlyphs = null;
 
+    public string Name { get; set; }
+
+    public NetflixCheckGlyph(string name)
+    {
+        Name = name;
+    }
+
     private static HashSet<int> LoadNetflixGlyphs()
     {
         if (_netflixGlyphs != null)

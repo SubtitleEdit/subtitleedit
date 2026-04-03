@@ -59,7 +59,7 @@ public class BurnInLogoWindow : Window
         var labelLogoPosition = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LogoPositionText));
 
         // Alpha slider
-        var labelAlpha = UiUtil.MakeLabel("Alpha:");
+        var labelAlpha = UiUtil.MakeLabel(Se.Language.General.Alpha);
         labelAlpha.VerticalAlignment = VerticalAlignment.Center;
         labelAlpha.Margin = new Thickness(20, 0, 5, 0);
 
@@ -80,7 +80,7 @@ public class BurnInLogoWindow : Window
         labelAlphaValue[!TextBlock.TextProperty] = new Binding("BurnInLogo.Alpha") { StringFormat = "{0}%" };
 
         // Logo size slider
-        var labelSize = UiUtil.MakeLabel("Size:");
+        var labelSize = UiUtil.MakeLabel(Se.Language.General.Size);
         labelSize.VerticalAlignment = VerticalAlignment.Center;
         labelSize.Margin = new Thickness(20, 0, 5, 0);
 
@@ -220,7 +220,7 @@ public class BurnInLogoWindow : Window
         };
 
         // Instructions label
-        var instructionsLabel = UiUtil.MakeLabel("Pick a PNG image and drag it to position it on the video.");
+        var instructionsLabel = UiUtil.MakeLabel(Se.Language.Video.BurnIn.LogoInfo);
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

@@ -652,8 +652,8 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
                 Window,
-                "Download Piper?",
-                $"{Environment.NewLine}\"Text to speech\" requires Piper.{Environment.NewLine}{Environment.NewLine}Download and use Piper?",
+                string.Format(Se.Language.General.DownloadX, "Piper"),
+                Se.Language.Video.TextToSpeech.DownloadPiperPrompt,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 

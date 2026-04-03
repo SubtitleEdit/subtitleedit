@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config.Language;
+﻿using System;
+
+namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageTextToSpeech
 {
@@ -48,6 +50,7 @@ public class LanguageTextToSpeech
     public string EdgeTtsPitchDescription { get; set; }
     public string EdgeTtsVolume { get; set; }
     public string EdgeTtsVolumeDescription { get; set; }
+    public string DownloadPiperPrompt { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -97,5 +100,6 @@ public class LanguageTextToSpeech
         EdgeTtsPitchDescription = "Pitch adjustment for Edge-TTS, e.g. \"+10Hz\", \"-5Hz\", or \"+0Hz\" for default.";
         EdgeTtsVolume = "Edge-TTS volume";
         EdgeTtsVolumeDescription = "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.";
+        DownloadPiperPrompt = $"\"Text to speech\" requires Piper.{Environment.NewLine}{Environment.NewLine}Download and use Piper?";
     }
 }

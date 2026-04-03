@@ -276,6 +276,7 @@ public class LanguageSettings
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
+    public string PixelWidthInfo { get; set; }
 
     public LanguageSettings()
     {
@@ -548,6 +549,7 @@ public class LanguageSettings
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
+        PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

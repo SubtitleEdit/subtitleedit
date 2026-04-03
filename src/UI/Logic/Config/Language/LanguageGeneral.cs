@@ -649,6 +649,13 @@ public class LanguageGeneral
     public string Installed { get; set; }
     public string AdvancedDotDotDot { get; set; }
     public string ChooseAlignment { get; set; }
+    public string MaxWidthPixels { get; set; }
+    public string SampleText { get; set; }
+    public string BoxWidthPixels { get; set; }
+    public string FadeInOut { get; set; }
+    public string Alpha { get; set; }
+    public string PickResolution { get; set; }
+    public string ManualSync { get; set; }
 
     public LanguageGeneral()
     {
@@ -1297,5 +1304,12 @@ public class LanguageGeneral
         Installed = "Installed";
         AdvancedDotDotDot = "Advanced...";
         ChooseAlignment = "Choose alignment";
+        MaxWidthPixels = "Max width (pixels)";
+        SampleText = "Sample text";
+        BoxWidthPixels = "Box width (pixels)";
+        FadeInOut = "Fade in/out";
+        Alpha = "Alpha";
+        PickResolution = "Pick resolution";
+        ManualSync = "Manual sync";
     }
 }

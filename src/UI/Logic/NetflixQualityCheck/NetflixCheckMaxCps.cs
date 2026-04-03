@@ -10,6 +10,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckMaxCps : INetflixQualityChecker
 {
+    public string Name { get; set; }
+
+    public NetflixCheckMaxCps(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         ICalcLength calc = CalcFactory.MakeCalculator(nameof(CalcAll));

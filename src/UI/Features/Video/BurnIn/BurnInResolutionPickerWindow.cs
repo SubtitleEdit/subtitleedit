@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
@@ -16,7 +17,7 @@ public class BurnInResolutionPickerWindow : Window
     public BurnInResolutionPickerWindow(BurnInResolutionPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Pick resolution";
+        Title = Se.Language.General.PickResolution;
         SizeToContent = SizeToContent.WidthAndHeight;
         MaxHeight = 900;
         CanResize = false;

@@ -14,6 +14,13 @@ public class NetflixCheckShotChange : INetflixQualityChecker
 {
     public static string ShotChangeDirectory = string.Empty;
 
+    public string Name { get; set; }
+
+    public NetflixCheckShotChange(string name)
+    {
+        Name = name;
+    }
+
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
         if (!controller.VideoExists)

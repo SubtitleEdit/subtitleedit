@@ -33,14 +33,14 @@ public class SyntaxColorTooWideSettingsWindow : Window
         numericFontSize.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Row 2 – max width
-        var labelMaxWidth = UiUtil.MakeLabel("Max width (px):");
+        var labelMaxWidth = UiUtil.MakeLabel(Se.Language.General.MaxWidthPixels);
         var numericMaxWidth = UiUtil.MakeNumericUpDownInt(10, 9999, 560, 120, vm, nameof(vm.MaxWidthPixels));
         numericMaxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Row 3 – separator
 
         // Row 4 – sample text
-        var labelSampleText = UiUtil.MakeLabel("Sample text:");
+        var labelSampleText = UiUtil.MakeLabel(Se.Language.General.SampleText);
         var textBoxSampleText = new TextBox
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -50,7 +50,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         textBoxSampleText.TextChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Row 5 – box width
-        var labelBoxWidth = UiUtil.MakeLabel("Box width (px):");
+        var labelBoxWidth = UiUtil.MakeLabel(Se.Language.General.BoxWidthPixels);
         var numericBoxWidth = UiUtil.MakeNumericUpDownInt(100, 9999, 720, 120, vm, nameof(vm.SampleBoxWidth));
         numericBoxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
@@ -69,7 +69,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         // Row 7 – hint
         var hint = new TextBlock
         {
-            Text = "Green lines = max-width limit   |   Red area = text exceeds limit",
+            Text = Se.Language.Options.Settings.PixelWidthInfo,
             FontStyle = FontStyle.Italic,
             Opacity = 0.65,
             HorizontalAlignment = HorizontalAlignment.Left,
