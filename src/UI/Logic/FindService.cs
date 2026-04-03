@@ -20,6 +20,14 @@ public partial class FindService : IFindService
 
     public IReadOnlyList<string> SearchHistory => _searchHistory.AsReadOnly();
 
+    public FindService()
+    {
+        foreach (var findHistory in Se.Settings.Tools.FindHistory)
+        {
+            _searchHistory.Add(findHistory);
+        }
+    }
+
     public void Initialize(List<string> textLines, int currentLineNumber, bool wholeWord, FindMode findMode)
     {
         _textLines = textLines;
@@ -27,11 +35,6 @@ public partial class FindService : IFindService
         WholeWord = wholeWord;
         CurrentFindMode = findMode;
         ResetSearchState();
-
-        foreach (var findHistory in Se.Settings.Tools.FindHistory)
-        {
-            _searchHistory.Add(findHistory);
-        }
     }
 
     public int FindNext(string searchText, List<string> textLines, int startLineIndex, int startTextIndex)
