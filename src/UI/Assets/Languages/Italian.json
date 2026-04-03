@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 02.04.2026 di bovirus",
+  "TranslatedBy": "v. 03.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -310,6 +310,7 @@
     "NewDotDotDot": "Nuovo...",
     "NewProfile": "Nuovo profilo",
     "NewSubtitleStartKeyDownSetEndKeyUp": "Inserisci sottotitolo: inizia con il tasto giù, imposta la fine con il tasto su",
+    "SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Imposta l'inizio nella posizione del video, imposta la fine premendo il tasto su e vai al successivo",
     "No": "No",
     "NoFilesToConvert": "Nessun file da convertire",
     "NoLanguageCode": "Nessun codice lingua",
@@ -643,7 +644,10 @@
     "CopyToClipboard": "Copia negli appunti",
     "PlayCurrent": "Riproduci attuale",
     "LeftMargin": "Margine sinistro",
-    "RightMargin": "Margine destro"
+    "RightMargin": "Margine destro",
+    "Installed": "Installato",
+    "AdvancedDotDotDot": "Avanzate...",
+    "ChooseAlignment": "Scegli allineamento"
   },
   "Main": {
     "AudioTrackIsNowX": "La traccia audio ora è \"{0}",
@@ -843,6 +847,7 @@
       "HelpTitle": "_Aiuto",
       "Help": "_Guida in linea",
       "About": "_Info programma...",
+      "CheckForUpdates": "_Controlla aggiornamenti...",
       "FixRightToLeftViaUnicodeControlCharacters": "Correggi RTL tramite caratteri di controllo Unicode (righe selezionate)",
       "RemoveUnicodeControlCharacters": "Rimuovi caratteri di controllo Unicode (righe selezionate)",
       "ReverseRightToLeftStartEnd": "Inverti inizio/fine RTL (righe selezionate)",
@@ -1138,6 +1143,8 @@
       "LengthLessThan": "Lunghezza inferiore a",
       "LengthGreaterThan": "Lunghezza superiore a",
       "PixelLengthGreaterThan": "Lunghezza pixel >",
+      "GapLessThan": "Gap in ms <",
+      "GapGreaterThan": "Gap in ms >",
       "ExactlyOneLine": "Esattamente una linea",
       "ExactlyTwoLines": "Esattamente due righe",
       "MoreThanTwoLines": "Più di due righe",
@@ -1159,7 +1166,11 @@
       "ExportReplaceRules": "Esporta regole",
       "AppliedRules": "Regole applicate",
       "FindRule": "Trova regola",
-      "XLinesAffected": "{0:#,##0} righe interessate"
+      "XLinesAffected": "{0:#,##0} righe interessate",
+      "DeleteCategoryConfirm": "Vuoi eliminare la categoria '{0}'?",
+      "DeleteRuleConfirm": "Vuoi eliminare la regola '{0}'?",
+      "FindWhat": "Trova questo",
+      "DescriptionOptional": "Descrizione (facoltativa)"
     },
     "Find": {
       "SearchTextWatermark": "Cerca testo...",
@@ -1304,7 +1315,9 @@
       "BackToFixList": "Torna all'elenco correzioni",
       "ApplyFixesAndClose": "Applica correzioni e chiudi",
       "FixCommonOcrErrorsStep2": "Correggi errori comuni, passaggio 2 (applica correzioni)",
-      "FixCommonOcrErrorsStep2FixesFoundX": "Correggi errori comuni, passaggio 2 - correzioni trovate: {0}"
+      "FixCommonOcrErrorsStep2FixesFoundX": "Correggi errori comuni, passaggio 2 - correzioni trovate: {0}",
+      "Action": "Azione",
+      "ApplySelectedFixes": "Applica correzioni selezionate"
     },
     "AdjustDurations": {
       "Title": "Modifica durate",
@@ -1484,6 +1497,24 @@
       "ResizeImages": "Ridimensiona immagini",
       "Percentage": "Percentuale",
       "ResizeImagesInfo": "Inserisci la percentuale per ridimensionare le immagini.\r\n\r\nGli aggiornamenti verranno visualizzati in tempo reale."
+    },
+    "RemoveTextForHearingImpaired": {
+      "Title": "Rimuovi testo per non udenti",
+      "Interjections": "Interiezioni",
+      "SkipIfStartWith": "Salta se inizia con",
+      "RemoveTextBetween": "Rimuovi testo tra",
+      "Brackets": "Parentesi",
+      "CurlyBrackets": "Parentesi graffe",
+      "Parentheses": "Parentesi",
+      "And": "E",
+      "OnlySeparateLines": "Solo linee separate",
+      "RemoveTextBeforeColon": "Rimuovi testo prima dei due punti",
+      "OnlyIfTextIsUppercase": "Solo se il testo è in maiuscolo",
+      "OnlyOnSeparateLine": "Solo in riga separata",
+      "IfLineIsUppercase": "Se la riga è maiuscola",
+      "IfLineContains": "Se la riga contiene",
+      "IfLineOnlyContainsMusicSymbols": "Se la riga contiene solo simboli musicali",
+      "RemoveInterjections": "Rimuovi interiezioni"
     }
   },
   "SpellCheck": {
@@ -1537,6 +1568,8 @@
     "AddCurrentSubtitle": "Aggiungi sottotitolo attuale",
     "TitleOrLanguage": "Titolo/lingua",
     "ViewMatroskaTrackX": "Visualizza traccia Matroska - {0}",
+    "ResolutionSeparator": "x",
+    "OpenFromUrlTitle": "Apri file video dall'URL",
     "BurnIn": {
       "Title": "Genera video con sottotitoli incorporati",
       "InfoAssaOff": "Nota: è supportato lo stile Advanced SubStation Alpha.",
@@ -1604,7 +1637,15 @@
       "SelectModel": "Seleziona modello",
       "ViewWhisperLogFile": "Visualizza file registro Whisper",
       "ReDownloadX": "Scarica nuovamente {0}",
-      "DownloadingSpeechToTextModel": "Download modello sintesi vocale"
+      "DownloadingSpeechToTextModel": "Download modello sintesi vocale",
+      "WhisperPostProcessingTitle": "Post-elaborazione Whisper",
+      "AdjustTimings": "Regola tempi",
+      "MergeShortLines": "Unisci righe brevi",
+      "BreakSplitLongLines": "Interrompi/dividi righe lunghe",
+      "FixShortDuration": "Correggi durata breve",
+      "FixCasing": "Correggi maiuscolo/minuscolo",
+      "AddPeriods": "Aggiungi periodi",
+      "ChangeUnderlineToColor": "Cambia sottolineatura in colore"
     },
     "TextToSpeech": {
       "Title": "Sintesi vocale",
@@ -1628,7 +1669,31 @@
       "RegenerateAudio": "Rigenera audio",
       "AutoContinuePlaying": "Continua automaticamente la riproduzione",
       "AddingAudioToVideoFileDotDotDot": "Aggiunta audio al file video...",
-      "PreparingMergeDotDotDot": "Preparazione unione..."
+      "PreparingMergeDotDotDot": "Preparazione unione...",
+      "ImportVoiceDotDotDot": "Importa voce...",
+      "VoiceImportSuccessTitle": "Voce importata",
+      "VoiceXImported": "La voce '{0}' è stata importata correttamente",
+      "AdvancedTtsSettings": "Impostazioni TTS avanzate",
+      "ProAudioPostProcessing": "Post-elaborazione professionale audio",
+      "ProAudioPostProcessingDescription": "Applica a ciascun segmento EQ warmth, noise gate, compressione, normalizzazione del volume (-16 LUFS) e dissolvenza in entrata/uscita.",
+      "AudioDucking": "Ducking audio",
+      "AudioDuckingDescription": "Riduci il volume dell'audio del video originale e uniscilo con l'audio TTS, in modo che la colonna sonora originale sia ancora debolmente udibile.",
+      "OriginalVolumePercent": "% volume originale",
+      "VadSilenceCompression": "Compressione silenzio VAD",
+      "VadSilenceCompressionDescription": "Riduci le pause tra le parole prima di cambiare tempo.\r\nUsa il rilevamento dell'attività vocale per comprimere solo le pause di silenzio mantenendo intatto il parlato.\r\nQuesto è il primo passo preferibile: riduce la durata senza alcuna perdita di qualità.",
+      "MaxSilenceMs": "Silenzio massimo (ms)",
+      "HighQualityTimeStretch": "Time-stretch ad alta qualità (WSOLA/elastico)",
+      "HighQualityTimeStretchDescription": "Per i cambiamenti di velocità che preservano l'intonazione usa l'algoritmo della banda elastica (WSOLA) invece del filtro a tempo predefinito .\r\nProduce un parlato dal suono più naturale, soprattutto a fattori di velocità più elevati.\r\nRichiede librubberband nella build di FFmpeg: torna automaticamente al tempo se non disponibile.",
+      "SilencePaddingMs": "Riempimento silenzio (ms)",
+      "SilencePaddingMsDescription": "Aggiunge un breve silenzio alla fine di ogni segmento.\r\nUtile per prendere respiro tra una frase e l'altra.",
+      "OutputSampleRate": "Frequenza campionamento in uscita (0 = predefinita)",
+      "OutputSampleRateDescription": "Ricampiona tutti i segmenti alla frequenza di campionamento specificata (ad esempio 44100, 48000).\r\nPer mantenere la frequenza di campionamento originale Impostalo a 0 .",
+      "EdgeTtsRate": "Tasso Edge-TTS",
+      "EdgeTtsRateDescription": "Velocità voce Edge-TTS, ad es.\r\n\"+50%\", \"-30%\" o \"+0%\" per impostazione predefinita.",
+      "EdgeTtsPitch": "Tono Edge-TTS",
+      "EdgeTtsPitchDescription": "Regolazione tono Edge-TTS, ad es.\r\n\"+10Hz\", \"-5Hz\" o \"+0Hz\" per impostazione predefinita.",
+      "EdgeTtsVolume": "Volume Edge-TTS",
+      "EdgeTtsVolumeDescription": "Regolazione volume Edge-TTS, ad es.\r\n\"+20%\", \"-10%\" o \"+0%\" per impostazione predefinita."
     },
     "ShotChanges": {
       "TitleGenerateOrImport": "Genera/importa cambi inquadrature",
@@ -1715,7 +1780,11 @@
     "ReCopyTextToClipboard": "Ricopia il testo negli appunti (per traduttore/IA)",
     "BlockXOfY": "Blocco {0} di {1}",
     "NoTextInClipboard": "Nessun testo negli appunti",
-    "TextInClipboardIsSameAsSourceText": "Il testo negli appunti è lo stesso del testo sorgente, riprova."
+    "TextInClipboardIsSameAsSourceText": "Il testo negli appunti è lo stesso del testo sorgente, riprova.",
+    "LineMerge": "Unione riga",
+    "DelayInSecondsBetweenRequests": "Ritardo tra le richieste (secondi)",
+    "MaxBytesPerRequest": "Numero massimo byte per richiesta",
+    "PromptText": "Testo suggerito"
   },
   "Options": {
     "Settings": {
@@ -1808,7 +1877,7 @@
       "MaxLines": "Numero massimo di righe",
       "UnbreakSubtitlesShortThan": "Non interrompere sottotitoli più brevi di",
       "NewEmptyDefaultMs": "Durata predefinita nuovi sottotitoli (ms)",
-      "PromptDeleteLines": "Richiedi di eliminare righe",
+      "PromptBeforeDelete": "Chiedi conferma prima dell'eliminazione",
       "RememberPositionAndSize": "Ricorda posizione/dimensioni finestra",
       "AutoBackupOn": "Backup automatico",
       "AutoBackupIntervalMinutes": "Intervallo backup automatico (minuti)",
@@ -1973,7 +2042,8 @@
       "AllSettings": "Tutte le impostazioni",
       "UiScale": "Scala interfaccia utente (%)",
       "WaveformToolbarItems": "Elementi barra strumenti forma d'onda",
-      "MatchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro"
+      "MatchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro",
+      "SubtitlePreviewProperties": "Proprietà anteprima sottotitoli"
     },
     "Shortcuts": {
       "Title": "Tasti rapidi",
@@ -2244,7 +2314,13 @@
     }
   },
   "Help": {
-    "AboutSubtitleEdit": "Info su Subtitile Edit"
+    "AboutSubtitleEdit": "Info su Subtitile Edit",
+    "CheckForUpdates": "Controlla aggiornamenti",
+    "CheckForUpdatesChecking": "Controllo aggiornamenti...",
+    "CheckForUpdatesUpToDate": "Questa versione è aggiornata.",
+    "CheckForUpdatesNewVersionAvailable": "Disponibile nuova versione: {0}",
+    "CheckForUpdatesUnableToCheck": "Impossibile controllare gli aggiornamenti.",
+    "CheckForUpdatesDownloadNewVersion": "Download nuova versione"
   },
   "Ocr": {
     "LinesToDraw": "Righe da disegnare",
