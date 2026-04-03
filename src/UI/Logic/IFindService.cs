@@ -21,6 +21,5 @@ public interface IFindService
     int Count(string searchText);
     List<(int LineIndex, int TextIndex, string FoundText)> FindAll(string searchText);
     void Reset();
-    void ClearSearchHistory();
     void RemoveFromSearchHistory(string searchText);
 }

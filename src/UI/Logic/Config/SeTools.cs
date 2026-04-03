@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -81,6 +82,7 @@ public class SeTools
     public bool SpeechToTextSelectedLinesPromptFistTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
+    public List<string> FindHistory { get; set; } = new List<string>();
 
     public SeTools()
     {
