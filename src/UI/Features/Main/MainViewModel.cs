@@ -319,6 +319,7 @@ public partial class MainViewModel :
     private readonly IUndoRedoManager _undoRedoManager;
     private readonly IBluRayHelper _bluRayHelper;
     private readonly IMpvReloader _mpvReloader;
+    private readonly IVlcReloader _vlcReloader;
     private readonly IFindService _findService;
     private readonly IColorService _colorService;
     private readonly IFontNameService _fontNameService;
@@ -378,6 +379,7 @@ public partial class MainViewModel :
         IUndoRedoManager undoRedoManager,
         IBluRayHelper bluRayHelper,
         IMpvReloader mpvReloader,
+        IVlcReloader vlcReloader,
         IFindService findService,
         IDictionaryInitializer dictionaryInitializer,
         ILanguageInitializer languageInitializer,
@@ -400,6 +402,7 @@ public partial class MainViewModel :
         _undoRedoManager = undoRedoManager;
         _bluRayHelper = bluRayHelper;
         _mpvReloader = mpvReloader;
+        _vlcReloader = vlcReloader;
         _findService = findService;
         _colorService = colorService;
         _fontNameService = fontNameService;
@@ -778,6 +781,7 @@ public partial class MainViewModel :
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
         _mpvReloader.Reset();
+        _vlcReloader.Reset();   
         _mpvPreviewDirty = true;
     }
 
@@ -902,6 +906,7 @@ public partial class MainViewModel :
             ApplyAssaStyles(result);
             _subtitle.Footer = result.ResultSubtitle.Footer;
             _mpvReloader.Reset();
+            _vlcReloader.Reset();
             _mpvPreviewDirty = true;
         }
     }
@@ -932,6 +937,7 @@ public partial class MainViewModel :
         }
 
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -953,6 +959,7 @@ public partial class MainViewModel :
         {
             _subtitle.Header = result.Header;
             _mpvReloader.Reset();
+            _vlcReloader.Reset();
             _mpvPreviewDirty = true;
         }
     }
@@ -976,6 +983,7 @@ public partial class MainViewModel :
             _subtitle.Header = result.Header;
             _subtitle.Footer = result.Footer;
             _mpvReloader.Reset();
+            _vlcReloader.Reset();
             _mpvPreviewDirty = true;
         }
     }
@@ -1043,6 +1051,7 @@ public partial class MainViewModel :
 
         Renumber();
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
         _updateAudioVisualizer = true;
     }
@@ -1076,6 +1085,7 @@ public partial class MainViewModel :
         Renumber();
         _updateAudioVisualizer = true;
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -1096,6 +1106,7 @@ public partial class MainViewModel :
         _subtitle.Header = result.ResultSubtitle.Header;
         ShowStatus(Se.Language.Main.AssaResolutionResamplerDone);
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -1134,6 +1145,7 @@ public partial class MainViewModel :
         _subtitle.Header = result.ResultSubtitle.Header;
         SetSubtitles(result.ResultSubtitle);
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -1158,6 +1170,7 @@ public partial class MainViewModel :
         });
 
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -1190,6 +1203,7 @@ public partial class MainViewModel :
         var y = result.ResultY;
         selectedItem.Text = $"{{\\pos({x},{y})}}" + RemovePositionTags(selectedItem.Text);
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -1343,6 +1357,7 @@ public partial class MainViewModel :
         AutoFitColumns();
 
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
 
         if (_findViewModel != null)
         {
@@ -1368,10 +1383,8 @@ public partial class MainViewModel :
             vp.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
         }
 
-        if (_mpvReloader != null)
-        {
-            _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
-        }
+        _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
+        _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
 
         _formatChangedByUser = false;
         _undoRedoManager.Reset();
@@ -1527,10 +1540,18 @@ public partial class MainViewModel :
         IsSubtitleSecondaryVisible = true;
 
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null)
         {
-            _mpvReloader.Reset();
-            _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            {
+                _mpvReloader.Reset();
+                _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
+            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            {
+                _vlcReloader.Reset();
+                _ = _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
         }
     }
 
@@ -4182,6 +4203,7 @@ public partial class MainViewModel :
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             _mpvReloader.Reset();
+            _vlcReloader.Reset();
         }
     }
 
@@ -4210,6 +4232,7 @@ public partial class MainViewModel :
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             _mpvReloader.Reset();
+            _vlcReloader.Reset();
         }
     }
 
@@ -4928,10 +4951,8 @@ public partial class MainViewModel :
             vp.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
         }
 
-        if (_mpvReloader != null)
-        {
-            _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
-        }
+        _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
+        _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
     }
 
     [RelayCommand]
@@ -6050,10 +6071,18 @@ public partial class MainViewModel :
         _oldEditTextBox = EditTextBox;
 
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null)
         {
-            _mpvReloader.Reset();
-            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            {
+                _mpvReloader.Reset();
+                _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
+            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            {
+                _vlcReloader.Reset();
+                _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
         }
 
         if (Se.Settings.Appearance.RightToLeft)
@@ -6085,6 +6114,7 @@ public partial class MainViewModel :
         }
 
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -8183,10 +8213,18 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
 
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null)
         {
-            _mpvReloader.Reset();
-            _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            {
+                _mpvReloader.Reset();
+                _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
+            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            {
+                _vlcReloader.Reset();
+                _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            }
         }
     }
 
@@ -12194,6 +12232,7 @@ public partial class MainViewModel :
         await vp.Open(videoFileName);
         _videoFileName = videoFileName;
         _mpvReloader.Reset();
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
 
         if (IsValidUrl(videoFileName))
@@ -14263,6 +14302,20 @@ public partial class MainViewModel :
                 }
 
                 _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
+            }
+            else if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            {
+                var subtitle = GetUpdateSubtitle();
+                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
+                var hasVisibleLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
+                if (hasVisibleLayers)
+                {
+                    var paragraphs = subtitle.Paragraphs.Where(p => _visibleLayers!.Contains(p.Layer)).ToList();
+                    subtitle.Paragraphs.Clear();
+                    subtitle.Paragraphs.AddRange(paragraphs);
+                }
+
+                _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
             }
         };
         _slowTimer.Start();

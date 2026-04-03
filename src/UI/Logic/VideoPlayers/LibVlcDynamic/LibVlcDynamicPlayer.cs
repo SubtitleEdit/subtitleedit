@@ -399,6 +399,53 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
         return false;
     }
 
+    private string? _currentSubtitleFileName;
+
+    public void SubAdd(string fileName)
+    {
+        if (_mediaPlayer == IntPtr.Zero || _libvlc_media_player_add_slave == null)
+        {
+            return;
+        }
+
+        try
+        {
+            _currentSubtitleFileName = fileName;
+            var fileUri = new Uri(fileName).AbsoluteUri;
+            _libvlc_media_player_add_slave(_mediaPlayer, 1, GetUtf8Bytes(fileUri), true);
+        }
+        catch
+        {
+            // Ignore
+        }
+    }
+
+    public void SubRemove()
+    {
+        if (_mediaPlayer == IntPtr.Zero || _libvlc_video_set_spu == null)
+        {
+            return;
+        }
+
+        try
+        {
+            _libvlc_video_set_spu(_mediaPlayer, -1);
+        }
+        catch
+        {
+            // Ignore
+        }
+    }
+
+    public void SubReload()
+    {
+        if (_currentSubtitleFileName != null)
+        {
+            SubRemove();
+            SubAdd(_currentSubtitleFileName);
+        }
+    }
+
     public void LoadLib()
     {
         if (_library == IntPtr.Zero)

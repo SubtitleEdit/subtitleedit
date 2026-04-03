@@ -197,6 +197,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IThemeInitializer, ThemeInitializer>();
         collection.AddTransient<ITtsDownloadService, TtsDownloadService>();
         collection.AddTransient<IUndoRedoManager, UndoRedoManager>();
+        collection.AddTransient<IVlcReloader, VlcReloader>();
         collection.AddTransient<IWindowService, WindowService>();
         collection.AddTransient<IZipUnpacker, ZipUnpacker>();
 
