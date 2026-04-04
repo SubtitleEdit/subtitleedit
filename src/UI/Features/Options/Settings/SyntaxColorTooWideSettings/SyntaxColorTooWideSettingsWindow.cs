@@ -113,7 +113,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         grid.Add(numericFontSize, 1, 1);
         grid.Add(labelMaxWidth, 2, 0);
         grid.Add(numericMaxWidth, 2, 1);
-        grid.Add(UiUtil.MakeVerticalSeperator(), 3, 0, 1, 2);
+        grid.Add(UiUtil.MakeVerticalSeparator(), 3, 0, 1, 2);
         grid.Add(labelSampleText, 4, 0);
         grid.Add(textBoxSampleText, 4, 1);
         grid.Add(labelBoxWidth, 5, 0);

@@ -77,7 +77,7 @@ public class MainView : ViewBase
 
         if (Se.Settings.Appearance.ShowHorizontalLineAboveToolbar)
         {
-            root.Children.Add(UiUtil.MakeVerticalSeperator(0.5, 0.5, new Thickness(0, 0, 0, 0)).Dock(Dock.Top));
+            root.Children.Add(UiUtil.MakeHorizontalSeparator(0.5, 0.5, new Thickness(0, 0, 0, 0)).Dock(Dock.Top));
         }
 
         // Toolbar

@@ -173,26 +173,26 @@ public static class UiUtil
         return new Color(128, color.R, color.G, color.B);
     }
 
-    public static Separator MakeVerticalSeperator(double height = 0.5, double opacity = 0.5, Thickness? margin = null,
-        IBrush? backgroud = null)
+    public static Separator MakeHorizontalSeparator(double height = 0.5, double opacity = 0.5, Thickness? margin = null,
+        IBrush? background = null)
     {
         return new Separator
         {
             Height = height,
             Margin = margin ?? new Thickness(5, 1),
-            Background = backgroud ?? GetBorderBrush(),
+            Background = background ?? GetBorderBrush(),
             Opacity = opacity,
         };
     }
 
-    public static Border MakeHorizontalSeperator(double width = 2.5, double opacity = 0.5, Thickness? margin = null,
-        IBrush? backgroud = null)
+    public static Border MakeVerticalSeparator(double width = 2.5, double opacity = 0.5, Thickness? margin = null,
+        IBrush? background = null)
     {
         return new Border
         {
             Width = width,
             Margin = margin ?? new Thickness(1, 5),
-            Background = backgroud ?? GetBorderBrush(),
+            Background = background ?? GetBorderBrush(),
             Opacity = opacity,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Center
