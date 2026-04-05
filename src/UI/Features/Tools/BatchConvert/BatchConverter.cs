@@ -326,13 +326,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     return;
                 }
 
-                if (format is Ayato ayato) //TODO: make Ayato implement IBinaryPersistableSubtitle
-                {
-                    var path = MakeOutputFileName(item, format.Extension);
-                    ayato.Save(path, string.Empty, item.Subtitle);
-                    return;
-                }
-
                 await SaveSubtitleFormat(item, format, cancellationToken);
                 return;
             }
