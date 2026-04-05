@@ -29,12 +29,12 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     /// When true, ignore explicit active-word markup and auto-sequence whole words
     /// (one subtitle per word, timing = duration / wordCount).
     /// </summary>
-    public bool AutoDetectActiveWord { get; set; } = false;
+    public bool AutoDetectActiveWord { get; set; } = true;
 
     /// <summary>
     /// Alpha value used for inactive words (ASS \alpha uses hex).
     /// </summary>
-    public int InactiveAlpha { get; set; } = 100;
+    public int InactiveAlpha { get; set; } = 200;
 
     /// <summary>
     /// Glow color used for the active word's 3c (ASS BGR).
@@ -88,7 +88,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
 
             // Inactive tags now explicitly set \1c to InactiveWordColor so color resets after active word.
-            string inactiveTags = $"{{\\alpha&H{InactiveAlpha:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
+            string inactiveTags = $"{{\\alpha&H{(255 -InactiveAlpha):X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
 
             if (parsed == null || string.IsNullOrEmpty(parsed.Value.Active))
             {
