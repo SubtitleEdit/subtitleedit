@@ -335,6 +335,7 @@ public partial class MainViewModel :
     public VideoPlayerControl? VideoPlayerControl { get; internal set; }
     public Menu Menu { get; internal set; }
     public Border Toolbar { get; internal set; }
+    public Separator? ToolbarTopSeparator { get; internal set; }
     public StackPanel PanelSingleLineLengths { get; internal set; }
     public MenuItem MenuItemMergeAsDialog { get; internal set; }
     public MenuItem MenuItemExtendToLineBefore { get; internal set; }
@@ -5953,6 +5954,11 @@ public partial class MainViewModel :
     {
         UiUtil.SetFontName(Se.Settings.Appearance.FontName);
         UiTheme.SetCurrentTheme();
+
+        if (ToolbarTopSeparator != null)
+        {
+            ToolbarTopSeparator.IsVisible = Se.Settings.Appearance.ShowHorizontalLineAboveToolbar;
+        }
 
         if (Toolbar is Border toolbarBorder)
         {
