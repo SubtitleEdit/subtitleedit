@@ -12,7 +12,7 @@ internal sealed class FormatsCommand : Command<FormatsCommand.Settings>
     {
     }
 
-    public override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         AnsiConsole.MarkupLine("[bold cyan]Available Subtitle Formats[/]");
         AnsiConsole.WriteLine();

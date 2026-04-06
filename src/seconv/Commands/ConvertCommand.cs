@@ -179,7 +179,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool SplitLongLines { get; init; }
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
+    protected override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         try
         {

@@ -25,7 +25,7 @@ internal class Program
                                  args[0].Equals("--formats", StringComparison.OrdinalIgnoreCase)))
         {
             var formatsCommand = new FormatsCommand();
-            return formatsCommand.Execute(null!, new FormatsCommand.Settings(), CancellationToken.None);
+            return ((ICommand)formatsCommand).ExecuteAsync(null!, new FormatsCommand.Settings(), CancellationToken.None).GetAwaiter().GetResult();
         }
 
         // Set up Spectre.Console CLI with default command

@@ -39,14 +39,14 @@
 		</PackageReference>
 		<PackageReference Include="AvaloniaEdit.TextMate" Version="11.4.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.17.0" />
+		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.18.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5" />
 		<PackageReference Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.6.2" />
-		<PackageReference Include="SharpCompress" Version="0.47.3" />
+		<PackageReference Include="SharpCompress" Version="0.47.4" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
 		<PackageReference Include="WeCantSpell.Hunspell" Version="7.0.1" />
