@@ -68,6 +68,7 @@
 		<None Remove="Assets\FileTypes\vtt.ico" />
 		<None Remove="Assets\HunspellDictionaries.json" />
 		<None Remove="Assets\Languages\Danish.json" />
+		<None Remove="Assets\Languages\Dutch.json" />
 		<None Remove="Assets\Languages\English.json" />
 		<None Remove="Assets\Languages\French.json" />
 		<None Remove="Assets\Languages\German.json" />
@@ -94,6 +95,7 @@
 		<None Remove="Styles.xaml" />
 		<AvaloniaResource Include="Assets\Dictionaries.zip" />
 		<AvaloniaResource Include="Assets\Languages\Danish.json" />
+		<AvaloniaResource Include="Assets\Languages\Dutch.json" />
 		<AvaloniaResource Include="Assets\Languages\English.json" />
 		<AvaloniaResource Include="Assets\Languages\French.json" />
 		<AvaloniaResource Include="Assets\Languages\German.json" />
