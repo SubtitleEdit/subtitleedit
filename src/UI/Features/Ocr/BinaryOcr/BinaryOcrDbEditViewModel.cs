@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -151,6 +152,11 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         CharactersChanged();
     }
 
+
+    partial void OnIsItemItalicChanged(bool value)
+    {
+        TextBoxItem.FontStyle = value ? FontStyle.Italic : FontStyle.Normal;
+    }
 
     private void Close()
     {
