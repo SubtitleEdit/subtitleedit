@@ -87,6 +87,7 @@ public class NOcrChar
             }
             else
             {
+                position++;
                 ExpandCount = file[position++];
                 Width = file[position++] << 8 | file[position++];
                 Height = file[position++] << 8 | file[position++];
@@ -179,7 +180,7 @@ public class NOcrChar
     {
         return Width <= byte.MaxValue && Height <= byte.MaxValue && ExpandCount < 16 &&
                LinesBackground.Count <= byte.MaxValue && LinesForeground.Count <= byte.MaxValue &&
-               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesForeground);
+               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesBackground);
     }
 
     private static bool IsAllPointByteValues(List<NOcrLine> lines)
