@@ -1013,7 +1013,7 @@ public partial class BatchConvertViewModel : ObservableObject
             return false;
         }
 
-        if (format == Se.Language.General.Unknown && fileInfo.Length < 200_000)
+        if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
         {
             subtitle = Subtitle.Parse(fileName);
             if (subtitle != null)
@@ -1037,7 +1037,7 @@ public partial class BatchConvertViewModel : ObservableObject
             }
         }
 
-        if (format == Se.Language.General.Unknown && fileInfo.Length < 300_000)
+        if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
         {
             subtitle = Subtitle.Parse(fileName);
             if (subtitle != null)

@@ -1881,11 +1881,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private string MakeOutputFileName(BatchConvertItem item, string extension)
     {
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] item.FileName='{item.FileName}'");
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] item.OutputFileName='{item.OutputFileName}'");
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] extension='{extension}'");
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] SaveInSourceFolder={_config.SaveInSourceFolder}, OutputFolder='{_config.OutputFolder}'");
-
         var outputFolder = _config.SaveInSourceFolder || string.IsNullOrEmpty(_config.OutputFolder)
             ? Path.GetDirectoryName(item.FileName)
             : _config.OutputFolder;
@@ -1894,18 +1889,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             throw new InvalidOperationException("Output folder is not set");
         }
 
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] outputFolder='{outputFolder}'");
-
         var fileName = Path.GetFileNameWithoutExtension(item.FileName);
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] fileName (from item.FileName)='{fileName}'");
         if (!string.IsNullOrEmpty(item.OutputFileName))
         {
             fileName = Path.GetFileNameWithoutExtension(item.OutputFileName);
-            System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] fileName (from item.OutputFileName)='{fileName}'");
         }
 
         var targetExtension = extension;
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] targetExtension='{targetExtension}'");
 
         if (!string.IsNullOrEmpty(item.LanguageCode))
         {
@@ -1947,22 +1937,18 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var outputFileName = Path.Combine(outputFolder, fileName + targetExtension);
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] outputFileName (combined)='{outputFileName}'");
         if (targetExtension != string.Empty && !File.Exists(outputFileName) && Directory.Exists(outputFolder))
         {
-            System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] returning (new file, folder exists)='{outputFileName}'");
             return outputFileName;
         }
 
         if (targetExtension == string.Empty && Directory.Exists(outputFileName))
         {
-            System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] returning (empty ext, dir exists)='{outputFileName}'");
             return outputFileName;
         }
 
         if (targetExtension != string.Empty && _config.Overwrite && File.Exists(outputFileName))
         {
-            System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] overwriting existing file='{outputFileName}'");
             File.Delete(outputFileName);
         }
         else
@@ -1973,10 +1959,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 outputFileName = Path.Combine(outputFolder, fileName + $"_{counter}" + targetExtension);
                 counter++;
             } while (File.Exists(outputFileName) || Directory.Exists(outputFileName));
-            System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] counter-suffixed outputFileName='{outputFileName}'");
         }
 
-        System.Diagnostics.Debug.WriteLine($"[MakeOutputFileName] returning (final)='{outputFileName}'");
         return outputFileName;
     }
 
