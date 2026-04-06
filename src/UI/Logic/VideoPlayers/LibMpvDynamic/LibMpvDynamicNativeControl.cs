@@ -22,6 +22,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private const uint WS_VISIBLE = 0x10000000;
     private const uint WS_CLIPSIBLINGS = 0x04000000;
     private const uint WS_CLIPCHILDREN = 0x02000000;
+    private const uint WM_LBUTTONDOWN = 0x0201;
+    private const uint WM_NCHITTEST = 0x0084;
+    private const int GWLP_WNDPROC = -4;
+    private const int HTCLIENT = 1;
+
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+    private WndProcDelegate? _customWndProc;
+    private IntPtr _originalWndProc = IntPtr.Zero;
 
     // Linux still needs the temporary hide/show workaround during live resize.
     private static bool ShouldHideNativeControlDuringResize => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -143,6 +152,12 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
         if (_ownedChildHandle != IntPtr.Zero)
         {
+            if (_originalWndProc != IntPtr.Zero)
+            {
+                SetWindowLongPtr(_ownedChildHandle, GWLP_WNDPROC, _originalWndProc);
+                _originalWndProc = IntPtr.Zero;
+                _customWndProc = null;
+            }
             DestroyWindow(_ownedChildHandle);
             _ownedChildHandle = IntPtr.Zero;
         }
@@ -180,6 +195,9 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to create mpv child host window: {error}. Falling back to parent handle.");
             return parentHandle;
         }
+
+        _customWndProc = CustomWndProc;
+        _originalWndProc = SetWindowLongPtr(_ownedChildHandle, GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(_customWndProc));
 
         return _ownedChildHandle;
     }
@@ -270,6 +288,40 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool DestroyWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+    private IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+    {
+        if (msg == WM_NCHITTEST)
+        {
+            // The STATIC window class returns HTTRANSPARENT by default, which forwards
+            // all mouse messages to the parent HWND before they reach this WndProc.
+            // Returning HTCLIENT makes the window opaque to mouse input so that
+            // WM_LBUTTONDOWN is actually delivered here.
+            return new IntPtr(HTCLIENT);
+        }
+        if (msg == WM_LBUTTONDOWN)
+        {
+            Dispatcher.UIThread.Post(TogglePlayPause);
+        }
+        return CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+            e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            TogglePlayPause();
+            e.Handled = true;
+        }
+    }
 
     public void LoadFile(string path)
     {
