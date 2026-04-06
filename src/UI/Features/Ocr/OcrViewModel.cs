@@ -2247,15 +2247,6 @@ public partial class OcrViewModel : ObservableObject
                                         OcrSubtitleItems.IndexOf(item));
                                     IsInspectAdditionsVisible = true;
 
-                                    if (result.FirstBinaryOcrBitmap != null)
-                                    {
-                                        result.BinaryOcrBitmap.Width = result.FirstBinaryOcrBitmap.Width;
-                                        result.BinaryOcrBitmap.Height = result.FirstBinaryOcrBitmap.Height;
-                                        result.BinaryOcrBitmap.NumberOfColoredPixels = result.FirstBinaryOcrBitmap.NumberOfColoredPixels;
-                                        result.BinaryOcrBitmap.Hash = result.FirstBinaryOcrBitmap.Hash;
-                                        result.BinaryOcrBitmap.Colors = result.FirstBinaryOcrBitmap.Colors;
-                                    }
-
                                     db.Add(result.BinaryOcrBitmap);
                                     _ = Task.Run(() => db.Save());
                                 }

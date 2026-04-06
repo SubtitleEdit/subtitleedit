@@ -37,6 +37,8 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
     private ImageSplitterItem2 _splitItem;
 
     public BinaryOcrBitmap? BinaryOcrBitmap { get; private set; }
+    public NikseBitmap2? PreviewBitmap { get; private set; }
+    public int PreviewTopMargin { get; private set; }
     public TextBox TextBoxNew { get; set; }
     public bool OkPressed { get; set; }
     public bool AbortPressed { get; set; }
@@ -51,7 +53,6 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
     private BinaryOcrDb _db;
     private bool _isControlDown;
     private bool _isWinDown;
-    public BinaryOcrBitmap? FirstBinaryOcrBitmap { get; set; }
 
     public BinaryOcrCharacterAddViewModel()
     {
@@ -69,6 +70,8 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
         _splitItem = new ImageSplitterItem2(string.Empty);
         TextBoxNew = new TextBox();
         _nBmp = new NikseBitmap2(1, 1);
+        PreviewBitmap = null;
+        PreviewTopMargin = 0;
         ShowSkip = true;
         ShowUseOnce = true;
         LoadSettings();
@@ -138,14 +141,15 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
 
         if (_splitItem.NikseBitmap != null)
         {
+            PreviewBitmap = _splitItem.NikseBitmap;
+            PreviewTopMargin = _splitItem.Top;
             BinaryOcrBitmap = new BinaryOcrBitmap(_splitItem.NikseBitmap)
             {
                 X = _splitItem.X,
                 Y = _splitItem.Top,
                 ExpandCount = 0,
             };
-            FirstBinaryOcrBitmap = BinaryOcrBitmap;
-            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, BinaryOcrBitmap.Width, BinaryOcrBitmap.Height, BinaryOcrBitmap.Y);
+            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, PreviewBitmap.Width, PreviewBitmap.Height, PreviewTopMargin);
         }
 
         if (_splitItem.NikseBitmap != null)
@@ -156,61 +160,20 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
                 _splitItem.X + _splitItem.NikseBitmap.Width,
                 _splitItem.Y + _splitItem.NikseBitmap.Height);
 
-            CurrentBitmap = _splitItem.NikseBitmap!.GetBitmap().ToAvaloniaBitmap();
+            CurrentBitmap = PreviewBitmap!.GetBitmap().ToAvaloniaBitmap();
 
             if (_expandCount > 0)
             {
-                var minMarginTop = int.MaxValue;
-                var minX = int.MaxValue;
-                var minY = int.MaxValue;
-                var maxX = 0;
-                var maxY = 0;
-
-                for (var i = _startFromNumber; i < _startFromNumber + _expandCount + 1 && i < _letters.Count; i++)
+                var expandedGroup = ExpandedOcrGroup.Create(_nBmp, _letters, _startFromNumber, _expandCount + 1);
+                if (expandedGroup != null)
                 {
-                    var letter = _letters[i];
-                    if (letter.NikseBitmap != null)
-                    {
-                        minMarginTop = Math.Min(minMarginTop, letter.Top);
-                        minX = Math.Min(minX, letter.X);
-                        minY = Math.Min(minY, letter.Y);
-                        maxX = Math.Max(maxX, letter.X + letter.NikseBitmap.Width);
-                        maxY = Math.Max(maxY, letter.Y + letter.NikseBitmap.Height);
-                    }
+                    PreviewBitmap = expandedGroup.PreviewBitmap;
+                    PreviewTopMargin = expandedGroup.PreviewTopMargin;
+                    rect = expandedGroup.Bounds;
+                    CurrentBitmap = PreviewBitmap.GetBitmap().ToAvaloniaBitmap();
+                    BinaryOcrBitmap = expandedGroup.CreateBinaryOcrBitmap();
+                    ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, PreviewBitmap.Width, PreviewBitmap.Height, PreviewTopMargin);
                 }
-
-                rect = new SKRectI(minX, minY, maxX, maxY);
-                var subset = new SKBitmap();
-                if (!nBmp.GetBitmap().ExtractSubset(subset, rect))
-                {
-                    throw new InvalidOperationException("Subset extraction failed.");
-                }
-                CurrentBitmap = subset.ToAvaloniaBitmap();
-
-                var nikseBitmap = new NikseBitmap2(subset);
-                BinaryOcrBitmap = new BinaryOcrBitmap(nikseBitmap)
-                {
-                    X = minX,
-                    Y = minY,
-                    ExpandCount = _expandCount + 1,
-                };
-
-                // Build expanded list
-                BinaryOcrBitmap.ExpandedList = new List<BinaryOcrBitmap>();
-                for (var j = 1; j <= _expandCount; j++)
-                {
-                    if (_startFromNumber + j < _letters.Count && _letters[_startFromNumber + j].NikseBitmap != null)
-                    {
-                        var expandedBitmap = new BinaryOcrBitmap(_letters[_startFromNumber + j].NikseBitmap!)
-                        {
-                            X = _letters[_startFromNumber + j].X,
-                            Y = _letters[_startFromNumber + j].Top,
-                        };
-                        BinaryOcrBitmap.ExpandedList.Add(expandedBitmap);
-                    }
-                }
-
-                ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, BinaryOcrBitmap.Width, BinaryOcrBitmap.Height, BinaryOcrBitmap.Y);
             }
 
             using (var canvas = new SKCanvas(skBitmap))

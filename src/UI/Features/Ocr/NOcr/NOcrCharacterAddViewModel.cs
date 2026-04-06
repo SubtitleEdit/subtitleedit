@@ -53,6 +53,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     private ImageSplitterItem2 _splitItem;
 
     public NOcrChar NOcrChar { get; private set; }
+    public NikseBitmap2? PreviewBitmap { get; private set; }
     public NOcrDrawingCanvasView NOcrDrawingCanvas { get; set; }
     public TextBox TextBoxNew { get; set; }
     public bool OkPressed { get; set; }
@@ -99,6 +100,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         NOcrDrawingCanvas = new NOcrDrawingCanvasView();
         TextBoxNew = new TextBox();
         _nBmp = new NikseBitmap2(1, 1);
+        PreviewBitmap = null;
         ShowSkip = true;
         ShowUseOnce = true;
         ShowAbort = true;
@@ -164,6 +166,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
 
         if (_splitItem.NikseBitmap != null)
         {
+            PreviewBitmap = _splitItem.NikseBitmap;
             NOcrChar = new NOcrChar
             {
                 Width = _splitItem.NikseBitmap.Width,
@@ -184,46 +187,19 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
                 _splitItem.X + _splitItem.NikseBitmap.Width,
                 _splitItem.Y + _splitItem.NikseBitmap.Height);
 
-            CurrentBitmap = _splitItem.NikseBitmap!.GetBitmap().ToAvaloniaBitmap();
+            CurrentBitmap = PreviewBitmap!.GetBitmap().ToAvaloniaBitmap();
 
             if (_expandCount > 0)
             {
-                var minMarginTop = int.MaxValue;
-                var minX = int.MaxValue;
-                var minY = int.MaxValue;
-                var maxX = 0;
-                var maxY = 0;
-
-                for (var i = _startFromNumber; i < _startFromNumber + _expandCount + 1 && i < _letters.Count; i++)
+                var expandedGroup = ExpandedOcrGroup.Create(_nBmp, _letters, _startFromNumber, _expandCount + 1);
+                if (expandedGroup != null)
                 {
-                    var letter = _letters[i];
-                    if (letter.NikseBitmap != null)
-                    {
-                        minMarginTop = Math.Min(minMarginTop, letter.Top);
-                        minX = Math.Min(minX, letter.X);
-                        minY = Math.Min(minY, letter.Y);
-                        maxX = Math.Max(maxX, letter.X + letter.NikseBitmap.Width);
-                        maxY = Math.Max(maxY, letter.Y + letter.NikseBitmap.Height);
-                    }
+                    PreviewBitmap = expandedGroup.PreviewBitmap;
+                    rect = expandedGroup.Bounds;
+                    CurrentBitmap = PreviewBitmap.GetBitmap().ToAvaloniaBitmap();
+                    NOcrChar = expandedGroup.CreateNOcrChar();
+                    ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, NOcrChar.Width, NOcrChar.Height, NOcrChar.MarginTop);
                 }
-
-                rect = new SKRectI(minX, minY, maxX, maxY);
-                var subset = new SKBitmap();
-                if (!nBmp.GetBitmap().ExtractSubset(subset, rect))
-                {
-                    throw new InvalidOperationException("Subset extraction failed.");
-                }
-                CurrentBitmap = subset.ToAvaloniaBitmap();
-
-                NOcrChar = new NOcrChar
-                {
-                    Width = subset.Width,
-                    Height = subset.Height,
-                    MarginTop = 0,
-                    ExpandCount = _expandCount + 1,
-                };
-
-                ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, NOcrChar.Width, NOcrChar.Height, NOcrChar.MarginTop);
             }
 
             NOcrDrawingCanvas.BackgroundImage = CurrentBitmap;
@@ -349,7 +325,12 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     {
         NOcrChar.LinesForeground.Clear();
         NOcrChar.LinesBackground.Clear();
-        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, new NikseBitmap2(SkBitmapExtensions.ToSkBitmap(CurrentBitmap)));
+        if (PreviewBitmap == null)
+        {
+            return;
+        }
+
+        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, PreviewBitmap);
         ShowOcrPoints();
     }
 
