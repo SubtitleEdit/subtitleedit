@@ -780,6 +780,11 @@ public partial class MainViewModel :
         var idx = SubtitleGrid.SelectedIndex;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
+        RefreshSubtitlePreview();
+    }
+
+    private void RefreshSubtitlePreview()
+    {
         _mpvReloader.Reset();
         _vlcReloader.Reset();   
         _mpvPreviewDirty = true;
@@ -905,9 +910,7 @@ public partial class MainViewModel :
         {
             ApplyAssaStyles(result);
             _subtitle.Footer = result.ResultSubtitle.Footer;
-            _mpvReloader.Reset();
-            _vlcReloader.Reset();
-            _mpvPreviewDirty = true;
+           RefreshSubtitlePreview();
         }
     }
 
@@ -936,9 +939,7 @@ public partial class MainViewModel :
             }
         }
 
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -958,13 +959,10 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             _subtitle.Header = result.Header;
-            _mpvReloader.Reset();
-            _vlcReloader.Reset();
-            _mpvPreviewDirty = true;
+            RefreshSubtitlePreview();
         }
     }
-
-
+    
     [RelayCommand]
     private async Task ShowAssaAttachments()
     {
@@ -982,9 +980,7 @@ public partial class MainViewModel :
         {
             _subtitle.Header = result.Header;
             _subtitle.Footer = result.Footer;
-            _mpvReloader.Reset();
-            _vlcReloader.Reset();
-            _mpvPreviewDirty = true;
+            RefreshSubtitlePreview();
         }
     }
 
@@ -1050,9 +1046,7 @@ public partial class MainViewModel :
         }
 
         Renumber();
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
         _updateAudioVisualizer = true;
     }
 
@@ -1084,9 +1078,7 @@ public partial class MainViewModel :
 
         Renumber();
         _updateAudioVisualizer = true;
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -1105,9 +1097,7 @@ public partial class MainViewModel :
         SetSubtitles(result.ResultSubtitle);
         _subtitle.Header = result.ResultSubtitle.Header;
         ShowStatus(Se.Language.Main.AssaResolutionResamplerDone);
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -1144,9 +1134,7 @@ public partial class MainViewModel :
 
         _subtitle.Header = result.ResultSubtitle.Header;
         SetSubtitles(result.ResultSubtitle);
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -1169,9 +1157,7 @@ public partial class MainViewModel :
             vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
         });
 
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -1202,9 +1188,7 @@ public partial class MainViewModel :
         var x = result.ResultX;
         var y = result.ResultY;
         selectedItem.Text = $"{{\\pos({x},{y})}}" + RemovePositionTags(selectedItem.Text);
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     private static string RemovePositionTags(string text)
@@ -1356,8 +1340,7 @@ public partial class MainViewModel :
 
         AutoFitColumns();
 
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
+        RefreshSubtitlePreview();
 
         if (_findViewModel != null)
         {
@@ -4202,8 +4185,7 @@ public partial class MainViewModel :
             Subtitles.AddRange(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
-            _mpvReloader.Reset();
-            _vlcReloader.Reset();
+            RefreshSubtitlePreview();
         }
     }
 
@@ -4231,8 +4213,7 @@ public partial class MainViewModel :
             Subtitles.AddRange(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
-            _mpvReloader.Reset();
-            _vlcReloader.Reset();
+            RefreshSubtitlePreview();
         }
     }
 
@@ -4424,6 +4405,7 @@ public partial class MainViewModel :
             });
 
             InitLayout.MakeLayout12KeepVideo(MainView!, this);
+            RefreshSubtitlePreview();
         });
     }
 
@@ -4452,6 +4434,7 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(videoFileName))
         {
             Dispatcher.UIThread.Post(async void () => { await VideoOpenFile(videoFileName); });
+            RefreshSubtitlePreview();
         }
     }
 
@@ -6113,9 +6096,7 @@ public partial class MainViewModel :
                 p.Name == Se.Settings.General.DefaultSubtitleFormat) ?? SubtitleFormats[0];
         }
 
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
     }
 
     public VideoPlayerControl? GetVideoPlayerControl()
@@ -8226,6 +8207,8 @@ public partial class MainViewModel :
                 _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
         }
+        
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -12231,9 +12214,7 @@ public partial class MainViewModel :
         _videoOpenTokenSource?.Cancel();
         await vp.Open(videoFileName);
         _videoFileName = videoFileName;
-        _mpvReloader.Reset();
-        _vlcReloader.Reset();
-        _mpvPreviewDirty = true;
+        RefreshSubtitlePreview();
 
         if (IsValidUrl(videoFileName))
         {
