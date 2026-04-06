@@ -648,7 +648,14 @@
     "rightMargin": "Right margin",
     "installed": "Installed",
     "advancedDotDotDot": "Advanced...",
-    "chooseAlignment": "Choose alignment"
+    "chooseAlignment": "Choose alignment",
+    "maxWidthPixels": "Max width (pixels)",
+    "sampleText": "Sample text",
+    "boxWidthPixels": "Box width (pixels)",
+    "fadeInOut": "Fade in/out",
+    "alpha": "Alpha",
+    "pickResolution": "Pick resolution",
+    "manualSync": "Manual sync"
   },
   "main": {
     "menu": {
@@ -1395,7 +1402,14 @@
       "editStyles": "Edit styles",
       "editProperties": "Edit properties",
       "editAttachments": "Edit attachments",
-      "errorsExportedX": "Errors exported: {0}"
+      "errorsExportedX": "Errors exported: {0}",
+      "slowFontSizeChange": "Slow font size change",
+      "increaseFontKerning": "Increase font kerning",
+      "scrollUp": "Scroll up",
+      "scrollDown": "Scroll down",
+      "rotateIn": "Rotate in",
+      "tiltBounce": "Tilt bounce",
+      "fontSizeBounceIn": "Font size bounce in"
     },
     "changeCasing": {
       "title": "Change casing",
@@ -1445,7 +1459,9 @@
     },
     "mergeShortLines": {
       "title": "Merge short lines",
-      "highlightParts": "Highlight parts (karaoke)"
+      "highlightParts": "Highlight parts (karaoke)",
+      "mergedLineInfo": "Merged line {0} into {1} - {2}",
+      "linesMergedX": "Lines merged: {0}"
     },
     "mergeLinesWithSameText": {
       "title": "Merge lines with same text",
@@ -1463,7 +1479,23 @@
       "nothingToReport": "No issues found.",
       "saveNetflixQualityReport": "Save Netflix quality report",
       "netflixReportSaved": "Netflix quality report saved",
-      "netFlixQualityReportSavedToX": "Netflix quality report saved to:\n {0}"
+      "netFlixQualityReportSavedToX": "Netflix quality report saved to:\n {0}",
+      "dialogHyphenSpace": "Dialog hyphen space",
+      "ellipsesNotThreeDots": "Use elipses (not three dots)",
+      "onlyAllowedGlyphs": "Only allowed glyphs",
+      "italics": "Italics",
+      "maxCharsSec": "Max chars/sec",
+      "maxDuration": "Max duration",
+      "maxLineLength": "Max line length",
+      "minDuration": "Min duration",
+      "maxNumberOfLines": "Max number of lines",
+      "oneToTenSpellOut": "One to ten spell out",
+      "shotChanges": "Shot changes",
+      "startNumberSpellOut": "Start number spell out",
+      "textforHiUseBrackets": "Text for HI, use brackets",
+      "frameRate": "Frame rate",
+      "twoFrameGrap": "Two frame gap",
+      "whiteSpace": "White space"
     },
     "imageBasedEdit": {
       "editImagedBaseSubtitle": "Edit imaged-based subtitle",
@@ -1583,7 +1615,8 @@
       "outputProperties": "Output properties...",
       "videoFileSize": "Video file size",
       "oneBox": "One box",
-      "boxPerLine": "Box per line"
+      "boxPerLine": "Box per line",
+      "logoInfo": "Pick a PNG image and drag it to position it on the video."
     },
     "videoTransparent": {
       "title": "Generate transparent video with subtitles",
@@ -1664,7 +1697,8 @@
       "edgeTtsPitch": "Edge-TTS pitch",
       "edgeTtsPitchDescription": "Pitch adjustment for Edge-TTS, e.g. \"+10Hz\", \"-5Hz\", or \"+0Hz\" for default.",
       "edgeTtsVolume": "Edge-TTS volume",
-      "edgeTtsVolumeDescription": "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default."
+      "edgeTtsVolumeDescription": "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.",
+      "downloadPiperPrompt": "\"Text to speech\" requires Piper.\r\n\r\nDownload and use Piper?"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generate/import shot changes",
@@ -1785,7 +1819,8 @@
     "lineMerge": "Line merge",
     "delayInSecondsBetweenRequests": "Delay in seconds between requests",
     "maxBytesPerRequest": "Max bytes per request",
-    "promptText": "Prompt text"
+    "promptText": "Prompt text",
+    "translateEachLineSeparately": "Translate each line separately"
   },
   "options": {
     "settings": {
@@ -2044,7 +2079,8 @@
       "uiScale": "UI scale (%)",
       "waveformToolbarItems": "Waveform toolbar items",
       "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color",
-      "subtitlePreviewProperties": "Subtitle preview properties"
+      "subtitlePreviewProperties": "Subtitle preview properties",
+      "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit"
     },
     "shortcuts": {
       "title": "Shortcuts",
